@@ -366,6 +366,7 @@ struct RootView_Previews: PreviewProvider {
                 productNavigationStateManager: .preview,
                 tabsViewModel: .preview,
                 informerViewModel: .init(.emptyMock),
+                splash: .preview,
                 .emptyMock,
                 showLoginAction: { _ in
                     
@@ -378,6 +379,19 @@ struct RootView_Previews: PreviewProvider {
     }
 }
 
+private extension SplashScreenViewModel {
+    
+    static let preview: SplashScreenViewModel = .init(
+        initialState: .initialSplashData,
+        reduce: {
+            state,
+            _ in (state, nil)
+        },
+        handleEffect: { _,_ in }
+    )
+}
+
+
 private extension RootViewFactory {
     
     static var preview: Self {
@@ -389,6 +403,11 @@ private extension RootViewFactory {
                 map: PublishingInfo.preview(info:),
                 config: .iVortex
             )
+        }
+        
+        let makeSplashScreenView: MakeSplashScreenView = { state, event in
+            
+            .init(splash: state, config: .prod())
         }
         
         return .init(
@@ -429,6 +448,7 @@ private extension RootViewFactory {
             },
             makeReturnButtonView: { _ in .init(action: {}) },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
+            makeSplashScreenView: makeSplashScreenView,
             makeUserAccountView: {
                 
                 return .init(

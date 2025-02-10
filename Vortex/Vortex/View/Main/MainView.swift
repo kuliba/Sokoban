@@ -280,12 +280,12 @@ struct MainView<NavigationOperationView: View>: View {
                 binder: binder,
                 factory: factory,
                 // TODO: Pop to root
-                goToMain: { viewModel.resetDestination() }
+                goToMain: viewModel.resetDestination
             )
                 .navigationBarWithBack(
                     title: "Кредиты",
                     // TODO: Pop to root
-                    dismiss: { viewModel.resetDestination() }
+                    dismiss: viewModel.resetDestination
                 )
                 .edgesIgnoringSafeArea(.bottom)
             

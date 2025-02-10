@@ -50,18 +50,8 @@ extension RootViewModelFactory {
         let effectHandler = Domain.EffectHandler(
             createDraftApplication: createDraftApplication(payload:completion:),
             getVerificationCode: getVerificationCode(completion:),
-            saveConsents: {
-                payload, completion in
-                
-//                self.saveConsents(payload: payload) {
-//                    completion($0)
-//                }
-
-                completion(.success(.preview))
-            },
-            confirm: { [weak self] event in
-                
-                guard let self else { return }
+            saveConsents: saveConsents,
+            confirm: { event in
                 
                 let model = self.makeTimedOTPInputViewModel(
                     timerDuration: self.settings.otpDuration,
@@ -166,7 +156,6 @@ extension RootViewModelFactory {
                 
         getVerificationCode(()) { [getVerificationCode] in
             
-            // TODO: Реализовать показ ошибок согласно дизайна
             completion($0.map(\.resendOTPCount).mapError { .init(message: $0.localizedDescription) })
             _ = getVerificationCode
         }
@@ -178,13 +167,12 @@ extension RootViewModelFactory {
     ) {
         let saveConsents = nanoServiceComposer.compose(
             createRequest: RequestFactory.createSaveConsentsRequest(with:),
-            mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:),
-            mapError: { CreateDraftCollateralLoanApplicationDomain.LoadResultFailure.init(error: $0) }
+            mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:)
         )
         
         saveConsents(payload.payload) { [saveConsents] in
             
-            completion($0.map(\.response).mapError { $0 })
+            completion($0.map(\.response).mapError{ .init(message: $0.localizedDescription) })
             _ = saveConsents
         }
     }
@@ -195,13 +183,12 @@ extension RootViewModelFactory {
     ) {
         let saveConsents = nanoServiceComposer.compose(
             createRequest: RequestFactory.createSaveConsentsRequest(with:),
-            mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:),
-            mapError: { CreateDraftCollateralLoanApplicationDomain.LoadResultFailure.init(error: $0) }
+            mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:)
         )
         
-        saveConsents(payload.payload) { [saveConsents] in
+        saveConsents (payload.payload) { [saveConsents] in
             
-            completion($0.map(\.response).mapError { $0 })
+            completion($0.map(\.response).mapError{ .init(message: $0.localizedDescription) })
             _ = saveConsents
         }
     }
@@ -239,27 +226,19 @@ extension RootViewModelFactory {
     }
 }
 
-extension CreateDraftCollateralLoanApplicationDomain.LoadResultFailure {
+private extension CreateDraftCollateralLoanApplicationDomain.LoadResultFailure {
     
     init(
         error: RemoteServiceErrorOf<RemoteServices.ResponseMapper.MappingError>
     ) {
-        switch error {
-            
-        case let .createRequest(createRequestError):
-            self = Self(error: .createRequest(createRequestError))
-            
-        case let .performRequest(performRequestError):
-            self = Self(error: .performRequest(performRequestError))
-            
-        case let .mapResponse(mapResponseError):
-            switch mapResponseError {
-            case .invalid:
-                self = Self(message: error.localizedDescription)
-                
-            case .server(_, errorMessage: let errorMessage):
-                self = Self(message: errorMessage)
-            }
+        if case let .mapResponse(response) = error,
+           case let .server(_, errorMessage) = response
+        {
+
+            self = Self(message: errorMessage)
+        } else {
+
+            self = Self(message: error.localizedDescription)
         }
     }
 }
@@ -310,16 +289,6 @@ extension RemoteServices.ResponseMapper.CollateralLoanLandingSaveConsentsRespons
             cityName: cityName,
             status: status,
             responseMessage: responseMessage
-        )
-    }
-}
-
-extension RemoteServices.ResponseMapper.CreateDraftCollateralLoanApplicationData {
-    
-    func submitResult(_ applicationID: UInt) -> CollateralLandingApplicationCreateDraftResult {
-        
-        .init(
-            applicationID: applicationID
         )
     }
 }

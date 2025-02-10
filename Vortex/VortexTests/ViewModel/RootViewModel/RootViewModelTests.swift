@@ -515,7 +515,8 @@ final class RootViewModelTests: XCTestCase {
                 chatViewModel: .init(),
                 marketShowcaseBinder: .preview
             ),
-            informerViewModel: .init(model),
+            informerViewModel: .init(model), 
+            splash: .preview,
             infoDictionary: infoDictionary,
             model,
             showLoginAction: { _ in
@@ -597,7 +598,8 @@ final class RootViewModelTests: XCTestCase {
                 chatViewModel: .init(),
                 marketShowcaseBinder: .immediate
             ),
-            informerViewModel: .init(model),
+            informerViewModel: .init(model), 
+            splash: .preview,
             infoDictionary: nil,
             model,
             showLoginAction: { _ in
@@ -771,6 +773,17 @@ private extension GetShowcaseDomain.Content {
         initialState: .init(),
         reduce: GetShowcaseDomain.Reducer().reduce(_:_:),
         handleEffect: GetShowcaseDomain.EffectHandler(load: { _ in }).handleEffect(_:dispatch:)
+    )
+}
+
+// MARK: - SplashScreenViewModel preview
+
+private extension SplashScreenViewModel {
+    
+    static let preview: SplashScreenViewModel = .init(
+        initialState: .initialSplashData,
+        reduce: { state,_ in (state, nil) },
+        handleEffect: { _,_ in }
     )
 }
 

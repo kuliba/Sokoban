@@ -22,9 +22,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     
     var body: some View {
         
-        RxWrapperView(model: binder.flow) {
-            state,
-            event in
+        RxWrapperView(model: binder.flow) { state, event in
             
             RxWrapperView(
                 model: binder.content,
@@ -129,6 +127,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
                 factory: makePaymentCompleteViewFactory(),
                 config: .collateralLoanLanding
             )
+            
         case .failure:
             PaymentCompleteView(
                 state: .rejected,
