@@ -301,6 +301,7 @@ private extension NanoServices.GetOperationDetailByPaymentIDResponse {
             payerFullName: "Большаков Кирилл Сергеевич",
             payerINN: payerINN,
             payerMiddleName: payerMiddleName,
+            paymentFlow: nil, 
             paymentMethod: paymentMethod,
             paymentOperationDetailID: 57723,
             paymentTemplateID: paymentTemplateID,

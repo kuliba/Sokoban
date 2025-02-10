@@ -87,7 +87,7 @@ private extension ResponseMapper.GetOperationDetailByPaymentIDResponse {
             payerMiddleName: data.payerMiddleName,
             payerPhone: data.payerPhone,
             payerSurName: data.payerSurName,
-            paymentFlow: data.payment_flow,
+            paymentFlow: data.paymentFlow,
             paymentMethod: .init(data.paymentMethod),
             paymentOperationDetailID: data.paymentOperationDetailId,
             paymentTemplateID: data.paymentTemplateId,
@@ -283,7 +283,7 @@ private extension ResponseMapper {
         let payerMiddleName: String?
         let payerPhone: String?
         let payerSurName: String?
-        let payment_flow: String?
+        let paymentFlow: String?
         let paymentMethod: String?
         let paymentOperationDetailId: Int
         let paymentTemplateId: Int?
