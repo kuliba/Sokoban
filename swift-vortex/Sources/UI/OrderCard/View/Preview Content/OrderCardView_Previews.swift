@@ -194,6 +194,7 @@ private extension Messages {
         description: String = "description",
         icon: String = "icon",
         subtitle: String = "subtitle",
+        tariffLink: String = "tariffLink",
         title: String = "title",
         isOn: Bool = false
     ) -> Self {
@@ -202,6 +203,7 @@ private extension Messages {
             description: description,
             icon: icon,
             subtitle: subtitle,
+            tariffLink: tariffLink,
             title: title,
             isOn: isOn
         )
