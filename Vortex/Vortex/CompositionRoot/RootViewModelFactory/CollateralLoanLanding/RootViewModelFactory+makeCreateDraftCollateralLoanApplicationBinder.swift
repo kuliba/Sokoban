@@ -50,14 +50,7 @@ extension RootViewModelFactory {
         let effectHandler = Domain.EffectHandler(
             createDraftApplication: createDraftApplication(payload:completion:),
             getVerificationCode: getVerificationCode(completion:),
-            saveConsents: { payload, completion in
-                
-                self.saveConsents(payload: payload) {
-                    completion($0)
-                }
-
-                // For tests only: completion(.success(.preview))
-            },
+            saveConsents: saveConsents,
             confirm: { event in
                 
                 let model = self.makeTimedOTPInputViewModel(
@@ -174,13 +167,12 @@ extension RootViewModelFactory {
     ) {
         let saveConsents = nanoServiceComposer.compose(
             createRequest: RequestFactory.createSaveConsentsRequest(with:),
-            mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:),
-            mapError: { CreateDraftCollateralLoanApplicationDomain.LoadResultFailure.init(error: $0) }
+            mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:)
         )
         
         saveConsents(payload.payload) { [saveConsents] in
             
-            completion($0.map(\.response))
+            completion($0.map(\.response).mapError{ .init(message: $0.localizedDescription) })
             _ = saveConsents
         }
     }
@@ -191,13 +183,12 @@ extension RootViewModelFactory {
     ) {
         let saveConsents = nanoServiceComposer.compose(
             createRequest: RequestFactory.createSaveConsentsRequest(with:),
-            mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:),
-            mapError: { CreateDraftCollateralLoanApplicationDomain.LoadResultFailure.init(error: $0) }
+            mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:)
         )
         
-        saveConsents(payload.payload) { [saveConsents] in
+        saveConsents (payload.payload) { [saveConsents] in
             
-            completion($0.map(\.response))
+            completion($0.map(\.response).mapError{ .init(message: $0.localizedDescription) })
             _ = saveConsents
         }
     }
