@@ -96,6 +96,11 @@ extension GetCollateralLandingDomain.State {
         
         return annuity.formatted(.currency(code: "RUB"))
     }
+    
+    var selectedBottomSheetItem: GetCollateralLandingDomain.State.BottomSheet.Item? {
+        
+        bottomSheetItems.first { $0.termMonth == selectedMonthPeriod }
+    }
 }
 
 extension FloatingPoint {
