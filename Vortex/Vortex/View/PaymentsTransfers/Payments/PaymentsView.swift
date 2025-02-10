@@ -59,10 +59,22 @@ struct PaymentsView: View {
             
             Color.clear
                 .zIndex(2)
-                .fullScreenCover(item: $viewModel.successViewModel, content: { successViewModel in
-                    
-                    viewFactory.makePaymentsSuccessView(successViewModel)
-                })
+                .fullScreenCover(
+                    item: .init(
+                        get: { viewModel.route?.fullScreen },
+                        set: { if $0 == nil { viewModel.dismiss() }}
+                    ),
+                    content: fullScreenContent
+                )
+
+            Color.clear
+                .navigationDestination(
+                    item: .init(
+                        get: { viewModel.route?.destination },
+                        set: { _ in } // managed by action in content
+                    ),
+                    content: destinationContent
+                )
             
             Color.clear
                 .zIndex(3)
@@ -72,6 +84,85 @@ struct PaymentsView: View {
                 })
         }
         .navigationBarBackButtonHidden(true)
+    }
+    
+    @ViewBuilder
+    func fullScreenContent(
+        _ fullScreen: PaymentsViewModel.Route.FullScreen
+    ) -> some View {
+        
+        switch fullScreen {
+        case let .success(successViewModel):
+            viewFactory.makePaymentsSuccessView(successViewModel)
+        }
+    }
+    
+    @ViewBuilder
+    func destinationContent(
+    _ destination: PaymentsViewModel.Route.Destination
+    ) -> some View {
+        
+        switch destination {
+        case let .confirm(confirmViewModel):
+            viewFactory.makePaymentsOperationView(confirmViewModel)
+        }
+    }
+}
+
+extension PaymentsViewModel.Route {
+        
+    var destination: Destination? {
+        
+        switch self {
+        case let .confirm(confirm):
+            return .confirm(confirm)
+            
+        default:
+            return nil
+        }
+    }
+    
+    enum Destination {
+        
+        case confirm(PaymentsConfirmViewModel)
+    }
+    
+    var fullScreen: FullScreen? {
+        
+        switch self {
+        case let .success(success):
+            return .success(success)
+            
+        default:
+            return nil
+        }
+    }
+    
+    enum FullScreen {
+        
+        case success(PaymentsSuccessViewModel)
+    }
+}
+
+extension PaymentsViewModel.Route.Destination: Identifiable {
+    
+    var id: ObjectIdentifier {
+        
+        switch self {
+        case let .confirm(confirm):
+            return .init(confirm)
+        }
+    }
+}
+
+extension PaymentsViewModel.Route.FullScreen: Identifiable {
+    
+    var id: ObjectIdentifier {
+        
+        switch self {
+        case let .success(success):
+            return .init(success)
+        }
     }
 }
 

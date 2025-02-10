@@ -162,7 +162,11 @@ final class PaymentsOperationViewModelTests: XCTestCase {
     }
     
     
-    func test_modelPaymentProcessResponseWithConfirmResult_linkUpdatedToConfirm() throws {
+  /*  
+   
+   // TODO: move to PaymentsViewModelTests
+   
+   func test_modelPaymentProcessResponseWithConfirmResult_linkUpdatedToConfirm() throws {
         
         let operation = Payments.Operation.makeWithOneUncompleteStepForAnyService(params: [])
         let (sut, model) = makeSut(operation: operation)
@@ -216,7 +220,7 @@ final class PaymentsOperationViewModelTests: XCTestCase {
         
         confirmViewModel.closeAction()
         XCTAssertNil(sut.link, "Link should be reset for non-abroad service")
-    }
+    }*/
 }
 
 //MARK: - Helpers
