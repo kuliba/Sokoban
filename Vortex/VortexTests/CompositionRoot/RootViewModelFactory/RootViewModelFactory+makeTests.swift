@@ -42,21 +42,20 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         XCTAssertNotNil(sut)
     }
     
-    // TODO: fix CI flakyness
-//    func test_shouldCallHTTPClientOnSessionStateChangeToActive() {
-//        
-//        let (sut, httpClient, sessionAgent, userInitiatedScheduler) = makeSUT(
-//            sessionState: .inactive
-//        )
-//        XCTAssertEqual(httpClient.callCount, 0)
-//        
-//        sessionAgent.sessionState.value = active()
-//        userInitiatedScheduler.advance()
-//        awaitActorThreadHop()
-//        
-//        XCTAssertGreaterThanOrEqual(httpClient.callCount, 1)
-//        XCTAssertNotNil(sut)
-//    }
+    func test_shouldCallHTTPClientOnSessionStateChangeToActive() { //
+        
+        let (sut, httpClient, sessionAgent, userInitiatedScheduler) = makeSUT(
+            sessionState: .inactive
+        )
+        XCTAssertEqual(httpClient.callCount, 0)
+        
+        sessionAgent.sessionState.value = active()
+        userInitiatedScheduler.advance()
+        awaitActorThreadHop()
+        
+        XCTAssertGreaterThanOrEqual(httpClient.callCount, 1)
+        XCTAssertNotNil(sut)
+    }
     
     func test_shouldCallHTTPClientWithGetServiceCategoryListOnActiveSession() throws {
         
