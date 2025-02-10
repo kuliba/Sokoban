@@ -63,9 +63,9 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
         let sut = Composer(
             getCurrencySymbol: { _ in "₽" },
             elementMapper: .init(
-                currencyOfProduct: { _ in "₽" }, 
+                currencyOfProduct: { _ in "₽" },
                 format: { _,_ in ""},
-                getProducts: { [] }, 
+                getProducts: { [] },
                 makeContacts: { .sampleFastContacts }
             ),
             microServices: .init(
@@ -186,14 +186,18 @@ final class AnywayTransactionViewModelComposerTests: XCTestCase {
             productType: productType
         )
     }
+}
+
+extension XCTestCase {
     
     func makeAnywayPaymentPayload(
         puref: AnywayPaymentOutline.Payload.Puref = anyMessage(),
         title: String = anyMessage(),
         subtitle: String = anyMessage(),
-        icon: String = anyMessage()
+        icon: String = anyMessage(),
+        templateID: Int? = nil
     ) -> AnywayPaymentOutline.Payload {
         
-        return .init(puref: puref, title: title, subtitle: subtitle, icon: icon)
+        return .init(puref: puref, title: title, subtitle: subtitle, icon: icon, templateID: templateID)
     }
 }

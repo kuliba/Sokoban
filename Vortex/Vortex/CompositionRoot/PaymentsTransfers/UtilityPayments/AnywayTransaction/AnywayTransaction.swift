@@ -40,6 +40,7 @@ struct AnywayCompleted: Equatable {
     let formattedAmount: String
     let merchantIcon: String?
     let result: TransactionResult
+    let templateID: Int?
     
     typealias TransactionResult = Result<AnywayTransactionReport, Fraud>
     
