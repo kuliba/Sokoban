@@ -12,7 +12,7 @@ import ToggleComponent
 struct GetCollateralLandingCalculatorView: View {
     
     @SwiftUI.State private var toggleIsOn = false
-    @SwiftUI.State private var sliderCurrentValue: Double = 6.0
+    @SwiftUI.State private var sliderCurrentValue: Double
     
     let state: State
     let product: Product
@@ -20,6 +20,24 @@ struct GetCollateralLandingCalculatorView: View {
     let domainEvent: (DomainEvent) -> Void
     let externalEvent: (ExternalEvent) -> Void
 
+    init(
+        toggleIsOn: Bool = false,
+        sliderCurrentValue: Double = .zero,
+        state: State,
+        product: Product,
+        config: Config,
+        domainEvent: @escaping (DomainEvent) -> Void,
+        externalEvent: @escaping (ExternalEvent) -> Void
+    ) {
+        self.toggleIsOn = toggleIsOn
+        self.sliderCurrentValue = Double(state.desiredAmount)
+        self.state = state
+        self.product = product
+        self.config = config
+        self.domainEvent = domainEvent
+        self.externalEvent = externalEvent
+    }
+    
     var body: some View {
         
         calculatorView
@@ -232,7 +250,8 @@ struct GetCollateralLandingCalculatorView: View {
         
         SliderView(
             value: $sliderCurrentValue,
-            maximumValue: config.salary.slider.maximumValue,
+            minimumValue: Float(product.calc.amount.minIntValue),
+            maximumValue: Float(product.calc.amount.maxIntValue),
             minTrackColor: UIColor(config.salary.slider.minTrackColor),
             maxTrackColor: UIColor(config.salary.slider.maxTrackColor),
             thumbDiameter: config.salary.slider.thumbDiameter,
@@ -275,8 +294,7 @@ struct GetCollateralLandingCalculatorView: View {
     
     private func monthlyPaymentValueText(config: Config) -> some View {
         
-        // TODO: Replace on real data
-        formatText("35 099,28 ₽", with: config.calculator.root.fonts.value)
+        formatText(state.formattedAnnuity, with: config.calculator.root.fonts.value)
     }
     
     private func periodTitleText(config: Config.Calculator) -> some View {
@@ -296,8 +314,7 @@ struct GetCollateralLandingCalculatorView: View {
     
     private func percentValueText(config: Config.Calculator) -> some View {
         
-        // TODO: Replace on real data
-        formatText("16%", with: config.root.fonts.value)
+        formatText(state.selectedPercent, with: config.root.fonts.value)
     }
     
     private func depositTitleText(config: Config.Calculator) -> some View {
@@ -317,8 +334,7 @@ struct GetCollateralLandingCalculatorView: View {
     
     private func desiredAmountValueText(config: Config.Calculator) -> some View {
         
-        // TODO: Replace on real data
-        formatText("1 325 457 ₽", with: config.desiredAmount.fontValue)
+        formatText(state.formattedDesiredAmount, with: config.desiredAmount.fontValue)
     }
     
     private func desiredAmountMaxText(config: Config.Calculator) -> some View {

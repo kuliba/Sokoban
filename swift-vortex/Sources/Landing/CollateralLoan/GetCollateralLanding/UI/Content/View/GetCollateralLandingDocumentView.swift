@@ -19,8 +19,16 @@ struct GetCollateralLandingDocumentView: View {
         HStack(spacing: 0) {
             
             document.icon.map {
+                
                 factory.makeImageViewWithMD5Hash($0)
                     .frame(width: 20, height: 20)
+                    .padding(.trailing, config.layouts.iconTrailingPadding)
+            }
+            
+            if document.icon == nil {
+                
+                config.defaultIcon
+                    .frame(width: 24, height: 24)
                     .padding(.trailing, config.layouts.iconTrailingPadding)
             }
             

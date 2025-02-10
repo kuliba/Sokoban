@@ -37,10 +37,9 @@ extension GetCollateralLandingDomain {
                 // TODO: need to realize
                 break
 
-            case .changeDesiredAmount(_):
-                // TODO: need to realize
-                break
-
+            case let .changeDesiredAmount(newValue):
+                state.desiredAmount = newValue
+                
             case let .selectCollateral(collateral):
                 state.selectedCollateralType = collateral
 
