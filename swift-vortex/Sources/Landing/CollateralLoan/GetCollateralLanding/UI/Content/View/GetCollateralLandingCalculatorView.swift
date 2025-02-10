@@ -197,6 +197,7 @@ struct GetCollateralLandingCalculatorView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .contentShape(Rectangle())
         .onTapGesture {
             externalEvent(.showCaseList(.collaterals(product.calc.collaterals)))
         }

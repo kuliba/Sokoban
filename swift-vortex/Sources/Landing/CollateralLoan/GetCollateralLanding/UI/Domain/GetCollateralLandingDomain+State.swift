@@ -46,6 +46,11 @@ extension GetCollateralLandingDomain.State {
         
         product?.calc.collaterals.first { $0.type == selectedCollateralType }?.name ?? ""
     }
+    
+    var selectedBottomSheetItem: GetCollateralLandingDomain.State.BottomSheet.Item? {
+        
+        bottomSheetItems.first { $0.termMonth == selectedMonthPeriod }
+    }
 }
 
 extension GetCollateralLandingDomain.State {
