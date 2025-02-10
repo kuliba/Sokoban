@@ -165,7 +165,8 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
                     puref: puref,
                     title: title,
                     subtitle: nil,
-                    icon: icon
+                    icon: icon,
+                    templateID: nil
                 )
             ),
             firstField: nil
@@ -301,7 +302,8 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
                     puref: puref,
                     title: title,
                     subtitle: inn,
-                    icon: icon
+                    icon: icon, 
+                    templateID: nil
                 )
             ),
             firstField: .init(
@@ -571,7 +573,8 @@ final class AnywayPaymentSourceParserTests: XCTestCase {
                     puref: puref,
                     title: title,
                     subtitle: inn,
-                    icon: icon
+                    icon: icon, 
+                    templateID: nil
                 )
             ),
             firstField: nil

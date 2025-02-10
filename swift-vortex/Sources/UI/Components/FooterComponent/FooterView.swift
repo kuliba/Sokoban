@@ -63,9 +63,15 @@ private extension FooterView {
                     .frame(height: 56)
                 }
                 
-                footer.subtitle.text(withConfig: config.subtitle)
-                    .padding(.horizontal, 16)
-                    .multilineTextAlignment(.center)
+                footer.subtitle.text(
+                    withConfig: config.subtitle,
+                    alignment: .center
+                )
+                .multilineTextAlignment(.center)
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.horizontal, 16)
             }
         }
     }
