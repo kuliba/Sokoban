@@ -62,7 +62,12 @@ private extension OrderCardView {
     
     func loadingProductView() -> some View {
         
-        ProductView(product: .sample, isLoading: true, config: config.product)
+        ProductView(
+            product: .sample,
+            isLoading: true,
+            config: config.product,
+            makeIconView: { _ in EmptyView() }
+        )
             .rounded(config.roundedConfig)
     }
     
@@ -144,7 +149,8 @@ private extension OrderCardView {
         ProductView(
             product: product,
             isLoading: state.loadableForm.isLoading,
-            config: config.product
+            config: config.product,
+            makeIconView: { factory.makeIconView($0) }
         )
         .rounded(config.roundedConfig)
     }

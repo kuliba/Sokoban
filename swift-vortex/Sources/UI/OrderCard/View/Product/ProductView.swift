@@ -8,11 +8,13 @@
 import SwiftUI
 import SharedConfigs
 
-struct ProductView: View {
+struct ProductView<IconView>: View
+where IconView: View {
     
     let product: Product
     let isLoading: Bool
     let config: ProductConfig
+    let makeIconView: (String) -> IconView
     
     var body: some View {
         
@@ -41,10 +43,8 @@ struct ProductView: View {
             
             HStack(alignment: .top, spacing: config.padding) {
                 
-                productImageView(
-                    designMd5hash: designMd5hash,
-                    needShimmering
-                )
+                makeIconView(designMd5hash)
+                    .frame(width: 112, height: 72)
                 
                 productOptionsView(
                     open: orderOption.open,
@@ -129,29 +129,6 @@ struct ProductView: View {
             )
         }
     }
-    
-    @ViewBuilder
-    private func productImageView(
-        designMd5hash: String,
-        _  needShimmering: Bool
-    ) -> some View {
-        
-        Group {
-            
-            if needShimmering {
-                
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(config.shimmeringColor)
-                    .shimmering()
-                
-            } else {
-                
-                Image("DigitalGold")
-                    .resizable()
-            }
-        }
-        .frame(width: 112, height: 72, alignment: .center)
-    }
 }
 
 struct ProductView_Previews: PreviewProvider {
@@ -186,7 +163,8 @@ struct ProductView_Previews: PreviewProvider {
                 orderOptionIcon: .bolt,
                 cornerRadius: 12,
                 background: .red.opacity(0.2)
-            )
+            ),
+            makeIconView: { _ in EmptyView() }
         )
     }
 }
