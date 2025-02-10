@@ -19,41 +19,23 @@ struct QRWrapperView: View {
         
         RxWrapperView(model: binder.flow) { state, event in
             
-            ZStack {
-                
-                factory.makeQRView(binder.content.qrScanner)
-                // TODO: fix alert, see MainViewModel.swift:1345
-                    .alert(
-                        item: state.navigation?.alert,
-                        content: alert
-                    )
-                    .navigationDestination(
-                        destination: state.navigation?.destination,
-                        dismiss: { event(.dismiss) },
-                        content: destinationContent
-                    )
-                    .fullScreenCover(
-                        cover: state.navigation?.fullScreenCover,
-                        content: fullScreenCoverContent
-                    )
-                    .accessibilityIdentifier(ElementIDs.qrScanner.rawValue)
-                
-                spinnerView(isShowing: state.isLoading)
-                    .ignoresSafeArea()
-            }
+            factory.makeQRView(binder.content.qrScanner)
+            // TODO: fix alert, see MainViewModel.swift:1345
+                .alert(
+                    item: state.navigation?.alert,
+                    content: alert
+                )
+                .navigationDestination(
+                    destination: state.navigation?.destination,
+                    dismiss: { event(.dismiss) },
+                    content: destinationContent
+                )
+                .fullScreenCover(
+                    cover: state.navigation?.fullScreenCover,
+                    content: fullScreenCoverContent
+                )
+                .accessibilityIdentifier(ElementIDs.qrScanner.rawValue)
         }
-    }
-}
-
-private extension QRWrapperView {
-    
-    func spinnerView(
-        isShowing: Bool
-    ) -> some View {
-        
-        SpinnerView(viewModel: .init())
-            .opacity(isShowing ? 1 : 0)
-            .animation(.easeInOut, value: isShowing)
     }
 }
 

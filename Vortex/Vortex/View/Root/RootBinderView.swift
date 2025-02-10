@@ -17,25 +17,13 @@ struct RootBinderView: View {
         
         RxWrapperView(model: binder.flow) { state, event in
             
-            ZStack {
-                
-                rootViewInNavigationView(state: state, event: event)
-                spinnerView(isShowing: state.isLoading)
-            }
+            rootViewInNavigationView(state: state, event: event)
+                .loader(isLoading: state.isLoading)
         }
     }
 }
 
 private extension RootBinderView {
-    
-    func spinnerView(
-        isShowing: Bool
-    ) -> some View {
-        
-        SpinnerView(viewModel: .init())
-            .opacity(isShowing ? 1 : 0)
-            .animation(.easeInOut, value: isShowing)
-    }
     
     func rootViewInNavigationView(
         state: RootViewDomain.FlowDomain.State,
@@ -149,17 +137,20 @@ private extension RootBinderView {
     }
     
     private func qrScannerView(
-        _ qrScanner: QRScannerDomain.Binder
+        _ binder: QRScannerDomain.Binder
     ) -> some View {
         
-        NavigationView {
+        RxWrapperView(model: binder.flow) { state, _ in
             
-            rootViewFactory.makeQRScannerView(qrScanner)
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationBarHidden(true)
+            NavigationView {
+                
+                rootViewFactory.makeQRScannerView(binder)
+                    .navigationBarHidden(true)
+            }
+            .navigationViewStyle(.stack)
+            .accessibilityIdentifier(ElementIDs.rootView(.qrFullScreenCover).rawValue)
+            .loader(isLoading: state.isLoading)
         }
-        .navigationViewStyle(.stack)
-        .accessibilityIdentifier(ElementIDs.rootView(.qrFullScreenCover).rawValue)
     }
 }
 
