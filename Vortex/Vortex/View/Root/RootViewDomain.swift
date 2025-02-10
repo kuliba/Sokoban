@@ -18,7 +18,7 @@ extension RootViewDomain {
 enum RootViewSelect: Equatable {
     
     case openProduct(OpenProductType)
-    case orderCardResult(OpenCardDomain.OrderCardResult)
+    case orderCardResponse(OpenCardDomain.OrderCardResponse)
     case outside(RootViewOutside)
     case scanQR
     case standardPayment(ServiceCategory.CategoryType)
@@ -41,7 +41,7 @@ enum RootViewNavigation {
     
     case failure(Failure)
     case openProduct(OpenProduct)
-    case orderCardResult(OpenCardDomain.OrderCardResult)
+    case orderCardResponse(OpenCardDomain.OrderCardResponse)
     case outside(RootViewOutside)
     case scanQR(Node<QRScannerDomain.Binder>)
     case standardPayment(Node<PaymentProviderPickerDomain.Binder>)

@@ -10,7 +10,7 @@ extension RootViewModelFactory {
     @inlinable
     func openProduct(
         type: OpenProductType,
-        notify: @escaping (OpenCardDomain.OrderCardResult) -> Void
+        notify: @escaping (OpenCardDomain.OrderCardResponse) -> Void
     ) -> OpenProduct {
         
         switch type {

@@ -26,13 +26,13 @@ extension RootViewModelFactory {
         completion: @escaping (RootViewNavigation) -> Void
     ) {
         switch select {
-        case let .orderCardResult(orderCardResult):
-            completion(.orderCardResult(orderCardResult))
+        case let .orderCardResponse(orderCardResponse):
+            completion(.orderCardResponse(orderCardResponse))
             
         case let .openProduct(type):
             completion(.openProduct(openProduct(
                 type: type,
-                notify: { notify(.select(.orderCardResult($0))) }
+                notify: { notify(.select(.orderCardResponse($0))) }
             )))
             
         case let .outside(outside):

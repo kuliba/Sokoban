@@ -139,6 +139,7 @@ extension Services {
             case unblockCard
             case updateFastPaymentContract
             case userVisibilityProductsSettings
+            case createCardApplication
         }
     }
 }
@@ -566,5 +567,11 @@ extension Services.Endpoint {
         pathPrefix: .rest,
         version: .v1,
         serviceName: .createDraftCollateralLoanApplication
+    )
+    
+    static let createCardApplication: Self = .init(
+        pathPrefix: .rest,
+        version: .v2,
+        serviceName: .createCardApplication
     )
 }

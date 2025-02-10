@@ -139,10 +139,8 @@ private extension RootBinderView {
     ) -> some View {
         
         switch fullScreenCover {
-        case let .orderCardResult(orderCardResult):
-            Button(String(describing: orderCardResult)) {
-                
-                binder.flow.event(.dismiss)
+        case let .orderCardResponse(response):
+            rootViewFactory.components.makeOrderCardCompleteView(response) { binder.flow.event(.dismiss)
             }
             
         case let .scanQR(qrScanner):
@@ -218,7 +216,7 @@ extension RootViewNavigation {
         case let .openProduct(openProduct):
             return .openProduct(openProduct)
             
-        case .orderCardResult:
+        case .orderCardResponse:
             return nil
             
         case let .outside(outside):
@@ -265,8 +263,8 @@ extension RootViewNavigation {
         case .openProduct, .outside:
             return nil
             
-        case let .orderCardResult(orderCardResult):
-               return .orderCardResult(orderCardResult)
+        case let .orderCardResponse(orderCardResponse):
+               return .orderCardResponse(orderCardResponse)
             
         case let .scanQR(node):
             return .scanQR(node.model)
@@ -279,7 +277,7 @@ extension RootViewNavigation {
     
     enum FullScreenCover {
         
-        case orderCardResult(OpenCardDomain.OrderCardResult)
+        case orderCardResponse(OpenCardDomain.OrderCardResponse)
         case scanQR(QRScannerDomain.Binder)
     }
 }
@@ -337,8 +335,8 @@ extension RootViewNavigation.FullScreenCover: Identifiable {
     var id: ID {
         
         switch self {
-        case .orderCardResult:
-            return .orderCardResult
+        case .orderCardResponse:
+            return .orderCardResponse
             
         case let .scanQR(qrRScanner):
             return .scanQR(.init(qrRScanner))
@@ -347,7 +345,7 @@ extension RootViewNavigation.FullScreenCover: Identifiable {
     
     enum ID: Hashable {
         
-        case orderCardResult
+        case orderCardResponse
         case scanQR(ObjectIdentifier)
     }
 }

@@ -32,6 +32,7 @@ let package = Package(
         .collateralLoanLandingGetShowcaseUI,
         .collateralLoanLandingSaveConsentsBackend,
         .orderCardLandingBackend,
+        .createCardApplicationBackend,
         // Infra
         .ephemeralStores,
         .fetcher,
@@ -167,6 +168,7 @@ let package = Package(
         .collateralLoanLandingSaveConsentsBackendTests,
         .orderCardLandingBackend,
         .orderCardLandingBackendTests,
+        .createCardApplicationBackend,
         // Infra
         .ephemeralStores,
         .ephemeralStoresTests,
@@ -509,6 +511,14 @@ private extension Product {
             .orderCardLandingBackend
         ]
     )
+    
+    static let createCardApplicationBackend = library(
+        name: .createCardApplicationBackend,
+        targets: [
+            .createCardApplicationBackend
+        ]
+    )
+    
     // MARK: - UI
     
     static let activateSlider = library(
@@ -1472,6 +1482,14 @@ private extension Target {
         path: "Tests/Landing/\(String.collateralLoanTests)/\(String.GetCollateralLanding)Tests/Backend/V1"
     )
 
+    static let createCardApplicationBackend = target(
+        name: .createCardApplicationBackend,
+        dependencies: [
+            .remoteServices
+        ],
+        path: "Sources/Landing/\(String.createCardApplicationBackend)"
+    )
+    
     static let orderCardLandingBackend = target(
         name: .orderCardLandingBackend,
         dependencies: [
@@ -3478,6 +3496,10 @@ private extension Target.Dependency {
         name: .orderCardLandingBackend
     )
     
+    static let createCardApplicationBackend = byName(
+        name: .createCardApplicationBackend
+    )
+    
     static let serverAgent = byName(
         name: .serverAgent
     )
@@ -3954,6 +3976,8 @@ private extension String {
     
     static let orderCardLandingBackend = "OrderCardLandingBackend"
     static let orderCardLandingBackendTests = "OrderCardLandingBackendTests"
+    
+    static let createCardApplicationBackend = "CreateCardApplication"
     // MARK: - UI
     
     static let activateSlider = "ActivateSlider"
