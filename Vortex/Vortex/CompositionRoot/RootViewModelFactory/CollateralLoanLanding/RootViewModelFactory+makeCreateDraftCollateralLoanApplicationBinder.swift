@@ -50,8 +50,7 @@ extension RootViewModelFactory {
         let effectHandler = Domain.EffectHandler(
             createDraftApplication: createDraftApplication(payload:completion:),
             getVerificationCode: getVerificationCode(completion:),
-            saveConsents: {
-                payload, completion in
+            saveConsents: { payload, completion in
                 
                 self.saveConsents(payload: payload) {
                     completion($0)
@@ -59,9 +58,7 @@ extension RootViewModelFactory {
 
                 // For tests only: completion(.success(.preview))
             },
-            confirm: { [weak self] event in
-                
-                guard let self else { return }
+            confirm: { event in
                 
                 let model = self.makeTimedOTPInputViewModel(
                     timerDuration: self.settings.otpDuration,
@@ -183,7 +180,7 @@ extension RootViewModelFactory {
         
         saveConsents(payload.payload) { [saveConsents] in
             
-            completion($0.map(\.response).mapError { $0 })
+            completion($0.map(\.response))
             _ = saveConsents
         }
     }
@@ -200,7 +197,7 @@ extension RootViewModelFactory {
         
         saveConsents(payload.payload) { [saveConsents] in
             
-            completion($0.map(\.response).mapError { $0 })
+            completion($0.map(\.response))
             _ = saveConsents
         }
     }
@@ -243,22 +240,14 @@ private extension CreateDraftCollateralLoanApplicationDomain.LoadResultFailure {
     init(
         error: RemoteServiceErrorOf<RemoteServices.ResponseMapper.MappingError>
     ) {
-        switch error {
-            
-        case let .createRequest(createRequestError):
-            self = Self(error: .createRequest(createRequestError))
-            
-        case let .performRequest(performRequestError):
-            self = Self(error: .performRequest(performRequestError))
-            
-        case let .mapResponse(mapResponseError):
-            switch mapResponseError {
-            case .invalid:
-                self = Self(message: error.localizedDescription)
-                
-            case .server(_, errorMessage: let errorMessage):
-                self = Self(message: errorMessage)
-            }
+        if case let .mapResponse(response) = error,
+           case let .server(_, errorMessage) = response
+        {
+
+            self = Self(message: errorMessage)
+        } else {
+
+            self = Self(message: error.localizedDescription)
         }
     }
 }
