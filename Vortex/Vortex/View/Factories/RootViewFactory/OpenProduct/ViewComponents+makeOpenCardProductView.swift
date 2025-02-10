@@ -107,17 +107,12 @@ extension ViewComponents {
         state: OpenCardDomain.State,
         action: @escaping () -> Void
     ) -> some View {
-        
-        PaymentComponents.ButtonView.goToMain(
-            title: state.continueButtonTitle,
-            goToMain: action
+    
+        StatefulButtonView(
+            isActive: state.isValid,
+            event: action,
+            config: .iVortex(title: state.hasConfirmation ? "Заказать карту" : "Продолжить")
         )
-        // TODO: replace with config with button colors and title //
-        .saturation(state.isLoading ? 0 : 1)
-        .opacity(!state.isValid ? 0.3 : 1)
-        .saturation(!state.isValid ? 0 : 1)
-        .disabled(!state.isValid)
-        .loaderOverlay(isLoading: state.isLoading)
     }
     
     @inlinable

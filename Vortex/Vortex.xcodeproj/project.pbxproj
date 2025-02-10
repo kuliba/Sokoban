@@ -3150,6 +3150,7 @@
 		C16DDBEE2B2C95BA001BF988 /* QRPaymentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16DDBED2B2C95BA001BF988 /* QRPaymentType.swift */; };
 		C16DDBF02B2C9A67001BF988 /* Model+QRHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16DDBEF2B2C9A67001BF988 /* Model+QRHelpers.swift */; };
 		C16DDBF42B314E26001BF988 /* GetSberQRDataResult+emptySuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16DDBF32B314E26001BF988 /* GetSberQRDataResult+emptySuccess.swift */; };
+		C17094322D5A285B001E3094 /* StatefulButtonConfig+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17094312D5A285B001E3094 /* StatefulButtonConfig+iVortex.swift */; };
 		C172098C2A9E28EC0020CE93 /* ProductDataFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C172098B2A9E28EC0020CE93 /* ProductDataFilterTests.swift */; };
 		C1722C312989454B00C503E3 /* GetCountriesWithServiceResponseGenericFromServer.json in Resources */ = {isa = PBXBuildFile; fileRef = C1722C302989454B00C503E3 /* GetCountriesWithServiceResponseGenericFromServer.json */; };
 		C1722C352989613E00C503E3 /* CountyWithServiceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1722C342989613E00C503E3 /* CountyWithServiceData.swift */; };
@@ -6770,6 +6771,7 @@
 		C16DDBED2B2C95BA001BF988 /* QRPaymentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRPaymentType.swift; sourceTree = "<group>"; };
 		C16DDBEF2B2C9A67001BF988 /* Model+QRHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+QRHelpers.swift"; sourceTree = "<group>"; };
 		C16DDBF32B314E26001BF988 /* GetSberQRDataResult+emptySuccess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "GetSberQRDataResult+emptySuccess.swift"; sourceTree = "<group>"; };
+		C17094312D5A285B001E3094 /* StatefulButtonConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StatefulButtonConfig+iVortex.swift"; sourceTree = "<group>"; };
 		C172098B2A9E28EC0020CE93 /* ProductDataFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDataFilterTests.swift; sourceTree = "<group>"; };
 		C1722C302989454B00C503E3 /* GetCountriesWithServiceResponseGenericFromServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetCountriesWithServiceResponseGenericFromServer.json; sourceTree = "<group>"; };
 		C1722C342989613E00C503E3 /* CountyWithServiceData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountyWithServiceData.swift; sourceTree = "<group>"; };
@@ -8870,6 +8872,7 @@
 			children = (
 				83A3F5B02C9432B800CE8B3B /* BannerPickerSectionStateItemViewConfig+iVortex.swift */,
 				2A5AEF282B7A191B00E935B6 /* ButtonConfig+iVortex.swift */,
+				C17094312D5A285B001E3094 /* StatefulButtonConfig+iVortex.swift */,
 				2A1F5E812C26EA0D002B3F65 /* ButtonStateConfig+ext.swift */,
 				2A2B91E32C7CB981008F5186 /* CategoryPickerSectionStateItemLabelConfig+iVortex.swift */,
 				2A2B91E12C7CB894008F5186 /* CategoryPickerSectionContentViewConfig+iVortex.swift */,
@@ -21786,6 +21789,7 @@
 				77DA206428453ADB00D7E005 /* MeToMeView+Legacy.swift in Sources */,
 				2A5D2FBD2BF33D6F00BC3092 /* UtilityPrepaymentFlowMicroServices.swift in Sources */,
 				ED664BB7274530320050D1E0 /* AccountStatementPDFController.swift in Sources */,
+				C17094322D5A285B001E3094 /* StatefulButtonConfig+iVortex.swift in Sources */,
 				C13D8F6B2C9B16E800A79263 /* HistoryEffectHandler.swift in Sources */,
 				2AD8243B2C8712CC0007B8DF /* PaymentsTransfersPersonalViewConfig+iVortex.swift in Sources */,
 				2A3EB71C29B1098C002A1309 /* Config.swift in Sources */,
