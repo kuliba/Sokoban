@@ -357,7 +357,7 @@ private extension OrderCard.Messages {
     ) -> Self {
 
         return .init(
-            description: getAttributedText(
+            description: description(
                 description: "Присылаем пуш-уведомления по операциям,\nесли не доходят - отправляем смс.\nС тарифами за услугу согласен.",
                 tariffURL: tariffLink
             ),
@@ -371,7 +371,7 @@ private extension OrderCard.Messages {
 
 private extension OrderCard.Messages {
 
-    static func getAttributedText(
+    static func description(
         description: String,
         tariffURL: URL
     ) -> AttributedString {
