@@ -91,7 +91,7 @@ enum OrderCard { // TODO: replace stub with types from module
         var consent = true
         var messages: Messages
         var otp: String?
-        var orderCardResult: OrderCardResult?
+        var orderCardResponse: OrderCardResponse?
         
         struct Messages: Equatable {
             
@@ -151,8 +151,15 @@ enum OrderCard { // TODO: replace stub with types from module
     typealias OrderCardResponse = Bool
     
     final class Reducer<Confirmation> {
+
+        private let otpWitness: OTPWitness
+        typealias OTPWitness = (Confirmation) -> (String) -> Void
         
-        init() {}
+        init(
+            otpWitness: @escaping OTPWitness
+        ) {
+            self.otpWitness = otpWitness
+        }
         
         func reduce(
             _ state: State,
@@ -187,7 +194,17 @@ enum OrderCard { // TODO: replace stub with types from module
                 }
                 
             case let .orderCardResult(orderCardResult):
-                state.form?.orderCardResult = orderCardResult
+                // TODO: extract to helper
+                state.isLoading = false
+                
+                switch orderCardResult {
+                case let .failure(loadFailure):
+                    let notifyOTP = state.form?.confirmation?.success.map(otpWitness)
+                    notifyOTP?(loadFailure.message)
+                    
+                case let .success(orderCardResponse):
+                    state.form?.orderCardResponse = orderCardResponse
+                }
                 
             case let .otp(otp):
                 if !state.isLoading && state.hasConfirmation {

@@ -11,6 +11,7 @@ import Foundation
 import GetCardOrderFormService
 import OTPInputComponent
 import RemoteServices
+import GenericRemoteService
 
 extension RootViewModelFactory {
     
@@ -23,7 +24,7 @@ extension RootViewModelFactory {
         content.event(.load)
         
         let cancellable = content.$state
-            .compactMap(\.form?.orderCardResult?.success)
+            .compactMap(\.form?.orderCardResponse)
             .sink { notify($0) }
         
         let binder = composeBinder(
@@ -43,7 +44,10 @@ extension RootViewModelFactory {
         initialState: OpenCardDomain.State = .init()
     ) -> OpenCardDomain.Content {
         
-        let reducer = OpenCardDomain.Reducer()
+        let reducer = OpenCardDomain.Reducer { confirmation in
+            
+            { confirmation.otp.event(.otpField(.failure(.serverError($0)))) }
+        }
         let effectHandler = OpenCardDomain.EffectHandler(
             load: load,
             loadConfirmation: loadConfirmation,
@@ -101,6 +105,7 @@ extension RootViewModelFactory {
         dismissInformer: @escaping () -> Void,
         completion: @escaping (OpenCardDomain.LoadFormResult) -> Void
     ) {
+        // TODO: add `onBackground` overload with response mapping
         let service = onBackground(
             makeRequest: RequestFactory.createGetCardOrderFormRequest,
             mapResponse: RemoteServices.ResponseMapper.mapGetCardOrderFormResponse
@@ -108,42 +113,12 @@ extension RootViewModelFactory {
         
         service { [weak self] in
             
-            let result: OpenCardDomain.LoadFormResult
-            
-            switch $0 {
-            case let .failure(failure):
-                result = .failure(failure.loadFailure)
-                
-            case let .success(response):
-                guard let digital = response.digital else {
-                    
-                    return completion(.failure(.init(
-                        message: "Что-то пошло не так.\nПопробуйте позже.",
-                        type: .alert
-                    )))
-                }
-                
-                result = .success(.init(
-                    requestID: UUID().uuidString.lowercased(),
-                    cardApplicationCardType: digital.type,
-                    cardProductExtID: digital.id,
-                    cardProductName: digital.title,
-                    messages: .init(
-                        description: "",
-                        icon: "",
-                        subtitle: "",
-                        title: "",
-                        isOn: false
-                    )
-                ))
-            }
-            
             if case .informer = $0.loadFailure?.type {
                 
                 self?.schedulers.background.delay(for: .seconds(2), dismissInformer)
             }
             
-            completion(result)
+            completion($0.loadFormResult)
         }
     }
     
@@ -207,28 +182,7 @@ extension RootViewModelFactory {
         // TODO: use `onBackground` to create service
         let service = nanoServiceComposer.compose(
             createRequest: RequestFactory.createCardApplicationRequest,
-            mapResponse: { data, response in
-                
-#warning("extract helper")
-                let result = RemoteServices.ResponseMapper.mapCreateCardApplicationResponse(data, response)
-                
-                switch result {
-                case .failure(.server(statusCode: 102, errorMessage: "Введен некорректный код. Попробуйте еще раз.")):
-                    return OpenCardDomain.OrderCardResult.failure(.init(message: "Введен некорректный код. Попробуйте еще раз.", type: .alert))
-                    
-                case .failure:
-                    return .success(false)
-                    
-                case let .success(response):
-                    switch response.status {
-                    case "SUBMITTED_FOR_REVIEW", "DRAFT":
-                        return OpenCardDomain.OrderCardResult.success(true)
-                        
-                    default:
-                        return .success(false)
-                    }
-                }
-            }
+            mapResponse: ResponseMapper.mapCreateCardApplicationServiceResponse
         )
         
         // TODO: use `onBackground` to create service
@@ -240,6 +194,21 @@ extension RootViewModelFactory {
                 _ = service
             }
         }
+    }
+}
+
+// MARK: - Helpers
+
+private extension ResponseMapper {
+    
+    static func mapCreateCardApplicationServiceResponse(
+        _ data: Data,
+        _ response: HTTPURLResponse
+    ) -> OpenCardDomain.OrderCardResult {
+        
+        let result = RemoteServices.ResponseMapper.mapCreateCardApplicationResponse(data, response)
+        
+        return result.orderCardResult
     }
 }
 
@@ -268,25 +237,7 @@ private extension OrderCard.Form {
     
     var failure: OrderCard.LoadFailure? {
         
-        confirmation?.failure ?? orderCardResult?.failure
-    }
-}
-
-#warning("extract as reusable helper")
-private extension Result {
-    
-    var failure: Failure? {
-        
-        guard case let .failure(failure) = self else { return nil }
-        
-        return failure
-    }
-    
-    var success: Success? {
-        
-        guard case let .success(success) = self else { return nil }
-        
-        return success
+        confirmation?.failure// ?? orderCardResult?.failure
     }
 }
 
@@ -294,12 +245,30 @@ private extension Error {
     
     var loadFailure: OrderCard.LoadFailure {
         
-        switch self as? RemoteServices.ResponseMapper.MappingError {
-        case let .server(_, errorMessage: errorMessage):
-            return .init(message: errorMessage, type: .alert)
+        switch self {
+        case let failure as OrderCard.LoadFailure:
+            return failure
+            
+        case let failure as RemoteServiceError<Error, Error, OrderCard.LoadFailure>:
+            switch failure {
+            case let .mapResponse(failure):
+                return failure
+                
+            default:
+                return .tryLaterInformer
+            }
+            
+        case let mappingError as RemoteServices.ResponseMapper.MappingError:
+            switch mappingError {
+            case let .server(_, errorMessage):
+                return .init(message: errorMessage, type: .alert)
+                
+            default:
+                return .tryLaterInformer
+            }
             
         default:
-            return .init(message: "Что-то пошло не так.\nПопробуйте позже.", type: .informer)
+            return .tryLaterInformer
         }
     }
 }
@@ -329,16 +298,46 @@ private extension OpenCardDomain.OrderCardPayload {
     }
 }
 
-//private extension Result where Success == CreateCardApplicationResponse {
-//    
-//    var orderCardResult: OpenCardDomain.OrderCardResult {
-//        
-//        return .init(
-//            requestID: requestId,
-//            status: status == "SUBMITTED_FOR_REVIEW" || status == "DRAFT"
-//        )
-//    }
-//}
+private extension Result
+where Success == RemoteServices.ResponseMapper.GetCardOrderFormDataResponse {
+    
+    var loadFormResult: OpenCardDomain.LoadFormResult {
+        
+        switch self {
+        case let .failure(failure):
+            return .failure(failure.loadFailure)
+            
+        case let .success(response):
+            let form = response.digital?.form
+            return form.map { .success($0) } ?? .failure(.tryLaterAlert)
+        }
+    }
+}
+
+private extension RemoteServices.ResponseMapper.GetCardOrderFormData.Item {
+    
+    var form: OrderCard.Form<OpenCardDomain.Confirmation> {
+        
+        return .init(
+            requestID: UUID().uuidString.lowercased(),
+            cardApplicationCardType: type,
+            cardProductExtID: id,
+            cardProductName: title,
+            messages: .default
+        )
+    }
+}
+
+private extension OrderCard.Form<OpenCardDomain.Confirmation>.Messages {
+    
+    static let `default`: Self = .init(
+        description: "",
+        icon: "",
+        subtitle: "",
+        title: "",
+        isOn: false
+    )
+}
 
 private extension RemoteServices.ResponseMapper.GetCardOrderFormDataResponse {
     
@@ -351,4 +350,43 @@ private extension RemoteServices.ResponseMapper.GetCardOrderFormDataResponse {
         
         list.flatMap(\.list)
     }
+}
+
+private extension RemoteServices.ResponseMapper.MappingResult<CreateCardApplicationResponse> {
+    
+    var orderCardResult: OpenCardDomain.OrderCardResult {
+        
+        switch self {
+        case let .failure(failure):
+            switch failure {
+            case .server(statusCode: 102, errorMessage: ._invalidCode):
+                return .failure(.invalidCodeAlert)
+                
+            default:
+                return .success(false)
+            }
+            
+        case let .success(response):
+            switch response.status {
+            case "SUBMITTED_FOR_REVIEW", "DRAFT":
+                return .success(true)
+                
+            default:
+                return .success(false)
+            }
+        }
+    }
+}
+
+private extension OpenCardDomain.LoadFailure {
+    
+    static let invalidCodeAlert: Self = .init(message: ._invalidCode, type: .alert)
+    static let tryLaterAlert: Self = .init(message: ._tryLater, type: .alert)
+    static let tryLaterInformer: Self = .init(message: ._tryLater, type: .informer)
+}
+
+private extension String {
+    
+    static let _invalidCode = "Введен некорректный код. Попробуйте еще раз."
+    static let _tryLater = "Что-то пошло не так.\nПопробуйте позже."
 }
