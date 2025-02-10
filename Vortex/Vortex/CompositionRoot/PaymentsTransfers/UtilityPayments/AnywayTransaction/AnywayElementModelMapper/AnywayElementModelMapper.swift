@@ -323,7 +323,8 @@ extension ContactsViewModel {
     }
 }
 
-private extension TimedOTPInputViewModel {
+// TODO: extract and  reuse
+/*private*/ extension TimedOTPInputViewModel {
     
     convenience init(
         otpText: String,

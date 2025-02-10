@@ -5,7 +5,6 @@
 //  Created by Valentin Ozerov on 16.01.2025.
 //
 
-import AnywayPaymentCore
 import Foundation
 import InputComponent
 import OptionalSelectorComponent
