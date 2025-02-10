@@ -63,6 +63,12 @@ extension MessageViewConfig {
                 textColor: .textPlaceholder
             )
         ),
+        
+        linkableText: .init(
+            text: "Присылаем пуш-уведомления, если не доходят - отправляем смс. С <u>тарифами</u> за услугу согласен.",
+            tag: ("<u>", "</u>"),
+            tariff: "link" //TOOD: setup link
+        ),
         toggle: .init(colors: .init(on: .systemColorActive, off: .black))
     )
 }

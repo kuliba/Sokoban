@@ -7,6 +7,7 @@
 
 import SharedConfigs
 import SwiftUI
+import LinkableText
 
 public struct MessageViewConfig {
     
@@ -14,6 +15,7 @@ public struct MessageViewConfig {
     public let title: TitleConfig
     public let subtitle: TitleConfig
     public let description: TitleConfig
+    public let linkableText: LinkableTexts
     public let toggle: SharedConfigs.ToggleConfig
     
     public init(
@@ -21,12 +23,31 @@ public struct MessageViewConfig {
         title: TitleConfig,
         subtitle: TitleConfig,
         description: TitleConfig,
+        linkableText: LinkableTexts,
         toggle: SharedConfigs.ToggleConfig
     ) {
         self.icon = icon
         self.title = title
         self.subtitle = subtitle
         self.description = description
+        self.linkableText = linkableText
         self.toggle = toggle
+    }
+    
+    public struct LinkableTexts {
+        
+        let text: String
+        let tag: LinkableText.Tag
+        let tariff: String
+        
+        public init(
+            text: String,
+            tag: LinkableText.Tag = ("<u>", "</u>"),
+            tariff: String
+        ) {
+            self.text = text
+            self.tag = tag
+            self.tariff = tariff
+        }
     }
 }

@@ -110,6 +110,6 @@ public extension ResponseMapper.GetCardOrderFormData.Item.Fee {
     
     var free: String {
         
-        self.open == "0" ? "Бусплатно" : self.open
+        self.open == "0" ? "Бесплатно" : self.open
     }
 }
