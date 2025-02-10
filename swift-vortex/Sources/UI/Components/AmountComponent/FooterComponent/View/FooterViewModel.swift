@@ -20,8 +20,7 @@ public final class FooterViewModel: ObservableObject {
     private let format: Format
     private let stateSubject = PassthroughSubject<State, Never>()
     private var cancellables = Set<AnyCancellable>()
-    private var hasSetInitialValue = false
-    
+        
     public init(
         initialState: State,
         reduce: @escaping Reduce,
@@ -35,55 +34,19 @@ public final class FooterViewModel: ObservableObject {
         self.reduce = reduce
         self.format = format
         
-        setupTextFieldSubscription(getDecimal: getDecimal, scheduler: scheduler)
-        setupStateSubscription(scheduler: scheduler)
-        setupInitialValue(initialState: initialState)
-    }
-    
-    private func setupTextFieldSubscription(
-        getDecimal: @escaping GetDecimal,
-        scheduler: AnySchedulerOfDispatchQueue
-    ) {
+        textFieldModel.setText(to: format(initialState.amount))
+        
         textFieldModel.$state
+            .dropFirst()
             .map(getDecimal)
-            .removeDuplicates()
+            .removeDuplicates(by: { $0.distance(to: $1).isLess(than: 0.01) })
             .receive(on: scheduler)
-            .sink { [weak self] newAmount in
-                
-                guard let self = self, self.hasSetInitialValue else { return }
-                self.state.amount = newAmount
-            }
+            .sink { [weak self] in self?.state.amount = $0 }
             .store(in: &cancellables)
-    }
-    
-    private func setupStateSubscription(
-        scheduler: AnySchedulerOfDispatchQueue
-    ) {
+        
         stateSubject
             .receive(on: scheduler)
-            .sink { [weak self] newState in
-                
-                guard let self = self else { return }
-                self.state = newState
-                
-                if let formattedValue = self.format(newState.amount) {
-                    self.textFieldModel.setText(to: formattedValue)
-                }
-            }
-            .store(in: &cancellables)
-    }
-    
-    private func setupInitialValue(initialState: State) {
-        
-        DispatchQueue.main.async { [weak self] in
-            
-            guard let self = self else { return }
-            
-            if let formattedValue = self.format(initialState.amount) {
-                self.textFieldModel.setText(to: formattedValue)
-                self.hasSetInitialValue = true
-            }
-        }
+            .assign(to: &$state)
     }
 }
 
