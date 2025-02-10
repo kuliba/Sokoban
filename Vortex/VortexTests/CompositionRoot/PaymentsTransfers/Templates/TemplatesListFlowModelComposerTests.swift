@@ -156,7 +156,8 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
                         puref: anyMessage(),
                         title: anyMessage(),
                         subtitle: nil,
-                        icon: nil
+                        icon: nil,
+                        templateID: nil
                     )
                 ),
                 shouldRestart: false,

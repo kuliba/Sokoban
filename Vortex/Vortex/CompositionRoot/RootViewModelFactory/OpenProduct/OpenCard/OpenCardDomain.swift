@@ -57,11 +57,10 @@ enum OpenCardDomain {
     struct Confirmation {
         
         let otp: TimedOTPInputViewModel
-        var consent: Consent
+        let consent: Consent
         
         struct Consent {
             
-            var check: Bool
             let description: AttributedString
         }
     }

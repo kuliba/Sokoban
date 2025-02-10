@@ -41,7 +41,7 @@ final class RootViewFactoryComposer {
         let defaultImage: Image = savingsAccountFlag.isActive ? .defaultSavingsAccount : .defaultLanding
         self.infra = .init(
             imageCache: model.imageCache(),
-            generalImageCache: model.generalImageCache(),
+            generalImageCache: model.generalImageCache(defaultImage),
             getUImage: { model.images.value[$0]?.uiImage }
         )
         self.model = model
@@ -826,7 +826,8 @@ private extension RootViewFactoryComposer {
                         result: $0.result.mapError {
                             
                             return .init(hasExpired: $0.hasExpired)
-                        }
+                        },
+                        templateID: $0.templateID
                     ),
                     goToMain: { flowModel.event(.goTo(.main)) })
             }
@@ -945,14 +946,25 @@ private extension RootViewFactoryComposer {
         with completed: Completed
     ) -> () -> TemplateButtonStateWrapperView? {
         
-        return {
+        return { [weak self] in
+            
+            guard let self else { return nil }
             
             guard let report = try? completed.result.get(),
-                  let operationDetail = report.info.operationDetail
+                  let operationDetail = report.info.operationDetail,
+                  let templateID = completed.templateID,
+                  let template = model.paymentTemplates.value.first(matching: templateID)
             else { return nil }
             
             let viewModel = TemplateButtonStateWrapperView.ViewModel(
-                model: self.model,
+                model: model,
+                state: TemplateButton.templateButtonState(
+                    model: model,
+                    template: template,
+                    operation: nil,
+                    meToMePayment: nil,
+                    detail: operationDetail
+                ),
                 operation: nil,
                 operationDetail: operationDetail
             )
