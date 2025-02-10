@@ -42,7 +42,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeContent(
-        initialState: OpenCardDomain.State = .init()
+        initialState: OpenCardDomain.State = .init(loadableForm: .loaded(nil))
     ) -> OpenCardDomain.Content {
         
         let reducer = OpenCardDomain.Reducer { confirmation in
@@ -137,7 +137,11 @@ extension RootViewModelFactory {
             resend: { service { _ in }}, // fire and forget
             observe: { notify(.otp($0)) }
         )
-        let consent = OpenCardDomain.Confirmation.Consent(check: true)
+        #warning("USE CONDITION AND TARIFF URL TO CREATE CONSENT DESCRIPTION")
+        let consent = OpenCardDomain.Confirmation.Consent(
+            check: true,
+            description: "Я соглашаюсь с Условиями и Тарифами"
+        )
         
         service { [weak self] in
             
@@ -230,7 +234,7 @@ private extension OpenCardDomain.State {
     
     var failure: OpenCardDomain.LoadFailure? {
         
-        return formResult?.failure ?? form?.failure
+        return form?.failure ?? form?.failure
     }
 }
 
@@ -238,7 +242,9 @@ private extension OrderCard.Form {
     
     var failure: OrderCard.LoadFailure? {
         
-        confirmation?.failure// ?? orderCardResult?.failure
+        guard case let .loaded(.failure(failure)) = confirmation else { return nil }
+        
+        return failure
     }
 }
 
@@ -309,48 +315,90 @@ where Success == RemoteServices.ResponseMapper.GetCardOrderFormDataResponse {
             return .failure(failure.loadFailure)
             
         case let .success(response):
-            let form = response.digital?.form
-            return form.map { .success($0) } ?? .failure(.tryLaterAlert)
+            if let digital = response.digital {
+                
+                return .success(digital.form())
+            } else {
+            
+                return .failure(.tryLaterAlert)
+            }
         }
     }
 }
 
-private extension RemoteServices.ResponseMapper.GetCardOrderFormData.Item {
+private extension CardProduct {
     
-    var form: OrderCard.Form<OpenCardDomain.Confirmation> {
+    func form() -> OrderCard.Form<OpenCardDomain.Confirmation> {
         
         return .init(
+            product: .init(
+                image: item.design,
+                header: (item.description, item.title),
+                orderOption: ("\(item.fee.free)", ("\(String(item.fee.maintenance.value)) \(item.currency.symbol)"))
+            ),
+            type: .init(
+                title: item.typeText
+            ),
+            conditions: conditions,
+            tariffs: tariffs,
             requestID: UUID().uuidString.lowercased(),
-            cardApplicationCardType: type,
-            cardProductExtID: id,
-            cardProductName: title,
-            messages: .default
+            cardApplicationCardType: item.type,
+            cardProductExtID: item.id,
+            cardProductName: item.title,
+            messages: .default(tariffs)
         )
     }
 }
 
-private extension OrderCard.Form<OpenCardDomain.Confirmation>.Messages {
+private extension OrderCard.Messages {
     
-    static let `default`: Self = .init(
-        description: "",
-        icon: "",
-        subtitle: "",
-        title: "",
-        isOn: false
-    )
+    static func `default`(
+        _ tariffLink: URL
+    ) -> Self {
+        
+        #warning("ADD TARIFF LINK TO DESCRIPTION")
+        return .init(
+            description: "Присылаем пуш-уведомления, если не доходят - отправляем смс. С тарифами за услугу согласен.",
+            icon: "ic24MessageSquare",
+            subtitle: "Пуши и смс",
+            title: "Способ уведомлений",
+            isOn: false
+        )
+    }
 }
 
 private extension RemoteServices.ResponseMapper.GetCardOrderFormDataResponse {
     
-    var digital: RemoteServices.ResponseMapper.GetCardOrderFormData.Item? {
+    var digital: CardProduct? {
         
-        items.first { $0.type == "DIGITAL" }
+        cardProducts.first { $0.item.type == "DIGITAL" }
     }
     
-    var items: [RemoteServices.ResponseMapper.GetCardOrderFormData.Item] {
+    var cardProducts: [CardProduct] {
         
-        list.flatMap(\.list)
+        list.flatMap { product in
+            
+            product.list.compactMap { item in
+                
+                guard let conditions = URL(string: product.conditionsLink),
+                      let tariffs = URL(string: product.tariffLink)
+                else { return nil }
+                
+                return .init(
+                    conditions: conditions,
+                    tariffs: tariffs,
+                    item: item
+                )
+            }
+        }
     }
+}
+
+private struct CardProduct {
+    
+    let conditions: URL
+    let tariffs: URL
+    let item: RemoteServices.ResponseMapper.GetCardOrderFormData.Item
 }
 
 private extension RemoteServices.ResponseMapper.MappingResult<CreateCardApplicationResponse> {

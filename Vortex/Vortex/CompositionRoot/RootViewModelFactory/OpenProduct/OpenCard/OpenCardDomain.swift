@@ -6,6 +6,7 @@
 //
 
 import FlowCore
+import Foundation
 import OrderCard
 import OTPInputComponent
 import PayHub
@@ -41,12 +42,12 @@ enum OpenCardDomain {
     
     enum Select {
         
-        case failure(OrderCard.LoadFailure)
+        case failure(LoadFailure)
     }
     
     enum Navigation {
         
-        case failure(OrderCard.LoadFailure)
+        case failure(LoadFailure)
     }
     
     // MARK: - Other
@@ -61,6 +62,7 @@ enum OpenCardDomain {
         struct Consent {
             
             var check: Bool
+            let description: AttributedString
         }
     }
     

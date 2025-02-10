@@ -5,7 +5,9 @@
 //  Created by Igor Malyarov on 07.02.2025.
 //
 
+import OrderCard
 import OTPInputComponent
+import PaymentComponents
 import RxViewModel
 import SwiftUI
 
@@ -43,103 +45,79 @@ extension ViewComponents {
         
         RxWrapperView(model: content) { state, event in
             
-            switch state.formResult {
-            case .none, .failure:
-                RoundedRectangle(cornerRadius: 12)
-                    .foregroundStyle(.tertiary)
-                    ._shimmering(isActive: state.formResult == nil)
-                
-            case let .success(form):
-                switch form.confirmation {
-                case .none:
-                    VStack {
-                        
-                        Text("TBD: openCard Form without confirmation")
-                        
-                        Toggle(
-                            "SMS/Push Expanded",
-                            isOn: .init(
-                                get: { state.form?.messages.isOn ?? false },
-                                set: { event(.setMessages($0)) }
-                            )
-                        )
-                        
-                        Spacer()
-                        
-                        continueButton(isLoading: state.isLoading) {
-                            
-                            event(.continue)
-                        }
-                        .buttonStyle(.borderedProminent)
-                    }
-                    .disabled(state.isLoading)
+            OrderCard.OrderCardView(
+                state: state,
+                event: event,
+                config: .iVortex,
+                factory: .init(
+                    makeIconView: makeIconView,
+                    makeBannerImageView: makeGeneralIconView
+                ),
+                confirmationView: {
                     
-                case .failure:
-                    Text("TBD: openCard Form with confirmation failure")
-                        .foregroundStyle(.red)
-                    
-                case let .success(confirmation):
-                    VStack {
-                        
-                        Text("TBD: openCard Form with confirmation")
-                        
-                        Toggle(
-                            "SMS/Push Expanded",
-                            isOn: .init(
-                                get: { state.form?.messages.isOn ?? false },
-                                set: { event(.setMessages($0)) }
-                            )
-                        )
-                        
-                        makeOTPView(viewModel: confirmation.otp)
-                        
-                        HStack {
-                            
-                            PaymentsCheckView.CheckBoxView(
-                                isChecked: state.consent,
-                                activeColor: .systemColorActive
-                            )
-                            
-                            Text("Consent")
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .font(.textBodyMR14200())
-                                .foregroundColor(.textPlaceholder)
-                        }
-                        .onTapGesture { event(.setConsent(!state.consent)) }
-                        .animation(.easeInOut, value: state.consent)
-                        
-                        Spacer()
-                        
-                        Text(String(describing: state.payload))
-                            .foregroundStyle(.secondary)
-                        
-                        Spacer()
-                        
-                        continueButton(isLoading: state.isLoading) {
-                            
-                            event(.continue)
-                        }
-                        .disabled(!state.isValid)
-                    }
-                    .disabled(state.isLoading)
+                    confirmationView($0, state, event)
                 }
+            )
+            .safeAreaInset(edge: .bottom) {
+                
+                continueButton(state: state) { event(.continue) }
             }
+            .opacity(state.isLoading ? 0.7 : 1)
+            .disabled(state.isLoading)
+        }
+    }
+    
+    @ViewBuilder
+    private func confirmationView(
+        _ confirmation: OpenCardDomain.Confirmation,
+        _ state: OpenCardDomain.State,
+        _ event: @escaping (OpenCardDomain.Event) -> Void
+    ) -> some View {
+        
+        makeOTPView(viewModel: confirmation.otp)
+        makeConsent(state, event)
+    }
+    
+    @ViewBuilder
+    private func makeConsent(
+        _ state: OpenCardDomain.State,
+        _ event: @escaping (OpenCardDomain.Event) -> Void
+    ) -> some View {
+        
+        if let consent = state.consent {
+            
+            HStack {
+                
+                PaymentsCheckView.CheckBoxView(
+                    isChecked: consent.check,
+                    activeColor: .systemColorActive
+                )
+                
+                Text(consent.description)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .font(.textBodyMR14200())
+                    .foregroundColor(.textPlaceholder)
+            }
+            .onTapGesture { event(.setConsent(!consent.check)) }
+            .animation(.easeInOut, value: consent.check)
         }
     }
     
     private func continueButton(
-        isLoading: Bool,
+        state: OpenCardDomain.State,
         action: @escaping () -> Void
     ) -> some View {
         
-        Button(action: action) {
-            if isLoading {
-                ProgressView()
-            } else {
-                Text("Continue")
-            }
-        }
-        .buttonStyle(.borderedProminent)
+        PaymentComponents.ButtonView.goToMain(
+            title: state.continueButtonTitle,
+            goToMain: action
+        )
+        // TODO: replace with config with button colors and title //
+        .saturation(state.isLoading ? 0 : 1)
+        .opacity(!state.isValid ? 0.3 : 1)
+        .saturation(!state.isValid ? 0 : 1)
+        .disabled(!state.isValid)
+        .loaderOverlay(isLoading: state.isLoading)
     }
     
     @inlinable
@@ -158,6 +136,31 @@ extension ViewComponents {
         )
         .paddedRoundedBackground()
         .keyboardType(.numberPad)
+    }
+}
+
+// MARK: - Helpers
+
+private extension OpenCardDomain.State {
+    
+    var consent: OpenCardDomain.Confirmation.Consent? {
+        
+        loadableForm.state?.confirmation.state?.consent
+    }
+    
+    var continueButtonTitle: String {
+        
+        hasConfirmation ? "Заказать карту" : "Продолжить"
+    }
+    
+    var isLoading: Bool {
+        
+        loadableForm.isLoading || isConfirmationLoading
+    }
+    
+    var isConfirmationLoading: Bool {
+        
+        loadableForm.state?.confirmation.isLoading ?? false
     }
 }
 

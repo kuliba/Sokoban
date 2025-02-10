@@ -5,50 +5,85 @@
 //  Created by Дмитрий Савушкин on 09.12.2024.
 //
 
+public enum Loadable<State> {
+    
+    /// `nil` represents clean state, `some` - previously loaded.
+    case loading(State?)
+    
+    /// `nil` represents idle state, `some` - loaded result.
+    case loaded(Loaded?)
+    
+    public typealias Loaded = Result<State, LoadFailure>
+}
+
+public extension Loadable {
+    
+    var isLoading: Bool {
+        
+        guard case .loading = self else { return false }
+        
+        return true
+    }
+    
+    var state: State? {
+        
+        get {
+            
+            guard case let .loaded(.success(state)) = self
+            else { return nil }
+            
+            return state
+        }
+        
+        set(newValue) {
+            
+            guard let newValue, case .loaded(.success) = self
+            else { return }
+            
+            self = .loaded(.success(newValue))
+        }
+    }
+}
+
 public struct State<Confirmation> {
     
-    public var isLoading: Bool = false
-    public var formResult: LoadFormResult<Confirmation>?
+    public var loadableForm: Loadable<Form<Confirmation>>
     
     public init(
-        isLoading: Bool = false,
-        formResult: LoadFormResult<Confirmation>? = nil
+        loadableForm: Loadable<Form<Confirmation>>
     ) {
-        self.isLoading = isLoading
-        self.formResult = formResult
+        self.loadableForm = loadableForm
     }
 }
 
 public extension State {
     
-    var consent: Bool { form?.consent ?? false }
+//    var isProductLoading: Bool { isLoading && form == nil }
     
+//    var consent: Bool { form?.consent ?? false }
+    
+    /// active form
     var form: Form<Confirmation>? {
         
         get {
             
-            guard case let .success(form) = formResult
-            else { return nil }
+            guard let form = loadableForm.state else { return nil }
             
             return form
         }
         
         set(newValue) {
             
-            guard let newValue, case .success = formResult
+            guard let newValue, case .loaded(.success) = loadableForm
             else { return }
             
-            formResult = .success(newValue)
+            loadableForm = .loaded(.success(newValue))
         }
     }
     
     var hasConfirmation: Bool {
         
-        if case .success = form?.confirmation {
-            return true
-        } else {
-            return false
-        }
+        loadableForm.state?.confirmation.state != nil
     }
     
     var isValid: Bool { form?.isValid ?? false } // rename to `canOrder`
@@ -68,5 +103,19 @@ public extension State {
             smsInfo: form.messages.isOn,
             verificationCode: otp
         )
+    }
+}
+
+private extension Form {
+    
+    var isValid: Bool {
+        
+        switch confirmation {
+        case .loaded(nil):
+            return true
+            
+        default: // rename to `canOrder`
+            return otp?.count == 6 && consent
+        }
     }
 }

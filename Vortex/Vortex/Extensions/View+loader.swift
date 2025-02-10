@@ -9,6 +9,17 @@ import SwiftUI
 
 extension View {
     
+    func loaderOverlay(
+        isLoading: Bool
+    ) -> some View {
+        
+        overlay {
+            
+            SpinnerRefreshView(icon: .init("Logo Vortex"))
+                .opacity(isLoading ? 1 : 0)
+        }
+    }
+    
     func loader(
         isLoading: Bool,
         icon: Image = .init("Logo Vortex"),
