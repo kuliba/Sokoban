@@ -22,16 +22,18 @@ extension OrderCardViewConfig {
 extension CardTypeViewConfig {
     
     static let iVortex: Self = .init(
-        title: .init(
-            textFont: .textH4M16240(),
-            textColor: .textSecondary
-        ),
+        backgroundColorIcon: .bgIconDeepPurpleMedium,
+        icon: .ic24CreditCard,
         subtitle: .init(
             text: "Тип носителя",
             config: .init(
                 textFont: .textBodyMR14180(),
                 textColor: .textPlaceholder
             )
+        ),
+        title: .init(
+            textFont: .textH4M16240(),
+            textColor: .textSecondary
         )
     )
 }
@@ -55,11 +57,13 @@ extension MessageViewConfig {
             )
         ),
         description: .init(
-            text: "Присылаем пуш-уведомления, если не доходят - отправляем смс. С Тарифами за услугу согласен.",
-            config: .init(
-                textFont: .textBodySR12160(),
-                textColor: .textPlaceholder
-            )
+            textFont: .textBodySR12160(),
+            textColor: .textPlaceholder
+        ),
+        linkableText: .init(
+            text: "Присылаем пуш-уведомления, если не доходят - отправляем смс. С <u>тарифами</u> за услугу согласен.",
+            tag: ("<u>", "</u>"),
+            tariff: "link" //TOOD: setup link
         ),
         toggle: .init(colors: .init(on: .systemColorActive, off: .black))
     )

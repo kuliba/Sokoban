@@ -1,5 +1,5 @@
 //
-//  SwiftUIView 2.swift
+//  MessageView.swift
 //
 //
 //  Created by Дмитрий Савушкин on 09.02.2025.
@@ -7,10 +7,13 @@
 
 import SwiftUI
 import ToggleComponent
+import LinkableText
 
 struct MessageView: View {
     
-    let state: Bool
+    @Environment(\.openURL) var openURL
+
+    let state: Messages
     let event: (Bool) -> Void
     let config: MessageViewConfig
     
@@ -35,8 +38,9 @@ struct MessageView: View {
                     toggleView()
                 }
                 
-                config.description.render()
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text(state.description)
+                    .foregroundStyle(config.description.textColor)
+                    .font(config.description.textFont)
             }
         }
     }
@@ -56,7 +60,7 @@ private extension MessageView {
     func toggleView() -> some View {
         
         Toggle("", isOn: .init(
-            get: { state },
+            get: { state.isOn },
             set: { event($0) }
         ))
         .toggleStyle(ToggleComponentStyle(config: config.toggle))
@@ -68,11 +72,17 @@ struct MessageView_Previews: PreviewProvider {
     
     private struct MessageWrapperView: View {
         
-        @SwiftUI.State var state = false
+        @SwiftUI.State var state = Messages(
+            description: "description",
+            icon: "icon",
+            subtitle: "subtitle",
+            title: "title",
+            isOn: true
+        )
         
         var body: some View {
             
-            MessageView(state: state, event: { state = $0 }, config: .preview)
+            MessageView(state: state, event: { state.isOn = $0 }, config: .preview)
         }
     }
     
@@ -101,11 +111,12 @@ extension MessageViewConfig {
             )
         ),
         description: .init(
+            textFont: .body,
+            textColor: .blue
+        ),
+        linkableText: .init(
             text: "Присылаем пуш-уведомления по операциям, если не доходят - отправляем смс. С тарифами за услугу согласен.",
-            config: .init(
-                textFont: .footnote,
-                textColor: .pink
-            )
+            tariff: ""
         ),
         toggle: .init(colors: .init(on: .orange, off: .blue))
     )

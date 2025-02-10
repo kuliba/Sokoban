@@ -5,16 +5,18 @@
 //  Created by Igor Malyarov on 09.02.2025.
 //
 
+import Foundation
+
 public struct Messages: Equatable {
     
-    let description: String
+    let description: AttributedString
     let icon: String
     let subtitle: String
     let title: String
     public var isOn: Bool
     
     public init(
-        description: String,
+        description: AttributedString,
         icon: String,
         subtitle: String,
         title: String,

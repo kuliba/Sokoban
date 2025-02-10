@@ -75,21 +75,32 @@ extension ViewComponents {
     ) -> some View {
         
         makeOTPView(viewModel: confirmation.otp)
+        makeConsent(state, event)
+    }
+    
+    @ViewBuilder
+    private func makeConsent(
+        _ state: OpenCardDomain.State,
+        _ event: @escaping (OpenCardDomain.Event) -> Void
+    ) -> some View {
         
-        HStack {
+        if let consent = state.consent {
             
-            PaymentsCheckView.CheckBoxView(
-                isChecked: state.consent,
-                activeColor: .systemColorActive
-            )
-            
-            Text("Consent") // TODO: replace with linked?
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .font(.textBodyMR14200())
-                .foregroundColor(.textPlaceholder)
+            HStack {
+                
+                PaymentsCheckView.CheckBoxView(
+                    isChecked: consent.check,
+                    activeColor: .systemColorActive
+                )
+                
+                Text(consent.description)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .font(.textBodyMR14200())
+                    .foregroundColor(.textPlaceholder)
+            }
+            .onTapGesture { event(.setConsent(!consent.check)) }
+            .animation(.easeInOut, value: consent.check)
         }
-        .onTapGesture { event(.setConsent(!state.consent)) }
-        .animation(.easeInOut, value: state.consent)
     }
     
     private func continueButton(
@@ -101,7 +112,7 @@ extension ViewComponents {
             title: state.continueButtonTitle,
             goToMain: action
         )
-        // TODO: replace with config with button colors and title
+        // TODO: replace with config with button colors and title //
         .saturation(state.isLoading ? 0 : 1)
         .opacity(!state.isValid ? 0.3 : 1)
         .saturation(!state.isValid ? 0 : 1)
@@ -132,7 +143,10 @@ extension ViewComponents {
 
 private extension OpenCardDomain.State {
     
-    var consent: Bool { loadableForm.state?.consent ?? false }
+    var consent: OpenCardDomain.Confirmation.Consent? {
+        
+        loadableForm.state?.confirmation.state?.consent
+    }
     
     var continueButtonTitle: String {
         

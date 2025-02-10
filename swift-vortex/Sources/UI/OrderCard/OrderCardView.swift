@@ -5,13 +5,6 @@
 //  Created by Дмитрий Савушкин on 09.02.2025.
 //
 
-//import CreateCardApplication
-//import Foundation
-//import LinkableText
-//import OTPInputComponent
-//import PaymentComponents
-//import SharedConfigs
-//import UIPrimitives
 import SwiftUI
 
 public struct OrderCardView<Confirmation, ConfirmationView>: View
@@ -47,6 +40,7 @@ where ConfirmationView: View{
         switch state.loadableForm {
         case .loading(nil), .loaded(nil), .loaded(.failure):
             loadingProductView()
+                .frame(maxHeight: .infinity, alignment: .top)
             
         case let .loading(.some(form)):
             formView(form)
@@ -69,8 +63,13 @@ private extension OrderCardView {
     
     func loadingProductView() -> some View {
         
-        ProductView(product: .sample, isLoading: true, config: config.product)
-            .rounded(config.roundedConfig)
+        ProductView(
+            product: .sample,
+            isLoading: true,
+            config: config.product,
+            makeIconView: { _ in EmptyView() }
+        )
+        .rounded(config.roundedConfig)
     }
     
     @ViewBuilder
@@ -151,7 +150,8 @@ private extension OrderCardView {
         ProductView(
             product: product,
             isLoading: state.loadableForm.isLoading,
-            config: config.product
+            config: config.product,
+            makeIconView: { factory.makeIconView($0) }
         )
         .rounded(config.roundedConfig)
     }
@@ -162,8 +162,7 @@ private extension OrderCardView {
         
         CardTypeView(
             select: type,
-            config: config.cardType,
-            makeIconView: factory.makeIconView
+            config: config.cardType
         )
         .rounded(config.roundedConfig)
     }
@@ -174,7 +173,7 @@ private extension OrderCardView {
         
         // TODO: fix: message has link
         MessageView(
-            state: messages.isOn,
+            state: messages,
             event: { event(.setMessages($0)) },
             config: config.messages
         )

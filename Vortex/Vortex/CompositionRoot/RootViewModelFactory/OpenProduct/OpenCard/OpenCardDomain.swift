@@ -6,6 +6,7 @@
 //
 
 import FlowCore
+import Foundation
 import OrderCard
 import OTPInputComponent
 import PayHub
@@ -61,6 +62,7 @@ enum OpenCardDomain {
         struct Consent {
             
             var check: Bool
+            let description: AttributedString
         }
     }
     

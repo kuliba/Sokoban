@@ -127,6 +127,8 @@ where Confirmation == PreviewConfirmation {
     static let confirmationSuccess: Self = .preview(confirmation: .success, consent: false)
     
     static func preview(
+        conditions: URL = .init(string: "conditions")!,
+        tariff: URL = .init(string: "tariff")!,
         requestID: String = "requestID",
         cardApplicationCardType: String = "cardApplicationCardType",
         cardProductExtID: String = "cardProductExtID",
@@ -141,6 +143,8 @@ where Confirmation == PreviewConfirmation {
         return .init(
             product: .preview,
             type: .preview,
+            conditions: conditions,
+            tariffs: tariff,
             requestID: requestID,
             cardApplicationCardType: cardApplicationCardType,
             cardProductExtID: cardProductExtID,
@@ -175,7 +179,7 @@ private extension Product {
 
 private extension CardType {
     
-    static let preview: Self = .init(icon: "icon", title: "title")
+    static let preview: Self = .init(title: "title")
 }
 
 private extension Result
@@ -191,7 +195,7 @@ where Success == PreviewConfirmation,
 private extension Messages {
     
     static func preview(
-        description: String = "description",
+        description: AttributedString = "description",
         icon: String = "icon",
         subtitle: String = "subtitle",
         title: String = "title",
@@ -227,16 +231,18 @@ private extension OrderCardViewConfig {
 private extension CardTypeViewConfig {
     
     static let preview: Self = .init(
-        title: .init(
-            textFont: .title2,
-            textColor: .orange
-        ),
+        backgroundColorIcon: .pink,
+        icon: .flag,
         subtitle: .init(
             text: "Select type",
             config: .init(
                 textFont: .headline,
                 textColor: .green
             )
+        ), 
+        title: .init(
+            textFont: .title2,
+            textColor: .orange
         )
     )
 }
