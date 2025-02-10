@@ -14,7 +14,7 @@ public struct MessageViewConfig {
     public let icon: Image
     public let title: TitleConfig
     public let subtitle: TitleConfig
-    public let description: TitleConfig
+    public let description: TextConfig
     public let linkableText: LinkableTexts
     public let toggle: SharedConfigs.ToggleConfig
     
@@ -22,7 +22,7 @@ public struct MessageViewConfig {
         icon: Image,
         title: TitleConfig,
         subtitle: TitleConfig,
-        description: TitleConfig,
+        description: TextConfig,
         linkableText: LinkableTexts,
         toggle: SharedConfigs.ToggleConfig
     ) {

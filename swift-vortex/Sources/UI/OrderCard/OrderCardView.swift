@@ -40,6 +40,7 @@ where ConfirmationView: View{
         switch state.loadableForm {
         case .loading(nil), .loaded(nil), .loaded(.failure):
             loadingProductView()
+                .frame(maxHeight: .infinity, alignment: .top)
             
         case let .loading(.some(form)):
             formView(form)
@@ -68,7 +69,7 @@ private extension OrderCardView {
             config: config.product,
             makeIconView: { _ in EmptyView() }
         )
-            .rounded(config.roundedConfig)
+        .rounded(config.roundedConfig)
     }
     
     @ViewBuilder
@@ -172,7 +173,7 @@ private extension OrderCardView {
         
         // TODO: fix: message has link
         MessageView(
-            state: messages.isOn,
+            state: messages,
             event: { event(.setMessages($0)) },
             config: config.messages
         )

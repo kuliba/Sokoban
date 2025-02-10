@@ -127,6 +127,8 @@ where Confirmation == PreviewConfirmation {
     static let confirmationSuccess: Self = .preview(confirmation: .success, consent: false)
     
     static func preview(
+        conditions: URL = .init(string: "conditions")!,
+        tariff: URL = .init(string: "tariff")!,
         requestID: String = "requestID",
         cardApplicationCardType: String = "cardApplicationCardType",
         cardProductExtID: String = "cardProductExtID",
@@ -141,6 +143,8 @@ where Confirmation == PreviewConfirmation {
         return .init(
             product: .preview,
             type: .preview,
+            conditions: conditions,
+            tariffs: tariff,
             requestID: requestID,
             cardApplicationCardType: cardApplicationCardType,
             cardProductExtID: cardProductExtID,
@@ -191,10 +195,9 @@ where Success == PreviewConfirmation,
 private extension Messages {
     
     static func preview(
-        description: String = "description",
+        description: AttributedString = "description",
         icon: String = "icon",
         subtitle: String = "subtitle",
-        tariffLink: String = "tariffLink",
         title: String = "title",
         isOn: Bool = false
     ) -> Self {
@@ -203,7 +206,6 @@ private extension Messages {
             description: description,
             icon: icon,
             subtitle: subtitle,
-            tariffLink: tariffLink,
             title: title,
             isOn: isOn
         )

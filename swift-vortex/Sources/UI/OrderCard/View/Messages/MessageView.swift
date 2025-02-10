@@ -13,7 +13,7 @@ struct MessageView: View {
     
     @Environment(\.openURL) var openURL
 
-    let state: Bool
+    let state: Messages
     let event: (Bool) -> Void
     let config: MessageViewConfig
     
@@ -38,19 +38,9 @@ struct MessageView: View {
                     toggleView()
                 }
                 
-                LinkableTextView(
-                    linkableText: .init(
-                        text: config.linkableText.text,
-                        urlString: config.linkableText.tariff,
-                        tag: config.linkableText.tag
-                    ),
-                    handleURL: { openURL($0) }
-                )
-                .font(.system(size: 12))
-                .foregroundStyle(.gray.opacity(0.4))
-                .accentColor(.gray.opacity(0.4))
-//                config.description.render()
-//                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text(state.description)
+                    .foregroundStyle(config.description.textColor)
+                    .font(config.description.textFont)
             }
         }
     }
@@ -70,7 +60,7 @@ private extension MessageView {
     func toggleView() -> some View {
         
         Toggle("", isOn: .init(
-            get: { state },
+            get: { state.isOn },
             set: { event($0) }
         ))
         .toggleStyle(ToggleComponentStyle(config: config.toggle))
@@ -82,11 +72,17 @@ struct MessageView_Previews: PreviewProvider {
     
     private struct MessageWrapperView: View {
         
-        @SwiftUI.State var state = false
+        @SwiftUI.State var state = Messages(
+            description: "description",
+            icon: "icon",
+            subtitle: "subtitle",
+            title: "title",
+            isOn: true
+        )
         
         var body: some View {
             
-            MessageView(state: state, event: { state = $0 }, config: .preview)
+            MessageView(state: state, event: { state.isOn = $0 }, config: .preview)
         }
     }
     
@@ -115,13 +111,9 @@ extension MessageViewConfig {
             )
         ),
         description: .init(
-            text: "Присылаем пуш-уведомления по операциям, если не доходят - отправляем смс. С тарифами за услугу согласен.",
-            config: .init(
-                textFont: .footnote,
-                textColor: .pink
-            )
+            textFont: .body,
+            textColor: .blue
         ),
-        
         linkableText: .init(
             text: "Присылаем пуш-уведомления по операциям, если не доходят - отправляем смс. С тарифами за услугу согласен.",
             tariff: ""

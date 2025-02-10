@@ -5,27 +5,26 @@
 //  Created by Igor Malyarov on 09.02.2025.
 //
 
+import Foundation
+
 public struct Messages: Equatable {
     
-    let description: String
+    let description: AttributedString
     let icon: String
     let subtitle: String
-    let tariffLink: String
     let title: String
     public var isOn: Bool
     
     public init(
-        description: String,
+        description: AttributedString,
         icon: String,
         subtitle: String,
-        tariffLink: String,
         title: String,
         isOn: Bool
     ) {
         self.description = description
         self.icon = icon
         self.subtitle = subtitle
-        self.tariffLink = tariffLink
         self.title = title
         self.isOn = isOn
     }
