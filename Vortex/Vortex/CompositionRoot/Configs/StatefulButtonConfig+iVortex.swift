@@ -25,7 +25,7 @@ private extension _ButtonStateConfig {
     static func active(title: String) -> Self {
         
         .init(
-            backgroundColor: .mainColorsRed,
+            backgroundColor: .buttonPrimary,
             title: .init(
                 text: title,
                 config: .init(
@@ -39,7 +39,7 @@ private extension _ButtonStateConfig {
     static func inactive(title: String) -> Self {
         
         .init(
-            backgroundColor: .mainColorsGrayMedium,
+            backgroundColor: .buttonPrimaryDisabled,
             title: .init(
                 text: title,
                 config: .init(
