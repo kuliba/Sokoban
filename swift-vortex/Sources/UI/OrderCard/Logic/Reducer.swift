@@ -53,7 +53,7 @@ public extension Reducer {
             state.loadableForm = .loaded(result)
             
         case let .setMessages(isOn):
-            if var loaded = state.loadableForm.state {
+            if state.loadableForm.state != nil {
                 state.loadableForm.state?.messages.isOn = isOn
             }
             
@@ -86,7 +86,7 @@ private extension Reducer {
         switch form.confirmation {
         case .loaded(nil):
             state.loadableForm.state?.confirmation = .loading(nil)
-            effect = .loadConfirmation
+            effect = .loadConfirmation(form.payload)
             
         case .loaded(.success):
             if let payload = state.payload {
@@ -143,5 +143,13 @@ private extension Reducer {
             form.orderCardResponse = orderCardResponse
             state.loadableForm = .loaded(.success(form))
         }
+    }
+}
+
+private extension Form {
+    
+    var payload: Effect.LoadConfirmationPayload {
+        
+        .init(condition: conditions, tariff: tariffs)
     }
 }

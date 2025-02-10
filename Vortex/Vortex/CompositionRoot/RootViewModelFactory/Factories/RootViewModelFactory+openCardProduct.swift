@@ -125,6 +125,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func loadConfirmation(
+        payload: OpenCardDomain.Effect.LoadConfirmationPayload,
         notify: @escaping OpenCardDomain.ConfirmationNotify,
         completion: @escaping (OpenCardDomain.LoadConfirmationResult) -> Void
     ) {
@@ -132,15 +133,19 @@ extension RootViewModelFactory {
             makeRequest: RequestFactory.createGetVerificationCodeOrderCardVerifyRequest,
             mapResponse: RemoteServices.ResponseMapper.mapGetVerificationCodeResponse
         )
-        
+
         let otp = makeOTPModel(
             resend: { service { _ in }}, // fire and forget
             observe: { notify(.otp($0)) }
         )
-        #warning("USE CONDITION AND TARIFF URL TO CREATE CONSENT DESCRIPTION")
+        
         let consent = OpenCardDomain.Confirmation.Consent(
             check: true,
-            description: "Я соглашаюсь с Условиями и Тарифами"
+            description: RootViewModelFactory.description(
+                "Я соглашаюсь с Условиями и Тарифами",
+                tariffURL: payload.tariff,
+                conditionURL: payload.condition
+            )
         )
         
         service { [weak self] in
@@ -202,6 +207,33 @@ extension RootViewModelFactory {
     }
 }
 
+private extension RootViewModelFactory {
+    
+    static func description(
+        _ consent: String,
+        tariffURL: URL,
+        conditionURL: URL
+    ) -> AttributedString {
+        
+        var attributedString = AttributedString(consent)
+        attributedString.foregroundColor = .textPlaceholder
+        attributedString.font = .textBodySR12160()
+        
+        if let tariff = attributedString.range(of: "Тарифами") {
+            attributedString[tariff].link = tariffURL
+            attributedString[tariff].underlineStyle = .single
+            attributedString[tariff].foregroundColor = .textPlaceholder
+        }
+        
+        if let tariff = attributedString.range(of: "Условиями") {
+            attributedString[tariff].link = conditionURL
+            attributedString[tariff].underlineStyle = .single
+            attributedString[tariff].foregroundColor = .textPlaceholder
+        }
+        
+        return attributedString
+    }
+}
 // MARK: - Helpers
 
 private extension ResponseMapper {
@@ -358,7 +390,7 @@ private extension OrderCard.Messages {
 
         return .init(
             description: description(
-                description: "Присылаем пуш-уведомления по операциям,\nесли не доходят - отправляем смс.\nС тарифами за услугу согласен.",
+                "Присылаем пуш-уведомления по операциям,\nесли не доходят - отправляем смс.\nС Тарифами за услугу согласен.",
                 tariffURL: tariffLink
             ),
             icon: "ic24MessageSquare",
@@ -372,21 +404,21 @@ private extension OrderCard.Messages {
 private extension OrderCard.Messages {
 
     static func description(
-        description: String,
+        _ description: String,
         tariffURL: URL
     ) -> AttributedString {
-      
+        
         var attributedString = AttributedString(description)
         attributedString.foregroundColor = .textPlaceholder
         attributedString.font = .textBodySR12160()
-      
-        if let tariff = attributedString.range(of: "тарифами") {
+        
+        if let tariff = attributedString.range(of: "Тарифами") {
             attributedString[tariff].link = tariffURL
             attributedString[tariff].underlineStyle = .single
             attributedString[tariff].foregroundColor = .textPlaceholder
         }
         
-      return attributedString
+        return attributedString
     }
 }
 
