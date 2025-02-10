@@ -83,7 +83,7 @@ extension ViewComponents {
                 activeColor: .systemColorActive
             )
             
-            Text("Consent") // TODO: replace with linked?
+            Text("Я соглашаюсь с Условиями и Тарифами") // TODO: replace with linked?
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.textBodyMR14200())
                 .foregroundColor(.textPlaceholder)
@@ -101,7 +101,7 @@ extension ViewComponents {
             title: state.continueButtonTitle,
             goToMain: action
         )
-        // TODO: replace with config with button colors and title
+        // TODO: replace with config with button colors and title //
         .saturation(state.isLoading ? 0 : 1)
         .opacity(!state.isValid ? 0.3 : 1)
         .saturation(!state.isValid ? 0 : 1)
