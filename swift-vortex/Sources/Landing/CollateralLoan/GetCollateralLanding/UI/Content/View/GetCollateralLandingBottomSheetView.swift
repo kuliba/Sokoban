@@ -30,15 +30,6 @@ public struct GetCollateralLandingBottomSheetView: View {
         
         self.state.bottomSheet = .init(sheetType: type)
     }
-        
-    private func makeSelected() {
-        
-        if self.state.bottomSheet?.sheetType == .periods {
-
-            selected = state.bottomSheetItems.first { $0.termMonth == state.selectedMonthPeriod }
-        }
-
-    }
     
     public var body: some View {
         
@@ -53,8 +44,8 @@ public struct GetCollateralLandingBottomSheetView: View {
             
             UIScrollView.appearance().isScrollEnabled
                 = state.bottomSheetItems.count >= config.layouts.scrollThreshold
-
-            makeSelected()
+            
+            selected = state.selectedBottomSheetItem
         }
         .frame(height: height)
     }
