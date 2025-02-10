@@ -1,6 +1,6 @@
 //
 //  SwiftUIView.swift
-//  
+//
 //
 //  Created by Дмитрий Савушкин on 09.02.2025.
 //
@@ -8,33 +8,13 @@
 import SwiftUI
 import SharedConfigs
 
-struct ProductConfig {
-
-    let padding: Double
-    let title: TextConfig
-    let subtitle: TextConfig
-    let optionTitle: TextConfig
-    let optionSubtitle: TextConfig
-    let openOptionTitle: String = "Открытие"
-    let serviceOptionTitle: String = "Стоимость обслуживания"
-    let shimmeringColor: Color
-    let orderOptionIcon: Image
-    let cornerRadius: CGFloat
-    let background: Color
-}
-
-struct Product {
-
-    let image: String
-    let header: (String, String)
-    let orderOption: (open: String, service: String)
-}
-
-struct ProductView: View {
+struct ProductView<IconView>: View
+where IconView: View {
     
     let product: Product
     let isLoading: Bool
     let config: ProductConfig
+    let makeIconView: (String) -> IconView
     
     var body: some View {
         
@@ -63,10 +43,8 @@ struct ProductView: View {
             
             HStack(alignment: .top, spacing: config.padding) {
                 
-                productImageView(
-                    designMd5hash: designMd5hash,
-                    needShimmering
-                )
+                makeIconView(designMd5hash)
+                    .frame(width: 112, height: 72)
                 
                 productOptionsView(
                     open: orderOption.open,
@@ -75,13 +53,6 @@ struct ProductView: View {
                 )
             }
         }
-        .modifier(
-            ViewWithBackgroundCornerRadiusAndPaddingModifier(
-                config.background,
-                config.cornerRadius,
-                config.padding
-            )
-        )
     }
     
     private func productHeaderView(
@@ -158,50 +129,42 @@ struct ProductView: View {
             )
         }
     }
-    
-    @ViewBuilder
-    private func productImageView(
-        designMd5hash: String,
-        _  needShimmering: Bool
-    ) -> some View {
-        
-        Group {
-           
-            if needShimmering {
-                
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(config.shimmeringColor)
-                    .shimmering()
-                
-            } else {
-                
-                Image("DigitalGold")
-                    .resizable()
-            }
-        }
-        .frame(width: 112, height: 72, alignment: .center)
-    }
 }
 
-#Preview {
-
-    ProductView(
-        product: .init(
-            image: "",
-            header: ("Все включено", "Кешбэк до 10 000 ₽ в месяц"),
-            orderOption: (open: "Бесплатно", service: "0 ₽")
-        ),
-        isLoading: false,
-        config: .init(
-            padding: 20,
-            title: .init(textFont: .system(size: 18), textColor: .black),
-            subtitle: .init(textFont: .system(size: 14), textColor: .black),
-            optionTitle: .init(textFont: .system(size: 12), textColor: .gray),
-            optionSubtitle: .init(textFont: .system(size: 16), textColor: .black),
-            shimmeringColor: .gray,
-            orderOptionIcon: .bolt,
-            cornerRadius: 12,
-            background: .red
+struct ProductView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        VStack {
+            
+            productView(false)
+            productView(true)
+        }
+    }
+    
+    private static func productView(
+        _ isLoading: Bool
+    ) -> some View {
+        
+        ProductView(
+            product: .init(
+                image: "",
+                header: ("Все включено", "Кешбэк до 10 000 ₽ в месяц"),
+                orderOption: (open: "Бесплатно", service: "0 ₽")
+            ),
+            isLoading: isLoading,
+            config: .init(
+                padding: 20,
+                title: .init(textFont: .system(size: 18), textColor: .black),
+                subtitle: .init(textFont: .system(size: 14), textColor: .black),
+                optionTitle: .init(textFont: .system(size: 12), textColor: .gray),
+                optionSubtitle: .init(textFont: .system(size: 16), textColor: .black),
+                shimmeringColor: .gray,
+                orderOptionIcon: .bolt,
+                cornerRadius: 12,
+                background: .red.opacity(0.2)
+            ),
+            makeIconView: { _ in EmptyView() }
         )
-    )
+    }
 }

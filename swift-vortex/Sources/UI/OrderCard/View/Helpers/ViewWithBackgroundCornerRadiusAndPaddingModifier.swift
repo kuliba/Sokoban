@@ -1,6 +1,6 @@
 //
 //  ViewWithBackgroundCornerRadiusAndPaddingModifier.swift
-//  
+//
 //
 //  Created by Дмитрий Савушкин on 09.12.2024.
 //
@@ -13,13 +13,18 @@ struct ViewWithBackgroundCornerRadiusAndPaddingModifier: ViewModifier {
     let cornerRadius: CGFloat
     let padding: CGFloat
     
-    init(_ background: Color, _ cornerRadius: CGFloat, _ padding: CGFloat) {
+    init(
+        background: Color,
+        cornerRadius: CGFloat,
+        padding: CGFloat
+    ) {
         self.background = background
         self.cornerRadius = cornerRadius
         self.padding = padding
     }
     
     func body(content: Content) -> some View {
+        
         content
             .padding(.all, padding)
             .background(background)
