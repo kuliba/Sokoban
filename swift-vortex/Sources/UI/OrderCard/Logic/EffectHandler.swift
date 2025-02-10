@@ -33,7 +33,7 @@ public final class EffectHandler<Confirmation> {
     }
     
     public typealias ConfirmationNotify = (ConfirmationEvent) -> Void
-    public typealias LoadConfirmation = (@escaping ConfirmationNotify, @escaping (LoadConfirmationResult<Confirmation>) -> Void) -> Void
+    public typealias LoadConfirmation = (Effect.LoadConfirmationPayload, @escaping ConfirmationNotify, @escaping (LoadConfirmationResult<Confirmation>) -> Void) -> Void
     
     public typealias OrderCard = (OrderCardPayload, @escaping (Event.OrderCardResult) -> Void) -> Void
 }
@@ -48,7 +48,7 @@ public extension EffectHandler {
         case .load:
             load({ dispatch(.dismissInformer) }) { dispatch(.loaded($0)) }
             
-        case .loadConfirmation:
+        case let .loadConfirmation(payload):
             
             let confirmationNotify: ConfirmationNotify = {
                 
@@ -60,7 +60,7 @@ public extension EffectHandler {
                     dispatch(.otp(otp))
                 }
             }
-            loadConfirmation(confirmationNotify) { dispatch(.loadConfirmation($0)) }
+            loadConfirmation(payload, confirmationNotify) { dispatch(.loadConfirmation($0)) }
             
         case let .orderCard(payload):
             orderCard(payload) { dispatch(.orderCardResult($0)) }
