@@ -41,6 +41,7 @@ struct MessageView: View {
                 Text(state.description)
                     .foregroundStyle(config.description.textColor)
                     .font(config.description.textFont)
+                    .lineSpacing(3)
             }
         }
     }
@@ -114,10 +115,11 @@ extension MessageViewConfig {
             textFont: .body,
             textColor: .blue
         ),
-        linkableText: .init(
-            text: "Присылаем пуш-уведомления по операциям, если не доходят - отправляем смс. С тарифами за услугу согласен.",
-            tariff: ""
-        ),
-        toggle: .init(colors: .init(on: .orange, off: .blue))
+        toggle: .init(
+            colors: .init(
+                on: .orange,
+                off: .blue
+            )
+        )
     )
 }

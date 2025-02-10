@@ -355,15 +355,38 @@ private extension OrderCard.Messages {
     static func `default`(
         _ tariffLink: URL
     ) -> Self {
-        
-        #warning("ADD TARIFF LINK TO DESCRIPTION")
+
         return .init(
-            description: "Присылаем пуш-уведомления, если не доходят - отправляем смс. С тарифами за услугу согласен.",
+            description: getAttributedText(
+                description: "Присылаем пуш-уведомления по операциям,\nесли не доходят - отправляем смс.\nС тарифами за услугу согласен.",
+                tariffURL: tariffLink
+            ),
             icon: "ic24MessageSquare",
             subtitle: "Пуши и смс",
             title: "Способ уведомлений",
             isOn: false
         )
+    }
+}
+
+private extension OrderCard.Messages {
+
+    static func getAttributedText(
+        description: String,
+        tariffURL: URL
+    ) -> AttributedString {
+      
+        var attributedString = AttributedString(description)
+        attributedString.foregroundColor = .textPlaceholder
+        attributedString.font = .textBodySR12160()
+      
+        if let tariff = attributedString.range(of: "тарифами") {
+            attributedString[tariff].link = tariffURL
+            attributedString[tariff].underlineStyle = .single
+            attributedString[tariff].foregroundColor = .textPlaceholder
+        }
+        
+      return attributedString
     }
 }
 
