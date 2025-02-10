@@ -7,9 +7,12 @@
 
 import SwiftUI
 import ToggleComponent
+import LinkableText
 
 struct MessageView: View {
     
+    @Environment(\.openURL) var openURL
+
     let state: Bool
     let event: (Bool) -> Void
     let config: MessageViewConfig
@@ -35,8 +38,19 @@ struct MessageView: View {
                     toggleView()
                 }
                 
-                config.description.render()
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                LinkableTextView(
+                    linkableText: .init(
+                        text: config.linkableText.text,
+                        urlString: config.linkableText.tariff,
+                        tag: config.linkableText.tag
+                    ),
+                    handleURL: { openURL($0) }
+                )
+                .font(.system(size: 12))
+                .foregroundStyle(.gray.opacity(0.4))
+                .accentColor(.gray.opacity(0.4))
+//                config.description.render()
+//                    .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
     }
@@ -106,6 +120,11 @@ extension MessageViewConfig {
                 textFont: .footnote,
                 textColor: .pink
             )
+        ),
+        
+        linkableText: .init(
+            text: "Присылаем пуш-уведомления по операциям, если не доходят - отправляем смс. С тарифами за услугу согласен.",
+            tariff: ""
         ),
         toggle: .init(colors: .init(on: .orange, off: .blue))
     )
