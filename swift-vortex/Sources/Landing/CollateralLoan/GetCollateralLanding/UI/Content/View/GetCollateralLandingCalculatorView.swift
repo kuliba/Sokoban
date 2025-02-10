@@ -155,13 +155,13 @@ struct GetCollateralLandingCalculatorView: View {
                     .padding(.leading, config.root.layouts.contentLeadingPadding)
                 
                 chevron(config: config)
-                    .onTapGesture {
-                        externalEvent(.showCaseList(.periods(product.calc.rates)))
-                    }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .frame(minWidth: 0, maxWidth: .infinity)
+        .onTapGesture {
+            externalEvent(.showCaseList(.periods(product.calc.rates)))
+        }
     }
     
     private func percentView(config: Config.Calculator) -> some View {
@@ -194,11 +194,11 @@ struct GetCollateralLandingCalculatorView: View {
                     .padding(.leading, config.root.layouts.contentLeadingPadding)
 
                 chevron(config: config)
-                    .onTapGesture {
-                        externalEvent(.showCaseList(.collaterals(product.calc.collaterals)))
-                    }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .onTapGesture {
+            externalEvent(.showCaseList(.collaterals(product.calc.collaterals)))
         }
     }
     
@@ -286,8 +286,7 @@ struct GetCollateralLandingCalculatorView: View {
     
     private func periodValueText(config: Config.Calculator) -> some View {
         
-        // TODO: Replace on real data
-        formatText("3 года", with: config.root.fonts.value)
+        formatText(state.selectedPeriodTitle, with: config.root.fonts.value)
     }
     
     private func percentTitleText(config: Config.Calculator) -> some View {
@@ -308,7 +307,7 @@ struct GetCollateralLandingCalculatorView: View {
     
     private func depositValueText(config: Config.Calculator) -> some View {
         
-        formatText("Иное движимое имущество", with: config.root.fonts.value)
+        formatText(state.selectedCollateralTitle, with: config.root.fonts.value)
     }
     
     private func desiredAmountTitleText(config: Config.Calculator) -> some View {

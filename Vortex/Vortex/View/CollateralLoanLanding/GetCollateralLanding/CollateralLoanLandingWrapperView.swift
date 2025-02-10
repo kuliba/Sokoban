@@ -105,7 +105,7 @@ struct CollateralLoanLandingWrapperView: View {
         
         GetCollateralLandingBottomSheetView(
             state: binder.content.state,
-            domainEvent: handlePeriodsDomainEvent(_:),
+            event: handlePeriodsDomainEvent(_:),
             config: factory.config.bottomSheet,
             factory: factory,
             type: .periods
@@ -116,7 +116,7 @@ struct CollateralLoanLandingWrapperView: View {
         
         GetCollateralLandingBottomSheetView(
             state: binder.content.state,
-            domainEvent: handlePeriodsDomainEvent(_:),
+            event: handlePeriodsDomainEvent(_:),
             config: factory.config.bottomSheet,
             factory: factory,
             type: .collaterals
