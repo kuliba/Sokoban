@@ -2210,10 +2210,16 @@ extension OperationDetailInfoViewModel {
         
         case .mobile:
             
+            let debitViewModel = debitAccount(
+                cardID: operation.payerCardId,
+                accountID: operation.payerAccountId
+            )
+            
             return [
                 payeeViewModel,
                 amountViewModel,
                 commissionViewModel,
+                debitViewModel,
                 dateViewModel].compactMap { $0 }
             
         default:
@@ -2221,6 +2227,7 @@ extension OperationDetailInfoViewModel {
             return [
                 payeeViewModel,
                 operationCategoryViewModel,
+                documentNumberViewModel,
                 payeeNumberPhone,
                 amountViewModel,
                 commissionViewModel,
