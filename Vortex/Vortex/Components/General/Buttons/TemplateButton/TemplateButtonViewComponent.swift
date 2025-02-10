@@ -5,8 +5,9 @@
 //  Created by Дмитрий Савушкин on 30.05.2023.
 //
 
-import SwiftUI
 import Combine
+import CombineSchedulers
+import SwiftUI
 
 extension TemplateButtonView {
     
@@ -15,228 +16,190 @@ extension TemplateButtonView {
         
         let id: Payments.ParameterSuccessOptionButtons.Option = .template
         let action: PassthroughSubject<Action, Never> = .init()
-        private var bindings = Set<AnyCancellable>()
         
         @Published private(set) var state: State
-        private(set) var tapAction: () -> Void
+        
         private let model: Model
+        private let operation: Payments.Operation?
+        private let details: OperationDetailData
+        private var bindings = Set<AnyCancellable>()
+        private let scheduler: AnySchedulerOf<DispatchQueue>
         
         init(
             model: Model,
             state: State? = nil,
             operation: Payments.Operation?,
-            operationDetail: OperationDetailData
+            operationDetail details: OperationDetailData,
+            scheduler: AnySchedulerOf<DispatchQueue> = .main
         ) {
-            
             self.model = model
+            self.operation = operation
+            self.details = details
+            self.state = state ?? .init(details: details)
+            self.scheduler = scheduler
             
-            let state = state ?? (operationDetail.paymentTemplateId != nil ? .init(details: operationDetail) : .idle)
-            
-            switch operation {
-            case let .some(operation):
-                
-                let action = Self.buttonAction(
-                    model: model,
-                    with: state,
-                    operation: operation,
-                    operationDetail: operationDetail
-                )
-                
-                self.state = state
-                self.tapAction = action
-                
-            default:
-                
-                self.state = state
-                let action = Self.buttonAction(
-                    model: model,
-                    with: state,
-                    operation: operation,
-                    operationDetail: operationDetail
-                )
-                self.tapAction = action
-            }
-            
-            bind(operation: operation, details: operationDetail)
+            bind()
         }
         
-        static func buttonAction(
-            model: Model,
-            with state: State,
-            operation: Payments.Operation?,
-            operationDetail: OperationDetailData
-        ) -> () -> Void {
+        func tapAction() {
             
             switch state {
-            case let .refresh(templateId: templateId):
+            case let .refresh(templateId: templateID):
+                requestUpdate(templateID: templateID)
                 
-                guard let template = model.paymentTemplates.value.first(where: { $0.id == templateId } ) else {
-                    return {}
-                }
-                
-                if case let .template(templateID) = operation?.source {
-                    
-                    let parameterList = TemplateButton.templateParameterList(
-                        model: model,
-                        operationDetail: operationDetail,
-                        operation: operation
-                    )
-                    
-                    let action = ModelAction.PaymentTemplate.Update.Requested(
-                        name: template.name,
-                        parameterList: parameterList,
-                        paymentTemplateId: templateID
-                    )
-                    
-                    return { model.action.send(action) }
-                    
-                } else {
-                    
-                    let parameterList = TemplateButton.createMe2MeParameterList(
-                        model: model,
-                        operationDetail: operationDetail
-                    )
-                    
-                    let action = ModelAction.PaymentTemplate.Update.Requested(
-                        name: template.name,
-                        parameterList: parameterList,
-                        paymentTemplateId: templateId
-                    )
-                    
-                    return { model.action.send(action) }
-                }
-                
-            case let .complete(templateId):
-                
-                switch operationDetail.paymentTemplateId {
-                case let .some(paymentTemplateId):
-                    
-                    let action = ModelAction.PaymentTemplate.Delete.Requested(
-                        paymentTemplateIdList: [paymentTemplateId]
-                    )
-                    return { model.action.send(action) }
-                    
-                default:
-                    if case let .template(templateID) = operation?.source {
-                        
-                        let action = ModelAction.PaymentTemplate.Delete.Requested(
-                            paymentTemplateIdList: [templateID]
-                        )
-                        return { model.action.send(action) }
-                        
-                    } else {
-                        
-                        let action = ModelAction.PaymentTemplate.Delete.Requested(
-                            paymentTemplateIdList: [templateId]
-                        )
-                        
-                        return { model.action.send(action) }
-                    }
-                }
+            case let .complete(templateID):
+                requestDelete(templateID: templateID)
                 
             case .idle:
-                
-                let paymentOperationDetailId = operationDetail.paymentOperationDetailId
-                let name = operationDetail.templateName
-                let action = ModelAction.PaymentTemplate.Save.Requested(
-                    name: name,
-                    paymentOperationDetailId: paymentOperationDetailId
-                )
-                return { model.action.send(action) }
+                requestSave()
                 
             case .loading:
-                return {}
+                return
             }
         }
     }
 }
 
-// MARK: Binding's
+// MARK: - implementation details
 
-extension TemplateButtonView.ViewModel {
+private extension TemplateButtonView.ViewModel {
     
-    func bind(
-        operation: Payments.Operation?,
-        details: OperationDetailData
-    ) {
+    func bind() {
         
-        //MARK: bind model action
+        // MARK: - complete
         
-        let complete = Publishers.CombineLatest(
-            model.action.compactMap { $0 as? ModelAction.PaymentTemplate.Save.Complete },
-            model.action.compactMap { $0 as? ModelAction.PaymentTemplate.Update.Complete }
-        )
-            .map(\.0.paymentTemplateId)
+        let saveComplete = model.action
+            .compactMap { $0 as? ModelAction.PaymentTemplate.Save.Complete }
+            .map(\.paymentTemplateId)
+        
+        let updateComplete = model.action
+            .compactMap { $0 as? ModelAction.PaymentTemplate.Update.Complete }
+            .map(\.paymentTemplateId)
+        
+        let complete = Publishers.Merge(saveComplete, updateComplete)
             .map { State.complete(templateId: $0) }
+        
+        // MARK: - idle
         
         let idle = model.action
             .compactMap { $0 as? ModelAction.PaymentTemplate.Delete.Complete }
-            .map { _ in State.idle}
+            .map { _ in State.idle }
         
-        let loading = Publishers.CombineLatest(
-            model.action.compactMap { $0 as? ModelAction.PaymentTemplate.Save.Requested },
-            model.action.compactMap { $0 as? ModelAction.PaymentTemplate.Delete.Requested }
-        )
-            .map { _ in State.loading}
+        // MARK: - loading
         
-        let refresh = model.action
-            .compactMap { $0 as? ModelAction.PaymentTemplate.Update.Complete }
-            .map(\.paymentTemplateId)
-            .map { templateId in State.complete(templateId: templateId)}
+        let saveRequested = model.action
+            .compactMap { $0 as? ModelAction.PaymentTemplate.Save.Requested }
+            .map { _ in () }
         
-        Publishers.Merge3(complete, idle, refresh)
-            .receive(on: DispatchQueue.main)
+        let updateRequested = model.action
+            .compactMap { $0 as? ModelAction.PaymentTemplate.Delete.Requested }
+            .map { _ in () }
+        
+        let loading = Publishers.Merge(saveRequested, updateRequested)
+            .map { _ in State.loading }
+        
+        // MARK: - Merged state update pipeline
+        
+        Publishers.Merge3(complete, idle, loading)
+            .receive(on: scheduler)
             .assign(to: &$state)
-        
-        model.action
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] action in
-                
-                guard let self else { return }
-                
-                switch action {
-                case _ as ModelAction.PaymentTemplate.Save.Requested:
-                    self.state = .loading
-                    
-                case let payload as ModelAction.PaymentTemplate.Save.Complete:
-                    self.state = .complete(templateId: payload.paymentTemplateId)
-                    self.deleteAction(templateId: payload.paymentTemplateId)
-                    
-                case _ as ModelAction.PaymentTemplate.Delete.Complete:
-                    self.state = .idle
-                    let action = Self.buttonAction(
-                        model: self.model,
-                        with: .idle,
-                        operation: operation,
-                        operationDetail: details
-                    )
-                    self.tapAction = action
-                    
-                case _ as ModelAction.PaymentTemplate.Delete.Requested:
-                    self.state = .loading
-                    
-                case let payload as ModelAction.PaymentTemplate.Update.Complete:
-                    self.state = .complete(templateId: payload.paymentTemplateId)
-                    self.deleteAction(templateId: payload.paymentTemplateId)
-                    
-                default:
-                    break
-                }    
-            }
-            .store(in: &bindings)
     }
     
-    func deleteAction(templateId: Int) {
+    func requestUpdate(templateID: Int) {
         
-        let action = ModelAction.PaymentTemplate.Delete.Requested(
-            paymentTemplateIdList: [templateId]
+        guard let template = model.paymentTemplates.value.first(where: { $0.id == templateID } )
+        else { return }
+        
+        if case let .template(templateID) = operation?.source {
+            
+            requestUpdate(name: template.name, templateID: templateID)
+            
+        } else {
+            
+            requestMe2MeUpdate(name: template.name, templateID: templateID)
+        }
+    }
+    
+    func requestUpdate(name: String, templateID: Int) {
+        
+        let parameterList = TemplateButton.templateParameterList(
+            model: model,
+            operationDetail: details,
+            operation: operation
         )
         
-        self.tapAction = { self.model.action.send(action) }
+        let action = ModelAction.PaymentTemplate.Update.Requested(
+            name: name,
+            parameterList: parameterList,
+            paymentTemplateId: templateID
+        )
+        
+        sendModelAction(action)
+    }
+    
+    func requestMe2MeUpdate(name: String, templateID: Int) {
+        
+        let parameterList = TemplateButton.createMe2MeParameterList(
+            model: model,
+            operationDetail: details
+        )
+        
+        let action = ModelAction.PaymentTemplate.Update.Requested(
+            name: name,
+            parameterList: parameterList,
+            paymentTemplateId: templateID
+        )
+        
+        sendModelAction(action)
+    }
+    
+    func requestDelete(templateID: Int) {
+        
+        switch details.paymentTemplateId {
+        case let .some(templateID):
+            
+            _requestDelete(templateID: templateID)
+            
+        default:
+            
+            if case let .template(templateID) = operation?.source {
+                
+                _requestDelete(templateID: templateID)
+                
+            } else {
+                
+                _requestDelete(templateID: templateID)
+            }
+        }
+    }
+    
+    func _requestDelete(templateID: Int) {
+        
+        let action = ModelAction.PaymentTemplate.Delete.Requested(
+            paymentTemplateIdList: [templateID]
+        )
+        sendModelAction(action)
+    }
+    
+    func requestSave() {
+        
+        let paymentOperationDetailId = details.paymentOperationDetailId
+        let name = details.templateName
+        let action = ModelAction.PaymentTemplate.Save.Requested(
+            name: name,
+            paymentOperationDetailId: paymentOperationDetailId
+        )
+        sendModelAction(action)
+    }
+    
+    func sendModelAction(_ action: Action) {
+        
+        model.action.send(action)
     }
 }
 
-// MARK: Helpers
+// MARK: - Helpers
+
 extension TemplateButtonView.ViewModel {
     
     var title: String {
@@ -620,6 +583,6 @@ private extension TemplateButtonView.ViewModel {
     
     static func preview(state: State) -> TemplateButtonView.ViewModel {
         
-        .init(model: .emptyMock, operation: nil, operationDetail: OperationDetailData.stub())
+        .init(model: .emptyMock, operation: nil, operationDetail: .stub())
     }
 }

@@ -67,7 +67,7 @@ public struct RefreshableScrollView<Content: View>: View {
         
         ScrollView(showsIndicators: showsIndicators) {
             
-            content
+            VStack { content }
                 .background(
                     GeometryReader { geo in
                         

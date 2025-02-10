@@ -14,11 +14,10 @@ struct PaymentCompleteState {
     struct Report {
         
         let detailID: Int
-        let details: Details?
+        let details: TransactionDetailButton.Details?
+        let operationDetail: OperationDetailData?
         let printFormType: String
         let status: DocumentStatus
-        
-        typealias Details = TransactionCompleteState.Details
     }
     
     struct Fraud: Equatable, Error {

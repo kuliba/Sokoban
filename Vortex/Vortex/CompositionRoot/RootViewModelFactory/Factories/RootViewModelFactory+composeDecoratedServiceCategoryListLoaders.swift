@@ -210,19 +210,6 @@ extension RootViewModelFactory {
     }
 }
 
-// MARK: - Adapters
-
-private extension Result {
-    
-    var failure: Failure? {
-        
-        guard case let .failure(failure) = self
-        else { return nil }
-        
-        return failure
-    }
-}
-
 // MARK: - ServicePaymentOperator Storage
 
 typealias ServicePaymentOperatorStorage = VortexTools.CategorizedStorage<ServiceCategory.CategoryType, CodableServicePaymentOperator>

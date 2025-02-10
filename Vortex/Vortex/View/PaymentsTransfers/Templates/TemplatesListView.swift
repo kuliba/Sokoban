@@ -105,7 +105,7 @@ private extension TemplatesListView {
             
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
-                viewModel.link.map(destination)
+                viewModel.link.map(destinationView)
             }
         }
     }
@@ -226,7 +226,7 @@ private extension TemplatesListView {
     }
     
     @ViewBuilder
-    func destination(
+    func destinationView(
         link: TemplatesListViewModel.Link
     ) -> some View {
         

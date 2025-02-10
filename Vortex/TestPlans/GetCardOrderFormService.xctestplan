@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "05AAE4E3-0EEC-4017-80C1-8210410188DB",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetCardOrderFormServiceTests",
+        "name" : "GetCardOrderFormServiceTests"
+      }
+    }
+  ],
+  "version" : 1
+}

@@ -199,7 +199,8 @@ private extension PaymentTemplateData {
                 puref: core.puref,
                 title: name,
                 subtitle: groupName,
-                icon: md5hash
+                icon: md5hash,
+                templateID: id
             )
         )
     }
