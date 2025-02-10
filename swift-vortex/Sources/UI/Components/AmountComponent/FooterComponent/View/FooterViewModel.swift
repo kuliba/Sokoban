@@ -37,8 +37,9 @@ public final class FooterViewModel: ObservableObject {
         textFieldModel.setText(to: format(initialState.amount))
         
         textFieldModel.$state
+            .dropFirst()
             .map(getDecimal)
-            .removeDuplicates()
+            .removeDuplicates(by: { $0.distance(to: $1).isLess(than: 0.01) })
             .receive(on: scheduler)
             .sink { [weak self] in self?.state.amount = $0 }
             .store(in: &cancellables)
