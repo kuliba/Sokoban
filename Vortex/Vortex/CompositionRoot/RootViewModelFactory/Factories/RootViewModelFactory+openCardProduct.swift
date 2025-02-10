@@ -140,7 +140,6 @@ extension RootViewModelFactory {
         )
         
         let consent = OpenCardDomain.Confirmation.Consent(
-            check: true,
             description: RootViewModelFactory.description(
                 "Я соглашаюсь с Условиями и Тарифами",
                 tariffURL: payload.tariff,

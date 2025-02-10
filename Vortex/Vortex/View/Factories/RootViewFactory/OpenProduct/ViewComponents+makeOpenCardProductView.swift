@@ -84,22 +84,23 @@ extension ViewComponents {
         _ event: @escaping (OpenCardDomain.Event) -> Void
     ) -> some View {
         
-        if let consent = state.consent {
+        if let form = state.loadableForm.state,
+           let confirmation = form.confirmation.state {
             
             HStack {
                 
                 PaymentsCheckView.CheckBoxView(
-                    isChecked: consent.check,
+                    isChecked: state.consent,
                     activeColor: .systemColorActive
                 )
+                .onTapGesture { event(.setConsent(!state.consent)) }
                 
-                Text(consent.description)
+                Text(confirmation.consent.description)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .font(.textBodyMR14200())
                     .foregroundColor(.textPlaceholder)
             }
-            .onTapGesture { event(.setConsent(!consent.check)) }
-            .animation(.easeInOut, value: consent.check)
+            .animation(.easeInOut, value: state.consent)
         }
     }
     
@@ -138,10 +139,7 @@ extension ViewComponents {
 
 private extension OpenCardDomain.State {
     
-    var consent: OpenCardDomain.Confirmation.Consent? {
-        
-        loadableForm.state?.confirmation.state?.consent
-    }
+    var consent: Bool { loadableForm.state?.consent ?? false }
     
     var continueButtonTitle: String {
         
