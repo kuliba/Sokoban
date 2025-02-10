@@ -64,7 +64,7 @@ private extension PaymentTemplateData {
         
         switch flag.rawValue {
         case .active:
-            return paymentFlow == nil
+            return paymentFlow.isLegacyPaymentFlow
             
         case .inactive:
             return type != .housingAndCommunalService

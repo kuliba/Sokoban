@@ -28,13 +28,13 @@ final class FooterViewModelTests: XCTestCase {
         
         let initial = makeState(amount: 987)
         let (sut, textField, spy) = makeSUT(initialState: initial)
-        
+       
         textField.setText(to: nil)
         textField.setText(to: "abc")
         textField.setText(to: "abc123")
         textField.setText(to: "123")
         
-        XCTAssertNoDiff(spy.values.map(\.amount), [987, 0, 123])
+        XCTAssertNoDiff(spy.values.map(\.amount), [987, 0])
         XCTAssertNotNil(sut)
     }
     

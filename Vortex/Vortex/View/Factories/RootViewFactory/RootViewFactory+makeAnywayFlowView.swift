@@ -34,7 +34,8 @@ extension RootViewFactory {
                         result: $0.result.mapError {
                             
                             return .init(hasExpired: $0.hasExpired)
-                        }
+                        },
+                        templateID: $0.templateID
                     ),
                     { flowModel.event(.goTo(.main)) }
                 )

@@ -115,16 +115,6 @@ func makeAnywayPayment(
     )
 }
 
-func makeAnywayPaymentPayload(
-    puref: AnywayPaymentOutline.Payload.Puref = anyMessage(),
-    title: String = anyMessage(),
-    subtitle: String = anyMessage(),
-    icon: String = anyMessage()
-) -> AnywayPaymentOutline.Payload {
-    
-    return .init(puref: puref, title: title, subtitle: subtitle, icon: icon)
-}
-
 func makeAnywayPayment(
     amount: Decimal? = nil,
     parameters: [AnywayElement.Parameter],
@@ -174,6 +164,17 @@ func makeAnywayPaymentOutline(
         fields: fields.reduce(into: [:]) { $0[$1.key] = $1.value },
         payload: payload
     )
+}
+
+func makeAnywayPaymentPayload(
+    puref: AnywayPaymentOutline.Payload.Puref = anyMessage(),
+    title: String = anyMessage(),
+    subtitle: String = anyMessage(),
+    icon: String = anyMessage(),
+    templateID: Int? = nil
+) -> AnywayPaymentOutline.Payload {
+    
+    return .init(puref: puref, title: title, subtitle: subtitle, icon: icon, templateID: templateID)
 }
 
 func makeAnywayPaymentWithAmount(

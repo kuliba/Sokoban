@@ -227,14 +227,16 @@ private extension PaymentsTransfersFlowReducer {
                 state.setPaymentFullScreenCover(to: .completed(.init(
                     formattedAmount: fraud.formattedAmount, 
                     merchantIcon: state.merchantIcon,
-                    result: .failure(.init(hasExpired: fraud.hasExpired))
+                    result: .failure(.init(hasExpired: fraud.hasExpired)),
+                    templateID: state.paymentFlowState?.content.state.transaction.context.outline.payload.templateID
                 )))
                 
             case let .success(report):
                 state.setPaymentFullScreenCover(to: .completed(.init(
                     formattedAmount: factory.getFormattedAmount(state) ?? "",
                     merchantIcon: state.merchantIcon,
-                    result: .success(report)
+                    result: .success(report),
+                    templateID: state.paymentFlowState?.content.state.transaction.context.outline.payload.templateID
                 )))
             }
         }
@@ -628,7 +630,7 @@ private extension PaymentsTransfersViewModel.Route {
         self.setUtilityPrepaymentDestination(to: .servicePicker(servicePicker))
     }
     
-    private var paymentFlowState: UtilityServicePaymentFlowState? {
+    /*private*/ var paymentFlowState: UtilityServicePaymentFlowState? {
         
         guard case let .payment(paymentFlowState) = utilityPrepaymentDestination
         else { return nil }
