@@ -139,10 +139,8 @@ private extension RootBinderView {
     ) -> some View {
         
         switch fullScreenCover {
-        case let .orderCardResponse(orderCardResponse):
-            Button(String(describing: orderCardResponse)) {
-                
-                binder.flow.event(.dismiss)
+        case let .orderCardResponse(response):
+            rootViewFactory.components.makeOrderCardCompleteView(response) { binder.flow.event(.dismiss)
             }
             
         case let .scanQR(qrScanner):
