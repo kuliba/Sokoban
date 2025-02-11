@@ -391,8 +391,8 @@ extension RootViewModelFactory {
         
         let splash = makeSplashScreenViewModel(
             initialState: .initialSplashData,
-            phaseOneDuration: settings.phaseOneDuration,
-            phaseTwoDuration: settings.phaseTwoDuration
+            phaseOneDuration: settings.splash.phaseOneDuration,
+            phaseTwoDuration: settings.splash.phaseTwoDuration
         )
         
         model.auth

@@ -172,7 +172,7 @@ class RootViewModel: ObservableObject, Resetable {
                     LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.Hide")
                     action.send(RootViewModelAction.Cover.Hide())
                     
-                    delay(for: settings.splashDelay + settings.phaseTwoDuration) { [unowned self] in
+                    delay(for: settings.splash.delay + settings.splash.phaseTwoDuration) { [unowned self] in
                         
                         guard let authorized = self.model.clientAuthorizationState.value.authorized else { return }
                         
