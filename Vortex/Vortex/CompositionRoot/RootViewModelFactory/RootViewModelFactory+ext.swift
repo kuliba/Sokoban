@@ -829,7 +829,11 @@ private extension RootViewModelFactory {
                     featureFlags: featureFlags
                 )
             },
-            qrViewModelFactory: qrViewModelFactory)
+            qrViewModelFactory: qrViewModelFactory,
+            makeTrailingToolbarItems: makeTrailingToolbarItems(
+                featureFlags.c2gFlag
+            )
+        )
         
         let mainViewModel = MainViewModel(
             model,

@@ -2069,6 +2069,12 @@ enum MainViewModelAction {
         
         struct Countries: Action {}
     }
+    
+    enum Toolbar {
+        
+        case notifications
+        case scanQR
+    }
 }
 
 extension Array where Element == MainSectionViewModel {
