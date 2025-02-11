@@ -45,7 +45,7 @@ struct LoaderWrapper: ViewModifier {
         ZStack {
             
             content
-                .disabled(isLoading)
+              //  .disabled(isLoading)
             
             ZStack {
                 
