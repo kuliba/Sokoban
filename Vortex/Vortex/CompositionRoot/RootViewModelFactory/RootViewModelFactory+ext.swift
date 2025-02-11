@@ -451,7 +451,7 @@ extension RootViewModelFactory {
                 
                 // TODO: - improve with fine-grained delays for different navigation cases
                 schedulers.interactive.delay(
-                    for: settings.delay * 2
+                    for: settings.delay
                 ) { [weak self] in
                     
                     self?.getRootNavigation(
