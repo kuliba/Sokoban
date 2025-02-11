@@ -255,15 +255,8 @@ class PaymentsViewModel: ObservableObject {
                 switch action {
                     
                 case _ as PaymentsViewModelAction.Dismiss:
-                    withAnimation { [weak self] in
-                        self?.dismiss()
-
-                        if #available(iOS 17.0, *) {
-                            self?.closeAction()
-                        } else {
-                            NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
-                        }
-                    }
+                    dismiss()
+                    closeAction()
                     
                 case _ as PaymentsViewModelAction.Spinner.Show:
                     withAnimation { [weak self] in
