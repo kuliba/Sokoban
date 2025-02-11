@@ -412,6 +412,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
     private func makeFeatureFlagsStub() -> FeatureFlags {
         
         .init(
+            c2gFlag: .inactive,
             getProductListByTypeV6Flag: .active,
             paymentsTransfersFlag: .active,
             savingsAccountFlag: .active,

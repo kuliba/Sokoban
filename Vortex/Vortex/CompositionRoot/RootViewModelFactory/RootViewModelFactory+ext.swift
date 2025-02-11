@@ -38,6 +38,7 @@ extension RootViewModelFactory {
         
         // keep for manual override of release flags
         let featureFlags = FeatureFlags(
+            c2gFlag: featureFlags.c2gFlag,
             getProductListByTypeV6Flag: .active,
             paymentsTransfersFlag: .active,
             savingsAccountFlag: featureFlags.savingsAccountFlag,
