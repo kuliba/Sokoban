@@ -41,7 +41,8 @@ private extension TemplatesListFlowReducer {
         case .dismiss(.destination):
             state.isLoading = false
             state.status = nil
-            
+         //   state.status = .outside(.tab(.main))
+
         case let .flow(flow):
             reduce(&state, &effect, with: flow)
 
