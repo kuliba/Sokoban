@@ -12,7 +12,7 @@ import ToggleComponent
 struct GetCollateralLandingCalculatorView: View {
     
     @SwiftUI.State private var toggleIsOn = false
-    @SwiftUI.State private var sliderCurrentValue: Double
+    @SwiftUI.State private var sliderCurrentValue: Double = .zero
     
     let state: State
     let product: Product
@@ -21,21 +21,21 @@ struct GetCollateralLandingCalculatorView: View {
     let externalEvent: (ExternalEvent) -> Void
 
     init(
-        toggleIsOn: Bool = false,
-        sliderCurrentValue: Double = .zero,
         state: State,
         product: Product,
         config: Config,
         domainEvent: @escaping (DomainEvent) -> Void,
-        externalEvent: @escaping (ExternalEvent) -> Void
+        externalEvent: @escaping (ExternalEvent) -> Void,
+        toggleIsOn: Bool = false,
+        sliderCurrentValue: Double = .zero
     ) {
-        self.toggleIsOn = toggleIsOn
-        self.sliderCurrentValue = Double(state.desiredAmount)
         self.state = state
         self.product = product
         self.config = config
         self.domainEvent = domainEvent
         self.externalEvent = externalEvent
+        self.toggleIsOn = toggleIsOn
+        self.sliderCurrentValue = Double(state.desiredAmount)
     }
     
     var body: some View {
