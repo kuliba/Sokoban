@@ -127,8 +127,13 @@ private extension RemoteServices.ResponseMapper.GetShowcaseData.Product.Theme {
         switch self {
         case .gray:
             return .gray
+            
         case .white:
             return .white
+
+        case .black:
+            return .black
+            
         case .unknown:
             return .unknown
         }
