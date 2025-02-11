@@ -974,13 +974,16 @@ private extension MainViewModel {
     
     func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
         
-        [.init(
-            icon: .ic24Bell,
-            action: { [weak self] in
-                
+        viewModelsFactory.makeTrailingToolbarItems { [weak self] in
+            
+            switch $0 {
+            case .notifications:
                 self?.action.send(MainViewModelAction.ButtonTapped.Messages())
+                
+            case .scanQR:
+                self?.action.send(MainViewModelAction.Toolbar.scanQR)
             }
-        )]
+        }
     }
     
     func openCollateralLoanLanding() {
@@ -2070,7 +2073,7 @@ enum MainViewModelAction {
         struct Countries: Action {}
     }
     
-    enum Toolbar {
+    enum Toolbar: Action {
         
         case notifications
         case scanQR
