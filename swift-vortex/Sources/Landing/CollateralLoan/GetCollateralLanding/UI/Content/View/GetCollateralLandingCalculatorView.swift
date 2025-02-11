@@ -235,6 +235,7 @@ struct GetCollateralLandingCalculatorView: View {
                 
                 desiredAmountValueText(config: config)
                     .padding(.leading, config.root.layouts.contentLeadingPadding)
+                    .fixedSize(horizontal: true, vertical: false)
                 
                 desiredAmountMaxText(config: config)
                     .padding(.trailing, config.root.layouts.contentTrailingPadding)

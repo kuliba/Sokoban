@@ -114,7 +114,7 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
         let isFirstStageValid = isAmountVaild
         let isSecondStageValid = checkedConsents.count == data.consents.count
             && confirmation != nil
-            && otpValidated
+            && otp.count == 6
         
         switch stage {
         case .correctParameters:
@@ -178,7 +178,7 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
         )
     }
     
-    func saveConsentspayload(
+    func saveConsentsPayload(
         applicationID: UInt,
         verificationCode: String
     ) -> CollateralLandingApplicationSaveConsentsPayload {

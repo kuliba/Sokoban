@@ -42,6 +42,28 @@ struct CollateralLoanLandingWrapperView: View {
         event: @escaping (GetCollateralLandingDomain.Event) -> Void
     ) -> some View {
         
+        Group {
+            
+            switch state.product {
+            case .none:
+                Color.clear
+                    .loader(isLoading: state.product == nil, color: .clear)
+                
+            case let .some(product):
+                getCollateralLandingView(product, state, event)
+            }
+        }
+        .onFirstAppear {
+            event(.load(state.landingID))
+        }
+    }
+    
+    private func getCollateralLandingView(
+        _ product: GetCollateralLandingProduct,
+        _ state: GetCollateralLandingDomain.State,
+        _ event: @escaping (GetCollateralLandingDomain.Event) -> Void
+    ) -> some View {
+        
         GetCollateralLandingView(
             state: state,
             domainEvent: event,
@@ -60,9 +82,6 @@ struct CollateralLoanLandingWrapperView: View {
                 makeImageViewWithURL: factory.makeImageViewWithURL
             )
         )
-        .onFirstAppear {
-            event(.load(state.landingID))
-        }
     }
     
     @ViewBuilder
@@ -81,6 +100,7 @@ struct CollateralLoanLandingWrapperView: View {
                 ), 
                 goToMain: goToMain
             )
+            .navigationBarWithBack(title: "Оформление заявки", dismiss: { binder.flow.event(.dismiss) })
         }
     }
     

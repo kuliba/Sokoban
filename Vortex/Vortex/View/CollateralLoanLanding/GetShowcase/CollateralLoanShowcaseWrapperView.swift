@@ -92,6 +92,7 @@ struct CollateralLoanShowcaseWrapperView: View {
                 ), 
                 goToMain: goToMain
             )
+            .navigationBarWithBack(title: "", dismiss: { binder.flow.event(.dismiss) })
         }
     }
     

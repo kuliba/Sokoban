@@ -44,14 +44,16 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         event: @escaping (Event) -> Void
     ) -> some View {
         
-        ZStack {
+        Group {
             
             if state.isLoading {
                 
-                SpinnerView(viewModel: .init())
-                    .zIndex(1.0)
+                Color.clear
+                    .loader(isLoading: true, color: .clear)
+            } else {
+                
+                content(state: state, event: event)
             }
-            content(state: state, event: event)
         }
         .frame(maxHeight: .infinity)
     }

@@ -40,11 +40,17 @@ public struct CollateralLoanLandingGetShowcaseViewConfig {
         
         public let header: Font
         public let body: Font
+        public let button: Font
         
-        public init(header: Font, body: Font) {
+        public init(
+            header: Font,
+            body: Font,
+            button: Font
+        ) {
          
             self.header = header
             self.body = body
+            self.button = button
         }
     }
     
@@ -141,7 +147,8 @@ extension CollateralLoanLandingGetShowcaseViewConfig {
 
         fonts: .init(
             header: Font.system(size: 32).bold(),
-            body: Font.system(size: 14)
+            body: Font.system(size: 14),
+            button: Font.system(size: 16).bold()
         ),
         paddings: .init(
             outer: .init(
