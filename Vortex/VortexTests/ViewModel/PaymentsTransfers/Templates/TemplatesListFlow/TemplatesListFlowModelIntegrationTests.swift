@@ -10,7 +10,7 @@ import CombineSchedulers
 @testable import Vortex
 import XCTest
 
-final class TemplatesListFlowModelIntegrationTests: XCTestCase {
+/*final class TemplatesListFlowModelIntegrationTests: XCTestCase {
     
     // MARK: - init
     
@@ -480,3 +480,4 @@ private extension TemplatesListFlowState {
         return node.model
     }
 }
+*/

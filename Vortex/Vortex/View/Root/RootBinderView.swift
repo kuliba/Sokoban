@@ -45,6 +45,7 @@ private extension RootBinderView {
                     content: destinationContent
                 )
         }
+        .navigationViewStyle(.stack)
     }
     
     func rootView() -> RootView {
