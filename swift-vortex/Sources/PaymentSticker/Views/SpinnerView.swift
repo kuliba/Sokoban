@@ -50,7 +50,7 @@ struct SpinnerRefreshView: View {
 struct SpinnerRefreshViewComponent_Previews: PreviewProvider {
     static var previews: some View {
         
-        SpinnerRefreshView(icon: .init("Logo Vortex Bank"))
+        SpinnerRefreshView(icon: .init("ic24LogoVortexWhiteElipse"))
             .previewLayout(.sizeThatFits)
             .padding()
     }
