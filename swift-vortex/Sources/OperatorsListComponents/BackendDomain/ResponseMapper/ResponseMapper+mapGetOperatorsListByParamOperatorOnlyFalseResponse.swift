@@ -58,7 +58,7 @@ private extension ResponseMapper {
             
             struct _AttributeDTO: Decodable {
                 
-                let md5hash: String
+                let md5hash: String?
                 let serviceList: [_ServiceDTO]?
             }
             
