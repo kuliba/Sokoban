@@ -45,7 +45,8 @@ struct CollateralLoanShowcaseWrapperView: View {
             
             switch state.showcase {
             case .none:
-                SpinnerView(viewModel: .init())
+                Color.clear
+                    .loader(isLoading: state.showcase == nil, color: .clear)
                 
             case let .some(showcase):
                 getShowcaseView(showcase)
