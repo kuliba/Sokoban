@@ -329,7 +329,7 @@ final class FlowReducerTests: FlowTests {
         }
     }
     
-    func test_select_shouldSetIsLoadingToTrueResetNavigation_onIsLoadingFalseNonNilNavigation() {
+    func test_select_shouldSetIsLoadingToTrue_onIsLoadingFalseNonNilNavigation() {
         
         let select = makeSelect()
         
@@ -339,11 +339,10 @@ final class FlowReducerTests: FlowTests {
             event: .select(select)
         ) {
             $0.isLoading = true
-            $0.navigation = nil
         }
     }
     
-    func test_select_shouldResetNavigation_onIsLoadingTrueNonNilNavigation() {
+    func test_select_shouldNotResetNavigation_onIsLoadingTrueNonNilNavigation() {
         
         let select = makeSelect()
         
@@ -353,7 +352,6 @@ final class FlowReducerTests: FlowTests {
             event: .select(select)
         ) {
             $0.isLoading = true
-            $0.navigation = nil
         }
     }
     
