@@ -130,13 +130,27 @@ class AuthPinCodeViewModel: ObservableObject {
                 
                 guard let self else { return }
                 
+                spinner = nil
+                
                 if alerts == nil {
                     tryAutoEvaluateSensor()
+                    
                 } else {
                     clientInformAlerts = alerts
                 }
+            }
+            .store(in: &bindings)
+        
+        model.sessionState
+            .receive(on: DispatchQueue.main)
+            .filter(\.isNotActive)
+            .sink { [weak self] _ in
                 
-            }.store(in: &bindings)
+                guard let self, spinner == nil else { return }
+                
+                spinner = .init()
+            }
+            .store(in: &bindings)
 
         model.action
             .receive(on: DispatchQueue.main)
