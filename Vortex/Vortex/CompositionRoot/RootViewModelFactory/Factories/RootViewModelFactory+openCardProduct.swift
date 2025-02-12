@@ -364,7 +364,7 @@ private extension CardProduct {
         return .init(
             product: .init(
                 image: item.design,
-                header: (item.description, item.title),
+                header: (item.title, item.description),
                 orderOption: ("\(item.fee.free)", ("\(String(item.fee.maintenance.value)) \(item.currency.symbol)"))
             ),
             type: .init(
