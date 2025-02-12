@@ -59,6 +59,7 @@ public extension CollateralLandingApplicationSaveConsentsResult {
 // MARK: Helpers
 
 var rubSymbol: String {
+    
     let code = "RUB"
     let locale = NSLocale(localeIdentifier: code)
     return locale.displayName(forKey: NSLocale.Key.currencySymbol, value: code) ?? "₽"

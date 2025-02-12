@@ -16,7 +16,12 @@ extension GetCollateralLandingConfig {
         let header: Header
         let list: List
         
-        init(background: Color, topPadding: CGFloat, header: Header, list: List) {
+        init(
+            background: Color,
+            topPadding: CGFloat,
+            header: Header,
+            list: List
+        ) {
             self.background = background
             self.topPadding = topPadding
             self.header = header
@@ -40,10 +45,16 @@ extension GetCollateralLandingConfig {
         
         struct List {
             
+            let defaultIcon: Image
             let layouts: Layouts
             let fonts: Fonts
             
-            init(layouts: Layouts, fonts: Fonts) {
+            init(
+                defaultIcon: Image,
+                layouts: Layouts,
+                fonts: Fonts
+            ) {
+                self.defaultIcon = defaultIcon
                 self.layouts = layouts
                 self.fonts = fonts
             }
@@ -96,6 +107,7 @@ extension GetCollateralLandingConfig.Documents {
             headerFont: .init(Font.system(size: 18).bold())
         ),
         list: .init(
+            defaultIcon: Image("file-text"),
             layouts: .init(
                 horizontalPadding: 16,
                 topPadding: 8,
