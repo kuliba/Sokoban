@@ -18,16 +18,38 @@ extension GetCollateralLandingDomain {
         var isLoading = false
         var result: Result?
         var iHaveSalaryInCompany = false
-        var selectedCollateral: String?
-        var selectedMonthPeriod: UInt?
+        var selectedCollateralType: String
+        var selectedMonthPeriod: UInt
 
         public init(
             landingID: String,
-            bottomSheet: BottomSheet? = nil
+            bottomSheet: BottomSheet? = nil,
+            selectedCollateralType: String = "", // Set default value
+            selectedMonthPeriod: UInt = 12 // Set default value
         ) {
             self.landingID = landingID
             self.bottomSheet = bottomSheet
+            self.selectedMonthPeriod = selectedMonthPeriod
+            self.selectedCollateralType = selectedCollateralType
         }
+    }
+}
+
+extension GetCollateralLandingDomain.State {
+    
+    var selectedPeriodTitle: String {
+        
+        product?.calc.rates.first { $0.termMonth == selectedMonthPeriod }?.termStringValue ?? ""
+    }
+    
+    var selectedCollateralTitle: String {
+        
+        product?.calc.collaterals.first { $0.type == selectedCollateralType }?.name ?? ""
+    }
+    
+    var selectedBottomSheetItem: GetCollateralLandingDomain.State.BottomSheet.Item? {
+        
+        bottomSheetItems.first { $0.termMonth == selectedMonthPeriod }
     }
 }
 
@@ -57,6 +79,16 @@ extension GetCollateralLandingDomain.State {
             let title: String
         }
     }
+}
+
+extension GetCollateralLandingDomain.State.BottomSheet.Item {
+    
+    static let preview = Self(
+        id: "",
+        termMonth: 12,
+        icon: "",
+        title: "1 год"
+    )
 }
 
 extension GetCollateralLandingDomain.State {

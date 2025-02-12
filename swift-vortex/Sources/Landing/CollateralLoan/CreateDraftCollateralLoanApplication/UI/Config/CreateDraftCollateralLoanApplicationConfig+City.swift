@@ -51,7 +51,7 @@ extension CreateDraftCollateralLoanApplicationConfig.City {
                     config: .init(textFont: Font.system(size: 14), textColor: .title)
                 ),
                 search: .init(textFont: Font.system(size: 14), textColor: .primary),
-                searchPlaceholder: "Поиск"
+                searchPlaceholder: "Поиск по городам"
             )
         )
     )
