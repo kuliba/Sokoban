@@ -110,7 +110,6 @@ class TemplatesListViewModel: ObservableObject {
         )
         
         updateNavBar(event: .setRegular)
-        bind()
     }
     
     deinit {
@@ -118,8 +117,9 @@ class TemplatesListViewModel: ObservableObject {
     }
 }
 
-//MARK: - Bindings
-private extension TemplatesListViewModel {
+// MARK: - Bindings
+
+extension TemplatesListViewModel {
     
     func bind() {
         
