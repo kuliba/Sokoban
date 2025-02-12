@@ -1633,6 +1633,11 @@
 		2ADD15F62D5CB6A3003C2AB5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADD15F52D5CB6A3003C2AB5 /* ContentView.swift */; };
 		2ADD15F82D5CB6A3003C2AB5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2ADD15F72D5CB6A3003C2AB5 /* Assets.xcassets */; };
 		2ADD15FB2D5CB6A3003C2AB5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2ADD15FA2D5CB6A3003C2AB5 /* Preview Assets.xcassets */; };
+		2ADD16022D5CBF36003C2AB5 /* TextFieldComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2ADD16012D5CBF36003C2AB5 /* TextFieldComponent */; };
+		2ADD16042D5CBF72003C2AB5 /* InputViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADD16032D5CBF72003C2AB5 /* InputViewModel.swift */; };
+		2ADD16062D5CBFE4003C2AB5 /* RxViewModel in Frameworks */ = {isa = PBXBuildFile; productRef = 2ADD16052D5CBFE4003C2AB5 /* RxViewModel */; };
+		2ADD16082D5CC016003C2AB5 /* PaymentComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 2ADD16072D5CC016003C2AB5 /* PaymentComponents */; };
+		2ADD160A2D5CC125003C2AB5 /* FlowCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2ADD16092D5CC125003C2AB5 /* FlowCore */; };
 		2ADDFD802AEFF3C2002FCE43 /* RSADomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADDFD7F2AEFF3C2002FCE43 /* RSADomain.swift */; };
 		2ADDFD822AEFF4F7002FCE43 /* ECDHDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADDFD812AEFF4F7002FCE43 /* ECDHDomain.swift */; };
 		2ADF317F2CA3536600F1668B /* PaymentServiceOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADF317E2CA3536600F1668B /* PaymentServiceOperator.swift */; };
@@ -5288,6 +5293,7 @@
 		2ADD15F52D5CB6A3003C2AB5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2ADD15F72D5CB6A3003C2AB5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2ADD15FA2D5CB6A3003C2AB5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2ADD16032D5CBF72003C2AB5 /* InputViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputViewModel.swift; sourceTree = "<group>"; };
 		2ADDFD7F2AEFF3C2002FCE43 /* RSADomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSADomain.swift; sourceTree = "<group>"; };
 		2ADDFD812AEFF4F7002FCE43 /* ECDHDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECDHDomain.swift; sourceTree = "<group>"; };
 		2ADF317E2CA3536600F1668B /* PaymentServiceOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentServiceOperator.swift; sourceTree = "<group>"; };
@@ -7352,6 +7358,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2ADD16022D5CBF36003C2AB5 /* TextFieldComponent in Frameworks */,
+				2ADD160A2D5CC125003C2AB5 /* FlowCore in Frameworks */,
+				2ADD16082D5CC016003C2AB5 /* PaymentComponents in Frameworks */,
+				2ADD16062D5CBFE4003C2AB5 /* RxViewModel in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -12671,6 +12681,7 @@
 			children = (
 				2ADD15F32D5CB6A3003C2AB5 /* C2GPreviewAppApp.swift */,
 				2ADD15F52D5CB6A3003C2AB5 /* ContentView.swift */,
+				2ADD16032D5CBF72003C2AB5 /* InputViewModel.swift */,
 				2ADD15F72D5CB6A3003C2AB5 /* Assets.xcassets */,
 				2ADD15F92D5CB6A3003C2AB5 /* Preview Content */,
 			);
@@ -19133,6 +19144,12 @@
 			dependencies = (
 			);
 			name = C2GPreviewApp;
+			packageProductDependencies = (
+				2ADD16012D5CBF36003C2AB5 /* TextFieldComponent */,
+				2ADD16052D5CBFE4003C2AB5 /* RxViewModel */,
+				2ADD16072D5CC016003C2AB5 /* PaymentComponents */,
+				2ADD16092D5CC125003C2AB5 /* FlowCore */,
+			);
 			productName = C2GPreviewApp;
 			productReference = 2ADD15F12D5CB6A2003C2AB5 /* C2GPreviewApp.app */;
 			productType = "com.apple.product-type.application";
@@ -20809,6 +20826,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2ADD16042D5CBF72003C2AB5 /* InputViewModel.swift in Sources */,
 				2ADD15F62D5CB6A3003C2AB5 /* ContentView.swift in Sources */,
 				2ADD15F42D5CB6A3003C2AB5 /* C2GPreviewAppApp.swift in Sources */,
 			);
@@ -29263,6 +29281,22 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
 			productName = CombineSchedulers;
+		};
+		2ADD16012D5CBF36003C2AB5 /* TextFieldComponent */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TextFieldComponent;
+		};
+		2ADD16052D5CBFE4003C2AB5 /* RxViewModel */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RxViewModel;
+		};
+		2ADD16072D5CC016003C2AB5 /* PaymentComponents */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PaymentComponents;
+		};
+		2ADD16092D5CC125003C2AB5 /* FlowCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FlowCore;
 		};
 		2AEEC24A2C9480B900EBDD65 /* OperatorsListBackendV0 */ = {
 			isa = XCSwiftPackageProductDependency;
