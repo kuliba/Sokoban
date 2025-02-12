@@ -930,6 +930,7 @@
 		2A6167312D5BDED90026B036 /* C2GFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6167302D5BDED90026B036 /* C2GFlag.swift */; };
 		2A6167342D5BE7B00026B036 /* RootViewModelFactory+makeTrailingToolbarItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6167332D5BE7B00026B036 /* RootViewModelFactory+makeTrailingToolbarItems.swift */; };
 		2A6167372D5BE88A0026B036 /* RootViewModelFactory+makeTrailingToolbarItemsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6167362D5BE88A0026B036 /* RootViewModelFactory+makeTrailingToolbarItemsTests.swift */; };
+		2A6167392D5C634E0026B036 /* FastOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A6167382D5C634E0026B036 /* FastOperations.swift */; };
 		2A61C5072CEC516900EA9BB7 /* QRScannerDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61C5062CEC516900EA9BB7 /* QRScannerDomain.swift */; };
 		2A61C5092CEC535A00EA9BB7 /* QRWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61C5082CEC535A00EA9BB7 /* QRWrapperView.swift */; };
 		2A61C50B2CEC577700EA9BB7 /* RootViewModelFactory+makeQRScannerBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A61C50A2CEC577700EA9BB7 /* RootViewModelFactory+makeQRScannerBinder.swift */; };
@@ -4599,6 +4600,7 @@
 		2A6167302D5BDED90026B036 /* C2GFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C2GFlag.swift; sourceTree = "<group>"; };
 		2A6167332D5BE7B00026B036 /* RootViewModelFactory+makeTrailingToolbarItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeTrailingToolbarItems.swift"; sourceTree = "<group>"; };
 		2A6167362D5BE88A0026B036 /* RootViewModelFactory+makeTrailingToolbarItemsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeTrailingToolbarItemsTests.swift"; sourceTree = "<group>"; };
+		2A6167382D5C634E0026B036 /* FastOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastOperations.swift; sourceTree = "<group>"; };
 		2A61C5062CEC516900EA9BB7 /* QRScannerDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerDomain.swift; sourceTree = "<group>"; };
 		2A61C5082CEC535A00EA9BB7 /* QRWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRWrapperView.swift; sourceTree = "<group>"; };
 		2A61C50A2CEC577700EA9BB7 /* RootViewModelFactory+makeQRScannerBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeQRScannerBinder.swift"; sourceTree = "<group>"; };
@@ -14660,6 +14662,7 @@
 				0C33244328F75988006C6501 /* MyProducts */,
 				7728A1772834FFF500EE4CA6 /* Products */,
 				F87F9B1D27C3A0FD007E3D94 /* MainSectionFastOperationViewComponent.swift */,
+				2A6167382D5C634E0026B036 /* FastOperations.swift */,
 				F81EF91927D2180E0096DC70 /* MainSectionPromoViewComponent.swift */,
 				0C99077628733835000831BB /* MainSectionCurrencyMetallComponent.swift */,
 				F81EF91C27D21A240096DC70 /* MainSectionCurrencyViewComponent.swift */,
@@ -22369,6 +22372,7 @@
 				2A0FD7802C9855F6002184E6 /* Set+AnyCancellable.swift in Sources */,
 				2A69122A2C1D846C000801ED /* TimedOTPInputViewConfig+iVortex.swift in Sources */,
 				774E319327A06F3D005A067B /* TemplatesListViewHostingViewController.swift in Sources */,
+				2A6167392D5C634E0026B036 /* FastOperations.swift in Sources */,
 				7744940227FDF9D7001E2B9E /* PlacesFilterView.swift in Sources */,
 				ED84995726A8831E005205C6 /* EPExtensions.swift in Sources */,
 				ED0AF88D286B3C4A00F86B68 /* ImageCapture.swift in Sources */,

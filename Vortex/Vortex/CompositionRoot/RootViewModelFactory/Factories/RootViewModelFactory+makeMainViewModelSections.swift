@@ -57,10 +57,10 @@ extension RootViewModelFactory {
     
     @inlinable
     func createItems(
-        action: @escaping (MainSectionFastOperationView.ViewModel.FastOperations) -> Void
+        action: @escaping (FastOperations) -> Void
     ) -> [ButtonIconTextView.ViewModel] {
         
-        let displayButtonsTypes: [MainSectionFastOperationView.ViewModel.FastOperations] = [.byQr, .byPhone, .utility, .templates]
+        let displayButtonsTypes: [FastOperations] = [.byQr, .byPhone, .utility, .templates]
         
         return displayButtonsTypes.map { type in
             
@@ -70,7 +70,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func createButtonViewModel(
-        for type: MainSectionFastOperationView.ViewModel.FastOperations,
+        for type: FastOperations,
         action: @escaping () -> Void
     ) -> ButtonIconTextView.ViewModel {
         
@@ -84,7 +84,7 @@ extension RootViewModelFactory {
 extension ButtonIconTextView.ViewModel {
     
     static func `default`(
-        for type: MainSectionFastOperationView.ViewModel.FastOperations,
+        for type: FastOperations,
         _ action: @escaping () -> Void
     ) -> ButtonIconTextView.ViewModel {
         
@@ -103,7 +103,7 @@ extension ButtonIconTextView.ViewModel {
         _ action: @escaping () -> Void
     ) -> ButtonIconTextView.ViewModel {
         
-        let type: MainSectionFastOperationView.ViewModel.FastOperations = .utility
+        let type: FastOperations = .utility
         
         return .init(
             icon: .init(

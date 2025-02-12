@@ -111,7 +111,7 @@ private extension MainSectionFastOperationView.ViewModel {
     }
 }
 
-private extension MainSectionFastOperationView.ViewModel.FastOperations {
+private extension FastOperations {
     
     var rootEvent: RootEvent? {
         
