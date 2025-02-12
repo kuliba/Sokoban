@@ -95,7 +95,18 @@ private extension RootBinderView {
             templatesView(node)
             
         case .uin:
+            // TODO: extract to rootViewFactory.components
             Text("TBD: Search by UIN")
+                .frame(maxHeight: .infinity, alignment: .center)
+                .navigationBarWithBack(
+                    title: "Поиск по УИН",
+                    subtitle: "Поиск начислений по УИН",
+                    dismiss: { binder.flow.event(.dismiss) },
+                    rightItem: .barcodeScanner {
+                        
+                        binder.flow.event(.select(.scanQR))
+                    }
+                )
             
         case let .userAccount(userAccount):
             userAccountView(userAccount)
