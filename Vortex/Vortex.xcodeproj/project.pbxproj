@@ -3119,6 +3119,7 @@
 		C143D1A42D00944F009C4F3E /* DropDownListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C143D1A32D00944F009C4F3E /* DropDownListView.swift */; };
 		C143D1A62D0143FA009C4F3E /* OrderCardLandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C143D1A52D0143FA009C4F3E /* OrderCardLandingView.swift */; };
 		C14A847F299A2C3A002D5735 /* PaymentsSelectCountryViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14A847E299A2C3A002D5735 /* PaymentsSelectCountryViewComponent.swift */; };
+		C14AAB8C2D5C824400AA0B41 /* PaymentSticker+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14AAB8B2D5C824400AA0B41 /* PaymentSticker+iVortex.swift */; };
 		C14F6E252924175C00D46C37 /* CloseProductTransferData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14F6E242924175C00D46C37 /* CloseProductTransferData.swift */; };
 		C14F85532AF537B000749534 /* PaymentSticker in Frameworks */ = {isa = PBXBuildFile; productRef = C14F85522AF537B000749534 /* PaymentSticker */; };
 		C152489B2B8376FA0043F412 /* OperatorsListComponents in Frameworks */ = {isa = PBXBuildFile; productRef = C152489A2B8376FA0043F412 /* OperatorsListComponents */; };
@@ -6745,6 +6746,7 @@
 		C143D1A32D00944F009C4F3E /* DropDownListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownListView.swift; sourceTree = "<group>"; };
 		C143D1A52D0143FA009C4F3E /* OrderCardLandingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCardLandingView.swift; sourceTree = "<group>"; };
 		C14A847E299A2C3A002D5735 /* PaymentsSelectCountryViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSelectCountryViewComponent.swift; sourceTree = "<group>"; };
+		C14AAB8B2D5C824400AA0B41 /* PaymentSticker+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentSticker+iVortex.swift"; sourceTree = "<group>"; };
 		C14F6E242924175C00D46C37 /* CloseProductTransferData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseProductTransferData.swift; sourceTree = "<group>"; };
 		C152489D2B83A6A20043F412 /* MyProductsSectionItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProductsSectionItemViewModel.swift; sourceTree = "<group>"; };
 		C1549865290756AD00D00670 /* ContactsSectionCollapsableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsSectionCollapsableViewModel.swift; sourceTree = "<group>"; };
@@ -8893,6 +8895,7 @@
 				2A5B48462CFC6BE00052801D /* UserAccountButtonLabelConfig+prod.swift */,
 				830207422D37E45E0038EFA4 /* SavingsAccount */,
 				2AAEF8662D58D5EA000E81C6 /* OrderCardViewConfig+iVortex.swift */,
+				C14AAB8B2D5C824400AA0B41 /* PaymentSticker+iVortex.swift */,
 			);
 			path = Configs;
 			sourceTree = "<group>";
@@ -21859,6 +21862,7 @@
 				A5B55E9C27E2625A00C0B695 /* CreateC2BTransferRequest.swift in Sources */,
 				6820922E27A978D0003DCAFD /* ServerCommands+Dictionary.swift in Sources */,
 				7758401727B1BD6000251969 /* Payments+Operation.swift in Sources */,
+				C14AAB8C2D5C824400AA0B41 /* PaymentSticker+iVortex.swift in Sources */,
 				5059D44A2863B76E00DA446D /* CurrencyListVIewComponent.swift in Sources */,
 				2AE886342AFBA23200D86E84 /* MappingRemoteServiceError.swift in Sources */,
 				0BA7F27529320A8300A13EA1 /* DocumentPicker.swift in Sources */,
@@ -26225,6 +26229,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 158;
+				CURRENT_PROJECT_VERSION = 155;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
@@ -26312,6 +26317,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 158;
+				CURRENT_PROJECT_VERSION = 155;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VortexPushServiceExtension/Info.plist;
@@ -26642,6 +26648,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 158;
+				CURRENT_PROJECT_VERSION = 155;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VortexPushServiceExtension/Info.plist;
@@ -26675,6 +26682,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 158;
+				CURRENT_PROJECT_VERSION = 155;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VortexPushServiceExtension/Info.plist;
@@ -26913,6 +26921,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 158;
+				CURRENT_PROJECT_VERSION = 155;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -26998,6 +27007,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 158;
+				CURRENT_PROJECT_VERSION = 155;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VortexPushServiceExtension/Info.plist;
@@ -27978,6 +27988,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 158;
+				CURRENT_PROJECT_VERSION = 155;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
@@ -28015,6 +28026,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 158;
+				CURRENT_PROJECT_VERSION = 155;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
