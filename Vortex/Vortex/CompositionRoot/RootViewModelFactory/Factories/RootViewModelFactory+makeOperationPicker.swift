@@ -68,13 +68,7 @@ extension RootViewModelFactory {
         navigation: Domain.Navigation
     ) -> Delay {
         
-        switch navigation {
-        case .exchange:        return settings.delay
-        case .exchangeFailure: return settings.delay
-        case .latest:          return settings.delay
-        case .outside:         return .milliseconds(100)
-        case .templates:       return settings.delay
-        }
+        return .zero
     }
     
     private func getNavigation(
