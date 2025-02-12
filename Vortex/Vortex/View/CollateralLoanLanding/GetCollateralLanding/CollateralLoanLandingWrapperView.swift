@@ -79,7 +79,8 @@ struct CollateralLoanLandingWrapperView: View {
             },
             factory: .init(
                 makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
-                makeImageViewWithURL: factory.makeImageViewWithURL
+                makeImageViewWithURL: factory.makeImageViewWithURL,
+                getPDFDocument: factory.getPDFDocument
             )
         )
     }
@@ -96,8 +97,9 @@ struct CollateralLoanLandingWrapperView: View {
                 config: .default,
                 factory: .init(
                     makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
-                    makeImageViewWithURL: factory.makeImageViewWithURL
-                ), 
+                    makeImageViewWithURL: factory.makeImageViewWithURL,
+                    getPDFDocument: factory.getPDFDocument
+                ),
                 goToMain: goToMain
             )
             .navigationBarWithBack(title: "Оформление заявки", dismiss: { binder.flow.event(.dismiss) })

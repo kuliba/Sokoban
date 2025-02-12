@@ -13,11 +13,18 @@ public extension RequestFactory {
 
     struct GetConsentsPayload: Encodable, Equatable {
         
-        public let applicationID: Int
-        
-        public init(applicationID: Int) {
-            
-            self.applicationID = applicationID
+        public let cryptoVersion: String
+        public let applicationId: UInt
+        public let verificationCode: String
+
+        public init(
+            cryptoVersion: String,
+            applicationId: UInt,
+            verificationCode: String
+        ) {
+            self.cryptoVersion = cryptoVersion
+            self.applicationId = applicationId
+            self.verificationCode = verificationCode
         }
     }
     
@@ -38,7 +45,7 @@ extension RequestFactory.GetConsentsPayload {
         get throws {
 
             [
-                "applicationId": String(applicationID)
+                "applicationId": String(applicationId)
             ]
         }
     }

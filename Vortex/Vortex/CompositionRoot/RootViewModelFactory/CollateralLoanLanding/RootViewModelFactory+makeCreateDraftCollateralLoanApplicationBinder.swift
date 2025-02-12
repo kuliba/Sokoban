@@ -8,11 +8,15 @@
 import AnywayPaymentBackend
 import AnywayPaymentCore
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
+import CollateralLoanLandingGetCollateralLandingUI
+import CollateralLoanLandingGetConsentsBackend
+import CollateralLoanLandingGetShowcaseUI
 import Combine
 import Foundation
 import GenericRemoteService
 import InputComponent
 import OTPInputComponent
+import PDFKit
 import RemoteServices
 
 extension RootViewModelFactory {
@@ -161,22 +165,6 @@ extension RootViewModelFactory {
         }
     }
 
-    private func getConsents(
-        payload: CollateralLandingApplicationSaveConsentsPayload,
-        completion: @escaping (Domain.SaveConsentsResult) -> Void
-    ) {
-        let saveConsents = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createSaveConsentsRequest(with:),
-            mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:)
-        )
-        
-        saveConsents(payload.payload) { [saveConsents] in
-            
-            completion($0.map(\.response).mapError{ .init(message: $0.localizedDescription) })
-            _ = saveConsents
-        }
-    }
-
     private func saveConsents(
         payload: CollateralLandingApplicationSaveConsentsPayload,
         completion: @escaping (Domain.SaveConsentsResult) -> Void
@@ -268,6 +256,18 @@ extension CollateralLandingApplicationSaveConsentsPayload {
         
         .init(
             applicationID: applicationID,
+            verificationCode: verificationCode
+        )
+    }
+}
+
+extension CollateralLandingApplicationGetConsentsPayload {
+    
+    var payload: RemoteServices.RequestFactory.GetConsentsPayload {
+        
+        .init(
+            cryptoVersion: cryptoVersion,
+            applicationId: applicationID,
             verificationCode: verificationCode
         )
     }

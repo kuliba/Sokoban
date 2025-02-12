@@ -6,6 +6,7 @@
 //
 
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
+import CollateralLoanLandingGetShowcaseUI
 import InputComponent
 import OTPInputComponent
 import RxViewModel
@@ -70,7 +71,8 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
             config: .default,
             factory: .init(
                 makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
-                makeImageViewWithURL: factory.makeImageViewWithURL
+                makeImageViewWithURL: factory.makeImageViewWithURL,
+                getPDFDocument: factory.getPDFDocument
             )
         )
         .if(state.stage == .confirm) {
@@ -146,7 +148,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     ) -> PaymentCompleteState {
         
         .init(
-            formattedAmount: saveConsentsResult.formattedAmount(),
+            formattedAmount: saveConsentsResult.formattedAmount,
             merchantIcon: nil,
             result: .success(makeReport(from: saveConsentsResult))
         )
@@ -172,7 +174,8 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
             makeDocumentButton: makeTransactionDocumentButton,
             makeIconView: { factory.makeImageViewWithMD5Hash($0 ?? "") },
             makeTemplateButton: { nil },
-            makeTemplateButtonWrapperView: { _ in makeTemplateButtonWrapperView() }
+            makeTemplateButtonWrapperView: { _ in makeTemplateButtonWrapperView() },
+            makePDFDocumentButton: makePDFDocumentButton
         )
     }
     
@@ -180,12 +183,19 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         
         .init(viewModel: .init(model: .emptyMock, operation: nil, operationDetail: .stub()))
     }
+
+    private func makePDFDocumentButton(
+        payload: CollateralLandingApplicationGetConsentsPayload
+    ) -> PDFDocumentButton {
+        
+        .init(getDocument: factory.getPDFDocument)
+    }
     
     private func makeTransactionDocumentButton(
         documentID: DocumentID,
         printFormType: RequestFactory.PrintFormType
     ) -> TransactionDocumentButton {
-        .init(getDocument: { _ in }) // TODO: Load PDFDocument via getConsents request
+        .init(getDocument: { _ in })
     }
     
     // TODO: realize map

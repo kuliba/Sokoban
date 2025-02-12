@@ -65,35 +65,6 @@ private extension GetCollateralLandingDomain.Flow {
     )
 }
 
-// MARK: - GetShowcaseDomain.Binder preview
-
-private extension GetShowcaseDomain.Binder {
-    
-    static let preview = GetShowcaseDomain.Binder(
-        content: .preview,
-        flow: .preview,
-        bind: { _,_ in [] }
-    )
-}
-
-private extension GetShowcaseDomain.Flow {
-    
-    static let preview = GetShowcaseDomain.Flow(
-        initialState: .init(),
-        reduce: { state,_ in (state, nil) },
-        handleEffect: { _,_ in }
-    )
-}
-
-private extension GetShowcaseDomain.Content {
-    
-    static let preview: GetShowcaseDomain.Content = .init(
-        initialState: .init(),
-        reduce: { state,_ in (state, nil) },
-        handleEffect: { _,_ in }
-    )
-}
-
 // MARK: - CreateDraftCollateralLoanApplicationDomain.Binder preview
 
 private extension CreateDraftCollateralLoanApplicationDomain.Binder {

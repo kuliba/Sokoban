@@ -7,6 +7,7 @@
 
 import ActivateSlider
 import AnywayPaymentDomain
+import CollateralLoanLandingGetShowcaseUI
 import Combine
 import GenericRemoteService
 import InfoComponent
@@ -21,8 +22,9 @@ import RemoteServices
 import SavingsAccount
 import SplashScreen
 import SwiftUI
-import UIPrimitives
 import UIKit
+import UIPrimitives
+import CollateralLoanLandingGetConsentsBackend
 
 final class RootViewFactoryComposer {
     
@@ -144,7 +146,8 @@ extension RootViewFactoryComposer {
             components: makeViewComponents(),
             paymentsViewFactory: makePaymentsViewFactory(),
             makeTemplateButtonWrapperView: makeTemplateButtonWrapperView,
-            makeUpdatingUserAccountButtonLabel: makeUpdatingUserAccountButtonLabel
+            makeUpdatingUserAccountButtonLabel: makeUpdatingUserAccountButtonLabel, 
+            makeCollateralLoanShowcaseWrapperView: makeCollateralLoanShowcaseWrapperView
         )
     }
     
@@ -217,7 +220,8 @@ private extension RootViewFactoryComposer {
                 makePaymentCompleteView: makePaymentCompleteView,
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                 makeUserAccountView: makeUserAccountView,
-                components: makeViewComponents()
+                components: makeViewComponents(), 
+                makeCollateralLoanShowcaseWrapperView: makeCollateralLoanShowcaseWrapperView
             ),
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,
@@ -762,7 +766,8 @@ private extension RootViewFactoryComposer {
             makePaymentCompleteView: makePaymentCompleteView(result:goToMain:),
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView(viewModel:),
             makeUserAccountView: makeUserAccountView(viewModel:),
-            components: makeViewComponents()
+            components: makeViewComponents(),
+            makeCollateralLoanShowcaseWrapperView: makeCollateralLoanShowcaseWrapperView
         )
     }
     
@@ -947,6 +952,47 @@ private extension RootViewFactoryComposer {
         }
     }
     
+    private func getPDFDocument(
+        completion: @escaping (PDFDocument?) -> Void
+    ) {
+        
+        let getConsents = RemoteService(
+            createRequest: RequestFactory.createGetConsentsRequest(with:),
+            performRequest: httpClient.performRequest(_:completion:),
+            mapResponse: RemoteServices.ResponseMapper.mapGetConsentsResponse(_:_:)
+        )
+        
+        // TODO: Replace to real data
+        let payload: CollateralLandingApplicationGetConsentsPayload = .init(
+            verificationCode: "",
+            applicationID: 1
+        )
+
+        getConsents(payload.payload) { [getConsents] in
+            
+            completion(try? $0.get())
+            _ = getConsents
+        }
+    }
+    
+    func makeCollateralLoanShowcaseWrapperView(
+        binder: GetShowcaseDomain.Binder,
+        goToMain: @escaping () -> Void
+    ) -> CollateralLoanShowcaseWrapperView {
+        
+        let factory = CollateralLoanLandingGetShowcaseViewFactory(
+            makeImageViewWithMD5Hash: { self.makeIconView(.md5Hash(.init($0))) },
+            makeImageViewWithURL: { self.makeGeneralIconView(.image($0.addingPercentEncoding())) },
+            getPDFDocument: getPDFDocument
+        )
+        
+        return .init(
+            binder: binder,
+            factory: factory,
+            goToMain: goToMain
+        )
+    }
+
     private func makeTemplateButtonView(
         with completed: Completed
     ) -> () -> TemplateButtonStateWrapperView? {
