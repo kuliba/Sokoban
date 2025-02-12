@@ -86,7 +86,7 @@ class TemplatesListViewModel: ObservableObject {
         
         self.init(
             route: route,
-            state: model.paymentTemplates.value.isEmpty ? .placeholder : .normal,
+            state: model.paymentTemplates.value.isEmpty ? .placeholder : .loading,
             style: model.settingsPaymentTemplates.style,
             navBarState: .regular(
                 .init(
@@ -1178,7 +1178,7 @@ extension TemplatesListViewModel {
     
     enum State {
         
-        
+        case loading
         case emptyList(EmptyTemplateListViewModel)
         case normal
         case select
