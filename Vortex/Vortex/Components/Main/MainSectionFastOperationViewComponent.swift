@@ -15,22 +15,17 @@ extension MainSectionFastOperationView {
     class ViewModel: MainSectionCollapsableViewModel, ObservableObject {
         
         override var type: MainSectionType { .fastOperations }
+        
         @Published var items: [ButtonIconTextView.ViewModel]
+        
         private let displayButtonsTypes: [FastOperations] = [.byQr, .byPhone, .utility, .templates]
 
-        internal init(items: [ButtonIconTextView.ViewModel], isCollapsed: Bool) {
-            
-            self.items = []
-            super.init(isCollapsed: isCollapsed)
-            self.items = createItems()
-
-        }
-        
-        init() {
-            
-            self.items = []
+        init(
+            items: [ButtonIconTextView.ViewModel] = [],
+            isCollapsed: Bool = false
+        ) {
+            self.items = items
             super.init(isCollapsed: false)
-            
             self.items = createItems()
         }
         
@@ -39,12 +34,16 @@ extension MainSectionFastOperationView {
             displayButtonsTypes.map { type in
                 
                 createButtonViewModel(for: type) { [weak self] in
+                    
                     self?.action.send(MainSectionViewModelAction.FastPayment.ButtonTapped(operationType: type))
                 }
             }
         }
         
-        private func createButtonViewModel(for type: FastOperations, action: @escaping () -> Void) -> ButtonIconTextView.ViewModel {
+        private func createButtonViewModel(
+            for type: FastOperations,
+            action: @escaping () -> Void
+        ) -> ButtonIconTextView.ViewModel {
             
             switch type {
             case .utility:
