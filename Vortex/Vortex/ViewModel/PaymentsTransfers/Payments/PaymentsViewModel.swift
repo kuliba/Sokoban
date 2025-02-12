@@ -155,11 +155,7 @@ class PaymentsViewModel: ObservableObject {
                     switch payload.result {
                         
                     case .confirm(let operation):
-                        
-                        let closeAction: () -> Void = operation.service == .abroad
-                            ? closeAction
-                        : { self.closeAction() }
-                        
+
                         let confirmViewModel = PaymentsConfirmViewModel(
                             operation: operation,
                             model: model,
