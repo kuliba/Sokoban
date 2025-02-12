@@ -640,8 +640,9 @@ extension ProductProfileViewModel {
                 makePaymentsTransfers: makePaymentsTransfers
             )
             
-            let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
+            let makeAlertViewModels = PaymentsTransfersFactory.MakeAlertViewModels(
                 dataUpdateFailure: {
+                    
                     updateInfoStatusFlag.isActive ? .dataUpdateFailure(primaryAction: $0) : nil
                 },
                 disableForCorporateCard: {
