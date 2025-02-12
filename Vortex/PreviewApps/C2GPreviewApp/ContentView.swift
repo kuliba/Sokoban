@@ -5,17 +5,43 @@
 //  Created by Igor Malyarov on 12.02.2025.
 //
 
+import InputComponent
+import RxViewModel
 import SwiftUI
+import TextFieldDomain
 
 struct ContentView: View {
     
     @State private var uinInputState: UINInputState = .init()
+    
+    @ObservedObject var inputViewModel: RxInputViewModel
+    
+    let config: TextInputConfig
     
     var body: some View {
         
         ZStack {
             
             VStack {
+                
+                RxWrapperView(model: inputViewModel) { state, event in
+                    
+                    TextInputView(
+                        state: state,
+                        event: event,
+                        config: config,
+                        iconView: EmptyView.init
+                    )
+                    .onChange(of: state.uinInputState) { uinInputState = $0 }
+                    .padding()
+                    .background(.orange.opacity(0.15))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .padding()
+                    .keyboardType(.numberPad)
+                    
+                    Text(String(describing: state.uinInputState))
+                        .font(.headline)
+                }
                 
                 Spacer()
                 
@@ -87,15 +113,52 @@ struct ContentView: View {
         }
         .padding()
     }
+}
+
+private struct UINInputState: Equatable {
     
-    private struct UINInputState {
+    var isEditing: Bool = false
+    var isValid: Bool = false
+}
+
+private extension TextFieldState {
+    
+    var isEditing: Bool {
         
-        var isEditing: Bool = false
-        var isValid: Bool = false
+        switch self {
+        case .editing: return true
+        default:       return false
+        }
+    }
+}
+
+private extension TextInputState {
+    
+    var uinInputState: UINInputState {
+        
+        return .init(
+            isEditing: textField.isEditing,
+            isValid: message == nil && !textField.text.isNilOrEmpty
+        )
     }
 }
 
 #Preview {
     
-    ContentView()
+    ContentView(inputViewModel: .makeUINInputViewModel(), config: .preview)
+}
+
+extension TextInputConfig {
+    
+    static let preview: Self = .init(
+        hint: .init(textFont: .footnote, textColor: .secondary),
+        imageWidth: 24,
+        keyboard: .number,
+        placeholder: "УИН",
+        textField: .preview(),
+        title: "",
+        titleConfig: .init(textFont: .headline, textColor: .secondary),
+        toolbar: .init(closeImage: "", doneTitle: "Done"),
+        warning: .init(textFont: .body, textColor: .red)
+    )
 }

@@ -17,7 +17,7 @@ extension RxInputViewModel {
     
     static func makeUINInputViewModel(
         placeholderText: String = "УИН",
-        hintText: String = "",
+        hintText: String? = nil,
         warningText: String = "От 20 до 25 знаков"
     ) -> RxInputViewModel {
         
