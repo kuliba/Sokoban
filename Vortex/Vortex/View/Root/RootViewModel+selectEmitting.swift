@@ -119,6 +119,7 @@ private extension FastOperations {
         case .byQr:      return .select(.scanQR)
         case .templates: return .select(.templates)
         case .byPhone:   return nil
+        case .uin:       return .select(.uin)
         case .utility:   return nil
         }
     }

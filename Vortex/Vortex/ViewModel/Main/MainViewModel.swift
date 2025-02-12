@@ -945,6 +945,9 @@ private extension MainViewModel {
             case .byQr:
                 openScanner()
                 
+            case .uin:
+                break // handled by rootEventPublisher
+                
             case .utility:
                 self.rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService)
             }

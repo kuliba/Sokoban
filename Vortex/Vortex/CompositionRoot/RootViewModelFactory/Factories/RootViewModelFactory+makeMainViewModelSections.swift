@@ -12,6 +12,7 @@ extension RootViewModelFactory {
     @inlinable
     func makeMainViewModelSections(
         bannersBinder: BannersBinder,
+        c2gFlag: C2GFlag,
         collateralLoanLandingFlag: CollateralLoanLandingFlag,
         savingsAccountFlag: SavingsAccountFlag
     ) -> [MainSectionViewModel] {
@@ -21,7 +22,10 @@ extension RootViewModelFactory {
                 model,
                 promoProducts: nil
             ),
-            MainSectionFastOperationView.ViewModel(createItems: createItems),
+            MainSectionFastOperationView.ViewModel {
+                
+                createItems(c2gFlag: c2gFlag, action: $0)
+            },
             MainSectionPromoView.ViewModel(model),
             //    BannerPickerSectionBinderWrapper.init(binder: binder),
             MainSectionCurrencyMetallView.ViewModel(model),
@@ -57,15 +61,19 @@ extension RootViewModelFactory {
     
     @inlinable
     func createItems(
+        c2gFlag: C2GFlag,
         action: @escaping (FastOperations) -> Void
     ) -> [ButtonIconTextView.ViewModel] {
         
-        let displayButtonsTypes: [FastOperations] = [.byQr, .byPhone, .utility, .templates]
+        let uin: FastOperations? = c2gFlag.isActive ? .uin : nil
+        let displayButtonsTypes: [FastOperations?] = [uin, .byQr, .byPhone, .utility, .templates]
         
-        return displayButtonsTypes.map { type in
-            
-            createButtonViewModel(for: type) { action(type) }
-        }
+        return displayButtonsTypes
+            .compactMap { $0 }
+            .map { type in
+                
+                createButtonViewModel(for: type) { action(type) }
+            }
     }
     
     @inlinable
