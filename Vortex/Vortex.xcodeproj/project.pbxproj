@@ -2709,6 +2709,7 @@
 		83172A1E2D4289B700722619 /* PromoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83172A1D2D4289B700722619 /* PromoItem.swift */; };
 		8317CA492C3D641D0076DC7A /* SVCardLandingServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8317CA482C3D641D0076DC7A /* SVCardLandingServices.swift */; };
 		8317CA4B2C3D677C0076DC7A /* Services+makeSVCardLandingServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8317CA4A2C3D677C0076DC7A /* Services+makeSVCardLandingServices.swift */; };
+		831A35002D5CBC910041A884 /* PaymentsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831A34FF2D5CBC910041A884 /* PaymentsViewModelTests.swift */; };
 		831AB0E429CB22670091B6FD /* Model+PaymentsServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831AB0E329CB22670091B6FD /* Model+PaymentsServices.swift */; };
 		831B40412A715E6300548EEE /* ConfirmCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831B40402A715E6300548EEE /* ConfirmCodeView.swift */; };
 		831CCF3F2BEA400200DE7D64 /* UnblockCardServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831CCF3E2BEA400200DE7D64 /* UnblockCardServices.swift */; };
@@ -6350,6 +6351,7 @@
 		83172A1D2D4289B700722619 /* PromoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromoItem.swift; sourceTree = "<group>"; };
 		8317CA482C3D641D0076DC7A /* SVCardLandingServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SVCardLandingServices.swift; sourceTree = "<group>"; };
 		8317CA4A2C3D677C0076DC7A /* Services+makeSVCardLandingServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeSVCardLandingServices.swift"; sourceTree = "<group>"; };
+		831A34FF2D5CBC910041A884 /* PaymentsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsViewModelTests.swift; sourceTree = "<group>"; };
 		831AB0E329CB22670091B6FD /* Model+PaymentsServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsServices.swift"; sourceTree = "<group>"; };
 		831B40402A715E6300548EEE /* ConfirmCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmCodeView.swift; sourceTree = "<group>"; };
 		831CCF3E2BEA400200DE7D64 /* UnblockCardServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnblockCardServices.swift; sourceTree = "<group>"; };
@@ -14931,6 +14933,7 @@
 				C13825442AB9CD6600AD2AF2 /* MakePaymentsSuccessOptionButtonsViewModelTests.swift */,
 				C12B11B22ABAB78C003AECEC /* PaymentsSuccessTests.swift */,
 				2AD5F0C92CA54CE100AA5619 /* ClosePaymentsViewModelWrapperTests.swift */,
+				831A34FF2D5CBC910041A884 /* PaymentsViewModelTests.swift */,
 			);
 			path = Payments;
 			sourceTree = "<group>";
@@ -23530,6 +23533,7 @@
 				2A118E292AFF791A007EF30E /* Services+makeChangePINServiceTests.swift in Sources */,
 				2A0439CD2BB42A7D0063B7AB /* NanoServices+makeCreateAnywayTransferV2Tests.swift in Sources */,
 				77F15827281682D400CA5E4E /* ModelDictionaryAtmTests.swift in Sources */,
+				831A35002D5CBC910041A884 /* PaymentsViewModelTests.swift in Sources */,
 				2AEDAD5629A6359D00017F73 /* DaDataPhoneDataHelpersTests.swift in Sources */,
 				D4A5A7A42BAA5A3E006EE7A5 /* ProductCardData_getProductListByTypeV5.swift in Sources */,
 				2A90494F2C326E5200313CB8 /* LoggingDecoratorTests.swift in Sources */,
