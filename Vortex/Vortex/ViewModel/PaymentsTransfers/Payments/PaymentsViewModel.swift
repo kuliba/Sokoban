@@ -15,15 +15,21 @@ class PaymentsViewModel: ObservableObject {
     let action: PassthroughSubject<Action, Never> = .init()
     
     @Published var content: ContentType
-    @Published var successViewModel: PaymentsSuccessViewModel?
+    @Published var route: Route?
     @Published var spinner: SpinnerView.ViewModel?
     @Published var alert: Alert.ViewModel?
-    
+
     let closeAction: () -> Void
     
     private let model: Model
     private var source: Payments.Operation.Source?
     private var bindings = Set<AnyCancellable>()
+    
+    enum Route {
+        
+        case confirm(PaymentsConfirmViewModel)
+        case success(PaymentsSuccessViewModel)
+    }
 
     enum ContentType {
         
@@ -38,12 +44,12 @@ class PaymentsViewModel: ObservableObject {
         self.content = content
         self.model = model
         self.closeAction = closeAction
+        bind()
     }
         
     convenience init(category: Payments.Category, model: Model, closeAction: @escaping () -> Void) {
         
         self.init(content: .loading, model: model, closeAction: closeAction)
-        bind()
 
         Task {
             
@@ -96,7 +102,6 @@ class PaymentsViewModel: ObservableObject {
         
         self.init(content: .loading, model: model, closeAction: closeAction)
         self.source = source
-        bind()
         
         sourceOperation(model, source, closeAction)
     }
@@ -104,9 +109,7 @@ class PaymentsViewModel: ObservableObject {
     convenience init(_ model: Model, service: Payments.Service, closeAction: @escaping () -> Void) {
         
         self.init(content: .loading, model: model, closeAction: closeAction)
-        
-        bind()
-        
+                
         Task {
             
             do {
@@ -132,6 +135,11 @@ class PaymentsViewModel: ObservableObject {
         }
     }
     
+    func dismiss() {
+        
+        route = nil
+    }
+    
     private func bind() {
         
         model.action
@@ -145,9 +153,21 @@ class PaymentsViewModel: ObservableObject {
                     self.action.send(PaymentsViewModelAction.Spinner.Hide())
                     
                     switch payload.result {
+                        
+                    case .confirm(let operation):
+
+                        let confirmViewModel = PaymentsConfirmViewModel(
+                            operation: operation,
+                            model: model,
+                            closeAction: closeAction
+                        )
+                        confirmViewModel.rootActions = rootActions
+                        route = .confirm(confirmViewModel)
+                        bind(confirmViewModel: confirmViewModel)
+
                     case let .complete(paymentSuccess):
                         let successViewModel = PaymentsSuccessViewModel(paymentSuccess: paymentSuccess, model)
-                        self.successViewModel = successViewModel
+                        route = .success(successViewModel)
                         bind(successViewModel: successViewModel)
                         // update products balances
                         model.action.send(ModelAction.Products.Update.Total.All())
@@ -192,7 +212,9 @@ class PaymentsViewModel: ObservableObject {
                                     }
                                     
                                     operationViewModel.model.action.send(PaymentsOperationViewModelAction.IcorrectCodeEnterred())
-                                    
+                                    if case let .confirm(confirmViewModel) = route {
+                                        confirmViewModel.action.send(PaymentsConfirmViewModelAction.IcorrectCodeEnterred())
+                                    }
                                 } else if message.contains("Вы исчерпали") {
                                     
                                     self.action.send(PaymentsViewModelAction.CriticalAlert(title: "Ошибка", message: message))
@@ -229,10 +251,8 @@ class PaymentsViewModel: ObservableObject {
                 switch action {
                     
                 case _ as PaymentsViewModelAction.Dismiss:
-                    withAnimation {
-                        
-                        NotificationCenter.default.post(name: .dismissAllViewAndSwitchToMainTab, object: nil)
-                    }
+                    dismiss()
+                    closeAction()
                     
                 case _ as PaymentsViewModelAction.Spinner.Show:
                     withAnimation { [weak self] in
@@ -247,9 +267,9 @@ class PaymentsViewModel: ObservableObject {
                     }
                     
                 case _ as PaymentsViewModelAction.CloseSuccessView:
-                    withAnimation {
+                    withAnimation { [weak self] in
                         
-                        self.successViewModel = nil
+                        self?.route = nil
                     }
                     
                 default:
@@ -341,6 +361,64 @@ class PaymentsViewModel: ObservableObject {
                 }
             }
     }
+    
+    private func bind(confirmViewModel: PaymentsConfirmViewModel) {
+        
+        confirmViewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] action in
+                
+                guard let self else { return }
+                
+                switch action {
+                case let payload as PaymentsConfirmViewModelAction.CancelOperation:
+                    self.action.send(PaymentsOperationViewModelAction.CancelOperation(
+                        amount: payload.amount,
+                        reason: payload.reason
+                    ))
+                    
+                case let payload as PaymentsOperationViewModelAction.CancelOperation:
+                    
+                    switch payload.reason {
+                    case .cancel, .none:
+                        //TODO: move to convenience init
+                        let success = Payments.Success(
+                            operation: confirmViewModel.operation.value,
+                            parameters: [
+                                Payments.ParameterSuccessStatus(status: .accepted),
+                                Payments.ParameterSuccessText(value: "Перевод отменен!", style: .warning),
+                                Payments.ParameterSuccessText(value: String(payload.amount.dropFirst()), style: .amount),
+                                Payments.ParameterButton.actionButtonMain()
+                            ])
+                        
+                        route = .success(.init(paymentSuccess: success, model))
+                        
+                    case .timeOut:
+                        //TODO: move to convenience init
+                        let success = Payments.Success(
+                            operation: confirmViewModel.operation.value,
+                            parameters: [
+                                Payments.ParameterSuccessStatus(status: .accepted),
+                                Payments.ParameterSuccessText(value: "Перевод отменен!", style: .warning),
+                                Payments.ParameterSuccessText(value: "Время на подтверждение перевода вышло", style: .title),
+                                Payments.ParameterSuccessText(value: String(payload.amount.dropFirst()), style: .amount),
+                                Payments.ParameterButton.actionButtonMain()
+                            ])
+                        
+                        route = .success(.init(paymentSuccess: success, model))
+                    }
+                    
+                case _ as PaymentsOperationViewModelAction.ItemDidUpdated:
+                   // updateBottomSection(isContinueEnabled: isItemsValuesValid)
+                    break
+                    
+                default:
+                    break
+                }
+            }
+            .store(in: &bindings)
+    }
+
 }
 
 //MARK: - Types

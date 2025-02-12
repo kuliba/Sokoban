@@ -52,11 +52,7 @@ extension RootViewModelFactory {
         navigation: CategoryPickerSectionDomain.Navigation
     ) -> Delay {
         
-        switch navigation {
-        case .failure:     return .milliseconds(100)
-        case .destination: return settings.delay
-        case .outside:     return .milliseconds(100)
-        }
+        return .zero
     }
     
     @inlinable

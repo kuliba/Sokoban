@@ -284,7 +284,8 @@ private extension AnywayPaymentOutline.Payload {
             puref: lastPayment.puref,
             title: lastPayment.name,
             subtitle: "",
-            icon: lastPayment.md5Hash
+            icon: lastPayment.md5Hash,
+            templateID: nil
         )
     }
     
@@ -296,7 +297,8 @@ private extension AnywayPaymentOutline.Payload {
             puref: puref,
             title: `operator`.title,
             subtitle: `operator`.subtitle,
-            icon: `operator`.icon
+            icon: `operator`.icon,
+            templateID: nil
         )
     }
 }

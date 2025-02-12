@@ -86,7 +86,7 @@ class TemplatesListViewModel: ObservableObject {
         
         self.init(
             route: route,
-            state: model.paymentTemplates.value.isEmpty ? .placeholder : .normal,
+            state: model.paymentTemplates.value.isEmpty ? .placeholder : .loading,
             style: model.settingsPaymentTemplates.style,
             navBarState: .regular(
                 .init(
@@ -110,7 +110,6 @@ class TemplatesListViewModel: ObservableObject {
         )
         
         updateNavBar(event: .setRegular)
-        bind()
     }
     
     deinit {
@@ -118,8 +117,9 @@ class TemplatesListViewModel: ObservableObject {
     }
 }
 
-//MARK: - Bindings
-private extension TemplatesListViewModel {
+// MARK: - Bindings
+
+extension TemplatesListViewModel {
     
     func bind() {
         
@@ -1178,6 +1178,7 @@ extension TemplatesListViewModel {
     
     enum State {
         
+        case loading
         case emptyList(EmptyTemplateListViewModel)
         case normal
         case select

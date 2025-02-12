@@ -243,7 +243,7 @@ extension PaymentsConfirmViewModel {
             
             self?.action.send(PaymentsOperationViewModelAction.CloseBottomSheet())
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
                 
                 self?.action.send(PaymentsConfirmViewModelAction.CancelOperation(amount: antifraudData.amount, reason: .cancel))
             }
@@ -252,7 +252,7 @@ extension PaymentsConfirmViewModel {
             
             self?.action.send(PaymentsOperationViewModelAction.CloseBottomSheet())
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [weak self] in
                 
                 self?.action.send(PaymentsConfirmViewModelAction.CancelOperation(amount: antifraudData.amount, reason: .timeOut))
             }
@@ -265,9 +265,9 @@ extension PaymentsConfirmViewModel {
         let antifraudBottomSheet = BottomSheet(type: .antifraud(antifraudViewModel))
         antifraudBottomSheet.isUserInteractionEnabled.value = false
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) { [weak self] in
             
-            self.bottomSheet = antifraudBottomSheet
+            self?.bottomSheet = antifraudBottomSheet
         }
     }
 }

@@ -58,7 +58,9 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
             .fullScreenCover(.init(
                 formattedAmount: anyMessage(),
                 merchantIcon: anyMessage(),
-                result: .success(makeReport()))), event: .terminate
+                result: .success(makeReport()),
+                templateID: nil
+            )), event: .terminate
         ) {
             $0 = .terminated
         }
@@ -70,8 +72,9 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
             .fullScreenCover(.init(
                 formattedAmount: anyMessage(),
                 merchantIcon: nil,
-                result: .success(makeReport()))
-            ),
+                result: .success(makeReport()),
+                templateID: nil
+            )),
             event: .terminate,
             delivers: nil)
     }
@@ -233,7 +236,8 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
                 .showResult(.init(
                     formattedAmount: formattedAmount,
                     merchantIcon: merchantIcon,
-                    result: .failure(.init(hasExpired: false))
+                    result: .failure(.init(hasExpired: false)),
+                    templateID: nil
                 )),
                 for: .milliseconds(300)
             )
@@ -267,7 +271,8 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
                 .showResult(.init(
                     formattedAmount: formattedAmount,
                     merchantIcon: merchantIcon,
-                    result: .failure(.init(hasExpired: true))
+                    result: .failure(.init(hasExpired: true)),
+                    templateID: nil
                 )),
                 for: .milliseconds(300)
             )
@@ -344,7 +349,8 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
                 .showResult(.init(
                     formattedAmount: formattedAmount,
                     merchantIcon: merchantIcon,
-                    result: .success(report)
+                    result: .success(report),
+                    templateID: nil
                 )),
                 for: .milliseconds(300)
             )
@@ -362,12 +368,14 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
         assert(.none, event: .showResult(.init(
             formattedAmount: formattedAmount,
             merchantIcon: merchantIcon,
-            result: .failure(nonExpiredFraud)
+            result: .failure(nonExpiredFraud),
+            templateID: nil
         ))) {
             $0 = .fullScreenCover(.init(
                 formattedAmount: formattedAmount,
                 merchantIcon: merchantIcon,
-                result: .failure(.init(hasExpired: nonExpiredFraud.hasExpired))
+                result: .failure(.init(hasExpired: nonExpiredFraud.hasExpired)),
+                templateID: nil
             ))
         }
     }
@@ -376,7 +384,7 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
         
         let nonExpiredFraud = makeFraud(hasExpired: true)
         
-        assert(.none, event: .showResult(.init(formattedAmount: anyMessage(), merchantIcon: anyMessage(), result: .failure(nonExpiredFraud))), delivers: nil)
+        assert(.none, event: .showResult(.init(formattedAmount: anyMessage(), merchantIcon: anyMessage(), result: .failure(nonExpiredFraud), templateID: nil)), delivers: nil)
     }
     
     func test_showResult_shouldSetStateToFullScreenCoverFailureOnExpiredFraud() {
@@ -388,12 +396,14 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
         assert(.none, event: .showResult(.init(
             formattedAmount: formattedAmount,
             merchantIcon: merchantIcon,
-            result: .failure(expiredFraud)
+            result: .failure(expiredFraud),
+            templateID: nil
         ))) {
             $0 = .fullScreenCover(.init(
                 formattedAmount: formattedAmount,
                 merchantIcon: merchantIcon,
-                result: .failure(.init(hasExpired: expiredFraud.hasExpired))
+                result: .failure(.init(hasExpired: expiredFraud.hasExpired)),
+                templateID: nil
             ))
         }
     }
@@ -402,7 +412,7 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
         
         let expiredFraud = makeFraud(hasExpired: false)
         
-        assert(.none, event: .showResult(.init(formattedAmount: anyMessage(), merchantIcon: anyMessage(), result: .failure(expiredFraud))), delivers: nil)
+        assert(.none, event: .showResult(.init(formattedAmount: anyMessage(), merchantIcon: anyMessage(), result: .failure(expiredFraud), templateID: nil)), delivers: nil)
     }
     
     func test_showResult_shouldSetStateToFullScreenCoverSuccessOnSuccess() {
@@ -414,12 +424,14 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
         assert(.none, event: .showResult(.init(
             formattedAmount: formattedAmount,
             merchantIcon: merchantIcon,
-            result: .success(report)
+            result: .success(report),
+            templateID: nil
         ))) {
             $0 = .fullScreenCover(.init(
                 formattedAmount: formattedAmount,
                 merchantIcon: merchantIcon,
-                result: .success(report)
+                result: .success(report),
+                templateID: nil
             ))
         }
     }
@@ -428,7 +440,7 @@ final class ServicePaymentFlowReducerTests: ServicePaymentFlowTests {
         
         let report = makeReport()
         
-        assert(.none, event: .showResult(.init(formattedAmount: anyMessage(), merchantIcon: anyMessage(), result: .success(report))), delivers: nil)
+        assert(.none, event: .showResult(.init(formattedAmount: anyMessage(), merchantIcon: anyMessage(), result: .success(report), templateID: nil)), delivers: nil)
     }
     
     // MARK: - Helpers

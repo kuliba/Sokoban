@@ -56,52 +56,31 @@ struct PaymentTemplateData: Identifiable, Equatable {
 
 extension PaymentTemplateData {
     
-    enum Kind: String, Codable, Equatable, Unknownable {
+    typealias Kind = String
+    
+    var description: String {
         
-        case betweenTheir = "BETWEEN_THEIR"
-        case insideBank = "INSIDE_BANK"
-        case otherBank = "OTHER_BANK"
-        case byPhone = "BY_PHONE"
-        case sfp = "SFP"
-        case externalEntity = "EXTERNAL_ENTITY"
-        case externalIndividual = "EXTERNAL_INDIVIDUAL"
-        case contactAdressless = "CONTACT_ADDRESSLESS"
-        case direct = "DIRECT"
-        case newDirect = "NEW_DIRECT"
-        case contactCash = "ADDRESSING_CASH"
-        case contactAddressing = "CONTACT_ADDRESSING"
-        case contactAddressless = "ADDRESSLESS"
-        case housingAndCommunalService = "HOUSING_AND_COMMUNAL_SERVICE"
-        case mobile = "MOBILE"
-        case internet = "INTERNET"
-        case transport = "TRANSPORT"
-        case taxAndStateService = "TAX_AND_STATE_SERVICE"
-        case interestDeposit = "INTEREST_DEPOSIT"
-        case unknown
-        
-        var description: String {
-            
-            switch self {
-            case .betweenTheir: return "Между своими счетами"
-            case .insideBank: return "Внутри банка"
-            case .otherBank: return "В другой банк"
-            case .byPhone: return "По номеру телефона"
-            case .sfp: return "Перевод СБП"
-            case .externalEntity: return "По реквизитам: компания"
-            case .externalIndividual: return "По реквизитам: частный"
-            case .contactAdressless,
-                 .contactCash,
-                 .contactAddressing,
-                 .contactAddressless: return "Перевод Контакт"
-            case .direct, .newDirect: return "Перевод МИГ"
-            case .housingAndCommunalService: return "Услуги ЖКХ"
-            case .mobile: return "Мобильная связь"
-            case .internet: return "Интернет, ТВ"
-            case .transport: return "Транспорт"
-            case .taxAndStateService: return "Налоги и госуслуги"
-            case .interestDeposit: return "Проценты по депозитам"
-            case .unknown: return "Неизвестно"
-            }
+        switch type {
+        case .betweenTheir:              return "Между своими счетами"
+        case .insideBank:                return "Внутри банка"
+        case .otherBank:                 return "В другой банк"
+        case .byPhone:                   return "По номеру телефона"
+        case .sfp:                       return "Перевод СБП"
+        case .externalEntity:            return "По реквизитам: компания"
+        case .externalIndividual:        return "По реквизитам: частный"
+        case .contactAdressless,
+                .contactCash,
+                .contactAddressing,
+                .contactAddressless:     return "Перевод Контакт"
+        case .direct, .newDirect:        return "Перевод МИГ"
+        case .housingAndCommunalService: return "Услуги ЖКХ"
+        case .mobile:                    return "Мобильная связь"
+        case .internet:                  return "Интернет, ТВ"
+        case .transport:                 return "Транспорт"
+        case .taxAndStateService:        return "Налоги и госуслуги"
+        case .interestDeposit:           return "Проценты по депозитам"
+        case .insurance:                 return "Страхование"
+        default:                         return "Неизвестно"
         }
     }
     
@@ -110,6 +89,30 @@ extension PaymentTemplateData {
         let paymentTemplateId: Int
         let sort: Int
     }
+}
+
+extension PaymentTemplateData.Kind {
+    
+    //    static let betweenTheir = "BETWEEN_THEIR"
+    //    static let insideBank = "INSIDE_BANK"
+    //    static let otherBank = "OTHER_BANK"
+    static let byPhone = "BY_PHONE"
+    //    static let sfp = "SFP"
+    //    static let externalEntity = "EXTERNAL_ENTITY"
+    static let externalIndividual = "EXTERNAL_INDIVIDUAL"
+    static let contactAdressless = "CONTACT_ADDRESSLESS"
+    //    static let direct = "DIRECT"
+    static let newDirect = "NEW_DIRECT"
+    static let contactCash = "ADDRESSING_CASH"
+    static let contactAddressing = "CONTACT_ADDRESSING"
+    //    static let contactAddressless = "ADDRESSLESS"
+    //    static let housingAndCommunalService = "HOUSING_AND_COMMUNAL_SERVICE"
+    //    static let mobile = "MOBILE"
+    //    static let internet = "INTERNET"
+    //    static let transport = "TRANSPORT"
+    static let taxAndStateService = "TAX_AND_STATE_SERVICE"
+    static let interestDeposit = "INTEREST_DEPOSIT"
+    static let insurance = "INSURANCE_SERVICE"
 }
 
 //MARK: - Codable
@@ -157,8 +160,7 @@ extension PaymentTemplateData: Codable {
         productTemplate = try container.decodeIfPresent(ProductTemplateData.self, forKey: .productTemplate)
         sort = try container.decode(Int.self, forKey: .sort)
         svgImage = try container.decodeIfPresent(SVGImageData.self, forKey: .svgImage)
-        let typeString = try container.decode(String.self, forKey: .type)
-        type = Kind(rawValue: typeString) ?? .unknown
+        type = try container.decode(String.self, forKey: .type)
         
         // Decode the new optional fields
         inn = try container.decodeIfPresent(String.self, forKey: .inn)
@@ -175,7 +177,7 @@ extension PaymentTemplateData: Codable {
         try container.encodeIfPresent(productTemplate, forKey: .productTemplate)
         try container.encode(sort, forKey: .sort)
         try container.encodeIfPresent(svgImage, forKey: .svgImage)
-        try container.encode(type.rawValue, forKey: .type)
+        try container.encode(type, forKey: .type)
         
         // Encode the new optional fields
         try container.encodeIfPresent(inn, forKey: .inn)

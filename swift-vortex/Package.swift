@@ -32,6 +32,7 @@ let package = Package(
         .collateralLoanLandingGetShowcaseUI,
         .collateralLoanLandingSaveConsentsBackend,
         .orderCardLandingBackend,
+        .createCardApplicationBackend,
         // Infra
         .ephemeralStores,
         .fetcher,
@@ -76,6 +77,7 @@ let package = Package(
         .getProductListByTypeV7Service,
         .getClientInformDataServices,
         .savingsServices,
+        .getCardOrderFormService,
         // UI
         .buttonWithSheet,
         .c2bSubscriptionUI,
@@ -167,6 +169,7 @@ let package = Package(
         .collateralLoanLandingSaveConsentsBackendTests,
         .orderCardLandingBackend,
         .orderCardLandingBackendTests,
+        .createCardApplicationBackend,
         // Infra
         .ephemeralStores,
         .ephemeralStoresTests,
@@ -257,6 +260,8 @@ let package = Package(
         .getClientInformDataServicesTests,
         .savingsServices,
         .savingsServicesTests,
+        .getCardOrderFormService,
+        .getCardOrderFormServiceTests,
         // UI
         .activateSlider,
         .activateSliderTests,
@@ -508,6 +513,14 @@ private extension Product {
             .orderCardLandingBackend
         ]
     )
+    
+    static let createCardApplicationBackend = library(
+        name: .createCardApplicationBackend,
+        targets: [
+            .createCardApplicationBackend
+        ]
+    )
+    
     // MARK: - UI
     
     static let activateSlider = library(
@@ -1082,6 +1095,13 @@ private extension Product {
         ]
     )
     
+    static let getCardOrderFormService = library(
+        name: .getCardOrderFormService,
+        targets: [
+            .getCardOrderFormService
+        ]
+    )
+    
     // MARK: - Tools
     
     static let vortexTools = library(
@@ -1474,6 +1494,14 @@ private extension Target {
         path: "Tests/Landing/\(String.collateralLoanTests)/\(String.GetCollateralLanding)Tests/Backend/V1"
     )
 
+    static let createCardApplicationBackend = target(
+        name: .createCardApplicationBackend,
+        dependencies: [
+            .remoteServices
+        ],
+        path: "Sources/Landing/\(String.createCardApplicationBackend)"
+    )
+    
     static let orderCardLandingBackend = target(
         name: .orderCardLandingBackend,
         dependencies: [
@@ -2457,6 +2485,29 @@ private extension Target {
         path: "Tests/Services/\(String.savingsServicesTests)"
     )
 
+    static let getCardOrderFormService = target(
+        name: .getCardOrderFormService,
+        dependencies: [
+            .remoteServices,
+            .vortexTools
+        ],
+        path: "Sources/Services/\(String.getCardOrderFormService)"
+    )
+    
+    static let getCardOrderFormServiceTests = testTarget(
+        name: .getCardOrderFormServiceTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .getCardOrderFormService
+        ],
+        path: "Tests/Services/\(String.getCardOrderFormServiceTests)",
+        resources: [
+
+        ]
+    )
+    
     // MARK: - UI
     
     static let activateSlider = target(
@@ -2828,11 +2879,12 @@ private extension Target {
         name: .orderCard,
         dependencies: [
             // internal packages
+            .amountComponent,
+            .linkableText,
+            .paymentComponents,
+            .toggleComponent,
             .sharedConfigs,
             .uiPrimitives,
-            .linkableText,
-            .amountComponent,
-            .paymentComponents
         ],
         path: "Sources/UI/\(String.orderCard)"
     )
@@ -3469,6 +3521,10 @@ private extension Target.Dependency {
         name: .orderCardLandingBackend
     )
     
+    static let createCardApplicationBackend = byName(
+        name: .createCardApplicationBackend
+    )
+    
     static let serverAgent = byName(
         name: .serverAgent
     )
@@ -3852,6 +3908,10 @@ private extension Target.Dependency {
     static let savingsServices = byName(
         name: .savingsServices
     )
+    
+    static let getCardOrderFormService = byName(
+        name: .getCardOrderFormService
+    )
 
     // MARK: - Tools
     
@@ -3945,6 +4005,8 @@ private extension String {
     
     static let orderCardLandingBackend = "OrderCardLandingBackend"
     static let orderCardLandingBackendTests = "OrderCardLandingBackendTests"
+    
+    static let createCardApplicationBackend = "CreateCardApplication"
     // MARK: - UI
     
     static let activateSlider = "ActivateSlider"
@@ -4216,7 +4278,9 @@ private extension String {
     
     static let savingsServices = "SavingsServices"
     static let savingsServicesTests = "SavingsServicesTests"
-
+    
+    static let getCardOrderFormService = "GetCardOrderFormService"
+    static let getCardOrderFormServiceTests = "GetCardOrderFormServiceTests"
     
     // MARK: - Tools
     

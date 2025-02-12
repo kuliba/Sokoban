@@ -446,7 +446,7 @@ final class PaymentsSourceReducerTemplateTests: XCTestCase {
         let (service, source, type, parameterId) = makeOperationDummy(
             .return,
             .template(templateId),
-            .unknown,
+            "unknown",
             Identifier.sfpPhone.rawValue
         )
         

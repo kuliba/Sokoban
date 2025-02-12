@@ -44,7 +44,7 @@ private extension TemplatesListFlowReducer {
             
         case let .flow(flow):
             reduce(&state, &effect, with: flow)
-
+            
         case let .payment(result):
             reduce(&state, &effect, with: result)
             

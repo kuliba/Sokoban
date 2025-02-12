@@ -13,6 +13,8 @@ struct QRViewFactory {
 
 struct QRView: View {
     
+    @State private var isShowing = false
+    
     @ObservedObject var viewModel: QRViewModel
     let viewFactory: QRViewFactory
     
@@ -27,28 +29,43 @@ struct QRView: View {
         
         ZStack {
             
-            QRScannerViewModelView(viewModel: viewModel.scanner)
-            
-            VStack(alignment: .center, spacing: 0)  {
-                
-                Color.clear
-                    .frame(height: 30)
-                
-                headerView()
-                    .padding(.top)
-                    .background(Color.black.opacity(0.5))
-                
-                GeometryReader { geometry in
+            Color.clear
+                .edgesIgnoringSafeArea(.vertical)
+                .onFirstAppear {
                     
-                    let qrCenterRect: CGFloat = min(geometry.size.width , geometry.size.height) / 1.5
-                    
-                    QRCenterRectangleView(qrCenterRect: qrCenterRect, geometry: geometry)
+                    DispatchQueue.main.delay(for: .milliseconds(50)) {
+                        
+                        isShowing = true
+                    }
                 }
+            
+            ZStack {
                 
-                buttonsView()
-                    .background(Color.black.opacity(0.5))
+                QRScannerViewModelView(viewModel: viewModel.scanner)
+                
+                VStack(alignment: .center, spacing: 0)  {
+                    
+                    Color.clear
+                        .frame(height: 30)
+                    
+                    headerView()
+                        .padding(.top)
+                        .background(Color.black.opacity(0.5))
+                    
+                    GeometryReader { geometry in
+                        
+                        let qrCenterRect: CGFloat = min(geometry.size.width , geometry.size.height) / 1.5
+                        
+                        QRCenterRectangleView(qrCenterRect: qrCenterRect, geometry: geometry)
+                    }
+                    
+                    buttonsView()
+                        .background(Color.black.opacity(0.5))
+                }
+                .edgesIgnoringSafeArea(.vertical)
             }
-            .edgesIgnoringSafeArea(.vertical)
+            .opacity(isShowing ? 1 : 0)
+            .animation(.easeInOut, value: isShowing)
             
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 

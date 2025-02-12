@@ -171,10 +171,7 @@ struct PaymentsCheckView: View {
     private func checkBoxView() -> some View {
         
         CheckBoxView(
-            isChecked: .init(
-                get: { viewModel.isChecked },
-                set: { viewModel.setCheckbox(to: $0) }
-            ),
+            isChecked: viewModel.isChecked,
             activeColor: .systemColorActive
         )
         .onTapGesture(perform: viewModel.toggleCheckbox)
@@ -197,8 +194,7 @@ extension PaymentsCheckView {
     
     struct CheckBoxView: View {
         
-        @Binding var isChecked: Bool
-        
+        let isChecked: Bool
         let activeColor: Color
         
         var body: some View {

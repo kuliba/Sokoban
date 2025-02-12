@@ -473,7 +473,7 @@ private extension String {
         "trnPickupPointName": null,
         "docNumber": "330322",
         "operationCategory": "ЖКХ",
-        "payment_flow": "STANDARD_FLOW"
+        "paymentFlow": "STANDARD_FLOW"
     }
 }
 """

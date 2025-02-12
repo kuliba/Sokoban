@@ -31,16 +31,17 @@ extension ViewComponents {
         transfers: PaymentsTransfersPersonalTransfersDomain.Binder
     ) -> some View {
         
-        RxWrapperView(model: transfers.flow) {
+        RxWrapperView(model: transfers.flow) { state, event in
             
             PaymentsTransfersPersonalTransfersFlowView(
-                state: $0,
-                event: $1,
+                state: state,
+                event: event,
                 contentView: {
                     
                     ComposedPaymentsTransfersTransfersContentView(
                         content: transfers.content
                     )
+                    .disabled(state.isLoading)
                 },
                 viewFactory: personalTransfersFlowViewFactory
             )

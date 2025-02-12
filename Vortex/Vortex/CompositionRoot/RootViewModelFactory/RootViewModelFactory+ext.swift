@@ -461,26 +461,41 @@ extension RootViewModelFactory {
             isFlagActive: featureFlags.paymentsTransfersFlag == .active
         )
         
+        let getRootNavigation = { select, notify, completion in
+            
+            self.getRootNavigation(
+                makeProductProfileByID: makeProductProfileByID,
+                select: select,
+                notify: notify,
+                completion: completion
+            )
+        }
+        
+        typealias GN = FlowDomain<RootViewSelect, RootViewNavigation>.GetNavigation
+        let decorateGetRootNavigation: (@escaping GN) -> GN  = schedulers.interactive.decorateGetNavigation(
+            delayProvider: {
+              
+                // TODO: - extract to helper func
+                switch $0 {
+                case .outside:
+                    return .zero
+                
+                case .failure, .orderCardResponse:
+                    return .milliseconds(100)
+
+                case .scanQR, .templates:
+                    return .zero//.milliseconds(100)
+                
+                case .openProduct, .standardPayment, .userAccount:
+                    return .milliseconds(600)
+                }
+            }
+        )
+        
         let composer = RootViewDomain.BinderComposer(
             bindings: bindings,
             dismiss: dismiss,
-            getNavigation: { [weak self] select, notify, completion in
-                
-                guard let self else { return }
-                
-                // TODO: - improve with fine-grained delays for different navigation cases
-                schedulers.interactive.delay(
-                    for: settings.delay * 2
-                ) { [weak self] in
-                    
-                    self?.getRootNavigation(
-                        makeProductProfileByID: makeProductProfileByID,
-                        select: select,
-                        notify: notify,
-                        completion: completion
-                    )
-                }
-            },
+            getNavigation: decorateGetRootNavigation(getRootNavigation),
             bindOutside: { $1.bindOutside(to: $0) },
             scheduler: schedulers.main,
             witnesses: .init(content: witness, dismiss: .default)
