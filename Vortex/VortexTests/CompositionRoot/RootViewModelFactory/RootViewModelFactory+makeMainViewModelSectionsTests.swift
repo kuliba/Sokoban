@@ -17,7 +17,8 @@ final class RootViewModelFactory_makeMainViewModelSectionsTests: RootViewModelFa
         
         let sections = sut.makeMainViewModelSections(
             bannersBinder: bannersBinder,
-            collateralLoanLandingFlag: .active, 
+            c2gFlag: .inactive,
+            collateralLoanLandingFlag: .active,
             savingsAccountFlag: .inactive
         )
         

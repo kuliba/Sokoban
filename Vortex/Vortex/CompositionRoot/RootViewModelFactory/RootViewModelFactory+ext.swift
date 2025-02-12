@@ -813,6 +813,7 @@ private extension RootViewModelFactory {
                 
         let sections = makeMainViewModelSections(
             bannersBinder: bannersBinder,
+            c2gFlag: featureFlags.c2gFlag,
             collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
             savingsAccountFlag: featureFlags.savingsAccountFlag
         )

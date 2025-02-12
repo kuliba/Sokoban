@@ -111,7 +111,7 @@ private extension MainSectionFastOperationView.ViewModel {
     }
 }
 
-private extension MainSectionFastOperationView.ViewModel.FastOperations {
+private extension FastOperations {
     
     var rootEvent: RootEvent? {
         
@@ -119,6 +119,7 @@ private extension MainSectionFastOperationView.ViewModel.FastOperations {
         case .byQr:      return .select(.scanQR)
         case .templates: return .select(.templates)
         case .byPhone:   return nil
+        case .uin:       return .select(.uin)
         case .utility:   return nil
         }
     }
