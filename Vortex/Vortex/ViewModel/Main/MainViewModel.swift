@@ -41,9 +41,6 @@ class MainViewModel: ObservableObject, Resetable {
     
     var rootActions: RootViewModel.RootActions?
     
-    private var disableAlertViewModel: Alert.ViewModel? { paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard({})
-    }
-    
     let model: Model
     private let navigationStateManager: UserAccountNavigationStateManager
     private let sberQRServices: SberQRServices
@@ -97,6 +94,11 @@ class MainViewModel: ObservableObject, Resetable {
         bind(sections)
     }
     
+    private var disableAlertViewModel: Alert.ViewModel {
+        
+        paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard({})
+    }
+
     private func makePromoViewModels(
         promoItems: [PromoItem]
     ) -> [AdditionalProductViewModel]? {
@@ -219,27 +221,23 @@ extension MainViewModel {
     
     private func openScanner() {
         
-        guard !model.onlyCorporateCards
-        else {
-            if let alertViewModel = disableAlertViewModel {
-                
-                route.modal = .alert(alertViewModel)
-            }
-            return
-        }
-        
-        guard let qrModel = viewModelsFactory.qrViewModelFactory.makeQRScannerModel()
-        else { return }
-        
-        let cancellable = bind(qrModel)
-        var route = route
-        route.modal = .fullScreenSheet(.init(
-            type: .qrScanner(.init(
-                model: qrModel,
-                cancellable: cancellable
+        ifNotCorporate { [weak self] in
+            
+            guard let self else { return }
+            
+            guard let qrModel = viewModelsFactory.qrViewModelFactory.makeQRScannerModel()
+            else { return }
+            
+            let cancellable = bind(qrModel)
+            var route = route
+            route.modal = .fullScreenSheet(.init(
+                type: .qrScanner(.init(
+                    model: qrModel,
+                    cancellable: cancellable
+                ))
             ))
-        ))
-        routeSubject.send(route)
+            routeSubject.send(route)
+        }
     }
     
     func openTemplates() {
@@ -560,7 +558,7 @@ private extension MainViewModel {
                                 
                             case .sticker:
                                 handleLandingAction(.sticker)
-
+                                
                             case .insurance:
                                 break
                                 
@@ -570,7 +568,7 @@ private extension MainViewModel {
                             case .savingsAccount:
                                 openSavingsAccount()
                             }
-                                                        
+                            
                         default:
                             break
                         }
@@ -597,7 +595,7 @@ private extension MainViewModel {
                 promo.action
                     .receive(on: scheduler)
                     .sink { [unowned self] action in
-                      
+                        
                         switch action {
                         case let payload as MainSectionViewModelAction.PromoAction.ButtonTapped:
                             
@@ -629,7 +627,7 @@ private extension MainViewModel {
                     case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Sell:
                         
                         openCurrencyWallet(payload.code, .sell)
-
+                        
                         // atm section
                     case _ as MainSectionViewModelAction.Atm.ButtonTapped:
                         guard let placesViewModel = PlacesViewModel(model) else {
@@ -663,34 +661,34 @@ private extension MainViewModel {
         
         if let section = sections.productsSection {
             
-                let shared = section.action.share()
-                
-                shared
-                    .compactMap { $0 as? MainSectionViewModelAction.Products.ProductDidTapped }
-                    .map(\.productId)
-                    .receive(on: scheduler)
-                    .sink { [weak self] in
-                        
-                        self?.action.send(MainViewModelAction.Show.ProductProfile(productId: $0))
-                    }
-                    .store(in: &bindings)
-                
-                shared
-                    .compactMap { $0 as? MainSectionViewModelAction.Products.MoreButtonTapped }
-                    .receive(on: scheduler)
-                    .sink { [weak self] _ in self?.openMoreProducts() }
-                    .store(in: &bindings)
-                
-                shared
-                    .compactMap { $0 as? MainSectionViewModelAction.Products.PromoDidTapped }
-                    .receive(on: scheduler)
-                    .sink { [weak self] in
-                        self?.handlePromoAction($0.promo) }
-                    .store(in: &bindings)
+            let shared = section.action.share()
+            
+            shared
+                .compactMap { $0 as? MainSectionViewModelAction.Products.ProductDidTapped }
+                .map(\.productId)
+                .receive(on: scheduler)
+                .sink { [weak self] in
+                    
+                    self?.action.send(MainViewModelAction.Show.ProductProfile(productId: $0))
+                }
+                .store(in: &bindings)
+            
+            shared
+                .compactMap { $0 as? MainSectionViewModelAction.Products.MoreButtonTapped }
+                .receive(on: scheduler)
+                .sink { [weak self] _ in self?.openMoreProducts() }
+                .store(in: &bindings)
+            
+            shared
+                .compactMap { $0 as? MainSectionViewModelAction.Products.PromoDidTapped }
+                .receive(on: scheduler)
+                .sink { [weak self] in
+                    self?.handlePromoAction($0.promo) }
+                .store(in: &bindings)
         }
     }
     
-    func openMoreProducts() { // 
+    func openMoreProducts() { //
         
         let myProductsViewModel = MyProductsViewModel(
             model,
@@ -810,7 +808,7 @@ private extension MainViewModel {
             } else {
                 handleLandingAction(payload.target)
             }
-          
+            
         case let payload:
 #warning("need change after analyst creates a new action type")
             if payload.type == .payment {
@@ -819,13 +817,14 @@ private extension MainViewModel {
         }
     }
     
-    func openCurrencyWallet( _ code: Currency, _ operation: CurrencySwapView.ViewModel.CurrencyOperation) {
-        
-        if model.onlyCorporateCards,
-           let alertViewModel = disableAlertViewModel {
+    func openCurrencyWallet(
+        _ code: Currency,
+        _ operation: CurrencySwapView.ViewModel.CurrencyOperation
+    ) {
+        ifNotCorporate { [weak self] in
             
-            route.modal = .alert(alertViewModel)
-        } else {
+            guard let self else { return }
+
             guard let walletViewModel = CurrencyWalletViewModel(
                 currency: code,
                 currencyOperation: operation,
@@ -846,11 +845,11 @@ private extension MainViewModel {
         _ external: Templates.State.ExternalTemplatesListFlowState
     ) {
         rootActions?.showSpinner(external.isLoading)
-
+        
         switch external.outside {
         case .none:
             break
-
+            
         case let .productID(productID):
             rootActions?.spinner.hide()
             action.send(MainViewModelAction.Close.Link())
@@ -932,11 +931,10 @@ private extension MainViewModel {
     
     func handleFastPaymentsAction(_ payload: MainSectionViewModelAction.FastPayment.ButtonTapped) {
         
-        if model.onlyCorporateCards,
-           let alertViewModel = disableAlertViewModel {
+        ifNotCorporate { [weak self] in
             
-            route.modal = .alert(alertViewModel)
-        } else {
+            guard let self else { return }
+
             switch payload.operationType {
             case .templates:
                 openTemplates()
@@ -974,13 +972,19 @@ private extension MainViewModel {
     
     func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
         
-        [.init(
-            icon: .ic24Bell,
-            action: { [weak self] in
-                
+        viewModelsFactory.makeTrailingToolbarItems { [weak self] in
+            
+            switch $0 {
+            case .notifications:
                 self?.action.send(MainViewModelAction.ButtonTapped.Messages())
+                
+            case .scanQR:
+                self?.ifNotCorporate {
+                    
+                    self?.action.send(MainViewModelAction.Toolbar.scanQR)
+                }
             }
-        )]
+        }
     }
     
     func openCollateralLoanLanding() {
@@ -988,7 +992,7 @@ private extension MainViewModel {
         let binder = bindersFactory.makeCollateralLoanShowcaseBinder()
         route.destination = .collateralLoanLanding(binder)
     }
-
+    
     private func openDeposit() {
         
         let openDepositViewModel = OpenDepositListViewModel(
@@ -997,7 +1001,7 @@ private extension MainViewModel {
             dismissAction: { [weak self] in
                 
                 self?.action.send(MainViewModelAction.Close.Link())
-            }, 
+            },
             makeAlertViewModel: paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard)
         
         route.destination = .openDepositsList(openDepositViewModel)
@@ -1020,7 +1024,7 @@ private extension MainViewModel {
             route.destination = .openCard(authProductsViewModel)
         }
     }
-        
+    
     private func openOrderCardLanding() {
         
         route.destination = .orderCard
@@ -1071,6 +1075,16 @@ private extension MainViewModel {
             break
         }
     }
+    
+    private func ifNotCorporate(
+        _ execute: @escaping () -> Void
+    ) {
+        if model.onlyCorporateCards {
+            route.modal = .alert(disableAlertViewModel)
+        } else {
+            execute()
+        }
+    }
 }
 
 // MARK: Banner Action
@@ -1089,11 +1103,9 @@ extension MainViewModel {
     
     func openMigTransfer(_ payload: BannerActionMigTransfer) {
         
-        if model.onlyCorporateCards,
-           let alertViewModel = disableAlertViewModel {
+        ifNotCorporate { [weak self] in
             
-            route.modal = .alert(alertViewModel)
-        } else {
+            guard let self else { return }
             
             let paymentsViewModel = PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
                 
@@ -1110,12 +1122,10 @@ extension MainViewModel {
     
     func openContactTransfer(_ payload: BannerActionContactTransfer) {
         
-        if model.onlyCorporateCards,
-           let alertViewModel = disableAlertViewModel {
+        ifNotCorporate { [weak self] in
             
-            route.modal = .alert(alertViewModel)
-        } else {
-            
+            guard let self else { return }
+
             let paymentsViewModel = PaymentsViewModel(source: .direct(phone: nil, countryId: payload.countryId), model: model) { [weak self] in
                 
                 guard let self else { return }
@@ -1978,12 +1988,10 @@ extension MainViewModel {
     
     func orderSticker() {
         
-        if model.onlyCorporateCards,
-           let alertViewModel = disableAlertViewModel {
+        ifNotCorporate { [weak self] in
             
-            route.modal = .alert(alertViewModel)
-        } else {
-            
+            guard let self else { return }
+
             let productsCard = model.products(.card)
             
             if productsCard == nil ||
@@ -2068,6 +2076,12 @@ enum MainViewModelAction {
         struct Contacts: Action {}
         
         struct Countries: Action {}
+    }
+    
+    enum Toolbar: Action {
+        
+        case notifications
+        case scanQR
     }
 }
 

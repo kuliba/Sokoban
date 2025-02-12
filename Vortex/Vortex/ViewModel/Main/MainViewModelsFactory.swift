@@ -24,6 +24,9 @@ struct MainViewModelsFactory {
     let makeProductProfileViewModel: MakeProductProfileViewModel
     let makePromoProductViewModel: MakePromoProductViewModel
     let qrViewModelFactory: QRViewModelFactory
+    let makeTrailingToolbarItems: MakeTrailingToolbarItems
+    
+    typealias MakeTrailingToolbarItems = (@escaping (MainViewModelAction.Toolbar) -> Void) -> [NavigationBarButtonViewModel]
 }
 
 extension MainViewModelsFactory {
@@ -32,5 +35,7 @@ extension MainViewModelsFactory {
         makeAuthFactory: { ModelAuthLoginViewModelFactory(model: $0, rootActions: $1) },
         makeProductProfileViewModel: ProductProfileViewModel.makeProductProfileViewModel,
         makePromoProductViewModel: {_,_ in return nil },
-        qrViewModelFactory: .preview())
+        qrViewModelFactory: .preview(),
+        makeTrailingToolbarItems: { _ in [] }
+    )
 }

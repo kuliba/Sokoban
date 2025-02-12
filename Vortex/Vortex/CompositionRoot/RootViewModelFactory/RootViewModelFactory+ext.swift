@@ -640,8 +640,9 @@ extension ProductProfileViewModel {
                 makePaymentsTransfers: makePaymentsTransfers
             )
             
-            let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
+            let makeAlertViewModels = PaymentsTransfersFactory.MakeAlertViewModels(
                 dataUpdateFailure: {
+                    
                     updateInfoStatusFlag.isActive ? .dataUpdateFailure(primaryAction: $0) : nil
                 },
                 disableForCorporateCard: {
@@ -829,7 +830,11 @@ private extension RootViewModelFactory {
                     featureFlags: featureFlags
                 )
             },
-            qrViewModelFactory: qrViewModelFactory)
+            qrViewModelFactory: qrViewModelFactory,
+            makeTrailingToolbarItems: makeTrailingToolbarItems(
+                featureFlags.c2gFlag
+            )
+        )
         
         let mainViewModel = MainViewModel(
             model,
