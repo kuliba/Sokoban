@@ -27,6 +27,7 @@ struct TemplatesListFlowView<AnywayFlowView: View>: View {
     var body: some View {
         
         viewFactory.makeTemplatesListView(model.state.content)
+            .onFirstAppear(model.state.content.bind) // TODO: (hack) need to move expensive work away from TemplatesListViewModel.init
             .alert(
                 item: model.state.alert,
                 content: alertContent
