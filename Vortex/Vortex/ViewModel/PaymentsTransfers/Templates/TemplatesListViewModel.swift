@@ -1178,6 +1178,7 @@ extension TemplatesListViewModel {
     
     enum State {
         
+        
         case emptyList(EmptyTemplateListViewModel)
         case normal
         case select

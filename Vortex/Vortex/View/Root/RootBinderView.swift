@@ -79,9 +79,6 @@ private extension RootBinderView {
         case let .standardPayment(picker):
             standardPaymentView(picker)
             
-        case let .templates(node):
-            templatesView(node)
-            
         case let .userAccount(userAccount):
             userAccountView(userAccount)
         }
@@ -129,11 +126,20 @@ private extension RootBinderView {
         
         switch fullScreenCover {
         case let .orderCardResponse(response):
-            rootViewFactory.components.makeOrderCardCompleteView(response) { binder.flow.event(.dismiss)
+            rootViewFactory.components.makeOrderCardCompleteView(response) {
+                
+                binder.flow.event(.dismiss)
             }
             
         case let .scanQR(qrScanner):
             qrScannerView(qrScanner)
+            
+        case let .templates(node):
+            NavigationView {
+                
+                templatesView(node)
+            }
+            .navigationViewStyle(.stack)
         }
     }
     
@@ -220,14 +226,11 @@ extension RootViewNavigation {
                 return nil
             }
             
-        case .scanQR:
+        case .scanQR, .templates:
             return nil
             
         case let .standardPayment(node):
             return .standardPayment(node.model)
-            
-        case let .templates(node):
-            return .templates(node)
             
         case let .userAccount(userAccount):
             return .userAccount(userAccount)
@@ -240,7 +243,6 @@ extension RootViewNavigation {
         case openProduct(OpenProduct)
         case productProfile(ProductProfileViewModel)
         case standardPayment(PaymentProviderPickerDomain.Binder)
-        case templates(TemplatesNode)
         case userAccount(UserAccountViewModel)
         
         typealias TemplatesNode = RootViewNavigation.TemplatesNode
@@ -256,14 +258,17 @@ extension RootViewNavigation {
             return nil
             
         case let .orderCardResponse(orderCardResponse):
-               return .orderCardResponse(orderCardResponse)
+            return .orderCardResponse(orderCardResponse)
             
         case let .scanQR(node):
             return .scanQR(node.model)
             
             // cases listed for explicit exhaustivity
-        case .standardPayment, .templates, .userAccount:
+        case .standardPayment, .userAccount:
             return nil
+            
+        case let .templates(node):
+            return .templates(node)
         }
     }
     
@@ -271,6 +276,7 @@ extension RootViewNavigation {
         
         case orderCardResponse(OpenCardDomain.OrderCardResponse)
         case scanQR(QRScannerDomain.Binder)
+        case templates(TemplatesNode)
     }
 }
 
@@ -297,9 +303,6 @@ extension RootViewNavigation.Destination: Identifiable {
         case let .standardPayment(picker):
             return .standardPayment(.init(picker))
             
-        case let .templates(templates):
-            return .templates(.init(templates.model))
-            
         case let .userAccount(userAccount):
             return .userAccount(.init(userAccount))
         }
@@ -311,7 +314,6 @@ extension RootViewNavigation.Destination: Identifiable {
         case openProduct(OpenProductID)
         case productProfile(ObjectIdentifier)
         case standardPayment(ObjectIdentifier)
-        case templates(ObjectIdentifier)
         case userAccount(ObjectIdentifier)
         
         enum OpenProductID: Hashable {
@@ -332,6 +334,9 @@ extension RootViewNavigation.FullScreenCover: Identifiable {
             
         case let .scanQR(qrRScanner):
             return .scanQR(.init(qrRScanner))
+            
+        case let .templates(node):
+            return .templates(.init(node.model))
         }
     }
     
@@ -339,5 +344,6 @@ extension RootViewNavigation.FullScreenCover: Identifiable {
         
         case orderCardResponse
         case scanQR(ObjectIdentifier)
+        case templates(ObjectIdentifier)
     }
 }

@@ -464,10 +464,10 @@ extension RootViewModelFactory {
                 case .failure, .orderCardResponse:
                     return .milliseconds(100)
 
-                case .scanQR:
-                    return .milliseconds(300)
+                case .scanQR, .templates:
+                    return .zero//.milliseconds(100)
                 
-                case .openProduct, .standardPayment, .templates, .userAccount:
+                case .openProduct, .standardPayment, .userAccount:
                     return .milliseconds(600)
                 }
             }
