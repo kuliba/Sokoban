@@ -1629,6 +1629,10 @@
 		2ADBDBD42BD7F76900114E87 /* OperatorsPickerConfig+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBD32BD7F76900114E87 /* OperatorsPickerConfig+preview.swift */; };
 		2ADBDBD62BD8C16500114E87 /* _exploring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBD52BD8C16500114E87 /* _exploring.swift */; };
 		2ADBE70C2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */; };
+		2ADD15F42D5CB6A3003C2AB5 /* C2GPreviewAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADD15F32D5CB6A3003C2AB5 /* C2GPreviewAppApp.swift */; };
+		2ADD15F62D5CB6A3003C2AB5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADD15F52D5CB6A3003C2AB5 /* ContentView.swift */; };
+		2ADD15F82D5CB6A3003C2AB5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2ADD15F72D5CB6A3003C2AB5 /* Assets.xcassets */; };
+		2ADD15FB2D5CB6A3003C2AB5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2ADD15FA2D5CB6A3003C2AB5 /* Preview Assets.xcassets */; };
 		2ADDFD802AEFF3C2002FCE43 /* RSADomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADDFD7F2AEFF3C2002FCE43 /* RSADomain.swift */; };
 		2ADDFD822AEFF4F7002FCE43 /* ECDHDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADDFD812AEFF4F7002FCE43 /* ECDHDomain.swift */; };
 		2ADF317F2CA3536600F1668B /* PaymentServiceOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADF317E2CA3536600F1668B /* PaymentServiceOperator.swift */; };
@@ -5279,6 +5283,11 @@
 		2ADBDBD32BD7F76900114E87 /* OperatorsPickerConfig+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperatorsPickerConfig+preview.swift"; sourceTree = "<group>"; };
 		2ADBDBD52BD8C16500114E87 /* _exploring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _exploring.swift; sourceTree = "<group>"; };
 		2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+getMosParkingListDataTests.swift"; sourceTree = "<group>"; };
+		2ADD15F12D5CB6A2003C2AB5 /* C2GPreviewApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = C2GPreviewApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2ADD15F32D5CB6A3003C2AB5 /* C2GPreviewAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C2GPreviewAppApp.swift; sourceTree = "<group>"; };
+		2ADD15F52D5CB6A3003C2AB5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		2ADD15F72D5CB6A3003C2AB5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2ADD15FA2D5CB6A3003C2AB5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2ADDFD7F2AEFF3C2002FCE43 /* RSADomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSADomain.swift; sourceTree = "<group>"; };
 		2ADDFD812AEFF4F7002FCE43 /* ECDHDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECDHDomain.swift; sourceTree = "<group>"; };
 		2ADF317E2CA3536600F1668B /* PaymentServiceOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentServiceOperator.swift; sourceTree = "<group>"; };
@@ -7336,6 +7345,13 @@
 				2AD87D9C2BD778D4004D06C0 /* UIPrimitives in Frameworks */,
 				2AD87D9E2BD77AC3004D06C0 /* RxViewModel in Frameworks */,
 				2AD87D9A2BD778A4004D06C0 /* ForaTools in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2ADD15EE2D5CB6A2003C2AB5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -12650,6 +12666,25 @@
 			path = OperatorPicker;
 			sourceTree = "<group>";
 		};
+		2ADD15F22D5CB6A3003C2AB5 /* C2GPreviewApp */ = {
+			isa = PBXGroup;
+			children = (
+				2ADD15F32D5CB6A3003C2AB5 /* C2GPreviewAppApp.swift */,
+				2ADD15F52D5CB6A3003C2AB5 /* ContentView.swift */,
+				2ADD15F72D5CB6A3003C2AB5 /* Assets.xcassets */,
+				2ADD15F92D5CB6A3003C2AB5 /* Preview Content */,
+			);
+			path = C2GPreviewApp;
+			sourceTree = "<group>";
+		};
+		2ADD15F92D5CB6A3003C2AB5 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				2ADD15FA2D5CB6A3003C2AB5 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
 		2AE2215F2C0C398100618E7C /* Prepayment */ = {
 			isa = PBXGroup;
 			children = (
@@ -12733,6 +12768,7 @@
 				2A0F1E2A2C06E144006E1231 /* AutoScrollingListPreview */,
 				2A4CC4892D227E4A00F5C263 /* BinderComposerPreview */,
 				2A4CC49A2D227E4B00F5C263 /* BinderComposerPreviewTests */,
+				2ADD15F22D5CB6A3003C2AB5 /* C2GPreviewApp */,
 				C1E07D962BFE2D2F00D07180 /* CalendarPreview */,
 				A7598A502CE766DC001980B1 /* CollateralLoanLandingPreview */,
 				2AFED9662C0F929A008F2F95 /* CachedModelsStatePreview */,
@@ -17948,6 +17984,7 @@
 				A7598A5D2CE7671A001980B1 /* CollateralLoanLandingPreview.app */,
 				2A4CC4882D227E4A00F5C263 /* BinderComposerPreview.app */,
 				2A4CC4972D227E4B00F5C263 /* BinderComposerPreviewTests.xctest */,
+				2ADD15F12D5CB6A2003C2AB5 /* C2GPreviewApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -19083,6 +19120,23 @@
 			productReference = 2AD87D892BD77859004D06C0 /* NavStackPreview.app */;
 			productType = "com.apple.product-type.application";
 		};
+		2ADD15F02D5CB6A2003C2AB5 /* C2GPreviewApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2ADD16002D5CB6A3003C2AB5 /* Build configuration list for PBXNativeTarget "C2GPreviewApp" */;
+			buildPhases = (
+				2ADD15ED2D5CB6A2003C2AB5 /* Sources */,
+				2ADD15EE2D5CB6A2003C2AB5 /* Frameworks */,
+				2ADD15EF2D5CB6A2003C2AB5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = C2GPreviewApp;
+			productName = C2GPreviewApp;
+			productReference = 2ADD15F12D5CB6A2003C2AB5 /* C2GPreviewApp.app */;
+			productType = "com.apple.product-type.application";
+		};
 		2AE5972929F918C20083F138 /* PhoneNumberTextViewPreview */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2AE5973529F918C30083F138 /* Build configuration list for PBXNativeTarget "PhoneNumberTextViewPreview" */;
@@ -19583,6 +19637,9 @@
 					2AD87D882BD77859004D06C0 = {
 						CreatedOnToolsVersion = 15.3;
 					};
+					2ADD15F02D5CB6A2003C2AB5 = {
+						CreatedOnToolsVersion = 15.3;
+					};
 					2AE5972929F918C20083F138 = {
 						CreatedOnToolsVersion = 14.3;
 					};
@@ -19702,6 +19759,7 @@
 				A7598A5C2CE7671A001980B1 /* CollateralLoanLandingPreview */,
 				2A4CC4872D227E4A00F5C263 /* BinderComposerPreview */,
 				2A4CC4962D227E4B00F5C263 /* BinderComposerPreviewTests */,
+				2ADD15F02D5CB6A2003C2AB5 /* C2GPreviewApp */,
 			);
 		};
 /* End PBXProject section */
@@ -19827,6 +19885,15 @@
 			files = (
 				2AD87D932BD7785B004D06C0 /* Preview Assets.xcassets in Resources */,
 				2AD87D902BD7785B004D06C0 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2ADD15EF2D5CB6A2003C2AB5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2ADD15FB2D5CB6A3003C2AB5 /* Preview Assets.xcassets in Resources */,
+				2ADD15F82D5CB6A3003C2AB5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -20735,6 +20802,15 @@
 				2ADBDBCE2BD7F12B00114E87 /* OperatorsView.swift in Sources */,
 				2ADBDBBC2BD7D2CA00114E87 /* UtilityPaymentOperatorPickerEffect.swift in Sources */,
 				2AD87D8C2BD77859004D06C0 /* NavStackPreviewApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2ADD15ED2D5CB6A2003C2AB5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2ADD15F62D5CB6A3003C2AB5 /* ContentView.swift in Sources */,
+				2ADD15F42D5CB6A3003C2AB5 /* C2GPreviewAppApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -25745,6 +25821,147 @@
 			};
 			name = Preprod;
 		};
+		2ADD15FC2D5CB6A3003C2AB5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/C2GPreviewApp/Preview Content\"";
+				DEVELOPMENT_TEAM = 7YWKFT4W94;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.C2GPreviewApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2ADD15FD2D5CB6A3003C2AB5 /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/C2GPreviewApp/Preview Content\"";
+				DEVELOPMENT_TEAM = 7YWKFT4W94;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.C2GPreviewApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Mock;
+		};
+		2ADD15FE2D5CB6A3003C2AB5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/C2GPreviewApp/Preview Content\"";
+				DEVELOPMENT_TEAM = 7YWKFT4W94;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.C2GPreviewApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2ADD15FF2D5CB6A3003C2AB5 /* Preprod */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/C2GPreviewApp/Preview Content\"";
+				DEVELOPMENT_TEAM = 7YWKFT4W94;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.C2GPreviewApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Preprod;
+		};
 		2AE5973629F918C30083F138 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -28299,6 +28516,17 @@
 				2AD87D952BD7785B004D06C0 /* Mock */,
 				2AD87D962BD7785B004D06C0 /* Release */,
 				2AD87D972BD7785B004D06C0 /* Preprod */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2ADD16002D5CB6A3003C2AB5 /* Build configuration list for PBXNativeTarget "C2GPreviewApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2ADD15FC2D5CB6A3003C2AB5 /* Debug */,
+				2ADD15FD2D5CB6A3003C2AB5 /* Mock */,
+				2ADD15FE2D5CB6A3003C2AB5 /* Release */,
+				2ADD15FF2D5CB6A3003C2AB5 /* Preprod */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
