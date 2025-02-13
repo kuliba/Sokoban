@@ -25,7 +25,7 @@ struct RootBinderView: View {
                     makeContentView: rootViewFactory.makeSplashScreenView
                 )
                 .zIndex(2.0)
-
+                
                 rootViewInNavigationView(state: state, event: event)
                 spinnerView(isShowing: state.isLoading)
             }
@@ -94,19 +94,8 @@ private extension RootBinderView {
         case let .templates(node):
             templatesView(node)
             
-        case .uin:
-            // TODO: extract to rootViewFactory.components
-            Text("TBD: Search by UIN")
-                .frame(maxHeight: .infinity, alignment: .center)
-                .navigationBarWithBack(
-                    title: "Поиск по УИН",
-                    subtitle: "Поиск начислений по УИН",
-                    dismiss: { binder.flow.event(.dismiss) },
-                    rightItem: .barcodeScanner {
-                        
-                        binder.flow.event(.select(.scanQR))
-                    }
-                )
+        case let .searchByUIN(searchByUIN):
+            searchByUINView(searchByUIN)
             
         case let .userAccount(userAccount):
             userAccountView(userAccount)
@@ -137,6 +126,23 @@ private extension RootBinderView {
         
         rootViewFactory.components.makeTemplatesListFlowView(templates)
             .accessibilityIdentifier(ElementIDs.rootView(.destination(.templates)).rawValue)
+    }
+    
+    private func searchByUINView(
+        _ searchByUIN: SearchByUINDomain.Binder
+    ) -> some View {
+        
+        rootViewFactory.components.searchByUINView(searchByUIN)
+            .navigationBarWithBack(
+                title: "Поиск по УИН",
+                subtitle: "Поиск начислений по УИН",
+                dismiss: { binder.flow.event(.dismiss) },
+                rightItem: .barcodeScanner {
+                    
+                    binder.flow.event(.select(.scanQR))
+                }
+            )
+            .disablingLoading(flow: searchByUIN.flow)
     }
     
     private func userAccountView(
@@ -242,8 +248,8 @@ extension RootViewNavigation {
         case let .templates(node):
             return .templates(node)
             
-        case .uin:
-            return .uin
+        case let .searchByUIN(searchByUIN):
+            return .searchByUIN(searchByUIN)
             
         case let .userAccount(userAccount):
             return .userAccount(userAccount)
@@ -254,11 +260,12 @@ extension RootViewNavigation {
         
         case makeStandardPaymentFailure(ServiceCategoryFailureDomain.Binder)
         case productProfile(ProductProfileViewModel)
+        case searchByUIN(SearchByUIN)
         case standardPayment(PaymentProviderPickerDomain.Binder)
         case templates(TemplatesNode)
-        case uin
         case userAccount(UserAccountViewModel)
         
+        typealias SearchByUIN = SearchByUINDomain.Binder
         typealias TemplatesNode = RootViewNavigation.TemplatesNode
     }
     
@@ -275,7 +282,7 @@ extension RootViewNavigation {
             return .scanQR(node.model)
             
             // cases listed for explicit exhaustivity
-        case .standardPayment, .templates, .uin, .userAccount:
+        case .standardPayment, .templates, .searchByUIN, .userAccount:
             return nil
         }
     }
@@ -303,8 +310,9 @@ extension RootViewNavigation.Destination: Identifiable {
         case let .templates(templates):
             return .templates(.init(templates.model))
             
-        case .uin:
-            return .uin
+        case let .searchByUIN(searchByUIN):
+            return .searchByUIN(.init(searchByUIN))
+            
         case let .userAccount(userAccount):
             return .userAccount(.init(userAccount))
         }
@@ -314,9 +322,9 @@ extension RootViewNavigation.Destination: Identifiable {
         
         case makeStandardPaymentFailure
         case productProfile(ObjectIdentifier)
+        case searchByUIN(ObjectIdentifier)
         case standardPayment(ObjectIdentifier)
         case templates(ObjectIdentifier)
-        case uin
         case userAccount(ObjectIdentifier)
     }
 }

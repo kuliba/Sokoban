@@ -56,8 +56,8 @@ extension RootViewModelFactory {
         case let .standardPayment(type):
             initiateStandardPaymentFlow(type)
             
-        case .uin:
-            completion(.uin)
+        case .searchByUIN:
+            completion(.searchByUIN(makeSearchByUIN()))
             
         case .userAccount:
             makeUserAccount()
