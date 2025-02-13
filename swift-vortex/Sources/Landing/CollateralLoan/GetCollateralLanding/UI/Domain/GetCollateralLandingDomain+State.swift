@@ -18,17 +18,95 @@ extension GetCollateralLandingDomain {
         var isLoading = false
         var result: Result?
         var iHaveSalaryInCompany = false
-        var selectedCollateral: String?
-        var selectedMonthPeriod: UInt?
+        var selectedCollateralType: String
+        var selectedMonthPeriod: UInt
+        var desiredAmount: UInt
 
         public init(
             landingID: String,
-            bottomSheet: BottomSheet? = nil
+            bottomSheet: BottomSheet? = nil,
+            selectedCollateralType: String = "", // Calculator default value
+            selectedMonthPeriod: UInt = 12, // Calculator default value
+            desiredAmount: UInt = 3_000_000 // Calculator default value
         ) {
             self.landingID = landingID
             self.bottomSheet = bottomSheet
+            self.selectedMonthPeriod = selectedMonthPeriod
+            self.selectedCollateralType = selectedCollateralType
+            self.desiredAmount = desiredAmount
         }
     }
+}
+
+extension GetCollateralLandingDomain.State {
+    
+    var selectedPeriodTitle: String {
+        
+        product?.calc.rates.first { $0.termMonth == selectedMonthPeriod }?.termStringValue ?? ""
+    }
+    
+    var selectedCollateralTitle: String {
+        
+        product?.calc.collaterals.first { $0.type == selectedCollateralType }?.name ?? ""
+    }
+    
+    var selectedPercentDouble: Double {
+        
+        iHaveSalaryInCompany
+            ? product?.calc.rates.first { $0.termMonth == selectedMonthPeriod }?.ratePayrollClient ?? .zero
+            : product?.calc.rates.first { $0.termMonth == selectedMonthPeriod }?.rateBase ?? .zero
+    }
+    
+    var selectedPercent: String {
+        
+        String(format: "%.1f", selectedPercentDouble) + "%"
+    }
+    
+    var formattedDesiredAmount: String {
+      
+        formatAmount(desiredAmount)
+    }
+    
+    func formatAmount(_ amount: UInt) -> String {
+        
+        String(format: "%ld %@", locale: Locale.current, amount, rubSymbol)
+    }
+    
+    var rubSymbol: String {
+        
+        let code = "RUB"
+        let locale = NSLocale(localeIdentifier: code)
+        return locale.displayName(forKey: NSLocale.Key.currencySymbol, value: code) ?? "₽"
+    }
+    
+    func annuity(sumCredit: UInt, percent: Double, months: UInt) -> Double {
+        
+        let percentPerMonth = percent / 100 / 12;
+        let denominator = pow(1 + percentPerMonth, Double(months)) - 1
+        return Double(sumCredit) * (percentPerMonth + percentPerMonth / denominator)
+    }
+    
+    var formattedAnnuity: String {
+        
+        let annuity = annuity(
+            sumCredit: desiredAmount,
+            percent: selectedPercentDouble,
+            months: selectedMonthPeriod
+        )
+        
+        return annuity.formatted(.currency(code: "RUB"))
+    }
+    
+    var selectedBottomSheetItem: GetCollateralLandingDomain.State.BottomSheet.Item? {
+        
+        bottomSheetItems.first { $0.termMonth == selectedMonthPeriod }
+    }
+}
+
+extension FloatingPoint {
+
+    var whole: Self { modf(self).0 }
+    var fraction: Self { modf(self).1 }
 }
 
 extension GetCollateralLandingDomain.State {
@@ -59,6 +137,16 @@ extension GetCollateralLandingDomain.State {
     }
 }
 
+extension GetCollateralLandingDomain.State.BottomSheet.Item {
+    
+    static let preview = Self(
+        id: "",
+        termMonth: 12,
+        icon: "",
+        title: "1 год"
+    )
+}
+
 extension GetCollateralLandingDomain.State {
     
     var product: Product? {
@@ -87,9 +175,8 @@ extension GetCollateralLandingDomain.State {
     
     public func payload(_ product: GetCollateralLandingProduct) -> CreateDraftCollateralLoanApplicationUIData {
         
-        // TODO: Need to get from calculate summ from calculator
         return .init(
-            amount: 1_234_567,
+            amount: desiredAmount,
             cities: product.cities,
             consents: product.consents.map { .init(name: $0.name, link: $0.link) },
             icons: .init(
@@ -102,10 +189,9 @@ extension GetCollateralLandingDomain.State {
             maxAmount: product.calc.amount.maxIntValue,
             minAmount: product.calc.amount.minIntValue,
             name: product.name,
-            percent: 18.54221,
+            percent: selectedPercentDouble,
             periods: product.calc.rates.map { .init(title: $0.termStringValue, months: $0.termMonth) },
-            selectedCity: "Балабаново",
-            selectedMonths: 24
+            selectedMonths: selectedMonthPeriod
         )
     }
 }

@@ -11,7 +11,7 @@ extension ResponseMapper {
     
     public struct CollateralLoanLandingSaveConsentsResponse: Equatable {
         
-        public let applicationId: UInt
+        public let applicationID: UInt
         public let name: String
         public let amount: UInt
         public let termMonth: UInt
@@ -24,7 +24,7 @@ extension ResponseMapper {
         public let responseMessage: String
         
         public init(
-            applicationId: UInt,
+            applicationID: UInt,
             name: String,
             amount: UInt,
             termMonth: UInt,
@@ -36,7 +36,7 @@ extension ResponseMapper {
             status: String,
             responseMessage: String
         ) {
-            self.applicationId = applicationId
+            self.applicationID = applicationID
             self.name = name
             self.amount = amount
             self.termMonth = termMonth

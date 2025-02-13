@@ -782,6 +782,7 @@ private extension MainViewModel {
     
     func bannerAction(_ payload: MainSectionViewModelAction.PromoAction.ButtonTapped) {
         
+        // TODO: simplify and remove
         switch payload.actionData {
         case let payload as BannerActionDepositOpen:
             guard let depositId = Int(payload.depositProductId),
@@ -808,11 +809,17 @@ private extension MainViewModel {
             } else {
                 handleLandingAction(payload.target)
             }
-            
+
         case let payload:
-#warning("need change after analyst creates a new action type")
-            if payload.type == .payment {
+            switch payload.type {
+            case .cardOrder:
+                action.send(RootEvent.select(.openProduct(.card)))
+                
+            case .payment:
                 rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService)
+                
+            default:
+                break
             }
         }
     }

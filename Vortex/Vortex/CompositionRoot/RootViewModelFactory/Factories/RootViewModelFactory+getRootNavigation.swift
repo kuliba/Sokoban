@@ -26,6 +26,15 @@ extension RootViewModelFactory {
         completion: @escaping (RootViewNavigation) -> Void
     ) {
         switch select {
+        case let .orderCardResponse(orderCardResponse):
+            completion(.orderCardResponse(orderCardResponse))
+            
+        case let .openProduct(type):
+            completion(.openProduct(openProduct(
+                type: type,
+                notify: { notify(.select(.orderCardResponse($0))) }
+            )))
+            
         case let .outside(outside):
             switch outside {
             case let .productProfile(id):
@@ -170,7 +179,7 @@ extension RootViewModelFactory {
 private extension QRScannerDomain.FlowDomain.State {
     
     var rootOutside: RootViewSelect.RootViewOutside? {
-
+        
         switch navigation {
         case let .outside(outside):
             switch outside {
@@ -187,7 +196,7 @@ private extension QRScannerDomain.FlowDomain.State {
         }
     }
 }
-    
+
 private extension PaymentProviderPickerDomain.Navigation {
     
     var outcome: NavigationOutcome<RootViewSelect>? {

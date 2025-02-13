@@ -60,7 +60,7 @@ struct CreateDraftCollateralLoanApplicationCityView: View {
             info: .init(
                 id: .other(State.FieldID.city.id),
                 title: config.elements.city.title,
-                value: state.data.selectedCity,
+                value: state.selectedCity,
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),

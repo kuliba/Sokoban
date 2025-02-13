@@ -101,7 +101,7 @@ public struct GetCollateralLandingView: View {
                 DocumentsView(
                     product: product,
                     config: factory.config,
-                    makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash
+                    factory: factory
                 )
             }
             

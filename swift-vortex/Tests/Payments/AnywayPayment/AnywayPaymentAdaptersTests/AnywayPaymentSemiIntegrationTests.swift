@@ -264,14 +264,15 @@ private func makeOutlineProduct(
     )
 }
 
-private func makeAnywayPaymentPayload(
+func makeAnywayPaymentPayload(
     puref: AnywayPaymentOutline.Payload.Puref = anyMessage(),
     title: String = anyMessage(),
     subtitle: String = anyMessage(),
-    icon: String = anyMessage()
+    icon: String = anyMessage(),
+    templateID: Int? = nil
 ) -> AnywayPaymentOutline.Payload {
     
-    return .init(puref: puref, title: title, subtitle: subtitle, icon: icon)
+    return .init(puref: puref, title: title, subtitle: subtitle, icon: icon, templateID: templateID)
 }
 
 private func makeEmptyPayment(

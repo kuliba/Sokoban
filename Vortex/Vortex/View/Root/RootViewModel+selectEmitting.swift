@@ -71,7 +71,9 @@ private extension MainViewModel {
     
     private var explicitRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
         
-        sections
+        [action.compactMap(\.rootEvent).eraseToAnyPublisher()]
+        
+        + sections
             .map {
                 
                 $0.action.compactMap(\.rootEvent).eraseToAnyPublisher()

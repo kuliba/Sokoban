@@ -169,8 +169,10 @@ final class OperationDetailInfoViewModel: Identifiable {
             
         case .betweenTheir:
             
-            if let creditAccount = creditAccount(payeeCardID: operation?.payeeCardId) {
-                
+            if let creditAccount = creditAccount(
+                cardID: operation?.payeeCardId,
+                accountID: operation?.payeeAccountId
+            ) {
                 cells.append(creditAccount)
             }
 
@@ -191,8 +193,10 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(comissionCell)
             }
             
-            if let debitAccount = debitAccount(payeeCardID: operation?.payerAccountId ?? operation?.payerCardId) {
-                
+            if let debitAccount = debitAccount(
+                cardID: operation?.payerCardId,
+                accountID: operation?.payerAccountId
+            ) {
                 cells.append(debitAccount)
             }
             
@@ -1167,36 +1171,65 @@ final class OperationDetailInfoViewModel: Identifiable {
 extension OperationDetailInfoViewModel {
     
     func creditAccount(
-        payeeCardID: Int?,
+        cardID: Int?,
+        accountID: Int?,
         title: String = "Счет пополнения"
     ) -> ProductCellViewModel? {
         
-        guard let payeeCardID else { return nil }
-        
-        return model.account(matching: payeeCardID, title: title)
+        return model.account(
+            matching: cardID,
+            or: accountID,
+            title: title
+        )
     }
     
     func debitAccount(
-        payeeCardID: Int?,
+        cardID: Int?,
+        accountID: Int?,
         title: String = "Счет списания"
     ) -> ProductCellViewModel? {
         
-        guard let payeeCardID else { return nil }
-        
-        return model.account(matching: payeeCardID, title: title)
+        return model.account(
+            matching: cardID,
+            or: accountID,
+            title: title
+        )
     }
 }
 
 extension Model {
+ 
+    private func product(
+        forCardID cardID: Int?,
+        orAccountID accountID: Int?
+    ) -> ProductData? {
+        
+        let products = products.value.values.flatMap { $0 }
+        
+        if let cardID,
+           let card = products.first(matching: cardID) {
+          
+            return card
+        }
+        
+        if let accountID,
+           let account = products.first(matching: accountID) {
+          
+            return account
+        }
+        
+        return nil
+    }
     
     func account(
-        matching payeeCardID: Int,
+        matching cardID: Int?,
+        or accountID: Int?,
         title: String
     ) -> OperationDetailInfoViewModel.ProductCellViewModel? {
         
-        for product in products.value {
+        for products in products.value.values {
             
-            if let card = product.value.first(matching: payeeCardID),
+            if let card = product(forCardID: cardID, orAccountID: accountID),
                let description = card.number?.suffix(4),
                let balance = card.balance,
                let balanceFormatted = amountFormatted(
@@ -1687,6 +1720,11 @@ private extension OperationDetailInfoViewModel {
     }
 }
 
+private extension String {
+
+    static let standard = "STANDARD_FLOW"
+}
+
 // MARK: - Methods
 
 extension OperationDetailInfoViewModel {
@@ -1711,11 +1749,11 @@ extension OperationDetailInfoViewModel {
             productId: payerProductId,
             productNumber: payerProductNumber)
          
-        let operationCategoryViewModel = operation.operationCategory != nil ? Self.operationCategoryCellViewModel(
+        let operationCategoryViewModel = operation.paymentFlow == .standard ? Self.operationCategoryCellViewModel(
             value: operation.operationCategory
         ) : nil
         
-        let documentNumberViewModel = operation.documentNumber != nil ? Self.documentNumberCellViewModel(
+        let documentNumberViewModel = operation.paymentFlow == .standard ? Self.documentNumberCellViewModel(
             value: operation.documentNumber
         ) : nil
 
@@ -1984,7 +2022,20 @@ extension OperationDetailInfoViewModel {
             }
             
         case .external:
-            return Self.makeItemsForExternal(dictionaryFullBankInfoBank: model.dictionaryFullBankInfoBank, operation, payeeNameViewModel, payeeViewModel, payeeBankViewModel, operationCategoryViewModel, documentNumberViewModel, amountViewModel, commissionViewModel, payerViewModel, purposeViewModel, dateViewModel)
+            return Self.makeItemsForExternal(
+                dictionaryFullBankInfoBank: model.dictionaryFullBankInfoBank,
+                operation,
+                payeeNameViewModel,
+                payeeViewModel,
+                payeeBankViewModel,
+                operationCategoryViewModel,
+                nil, //documentNumberViewModel,
+                amountViewModel,
+                commissionViewModel,
+                payerViewModel,
+                purposeViewModel,
+                dateViewModel
+            )
             
         case .internet:
             
@@ -2072,7 +2123,7 @@ extension OperationDetailInfoViewModel {
             
             var cells = [
                 operationCategoryViewModel,
-                documentNumberViewModel,
+//                documentNumberViewModel,
                 amountViewModel,
                 commissionViewModel,
                 payerViewModel,
@@ -2097,8 +2148,8 @@ extension OperationDetailInfoViewModel {
             return Self.makeItemsForTransport(
                 dictionaryAnywayOperator: model.dictionaryAnywayOperator,
                 operation,
-                operationCategoryViewModel,
-                documentNumberViewModel,
+                nil, //operationCategoryViewModel,
+                nil, //documentNumberViewModel,
                 amountViewModel,
                 commissionViewModel,
                 payerViewModel,
@@ -2155,17 +2206,33 @@ extension OperationDetailInfoViewModel {
                 cells.insert(commentCell, at: 0)
             }
             
-            return cells.compactMap {$0}
+            return cells.compactMap { $0 }
+        
+        case .mobile:
+            
+            let debitViewModel = debitAccount(
+                cardID: operation.payerCardId,
+                accountID: operation.payerAccountId
+            )
+            
+            return [
+                payeeViewModel,
+                amountViewModel,
+                commissionViewModel,
+                debitViewModel,
+                dateViewModel].compactMap { $0 }
             
         default:
             
             return [
-                payerViewModel,
+                payeeViewModel,
                 operationCategoryViewModel,
+                documentNumberViewModel,
+                payeeNumberPhone,
                 amountViewModel,
                 commissionViewModel,
-                payeeViewModel,
-                dateViewModel].compactMap {$0}
+                payerViewModel,
+                dateViewModel].compactMap { $0 }
         }
     }
     

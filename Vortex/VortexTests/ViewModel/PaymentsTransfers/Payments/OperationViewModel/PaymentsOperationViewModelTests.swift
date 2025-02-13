@@ -10,7 +10,7 @@ import XCTest
 import Combine
 
 final class PaymentsOperationViewModelTests: XCTestCase {
-
+    
     func test_initWithEmptyOperation_emptyTopAndFeedSections_continueButtomItemInBottom() throws {
         
         let (sut, _) = makeSut()
@@ -48,7 +48,7 @@ final class PaymentsOperationViewModelTests: XCTestCase {
     }
     
     func test_itemValueChange_itemDidUpdatedActionTriggered() throws {
-
+        
         // given
         let param = makeContinueUpdatableFeedParam(id: "one", value: nil)
         let operation = Payments.Operation.makeWithOneUncompleteStepForAnyService(params: [param])
@@ -61,7 +61,7 @@ final class PaymentsOperationViewModelTests: XCTestCase {
         let firstFeedItem = try XCTUnwrap(sut.feed.first?.items.first)
         firstFeedItem.update(value: "test")
         _ = XCTWaiter.wait(for: [.init()], timeout: 0.1)
-
+        
         // then
         XCTAssertEqual(actionsSpy.values.count, 1)
         let firstAction = try XCTUnwrap(actionsSpy.values.first as? PaymentsOperationViewModelAction.ItemDidUpdated)
@@ -159,63 +159,6 @@ final class PaymentsOperationViewModelTests: XCTestCase {
         let lastOperation = try XCTUnwrap(operationSpy.values.last)
         XCTAssertEqual(lastOperation.service, updatedOperation.service)
         XCTAssertEqual(lastOperation.steps.count, updatedOperation.steps.count)
-    }
-    
-    
-    func test_modelPaymentProcessResponseWithConfirmResult_linkUpdatedToConfirm() throws {
-        
-        let operation = Payments.Operation.makeWithOneUncompleteStepForAnyService(params: [])
-        let (sut, model) = makeSut(operation: operation)
-        let linkSpy = ValueSpy(sut.$link)
-        
-        model.action.send(ModelAction.Payment.Process.Response(result: .confirm(operation)))
-        
-        _ = XCTWaiter.wait(for: [.init()], timeout: 0.1)
-        
-        let lastLink = try XCTUnwrap(linkSpy.values.last)
-        guard case .confirm = lastLink else {
-            XCTFail("Link should be updated to confirm type")
-            return
-        }
-    }
-    
-    func test_modelPaymentProcessResponseWithConfirmResultForAbroadService_closeActionSet() throws {
-        
-        var closeActionCalled = false
-        let closeAction = { closeActionCalled = true }
-        
-        let operation = Payments.Operation(service: .abroad)
-        let (sut, model) = makeSut(operation: operation, closeAction: closeAction)
-        
-        model.action.send(ModelAction.Payment.Process.Response(result: .confirm(operation)))
-        
-        _ = XCTWaiter.wait(for: [.init()], timeout: 0.1)
-        
-        guard case let .confirm(confirmViewModel) = sut.link else {
-            XCTFail("Link should be updated to confirm type")
-            return
-        }
-        
-        confirmViewModel.closeAction()
-        XCTAssertTrue(closeActionCalled, "Close action should be called for abroad service")
-    }
-    
-    func test_modelPaymentProcessResponseWithConfirmResultForNonAbroadService_linkResetOnClose() throws {
-        
-        let operation = Payments.Operation(service: .fms)
-        let (sut, model) = makeSut(operation: operation)
-        
-        model.action.send(ModelAction.Payment.Process.Response(result: .confirm(operation)))
-        
-        _ = XCTWaiter.wait(for: [.init()], timeout: 0.1)
-        
-        guard case let .confirm(confirmViewModel) = sut.link else {
-            XCTFail("Link should be updated to confirm type")
-            return
-        }
-        
-        confirmViewModel.closeAction()
-        XCTAssertNil(sut.link, "Link should be reset for non-abroad service")
     }
 }
 

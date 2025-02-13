@@ -397,7 +397,10 @@ final class PaymentsSuccessViewModel: ObservableObject, Identifiable {
                         return
                     }
                     
-                    let viewModel = adapter.makeOperationDetailInfoViewModel(operationDetailData: operationDetailData, merchantLogoMD5Hash: nil) { [weak self] in
+                    let viewModel = adapter.makeOperationDetailInfoViewModel(
+                        operationDetailData: operationDetailData,
+                        merchantLogoMD5Hash: nil
+                    ) { [weak self] in
                         
                         self?.sheet = nil
                     }

@@ -19,6 +19,7 @@ struct CollateralLoanShowcaseWrapperView: View {
     
     let binder: GetShowcaseDomain.Binder
     let factory: Factory
+    let goToMain: () -> Void
 
     var body: some View {
         
@@ -87,7 +88,8 @@ struct CollateralLoanShowcaseWrapperView: View {
                 factory: .init(
                     makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
                     makeImageViewWithURL: factory.makeImageViewWithURL
-                )
+                ), 
+                goToMain: goToMain
             )
         }
     }
