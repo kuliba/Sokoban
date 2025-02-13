@@ -95,18 +95,7 @@ private extension RootBinderView {
             templatesView(node)
             
         case .uin:
-            // TODO: extract to rootViewFactory.components
-            Text("TBD: Search by UIN")
-                .frame(maxHeight: .infinity, alignment: .center)
-                .navigationBarWithBack(
-                    title: "Поиск по УИН",
-                    subtitle: "Поиск начислений по УИН",
-                    dismiss: { binder.flow.event(.dismiss) },
-                    rightItem: .barcodeScanner {
-                        
-                        binder.flow.event(.select(.scanQR))
-                    }
-                )
+            searchByUINView()
             
         case let .userAccount(userAccount):
             userAccountView(userAccount)
@@ -137,6 +126,20 @@ private extension RootBinderView {
         
         rootViewFactory.components.makeTemplatesListFlowView(templates)
             .accessibilityIdentifier(ElementIDs.rootView(.destination(.templates)).rawValue)
+    }
+    
+    private func searchByUINView() -> some View {
+        
+        rootViewFactory.components.searchByUINView()
+            .navigationBarWithBack(
+                title: "Поиск по УИН",
+                subtitle: "Поиск начислений по УИН",
+                dismiss: { binder.flow.event(.dismiss) },
+                rightItem: .barcodeScanner {
+                    
+                    binder.flow.event(.select(.scanQR))
+                }
+            )
     }
     
     private func userAccountView(
