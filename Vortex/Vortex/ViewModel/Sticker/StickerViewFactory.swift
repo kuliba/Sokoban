@@ -49,10 +49,10 @@ extension StickerViewFactory {
                         model: result,
                         buttonsView: self.makeStickerDetailDocumentButtons(),
                         mainButtonAction: dismissAll,
-                        configuration: .default
+                        configuration: .iVortex
                     )
                 },
-                configuration: .default
+                configuration: .iVortex
             )
         }
         

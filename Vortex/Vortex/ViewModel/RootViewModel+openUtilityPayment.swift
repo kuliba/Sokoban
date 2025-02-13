@@ -88,3 +88,14 @@ extension ProductStatementData.Kind {
     static let security = "SECURITY_SERVICE"
     static let repayment = "REPAYMENT_LOANS_AND_ACCOUNTS_SERVICE"
 }
+
+extension String? {
+    
+    var isLegacyPaymentFlow: Bool {
+        
+        guard let self else { return true }
+        
+        return self == ProductStatementData.Kind.mobile ||
+               self == ProductStatementData.Kind.taxes
+    }
+}

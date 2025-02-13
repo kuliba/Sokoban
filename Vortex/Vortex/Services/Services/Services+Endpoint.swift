@@ -18,12 +18,14 @@ extension Services {
         enum PathPrefix {
             
             case binding
-            case dict
             case collateralLoanLanding
-            case savingsAccount
+            case dict
+            case pages
             case processing(Processing)
             case rest
+            case savingsAccount
             case transfer
+            case verify
             
             var path: String {
                 
@@ -37,6 +39,9 @@ extension Services {
                 case .collateralLoanLanding:
                     return "rest/v1/pages/collateral"
                     
+                case .pages:
+                    return "rest/v2/pages/order-card"
+                    
                 case .savingsAccount:
                     return "rest/pages/savings"
                     
@@ -48,6 +53,9 @@ extension Services {
                     
                 case .transfer:
                     return "rest/transfer"
+                
+                case .verify:
+                    return "verify"
                 }
             }
             
@@ -89,6 +97,7 @@ extension Services {
             case getBankDefault
             case getBannerCatalogList
             case getC2BSub
+            case getCardOrderForm
             case getCardStatementForPeriod
             case getCardStatementForPeriod_V3
             case getClientConsentMe2MePull
@@ -131,6 +140,7 @@ extension Services {
             case unblockCard
             case updateFastPaymentContract
             case userVisibilityProductsSettings
+            case createCardApplication
         }
     }
 }
@@ -235,10 +245,17 @@ extension Services.Endpoint {
         serviceName: .createFastPaymentContract
     )
     
+    
     static let createLandingRequest: Self = .init(
         pathPrefix: .dict,
         version: .v2,
         serviceName: .getJsonAbroad
+    )
+    
+    static let getCardOrderForm: Self = .init(
+        pathPrefix: .pages,
+        version: nil,
+        serviceName: .getCardOrderForm
     )
     
     static let getSavingLandingRequest: Self = .init(
@@ -557,5 +574,11 @@ extension Services.Endpoint {
         pathPrefix: .rest,
         version: .v1,
         serviceName: .createDraftCollateralLoanApplication
+    )
+    
+    static let createCardApplication: Self = .init(
+        pathPrefix: .rest,
+        version: .v2,
+        serviceName: .createCardApplication
     )
 }

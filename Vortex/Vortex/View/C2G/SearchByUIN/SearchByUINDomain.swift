@@ -41,6 +41,6 @@ extension SearchByUINDomain {
         case failure(BackendFailure)
         case payment(C2GPayment)
         
-        typealias C2GPayment = Void
+        typealias C2GPayment = C2GPaymentDomain.Binder
     }
 }

@@ -34,7 +34,7 @@ public struct PaymentCompletionStatusView: View {
 extension PaymentCompletionStatusView {
     
     typealias State = PaymentCompletionStatus
-    public typealias MakeIconView = (String?) -> UIPrimitives.AsyncImage
+    public typealias MakeIconView = (String) -> UIPrimitives.AsyncImage
     typealias Config = PaymentCompletionStatusViewConfig
 }
 
@@ -78,7 +78,7 @@ private extension PaymentCompletionStatusView {
     @ViewBuilder
     func merchantLogoView() -> some View {
         
-        makeIconView(state.merchantIcon)
+        state.merchantIcon.map(makeIconView)
             .frame(width: config.logoHeight, height: config.logoHeight)
     }
 }

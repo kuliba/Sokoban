@@ -82,6 +82,20 @@ private extension TemplatesListView {
         VStack {
             
             switch viewModel.state {
+            case .loading:
+                // TODO: improve with factory helper
+                 ProgressView()
+                    .offset(y: -44)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                // SpinnerRefreshView(icon: .init("Logo Vortex"))
+//                RoundedRectangle(cornerRadius: 24)
+//                    .foregroundColor(.mainColorsGray)
+//                    .frame(height: 56)
+//                    .frame(maxWidth: .infinity)
+//                    .padding()
+//                    .shimmering()
+//                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                
             case .normal, .select:
                 
                 categorySelector()
@@ -105,7 +119,7 @@ private extension TemplatesListView {
             
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
-                viewModel.link.map(destination)
+                viewModel.link.map(destinationView)
             }
         }
     }
@@ -226,7 +240,7 @@ private extension TemplatesListView {
     }
     
     @ViewBuilder
-    func destination(
+    func destinationView(
         link: TemplatesListViewModel.Link
     ) -> some View {
         

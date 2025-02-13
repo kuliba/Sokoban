@@ -46,6 +46,7 @@ class RootViewModel: ObservableObject, Resetable {
     
     let model: Model
     private let infoDictionary: [String : Any]?
+    private let settings: RootViewModelFactorySettings
     private let showLoginAction: ShowLoginAction
     private var bindings = Set<AnyCancellable>()
     private var authBinding: AnyCancellable?
@@ -60,6 +61,7 @@ class RootViewModel: ObservableObject, Resetable {
         splash: SplashScreenViewModel,
         infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
         _ model: Model,
+        settings: RootViewModelFactorySettings = .prod,
         showLoginAction: @escaping ShowLoginAction,
         landingServices: LandingServices,
         mainScheduler: AnySchedulerOfDispatchQueue = .makeMain()
@@ -74,6 +76,7 @@ class RootViewModel: ObservableObject, Resetable {
         self.splash = splash
         self.model = model
         self.infoDictionary = infoDictionary
+        self.settings = settings
         self.showLoginAction = showLoginAction
         self.landingServices = landingServices
         self.mainScheduler = mainScheduler
@@ -169,7 +172,7 @@ class RootViewModel: ObservableObject, Resetable {
                     LoggerAgent.shared.log(category: .ui, message: "sent RootViewModelAction.Cover.Hide")
                     action.send(RootViewModelAction.Cover.Hide())
                     
-                    delay(for: .milliseconds(600)) { [unowned self] in
+                    delay(for: settings.splash.delay + settings.splash.phaseTwoDuration) { [unowned self] in
                         
                         guard let authorized = self.model.clientAuthorizationState.value.authorized else { return }
                         

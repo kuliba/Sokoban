@@ -166,7 +166,7 @@ final class FlowIntegrationUseCases_WithOutsideChild_Tests: XCTestCase {
             .init(isLoading: true, navigation: nil),
             .init(isLoading: false, navigation: .withOutside),
             .init(isLoading: true, navigation: .withOutside),
-            .init(isLoading: true, navigation: nil),
+            .init(isLoading: true, navigation: .withOutside),
             .init(isLoading: false, navigation: .main),
         ])
     }

@@ -52,11 +52,7 @@ extension RootViewModelFactory {
         navigation: CategoryPickerSectionDomain.Navigation
     ) -> Delay {
         
-        switch navigation {
-        case .failure:     return .milliseconds(100)
-        case .destination: return settings.delay
-        case .outside:     return .milliseconds(100)
-        }
+        return .zero
     }
     
     @inlinable
@@ -102,6 +98,9 @@ extension RootViewModelFactory {
             else { return completion(.failure(.transport)) }
             
             completion(.destination(.transport(transport)))
+            
+        default:
+            completion(.failure(.init(id: .init(), message: "Неизвестная категория платежа. Попробуйте обновить приложение.")))
         }
     }
 }
@@ -112,4 +111,11 @@ private extension SelectedCategoryFailure {
         id: .init(),
         message: "Ошибка создания транспортных платежей"
     )
+}
+
+private extension String {
+    
+    static let qr = "QR"
+    static let standard = "STANDARD_FLOW"
+    static let taxAndStateServices = "TAX_AND_STATE_SERVICE"
 }

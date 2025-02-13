@@ -36,14 +36,16 @@ extension RootViewModelFactory {
     ) {
         switch select {
         case let .uin(uin):
-            getUINData(uin) {
+            getUINData(uin) { [weak self] in
+                
+                guard let self else { return }
                 
                 switch $0 {
                 case let .failure(failure):
                     completion(.failure(failure))
                     
                 case .success(()):
-                    completion(.payment(()))
+                    completion(.payment(makeC2BPayment()))
                 }
             }
         }

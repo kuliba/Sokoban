@@ -268,6 +268,7 @@ class MyProductsViewModel: ObservableObject {
                                 self?.action.send(MyProductsViewModelAction.Close.Link()) }, makeAlertViewModel: { .disableForCorporateCard(primaryAction: $0)})
                         
                         self.link = .openDeposit(openDepositViewModel)
+                        self.bottomSheet = nil
                     }
                     
                 case .card:
@@ -308,6 +309,7 @@ class MyProductsViewModel: ObservableObject {
             )
             
             self.link = .openCard(authProductsViewModel)
+            self.bottomSheet = nil
         }
     }
     

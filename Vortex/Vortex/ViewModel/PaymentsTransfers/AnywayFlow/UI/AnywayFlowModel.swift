@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 03.08.2024.
 //
 
+import AnywayPaymentDomain
 import Combine
 import CombineSchedulers
 import Foundation
@@ -201,7 +202,8 @@ private extension AnywayFlowModel {
             state.status = .completed(.init(
                 formattedAmount: fraud.formattedAmount,
                 merchantIcon: state.merchantIcon,
-                result: .failure(.init(hasExpired: fraud.hasExpired))
+                result: .failure(.init(hasExpired: fraud.hasExpired)),
+                templateID: state.templateID
             ))
             
         case let .success(report):
@@ -209,7 +211,8 @@ private extension AnywayFlowModel {
             state.status = .completed(.init(
                 formattedAmount: factory.getFormattedAmount(transaction) ?? "",
                 merchantIcon: state.merchantIcon,
-                result: .success(report)
+                result: .success(report), 
+                templateID: state.templateID
             ))
         }
     }
@@ -217,8 +220,12 @@ private extension AnywayFlowModel {
 
 private extension AnywayFlowState {
     
-    var merchantIcon: String? {
+    var merchantIcon: String? { payload.icon }
+    
+    var templateID: Int? { payload.templateID }
+    
+    private var payload: AnywayPaymentOutline.Payload {
         
-        content.state.transaction.context.outline.payload.icon
+        content.state.transaction.context.outline.payload
     }
 }
