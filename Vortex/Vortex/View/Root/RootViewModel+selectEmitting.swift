@@ -116,10 +116,10 @@ private extension FastOperations {
     var rootEvent: RootEvent? {
         
         switch self {
+        case .byPhone:   return nil
         case .byQr:      return .select(.scanQR)
         case .templates: return .select(.templates)
-        case .byPhone:   return nil
-        case .uin:       return .select(.uin)
+        case .uin:       return .select(.searchByUIN)
         case .utility:   return nil
         }
     }
