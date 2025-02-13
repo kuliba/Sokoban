@@ -44,14 +44,6 @@ extension ResponseMapper {
         
         public typealias CategoryType = String
         public typealias LatestPaymentsCategory = String
-        
-        public enum PaymentFlow: CaseIterable, Equatable {
-            
-            case mobile
-            case qr
-            case standard
-            case taxAndStateServices
-            case transport
-        }
+        public typealias PaymentFlow = String        
     }
 }

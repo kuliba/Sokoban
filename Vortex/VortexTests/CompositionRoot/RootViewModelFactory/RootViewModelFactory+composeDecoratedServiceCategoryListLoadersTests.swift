@@ -375,3 +375,9 @@ final class RootViewModelFactory_composeDecoratedServiceCategoryListLoadersTests
         wait(for: [exp], timeout: 1.0)
     }
 }
+
+private extension String {
+    
+    static let standard = "STANDARD_FLOW"
+    static let taxAndStateServices = "TAX_AND_STATE_SERVICE"
+}

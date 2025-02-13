@@ -291,6 +291,15 @@ private extension Data {
 
 private extension String {
     
+    static let mobile = "MOBILE"
+    static let qr = "QR"
+    static let standard = "STANDARD_FLOW"
+    static let taxAndStateServices = "TAX_AND_STATE_SERVICE"
+    static let transport = "TRANSPORT"
+}
+
+private extension String {
+    
     var json: Data { .init(self.utf8) }
     
     static let invalidData = """
