@@ -951,30 +951,7 @@ private extension RootViewFactoryComposer {
             }
         }
     }
-    
-    private func getPDFDocument(
-        completion: @escaping (PDFDocument?) -> Void
-    ) {
         
-        let getConsents = RemoteService(
-            createRequest: RequestFactory.createGetConsentsRequest(with:),
-            performRequest: httpClient.performRequest(_:completion:),
-            mapResponse: RemoteServices.ResponseMapper.mapGetConsentsResponse(_:_:)
-        )
-        
-        // TODO: Replace to real data
-        let payload: CollateralLandingApplicationGetConsentsPayload = .init(
-            verificationCode: "",
-            applicationID: 1
-        )
-
-        getConsents(payload.payload) { [getConsents] in
-            
-            completion(try? $0.get())
-            _ = getConsents
-        }
-    }
-    
     func makeCollateralLoanShowcaseWrapperView(
         binder: GetShowcaseDomain.Binder,
         goToMain: @escaping () -> Void
@@ -983,7 +960,8 @@ private extension RootViewFactoryComposer {
         let factory = CollateralLoanLandingGetShowcaseViewFactory(
             makeImageViewWithMD5Hash: { self.makeIconView(.md5Hash(.init($0))) },
             makeImageViewWithURL: { self.makeGeneralIconView(.image($0.addingPercentEncoding())) },
-            getPDFDocument: getPDFDocument
+            // TODO: Need to realized
+            getPDFDocument: { _ in }
         )
         
         return .init(
