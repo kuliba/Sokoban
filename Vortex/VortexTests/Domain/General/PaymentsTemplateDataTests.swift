@@ -165,7 +165,7 @@ final class PaymentsTemplateDataTests: XCTestCase {
             type: .betweenTheir
         )
         
-        XCTAssertEqual(template.type.description, "Между своими счетами")
+        XCTAssertEqual(template.description, "Между своими счетами")
     }
     
     func test_paymentsTemplateKind_description_shouldReturnInsideBank() throws {
@@ -174,7 +174,7 @@ final class PaymentsTemplateDataTests: XCTestCase {
             type: .insideBank
         )
         
-        XCTAssertEqual(template.type.description, "Внутри банка")
+        XCTAssertEqual(template.description, "Внутри банка")
     }
     
     func test_paymentsTemplateKind_description_shouldReturnOtherBank() throws {
@@ -183,7 +183,7 @@ final class PaymentsTemplateDataTests: XCTestCase {
             type: .otherBank
         )
         
-        XCTAssertEqual(template.type.description, "В другой банк")
+        XCTAssertEqual(template.description, "В другой банк")
     }
     
     func test_paymentsTemplateKind_description_shouldReturnByPhone() throws {
@@ -192,7 +192,7 @@ final class PaymentsTemplateDataTests: XCTestCase {
             type: .byPhone
         )
         
-        XCTAssertEqual(template.type.description, "По номеру телефона")
+        XCTAssertEqual(template.description, "По номеру телефона")
     }
     
     func test_paymentsTemplateKind_description_shouldReturnSfp() throws {
@@ -201,7 +201,7 @@ final class PaymentsTemplateDataTests: XCTestCase {
             type: .sfp
         )
         
-        XCTAssertEqual(template.type.description, "Перевод СБП")
+        XCTAssertEqual(template.description, "Перевод СБП")
     }
     
     func test_paymentsTemplateKind_description_shouldReturnExternalEntity() throws {
@@ -210,7 +210,7 @@ final class PaymentsTemplateDataTests: XCTestCase {
             type: .externalEntity
         )
         
-        XCTAssertEqual(template.type.description, "По реквизитам: компания")
+        XCTAssertEqual(template.description, "По реквизитам: компания")
     }
     
     func test_paymentsTemplateKind_description_shouldReturnExternalIndividual() throws {
@@ -219,7 +219,7 @@ final class PaymentsTemplateDataTests: XCTestCase {
             type: .externalIndividual
         )
         
-        XCTAssertEqual(template.type.description, "По реквизитам: частный")
+        XCTAssertEqual(template.description, "По реквизитам: частный")
     }
     
     func test_paymentsTemplateKind_description_shouldReturnContactAdressless() throws {
@@ -228,16 +228,16 @@ final class PaymentsTemplateDataTests: XCTestCase {
             type: .contactAdressless
         )
         
-        XCTAssertEqual(template.type.description, "Перевод Контакт")
+        XCTAssertEqual(template.description, "Перевод Контакт")
     }
     
     func test_paymentsTemplateKind_description_shouldReturnDirect() throws {
         
         let template = PaymentTemplateData.templateStub(
-            type: .direct
+            type: "DIRECT"
         )
         
-        XCTAssertEqual(template.type.description, "Перевод МИГ")
+        XCTAssertEqual(template.description, "Перевод МИГ")
     }
     
     func test_paymentsTemplateKind_description_shouldReturnHousingAndCommunalService() throws {
@@ -246,7 +246,7 @@ final class PaymentsTemplateDataTests: XCTestCase {
             type: .housingAndCommunalService
         )
         
-        XCTAssertEqual(template.type.description, "Услуги ЖКХ")
+        XCTAssertEqual(template.description, "Услуги ЖКХ")
     }
     
     func test_paymentsTemplateKind_description_shouldReturnMobile() throws {
@@ -255,7 +255,7 @@ final class PaymentsTemplateDataTests: XCTestCase {
             type: .mobile
         )
         
-        XCTAssertEqual(template.type.description, "Мобильная связь")
+        XCTAssertEqual(template.description, "Мобильная связь")
     }
     
     func test_paymentsTemplateKind_description_shouldReturnInternet() throws {
@@ -264,7 +264,7 @@ final class PaymentsTemplateDataTests: XCTestCase {
             type: .internet
         )
         
-        XCTAssertEqual(template.type.description, "Интернет, ТВ")
+        XCTAssertEqual(template.description, "Интернет, ТВ")
     }
     
     func test_paymentsTemplateKind_description_shouldReturnTransport() throws {
@@ -273,16 +273,16 @@ final class PaymentsTemplateDataTests: XCTestCase {
             type: .transport
         )
         
-        XCTAssertEqual(template.type.description, "Транспорт")
+        XCTAssertEqual(template.description, "Транспорт")
     }
     
     func test_paymentsTemplateKind_description_shouldReturnTaxAndStateService() throws {
         
         let template = PaymentTemplateData.templateStub(
-            type: .taxAndStateService
+            type: "TAX_AND_STATE_SERVICE"
         )
         
-        XCTAssertEqual(template.type.description, "Налоги и госуслуги")
+        XCTAssertEqual(template.description, "Налоги и госуслуги")
     }
     
     func test_paymentsTemplateKind_description_shouldReturnInterestDeposit() throws {
@@ -291,6 +291,6 @@ final class PaymentsTemplateDataTests: XCTestCase {
             type: .interestDeposit
         )
         
-        XCTAssertEqual(template.type.description, "Проценты по депозитам")
+        XCTAssertEqual(template.description, "Проценты по депозитам")
     }
 }

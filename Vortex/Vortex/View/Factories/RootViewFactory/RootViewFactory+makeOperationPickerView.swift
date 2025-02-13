@@ -52,26 +52,27 @@ extension OperationPickerView {
         binder: OperationPickerDomain.Binder
     ) -> some View {
         
-        RxWrapperView(
-            model: binder.flow,
-            makeContentView: {
-                
-                OperationPickerFlowView(
-                    state: $0,
-                    event: $1,
-                    factory: .init(
-                        makeContent: { makeContentView(binder.content) },
-                        makeDestination: {
-                            
-                            makeDestinationView(
-                                destination: $0,
-                                closeAction: { binder.flow.event(.dismiss) }
-                            )
-                        }
-                    )
+        RxWrapperView(model: binder.flow) { state, event in
+            
+            OperationPickerFlowView(
+                state: state,
+                event: event,
+                factory: .init(
+                    makeContent: {
+                        
+                        makeContentView(binder.content)
+                            .disabled(state.isLoading)
+                    },
+                    makeDestination: {
+                        
+                        makeDestinationView(
+                            destination: $0,
+                            closeAction: { binder.flow.event(.dismiss) }
+                        )
+                    }
                 )
-            }
-        )
+            )
+        }
     }
     
     private func makeContentView(

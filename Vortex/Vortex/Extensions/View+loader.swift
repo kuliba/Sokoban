@@ -36,6 +36,18 @@ extension View {
     }
 
     @usableFromInline
+    func loaderOverlay(
+        isLoading: Bool
+    ) -> some View {
+        
+        overlay {
+            
+            SpinnerRefreshView(icon: .init("Logo Vortex"))
+                .opacity(isLoading ? 1 : 0)
+        }
+    }
+    
+    @usableFromInline
     func loader(
         isLoading: Bool,
         icon: Image = .init("Logo Vortex"),
@@ -61,7 +73,7 @@ struct LoaderWrapper: ViewModifier {
         ZStack {
             
             content
-                .disabled(isLoading)
+              //  .disabled(isLoading)
             
             ZStack {
                 

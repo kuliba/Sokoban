@@ -316,7 +316,7 @@ extension OperationDetailViewModel {
                 return operationViewModel
                                 
             default:
-                if operation.flow == nil {
+                if operation.isPaymentFlowUnknown {
                     
                     operationViewModel = operationViewModel.updated(withUpdateWarning: .warning)
                 }
@@ -346,16 +346,17 @@ private extension String {
 }
 
 private extension OperationDetailData {
-    
-    var flow: ServiceCategory.PaymentFlow? {
+            
+    var isPaymentFlowUnknown: Bool {
         
         switch paymentFlow {
-        case "MOBILE":                return .mobile
-        case "QR":                    return .qr
-        case "STANDARD_FLOW":         return .standard
-        case "TAX_AND_STATE_SERVICE": return .taxAndStateServices
-        case "TRANSPORT":             return .transport
-        default:                      return .none
+        case .none:                   return false
+        case "MOBILE":                return false
+        case "QR":                    return false
+        case "STANDARD_FLOW":         return false
+        case "TAX_AND_STATE_SERVICE": return false
+        case "TRANSPORT":             return false
+        default:                      return true
         }
     }
 }

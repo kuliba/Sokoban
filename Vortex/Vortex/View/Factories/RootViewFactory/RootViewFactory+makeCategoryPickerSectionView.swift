@@ -19,32 +19,30 @@ extension ViewComponents {
         
         if let binder = categoryPicker.sectionBinder {
             
-            RxWrapperView(
-                model: binder.flow,
-                makeContentView: { state, _ in
-                    
-                    makeCategoryPickerContentView(
-                        binder.content, 
-                        select: { binder.flow.event(.select(.category($0))) },
-                        headerHeight: 24
-                    )
-                        .alert(
-                            item: state.failure,
-                            content: makeAlert(binder: binder)
+            RxWrapperView(model: binder.flow) { state, _ in
+                
+                makeCategoryPickerContentView(
+                    binder.content,
+                    select: { binder.flow.event(.select(.category($0))) },
+                    headerHeight: 24
+                )
+                .disabled(state.isLoading)
+                .alert(
+                    item: state.failure,
+                    content: makeAlert(binder: binder)
+                )
+                .navigationDestination(
+                    destination: makeSectionDestination(state),
+                    content: {
+                        
+                        makeSectionDestinationView(
+                            destination: $0,
+                            dismiss: { binder.flow.event(.dismiss) },
+                            scanQR: { binder.flow.event(.select(.qr)) }
                         )
-                        .navigationDestination(
-                            destination: makeSectionDestination(state),
-                            content: {
-                                
-                                makeSectionDestinationView(
-                                    destination: $0,
-                                    dismiss: { binder.flow.event(.dismiss) },
-                                    scanQR: { binder.flow.event(.select(.qr))}
-                                )
-                            }
-                        )
-                }
-            )
+                    }
+                )
+            }
             .padding(.top, 20)
             
         } else {

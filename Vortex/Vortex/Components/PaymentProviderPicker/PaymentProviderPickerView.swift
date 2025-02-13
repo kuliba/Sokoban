@@ -124,6 +124,7 @@ private extension PaymentProviderPickerView {
         }
         
         makeFooterView()
+            .plainListRow(insets: .init(top: 0, leading: 16, bottom: 0, trailing: 16))
     }
     
     func makeProviderView(

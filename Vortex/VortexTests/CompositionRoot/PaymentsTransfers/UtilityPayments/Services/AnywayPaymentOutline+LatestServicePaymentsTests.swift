@@ -48,7 +48,8 @@ final class AnywayPaymentOutline_LatestServicePaymentsTests: XCTestCase {
             puref: "iVortexNKORR||18650",
             title: "МУП АГО АНГАРСКИЙ ВОДОКАНАЛ",
             subtitle: nil,
-            icon: "1efeda3c9130101d4d88113853b03bb5"
+            icon: "1efeda3c9130101d4d88113853b03bb5",
+            templateID: nil
         ))
     }
     

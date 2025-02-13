@@ -28,12 +28,14 @@ final class FooterViewModelTests: XCTestCase {
         
         let initial = makeState(amount: 987)
         let (sut, textField, spy) = makeSUT(initialState: initial)
-        
+       
+        waitForMainQueue()
+
         textField.setText(to: nil)
         textField.setText(to: "abc")
         textField.setText(to: "abc123")
         textField.setText(to: "123")
-        
+
         XCTAssertNoDiff(spy.values.map(\.amount), [987, 0, 123])
         XCTAssertNotNil(sut)
     }
@@ -44,13 +46,15 @@ final class FooterViewModelTests: XCTestCase {
         let (sut, textField, _) = makeSUT(initialState: initial)
         let textFieldSpy = ValueSpy(textField.$state.map(\.text))
         
+        waitForMainQueue()
+        
         textField.setText(to: nil)
         textField.setText(to: "abc")
         textField.setText(to: "abc123")
         textField.setText(to: "123")
         textField.setText(to: "12345")
         
-        XCTAssertNoDiff(textFieldSpy.values, ["987 ₽", "", "0 ₽", "123 ₽", "12 345 ₽"])
+        XCTAssertNoDiff(textFieldSpy.values, ["0 ₽", "987 ₽", "", "0 ₽", "123 ₽", "12 345 ₽"])
         XCTAssertNotNil(sut)
     }
     
@@ -63,13 +67,15 @@ final class FooterViewModelTests: XCTestCase {
         )
         let textFieldSpy = ValueSpy(textField.$state.map(\.text))
         
+        waitForMainQueue()
+        
         textField.setText(to: nil)
         textField.setText(to: "abc")
         textField.setText(to: "abc123")
         textField.setText(to: "123")
         textField.setText(to: "12345")
         
-        XCTAssertNoDiff(textFieldSpy.values, ["₽987", "", "₽0", "₽123", "₽12,345"])
+        XCTAssertNoDiff(textFieldSpy.values, ["₽0", "₽987", "", "₽0", "₽123", "₽12,345"])
         XCTAssertNotNil(sut)
     }
     
@@ -81,11 +87,14 @@ final class FooterViewModelTests: XCTestCase {
         let (sut, textField, _) = makeSUT(initialState: initial)
         let textFieldSpy = ValueSpy(textField.$state)
         
+        waitForMainQueue()
+        
         textField.startEditing()
         textField.setText(to: "123")
         sut.event(.button(.tap))
         
         XCTAssertNoDiff(textFieldSpy.values, [
+            .noFocus("0 ₽"),
             .noFocus("987 ₽"),
             .editing(.init("987 ₽", cursorAt: 5)),
             .editing(.init("123 ₽", cursorAt: 5)),
@@ -99,11 +108,14 @@ final class FooterViewModelTests: XCTestCase {
         let (sut, textField, _) = makeSUT(initialState: initial)
         let textFieldSpy = ValueSpy(textField.$state)
         
+        waitForMainQueue()
+        
         textField.startEditing()
         textField.setText(to: "123")
         sut.event(.edit(567))
         
         XCTAssertNoDiff(textFieldSpy.values, [
+            .noFocus("0 ₽"),
             .noFocus("987 ₽"),
             .editing(.init("987 ₽", cursorAt: 5)),
             .editing(.init("123 ₽", cursorAt: 5)),
@@ -201,6 +213,14 @@ final class FooterViewModelTests: XCTestCase {
             button: .init(title: title, state: buttonState),
             style: style
         )
+    }
+    
+    private func waitForMainQueue(timeout: TimeInterval = 0.1) {
+        
+        let exp = expectation(description: "Wait for main queue")
+        DispatchQueue.main.async { exp.fulfill() }
+        
+        _ = XCTWaiter().wait(for: [exp], timeout: timeout)
     }
 }
 

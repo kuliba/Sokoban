@@ -42,7 +42,7 @@ public extension FlowReducer {
             
         case let .select(select):
             state.isLoading = true
-            state.navigation = nil
+         //   state.navigation = nil
             effect = .select(select)
         }
         

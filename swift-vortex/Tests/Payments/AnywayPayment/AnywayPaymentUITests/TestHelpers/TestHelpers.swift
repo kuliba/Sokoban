@@ -294,13 +294,15 @@ func makeOutlinePayload(
     puref: AnywayPaymentOutline.Payload.Puref = anyMessage(),
     title: String = anyMessage(),
     subtitle: String? = anyMessage(),
-    icon: String? = anyMessage()
+    icon: String? = anyMessage(),
+    templateID: Int? = nil
 ) -> AnywayPaymentOutline.Payload {
     
     return .init(
         puref: puref,
         title: title,
         subtitle: subtitle,
-        icon: icon
+        icon: icon,
+        templateID: templateID
     )
 }
