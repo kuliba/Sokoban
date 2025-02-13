@@ -1,5 +1,5 @@
 //
-//  SelectConfig.swift
+//  SelectViewConfig.swift
 //
 //
 //  Created by Дмитрий Савушкин on 24.04.2024.

@@ -22,4 +22,20 @@ extension Vortex.RequestFactory {
             url: endpointURL
         )
     }
+    
+    static func createGetVerificationCodeOrderCardVerifyRequest(
+    ) throws -> URLRequest {
+        
+        let base = Config.serverAgentEnvironment.baseURL
+        let endpoint = Services.Endpoint.init(
+            pathPrefix: .verify,
+            version: nil,
+            serviceName: .getVerificationCode
+        )
+        let endpointURL = try! endpoint.url(withBase: base)
+        
+        return try RemoteServices.RequestFactory.createGetVerificationCodeRequest(
+            url: endpointURL
+        )
+    }
 }

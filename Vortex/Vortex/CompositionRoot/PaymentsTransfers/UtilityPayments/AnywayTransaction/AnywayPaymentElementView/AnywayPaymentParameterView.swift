@@ -82,10 +82,7 @@ private extension AnywayPaymentParameterView {
             HStack(alignment: .top, spacing: 18) {
                 
                 PaymentsCheckView.CheckBoxView(
-                    isChecked: .init(
-                        get: { state.isChecked },
-                        set: { _ in event(.toggle) }
-                    ),
+                    isChecked: state.isChecked,
                     activeColor: .systemColorActive
                 )
                 

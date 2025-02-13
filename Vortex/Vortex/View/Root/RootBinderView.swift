@@ -18,31 +18,13 @@ struct RootBinderView: View {
         
         RxWrapperView(model: binder.flow) { state, event in
             
-            ZStack {
-                
-                RxWrapperView(
-                    model: binder.content.splash,
-                    makeContentView: rootViewFactory.makeSplashScreenView
-                )
-                .zIndex(2.0)
-
-                rootViewInNavigationView(state: state, event: event)
-                spinnerView(isShowing: state.isLoading)
-            }
+            rootViewInNavigationView(state: state, event: event)
+                .loader(isLoading: state.isLoading)
         }
     }
 }
 
 private extension RootBinderView {
-    
-    func spinnerView(
-        isShowing: Bool
-    ) -> some View {
-        
-        SpinnerView(viewModel: .init())
-            .opacity(isShowing ? 1 : 0)
-            .animation(.easeInOut, value: isShowing)
-    }
     
     func rootViewInNavigationView(
         state: RootViewDomain.FlowDomain.State,
@@ -64,6 +46,7 @@ private extension RootBinderView {
                     content: destinationContent
                 )
         }
+        .navigationViewStyle(.stack)
     }
     
     func rootView() -> RootView {
@@ -85,28 +68,20 @@ private extension RootBinderView {
         case let .makeStandardPaymentFailure(binder):
             rootViewFactory.components.serviceCategoryFailureView(binder: binder)
             
+        case let .openProduct(openProduct):
+            rootViewFactory.components.makeOpenProductView(
+                for: openProduct,
+                dismiss: { binder.flow.event(.dismiss) }
+            )
+            
         case let .productProfile(profile):
             productProfileView(profile)
             
         case let .standardPayment(picker):
             standardPaymentView(picker)
             
-        case let .templates(node):
-            templatesView(node)
-            
-        case .uin:
-            // TODO: extract to rootViewFactory.components
-            Text("TBD: Search by UIN")
-                .frame(maxHeight: .infinity, alignment: .center)
-                .navigationBarWithBack(
-                    title: "Поиск по УИН",
-                    subtitle: "Поиск начислений по УИН",
-                    dismiss: { binder.flow.event(.dismiss) },
-                    rightItem: .barcodeScanner {
-                        
-                        binder.flow.event(.select(.scanQR))
-                    }
-                )
+        case let .searchByUIN(searchByUIN):
+            searchByUINView(searchByUIN)
             
         case let .userAccount(userAccount):
             userAccountView(userAccount)
@@ -139,6 +114,23 @@ private extension RootBinderView {
             .accessibilityIdentifier(ElementIDs.rootView(.destination(.templates)).rawValue)
     }
     
+    private func searchByUINView(
+        _ searchByUIN: SearchByUINDomain.Binder
+    ) -> some View {
+        
+        rootViewFactory.components.searchByUINView(searchByUIN)
+            .navigationBarWithBack(
+                title: "Поиск по УИН",
+                subtitle: "Поиск начислений по УИН",
+                dismiss: { binder.flow.event(.dismiss) },
+                rightItem: .barcodeScanner {
+                    
+                    binder.flow.event(.select(.scanQR))
+                }
+            )
+            .disablingLoading(flow: searchByUIN.flow)
+    }
+    
     private func userAccountView(
         _ userAccount: UserAccountViewModel
     ) -> some View {
@@ -154,23 +146,39 @@ private extension RootBinderView {
     ) -> some View {
         
         switch fullScreenCover {
+        case let .orderCardResponse(response):
+            rootViewFactory.components.makeOrderCardCompleteView(response) {
+                
+                binder.flow.event(.dismiss)
+            }
+            
         case let .scanQR(qrScanner):
             qrScannerView(qrScanner)
+            
+        case let .templates(node):
+            NavigationView {
+                
+                templatesView(node)
+            }
+            .navigationViewStyle(.stack)
         }
     }
     
     private func qrScannerView(
-        _ qrScanner: QRScannerDomain.Binder
+        _ binder: QRScannerDomain.Binder
     ) -> some View {
         
-        NavigationView {
+        RxWrapperView(model: binder.flow) { state, _ in
             
-            rootViewFactory.makeQRScannerView(qrScanner)
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationBarHidden(true)
+            NavigationView {
+                
+                rootViewFactory.makeQRScannerView(binder)
+                    .navigationBarHidden(true)
+            }
+            .navigationViewStyle(.stack)
+            .accessibilityIdentifier(ElementIDs.rootView(.qrFullScreenCover).rawValue)
+            .loader(isLoading: state.isLoading)
         }
-        .navigationViewStyle(.stack)
-        .accessibilityIdentifier(ElementIDs.rootView(.qrFullScreenCover).rawValue)
     }
 }
 
@@ -224,6 +232,12 @@ extension RootViewNavigation {
                 return nil
             }
             
+        case let .openProduct(openProduct):
+            return .openProduct(openProduct)
+            
+        case .orderCardResponse:
+            return nil
+            
         case let .outside(outside):
             switch outside {
             case let .productProfile(productId):
@@ -233,17 +247,14 @@ extension RootViewNavigation {
                 return nil
             }
             
-        case .scanQR:
+        case .scanQR, .templates:
             return nil
             
         case let .standardPayment(node):
             return .standardPayment(node.model)
             
-        case let .templates(node):
-            return .templates(node)
-            
-        case .uin:
-            return .uin
+        case let .searchByUIN(searchByUIN):
+            return .searchByUIN(searchByUIN)
             
         case let .userAccount(userAccount):
             return .userAccount(userAccount)
@@ -253,12 +264,13 @@ extension RootViewNavigation {
     enum Destination {
         
         case makeStandardPaymentFailure(ServiceCategoryFailureDomain.Binder)
+        case openProduct(OpenProduct)
         case productProfile(ProductProfileViewModel)
+        case searchByUIN(SearchByUIN)
         case standardPayment(PaymentProviderPickerDomain.Binder)
-        case templates(TemplatesNode)
-        case uin
         case userAccount(UserAccountViewModel)
         
+        typealias SearchByUIN = SearchByUINDomain.Binder
         typealias TemplatesNode = RootViewNavigation.TemplatesNode
     }
     
@@ -268,21 +280,29 @@ extension RootViewNavigation {
         case .failure:
             return nil
             
-        case .outside:
+        case .openProduct, .outside:
             return nil
+            
+        case let .orderCardResponse(orderCardResponse):
+            return .orderCardResponse(orderCardResponse)
             
         case let .scanQR(node):
             return .scanQR(node.model)
             
             // cases listed for explicit exhaustivity
-        case .standardPayment, .templates, .uin, .userAccount:
+        case .standardPayment, .searchByUIN, .userAccount:
             return nil
+            
+        case let .templates(node):
+            return .templates(node)
         }
     }
     
     enum FullScreenCover {
         
+        case orderCardResponse(OpenCardDomain.OrderCardResponse)
         case scanQR(QRScannerDomain.Binder)
+        case templates(TemplatesNode)
     }
 }
 
@@ -294,17 +314,24 @@ extension RootViewNavigation.Destination: Identifiable {
         case .makeStandardPaymentFailure:
             return .makeStandardPaymentFailure
             
+        case let .openProduct(openProduct):
+            switch openProduct {
+            case let .card(openCard):
+                return .openProduct(.card(.init(openCard.model)))
+                
+            case .unknown:
+                return .openProduct(.unknown)
+            }
+            
         case let .productProfile(profile):
             return .productProfile(.init(profile))
             
         case let .standardPayment(picker):
             return .standardPayment(.init(picker))
             
-        case let .templates(templates):
-            return .templates(.init(templates.model))
+        case let .searchByUIN(searchByUIN):
+            return .searchByUIN(.init(searchByUIN))
             
-        case .uin:
-            return .uin
         case let .userAccount(userAccount):
             return .userAccount(.init(userAccount))
         }
@@ -313,11 +340,17 @@ extension RootViewNavigation.Destination: Identifiable {
     enum ID: Hashable {
         
         case makeStandardPaymentFailure
+        case openProduct(OpenProductID)
         case productProfile(ObjectIdentifier)
+        case searchByUIN(ObjectIdentifier)
         case standardPayment(ObjectIdentifier)
-        case templates(ObjectIdentifier)
-        case uin
         case userAccount(ObjectIdentifier)
+        
+        enum OpenProductID: Hashable {
+            
+            case card(ObjectIdentifier)
+            case unknown
+        }
     }
 }
 
@@ -326,13 +359,21 @@ extension RootViewNavigation.FullScreenCover: Identifiable {
     var id: ID {
         
         switch self {
+        case .orderCardResponse:
+            return .orderCardResponse
+            
         case let .scanQR(qrRScanner):
             return .scanQR(.init(qrRScanner))
+            
+        case let .templates(node):
+            return .templates(.init(node.model))
         }
     }
     
     enum ID: Hashable {
         
+        case orderCardResponse
         case scanQR(ObjectIdentifier)
+        case templates(ObjectIdentifier)
     }
 }

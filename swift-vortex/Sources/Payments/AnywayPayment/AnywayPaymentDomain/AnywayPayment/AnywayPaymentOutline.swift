@@ -62,17 +62,20 @@ extension AnywayPaymentOutline {
         public let title: String
         public let subtitle: String?
         public let icon: String?
+        public let templateID: Int?
         
         public init(
             puref: Puref,
             title: String,
             subtitle: String?,
-            icon: String?
+            icon: String?,
+            templateID: Int?
         ) {
             self.puref = puref
             self.title = title
             self.subtitle = subtitle
             self.icon = icon
+            self.templateID = templateID
         }
         
         public typealias Puref = String

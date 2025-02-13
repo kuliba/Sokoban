@@ -17,11 +17,13 @@ extension RootViewDomain {
 
 enum RootViewSelect: Equatable {
     
+    case openProduct(OpenProductType)
+    case orderCardResponse(OpenCardDomain.OrderCardResponse)
     case outside(RootViewOutside)
     case scanQR
+    case searchByUIN
     case standardPayment(ServiceCategory.CategoryType)
     case templates
-    case uin
     case userAccount
     
     enum RootViewOutside: Equatable {
@@ -39,11 +41,13 @@ enum RootViewTab: Equatable {
 enum RootViewNavigation {
     
     case failure(Failure)
+    case openProduct(OpenProduct)
+    case orderCardResponse(OpenCardDomain.OrderCardResponse)
     case outside(RootViewOutside)
     case scanQR(Node<QRScannerDomain.Binder>)
+    case searchByUIN(SearchByUIN)
     case standardPayment(Node<PaymentProviderPickerDomain.Binder>)
     case templates(TemplatesNode)
-    case uin
     case userAccount(UserAccountViewModel)
     
     enum Failure {
@@ -60,6 +64,7 @@ enum RootViewNavigation {
         case tab(RootViewTab)
     }
     
+    typealias SearchByUIN = SearchByUINDomain.Binder
     typealias Templates = PaymentsTransfersFactory.Templates
     typealias TemplatesNode = PaymentsTransfersFactory.TemplatesNode
 }

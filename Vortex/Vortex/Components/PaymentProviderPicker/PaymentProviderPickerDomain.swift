@@ -12,6 +12,8 @@ import UtilityServicePrepaymentCore
 import UtilityServicePrepaymentDomain
 import VortexTools
 
+typealias BackendFailure = PayHub.BackendFailure
+
 /// A namespace.
 enum PaymentProviderPickerDomain {}
 

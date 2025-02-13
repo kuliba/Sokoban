@@ -21,14 +21,8 @@ struct ProviderServicePickerView<AnywayFlowView: View>: View {
         RxWrapperView(model: binder.flow) { state, event in
             
             let navbar = binder.content.navBar
-
-            ZStack {
-                
-                if state.isLoading {
-                    
-                    SpinnerView(viewModel: .init())
-                        .zIndex(1)
-                }
+            
+            NavigationView {
                 
                 contentView(binder.content)
                     .alert(
@@ -47,6 +41,8 @@ struct ProviderServicePickerView<AnywayFlowView: View>: View {
                         style: .normal
                     )
             }
+            .navigationViewStyle(.stack)
+            .loader(isLoading: state.isLoading)
         }
     }
 }
