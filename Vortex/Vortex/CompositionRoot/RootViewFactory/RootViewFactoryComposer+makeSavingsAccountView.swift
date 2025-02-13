@@ -15,11 +15,13 @@ import OTPInputComponent
 extension RootViewFactoryComposer {
     
     func makeSavingsAccountBinderView(
-        binders: MakeSavingsAccountBinders
+        binder: SavingsAccountDomain.Binder,
+        openAccountBinder: SavingsAccountDomain.OpenAccountBinder
     ) -> SavingsAccountBinderView? {
         
         return .init(
-            binders: binders,
+            binder: binder,
+            openAccountBinder: openAccountBinder,
             config: .iVortex,
             factory: makeFactory(),
             openAccountFactory: makeOpenSavingsAccountLandingViewFactory()

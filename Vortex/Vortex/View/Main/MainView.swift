@@ -292,13 +292,8 @@ struct MainView<NavigationOperationView: View>: View {
         case .orderCard:
             viewFactory.components.makeOrderCardView()
             
-        case let .savingsAccount(openNode, node):
-            viewFactory.components.makeSavingsAccountView(
-                .init(
-                    makeOpenSavingsAccountBinder: { openNode.model },
-                    makeSavingsAccountBinder: { node.model })
-            )
-                .onFirstAppear { node.model.content.event(.load) }
+        case let .savingsAccount(nodes):
+            viewFactory.components.makeSavingsAccountView(nodes)
                 .navigationBarHidden(true)
         }
     }

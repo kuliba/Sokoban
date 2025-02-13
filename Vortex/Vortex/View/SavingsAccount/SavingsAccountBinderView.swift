@@ -17,15 +17,16 @@ struct SavingsAccountBinderView: View {
     private let config: Config
     private let factory: Factory
     private let openAccountFactory: OpenAccountFactory
-
+    
     init(
-        binders: MakeSavingsAccountBinders,
+        binder: SavingsAccountDomain.Binder,
+        openAccountBinder: SavingsAccountDomain.OpenAccountBinder,
         config: Config,
         factory: Factory,
         openAccountFactory: OpenAccountFactory
     ) {
-        self.binder = binders.makeSavingsAccountBinder()
-        self.openAccountBinder = binders.makeOpenSavingsAccountBinder()
+        self.binder = binder
+        self.openAccountBinder = openAccountBinder
         self.config = config
         self.factory = factory
         self.openAccountFactory = openAccountFactory

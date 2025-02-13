@@ -871,7 +871,7 @@ private extension RootViewModelFactory {
                 featureFlags.c2gFlag
             )
         )
-        
+                
         let mainViewModel = MainViewModel(
             model,
             navigationStateManager: userAccountNavigationStateManager,
@@ -886,10 +886,7 @@ private extension RootViewModelFactory {
                 makeCollateralLoanShowcaseBinder: makeCollateralLoanLandingShowcaseBinder,
                 makeCollateralLoanLandingBinder: makeCollateralLoanLandingBinder,
                 makeCreateDraftCollateralLoanApplicationBinder: makeCreateDraftCollateralLoanApplicationBinder,
-                makeSavingsAccountBinders: .init(
-                    makeOpenSavingsAccountBinder: makeOpenSavingsAccount,
-                    makeSavingsAccountBinder: makeSavingsAccount
-                )
+                makeSavingsAccountNodes: makeSavingsNodes(_:)
             ),
             viewModelsFactory: mainViewModelsFactory,
             makeOpenNewProductButtons: makeOpenNewProductButtons,

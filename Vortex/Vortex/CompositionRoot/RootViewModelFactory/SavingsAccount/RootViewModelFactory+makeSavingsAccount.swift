@@ -7,11 +7,46 @@
 
 import Combine
 import Foundation
+import FlowCore
 import GenericRemoteService
 import RemoteServices
 import SavingsServices
 
 extension RootViewModelFactory {
+    
+    @inlinable
+    func makeSavingsNodes(
+        _ dismiss: @escaping () -> Void
+    ) -> SavingsAccountNodes {
+        
+        let binder: SavingsAccountDomain.Binder = makeSavingsAccount()
+        let openBinder: SavingsAccountDomain.OpenAccountBinder = makeOpenSavingsAccount()
+        
+        let cancellable = binder.flow.$state
+            .compactMap {
+                switch $0.navigation {
+                case .main: return ()
+                    
+                default: return nil
+                }
+            }
+            .sink { dismiss() }
+        
+        let openCancellable = openBinder.flow.$state
+            .compactMap {
+                switch $0.navigation {
+                case .main: return ()
+                    
+                default: return nil
+                }
+            }
+            .sink { dismiss() }
+        
+        return .init(
+            openSavingsAccountNode: .init(model: openBinder, cancellable: openCancellable),
+            savingsAccountNode: .init(model: binder, cancellable: cancellable)
+        )
+    }
     
     @inlinable
     func makeSavingsAccount() -> SavingsAccountDomain.Binder {

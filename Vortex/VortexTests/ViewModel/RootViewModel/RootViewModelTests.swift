@@ -497,7 +497,7 @@ final class RootViewModelTests: XCTestCase {
                         makeCollateralLoanShowcaseBinder: { .preview },
                         makeCollateralLoanLandingBinder: { _ in .preview },
                         makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
-                        makeSavingsAccountBinders: .preview
+                        makeSavingsAccountNodes: { _ in .preview }
                     ),
                     viewModelsFactory: .preview,
                     makeOpenNewProductButtons: { _ in [] },
@@ -580,7 +580,7 @@ final class RootViewModelTests: XCTestCase {
                         makeCollateralLoanShowcaseBinder: { .preview },
                         makeCollateralLoanLandingBinder: { _ in .preview },
                         makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
-                        makeSavingsAccountBinders: .preview
+                        makeSavingsAccountNodes: { _ in .preview }
                     ),
                     viewModelsFactory: .preview,
                     makeOpenNewProductButtons: { _ in [] },

@@ -14,20 +14,19 @@ typealias MakeCollateralLoanShowcaseBinder = () -> GetShowcaseDomain.Binder
 typealias MakeCollateralLoanLandingBinder = (String) -> GetCollateralLandingDomain.Binder
 typealias MakeCreateDraftCollateralLoanApplicationBinder
     = (CreateDraftCollateralLoanApplicationUIData) -> CreateDraftCollateralLoanApplicationDomain.Binder
-typealias MakeSavingsAccountBinder = () -> SavingsAccountDomain.Binder
-typealias MakeOpenSavingsAccountBinder = () -> SavingsAccountDomain.OpenAccountBinder
+typealias MakeSavingsAccountNodes = (@escaping () -> Void) -> SavingsAccountNodes
 
-struct MakeSavingsAccountBinders {
+struct SavingsAccountNodes {
     
-    let makeOpenSavingsAccountBinder: MakeOpenSavingsAccountBinder
-    let makeSavingsAccountBinder: MakeSavingsAccountBinder
+    let openSavingsAccountNode: Node<SavingsAccountDomain.OpenAccountBinder>
+    let savingsAccountNode: Node<SavingsAccountDomain.Binder>
 }
 
-extension MakeSavingsAccountBinders {
+extension SavingsAccountNodes {
     
     static let preview: Self = .init(
-        makeOpenSavingsAccountBinder: { fatalError() },
-        makeSavingsAccountBinder: { fatalError() }
+        openSavingsAccountNode: { fatalError() }(),
+        savingsAccountNode: { fatalError() }()
     )
 }
 struct BindersFactory {
@@ -36,7 +35,7 @@ struct BindersFactory {
     let makeCollateralLoanShowcaseBinder: MakeCollateralLoanShowcaseBinder
     let makeCollateralLoanLandingBinder: MakeCollateralLoanLandingBinder
     let makeCreateDraftCollateralLoanApplicationBinder: MakeCreateDraftCollateralLoanApplicationBinder
-    let makeSavingsAccountBinders: MakeSavingsAccountBinders
+    let makeSavingsAccountNodes: MakeSavingsAccountNodes
 }
 
 extension BindersFactory {
@@ -46,9 +45,7 @@ extension BindersFactory {
         makeCollateralLoanShowcaseBinder: { .preview },
         makeCollateralLoanLandingBinder: { _ in .preview },
         makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
-        makeSavingsAccountBinders: .init(
-            makeOpenSavingsAccountBinder: {  fatalError() },
-            makeSavingsAccountBinder: {  fatalError() })
+        makeSavingsAccountNodes: { _ in .preview }
     )
 }
 
