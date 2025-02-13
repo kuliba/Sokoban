@@ -531,7 +531,7 @@ struct LandingUIView_Previews: PreviewProvider {
             OrderSavingsAccountWrapperView.init(
                 viewModel: .init(
                     initialState: .preview,
-                    reduce: OrderSavingsAccountReducer(openURL: { _ in }).reduce(_:_:),
+                    reduce: OrderSavingsAccountReducer().reduce(_:_:),
                     handleEffect: {_,_ in }),
                 config: .preview,
                 imageViewFactory: .default)

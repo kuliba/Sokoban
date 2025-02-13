@@ -9,13 +9,7 @@ import Foundation
 
 public final class OrderSavingsAccountReducer {
     
-    let openURL: (URL) -> Void
-    
-    public init(
-        openURL: @escaping (URL) -> Void
-    ) {
-        self.openURL = openURL
-    }
+    public init() {}
 }
 
 public extension OrderSavingsAccountReducer {
@@ -48,7 +42,7 @@ public extension OrderSavingsAccountReducer {
             state.consent.toggle()
             
         case let .openURL(url):
-            openURL(url)
+            effect = .openURL(url)
         }
         return (state, effect)
     }

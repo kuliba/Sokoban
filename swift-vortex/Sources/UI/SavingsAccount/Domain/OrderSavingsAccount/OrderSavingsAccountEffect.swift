@@ -11,4 +11,5 @@ public enum OrderSavingsAccountEffect: Equatable {
     
     case makeAccount
     case prepareAccount
+    case openURL(URL)
 }

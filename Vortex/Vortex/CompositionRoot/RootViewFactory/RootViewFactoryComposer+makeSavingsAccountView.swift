@@ -49,17 +49,11 @@ extension RootViewFactoryComposer {
         _ data: SavingsAccountDomain.OpenAccountLanding
     ) -> OrderSavingsAccountWrapperView {
         
-        let reducer = OrderSavingsAccountReducer(openURL: { url in
-            if UIApplication.shared.canOpenURL(url) {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-            }
-        })
-        
         return OrderSavingsAccountWrapperView(
             viewModel: .init(
                 initialState: .init(status: .result(.init(data.list.first ?? .empty))),
-                reduce: reducer.reduce(_:_:),
-                handleEffect: {_,_ in } // TODO: add handler
+                reduce: OrderSavingsAccountReducer().reduce(_:_:),
+                handleEffect: {_,_ in } // TODO: add handler (openUrl)
             ),
             amountToString: makeAmountToString,
             config: .prod,
