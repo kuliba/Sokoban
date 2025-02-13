@@ -93,7 +93,6 @@ extension SavingsAccountDomain {
 
     typealias OpenAccountContentReducer = SavingsAccount.FormContentReducer<OpenAccountLanding, InformerPayload>
     typealias OpenAccountContentEffectHandler = SavingsAccount.FormContentEffectHandler<OpenAccountLanding, InformerPayload>
-    typealias OpenAccountContentMicroService = SavingsAccount.FormContentEffectHandlerMicroServices<OpenAccountLanding, InformerPayload>
 
     typealias OpenAccountContent = RxViewModel<OpenAccountContentState, OpenAccountContentEvent, OpenAccountContentEffect>
     typealias OpenAccountView = OrderSavingsAccountView<AmountInfoView, Text, Text>

@@ -56,9 +56,7 @@ extension RootViewModelFactory {
         
         let reducer = SavingsAccountDomain.OpenAccountContentReducer()
         let effectHandler = SavingsAccountDomain.OpenAccountContentEffectHandler(
-            microServices: .init(
-                loadLanding: nanoServices.loadLanding
-            )
+            loadLanding: nanoServices.loadLanding
         )
         
         return .init(

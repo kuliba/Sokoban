@@ -9,15 +9,13 @@ import Foundation
 
 public final class FormContentEffectHandler<Landing, InformerPayload> {
     
-    private let microServices: MicroServices
-    
+    private let loadLanding: LoadLanding
+
     public init(
-        microServices: MicroServices
+        loadLanding: @escaping LoadLanding
     ) {
-        self.microServices = microServices
+        self.loadLanding = loadLanding
     }
-    
-    public typealias MicroServices = FormContentEffectHandlerMicroServices<Landing, InformerPayload>
 }
 
 public extension FormContentEffectHandler {
@@ -29,7 +27,7 @@ public extension FormContentEffectHandler {
         switch effect {
             
         case .load:
-            microServices.loadLanding() {
+            loadLanding() {
                 switch $0 {
                     
                 case let .failure(backendFailure):
@@ -55,4 +53,7 @@ public extension FormContentEffectHandler {
     
     typealias Event = SavingsAccountContentEvent<Landing, InformerPayload>
     typealias Effect = SavingsAccountContentEffect
+    
+    typealias LoadLandingCompletion = (Result<Landing, BackendFailure<InformerPayload>>) -> Void
+    typealias LoadLanding = (@escaping LoadLandingCompletion) -> Void
 }
