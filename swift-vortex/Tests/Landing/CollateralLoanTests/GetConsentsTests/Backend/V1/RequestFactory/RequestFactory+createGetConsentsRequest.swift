@@ -45,10 +45,15 @@ final class RequestFactory_createGetConsentsRequestTests: XCTestCase {
     
     private func makeRequest(
         _ applicationID: Int,
+        _ verificationCode: String = anyMessage(),
         _ url: URL = anyURL()
     ) throws -> URLRequest {
         
-        let payload = Payload(applicationID: applicationID)
+        let payload = Payload(
+            cryptoVersion: "1.0", // Constant
+            applicationId: UInt(applicationID),
+            verificationCode: verificationCode
+        )
 
         let request = try RequestFactory.createGetConsentsRequest(
             url: url,
