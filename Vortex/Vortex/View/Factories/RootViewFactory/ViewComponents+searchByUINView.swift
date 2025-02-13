@@ -51,10 +51,10 @@ extension ViewComponents {
             
             SearchByUINFlowView(
                 state: state.navigation,
-                dismiss: { flow.event(.dismiss) },
+                dismiss: { event(.dismiss) },
                 destinationView: {
                     
-                    destinationView(destination: $0) { flow.event(.dismiss) }
+                    destinationView(destination: $0) { event(.dismiss) }
                 }
             )
         }
