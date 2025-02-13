@@ -60,6 +60,7 @@ extension RootViewModelFactory {
         }
     }
     
+    // TODO: repeating code as in RootViewModelFactory+makeCategoryPickerSection.swift:75
     @inlinable
     func getNavigation(
         category: ServiceCategory,

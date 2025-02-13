@@ -241,8 +241,9 @@ private extension PaymentsTransfersPersonalNavigation {
         switch self {
         case .byPhoneTransfer:           return nil // .byPhoneTransfer
         case .main:                      return .select(.outside(.tab(.main)))
-        case .scanQR:                    return .select(.scanQR)
         case let .standardPayment(type): return .select(.standardPayment(type))
+        case .scanQR:                    return .select(.scanQR)
+        case .searchByUIN:               return .select(.searchByUIN)
         case .templates:                 return .select(.templates)
         case .userAccount:               return .select(.userAccount)
         }
