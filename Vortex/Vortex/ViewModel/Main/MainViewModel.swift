@@ -814,7 +814,10 @@ private extension MainViewModel {
             switch payload.type {
             case .cardOrder:
                 action.send(RootEvent.select(.openProduct(.card)))
-                
+            
+            case .savingLanding:
+                action.send(RootEvent.select(.openProduct(.savingsAccount)))
+
             case .payment:
                 rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService)
                 

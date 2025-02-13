@@ -56,6 +56,7 @@ struct SavingsAccountBinderView: View {
                                 config: .prod,
                                 factory: factory
                             )
+                            .onFirstAppear { contentEvent(.load) }
                         }
                     },
                     informerView: informerView
