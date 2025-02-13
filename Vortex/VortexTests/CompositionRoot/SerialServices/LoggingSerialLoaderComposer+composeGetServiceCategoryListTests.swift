@@ -430,3 +430,8 @@ private extension String {
 }
 """
 }
+
+private extension String {
+    
+    static let standard = "STANDARD_FLOW"
+}

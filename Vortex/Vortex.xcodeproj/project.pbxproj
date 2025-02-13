@@ -930,6 +930,10 @@
 		2A5D6F562D5DAE3A0011C09E /* ViewComponents+searchByUINView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D6F552D5DAE3A0011C09E /* ViewComponents+searchByUINView.swift */; };
 		2A5D6F5A2D5DAF680011C09E /* SearchByUINDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D6F592D5DAF680011C09E /* SearchByUINDomain.swift */; };
 		2A5D6F5D2D5DB4200011C09E /* RootViewModelFactory+makeSearchByUIN.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D6F5C2D5DB4200011C09E /* RootViewModelFactory+makeSearchByUIN.swift */; };
+		2A5D989E2D5DD2470065C4E3 /* C2GPaymentDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D989D2D5DD2470065C4E3 /* C2GPaymentDomain.swift */; };
+		2A5D98A02D5DD32D0065C4E3 /* RootViewModelFactory+makeC2BPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D989F2D5DD32D0065C4E3 /* RootViewModelFactory+makeC2BPayment.swift */; };
+		2A5D98A22D5DED900065C4E3 /* ViewComponents+makeC2GPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D98A12D5DED900065C4E3 /* ViewComponents+makeC2GPaymentView.swift */; };
+		2A5D98A42D5E11B90065C4E3 /* ViewComponents+makeC2GPaymentCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D98A32D5E11B90065C4E3 /* ViewComponents+makeC2GPaymentCompleteView.swift */; };
 		2A5DEB902B789E4200199538 /* C2BSubscriptionUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5DEB8F2B789E4200199538 /* C2BSubscriptionUI */; };
 		2A5EB43D2AAB29C900CA931D /* LandingUIComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5EB43C2AAB29C900CA931D /* LandingUIComponent */; };
 		2A5FFD392B17310600C89F0D /* OutgoingTransferResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5FFD382B17310600C89F0D /* OutgoingTransferResponse.swift */; };
@@ -4644,6 +4648,10 @@
 		2A5D6F552D5DAE3A0011C09E /* ViewComponents+searchByUINView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+searchByUINView.swift"; sourceTree = "<group>"; };
 		2A5D6F592D5DAF680011C09E /* SearchByUINDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchByUINDomain.swift; sourceTree = "<group>"; };
 		2A5D6F5C2D5DB4200011C09E /* RootViewModelFactory+makeSearchByUIN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeSearchByUIN.swift"; sourceTree = "<group>"; };
+		2A5D989D2D5DD2470065C4E3 /* C2GPaymentDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C2GPaymentDomain.swift; sourceTree = "<group>"; };
+		2A5D989F2D5DD32D0065C4E3 /* RootViewModelFactory+makeC2BPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeC2BPayment.swift"; sourceTree = "<group>"; };
+		2A5D98A12D5DED900065C4E3 /* ViewComponents+makeC2GPaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeC2GPaymentView.swift"; sourceTree = "<group>"; };
+		2A5D98A32D5E11B90065C4E3 /* ViewComponents+makeC2GPaymentCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeC2GPaymentCompleteView.swift"; sourceTree = "<group>"; };
 		2A5FFD382B17310600C89F0D /* OutgoingTransferResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutgoingTransferResponse.swift; sourceTree = "<group>"; };
 		2A6097342B9D760D00AA6C75 /* UtilityPayment.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UtilityPayment.xctestplan; sourceTree = "<group>"; };
 		2A6097352B9D76C000AA6C75 /* UtilityPaymentPreview.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UtilityPaymentPreview.xctestplan; sourceTree = "<group>"; };
@@ -10649,6 +10657,7 @@
 			isa = PBXGroup;
 			children = (
 				2A5D6F592D5DAF680011C09E /* SearchByUINDomain.swift */,
+				2A5D989D2D5DD2470065C4E3 /* C2GPaymentDomain.swift */,
 			);
 			path = SearchByUIN;
 			sourceTree = "<group>";
@@ -10657,6 +10666,17 @@
 			isa = PBXGroup;
 			children = (
 				2A5D6F5C2D5DB4200011C09E /* RootViewModelFactory+makeSearchByUIN.swift */,
+				2A5D989F2D5DD32D0065C4E3 /* RootViewModelFactory+makeC2BPayment.swift */,
+			);
+			path = C2G;
+			sourceTree = "<group>";
+		};
+		2A5D98A52D5E12650065C4E3 /* C2G */ = {
+			isa = PBXGroup;
+			children = (
+				2A5D6F552D5DAE3A0011C09E /* ViewComponents+searchByUINView.swift */,
+				2A5D98A12D5DED900065C4E3 /* ViewComponents+makeC2GPaymentView.swift */,
+				2A5D98A32D5E11B90065C4E3 /* ViewComponents+makeC2GPaymentCompleteView.swift */,
 			);
 			path = C2G;
 			sourceTree = "<group>";
@@ -12654,7 +12674,7 @@
 				842C423A2D11FF2F006A307D /* ViewComponents+serviceCategoryFailureView.swift */,
 				2AAEF8682D58EBA4000E81C6 /* ViewComponents+makeGeneralIconView.swift */,
 				2AEBF66A2D55CF4E001E8CB3 /* OpenProduct */,
-				2A5D6F552D5DAE3A0011C09E /* ViewComponents+searchByUINView.swift */,
+				2A5D98A52D5E12650065C4E3 /* C2G */,
 				833286CF2C91BF4700B6FA3F /* RootViewFactory+banners.swift */,
 				2A3C2CF52D4BCD2F003FEEFE /* RootViewFactory+makeCorporateTransfers.swift */,
 				2A267D502D4BFFE1001F725C /* RootViewFactory+makeMeToMeFlowView.swift */,
@@ -21873,6 +21893,7 @@
 				77FF670927B85266009FEA09 /* AESEncryptionAgent.swift in Sources */,
 				0B8CB0882680CAE3006A39C3 /* ExtensionNetworkHelper.swift in Sources */,
 				2A5FFD392B17310600C89F0D /* OutgoingTransferResponse.swift in Sources */,
+				2A5D989E2D5DD2470065C4E3 /* C2GPaymentDomain.swift in Sources */,
 				7784D2AA285B7BA300E81005 /* ProductProfileDetaiHeaderViewComponent.swift in Sources */,
 				2A6371272BF260E3007E494A /* IconDomain+preview.swift in Sources */,
 				ED84994326A6F647005205C6 /* ChooseCountryHeaderViewModel.swift in Sources */,
@@ -22046,6 +22067,7 @@
 				500ECA6228DC4DCD00881710 /* ProductsSwapViewComponent.swift in Sources */,
 				2A3F1B272A498AA900D8FE55 /* MosParkingPickerDataMapper.swift in Sources */,
 				0BB24AB326F0C59900DDA4F6 /* SaveCardNameDecodableModel.swift in Sources */,
+				2A5D98A42D5E11B90065C4E3 /* ViewComponents+makeC2GPaymentCompleteView.swift in Sources */,
 				EDCE659527C4FFDE006C2C3E /* Model+PaymentsTaxesFNS.swift in Sources */,
 				68A07C4B281B190800797A54 /* OpenDepositListViewModel.swift in Sources */,
 				77D527CE29A392D000270A73 /* PaymentsGroupViewModel.swift in Sources */,
@@ -22503,6 +22525,7 @@
 				2A3624712C5E6B7300174C50 /* SegmentedPaymentProviderPickerFlowEffect.swift in Sources */,
 				2A0EF2EE2C1DABCA003F094D /* ChevronViewConfig.swift in Sources */,
 				83DE8C6E2D53C51700682617 /* OTPInfoView.swift in Sources */,
+				2A5D98A22D5DED900065C4E3 /* ViewComponents+makeC2GPaymentView.swift in Sources */,
 				834E3F682AC2C40900E49C2B /* Services+getScenarioQRData.swift in Sources */,
 				0BA14E18270DF8F60098E422 /* AppLockerHelper.swift in Sources */,
 				2A267D592D4C1DDF001F725C /* RootViewFactory+makeOpenProductFlowView.swift in Sources */,
@@ -22635,6 +22658,7 @@
 				ED687C2D2768906800A38E87 /* DepositInfoViewController.swift in Sources */,
 				0B95C40C26B72CB100AA57E6 /* ExtensionBottomViewWithSetup.swift in Sources */,
 				77BE9A33290AC231006046B1 /* PaymentsSectionViewModel.swift in Sources */,
+				2A5D98A02D5DD32D0065C4E3 /* RootViewModelFactory+makeC2BPayment.swift in Sources */,
 				ED664BB2274512C80050D1E0 /* ResultAccountStatementController.swift in Sources */,
 				77E289A02859221D0048141B /* Calendar+Extensions.swift in Sources */,
 				2AD15D192C19FFCA003329C7 /* FraudNoticePayload.swift in Sources */,
@@ -26650,7 +26674,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/Vortex.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 155;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
@@ -26662,7 +26686,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 10.7;
+				MARKETING_VERSION = 10.7.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -26737,7 +26761,7 @@
 				CODE_SIGN_ENTITLEMENTS = VortexPushServiceExtension/VortexPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 155;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VortexPushServiceExtension/Info.plist;
@@ -26749,7 +26773,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 10.7;
+				MARKETING_VERSION = 10.7.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.sense.VortexPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -27067,7 +27091,7 @@
 				CODE_SIGN_ENTITLEMENTS = VortexPushServiceExtension/VortexPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 155;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VortexPushServiceExtension/Info.plist;
@@ -27079,7 +27103,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 10.7;
+				MARKETING_VERSION = 10.7.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.sense.VortexPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -27100,7 +27124,7 @@
 				CODE_SIGN_ENTITLEMENTS = VortexPushServiceExtension/VortexPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 155;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VortexPushServiceExtension/Info.plist;
@@ -27112,7 +27136,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 10.7;
+				MARKETING_VERSION = 10.7.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.sense.VortexPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -27338,7 +27362,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/VortexRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 155;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -27349,7 +27373,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 10.7;
+				MARKETING_VERSION = 10.7.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -27423,7 +27447,7 @@
 				CODE_SIGN_ENTITLEMENTS = VortexPushServiceExtension/VortexPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 155;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VortexPushServiceExtension/Info.plist;
@@ -27435,7 +27459,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 10.7;
+				MARKETING_VERSION = 10.7.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.sense.VortexPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -28403,7 +28427,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/Vortex.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 155;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
@@ -28415,7 +28439,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 10.7;
+				MARKETING_VERSION = 10.7.1;
 				"OTHER_SWIFT_FLAGS[sdk=*]" = "-Xfrontend -warn-long-function-bodies=400 -Xfrontend -warn-long-expression-type-checking=400";
 				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -28440,7 +28464,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/VortexRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 155;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -28451,7 +28475,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 10.7;
+				MARKETING_VERSION = 10.7.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

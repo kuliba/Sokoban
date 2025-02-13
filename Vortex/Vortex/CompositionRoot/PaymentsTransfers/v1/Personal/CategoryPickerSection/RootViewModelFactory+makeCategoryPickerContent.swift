@@ -94,3 +94,8 @@ extension ServiceCategory: Identifiable {
     
     public var id: CategoryType { type }
 }
+
+private extension String {
+    
+    static let standard = "STANDARD_FLOW"
+}

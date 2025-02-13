@@ -39,24 +39,10 @@ private extension ResponseMapper.ServiceCategory {
             md5Hash: category.md5hash,
             name: category.name,
             ord: category.ord,
-            paymentFlow: .init(category.paymentFlow),
+            paymentFlow: category.paymentFlow,
             hasSearch: category.search,
             type: .init(category.type)
         )
-    }
-}
-
-private extension ResponseMapper.ServiceCategory.PaymentFlow {
-    
-    init(_ flow: ResponseMapper._Data._Category._PaymentFlow) {
-        
-        switch flow {
-        case .mobile:              self = .mobile
-        case .qr:                  self = .qr
-        case .standard:            self = .standard
-        case .taxAndStateServices: self = .taxAndStateServices
-        case .transport:           self = .transport
-        }
     }
 }
 
@@ -79,15 +65,7 @@ private extension ResponseMapper {
             
             typealias CategoryType = String
             typealias LatestPaymentsCategory = String
-            
-            enum _PaymentFlow: String, Decodable {
-                
-                case mobile              = "MOBILE"
-                case qr                  = "QR"
-                case standard            = "STANDARD_FLOW"
-                case taxAndStateServices = "TAX_AND_STATE_SERVICE"
-                case transport           = "TRANSPORT"
-            }
+            typealias _PaymentFlow = String
         }
     }
 }

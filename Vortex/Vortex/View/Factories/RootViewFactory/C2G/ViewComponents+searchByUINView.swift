@@ -10,6 +10,7 @@ import SwiftUI
 
 extension ViewComponents {
     
+    @inlinable
     func searchByUINView(
         _ binder: SearchByUINDomain.Binder
     ) -> some View {
@@ -38,28 +39,55 @@ extension ViewComponents {
         .frame(maxHeight: .infinity, alignment: .top)
         .buttonBorderShape(.roundedRectangle)
         .buttonStyle(.bordered)
-        .frame(maxHeight: .infinity, alignment: .center)
-        .background(searchByUINFlowView(flow: binder.flow))
     }
     
+    @inlinable
     func searchByUINFlowView(
-        flow: SearchByUINDomain.Flow
+        flow: SearchByUINDomain.Flow,
+        c2gPaymentFlowView: @escaping (C2GPaymentDomain.Flow) -> some View
     ) -> some View {
         
         RxWrapperView(model: flow) { state, event in
             
             SearchByUINFlowView(
                 state: state.navigation,
-                dismiss: { flow.event(.dismiss) }
+                dismiss: { event(.dismiss) },
+                destinationView: { destination in
+                    
+                    destinationView(
+                        destination: destination,
+                        dismiss: { event(.dismiss) },
+                        c2gPaymentFlowView: c2gPaymentFlowView
+                    )
+                }
+            )
+        }
+    }
+    
+    @inlinable
+    @ViewBuilder
+    func destinationView(
+        destination: SearchByUINDomain.Navigation.Destination,
+        dismiss: @escaping () -> Void,
+        c2gPaymentFlowView: @escaping (C2GPaymentDomain.Flow) -> some View
+    ) -> some View {
+        
+        switch destination {
+        case let .c2gPayment(binder):
+            makeC2GPaymentView(
+                binder: binder,
+                dismiss: dismiss,
+                c2gPaymentFlowView: c2gPaymentFlowView
             )
         }
     }
 }
 
-struct SearchByUINFlowView: View {
+struct SearchByUINFlowView<DestinationView: View>: View {
     
     let state: State?
     let dismiss: () -> Void
+    let destinationView: (SearchByUINDomain.Navigation.Destination) -> DestinationView
     
     var body: some View {
         
@@ -84,20 +112,6 @@ private extension SearchByUINFlowView {
     ) -> Alert {
         
         return backendFailure.alert(action: dismiss)
-    }
-    
-    @ViewBuilder
-    func destinationView(
-        destination: SearchByUINDomain.Navigation.Destination
-    ) -> some View {
-        
-        switch destination {
-        case let .c2gPayment(c2gPayment):
-            // TODO: extract to components
-            Text("TBD c2gPayment:" + String(describing: c2gPayment))
-                .frame(maxHeight: .infinity, alignment: .top)
-                .navigationBarWithBack(title: "Оплата", dismiss: dismiss)
-        }
     }
 }
 

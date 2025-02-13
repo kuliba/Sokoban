@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makeSearchByUIN.swift
+//  RootViewModelFactory+makeC2BPayment.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 13.02.2025.
@@ -8,8 +8,8 @@
 extension RootViewModelFactory {
     
     @inlinable
-    func makeSearchByUIN(
-    ) -> SearchByUINDomain.Binder {
+    func makeC2BPayment(
+    ) -> C2GPaymentDomain.Binder {
         
         composeBinder(
             content: (),
@@ -22,7 +22,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func delayProvider(
-        navigation: SearchByUINDomain.Navigation
+        navigation: C2GPaymentDomain.Navigation
     ) -> Delay {
         
         return .zero
@@ -30,13 +30,13 @@ extension RootViewModelFactory {
     
     @inlinable
     func getNavigation(
-        select: SearchByUINDomain.Select,
-        notify: @escaping SearchByUINDomain.Notify,
-        completion: @escaping (SearchByUINDomain.Navigation) -> Void
+        select: C2GPaymentDomain.Select,
+        notify: @escaping C2GPaymentDomain.Notify,
+        completion: @escaping (C2GPaymentDomain.Navigation) -> Void
     ) {
         switch select {
-        case let .uin(uin):
-            getUINData(uin) { [weak self] in
+        case let .pay(payload):
+            createC2GPayment(payload) { [weak self] in
                 
                 guard let self else { return }
                 
@@ -44,22 +44,22 @@ extension RootViewModelFactory {
                 case let .failure(failure):
                     completion(.failure(failure))
                     
-                case .success(()):
-                    completion(.payment(makeC2BPayment()))
+                case let .success(success):
+                    completion(.success(success))
                 }
             }
         }
     }
     
     @inlinable
-    func getUINData(
-        _ uin: SearchByUINDomain.UIN,
-        completion: @escaping (GetUINDataResult) -> Void
+    func createC2GPayment(
+        _ payload: C2GPaymentDomain.Select.Payload,
+        completion: @escaping (CreateC2GPaymentResult) -> Void
     ) {
         // TODO: - replace stub with remote service, call on background
         schedulers.background.delay(for: .seconds(2)) {
             
-            switch uin.value {
+            switch payload {
             case "connectivityFailure":
                 completion(.failure(.connectivity("Возникла техническая ошибка")))
                 
@@ -72,5 +72,5 @@ extension RootViewModelFactory {
         }
     }
     
-    typealias GetUINDataResult = Result<Void, BackendFailure> // TODO: replace Void with  GetUINDataResponse from C2GBackend when ready
+    typealias CreateC2GPaymentResult = Result<Void, BackendFailure> // TODO: replace Void with  CreateC2GPaymentResponse from C2GBackend when ready
 }
