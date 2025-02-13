@@ -57,7 +57,8 @@ private extension PaymentCompletionStatusView {
     
     func titleView() -> some View {
         
-        state.status.title.text(withConfig: config.title)
+        state.status.title.text(withConfig: config.title, alignment: .center)
+            .fixedSize(horizontal: false, vertical: true)
     }
     
     func subtitleView() -> some View {
@@ -65,6 +66,7 @@ private extension PaymentCompletionStatusView {
         state.status.subtitle.map {
             
             $0.text(withConfig: config.subtitle, alignment: .center)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
     

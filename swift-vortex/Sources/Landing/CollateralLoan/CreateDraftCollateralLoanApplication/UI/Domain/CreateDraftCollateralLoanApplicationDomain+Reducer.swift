@@ -68,6 +68,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 effect = .confirm
                 
             case .tappedSubmit:
+                state.isLoading = true
                 if let applicationID = state.applicationID {
                     
                     effect = .saveConsents(
@@ -86,10 +87,8 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 state.isButtonDisabled = !state.checkButtonStatus
                 
             case let .showSaveConsentsResult(result):
-                state.isLoading = false
-                state.saveConsentsResult = result     
-                state.isButtonDisabled = !state.checkButtonStatus
-                
+                state.saveConsentsResult = result
+
             case let .otp(otp):
                 state.otp = otp
                 state.isButtonDisabled = !state.checkButtonStatus

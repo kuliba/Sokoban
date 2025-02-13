@@ -281,7 +281,7 @@ extension RemoteServices.ResponseMapper.CollateralLoanLandingSaveConsentsRespons
             applicationID: applicationID,
             name: name,
             amount: amount,
-            termMonth: termMonth,
+            term: term,
             collateralType: collateralType,
             interestRate: interestRate,
             collateralInfo: collateralInfo,

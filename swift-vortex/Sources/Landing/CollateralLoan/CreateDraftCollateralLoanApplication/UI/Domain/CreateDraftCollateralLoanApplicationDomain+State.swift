@@ -52,7 +52,6 @@ extension CreateDraftCollateralLoanApplicationDomain {
             needToDissmiss: Bool = false,
             otp: String = "",
             verificationCode: String = "",
-            checkedConsents: [String] = [],
             isButtonDisabled: Bool = false,
             confirmation: Confirmation? = nil,
             otpValidated: Bool = false
@@ -67,10 +66,10 @@ extension CreateDraftCollateralLoanApplicationDomain {
             self.amount = .init(textField: .noFocus(data.formattedAmount))
             self.otp = otp
             self.verificationCode = verificationCode
-            self.checkedConsents = checkedConsents
             self.isButtonDisabled = isButtonDisabled
             self.confirmation = confirmation
             self.otpValidated = otpValidated
+            self.checkedConsents = data.consents.map(\.name)
         }
         
         public enum Stage {

@@ -13,6 +13,8 @@ import UIPrimitives
 
 struct CollateralLoanLandingWrapperView: View {
     
+    @Environment(\.openURL) var openURL
+
     let binder: GetCollateralLandingDomain.Binder
     let factory: Factory
     let goToMain: () -> Void
@@ -71,10 +73,15 @@ struct CollateralLoanLandingWrapperView: View {
                 switch $0 {
                 case let .showCaseList(id):
                     binder.flow.event(.select(.showCaseList(id)))
-
+                    
                 case let .createDraftApplication(product):
                     let payload = state.payload(product)
-                        binder.flow.event(.select(.createDraftCollateralLoanApplication(payload)))
+                    binder.flow.event(.select(.createDraftCollateralLoanApplication(payload)))
+                    
+                case let .openDocument(link):
+                    if let url = URL(string: link) {
+                        openURL(url)
+                    }
                 }
             },
             factory: .init(

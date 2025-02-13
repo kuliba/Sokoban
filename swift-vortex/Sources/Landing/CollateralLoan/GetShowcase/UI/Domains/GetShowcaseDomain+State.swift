@@ -9,7 +9,7 @@ extension GetShowcaseDomain {
     
     public struct State: Equatable {
         
-        var isLoading = false
+        public var isLoading = false
         var result: Result?
         var selectedLandingId: String?
 
