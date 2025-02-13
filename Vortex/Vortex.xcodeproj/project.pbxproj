@@ -924,6 +924,7 @@
 		2A5D2FBD2BF33D6F00BC3092 /* UtilityPrepaymentFlowMicroServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D2FBC2BF33D6F00BC3092 /* UtilityPrepaymentFlowMicroServices.swift */; };
 		2A5D2FBF2BF33E0D00BC3092 /* UtilityPrepaymentFlowMicroServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D2FBE2BF33E0D00BC3092 /* UtilityPrepaymentFlowMicroServicesComposer.swift */; };
 		2A5D6F562D5DAE3A0011C09E /* ViewComponents+searchByUINView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D6F552D5DAE3A0011C09E /* ViewComponents+searchByUINView.swift */; };
+		2A5D6F5A2D5DAF680011C09E /* SearchByUINDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D6F592D5DAF680011C09E /* SearchByUINDomain.swift */; };
 		2A5DEB902B789E4200199538 /* C2BSubscriptionUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5DEB8F2B789E4200199538 /* C2BSubscriptionUI */; };
 		2A5EB43D2AAB29C900CA931D /* LandingUIComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5EB43C2AAB29C900CA931D /* LandingUIComponent */; };
 		2A5FFD392B17310600C89F0D /* OutgoingTransferResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5FFD382B17310600C89F0D /* OutgoingTransferResponse.swift */; };
@@ -4605,6 +4606,7 @@
 		2A5D2FBE2BF33E0D00BC3092 /* UtilityPrepaymentFlowMicroServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentFlowMicroServicesComposer.swift; sourceTree = "<group>"; };
 		2A5D6F542D5DA6990011C09E /* C2G.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = C2G.xctestplan; sourceTree = "<group>"; };
 		2A5D6F552D5DAE3A0011C09E /* ViewComponents+searchByUINView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+searchByUINView.swift"; sourceTree = "<group>"; };
+		2A5D6F592D5DAF680011C09E /* SearchByUINDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchByUINDomain.swift; sourceTree = "<group>"; };
 		2A5FFD382B17310600C89F0D /* OutgoingTransferResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutgoingTransferResponse.swift; sourceTree = "<group>"; };
 		2A6097342B9D760D00AA6C75 /* UtilityPayment.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UtilityPayment.xctestplan; sourceTree = "<group>"; };
 		2A6097352B9D76C000AA6C75 /* UtilityPaymentPreview.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UtilityPaymentPreview.xctestplan; sourceTree = "<group>"; };
@@ -10570,6 +10572,14 @@
 				2A5D6F582D5DAF4F0011C09E /* SearchByUIN */,
 			);
 			path = C2G;
+			sourceTree = "<group>";
+		};
+		2A5D6F582D5DAF4F0011C09E /* SearchByUIN */ = {
+			isa = PBXGroup;
+			children = (
+				2A5D6F592D5DAF680011C09E /* SearchByUINDomain.swift */,
+			);
+			path = SearchByUIN;
 			sourceTree = "<group>";
 		};
 		2A6167322D5BE7970026B036 /* C2G */ = {
@@ -21677,6 +21687,7 @@
 				68ECC2BA285C580900A95CE8 /* PhonePaymentView+Legacy.swift in Sources */,
 				770E68B02902B03000586FC4 /* Model+PaymentsTransfer.swift in Sources */,
 				2A15AF772CFC78F0004C4250 /* UpdatingUserAccountButtonLabel.swift in Sources */,
+				2A5D6F5A2D5DAF680011C09E /* SearchByUINDomain.swift in Sources */,
 				77517F9927A858C2005CFB77 /* TransferResponseData.swift in Sources */,
 				77F4C8BD27E077D70095820E /* Model+PaymentsTaxesFSSP.swift in Sources */,
 				77517FEC27A99279005CFB77 /* ServerCommands+Rates.swift in Sources */,
