@@ -74,17 +74,7 @@ extension RootViewFactoryComposer {
         
         .init(
             amountInfo: makeAmountInfoView(),
-            makeOTPView: { [makeOTPView] in
-                
-                let model = TimedOTPInputViewModel(
-                    otpText: "",
-                    initiateOTP: { _ in },
-                    submitOTP: { _,_ in }
-                   // observe: {  }
-                )
-
-                return makeOTPView(model)
-            },
+            makeOTPView: { Text("OTP") },
             makeProductPickerView:  { Text("productPicker") })
     }
     
