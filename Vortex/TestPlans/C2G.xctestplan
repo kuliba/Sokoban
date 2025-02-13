@@ -1,0 +1,31 @@
+{
+  "configurations" : [
+    {
+      "id" : "1B2179AD-B840-41B9-B7A3-1EC22CDAF44D",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "C2GBackendTests",
+        "name" : "C2GBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "C2GCoreTests",
+        "name" : "C2GCoreTests"
+      }
+    }
+  ],
+  "version" : 1
+}

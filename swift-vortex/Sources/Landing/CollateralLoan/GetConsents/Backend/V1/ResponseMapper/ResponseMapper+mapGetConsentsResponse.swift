@@ -17,6 +17,7 @@ public extension ResponseMapper {
     ) -> MappingResult<PDFDocument> {
 
         if let pdfDocument = PDFDocument(data: data) {
+            
             return .success(pdfDocument)
         }
         

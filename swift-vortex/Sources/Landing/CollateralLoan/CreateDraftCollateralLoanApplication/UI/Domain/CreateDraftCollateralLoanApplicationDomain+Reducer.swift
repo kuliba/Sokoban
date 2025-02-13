@@ -70,7 +70,6 @@ extension CreateDraftCollateralLoanApplicationDomain {
             case .tappedSubmit:
                 if let applicationID = state.applicationID {
                     
-                    state.isLoading = true
                     effect = .saveConsents(
                         state.saveConsentspayload(
                             applicationID: applicationID,

@@ -12,6 +12,7 @@ extension FeatureFlags {
     static let active: Self = activeExcept()
     
     static func activeExcept(
+        c2gFlag: C2GFlag = .inactive,
         getProductListByTypeV6Flag: GetProductListByTypeV6Flag = .active,
         paymentsTransfersFlag: PaymentsTransfersFlag = .active,
         savingsAccountFlag: SavingsAccountFlag = .active,
@@ -21,6 +22,7 @@ extension FeatureFlags {
     ) -> Self {
         
         return .init(
+            c2gFlag: c2gFlag,
             getProductListByTypeV6Flag: getProductListByTypeV6Flag,
             paymentsTransfersFlag: paymentsTransfersFlag,
             savingsAccountFlag: savingsAccountFlag,

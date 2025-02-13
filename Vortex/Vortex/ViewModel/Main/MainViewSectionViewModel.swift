@@ -89,7 +89,7 @@ enum MainSectionViewModelAction {
     
         struct ButtonTapped: Action {
             
-            let operationType: MainSectionFastOperationView.ViewModel.FastOperations
+            let operationType: FastOperations
         }
     }
     

@@ -66,7 +66,7 @@ private extension MainViewModel {
     
     private var rootEventPublishers: [AnyPublisher<RootEvent, Never>] {
         
-        explicitRootEventPublishers + fastRootEventPublishers
+        explicitRootEventPublishers + fastRootEventPublishers + [toolbarRootEventPublisher]
     }
     
     private var explicitRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
@@ -86,6 +86,19 @@ private extension MainViewModel {
             .compactMap { $0 as? MainSectionFastOperationView.ViewModel }
             .map(\.rootEventPublisher)
     }
+    
+    private var toolbarRootEventPublisher: AnyPublisher<RootEvent, Never> {
+        
+        action
+            .compactMap {
+                
+                switch $0 as? MainViewModelAction.Toolbar {
+                case .scanQR: return .select(.scanQR)
+                default: return nil
+                }
+            }
+            .eraseToAnyPublisher()
+    }
 }
 
 private extension MainSectionFastOperationView.ViewModel {
@@ -100,14 +113,15 @@ private extension MainSectionFastOperationView.ViewModel {
     }
 }
 
-private extension MainSectionFastOperationView.ViewModel.FastOperations {
+private extension FastOperations {
     
     var rootEvent: RootEvent? {
         
         switch self {
+        case .byPhone:   return nil
         case .byQr:      return .select(.scanQR)
         case .templates: return .select(.templates)
-        case .byPhone:   return nil
+        case .uin:       return .select(.searchByUIN)
         case .utility:   return nil
         }
     }

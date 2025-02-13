@@ -12,25 +12,25 @@ public struct GetCollateralLandingBottomSheetView: View {
     @SwiftUI.State var selected: Item? = nil
 
     private var state: State
-    private let domainEvent: (DomainEvent) -> Void
+    private let event: (Event) -> Void
     private let config: Config
     private let factory: Factory
     
     public init(
         state: State,
-        domainEvent: @escaping (DomainEvent) -> Void,
+        event: @escaping (Event) -> Void,
         config: Config,
         factory: Factory,
         type: State.BottomSheet.SheetType
     ) {
         self.state = state
-        self.domainEvent = domainEvent
+        self.event = event
         self.config = config
         self.factory = factory
         
         self.state.bottomSheet = .init(sheetType: type)
     }
-        
+    
     public var body: some View {
         
         ScrollView(.vertical) {
@@ -40,7 +40,13 @@ public struct GetCollateralLandingBottomSheetView: View {
                 ForEach(state.bottomSheetItems, content: itemView)
             }
         }
-        .disabled(state.bottomSheetItems.count < config.layouts.scrollThreshold)
+        .onAppear {
+            
+            UIScrollView.appearance().isScrollEnabled
+                = state.bottomSheetItems.count >= config.layouts.scrollThreshold
+            
+            selected = state.selectedBottomSheetItem
+        }
         .frame(height: height)
     }
     
@@ -75,7 +81,7 @@ public struct GetCollateralLandingBottomSheetView: View {
             
             if let termMonth = item.termMonth {
                 
-                domainEvent(.selectMonthPeriod(termMonth))
+                event(.selectMonthPeriod(termMonth))
             }
         }
     }
@@ -106,7 +112,7 @@ public struct GetCollateralLandingBottomSheetView: View {
             
             selected = item
             
-            domainEvent(.selectCollateral(item.id))
+            event(.selectCollateral(item.id))
         }
     }
     
@@ -125,7 +131,7 @@ public struct GetCollateralLandingBottomSheetView: View {
     @ViewBuilder
     private func makeRadioButton(for item: Item) -> some View {
         
-        if item == selected {
+        if item.title == selected?.title {
             makeSelectedRadioButton(for: item)
         } else {
             makepUnSelectedRadioButton(for: item)
@@ -205,7 +211,7 @@ extension GetCollateralLandingBottomSheetView {
     public typealias Item = GetCollateralLandingDomain.State.BottomSheet.Item
     public typealias Config = GetCollateralLandingConfig.BottomSheet
     public typealias Factory = GetCollateralLandingFactory
-    public typealias DomainEvent = GetCollateralLandingDomain.Event
+    public typealias Event = GetCollateralLandingDomain.Event
     public typealias State = GetCollateralLandingDomain.State
 }
 
@@ -219,7 +225,7 @@ struct GetCollateralLandingBottomSheetView_Previews: PreviewProvider {
             state: .init(
                 landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
                 bottomSheet: .init(sheetType: .periods)),
-            domainEvent: { print($0) },
+            event: { print($0) },
             config: .default,
             factory: .preview,
             type: .periods
@@ -230,7 +236,7 @@ struct GetCollateralLandingBottomSheetView_Previews: PreviewProvider {
             state: .init(
                 landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
                 bottomSheet: .init(sheetType: .periods)),
-            domainEvent: { print($0) },
+            event: { print($0) },
             config: .default,
             factory: .preview,
             type: .collaterals

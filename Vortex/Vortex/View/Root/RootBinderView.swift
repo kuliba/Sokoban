@@ -80,6 +80,9 @@ private extension RootBinderView {
         case let .standardPayment(picker):
             standardPaymentView(picker)
             
+        case let .searchByUIN(searchByUIN):
+            searchByUINView(searchByUIN)
+            
         case let .userAccount(userAccount):
             userAccountView(userAccount)
         }
@@ -109,6 +112,23 @@ private extension RootBinderView {
         
         rootViewFactory.components.makeTemplatesListFlowView(templates)
             .accessibilityIdentifier(ElementIDs.rootView(.destination(.templates)).rawValue)
+    }
+    
+    private func searchByUINView(
+        _ searchByUIN: SearchByUINDomain.Binder
+    ) -> some View {
+        
+        rootViewFactory.components.searchByUINView(searchByUIN)
+            .navigationBarWithBack(
+                title: "Поиск по УИН",
+                subtitle: "Поиск начислений по УИН",
+                dismiss: { binder.flow.event(.dismiss) },
+                rightItem: .barcodeScanner {
+                    
+                    binder.flow.event(.select(.scanQR))
+                }
+            )
+            .disablingLoading(flow: searchByUIN.flow)
     }
     
     private func userAccountView(
@@ -233,6 +253,9 @@ extension RootViewNavigation {
         case let .standardPayment(node):
             return .standardPayment(node.model)
             
+        case let .searchByUIN(searchByUIN):
+            return .searchByUIN(searchByUIN)
+            
         case let .userAccount(userAccount):
             return .userAccount(userAccount)
         }
@@ -243,9 +266,11 @@ extension RootViewNavigation {
         case makeStandardPaymentFailure(ServiceCategoryFailureDomain.Binder)
         case openProduct(OpenProduct)
         case productProfile(ProductProfileViewModel)
+        case searchByUIN(SearchByUIN)
         case standardPayment(PaymentProviderPickerDomain.Binder)
         case userAccount(UserAccountViewModel)
         
+        typealias SearchByUIN = SearchByUINDomain.Binder
         typealias TemplatesNode = RootViewNavigation.TemplatesNode
     }
     
@@ -265,7 +290,7 @@ extension RootViewNavigation {
             return .scanQR(node.model)
             
             // cases listed for explicit exhaustivity
-        case .standardPayment, .userAccount:
+        case .standardPayment, .searchByUIN, .userAccount:
             return nil
             
         case let .templates(node):
@@ -304,6 +329,9 @@ extension RootViewNavigation.Destination: Identifiable {
         case let .standardPayment(picker):
             return .standardPayment(.init(picker))
             
+        case let .searchByUIN(searchByUIN):
+            return .searchByUIN(.init(searchByUIN))
+            
         case let .userAccount(userAccount):
             return .userAccount(.init(userAccount))
         }
@@ -314,6 +342,7 @@ extension RootViewNavigation.Destination: Identifiable {
         case makeStandardPaymentFailure
         case openProduct(OpenProductID)
         case productProfile(ObjectIdentifier)
+        case searchByUIN(ObjectIdentifier)
         case standardPayment(ObjectIdentifier)
         case userAccount(ObjectIdentifier)
         

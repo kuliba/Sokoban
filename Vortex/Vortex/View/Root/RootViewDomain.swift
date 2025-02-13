@@ -21,6 +21,7 @@ enum RootViewSelect: Equatable {
     case orderCardResponse(OpenCardDomain.OrderCardResponse)
     case outside(RootViewOutside)
     case scanQR
+    case searchByUIN
     case standardPayment(ServiceCategory.CategoryType)
     case templates
     case userAccount
@@ -44,6 +45,7 @@ enum RootViewNavigation {
     case orderCardResponse(OpenCardDomain.OrderCardResponse)
     case outside(RootViewOutside)
     case scanQR(Node<QRScannerDomain.Binder>)
+    case searchByUIN(SearchByUIN)
     case standardPayment(Node<PaymentProviderPickerDomain.Binder>)
     case templates(TemplatesNode)
     case userAccount(UserAccountViewModel)
@@ -62,6 +64,7 @@ enum RootViewNavigation {
         case tab(RootViewTab)
     }
     
+    typealias SearchByUIN = SearchByUINDomain.Binder
     typealias Templates = PaymentsTransfersFactory.Templates
     typealias TemplatesNode = PaymentsTransfersFactory.TemplatesNode
 }

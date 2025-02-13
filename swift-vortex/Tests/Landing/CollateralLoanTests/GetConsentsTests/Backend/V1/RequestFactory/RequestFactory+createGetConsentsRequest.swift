@@ -27,32 +27,28 @@ final class RequestFactory_createGetConsentsRequestTests: XCTestCase {
 
     func test_createRequest_shouldCreateValidURL() throws {
 
-        let request = try makeRequest(with: .init(), .random(in: 0..<Int.max))
+        let request = try makeRequest(.random(in: 0..<Int.max))
 
         _ = try XCTUnwrap(request.url)
     }
 
     func test_createRequest_shouldCreateValidParameters() throws {
 
-        let docIDs = [String](repeating: anyMessage(), count: 3)
         let applicationID = Int.random(in: (0...Int.max))
 
-        let queryItems = try getQueryItems(with: docIDs, applicationID)
-        let mapFiles = try getMapFiles(with: docIDs)
+        let queryItems = try getQueryItems(applicationID)
 
         XCTAssertNoDiff(queryItems.first { $0.name == "applicationId" }?.value, String(applicationID))
-        XCTAssertNoDiff(queryItems.first { $0.name == "docIds" }?.value, mapFiles)
     }
     
     // MARK: Helpers
     
     private func makeRequest(
-        with docIDs: [String],
         _ applicationID: Int,
         _ url: URL = anyURL()
     ) throws -> URLRequest {
         
-        let payload = Payload(applicationID: applicationID, docIDs: docIDs)
+        let payload = Payload(applicationID: applicationID)
 
         let request = try RequestFactory.createGetConsentsRequest(
             url: url,
@@ -62,23 +58,15 @@ final class RequestFactory_createGetConsentsRequestTests: XCTestCase {
         return request
     }
     
-    private func getQueryItems(with docIDs: [String], _ applicationID: Int) throws -> [URLQueryItem] {
+    private func getQueryItems(_ applicationID: Int) throws -> [URLQueryItem] {
 
-        let request = try makeRequest(with: docIDs, applicationID)
+        let request = try makeRequest(applicationID)
         
         let requestUrl = try XCTUnwrap(request.url)
         let urlComponents = try XCTUnwrap(URLComponents(url: requestUrl, resolvingAgainstBaseURL: false))
         let queryItems = try XCTUnwrap(urlComponents.queryItems)
 
         return queryItems
-    }
-    
-    private func getMapFiles(with docIDs: [String]) throws -> String? {
-        
-        let data = try JSONSerialization.data(withJSONObject: docIDs as [String])
-        let mapFiles = String(data: data, encoding: String.Encoding.utf8)
-        
-        return mapFiles
     }
 }
 

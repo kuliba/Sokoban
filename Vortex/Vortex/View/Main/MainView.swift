@@ -276,9 +276,15 @@ struct MainView<NavigationOperationView: View>: View {
                 makeImageViewWithURL: { viewFactory.makeGeneralIconView(.image($0.addingPercentEncoding())) }
             )
 
-            CollateralLoanShowcaseWrapperView(binder: binder, factory: factory)
+            CollateralLoanShowcaseWrapperView(
+                binder: binder,
+                factory: factory,
+                // TODO: Pop to root
+                goToMain: viewModel.resetDestination
+            )
                 .navigationBarWithBack(
                     title: "Кредиты",
+                    // TODO: Pop to root
                     dismiss: viewModel.resetDestination
                 )
                 .edgesIgnoringSafeArea(.bottom)
@@ -504,11 +510,35 @@ struct NavBarButton: View {
     
     var body: some View {
         
-        Button(action: viewModel.action) {
-            
+        Button(action: viewModel.action, label: label)
+    }
+    
+    private func icon() -> some View {
+        
+        viewModel.icon
+            .renderingMode(.template)
+            .foregroundColor(.iconBlack)
+    }
+    
+    @ViewBuilder
+    private func label() -> some View {
+        
+        switch viewModel.title {
+        case "":
             viewModel.icon
-                .renderingMode(.template)
-                .foregroundColor(.iconBlack)
+            
+        default:
+            HStack(spacing: 8) {
+                
+                Text(viewModel.title)
+                    .foregroundStyle(.textSecondary)
+                    .font(.textBodySM12160())
+                
+                icon()
+            }
+            .padding(8)
+            .background(Color.pink.opacity(0.1)) // TODO: replace with color from design
+            .clipShape(RoundedRectangle(cornerRadius: 88))
         }
     }
 }

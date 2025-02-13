@@ -27,16 +27,21 @@ extension GetCollateralLandingDomain {
                 state.isLoading = false
                 state.result = result
                 
+                // set default value
+                if state.selectedCollateralType == "" {
+                    
+                    state.selectedCollateralType = state.product?.calc.collaterals.first?.type ?? ""
+                }
+                
             case .selectCaseList(_,_):
                 // TODO: need to realize
                 break
 
-            case .changeDesiredAmount(_):
-                // TODO: need to realize
-                break
-
+            case let .changeDesiredAmount(newValue):
+                state.desiredAmount = newValue
+                
             case let .selectCollateral(collateral):
-                state.selectedCollateral = collateral
+                state.selectedCollateralType = collateral
 
             case let .selectMonthPeriod(period):
                 state.selectedMonthPeriod = period
