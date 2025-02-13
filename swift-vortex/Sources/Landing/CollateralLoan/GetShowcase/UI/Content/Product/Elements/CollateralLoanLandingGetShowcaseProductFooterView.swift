@@ -35,7 +35,7 @@ struct CollateralLoanLandingGetShowcaseProductFooterView: View {
             
             Button(action: { event(.showLanding(landingId)) }) {
 
-                Text("Получить")
+                Text("Подать заявку")
                     .font(config.fonts.body)
                     .foregroundColor(config.footerView.buttonForegroundColor)
                     .padding(.vertical, 6)

@@ -78,7 +78,6 @@ class Model {
     var images: CurrentValueSubject<[String: ImageData], Never>
     
     // MARK: Client Inform Alerts and Notifications
-    let clientInform: CurrentValueSubject<ClientInformDataState, Never> // delete this and everything that conect with
     let clientAuthorizationState: CurrentValueSubject<ClientAuthorizationState, Never>
     let clientInformAlertManager: any AlertManager<ClientInformAlerts>
 
@@ -245,7 +244,6 @@ class Model {
         self.qrPaymentType = .init([])
         self.productsOpening = .init([])
         self.depositsCloseNotified = .init([])
-        self.clientInform = .init(.notRecieved)
         self.clientAuthorizationState = .init(.init(authorized: nil, notAuthorized: nil))
         self.clientInformAlertManager = clientInformAlertManager
         self.clientInformStatus = .init(isShowNotAuthorized: false, isShowAuthorized: false)
@@ -982,9 +980,6 @@ class Model {
                         
                     case .prefferedBanks:
                         handleDictionaryPrefferedBanks(payload.serial)
-                    
-                    case .clientInform:
-                        handleClientInform(payload.serial)
                     }
                     
                 case let payload as ModelAction.Dictionary.DownloadImages.Request:

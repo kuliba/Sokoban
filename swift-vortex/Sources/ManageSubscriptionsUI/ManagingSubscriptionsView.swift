@@ -64,17 +64,19 @@ public struct ManagingSubscriptionsView<P: Product, SearchView: View, EmptyListV
                         productView: productView,
                         backgroundColor: configurator.backgroundColor
                     )
-                    
-                    HStack {
-                     
-                        footerImage
-                            .renderingMode(.original)
-                            .frame(width: 72, height: 36, alignment: .center)
-                    }
-                    .padding(.vertical, 4)
-                    .frame(maxWidth: .infinity)
                 }
             }
+            
+            Spacer()
+            
+            HStack {
+             
+                footerImage
+                    .renderingMode(.original)
+                    .frame(width: 72, height: 36, alignment: .center)
+            }
+            .padding(.vertical, 4)
+            .frame(maxWidth: .infinity)
         }
         .navigationTitle("Управление подписками")
         .padding(.horizontal, 20)

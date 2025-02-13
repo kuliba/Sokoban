@@ -40,7 +40,7 @@ private extension ResponseMapper._Data {
         -> ResponseMapper.CollateralLoanLandingSaveConsentsResponse {
         
         guard
-            let applicationId = self.applicationId,
+            let applicationID = self.applicationId,
             let name = self.name,
             let amount = self.amount,
             let termMonth = self.termMonth,
@@ -55,7 +55,7 @@ private extension ResponseMapper._Data {
         }
 
         return .init(
-            applicationId: applicationId,
+            applicationID: applicationID,
             name: name,
             amount: amount,
             termMonth: termMonth,

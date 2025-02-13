@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 19.11.2024.
 //
 
+import PayHub
 import RxViewModel
 import SberQR
 import SwiftUI
@@ -18,14 +19,41 @@ struct QRWrapperView: View {
         
         RxWrapperView(model: binder.flow) { state, event in
             
-            factory.makeQRView(binder.content.qrScanner)
-                .navigationDestination(
-                    destination: state.navigation?.destination,
-                    dismiss: { event(.dismiss) },
-                    content: destinationContent
-                )
-                .accessibilityIdentifier(ElementIDs.qrScanner.rawValue)
+            ZStack {
+                
+                factory.makeQRView(binder.content.qrScanner)
+                // TODO: fix alert, see MainViewModel.swift:1345
+                    .alert(
+                        item: state.navigation?.alert,
+                        content: alert
+                    )
+                    .navigationDestination(
+                        destination: state.navigation?.destination,
+                        dismiss: { event(.dismiss) },
+                        content: destinationContent
+                    )
+                    .fullScreenCover(
+                        cover: state.navigation?.fullScreenCover,
+                        content: fullScreenCoverContent
+                    )
+                    .accessibilityIdentifier(ElementIDs.qrScanner.rawValue)
+                
+                spinnerView(isShowing: state.isLoading)
+                    .ignoresSafeArea()
+            }
         }
+    }
+}
+
+private extension QRWrapperView {
+    
+    func spinnerView(
+        isShowing: Bool
+    ) -> some View {
+        
+        SpinnerView(viewModel: .init())
+            .opacity(isShowing ? 1 : 0)
+            .animation(.easeInOut, value: isShowing)
     }
 }
 
@@ -42,6 +70,7 @@ struct QRWrapperViewFactory {
     let makeSegmentedPaymentProviderPickerView: MakeSegmentedPaymentProviderPickerView
     let paymentsViewFactory: PaymentsViewFactory
     let rootViewFactory: RootViewFactory
+    let components: ViewComponents
     
     typealias MakeOperatorView = (InternetTVDetailsViewModel) -> InternetTVDetailsView
 }
@@ -82,7 +111,15 @@ extension QRWrapperViewFactory {
 
 private extension QRWrapperView {
     
-#warning("add alert for sberQR failure case")
+    func alert(
+        backendFailure: BackendFailure
+    ) -> Alert {
+        
+        return backendFailure.alert {
+            
+            binder.flow.event(.select(.outside(.payments)))
+        }
+    }
     
     typealias Destination = QRScannerDomain.Navigation.Destination
     
@@ -118,7 +155,7 @@ private extension QRWrapperView {
                         action: { binder.flow.event(.dismiss) }
                     )
                 )
-
+            
         case let .providerServicePicker(picker):
             factory.makeAnywayServicePickerFlowView(picker)
                 .navigationBarWithAsyncIcon(
@@ -132,6 +169,23 @@ private extension QRWrapperView {
         case let .sberQR(sberQRConfirm):
             factory.makeSberQRConfirmPaymentView(sberQRConfirm)
                 .accessibilityIdentifier(ElementIDs.sberQRConfirm.rawValue)
+                .navigationBarWithBack(
+                    title: "Оплата по QR-коду",
+                    dismiss: { binder.flow.event(.dismiss) }
+                )
+        }
+    }
+    
+    typealias FullScreenCover = QRScannerDomain.Navigation.FullScreenCover
+    
+    @ViewBuilder
+    func fullScreenCoverContent(
+        fullScreenCover: FullScreenCover
+    ) -> some View {
+        
+        switch fullScreenCover {
+        case let .sberQRComplete(viewModel):
+            factory.components.makePaymentsSuccessView(viewModel)
         }
     }
 }
@@ -155,6 +209,17 @@ private extension AnywayServicePickerFlowModel {
 }
 
 extension QRScannerDomain.Navigation {
+    
+    var alert: BackendFailure? {
+        
+        switch self {
+        case .sberQR(nil), .sberQRComplete(nil):
+            return .server("Возникла техническая ошибка")
+            
+        default:
+            return nil
+        }
+    }
     
     var destination: Destination? {
         
@@ -185,6 +250,24 @@ extension QRScannerDomain.Navigation {
             
         case let .sberQR(.some(sberQRConfirm)):
             return .sberQR(sberQRConfirm)
+            
+        case .sberQRComplete:
+            return nil
+        }
+    }
+    
+    
+    var fullScreenCover: FullScreenCover? {
+        
+        switch self {
+        case .failure, .operatorSearch, .operatorView, .outside, .payments, .providerPicker, .providerServicePicker, .sberQR:
+            return nil
+            
+        case .sberQRComplete(nil):
+            return nil
+            
+        case let .sberQRComplete(.some(complete)):
+            return .sberQRComplete(complete)
         }
     }
     
@@ -197,6 +280,11 @@ extension QRScannerDomain.Navigation {
         case providerPicker(SegmentedPaymentProviderPickerFlowModel)
         case providerServicePicker(AnywayServicePickerFlowModel)
         case sberQR(SberQRConfirmPaymentViewModel)
+    }
+    
+    enum FullScreenCover {
+        
+        case sberQRComplete(PaymentsSuccessViewModel)
     }
 }
 
@@ -237,5 +325,21 @@ extension QRScannerDomain.Navigation.Destination: Identifiable {
         case providerPicker(ObjectIdentifier)
         case providerServicePicker(ObjectIdentifier)
         case sberQR(ObjectIdentifier)
+    }
+}
+
+extension QRScannerDomain.Navigation.FullScreenCover: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case let .sberQRComplete(complete):
+            return .sberQRComplete(.init(complete))
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case sberQRComplete(ObjectIdentifier)
     }
 }

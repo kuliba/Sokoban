@@ -60,7 +60,7 @@ struct CreateDraftCollateralLoanApplicationCityView: View {
             info: .init(
                 id: .other(State.FieldID.city.id),
                 title: config.elements.city.title,
-                value: state.data.selectedCity,
+                value: state.selectedCity,
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),
@@ -82,10 +82,11 @@ extension CreateDraftCollateralLoanApplicationCityView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias State = CreateDraftCollateralLoanApplicationDomain.State
-    typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias State = Domain.State
+    typealias Event = Domain.Event
     typealias IconView = UIPrimitives.AsyncImage
-    typealias CityItem = CreateDraftCollateralLoanApplicationDomain.CityItem
+    typealias CityItem = Domain.CityItem
     typealias SelectorView
         = OptionalSelectorView<CityItem, IconView, IconLabel<Image>, SelectedOptionView, ChevronView>
 }
@@ -97,16 +98,28 @@ struct CreateDraftCollateralLoanApplicationCityView_Previews: PreviewProvider {
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationCityView(
-            state: .correntParametersPreview,
-            event: { print($0) },
+            state: .init(
+                data: .preview,
+                stage: .correctParameters,
+                confirmation: .preview
+            ),
+            event: {
+                print($0)
+            },
             config: .default,
             factory: .preview
         )
         .previewDisplayName("Edit mode")
 
         CreateDraftCollateralLoanApplicationCityView(
-            state: .confirmPreview,
-            event: { print($0) },
+            state: .init(
+                data: .preview,
+                stage: .confirm,
+                confirmation: .preview
+            ),
+            event: {
+                print($0)
+            },
             config: .default,
             factory: .preview
         )

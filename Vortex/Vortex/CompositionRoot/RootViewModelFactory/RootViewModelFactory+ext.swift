@@ -38,6 +38,7 @@ extension RootViewModelFactory {
         
         // keep for manual override of release flags
         let featureFlags = FeatureFlags(
+            c2gFlag: featureFlags.c2gFlag,
             getProductListByTypeV6Flag: .active,
             paymentsTransfersFlag: .active,
             savingsAccountFlag: featureFlags.savingsAccountFlag,
@@ -384,7 +385,27 @@ extension RootViewModelFactory {
             scheduler: schedulers.main
         )
         let marketShowcaseBinder = marketShowcaseComposer.compose()
+        
+        let savingsAccount = makeSavingsAccount()
+        
+        // MARK: - Splash
+        
+        let splash = makeSplashScreenViewModel(
+            initialState: .initialSplashData,
+            phaseOneDuration: .milliseconds(0),
+            phaseTwoDuration: .milliseconds(1200)
+        )
+        
+        model.auth
+            .sink { auth in
                 
+                if auth == .authorized, featureFlags.splashScreenFlag == .active {
+                    
+                    splash.event(.start)
+                }
+            }
+            .store(in: &bindings)
+
         // MARK: - Notifications Authorized
         
         performOrWaitForAuthorized { [weak self] in
@@ -397,6 +418,7 @@ extension RootViewModelFactory {
         
         let rootViewModel = make(
             featureFlags: featureFlags,
+            splash: splash,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeTemplates: makeMakeTemplates(featureFlags.paymentsTransfersFlag),
             fastPaymentsFactory: fastPaymentsFactory,
@@ -638,8 +660,9 @@ extension ProductProfileViewModel {
                 makePaymentsTransfers: makePaymentsTransfers
             )
             
-            let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
+            let makeAlertViewModels = PaymentsTransfersFactory.MakeAlertViewModels(
                 dataUpdateFailure: {
+                    
                     updateInfoStatusFlag.isActive ? .dataUpdateFailure(primaryAction: $0) : nil
                 },
                 disableForCorporateCard: {
@@ -764,6 +787,7 @@ private extension RootViewModelFactory {
     
     func make(
         featureFlags: FeatureFlags,
+        splash: SplashScreenViewModel,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeTemplates: @escaping PaymentsTransfersFactory.MakeTemplates,
         fastPaymentsFactory: FastPaymentsFactory,
@@ -809,6 +833,7 @@ private extension RootViewModelFactory {
                 
         let sections = makeMainViewModelSections(
             bannersBinder: bannersBinder,
+            c2gFlag: featureFlags.c2gFlag,
             collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
             savingsAccountFlag: featureFlags.savingsAccountFlag
         )
@@ -826,7 +851,11 @@ private extension RootViewModelFactory {
                     featureFlags: featureFlags
                 )
             },
-            qrViewModelFactory: qrViewModelFactory)
+            qrViewModelFactory: qrViewModelFactory,
+            makeTrailingToolbarItems: makeTrailingToolbarItems(
+                featureFlags.c2gFlag
+            )
+        )
         
         let mainViewModel = MainViewModel(
             model,
@@ -912,6 +941,7 @@ private extension RootViewModelFactory {
             productNavigationStateManager: productNavigationStateManager,
             tabsViewModel: tabsViewModel,
             informerViewModel: informerViewModel,
+            splash: splash,
             model,
             showLoginAction: showLoginAction,
             landingServices: landingServices,

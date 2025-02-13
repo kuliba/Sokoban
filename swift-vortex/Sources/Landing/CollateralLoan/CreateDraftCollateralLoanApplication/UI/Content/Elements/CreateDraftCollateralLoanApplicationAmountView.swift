@@ -55,10 +55,11 @@ struct CreateDraftCollateralLoanApplicationAmountView: View {
 
 extension CreateDraftCollateralLoanApplicationAmountView {
     
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias State = Domain.State
+    typealias Event = Domain.Event
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias State = CreateDraftCollateralLoanApplicationDomain.State
-    typealias Event = CreateDraftCollateralLoanApplicationDomain.Event
 }
 
 // MARK: - Previews
@@ -68,16 +69,28 @@ struct CreateDraftCollateralLoanApplicationAmountView_Previews: PreviewProvider 
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationAmountView(
-            state: .correntParametersPreview,
-            event: { print($0) },
+            state: .init(
+                data: .preview,
+                stage: .correctParameters,
+                confirmation: .preview
+            ),
+            event: {
+                print($0)
+            },
             config: .default,
             factory: .preview
         )
         .previewDisplayName("Edit mode")
 
         CreateDraftCollateralLoanApplicationAmountView(
-            state: .confirmPreview,
-            event: { print($0) },
+            state: .init(
+                data: .preview,
+                stage: .correctParameters,
+                confirmation: .preview
+            ),
+            event: {
+                print($0)
+            },
             config: .default,
             factory: .preview
         )

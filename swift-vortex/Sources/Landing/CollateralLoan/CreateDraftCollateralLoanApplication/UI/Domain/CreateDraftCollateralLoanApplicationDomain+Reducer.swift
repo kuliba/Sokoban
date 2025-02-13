@@ -8,12 +8,13 @@
 import Foundation
 import InputComponent
 import OptionalSelectorComponent
+import OTPInputComponent
 import TextFieldComponent
 import TextFieldDomain
 
 extension CreateDraftCollateralLoanApplicationDomain {
     
-    public final class Reducer {
+    public final class Reducer<Confirmation> {
         
         private let amountReduce: AmountReduce
         private let citySelectReduce: CitySelectReduce
@@ -29,7 +30,8 @@ extension CreateDraftCollateralLoanApplicationDomain {
             self.periodSelectReduce = periodSelectReduce
         }
         
-        public func reduce(_ state: State, _ event: Event) -> (State, Effect?) {
+        public func reduce(_ state: State, _ event: Event)
+            -> (State, Effect?) {
             
             var state = state
             var effect: Effect?
@@ -37,52 +39,82 @@ extension CreateDraftCollateralLoanApplicationDomain {
             switch event {
             case let .amount(amountEvent):
                 state.amount = amountReduce(state.amount, amountEvent)
+                if state.isAmountVaild {
+                    
+                    state.amount.message = .hint(state.data.hintText)
+                } else {
+
+                    state.amount.message = .warning("Некорректная сумма")
+                }
+                state.isButtonDisabled = !state.checkButtonStatus
                 
             case let .period(periodEvent):
                 state.period = periodSelectReduce(state.period, periodEvent)
+                state.isButtonDisabled = !state.checkButtonStatus
                 
             case let .city(cityEvent):
                 state.city = citySelectReduce(state.city, cityEvent)
+                state.isButtonDisabled = !state.checkButtonStatus
                 
             case .tappedContinue:
                 state.isLoading = true
                 effect = .createDraftApplication(state.createDraftApplicationPayload)
                 
             case let .applicationCreated(result):
-                state.applicationId = try? result.get().applicationId
+                state.applicationID = try? result.get().applicationID
                 state.stage = .confirm
+                state.isButtonDisabled = !state.checkButtonStatus
                 state.isLoading = false
+                effect = .confirm
                 
             case .tappedSubmit:
-                state.isLoading = true
-                effect = .saveConsents(state.saveConsentspayload)
+                if let applicationID = state.applicationID {
+                    
+                    effect = .saveConsents(
+                        state.saveConsentspayload(
+                            applicationID: applicationID,
+                            verificationCode: state.otp
+                        )
+                    )
+                }
                 
             case .tappedBack:
                 if state.stage == .confirm {
                     
                     state.stage = .correctParameters
                 }
+                state.isButtonDisabled = !state.checkButtonStatus
                 
             case let .showSaveConsentsResult(result):
                 state.isLoading = false
                 state.saveConsentsResult = result     
+                state.isButtonDisabled = !state.checkButtonStatus
                 
             case let .otp(otp):
-                // TODO: clean up otp
                 state.otp = otp
+                state.isButtonDisabled = !state.checkButtonStatus
                 
             case .getVerificationCode:
                 effect = .getVerificationCode
                 
-            case let .gettedVerificationCode(result):
+            case .gettedVerificationCode:
                 break
                 
             case let .checkConsent(consentName):
-                if state.checkedConditions.contains(consentName) {
-                    state.checkedConditions.removeAll { $0 == consentName }
+                if state.checkedConsents.contains(consentName) {
+                    state.checkedConsents.removeAll { $0 == consentName }
                 } else {
-                    state.checkedConditions.append(consentName)
+                    state.checkedConsents.append(consentName)
                 }
+                state.isButtonDisabled = !state.checkButtonStatus
+                
+            case let .confirmed(confirmation):
+                state.confirmation = confirmation
+                state.isButtonDisabled = !state.checkButtonStatus
+                
+            case .otpValidated:
+                state.otpValidated = true
+                state.isButtonDisabled = !state.checkButtonStatus
             }
             
             return (state, effect)

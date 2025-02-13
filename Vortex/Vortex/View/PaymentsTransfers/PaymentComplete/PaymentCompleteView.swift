@@ -7,8 +7,8 @@
 
 import Combine
 import PaymentCompletionUI
+import PaymentComponents
 import SwiftUI
-import UIPrimitives
 
 struct PaymentCompleteView: View {
     
@@ -16,18 +16,18 @@ struct PaymentCompleteView: View {
     let goToMain: () -> Void
     let `repeat`: () -> Void
     let factory: Factory
-    let makeIconView: (String?) -> UIPrimitives.AsyncImage
     let config: Config
     
     var body: some View {
         
-        TransactionCompleteView(
-            state: transactionCompleteState,
-            goToMain: goToMain,
-            repeat: `repeat`,
-            factory: factory,
-            content: content
-        )
+        VStack {
+            
+            paymentCompletionStatusView()
+            Spacer()
+            transactionCompleteView()
+        }
+        .padding(.bottom)
+        .padding(.horizontal)
     }
 }
 
@@ -40,15 +40,87 @@ extension PaymentCompleteView {
 
 private extension PaymentCompleteView {
     
+    func paymentCompletionStatusView() -> some View {
+        
+        PaymentCompletionStatusView(
+            state: state.paymentCompletionState,
+            makeIconView: factory.makeIconView,
+            config: config
+        )
+    }
+    
+    func transactionCompleteView() -> some View {
+        
+        VStack(spacing: 56) {
+            
+            buttons(state: state.transactionCompleteState)
+                .frame(maxHeight: .infinity, alignment: .bottom)
+            
+            VStack(spacing: 8) {
+                
+                // repeatButton(state: state.transactionCompleteState)
+                
+                PaymentComponents.ButtonView.goToMain(goToMain: goToMain)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    func buttons(
+        state: TransactionCompleteState
+    ) -> some View {
+        
+        switch state.status {
+        case .completed:
+            HStack {
+                
+                state.operationDetail.map(factory.makeTemplateButtonWrapperView)
+                state.documentID.map(factory.makeDocumentButton)
+                state.details.map(factory.makeDetailButton)
+            }
+            
+        case .inflight:
+            HStack {
+                
+                factory.makeTemplateButton()
+                state.details.map(factory.makeDetailButton)
+            }
+            
+        case .rejected, .fraud:
+            EmptyView()
+        }
+    }
+    
+    @ViewBuilder
+    func repeatButton(
+        state: TransactionCompleteState
+    ) -> some View {
+        
+        if state.status == .rejected {
+            
+            Button("TBD: Repeat Button", action: `repeat`)
+                .frame(maxWidth: .infinity)
+                .frame(height: 56)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .foregroundColor(Color.buttonSecondary)
+                )
+        }
+    }
+}
+
+private extension PaymentCompleteState {
+    
     var transactionCompleteState: TransactionCompleteState {
         
-        switch state.result {
+        switch result {
         case .failure:
-            return .init(details: nil, documentID: nil, status: .fraud)
+            return .init(details: nil, operationDetail: nil, documentID: nil, status: .fraud)
             
         case let .success(report):
             return .init(
                 details: report.details,
+                operationDetail: report.operationDetail,
                 documentID: (.init(report.detailID), report.printFormType),
                 status: {
                     
@@ -65,15 +137,15 @@ private extension PaymentCompleteView {
     var paymentCompletionState: PaymentCompletion {
         
         return .init(
-            formattedAmount: state.formattedAmount,
-            merchantIcon: state.merchantIcon,
+            formattedAmount: formattedAmount,
+            merchantIcon: merchantIcon,
             status: paymentCompletionStatus
         )
     }
     
     private var paymentCompletionStatus: PaymentCompletion.Status {
         
-        switch state.result {
+        switch result {
         case let .failure(fraud):
             return .fraud(fraud.hasExpired ? .expired : .cancelled)
             
@@ -84,15 +156,6 @@ private extension PaymentCompleteView {
             case .rejected:  return .rejected
             }
         }
-    }
-    
-    private func content() -> some View {
-        
-        PaymentCompletionStatusView(
-            state: paymentCompletionState,
-            makeIconView: makeIconView,
-            config: config
-        )
     }
 }
 
@@ -109,6 +172,12 @@ struct PaymentCompleteView_Previews: PreviewProvider {
                 .previewDisplayName("fraud: expired")
             paymentCompleteView(state: .completed)
                 .previewDisplayName("completed")
+            paymentCompleteView(state: .completedWithDetails)
+                .previewDisplayName("completed with Details")
+            paymentCompleteView(state: .completedWithDocumentID)
+                .previewDisplayName("completed with DocumentID")
+            paymentCompleteView(state: .completedWithDetailsAndDocumentID)
+                .previewDisplayName("completed with Details and DocumentID")
             paymentCompleteView(state: .inflight)
                 .previewDisplayName("inflight")
             paymentCompleteView(state: .rejected)
@@ -125,13 +194,6 @@ struct PaymentCompleteView_Previews: PreviewProvider {
             goToMain: {},
             repeat: {},
             factory: .preview,
-            makeIconView: {
-                
-                return .init(
-                    image: .init(systemName: $0 ?? "pencil.and.outline"),
-                    publisher: Just(.init(systemName: $0 ?? "tray.full.fill")).eraseToAnyPublisher()
-                )
-            },
             config: .iVortex
         )
     }
@@ -142,6 +204,9 @@ extension PaymentCompleteState {
     static let fraudCancelled: Self = failure(.init(hasExpired: false))
     static let fraudExpired: Self = failure(.init(hasExpired: true))
     static let completed: Self = success(.completed)
+    static let completedWithDetails: Self = success(.completedWithDetails)
+    static let completedWithDocumentID: Self = success(.completedWithDocumentID)
+    static let completedWithDetailsAndDocumentID: Self = success(.completedWithDetailsAndDocumentID)
     static let inflight: Self = success(.inflight)
     static let rejected: Self = success(.rejected)
     
@@ -170,23 +235,33 @@ extension PaymentCompleteState {
 extension PaymentCompleteState.Report {
     
     static let completed: Self = .preview(.completed)
+    static let completedWithDetails: Self = .preview(details: .empty, .completed)
+    static let completedWithDocumentID: Self = .preview(detailID: 1, .completed)
+    static let completedWithDetailsAndDocumentID: Self = .preview(detailID: 1, details: .empty, .completed)
     static let inflight: Self = .preview(.inflight)
     static let rejected: Self = .preview(.rejected)
     
     private static func preview(
         detailID: Int = 1,
-        details: Details? = nil,
+        details: TransactionDetailButton.Details? = nil,
+        operationDetail: OperationDetailData? = nil,
         printFormType: String = "abc",
         _ status: DocumentStatus
     ) -> Self {
         
         return .init(
             detailID: detailID,
-            details: details, 
+            details: details,
+            operationDetail: operationDetail,
             printFormType: printFormType,
             status: status
         )
     }
+}
+
+private extension TransactionDetailButton.Details {
+    
+    static let empty: Self = .init(logo: nil, cells: [])
 }
 
 extension PaymentCompleteViewFactory {
@@ -194,6 +269,13 @@ extension PaymentCompleteViewFactory {
     static let preview: Self = .init(
         makeDetailButton: { _ in .init(details: .init(logo: nil, cells: [])) },
         makeDocumentButton: { _,_  in .init(getDocument: { _ in }) },
+        makeIconView: {
+            
+            return .init(
+                image: .init(systemName: $0 ?? "pencil.and.outline"),
+                publisher: Just(.init(systemName: $0 ?? "tray.full.fill")).delay(for: .seconds(1), scheduler: DispatchQueue.main).eraseToAnyPublisher()
+            )
+        },
         makeTemplateButton: {
             
             return .init(
@@ -203,6 +285,10 @@ extension PaymentCompleteViewFactory {
                     operationDetail: .stub()
                 )
             )
+        },
+        makeTemplateButtonWrapperView: {
+            
+            .init(viewModel: .init(model: .emptyMock, operation: nil, operationDetail: $0))
         }
     )
 }

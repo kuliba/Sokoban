@@ -5,8 +5,9 @@
 //  Created by Valentin Ozerov on 16.01.2025.
 //
 
-import RxViewModel
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
+import OTPInputComponent
+import RxViewModel
 
 extension CreateDraftCollateralLoanApplicationDomain {
 
@@ -16,11 +17,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
     
     // MARK: - Content
     
-    typealias Content = RxViewModel<
-        CreateDraftCollateralLoanApplicationDomain.State,
-        CreateDraftCollateralLoanApplicationDomain.Event,
-        CreateDraftCollateralLoanApplicationDomain.Effect
-    >
+    typealias Content = RxViewModel<State, Event, Effect>
     
     // MARK: - Flow
     
@@ -39,6 +36,6 @@ extension CreateDraftCollateralLoanApplicationDomain {
 
         // TODO: реализовать 2 кейса для failure: informer и alert
         case failure(String)
-        case success(String)
+        case success(CollateralLandingApplicationSaveConsentsResult)
     }
 }

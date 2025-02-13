@@ -28,10 +28,15 @@ final class NotAuthorizedAlertManager {
     private let isUpdateAllowedSubject = CurrentValueSubject<Bool, Never>(true)
 
     init(
-        alerts: ClientInformAlerts? = nil
+        alerts: ClientInformAlerts? = .initialValue
     ) {
         subject = .init(alerts)
     }
+}
+
+extension ClientInformAlerts {
+    
+    static let initialValue: Self = .init(id: UUID(), informAlerts: [], updateAlert: nil)
 }
 
 extension NotAuthorizedAlertManager: AlertManager {

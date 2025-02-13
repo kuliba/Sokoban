@@ -6,6 +6,7 @@
 //
 
 import RxViewModel
+import SplashScreen
 import SwiftUI
 
 struct RootBinderView: View {
@@ -19,6 +20,12 @@ struct RootBinderView: View {
             
             ZStack {
                 
+                RxWrapperView(
+                    model: binder.content.splash,
+                    makeContentView: rootViewFactory.makeSplashScreenView
+                )
+                .zIndex(2.0)
+
                 rootViewInNavigationView(state: state, event: event)
                 spinnerView(isShowing: state.isLoading)
             }
@@ -86,6 +93,20 @@ private extension RootBinderView {
             
         case let .templates(node):
             templatesView(node)
+            
+        case .uin:
+            // TODO: extract to rootViewFactory.components
+            Text("TBD: Search by UIN")
+                .frame(maxHeight: .infinity, alignment: .center)
+                .navigationBarWithBack(
+                    title: "Поиск по УИН",
+                    subtitle: "Поиск начислений по УИН",
+                    dismiss: { binder.flow.event(.dismiss) },
+                    rightItem: .barcodeScanner {
+                        
+                        binder.flow.event(.select(.scanQR))
+                    }
+                )
             
         case let .userAccount(userAccount):
             userAccountView(userAccount)
@@ -172,7 +193,8 @@ extension RootViewFactory {
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                 makeSegmentedPaymentProviderPickerView: components.makeSegmentedPaymentProviderPickerView,
                 paymentsViewFactory: paymentsViewFactory,
-                rootViewFactory: self
+                rootViewFactory: self,
+                components: components
             )
         )
     }
@@ -220,6 +242,9 @@ extension RootViewNavigation {
         case let .templates(node):
             return .templates(node)
             
+        case .uin:
+            return .uin
+            
         case let .userAccount(userAccount):
             return .userAccount(userAccount)
         }
@@ -231,6 +256,7 @@ extension RootViewNavigation {
         case productProfile(ProductProfileViewModel)
         case standardPayment(PaymentProviderPickerDomain.Binder)
         case templates(TemplatesNode)
+        case uin
         case userAccount(UserAccountViewModel)
         
         typealias TemplatesNode = RootViewNavigation.TemplatesNode
@@ -249,7 +275,7 @@ extension RootViewNavigation {
             return .scanQR(node.model)
             
             // cases listed for explicit exhaustivity
-        case .standardPayment, .templates, .userAccount:
+        case .standardPayment, .templates, .uin, .userAccount:
             return nil
         }
     }
@@ -277,6 +303,8 @@ extension RootViewNavigation.Destination: Identifiable {
         case let .templates(templates):
             return .templates(.init(templates.model))
             
+        case .uin:
+            return .uin
         case let .userAccount(userAccount):
             return .userAccount(.init(userAccount))
         }
@@ -288,6 +316,7 @@ extension RootViewNavigation.Destination: Identifiable {
         case productProfile(ObjectIdentifier)
         case standardPayment(ObjectIdentifier)
         case templates(ObjectIdentifier)
+        case uin
         case userAccount(ObjectIdentifier)
     }
 }

@@ -40,6 +40,7 @@ let package = Package(
         .serialComponents,
         // Payments
         .anywayPayment,
+        .c2g,
         .latestPaymentsBackendV2,
         .latestPaymentsBackendV3,
         .operatorsListBackendV0,
@@ -93,6 +94,7 @@ let package = Package(
         .rxViewModel,
         .savingsAccount,
         .searchBarComponent,
+        .splashScreen,
         .textFieldComponent,
         .uiKitHelpers,
         .uiPrimitives,
@@ -187,6 +189,10 @@ let package = Package(
         .anywayPaymentDomain,
         .anywayPaymentUI,
         .anywayPaymentUITests,
+        .c2gBackend,
+        .c2gBackendTests,
+        .c2gCore,
+        .c2gCoreTests,
         .latestPaymentsBackendV2,
         .latestPaymentsBackendV2Tests,
         .latestPaymentsBackendV3,
@@ -295,6 +301,7 @@ let package = Package(
         .savingsAccount,
         .savingsAccountTests,
         .searchBarComponent,
+        .splashScreen,
         .textFieldComponent,
         .textFieldComponentTests,
         .textFieldUI,
@@ -663,6 +670,13 @@ private extension Product {
         ]
     )
     
+    static let splashScreen = library(
+        name: .splashScreen,
+        targets: [
+            .splashScreen,
+        ]
+    )
+    
     static let textFieldComponent = library(
         name: .textFieldComponent,
         targets: [
@@ -831,6 +845,14 @@ private extension Product {
             .anywayPaymentCore,
             .anywayPaymentDomain,
             .anywayPaymentUI,
+        ]
+    )
+    
+    static let c2g = library(
+        name: .c2g,
+        targets: [
+            .c2gBackend,
+            .c2gCore,
         ]
     )
     
@@ -1727,6 +1749,30 @@ private extension Target {
             .rxViewModel,
         ],
         path: "Tests/Payments/AnywayPayment/\(String.anywayPaymentUITests)"
+    )
+    
+    static let c2gBackend = target(
+        name: .c2gBackend,
+        path: "Sources/Payments/C2G/Backend"
+    )
+    static let c2gBackendTests = testTarget(
+        name: .c2gBackendTests,
+        dependencies: [
+            .c2gBackend
+        ],
+        path: "Tests/Payments/C2G/BackendTests"
+    )
+    
+    static let c2gCore = target(
+        name: .c2gCore,
+        path: "Sources/Payments/C2G/Core"
+    )
+    static let c2gCoreTests = testTarget(
+        name: .c2gCoreTests,
+        dependencies: [
+            .c2gCore
+        ],
+        path: "Tests/Payments/C2G/CoreTests"
     )
     
     static let latestPaymentsBackendV2 = target(
@@ -2802,6 +2848,18 @@ private extension Target {
         ],
         path: "Tests/UI/\(String.savingsAccountTests)"
     )
+    
+    static let splashScreen = target(
+        name: .splashScreen,
+        dependencies: [
+            .sharedConfigs,
+            .uiPrimitives
+        ],
+        path: "Sources/UI/\(String.splashScreen)",
+        resources: [
+            .process("Resources")
+        ]
+    )
 
     static let orderCard = target(
         name: .orderCard,
@@ -3533,6 +3591,10 @@ private extension Target.Dependency {
     static let searchBarComponent = byName(
         name: .searchBarComponent
     )
+
+    static let splashScreen = byName(
+        name: .splashScreen
+    )
     
     static let textFieldUI = byName(
         name: .textFieldUI
@@ -3684,6 +3746,14 @@ private extension Target.Dependency {
     
     static let anywayPaymentUI = byName(
         name: .anywayPaymentUI
+    )
+    
+    static let c2gBackend = byName(
+        name: .c2gBackend
+    )
+    
+    static let c2gCore = byName(
+        name: .c2gCore
     )
     
     static let latestPaymentsBackendV2 = byName(
@@ -3980,6 +4050,8 @@ private extension String {
     static let savingsAccountTests = "SavingsAccountTests"
 
     static let searchBarComponent = "SearchBarComponent"
+
+    static let splashScreen = "SplashScreen"
     
     static let textFieldUI = "TextFieldUI"
     static let textFieldUITests = "TextFieldUITests"
@@ -4083,6 +4155,14 @@ private extension String {
     static let anywayPaymentDomain = "AnywayPaymentDomain"
     static let anywayPaymentUI = "AnywayPaymentUI"
     static let anywayPaymentUITests = "AnywayPaymentUITests"
+    
+    static let c2g = "C2G"
+    
+    static let c2gBackend = "C2GBackend"
+    static let c2gBackendTests = "C2GBackendTests"
+    
+    static let c2gCore = "C2GCore"
+    static let c2gCoreTests = "C2GCoreTests"
     
     static let latestPaymentsBackendV2 = "LatestPaymentsBackendV2"
     static let latestPaymentsBackendV2Tests = "LatestPaymentsBackendV2Tests"

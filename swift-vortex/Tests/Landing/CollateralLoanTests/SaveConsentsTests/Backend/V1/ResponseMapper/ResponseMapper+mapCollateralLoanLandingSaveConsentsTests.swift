@@ -191,7 +191,7 @@ private extension String {
 private extension ResponseMapper.CollateralLoanLandingSaveConsentsResponse {
     
     static let stub: Self = .init(
-        applicationId: 9,
+        applicationID: 9,
         name: "Кредит под залог транспорта",
         amount: 99998,
         termMonth: 365,

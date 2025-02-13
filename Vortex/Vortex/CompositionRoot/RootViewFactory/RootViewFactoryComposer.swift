@@ -17,8 +17,9 @@ import PayHub
 import PayHubUI
 import PaymentComponents
 import PDFKit
+import RemoteServices
 import SavingsAccount
-import SberQR
+import SplashScreen
 import SwiftUI
 import UIPrimitives
 import UIKit
@@ -74,9 +75,10 @@ extension RootViewFactoryComposer {
     
     func makeIconView(
         forMD5Hash md5Hash: String?
-    ) -> IconView? {
+    ) -> IconView {
         
-        return md5Hash.map { makeIconView(forMD5Hash: $0) }
+        let icon = md5Hash.map(AnywayElement.UIComponent.Icon.md5Hash)
+        return makeIconView(icon)
     }
     
     func makeIconView(
@@ -136,10 +138,12 @@ extension RootViewFactoryComposer {
             makePaymentsTransfersView: makePaymentsTransfersView,
             makeReturnButtonView: makeReturnButtonView,
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
+            makeSplashScreenView: makeSplashScreenView,
             makeUserAccountView: makeUserAccountView,
             makeMarketShowcaseView: makeMarketShowcaseView,
             components: makeViewComponents(),
             paymentsViewFactory: makePaymentsViewFactory(),
+            makeTemplateButtonWrapperView: makeTemplateButtonWrapperView,
             makeUpdatingUserAccountButtonLabel: makeUpdatingUserAccountButtonLabel
         )
     }
@@ -251,6 +255,14 @@ private extension RootViewFactoryComposer {
             },
             config: .iVortex
         )
+    }
+    
+    func makeSplashScreenView(
+        state: Splash,
+        eventHandler: @escaping (SplashScreenEvent) -> ()
+    ) -> SplashScreenView {
+        
+        .init(splash: state, config: .prod())
     }
     
     func makeOptionSelectorViewFactory() -> OptionSelectorViewFactory {
@@ -827,7 +839,6 @@ private extension RootViewFactoryComposer {
         )
     }
     
-    
     private func currencyOfProduct(
         product: ProductSelect.Product
     ) -> String {
@@ -847,12 +858,10 @@ private extension RootViewFactoryComposer {
             factory: .init(
                 makeDetailButton: TransactionDetailButton.init,
                 makeDocumentButton: makeDocumentButton,
-                makeTemplateButton: makeTemplateButtonView(with: result)
+                makeIconView: makeIconView(forMD5Hash:),
+                makeTemplateButton: makeTemplateButtonView(with: result),
+                makeTemplateButtonWrapperView: makeTemplateButtonWrapperView
             ),
-            makeIconView: {
-                
-                self.makeIconView($0.map { .md5Hash(.init($0)) })
-            },
             config: .iVortex
         )
     }
@@ -897,6 +906,7 @@ private extension RootViewFactoryComposer {
                             with: $0.info,
                             merchantLogoMD5Hash: completed.merchantIcon
                         ),
+                        operationDetail: $0.info.operationDetail,
                         printFormType: $0.info.operationDetail?.printFormType ?? "",
                         status: $0.status
                     )
@@ -1159,4 +1169,29 @@ extension ViewComponents.MakeInfoViews {
         makeUpdateInfoView: UpdateInfoView.init(text:),
         makeDisableCorCardsInfoView: DisableCorCardsView.init(text:)
     )
+}
+
+extension RootViewFactoryComposer {
+    
+    func makeTemplateButtonWrapperView(
+        response: RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse
+    ) -> TemplateButtonStateWrapperView {
+        
+        return makeTemplateButtonWrapperView(
+            operationDetail: response.operationDetail
+        )
+    }
+    
+    func makeTemplateButtonWrapperView(
+        operationDetail: OperationDetailData
+    ) -> TemplateButtonStateWrapperView {
+        
+        return .init(
+            viewModel: .init(
+                model: self.model,
+                operation: nil,
+                operationDetail: operationDetail
+            )
+        )
+    }
 }

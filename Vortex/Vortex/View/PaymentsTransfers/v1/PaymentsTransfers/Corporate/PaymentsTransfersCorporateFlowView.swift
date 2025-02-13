@@ -44,7 +44,7 @@ private extension PaymentsTransfersCorporateDomain.FlowDomain.State {
     var destination: PaymentsTransfersCorporateNavigation.Destination? {
         
         switch navigation {
-        case .none, .userAccount:
+        case .none, .main, .userAccount:
             return .none
         }
     }
@@ -52,7 +52,7 @@ private extension PaymentsTransfersCorporateDomain.FlowDomain.State {
     var fullScreenCover: PaymentsTransfersCorporateNavigation.FullScreenCover? {
         
         switch navigation {
-        case .none, .userAccount:
+        case .none, .main, .userAccount:
             return .none
         }
     }

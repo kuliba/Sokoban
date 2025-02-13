@@ -18,10 +18,12 @@ extension PaymentsTransfersCorporateDomain {
 
 enum PaymentsTransfersCorporateSelect {
 
+    case main
     case userAccount
 }
 
 enum PaymentsTransfersCorporateNavigation: Equatable {
     
+    case main
     case userAccount
 }

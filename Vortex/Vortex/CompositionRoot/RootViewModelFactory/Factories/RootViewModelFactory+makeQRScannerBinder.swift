@@ -41,7 +41,8 @@ extension RootViewModelFactory {
         case .payments:              return settings.delay
         case .providerPicker:        return settings.delay
         case .providerServicePicker: return settings.delay
-        case .sberQR:                return settings.delay
+        case .sberQR:                return .milliseconds(300)
+        case .sberQRComplete:        return .milliseconds(300)
         }
     }
     
@@ -58,11 +59,12 @@ extension RootViewModelFactory {
         case let .qrResult(qrResult):
             getQRNavigation(qrResult, notify, completion)
             
-        case .sberQR(nil):
+        case .sberQRResponse(nil):
             completion(.sberQR(nil))
             
-        case let .sberQR(response):
-#warning("FIXME")
+        case let .sberQRResponse(response):
+            let viewModel: PaymentsSuccessViewModel? = response.map { PaymentsSuccessViewModel(paymentSuccess: $0.success, self.model) }
+            completion(.sberQRComplete(viewModel))
         }
     }
     
@@ -113,7 +115,7 @@ extension RootViewModelFactory {
             _ url: URL
         ) -> (SberQRConfirmPaymentState) -> Void {
             
-            decoratedSberQRPay(url) { notify(.select(.sberQR($0))) }
+            decoratedSberQRPay(url) { notify(.select(.sberQRResponse($0))) }
         }
     }
     

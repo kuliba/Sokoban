@@ -25,6 +25,7 @@ extension FeatureFlagsLoader {
     func load() -> FeatureFlags {
         
         return .init(
+            c2gFlag: loadC2GFlag(),
             getProductListByTypeV6Flag: loadGetProductListByTypeV6Flag(),
             paymentsTransfersFlag: loadPaymentsTransfersFlag(),
             savingsAccountFlag: loadSavingsAccountFlag(),
@@ -37,6 +38,7 @@ extension FeatureFlagsLoader {
 
 enum FeatureFlagKey: String {
     
+    case c2gFlag = "c2g"
     case getProductListByTypeV6Flag = "getProductListByTypeV6"
     case paymentsTransfersFlag = "payments_transfers"
     case collateralLoanLandingFlag = "collateralLoanLanding"
@@ -46,6 +48,14 @@ enum FeatureFlagKey: String {
 }
 
 private extension FeatureFlagsLoader {
+    
+    func loadC2GFlag() -> C2GFlag {
+        
+        switch retrieve(.c2gFlag) {
+        case "1":  return .active
+        default:   return .inactive
+        }
+    }
     
     func loadGetProductListByTypeV6Flag() -> GetProductListByTypeV6Flag {
         

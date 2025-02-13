@@ -250,6 +250,6 @@ extension Transaction where Context == AnywayPaymentContext {
         _ other: Self
     ) -> [AnywayElement.ID: AnywayElement.Field.Value?] {
         
-        context.payment.elements.diff(other.context.payment.elements, keyPath: \.value)
+        context.payment.elements.diff(other.context.payment.elements.uniqueValues(useLast: true), keyPath: \.value)
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import OTPInputComponent
 
 public struct CreateDraftCollateralLoanApplicationView: View {
     
@@ -31,30 +32,7 @@ public struct CreateDraftCollateralLoanApplicationView: View {
     
     public var body: some View {
         
-        Group {
-            
-            if state.isLoading {
-                
-                ProgressView()
-            } else {
-                
-                content
-            }
-        }
-        .if(state.stage == .confirm) {
-        
-            $0.navigationBarBackButtonHidden(true)
-              .navigationBarItems(leading: buttonBack)
-        }
-    }
-    
-    var buttonBack : some View { Button(action: { event(.tappedBack) }) {
-        HStack {
-            Image(systemName: "chevron.left")
-                .aspectRatio(contentMode: .fit)
-            Text("Назад")
-        }
-    }
+        content
     }
     
     @ViewBuilder
@@ -72,7 +50,7 @@ public struct CreateDraftCollateralLoanApplicationView: View {
 
                 if state.stage == .confirm {
 
-                    otpView
+                    state.confirmation.map { otpView(otpViewModel: $0.otpViewModel) }
                     consentsView
                 }
             }
@@ -145,13 +123,14 @@ extension CreateDraftCollateralLoanApplicationView {
         )
     }
 
-    var otpView: some View {
+    func otpView(otpViewModel: TimedOTPInputViewModel) -> some View {
         
         CreateDraftCollateralLoanApplicationOTPView(
             state: state,
             event: event,
             config: config,
-            factory: factory
+            factory: factory,
+            otpViewModel: otpViewModel
         )
     }
 
@@ -188,17 +167,6 @@ struct FrameWithCornerRadiusModifier: ViewModifier {
     }
 }
 
-extension View {
-   @ViewBuilder
-   func `if`<Content: View>(_ conditional: Bool, content: (Self) -> Content) -> some View {
-        if conditional {
-            content(self)
-        } else {
-            self
-        }
-    }
-}
-
 extension CreateDraftCollateralLoanApplicationView {
     
     public typealias Domain = CreateDraftCollateralLoanApplicationDomain
@@ -223,8 +191,14 @@ struct CreateDraftCollateralLoanApplicationView_Previews: PreviewProvider {
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationView(
-            state: .correntParametersPreview,
-            event: { print($0) },
+            state: .init(
+                data: .preview,
+                stage: .correctParameters,
+                confirmation: .preview
+            ),
+            event: {
+                print($0)
+            },
             externalEvent: { print($0) },
             config: .default,
             factory: .preview
@@ -232,8 +206,12 @@ struct CreateDraftCollateralLoanApplicationView_Previews: PreviewProvider {
         .previewDisplayName("Экран подтверждения параметров кредита")
 
         CreateDraftCollateralLoanApplicationView(
-            state: .confirmPreview,
-            event: { print($0) }, 
+            state: .init(
+                data: .preview,
+                stage: .confirm,
+                confirmation: .preview
+            ),
+            event: { print($0) },
             externalEvent: { print($0) },
             config: .default,
             factory: .preview

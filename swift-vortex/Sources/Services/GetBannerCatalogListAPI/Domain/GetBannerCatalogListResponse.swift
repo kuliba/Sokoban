@@ -9,11 +9,11 @@ import Foundation
 
 public struct GetBannerCatalogListResponse: Equatable {
     
-    public let serial: String?
+    public let serial: String
     public let bannerCatalogList: [Item]
     
     public init(
-        serial: String?,
+        serial: String,
         bannerCatalogList: [Item]
     ) {
         self.serial = serial

@@ -18,7 +18,6 @@ public struct CreateDraftCollateralLoanApplicationUIData {
     public let name: String
     public let percent: Double
     public let periods: [Period]
-    public let selectedCity: String
     public let selectedMonths: UInt
 
     public init(
@@ -31,7 +30,6 @@ public struct CreateDraftCollateralLoanApplicationUIData {
         name: String,
         percent: Double,
         periods: [Period],
-        selectedCity: String,
         selectedMonths: UInt
     ) {
         self.amount = amount
@@ -43,7 +41,6 @@ public struct CreateDraftCollateralLoanApplicationUIData {
         self.name = name
         self.percent = percent
         self.periods = periods
-        self.selectedCity = selectedCity
         self.selectedMonths = selectedMonths
     }
     
@@ -127,6 +124,7 @@ extension CreateDraftCollateralLoanApplicationUIData {
     // MARK: Helpers
     
     var rubSymbol: String {
+        
         let code = "RUB"
         let locale = NSLocale(localeIdentifier: code)
         return locale.displayName(forKey: NSLocale.Key.currencySymbol, value: code) ?? "₽"
@@ -203,7 +201,6 @@ extension CreateDraftCollateralLoanApplicationUIData {
             .init(title: "6 лет", months: 72),
             .init(title: "7 лет", months: 84)
         ],
-        selectedCity: "Балабаново",
         selectedMonths: 24
     )
 }

@@ -29,9 +29,12 @@ class RootViewModel: ObservableObject, Resetable {
     
     let tabsViewModel: TabsViewModel
     let informerViewModel: InformerView.ViewModel
+    let splash: SplashScreenViewModel
     
+    @Published private(set) var isShowingSplash = false
+        
     var coverPresented: RootViewHostingViewController.Cover.Kind?
-    
+
     private let fastPaymentsFactory: FastPaymentsFactory
     private let navigationStateManager: UserAccountNavigationStateManager
     private let productNavigationStateManager: ProductProfileFlowManager
@@ -54,6 +57,7 @@ class RootViewModel: ObservableObject, Resetable {
         productNavigationStateManager: ProductProfileFlowManager,
         tabsViewModel: TabsViewModel,
         informerViewModel: InformerView.ViewModel,
+        splash: SplashScreenViewModel,
         infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
         _ model: Model,
         showLoginAction: @escaping ShowLoginAction,
@@ -67,6 +71,7 @@ class RootViewModel: ObservableObject, Resetable {
         self.selected = .main
         self.tabsViewModel = tabsViewModel
         self.informerViewModel = informerViewModel
+        self.splash = splash
         self.model = model
         self.infoDictionary = infoDictionary
         self.showLoginAction = showLoginAction
@@ -649,22 +654,13 @@ extension PaymentsTransfersSwitcher: PaymentsTransfersSwitcherProtocol {
     }
 }
 
-extension PaymentsTransfersCorporateDomain.Binder {
-    
-    var hasDestination: AnyPublisher<Bool, Never> {
-        
-#warning("unimplemented")
-        return Empty().eraseToAnyPublisher()
-    }
-}
-
 extension PaymentsTransfersPersonalDomain.Binder {
     
     var hasDestination: AnyPublisher<Bool, Never> {
         
         let categoryPicker = content.categoryPicker.hasDestination
         let operationPicker = content.operationPicker.hasDestination
-        let transferPicker = content.transfers.hasDestination.handleEvents(receiveOutput: { print("transferPicker.hasDestination", $0) })
+        let transferPicker = content.transfers.hasDestination
         let flowHasDestination = Just(false)
         
         return Publishers.Merge4(
@@ -714,6 +710,55 @@ private extension TransfersPicker {
     var hasDestination: AnyPublisher<Bool, Never> {
         
         transfersBinder?.flow.$state.map(\.hasDestination).eraseToAnyPublisher() ?? Empty().eraseToAnyPublisher()
+    }
+}
+
+extension PaymentsTransfersCorporateDomain.Binder {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        let bannerPicker = content.bannerPicker.hasDestination
+        let corporateTransfers = content.corporateTransfers.hasDestination
+        let flowHasDestination = flow.$state.map(\.hasDestination)
+        
+        return Publishers.Merge3(
+            bannerPicker,
+            corporateTransfers,
+            flowHasDestination
+        )
+        .eraseToAnyPublisher()
+    }
+}
+
+extension CorporateBannerPicker {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        bannerBinder?.hasDestination ?? Empty().eraseToAnyPublisher()
+    }
+}
+
+extension BannerPickerSectionBinder {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        flow.$state.map { $0.destination != nil }.eraseToAnyPublisher()
+    }
+}
+
+extension CorporateTransfersProtocol {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        corporateTransfers?.hasDestination ?? Empty().eraseToAnyPublisher()
+    }
+}
+
+extension PaymentsTransfersCorporateTransfers {
+    
+    var hasDestination: AnyPublisher<Bool, Never> {
+        
+        openProduct.$state.map(\.hasDestination).eraseToAnyPublisher()
     }
 }
 

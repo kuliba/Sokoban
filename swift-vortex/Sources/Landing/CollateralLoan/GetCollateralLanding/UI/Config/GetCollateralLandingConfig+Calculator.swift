@@ -175,20 +175,17 @@ extension GetCollateralLandingConfig {
             let maxTrackColor: Color
             let thumbDiameter: CGFloat
             let trackHeight: CGFloat
-            let maximumValue: Float
             
             init(
                 minTrackColor: Color,
                 maxTrackColor: Color,
                 thumbDiameter: CGFloat,
-                trackHeight: CGFloat,
-                maximumValue: Float
+                trackHeight: CGFloat
             ) {
                 self.minTrackColor = minTrackColor
                 self.maxTrackColor = maxTrackColor
                 self.thumbDiameter = thumbDiameter
                 self.trackHeight = trackHeight
-                self.maximumValue = maximumValue
             }
         }
         
@@ -327,8 +324,7 @@ extension GetCollateralLandingConfig.Calculator {
                 minTrackColor: .red,
                 maxTrackColor: .textPlaceholder,
                 thumbDiameter: 20,
-                trackHeight: 2,
-                maximumValue: 20.0
+                trackHeight: 2
             )
         ),
         period: .init(titleText: "Срок кредита"),
