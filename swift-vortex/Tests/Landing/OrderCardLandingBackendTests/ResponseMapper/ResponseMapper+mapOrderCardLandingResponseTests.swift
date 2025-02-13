@@ -8,7 +8,6 @@
 import XCTest
 import RemoteServices
 import UIPrimitives
-import ForaTools
 import OrderCardLandingBackend
 
 final class ResponseMapper_mapOrderCardLandingResponseTests: XCTestCase {
