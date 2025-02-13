@@ -34,7 +34,7 @@ public extension FormContentReducer {
             state.status = .loaded(landing)
             
         case let .failure(failure):
-            switch failure {
+            switch failure.kind {
             case let .alert(message):
                 let oldLanding = state.status.oldLanding
                 state.status = .failure(.alert(message), oldLanding)
