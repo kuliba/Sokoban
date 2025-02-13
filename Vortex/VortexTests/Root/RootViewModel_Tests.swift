@@ -87,7 +87,7 @@ class RootViewModel_Tests: XCTestCase {
         
         return (sut, spy)
     }
-     
+    
     private func makeSections() -> [MainSectionViewModel] {
         
         [
@@ -115,31 +115,39 @@ class RootViewModel_Tests: XCTestCase {
     }
     
     func tapMainViewFastSectionQRButton(
-        _ sut: SUT
+        _ sut: SUT,
+        file: StaticString = #file,
+        line: UInt = #line
     ) throws {
         
-        try sut.tapMainViewFastSectionQRButton()
+        try sut.tapMainViewFastSectionQRButton(file: file, line: line)
     }
     
     func tapMainViewFastSectionTemplatesButton(
-        _ sut: SUT
+        _ sut: SUT,
+        file: StaticString = #file,
+        line: UInt = #line
     ) throws {
         
-        try sut.tapMainViewFastSectionTemplatesButton()
+        try sut.tapMainViewFastSectionTemplatesButton(file: file, line: line)
     }
     
     func tapMainViewFastSectionStandardPaymentButton(
-        _ sut: SUT
+        _ sut: SUT,
+        file: StaticString = #file,
+        line: UInt = #line
     ) throws {
         
-        try sut.tapMainViewFastSectionStandardPaymentButton()
+        try sut.tapMainViewFastSectionStandardPaymentButton(file: file, line: line)
     }
     
     func tapLegacyPaymentsSectionQRButton(
-        _ sut: SUT
+        _ sut: SUT,
+        file: StaticString = #file,
+        line: UInt = #line
     ) throws {
         
-        try sut.tapLegacyPaymentsSectionQRButton()
+        try sut.tapLegacyPaymentsSectionQRButton(file: file, line: line)
     }
 }
 

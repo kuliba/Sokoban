@@ -760,7 +760,8 @@ final class MainViewModelTests: XCTestCase {
             makeAuthFactory: { ModelAuthLoginViewModelFactory(model: $0, rootActions: $1)},
             makeProductProfileViewModel: { _,_,_,_ in .sample },
             makePromoProductViewModel: { $0.mapper(onTap: $1.show, onHide: $1.hide)},
-            qrViewModelFactory: qrViewModelFactory
+            qrViewModelFactory: qrViewModelFactory,
+            makeTrailingToolbarItems: { _ in [] }
         )
         
         let sut = MainViewModel(
@@ -830,7 +831,8 @@ final class MainViewModelTests: XCTestCase {
             makeAuthFactory: { ModelAuthLoginViewModelFactory(model: $0, rootActions: $1)},
             makeProductProfileViewModel: { _,_,_,_ in nil },
             makePromoProductViewModel: { $0.mapper(onTap: $1.show, onHide: $1.hide)},
-            qrViewModelFactory: .preview()
+            qrViewModelFactory: .preview(),
+            makeTrailingToolbarItems: { _ in [] }
         )
 
         let sut = MainViewModel(

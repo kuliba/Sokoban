@@ -157,7 +157,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             flowManager: makeFlowManagerOnlyModalAlert(),
             makeAlertViewModels: .init(
                 dataUpdateFailure: { _ in .dataUpdateFailure {}},
-                disableForCorporateCard: { _ in nil}),
+                disableForCorporateCard: { _ in .testAlert }),
             updateInfoStatusFlag: .init(rawValue: .active))
         
         let alertMessageSpy = ValueSpy(sut.$route.map(\.modal?.alert?.message))

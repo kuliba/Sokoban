@@ -53,11 +53,14 @@ extension RootViewModelFactory {
                 completion(.outside(.tab(.main)))
             }
             
-        case .userAccount:
-            makeUserAccount()
-            
         case let .standardPayment(type):
             initiateStandardPaymentFlow(type)
+            
+        case .uin:
+            completion(.uin)
+            
+        case .userAccount:
+            makeUserAccount()
         }
         
         func makeScanQR() {
