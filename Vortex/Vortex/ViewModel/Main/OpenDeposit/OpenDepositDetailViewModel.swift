@@ -120,11 +120,9 @@ class OpenDepositDetailViewModel: ObservableObject {
 
     func confirmButtonTapped() {
         
-        if model.onlyCorporateCards, let alertViewModel = makeAlertViewModel({}) {
-            
-            route.modal = .alert(alertViewModel)
-        }
-        else {
+        if model.onlyCorporateCards {
+            route.modal = .alert(makeAlertViewModel({}))
+        } else {
             route.destination = .confirm(self)
         }
     }

@@ -8,6 +8,24 @@
 @testable import Vortex
 import XCTest
 
+extension MainSectionFastOperationView.ViewModel {
+    
+    convenience init(
+        _ createItems: CreateItems? = nil,
+        isCollapsed: Bool = false
+    ) {
+        let createItems = createItems ?? { action in
+            
+            let qr = ButtonIconTextView.ViewModel(icon: .init(image: .ic40Qr, background: .circle), title: .init(text: FastOperationsTitles.qr), orientation: .horizontal) { action(.byQr) }
+            
+            let templates = ButtonIconTextView.ViewModel(icon: .init(image: .ic40Qr, background: .circle), title: .init(text: FastOperationsTitles.templates), orientation: .horizontal) { action(.templates) }
+            
+            return [qr, templates]
+        }
+        self.init(createItems: createItems, isCollapsed: isCollapsed)
+    }
+}
+
 extension XCTestCase {
     
     func makeServiceLatest(

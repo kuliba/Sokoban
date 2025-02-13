@@ -165,6 +165,24 @@ extension RootViewModelFactory {
         }
     }
 
+    private func getConsents(
+        payload: CollateralLandingApplicationSaveConsentsPayload,
+        completion: @escaping (Domain.SaveConsentsResult) -> Void
+    ) {
+        let saveConsents = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createSaveConsentsRequest(with:),
+            mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:)
+        )
+        
+        let save = schedulers.background.scheduled(saveConsents)
+
+        save(payload.payload) { [saveConsents] in
+
+            completion($0.map(\.response).mapError{ .init(message: $0.localizedDescription) })
+            _ = saveConsents
+        }
+    }
+
     private func saveConsents(
         payload: CollateralLandingApplicationSaveConsentsPayload,
         completion: @escaping (Domain.SaveConsentsResult) -> Void
@@ -174,8 +192,10 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:)
         )
         
-        saveConsents (payload.payload) { [saveConsents] in
-            
+        let save = schedulers.background.scheduled(saveConsents)
+
+        save(payload.payload) { [saveConsents] in
+
             completion($0.map(\.response).mapError{ .init(message: $0.localizedDescription) })
             _ = saveConsents
         }

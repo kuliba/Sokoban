@@ -28,7 +28,7 @@ extension PaymentsTransfersFactory {
     
     struct MakeAlertViewModels {
         
-        let dataUpdateFailure: MakeAlertViewModel
+        let dataUpdateFailure: MakeOptionalAlertViewModel
         let disableForCorporateCard: MakeAlertViewModel
     }
     
@@ -57,7 +57,8 @@ extension PaymentsTransfersFactory {
     typealias MakeTemplates = (@escaping DismissAction) -> Templates?
     
     typealias MakePaymentsTransfersSections = () -> [PaymentsTransfersSectionViewModel]
-    typealias MakeAlertViewModel = (@escaping DismissAction) -> Alert.ViewModel?
+    typealias MakeOptionalAlertViewModel = (@escaping DismissAction) -> Alert.ViewModel?
+    typealias MakeAlertViewModel = (@escaping DismissAction) -> Alert.ViewModel
     
     typealias MakePaymentProviderPickerFlowModel = (MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping) -> SegmentedPaymentProviderPickerFlowModel
     
@@ -144,10 +145,8 @@ private final class PreviewTransfers: TransfersPicker {}
 extension PaymentsTransfersFactory.MakeAlertViewModels {
     
     static let `default`: Self = .init(
-        dataUpdateFailure: { _ in nil },
-        disableForCorporateCard: {        
-            .disableForCorporateCard(primaryAction: $0)
-        }
+        dataUpdateFailure: { _ in .techError {} },
+        disableForCorporateCard: { .disableForCorporateCard(primaryAction: $0) }
     )
 }
 

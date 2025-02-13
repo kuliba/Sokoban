@@ -917,15 +917,15 @@ private extension PaymentsTransfersViewModel {
             }
             .store(in: &bindings)
         
-            model.updateInfo
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] in self?.updateSections($0) }
-                .store(in: &bindings)
+        model.updateInfo
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.updateSections($0) }
+            .store(in: &bindings)
         
     }
     
     func updateSections(_ updateInfo: UpdateInfo) {
-       
+        
         if model.onlyCorporateCards {
             let containDisableCorporateSection: Bool = sections.first(where: { $0.type == .disableForCorCards }) is DisableForCorCardsPTViewModel
             if !containDisableCorporateSection {
@@ -1011,7 +1011,7 @@ private extension PaymentsTransfersViewModel {
     }
     
     func disableForCorporateCard(_ action: any Action) -> Bool {
-
+        
         guard model.onlyCorporateCards else { return false }
         
         guard case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer = action,
@@ -1027,12 +1027,11 @@ private extension PaymentsTransfersViewModel {
             event(.setModal(to: .alert(alertViewModel)))
         } else {
             
-            if disableForCorporateCard(action),
-               let alertViewModel = paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard({ self.action.send(ProductProfileViewModelAction.Close.Alert()) }) {
+            if disableForCorporateCard(action) {
                 
+                let alertViewModel = paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard({ self.action.send(ProductProfileViewModelAction.Close.Alert()) })
                 event(.setModal(to: .alert(alertViewModel)))
-            }
-            else {
+            } else {
                 
                 switch action {
                     //LatestPayments Section Buttons
@@ -1290,11 +1289,11 @@ private extension PaymentsTransfersViewModel {
         _ external: Templates.State.ExternalTemplatesListFlowState
     ) {
         rootActions?.showSpinner(external.isLoading)
-
+        
         switch external.outside {
         case .none:
             break
-
+            
         case let .productID(productID):
             rootActions?.spinner.hide()
             action.send(PaymentsTransfersViewModelAction.Close.Link())
@@ -1316,13 +1315,13 @@ private extension PaymentsTransfersViewModel {
                 
                 self?.rootActions?.switchTab(.main)
             }
-
+            
         case .tab(.payments):
             rootActions?.spinner.hide()
             action.send(PaymentsTransfersViewModelAction.Close.Link())
         }
     }
-
+    
     private func bind(_ productProfile: ProductProfileViewModel) {
         
         productProfile.action
@@ -1420,7 +1419,7 @@ private extension PaymentsTransfersViewModel {
         meToMeViewModel: PaymentsMeToMeViewModel?,
         successViewModel: PaymentsSuccessViewModel
     ) {
-
+        
         bind(successViewModel)
         fullCover = .init(type: .successMeToMe(successViewModel))
     }
@@ -1446,7 +1445,7 @@ private extension PaymentsTransfersViewModel {
     }
     
     private func closeSuccess() {
-                
+        
         self.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
         
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
@@ -1616,7 +1615,7 @@ private extension PaymentsTransfersViewModel {
         
         event(.dismiss(.destination))
         event(.dismiss(.modal))
-
+        
         action.send(PaymentsTransfersViewModelAction.Show.Requisites(qrCode: qrCode))
     }
     
@@ -1637,12 +1636,11 @@ private extension PaymentsTransfersViewModel {
     
     private func barcodeScannerAction() {
         
-        if disableForCorporateCard(PTSectionPaymentsViewAction.ButtonTapped.Payment(type: .qrPayment)),
-           let alertViewModel = paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard({ self.action.send(ProductProfileViewModelAction.Close.Alert()) }) {
+        if disableForCorporateCard(PTSectionPaymentsViewAction.ButtonTapped.Payment(type: .qrPayment)) {
             
+            let alertViewModel = paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard({ self.action.send(ProductProfileViewModelAction.Close.Alert()) })
             event(.setModal(to: .alert(alertViewModel)))
-        }
-        else {
+        } else {
             openScanner()
         }
     }

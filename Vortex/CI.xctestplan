@@ -653,6 +653,20 @@
         "identifier" : "CollateralLoanLandingCreateDraftCollateralLoanApplicationUITests",
         "name" : "CollateralLoanLandingCreateDraftCollateralLoanApplicationUITests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "C2GBackendTests",
+        "name" : "C2GBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "C2GCoreTests",
+        "name" : "C2GCoreTests"
+      }
     }
   ],
   "version" : 1

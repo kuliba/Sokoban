@@ -562,7 +562,7 @@ final class ControlPanelReducerTests: XCTestCase {
     private typealias MakeActions = ControlPanelReducer.MakeActions
     private typealias MakeViewModels = ControlPanelReducer.MakeViewModels
     
-    let makeAlertViewModel: PaymentsTransfersFactory.MakeAlertViewModel = {_ in nil }
+    let makeAlertViewModel: PaymentsTransfersFactory.MakeAlertViewModel = { _ in .testAlert }
 
     let makeIconView: LandingView.MakeIconView = { _ in .init(
         image: .cardPlaceholder,
