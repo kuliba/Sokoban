@@ -24,7 +24,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
     init(_ data: ResponseMapper._Data) throws {
         
         self.init(
-            list: data.categoryGroupList.map(ResponseMapper.ServiceCategory.init),
+            list: data.categoryGroupList.compactMap(ResponseMapper.ServiceCategory.init),
             serial: data.serial
         )
     }
@@ -32,30 +32,34 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
 
 private extension ResponseMapper.ServiceCategory {
     
-    init(_ category: ResponseMapper._Data._Category) {
+    init?(_ category: ResponseMapper._Data._Category) {
+        
+        guard let paymentFlow = category.paymentFlow.flow
+        else { return nil }
         
         self.init(
             latestPaymentsCategory: category.latestPaymentsCategory.map { .init($0) },
             md5Hash: category.md5hash,
             name: category.name,
             ord: category.ord,
-            paymentFlow: .init(category.paymentFlow),
+            paymentFlow: paymentFlow,
             hasSearch: category.search,
             type: .init(category.type)
         )
     }
 }
 
-private extension ResponseMapper.ServiceCategory.PaymentFlow {
+private extension ResponseMapper._Data._Category._PaymentFlow {
     
-    init(_ flow: ResponseMapper._Data._Category._PaymentFlow) {
+    var flow: ResponseMapper.ServiceCategory.PaymentFlow? {
         
-        switch flow {
-        case .mobile:              self = .mobile
-        case .qr:                  self = .qr
-        case .standard:            self = .standard
-        case .taxAndStateServices: self = .taxAndStateServices
-        case .transport:           self = .transport
+        switch self {
+        case "MOBILE":                return .mobile
+        case "QR":                    return .qr
+        case "STANDARD_FLOW":         return .standard
+        case "TAX_AND_STATE_SERVICE": return .taxAndStateServices
+        case "TRANSPORT":             return .transport
+        default:                      return nil
         }
     }
 }
@@ -79,15 +83,7 @@ private extension ResponseMapper {
             
             typealias CategoryType = String
             typealias LatestPaymentsCategory = String
-            
-            enum _PaymentFlow: String, Decodable {
-                
-                case mobile              = "MOBILE"
-                case qr                  = "QR"
-                case standard            = "STANDARD_FLOW"
-                case taxAndStateServices = "TAX_AND_STATE_SERVICE"
-                case transport           = "TRANSPORT"
-            }
+            typealias _PaymentFlow = String
         }
     }
 }
