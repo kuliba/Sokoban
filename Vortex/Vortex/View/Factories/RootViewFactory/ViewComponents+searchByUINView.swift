@@ -38,7 +38,6 @@ extension ViewComponents {
         .frame(maxHeight: .infinity, alignment: .top)
         .buttonBorderShape(.roundedRectangle)
         .buttonStyle(.bordered)
-        .frame(maxHeight: .infinity, alignment: .center)
         .background(searchByUINFlowView(flow: binder.flow))
     }
     
@@ -92,11 +91,33 @@ private extension SearchByUINFlowView {
     ) -> some View {
         
         switch destination {
-        case let .c2gPayment(c2gPayment):
+        case let .c2gPayment(binder):
             // TODO: extract to components
-            Text("TBD c2gPayment:" + String(describing: c2gPayment))
-                .frame(maxHeight: .infinity, alignment: .top)
-                .navigationBarWithBack(title: "Оплата", dismiss: dismiss)
+            VStack(spacing: 16) {
+                
+                Text("TBD: C2G Payment")
+                    .font(.headline)
+                
+                Button("connectivityFailure") {
+                    
+                    binder.flow.event(.select(.pay("connectivityFailure")))
+                }
+                
+                Button("serverFailure") {
+                    
+                    binder.flow.event(.select(.pay("serverFailure")))
+                }
+                
+                Button("success") {
+                    
+                    binder.flow.event(.select(.pay(UUID().uuidString)))
+                }
+            }
+            .padding()
+            .frame(maxHeight: .infinity, alignment: .top)
+            .buttonBorderShape(.roundedRectangle)
+            .buttonStyle(.bordered)
+            .navigationBarWithBack(title: "Оплата", dismiss: dismiss)
         }
     }
 }

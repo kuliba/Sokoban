@@ -1,5 +1,5 @@
 //
-//  SearchByUINDomain.swift
+//  C2GPaymentDomain.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 13.02.2025.
@@ -7,10 +7,10 @@
 
 import FlowCore
 
-/// A namespace
-enum SearchByUINDomain {}
+/// A namespace.
+enum C2GPaymentDomain {}
 
-extension SearchByUINDomain {
+extension C2GPaymentDomain {
     
     // MARK: - Binder
     
@@ -28,19 +28,14 @@ extension SearchByUINDomain {
     
     enum Select: Equatable {
         
-        case uin(UIN)
-    }
-    
-    struct UIN: Equatable {
+        case pay(Payload)
         
-        let value: String
+        typealias Payload = String
     }
     
     enum Navigation {
         
         case failure(BackendFailure)
-        case payment(C2GPayment)
-        
-        typealias C2GPayment = C2GPaymentDomain.Binder
+        case success(Void)
     }
 }
