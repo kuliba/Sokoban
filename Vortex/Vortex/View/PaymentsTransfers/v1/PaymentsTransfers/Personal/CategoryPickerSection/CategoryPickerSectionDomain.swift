@@ -55,5 +55,6 @@ extension CategoryPickerSectionDomain {
         
         case qr
         case standard(ServiceCategory)
+        case searchByUIN
     }
 }
