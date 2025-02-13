@@ -52,7 +52,7 @@ where RefreshView: View,
                 factory.makeLandingView($0)
             }
             if oldLanding == nil {
-                factory.makeRefreshView()
+                factory.refreshView
                     .modifier(ViewByCenterModifier(height: config.spinnerHeight))
             }
         }
@@ -82,7 +82,7 @@ where RefreshView == Text,
         event: {_ in },
         config: .prod,
         factory: .init(
-            makeRefreshView: { Text("Refresh") },
+            refreshView: Text("Refresh"),
             makeLandingView: { Text($0) }
         ))
 }

@@ -29,7 +29,7 @@ extension RootViewFactoryComposer {
     func makeFactory(
     ) -> SavingsAccountDomain.ViewFactory {
         .init(
-            makeRefreshView: makeSpinnerRefreshView(),
+            refreshView: makeSpinnerRefreshView(),
             makeLandingView: {
                 SavingsAccountView(
                     state: .init($0.list.first ?? .empty),
@@ -41,10 +41,8 @@ extension RootViewFactoryComposer {
     }
        
     func makeSpinnerRefreshView(
-    ) -> () -> SpinnerRefreshView {
-        {
+    ) -> SpinnerRefreshView {
             .init(icon: .init("Logo Fora Bank"))
-        }
     }
         
     func makeOpenSavingsAccountView(
@@ -73,7 +71,7 @@ extension RootViewFactoryComposer {
     func makeOpenSavingsAccountLandingViewFactory() -> SavingsAccountDomain.OpenAccountLandingViewFactory {
         
         .init(
-            makeRefreshView: makeSpinnerRefreshView(),
+            refreshView: makeSpinnerRefreshView(),
             makeLandingView: makeOpenSavingsAccountView
         )
     }
@@ -81,7 +79,7 @@ extension RootViewFactoryComposer {
     func makeOpenSavingsAccountViewFactory() -> SavingsAccountDomain.OpenAccountViewFactory {
         
         .init(
-            makeAmountInfoView: makeAmountInfoView(),
+            amountInfo: makeAmountInfoView(),
             makeOTPView: { [makeOTPView] in
                 
                 let model = TimedOTPInputViewModel(
@@ -126,8 +124,8 @@ extension RootViewFactoryComposer {
     }
     
     func makeAmountInfoView(
-    ) -> () -> AmountInfoView {
-        { .init() }
+    ) -> AmountInfoView {
+        .init()
     }
 }
 

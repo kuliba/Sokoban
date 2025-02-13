@@ -134,7 +134,7 @@ where AmountInfo: View,
             },
             currencySymbol: state.currencyCode,
             config: config.amount,
-            infoView: viewFactory.makeAmountInfoView
+            infoView: { viewFactory.amountInfo }
         )
     }
     
@@ -511,7 +511,7 @@ where AmountInfo == Text,
             config: .preview,
             factory: .default,
             viewFactory: .init(
-                makeAmountInfoView: { Text("") },
+                amountInfo: Text(""),
                 makeOTPView: { Text("Otp") },
                 makeProductPickerView: { Text("Products") })
         )
@@ -576,7 +576,7 @@ struct OrderSavingsAccountWrapperView: View {
                     config: config,
                     factory: imageViewFactory,
                     viewFactory: .init(
-                        makeAmountInfoView: {
+                        amountInfo: VStack {
                             HStack {
                                 "Без комиссии".text(withConfig: .init(textFont: .system(size: 14), textColor: .gray))
                                 

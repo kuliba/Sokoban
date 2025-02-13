@@ -12,20 +12,19 @@ where RefreshView: View,
       LandingView: View
 {
     
-    let makeRefreshView: MakeRefreshView
+    let refreshView: RefreshView
     let makeLandingView: MakeLandingView
     
     public init(
-        makeRefreshView: @escaping MakeRefreshView,
+        refreshView: RefreshView,
         makeLandingView: @escaping MakeLandingView
     ) {
-        self.makeRefreshView = makeRefreshView
+        self.refreshView = refreshView
         self.makeLandingView = makeLandingView
     }
 }
 
 public extension SavingsAccountContentViewFactory {
     
-    typealias MakeRefreshView = () -> RefreshView
     typealias MakeLandingView = (Landing) -> LandingView
 }
