@@ -10,6 +10,7 @@ import SwiftUI
 
 extension ViewComponents {
     
+    @inlinable
     func searchByUINView(
         _ binder: SearchByUINDomain.Binder
     ) -> some View {
@@ -41,6 +42,7 @@ extension ViewComponents {
         .background(searchByUINFlowView(flow: binder.flow))
     }
     
+    @inlinable
     func searchByUINFlowView(
         flow: SearchByUINDomain.Flow
     ) -> some View {
@@ -49,16 +51,34 @@ extension ViewComponents {
             
             SearchByUINFlowView(
                 state: state.navigation,
-                dismiss: { flow.event(.dismiss) }
+                dismiss: { flow.event(.dismiss) },
+                destinationView: {
+                    
+                    destinationView(destination: $0) { flow.event(.dismiss) }
+                }
             )
+        }
+    }
+    
+    @inlinable
+    @ViewBuilder
+    func destinationView(
+        destination: SearchByUINDomain.Navigation.Destination,
+        dismiss: @escaping () -> Void
+    ) -> some View {
+        
+        switch destination {
+        case let .c2gPayment(binder):
+            makeC2GPaymentView(binder, dismiss: dismiss)
         }
     }
 }
 
-struct SearchByUINFlowView: View {
+struct SearchByUINFlowView<DestinationView: View>: View {
     
     let state: State?
     let dismiss: () -> Void
+    let destinationView: (SearchByUINDomain.Navigation.Destination) -> DestinationView
     
     var body: some View {
         
@@ -83,42 +103,6 @@ private extension SearchByUINFlowView {
     ) -> Alert {
         
         return backendFailure.alert(action: dismiss)
-    }
-    
-    @ViewBuilder
-    func destinationView(
-        destination: SearchByUINDomain.Navigation.Destination
-    ) -> some View {
-        
-        switch destination {
-        case let .c2gPayment(binder):
-            // TODO: extract to components
-            VStack(spacing: 16) {
-                
-                Text("TBD: C2G Payment")
-                    .font(.headline)
-                
-                Button("connectivityFailure") {
-                    
-                    binder.flow.event(.select(.pay("connectivityFailure")))
-                }
-                
-                Button("serverFailure") {
-                    
-                    binder.flow.event(.select(.pay("serverFailure")))
-                }
-                
-                Button("success") {
-                    
-                    binder.flow.event(.select(.pay(UUID().uuidString)))
-                }
-            }
-            .padding()
-            .frame(maxHeight: .infinity, alignment: .top)
-            .buttonBorderShape(.roundedRectangle)
-            .buttonStyle(.bordered)
-            .navigationBarWithBack(title: "Оплата", dismiss: dismiss)
-        }
     }
 }
 
