@@ -933,6 +933,7 @@
 		2A5D989E2D5DD2470065C4E3 /* C2GPaymentDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D989D2D5DD2470065C4E3 /* C2GPaymentDomain.swift */; };
 		2A5D98A02D5DD32D0065C4E3 /* RootViewModelFactory+makeC2BPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D989F2D5DD32D0065C4E3 /* RootViewModelFactory+makeC2BPayment.swift */; };
 		2A5D98A22D5DED900065C4E3 /* ViewComponents+makeC2GPaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D98A12D5DED900065C4E3 /* ViewComponents+makeC2GPaymentView.swift */; };
+		2A5D98A42D5E11B90065C4E3 /* ViewComponents+makeC2GPaymentCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D98A32D5E11B90065C4E3 /* ViewComponents+makeC2GPaymentCompleteView.swift */; };
 		2A5DEB902B789E4200199538 /* C2BSubscriptionUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5DEB8F2B789E4200199538 /* C2BSubscriptionUI */; };
 		2A5EB43D2AAB29C900CA931D /* LandingUIComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A5EB43C2AAB29C900CA931D /* LandingUIComponent */; };
 		2A5FFD392B17310600C89F0D /* OutgoingTransferResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5FFD382B17310600C89F0D /* OutgoingTransferResponse.swift */; };
@@ -4644,6 +4645,7 @@
 		2A5D989D2D5DD2470065C4E3 /* C2GPaymentDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C2GPaymentDomain.swift; sourceTree = "<group>"; };
 		2A5D989F2D5DD32D0065C4E3 /* RootViewModelFactory+makeC2BPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeC2BPayment.swift"; sourceTree = "<group>"; };
 		2A5D98A12D5DED900065C4E3 /* ViewComponents+makeC2GPaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeC2GPaymentView.swift"; sourceTree = "<group>"; };
+		2A5D98A32D5E11B90065C4E3 /* ViewComponents+makeC2GPaymentCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeC2GPaymentCompleteView.swift"; sourceTree = "<group>"; };
 		2A5FFD382B17310600C89F0D /* OutgoingTransferResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutgoingTransferResponse.swift; sourceTree = "<group>"; };
 		2A6097342B9D760D00AA6C75 /* UtilityPayment.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UtilityPayment.xctestplan; sourceTree = "<group>"; };
 		2A6097352B9D76C000AA6C75 /* UtilityPaymentPreview.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UtilityPaymentPreview.xctestplan; sourceTree = "<group>"; };
@@ -10657,6 +10659,16 @@
 			path = C2G;
 			sourceTree = "<group>";
 		};
+		2A5D98A52D5E12650065C4E3 /* C2G */ = {
+			isa = PBXGroup;
+			children = (
+				2A5D6F552D5DAE3A0011C09E /* ViewComponents+searchByUINView.swift */,
+				2A5D98A12D5DED900065C4E3 /* ViewComponents+makeC2GPaymentView.swift */,
+				2A5D98A32D5E11B90065C4E3 /* ViewComponents+makeC2GPaymentCompleteView.swift */,
+			);
+			path = C2G;
+			sourceTree = "<group>";
+		};
 		2A6167322D5BE7970026B036 /* C2G */ = {
 			isa = PBXGroup;
 			children = (
@@ -12650,8 +12662,7 @@
 				842C423A2D11FF2F006A307D /* ViewComponents+serviceCategoryFailureView.swift */,
 				2AAEF8682D58EBA4000E81C6 /* ViewComponents+makeGeneralIconView.swift */,
 				2AEBF66A2D55CF4E001E8CB3 /* OpenProduct */,
-				2A5D6F552D5DAE3A0011C09E /* ViewComponents+searchByUINView.swift */,
-				2A5D98A12D5DED900065C4E3 /* ViewComponents+makeC2GPaymentView.swift */,
+				2A5D98A52D5E12650065C4E3 /* C2G */,
 				833286CF2C91BF4700B6FA3F /* RootViewFactory+banners.swift */,
 				2A3C2CF52D4BCD2F003FEEFE /* RootViewFactory+makeCorporateTransfers.swift */,
 				2A267D502D4BFFE1001F725C /* RootViewFactory+makeMeToMeFlowView.swift */,
@@ -22035,6 +22046,7 @@
 				500ECA6228DC4DCD00881710 /* ProductsSwapViewComponent.swift in Sources */,
 				2A3F1B272A498AA900D8FE55 /* MosParkingPickerDataMapper.swift in Sources */,
 				0BB24AB326F0C59900DDA4F6 /* SaveCardNameDecodableModel.swift in Sources */,
+				2A5D98A42D5E11B90065C4E3 /* ViewComponents+makeC2GPaymentCompleteView.swift in Sources */,
 				EDCE659527C4FFDE006C2C3E /* Model+PaymentsTaxesFNS.swift in Sources */,
 				68A07C4B281B190800797A54 /* OpenDepositListViewModel.swift in Sources */,
 				77D527CE29A392D000270A73 /* PaymentsGroupViewModel.swift in Sources */,

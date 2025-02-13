@@ -39,12 +39,12 @@ extension ViewComponents {
         .frame(maxHeight: .infinity, alignment: .top)
         .buttonBorderShape(.roundedRectangle)
         .buttonStyle(.bordered)
-        .background(searchByUINFlowView(flow: binder.flow))
     }
     
     @inlinable
     func searchByUINFlowView(
-        flow: SearchByUINDomain.Flow
+        flow: SearchByUINDomain.Flow,
+        c2gPaymentFlowView: @escaping (C2GPaymentDomain.Flow) -> some View
     ) -> some View {
         
         RxWrapperView(model: flow) { state, event in
@@ -52,9 +52,13 @@ extension ViewComponents {
             SearchByUINFlowView(
                 state: state.navigation,
                 dismiss: { event(.dismiss) },
-                destinationView: {
+                destinationView: { destination in
                     
-                    destinationView(destination: $0) { event(.dismiss) }
+                    destinationView(
+                        destination: destination,
+                        dismiss: { event(.dismiss) },
+                        c2gPaymentFlowView: c2gPaymentFlowView
+                    )
                 }
             )
         }
@@ -64,12 +68,17 @@ extension ViewComponents {
     @ViewBuilder
     func destinationView(
         destination: SearchByUINDomain.Navigation.Destination,
-        dismiss: @escaping () -> Void
+        dismiss: @escaping () -> Void,
+        c2gPaymentFlowView: @escaping (C2GPaymentDomain.Flow) -> some View
     ) -> some View {
         
         switch destination {
         case let .c2gPayment(binder):
-            makeC2GPaymentView(binder, dismiss: dismiss)
+            makeC2GPaymentView(
+                binder: binder,
+                dismiss: dismiss,
+                c2gPaymentFlowView: c2gPaymentFlowView
+            )
         }
     }
 }

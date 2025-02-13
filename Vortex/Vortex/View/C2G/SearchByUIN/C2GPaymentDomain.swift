@@ -36,6 +36,8 @@ extension C2GPaymentDomain {
     enum Navigation {
         
         case failure(BackendFailure)
-        case success(Void)
+        case success(PaymentSuccess)
+        
+        typealias PaymentSuccess = Void
     }
 }
