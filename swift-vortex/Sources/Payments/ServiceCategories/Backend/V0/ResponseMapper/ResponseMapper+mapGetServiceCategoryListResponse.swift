@@ -24,7 +24,7 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
     init(_ data: ResponseMapper._Data) throws {
         
         self.init(
-            list: data.categoryGroupList.compactMap(ResponseMapper.ServiceCategory.init),
+            list: data.categoryGroupList.map(ResponseMapper.ServiceCategory.init),
             serial: data.serial
         )
     }
@@ -32,35 +32,17 @@ private extension ResponseMapper.GetServiceCategoryListResponse {
 
 private extension ResponseMapper.ServiceCategory {
     
-    init?(_ category: ResponseMapper._Data._Category) {
-        
-        guard let paymentFlow = category.paymentFlow.flow
-        else { return nil }
+    init(_ category: ResponseMapper._Data._Category) {
         
         self.init(
             latestPaymentsCategory: category.latestPaymentsCategory.map { .init($0) },
             md5Hash: category.md5hash,
             name: category.name,
             ord: category.ord,
-            paymentFlow: paymentFlow,
+            paymentFlow: category.paymentFlow,
             hasSearch: category.search,
             type: .init(category.type)
         )
-    }
-}
-
-private extension ResponseMapper._Data._Category._PaymentFlow {
-    
-    var flow: ResponseMapper.ServiceCategory.PaymentFlow? {
-        
-        switch self {
-        case "MOBILE":                return .mobile
-        case "QR":                    return .qr
-        case "STANDARD_FLOW":         return .standard
-        case "TAX_AND_STATE_SERVICE": return .taxAndStateServices
-        case "TRANSPORT":             return .transport
-        default:                      return nil
-        }
     }
 }
 

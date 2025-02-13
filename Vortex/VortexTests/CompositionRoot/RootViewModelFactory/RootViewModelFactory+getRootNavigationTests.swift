@@ -597,3 +597,8 @@ extension String {
     static let socialAndGames             = "socialAndGames"
     static let taxAndStateService         = "taxAndStateService"
 }
+
+private extension String {
+    
+    static let standard = "STANDARD_FLOW"
+}
