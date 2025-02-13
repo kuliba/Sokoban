@@ -63,7 +63,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
             self.applicationID = applicationID
             self.needToDissmiss = needToDissmiss
             self.period = data.makePeriodSelectorState()
-            self.city = data.makeCitySelectorState()
+            self.city = data.makeCitySelectorState(selectedCity: "Москва") // set default city
             self.amount = .init(textField: .noFocus(data.formattedAmount))
             self.otp = otp
             self.verificationCode = verificationCode
@@ -123,6 +123,11 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
         case .confirm:
             return isFirstStageValid && isSecondStageValid
         }
+    }
+    
+    public var selectedCity: String {
+        
+        city.selected?.title ?? ""
     }
 }
 
@@ -208,7 +213,7 @@ public extension CreateDraftCollateralLoanApplicationUIData {
         )
     }
 
-    func makeCitySelectorState() -> OptionalSelectorState<CityItem> {
+    func makeCitySelectorState(selectedCity: String = "") -> OptionalSelectorState<CityItem> {
         
         let items: [CityItem] = cities.map { .init(title: $0) }
         var selectedItem: CityItem?
