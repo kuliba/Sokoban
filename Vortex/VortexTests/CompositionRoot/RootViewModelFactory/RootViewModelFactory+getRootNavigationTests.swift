@@ -259,8 +259,8 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         case .templates:
             return .templates
             
-        case .uin:
-            return .uin
+        case .searchByUIN:
+            return .searchByUIN
             
         case .userAccount:
             return .userAccount
@@ -274,7 +274,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         case scanQR
         case standardPayment
         case templates
-        case uin
+        case searchByUIN
         case userAccount
         
         enum Failure: Equatable {

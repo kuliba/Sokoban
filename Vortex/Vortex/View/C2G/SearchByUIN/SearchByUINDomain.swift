@@ -38,7 +38,7 @@ extension SearchByUINDomain {
     
     enum Navigation {
         
-        case failure(String)
+        case failure(BackendFailure)
         case payment(C2GPayment)
         
         typealias C2GPayment = Void
