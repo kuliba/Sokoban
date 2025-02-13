@@ -45,7 +45,7 @@ extension RootViewModelFactory {
         // TODO: Fix error case
         //      return completion(.init(result: .failure(NSError(domain: "Showcase error", code: -1))))
         //      return completion(.init(result: .success(.init(serial: "", products: []))))
-        
+
         let load = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetShowcaseRequest,
             mapResponse: RemoteServices.ResponseMapper.mapCreateGetShowcaseResponse(_:_:)
