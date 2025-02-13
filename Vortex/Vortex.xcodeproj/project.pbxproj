@@ -4602,6 +4602,7 @@
 		2A5D2FBA2BF33C5100BC3092 /* UtilityPaymentNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentNanoServices.swift; sourceTree = "<group>"; };
 		2A5D2FBC2BF33D6F00BC3092 /* UtilityPrepaymentFlowMicroServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentFlowMicroServices.swift; sourceTree = "<group>"; };
 		2A5D2FBE2BF33E0D00BC3092 /* UtilityPrepaymentFlowMicroServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentFlowMicroServicesComposer.swift; sourceTree = "<group>"; };
+		2A5D6F542D5DA6990011C09E /* C2G.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = C2G.xctestplan; sourceTree = "<group>"; };
 		2A5FFD382B17310600C89F0D /* OutgoingTransferResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutgoingTransferResponse.swift; sourceTree = "<group>"; };
 		2A6097342B9D760D00AA6C75 /* UtilityPayment.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UtilityPayment.xctestplan; sourceTree = "<group>"; };
 		2A6097352B9D76C000AA6C75 /* UtilityPaymentPreview.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UtilityPaymentPreview.xctestplan; sourceTree = "<group>"; };
@@ -10358,6 +10359,7 @@
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
+				2A5D6F542D5DA6990011C09E /* C2G.xctestplan */,
 				A72955C22D304A3A0076A5F3 /* CollateralLoanLandingCreateDraftCollateralLoanApplicationUI.xctestplan */,
 				2A9EA5D72D26A50100DEC45C /* FlowCore.xctestplan */,
 				834A11232D14617700123103 /* GetInfoRepeatPaymentService.xctestplan */,
