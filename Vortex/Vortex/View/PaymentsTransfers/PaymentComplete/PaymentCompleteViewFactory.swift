@@ -6,7 +6,6 @@
 //
 
 import UIPrimitives
-import CollateralLoanLandingGetShowcaseUI
 
 struct PaymentCompleteViewFactory {
     
