@@ -37,6 +37,7 @@ public extension ShapeStyle where Self == Color {
     static var bgIconOrangeLightest: Color { Color(#function) }
     static var bgIconPinkLight: Color { Color(#function) }
     static var bgIconPinkLightest: Color { Color(#function) }
+    static var bgIconPinkPurple: Color { Color(#function) }
     static var bgIconPurpleLight: Color { Color(#function) }
     static var bgIconRedLight: Color { Color(#function) }
     static var bgIconTealLight: Color { Color(#function) }
@@ -47,6 +48,7 @@ public extension ShapeStyle where Self == Color {
     static var blurBlack30: Color { Color(#function) }
     static var blurBlackMedium50: Color { Color(#function) }
     static var blurGray20: Color { Color(#function) }
+    static var blurPlaceholderBlack: Color { Color(#function) }
     static var blurMediumGray30: Color { Color(#function) }
     static var blurWhite: Color { Color(#function) }
     static var bordersDivaiderDisabled: Color { Color(#function) }
@@ -88,6 +90,7 @@ public extension ShapeStyle where Self == Color {
     static var systemColorWarning: Color { Color(#function) }
     static var systemColorActive: Color { Color(#function) }
     static var systemColorError: Color { Color(#function) }
+    static var textLink: Color { Color(#function) }
     static var textRed: Color { Color(#function) }
     static var textWhite: Color { Color(#function) }
     static var textDisabled: Color { Color(#function) }
