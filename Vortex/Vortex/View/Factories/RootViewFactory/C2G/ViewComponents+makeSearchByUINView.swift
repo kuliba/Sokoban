@@ -1,5 +1,5 @@
 //
-//  ViewComponents+searchByUINView.swift
+//  ViewComponents+makeSearchByUINView.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 13.02.2025.
@@ -11,7 +11,7 @@ import SwiftUI
 extension ViewComponents {
     
     @inlinable
-    func searchByUINView(
+    func makeSearchByUINView(
         _ binder: SearchByUINDomain.Binder
     ) -> some View {
         

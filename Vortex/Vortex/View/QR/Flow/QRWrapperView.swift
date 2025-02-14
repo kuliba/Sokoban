@@ -155,6 +155,9 @@ private extension QRWrapperView {
                     title: "Оплата по QR-коду",
                     dismiss: { binder.flow.event(.dismiss) }
                 )
+            
+        case let .searchByUIN(searchByUIN):
+            factory.components.makeSearchByUINView(searchByUIN)
         }
     }
     
@@ -233,6 +236,9 @@ extension QRScannerDomain.Navigation {
         case let .sberQR(.some(sberQRConfirm)):
             return .sberQR(sberQRConfirm)
             
+        case let .searchByUIN(searchByUIN):
+            return .searchByUIN(searchByUIN)
+            
         case .sberQRComplete:
             return nil
         }
@@ -242,7 +248,7 @@ extension QRScannerDomain.Navigation {
     var fullScreenCover: FullScreenCover? {
         
         switch self {
-        case .failure, .operatorSearch, .operatorView, .outside, .payments, .providerPicker, .providerServicePicker, .sberQR:
+        case .failure, .operatorSearch, .operatorView, .outside, .payments, .providerPicker, .providerServicePicker, .sberQR, .searchByUIN:
             return nil
             
         case .sberQRComplete(nil):
@@ -262,6 +268,9 @@ extension QRScannerDomain.Navigation {
         case providerPicker(SegmentedPaymentProviderPickerFlowModel)
         case providerServicePicker(AnywayServicePickerFlowModel)
         case sberQR(SberQRConfirmPaymentViewModel)
+        case searchByUIN(SearchByUIN)
+        
+        typealias SearchByUIN = SearchByUINDomain.Binder
     }
     
     enum FullScreenCover {
@@ -295,6 +304,9 @@ extension QRScannerDomain.Navigation.Destination: Identifiable {
             
         case let .sberQR(sberQRConfirm):
             return .sberQR(.init(sberQRConfirm))
+            
+        case let .searchByUIN(searchByUIN):
+            return .searchByUIN(.init(searchByUIN))
         }
     }
     
@@ -307,6 +319,7 @@ extension QRScannerDomain.Navigation.Destination: Identifiable {
         case providerPicker(ObjectIdentifier)
         case providerServicePicker(ObjectIdentifier)
         case sberQR(ObjectIdentifier)
+        case searchByUIN(ObjectIdentifier)
     }
 }
 

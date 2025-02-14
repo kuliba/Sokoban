@@ -927,7 +927,7 @@
 		2A5D2FBD2BF33D6F00BC3092 /* UtilityPrepaymentFlowMicroServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D2FBC2BF33D6F00BC3092 /* UtilityPrepaymentFlowMicroServices.swift */; };
 		2A5D2FBF2BF33E0D00BC3092 /* UtilityPrepaymentFlowMicroServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D2FBE2BF33E0D00BC3092 /* UtilityPrepaymentFlowMicroServicesComposer.swift */; };
 		2A5D6F532D5D251F0011C09E /* RequestFactory+createGetSavingLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D6F522D5D251F0011C09E /* RequestFactory+createGetSavingLanding.swift */; };
-		2A5D6F562D5DAE3A0011C09E /* ViewComponents+searchByUINView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D6F552D5DAE3A0011C09E /* ViewComponents+searchByUINView.swift */; };
+		2A5D6F562D5DAE3A0011C09E /* ViewComponents+makeSearchByUINView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D6F552D5DAE3A0011C09E /* ViewComponents+makeSearchByUINView.swift */; };
 		2A5D6F5A2D5DAF680011C09E /* SearchByUINDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D6F592D5DAF680011C09E /* SearchByUINDomain.swift */; };
 		2A5D6F5D2D5DB4200011C09E /* RootViewModelFactory+makeSearchByUIN.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D6F5C2D5DB4200011C09E /* RootViewModelFactory+makeSearchByUIN.swift */; };
 		2A5D989E2D5DD2470065C4E3 /* C2GPaymentDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5D989D2D5DD2470065C4E3 /* C2GPaymentDomain.swift */; };
@@ -4645,7 +4645,7 @@
 		2A5D2FBE2BF33E0D00BC3092 /* UtilityPrepaymentFlowMicroServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPrepaymentFlowMicroServicesComposer.swift; sourceTree = "<group>"; };
 		2A5D6F522D5D251F0011C09E /* RequestFactory+createGetSavingLanding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetSavingLanding.swift"; sourceTree = "<group>"; };
 		2A5D6F542D5DA6990011C09E /* C2G.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = C2G.xctestplan; sourceTree = "<group>"; };
-		2A5D6F552D5DAE3A0011C09E /* ViewComponents+searchByUINView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+searchByUINView.swift"; sourceTree = "<group>"; };
+		2A5D6F552D5DAE3A0011C09E /* ViewComponents+makeSearchByUINView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeSearchByUINView.swift"; sourceTree = "<group>"; };
 		2A5D6F592D5DAF680011C09E /* SearchByUINDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchByUINDomain.swift; sourceTree = "<group>"; };
 		2A5D6F5C2D5DB4200011C09E /* RootViewModelFactory+makeSearchByUIN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeSearchByUIN.swift"; sourceTree = "<group>"; };
 		2A5D989D2D5DD2470065C4E3 /* C2GPaymentDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C2GPaymentDomain.swift; sourceTree = "<group>"; };
@@ -10674,7 +10674,7 @@
 		2A5D98A52D5E12650065C4E3 /* C2G */ = {
 			isa = PBXGroup;
 			children = (
-				2A5D6F552D5DAE3A0011C09E /* ViewComponents+searchByUINView.swift */,
+				2A5D6F552D5DAE3A0011C09E /* ViewComponents+makeSearchByUINView.swift */,
 				2A5D98A12D5DED900065C4E3 /* ViewComponents+makeC2GPaymentView.swift */,
 				2A5D98A32D5E11B90065C4E3 /* ViewComponents+makeC2GPaymentCompleteView.swift */,
 			);
@@ -22463,7 +22463,7 @@
 				2A5B23112BEE03CE00270D50 /* View+ext.swift in Sources */,
 				2A6724142ADB313A00FAD522 /* KeyTagKeyChainStore.swift in Sources */,
 				0BEC8939267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift in Sources */,
-				2A5D6F562D5DAE3A0011C09E /* ViewComponents+searchByUINView.swift in Sources */,
+				2A5D6F562D5DAE3A0011C09E /* ViewComponents+makeSearchByUINView.swift in Sources */,
 				2A3B4F652CF368CE00076F05 /* RootViewModelFactory+makeProviderPickerNode.swift in Sources */,
 				2A01F9422AE512170064F15B /* Services+composedCVVPINService.swift in Sources */,
 				77A6A9CF27F46DC200CE7E28 /* PlacesMapViewModel.swift in Sources */,

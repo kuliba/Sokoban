@@ -118,7 +118,7 @@ private extension RootBinderView {
         _ searchByUIN: SearchByUINDomain.Binder
     ) -> some View {
         
-        rootViewFactory.components.searchByUINView(searchByUIN)
+        rootViewFactory.components.makeSearchByUINView(searchByUIN)
             .background(searchByUINFlowView(
                 flow: searchByUIN.flow,
                 goToMain: { binder.flow.event(.dismiss) }

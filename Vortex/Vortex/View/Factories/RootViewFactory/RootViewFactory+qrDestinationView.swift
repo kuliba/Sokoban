@@ -40,6 +40,9 @@ extension RootViewFactory {
         case let .sberQR(sberQR):
             makeSberQRConfirmPaymentView(sberQR)
             
+        case let .searchByUIN(searchByUIN):
+            components.makeSearchByUINView(searchByUIN)
+
         case let .servicePicker(servicePicker):
             servicePickerView(servicePicker)
         }

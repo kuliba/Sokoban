@@ -12,10 +12,11 @@ enum QRNavigation {
     case failure(QRFailedViewModel)
     case internetTV(InternetTVDetailsViewModel)
     case operatorSearch(OperatorSearch)
-    case payments(Node<ClosePaymentsViewModelWrapper>)
     case paymentComplete(PaymentCompleteResult)
+    case payments(Node<ClosePaymentsViewModelWrapper>)
     case providerPicker(Node<ProviderPicker>)
     case sberQR(SberQRResult)
+    case searchByUIN(SearchByUIN)
     case servicePicker(Node<AnywayServicePickerFlowModel>)
     
     typealias OperatorSearch = QRSearchOperatorViewModel
@@ -25,6 +26,8 @@ enum QRNavigation {
     
     typealias PaymentComplete = PaymentsSuccessViewModel
     typealias SberQR = SberQRConfirmPaymentViewModel
+    
+    typealias SearchByUIN = SearchByUINDomain.Binder
     
     struct ErrorMessage: Error, Equatable {
         

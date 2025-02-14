@@ -9,6 +9,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeSearchByUIN(
+        uin: String? = nil
     ) -> SearchByUINDomain.Binder {
         
         composeBinder(

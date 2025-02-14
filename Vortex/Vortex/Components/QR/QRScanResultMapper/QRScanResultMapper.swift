@@ -46,6 +46,9 @@ extension QRScanResultMapper {
             // TODO: add async SberQR processing
             qrModelResult = .sberQR(sberQR)
             
+        case let .uin(uin):
+            qrModelResult = .uin(uin)
+            
         case let .url(url):
             qrModelResult = .url(url)
             

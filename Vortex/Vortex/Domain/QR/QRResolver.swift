@@ -38,7 +38,14 @@ extension QRResolver {
                 
             } else if let qrCode = QRCode(string: string) {
                 
-                return .qrCode(qrCode)
+                if let uin = qrCode.uin {
+                    
+                    return .uin(uin)
+                    
+                } else {
+                    
+                    return .qrCode(qrCode)
+                }
                 
             } else {
                 
@@ -54,4 +61,9 @@ extension QRResolver {
             return .unknown
         }
     }
+}
+
+extension QRCode {
+    
+    var uin: String? { rawData["UIN"] }
 }
