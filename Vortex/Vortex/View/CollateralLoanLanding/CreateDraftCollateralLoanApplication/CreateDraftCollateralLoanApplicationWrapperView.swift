@@ -6,9 +6,10 @@
 //
 
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
-import CollateralLoanLandingGetShowcaseUI
+import CollateralLoanLandingGetConsentsBackend
 import InputComponent
 import OTPInputComponent
+import RemoteServices
 import RxViewModel
 import SwiftUI
 
@@ -146,7 +147,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     }
     
     private func makePDFDocumentButton(
-        payload: CollateralLandingApplicationGetConsentsPayload,
+        payload: RemoteServices.RequestFactory.GetConsentsPayload,
         getPDFDocument: @escaping PDFDocumentButton.GetPDFDocument
     ) -> PDFDocumentButton {
         

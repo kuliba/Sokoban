@@ -6,7 +6,8 @@
 //
 
 import Foundation
-import CollateralLoanLandingGetShowcaseUI
+import CollateralLoanLandingGetConsentsBackend
+import RemoteServices
 
 public struct CollateralLandingApplicationSaveConsentsResult: Equatable {
     
@@ -59,11 +60,12 @@ public extension CollateralLandingApplicationSaveConsentsResult {
         amount.formattedCurrency()
     }
     
-    var payload: CollateralLandingApplicationGetConsentsPayload {
+    var payload: RemoteServices.RequestFactory.GetConsentsPayload {
         
         .init(
-            verificationCode: verificationCode,
-            applicationID: applicationID
+            cryptoVersion: "1.0", // Constant, can be skipped in request
+            applicationId: applicationID,
+            verificationCode: verificationCode
         )
     }
 }

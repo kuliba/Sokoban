@@ -5,9 +5,11 @@
 //  Created by Valentin Ozerov on 10.10.2024.
 //
 
+import CollateralLoanLandingGetConsentsBackend
 import Combine
 import OTPInputComponent
 import PDFKit
+import RemoteServices
 import SwiftUI
 import UIPrimitives
 
@@ -33,7 +35,7 @@ public struct CollateralLoanLandingGetShowcaseViewFactory {
  
 public extension CollateralLoanLandingGetShowcaseViewFactory {
 
-    typealias Payload = CollateralLandingApplicationGetConsentsPayload
+    typealias Payload = RemoteServices.RequestFactory.GetConsentsPayload
     typealias IconView = UIPrimitives.AsyncImage
     typealias MakeImageViewWithMD5Hash = (String) -> IconView
     typealias MakeImageViewWithURL = (String) -> IconView

@@ -283,18 +283,6 @@ extension CollateralLandingApplicationSaveConsentsPayload {
     }
 }
 
-extension CollateralLandingApplicationGetConsentsPayload {
-    
-    public var payload: RemoteServices.RequestFactory.GetConsentsPayload {
-        
-        .init(
-            cryptoVersion: cryptoVersion,
-            applicationId: applicationID,
-            verificationCode: verificationCode
-        )
-    }
-}
-
 extension RemoteServices.ResponseMapper.CollateralLoanLandingSaveConsentsResponse {
     
     func response(verificationCode: String) -> CollateralLandingApplicationSaveConsentsResult {

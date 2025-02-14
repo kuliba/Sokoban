@@ -7,6 +7,7 @@
 
 import ActivateSlider
 import AnywayPaymentDomain
+import CollateralLoanLandingGetConsentsBackend
 import CollateralLoanLandingGetShowcaseUI
 import Combine
 import GenericRemoteService
@@ -24,7 +25,6 @@ import SplashScreen
 import SwiftUI
 import UIKit
 import UIPrimitives
-import CollateralLoanLandingGetConsentsBackend
 
 final class RootViewFactoryComposer {
     
@@ -954,7 +954,7 @@ private extension RootViewFactoryComposer {
     }
     
     private func getPDFDocument(
-        payload: CollateralLandingApplicationGetConsentsPayload,
+        payload: RemoteServices.RequestFactory.GetConsentsPayload,
         completion: @escaping (PDFDocument?) -> Void
     ) {
         
@@ -964,7 +964,7 @@ private extension RootViewFactoryComposer {
             mapResponse: RemoteServices.ResponseMapper.mapGetConsentsResponse(_:_:)
         )
         
-        getConsents(payload.payload) { [getConsents] in
+        getConsents(payload) { [getConsents] in
             
             completion(try? $0.get())
             _ = getConsents
