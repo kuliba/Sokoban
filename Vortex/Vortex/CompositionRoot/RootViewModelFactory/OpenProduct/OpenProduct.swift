@@ -8,9 +8,8 @@
 enum OpenProduct {
     
     case card(OpenCard)
-    case savingsAccount(OpenSavingsAccount)
+    case savingsAccount(SavingsAccountNodes)
     case unknown // TODO: replace with other types
     
     typealias OpenCard = Node<OpenCardDomain.Binder>
-    typealias OpenSavingsAccount = MakeSavingsAccountBinders
 }
