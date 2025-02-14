@@ -34,16 +34,10 @@ public extension ContentEffectHandler {
                 switch $0 {
                     
                 case let .failure(backendFailure):
-                    switch backendFailure.kind {
-                    case let .alert(message):
-                        dispatch(.failure(.alert(message)))
-                        
-                    case let .informer(informerPayload):
-                        dispatch(.failure(.informer(informerPayload)))
-                    }
+                    dispatch(.failure(backendFailure))
                     
                 case let .success(landing):
-                   dispatch(.loaded(landing))
+                    dispatch(.loaded(landing))
                 }
             }
         }

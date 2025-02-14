@@ -701,12 +701,15 @@ private extension RootViewFactoryComposer {
     }
     
     func makeSavingsAccountView(
-        binder: SavingsAccountDomain.Binder
+        nodes: SavingsAccountNodes
     ) -> SavingsAccountBinderView? {
                             
         guard savingsAccountFlag.isActive else { return nil }
             
-        return makeSavingsAccountBinderView(binder: binder)
+        return makeSavingsAccountBinderView(
+            binder: nodes.savingsAccountNode.model,
+            openAccountBinder: nodes.openSavingsAccountNode.model
+        )
     }
     
     func makePaymentsSuccessView(

@@ -30,10 +30,23 @@ extension RootViewModelFactory {
             completion(.orderCardResponse(orderCardResponse))
             
         case let .openProduct(type):
-            completion(.openProduct(openProduct(
-                type: type,
-                notify: { notify(.select(.orderCardResponse($0))) }
-            )))
+            
+            switch type {
+            case .card:
+                completion(.openProduct(openProduct(
+                    type: type,
+                    notify: { notify(.select(.orderCardResponse($0))) }
+                )))
+                
+            case .savingsAccount:
+                completion(.openProduct(openProduct(
+                    type: type,
+                    notify: { _ in notify(.select(.openProduct(.savingsAccount))) }
+                )))
+                
+            default:
+                break
+            }
             
         case let .outside(outside):
             switch outside {

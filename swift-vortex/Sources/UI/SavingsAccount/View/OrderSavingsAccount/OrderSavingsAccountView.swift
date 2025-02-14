@@ -11,7 +11,7 @@ import SharedConfigs
 import SwiftUI
 import ToggleComponent
 
-struct OrderSavingsAccountView<AmountInfo, OTPView, ProductPicker>: View
+public struct OrderSavingsAccountView<AmountInfo, OTPView, ProductPicker>: View
 where AmountInfo: View,
       OTPView: View,
       ProductPicker: View {
@@ -22,40 +22,33 @@ where AmountInfo: View,
     let config: Config
     let factory: Factory
     let viewFactory: ViewFactory<AmountInfo, OTPView, ProductPicker>
-    
-    private let coordinateSpace: String
-    
+        
     @State private(set) var isShowHeader = false
     @State private(set) var isShowingProducts = false
     
-    init(
+    public init(
         amountToString: @escaping AmountToString,
         state: OrderSavingsAccountState,
         event: @escaping (Event) -> Void,
         config: Config,
         factory: Factory,
-        viewFactory: ViewFactory<AmountInfo, OTPView, ProductPicker>,
-        coordinateSpace: String = "orderScroll"
+        viewFactory: ViewFactory<AmountInfo, OTPView, ProductPicker>
     ) {
         self.amountToString = amountToString
         self.state = state
         self.event = event
         self.config = config
         self.factory = factory
-        self.coordinateSpace = coordinateSpace
         self.viewFactory = viewFactory
     }
     
-    var body: some View {
+    public var body: some View {
         
-        ScrollView(showsIndicators: false) {
-            orderSavingsAccount(state.data)
-        }
-        .coordinateSpace(name: coordinateSpace)
-        .toolbar(content: toolbarContent)
-        .safeAreaInset(edge: .bottom, spacing: 0, content: footer)
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden()
+        orderSavingsAccount(state.data)
+            .toolbar(content: toolbarContent)
+            .safeAreaInset(edge: .bottom, spacing: 0, content: footer)
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden()
     }
     
     private func orderSavingsAccount(
@@ -106,9 +99,9 @@ where AmountInfo: View,
             
             if let links {
                 
-                LinkableTextView(taggedText: config.linkableTexts.condition, urlString: links.conditions, tag: config.linkableTexts.tag, handleURL: {_ in })
+                LinkableTextView(taggedText: config.linkableTexts.condition, urlString: links.conditions, tag: config.linkableTexts.tag, handleURL: { event(.openURL($0)) })
                     .minimumScaleFactor(0.9)
-                LinkableTextView(taggedText: config.linkableTexts.tariff, urlString: links.tariff, tag: config.linkableTexts.tag, handleURL: {_ in })
+                LinkableTextView(taggedText: config.linkableTexts.tariff, urlString: links.tariff, tag: config.linkableTexts.tag, handleURL: { event(.openURL($0)) })
                     .minimumScaleFactor(0.9)
             }
             Spacer()
@@ -141,7 +134,7 @@ where AmountInfo: View,
             },
             currencySymbol: state.currencyCode,
             config: config.amount,
-            infoView: viewFactory.makeAmountInfoView
+            infoView: { viewFactory.amountInfo }
         )
     }
     
@@ -215,6 +208,8 @@ where AmountInfo: View,
                         .shimmering()
                 } else {
                     config.order.image
+                        .renderingMode(.template)
+                        .foregroundColor(.green)
                         .frame(config.order.imageSize)
                 }
                 subtitle.text(withConfig: config.order.options.config.subtitle)
@@ -258,8 +253,11 @@ where AmountInfo: View,
             
             HStack(alignment:.top, spacing: config.padding) {
                 
-                product(designMd5hash: designMd5hash, needShimmering)
-                
+                ZStack {
+                    shadow()
+                    product(designMd5hash: designMd5hash, needShimmering)
+                    
+                }
                 orderOptions(
                     open: orderOption.open,
                     service: orderOption.service,
@@ -268,6 +266,15 @@ where AmountInfo: View,
             }
         }
         .modifier(ViewWithBackgroundCornerRadiusAndPaddingModifier(config.background, config.cornerRadius, config.padding))
+    }
+    
+    private func shadow() -> some View {
+        
+        RoundedRectangle(cornerRadius: config.cornerRadius)
+            .frame(width: config.order.card.width - config.cornerRadius * 2, height: config.order.card.height)
+            .foregroundColor(config.shadowColor)
+            .offset(x: 0, y: config.cornerRadius)
+            .blur(radius: 8)
     }
     
     @ViewBuilder
@@ -335,6 +342,8 @@ where AmountInfo: View,
                     .shimmering()
             } else {
                 config.income.image
+                    .renderingMode(.template)
+                    .foregroundColor(.gray)
                     .frame(config.income.imageSize)
             }
             incomeInfo(income: income, needShimmering: needShimmering)
@@ -377,6 +386,8 @@ where AmountInfo: View,
             }
             else {
                 config.topUp.image
+                    .renderingMode(.template)
+                    .foregroundColor(.gray)
                     .frame(config.income.imageSize)
                     .modifier(ShimmeringModifier(needShimmering, config.shimmering))
             }
@@ -413,7 +424,7 @@ where AmountInfo: View,
     }
     
     private func backButton() -> some View {
-        Button(action: { event(.dismiss) }) { config.images.back }
+        Button(action: {  }) { config.images.back }
     }
     
     private func header() -> some View {
@@ -421,7 +432,7 @@ where AmountInfo: View,
     }
 }
 
-extension OrderSavingsAccountView {
+public extension OrderSavingsAccountView {
     
     typealias Event = OrderSavingsAccountEvent
     typealias Config = OrderSavingsAccountConfig
@@ -481,10 +492,7 @@ where AmountInfo == Text,
                 switch $0 {
                 case .continue:
                     print("Открыть накопительный счет")
-                    
-                case .dismiss:
-                    print("Назад")
-                    
+                                        
                 case let .amount(amountEvent):
                     switch amountEvent {
                     case let .edit(newValue):
@@ -496,12 +504,14 @@ where AmountInfo == Text,
                 case .consent:
                     print("consent")
                     
+                case let .openURL(url):
+                    print("openURL \(url)")
                 }
             },
             config: .preview,
             factory: .default,
             viewFactory: .init(
-                makeAmountInfoView: { Text("") },
+                amountInfo: Text(""),
                 makeOTPView: { Text("Otp") },
                 makeProductPickerView: { Text("Products") })
         )
@@ -521,32 +531,7 @@ struct LandingUIView_Previews: PreviewProvider {
             OrderSavingsAccountWrapperView.init(
                 viewModel: .init(
                     initialState: .preview,
-                    reduce: { state, event in
-                        
-                        var state = state
-                        switch event {
-                        case .dismiss:
-                            print("dismiss")
-                            
-                        case .continue:
-                            state.isShowingOTP = true
-                            
-                        case let .amount(amountEvent):
-                            switch amountEvent {
-                                
-                            case let .edit(newValue):
-                                state.amountValue = newValue
-                                
-                            case .pay:
-                                state.isShowingOTP = true
-                            }
-                            
-                        case .consent:
-                            state.consent.toggle()
-                        }
-                        
-                        return (state, .none)
-                    },
+                    reduce: OrderSavingsAccountReducer().reduce(_:_:),
                     handleEffect: {_,_ in }),
                 config: .preview,
                 imageViewFactory: .default)
@@ -591,7 +576,7 @@ struct OrderSavingsAccountWrapperView: View {
                     config: config,
                     factory: imageViewFactory,
                     viewFactory: .init(
-                        makeAmountInfoView: {
+                        amountInfo: VStack {
                             HStack {
                                 "Без комиссии".text(withConfig: .init(textFont: .system(size: 14), textColor: .gray))
                                 

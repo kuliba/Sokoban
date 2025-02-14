@@ -9,23 +9,29 @@ import Foundation
 import SavingsAccount
 import SavingsServices
 import RxViewModel
+import SwiftUI
+import OTPInputComponent
 
 extension RootViewFactoryComposer {
     
     func makeSavingsAccountBinderView(
-        binder: SavingsAccountDomain.Binder
+        binder: SavingsAccountDomain.Binder,
+        openAccountBinder: SavingsAccountDomain.OpenAccountBinder
     ) -> SavingsAccountBinderView? {
         
         return .init(
             binder: binder,
+            openAccountBinder: openAccountBinder,
             config: .iVortex,
-            factory: makeFactory())
+            factory: makeFactory(),
+            openAccountFactory: makeOpenSavingsAccountLandingViewFactory()
+        )
     }
     
     func makeFactory(
     ) -> SavingsAccountDomain.ViewFactory {
         .init(
-            makeRefreshView: { SpinnerRefreshView(icon: .init("Logo Fora Bank")) },
+            refreshView: makeSpinnerRefreshView(),
             makeLandingView: {
                 SavingsAccountView(
                     state: .init($0.list.first ?? .empty),
@@ -35,6 +41,104 @@ extension RootViewFactoryComposer {
             }
         )
     }
+       
+    func makeSpinnerRefreshView(
+    ) -> SpinnerRefreshView {
+            .init(icon: .init("Logo Fora Bank"))
+    }
+        
+    func makeOpenSavingsAccountView(
+        _ data: SavingsAccountDomain.OpenAccountLanding
+    ) -> OrderSavingsAccountWrapperView {
+        
+        return OrderSavingsAccountWrapperView(
+            viewModel: .init(
+                initialState: .init(status: .result(.init(data.list.first ?? .empty))),
+                reduce: OrderSavingsAccountReducer().reduce(_:_:),
+                handleEffect: {_,_ in } // TODO: add handler (openUrl)
+            ),
+            amountToString: makeAmountToString,
+            config: .prod,
+            imageFactory: makeImageViewFactory(),
+            viewFactory: makeOpenSavingsAccountViewFactory()
+        )
+    }
+    
+    func makeOpenSavingsAccountLandingViewFactory() -> SavingsAccountDomain.OpenAccountLandingViewFactory {
+        
+        .init(
+            refreshView: makeSpinnerRefreshView(),
+            makeLandingView: makeOpenSavingsAccountView
+        )
+    }
+    
+    func makeOpenSavingsAccountViewFactory() -> SavingsAccountDomain.OpenAccountViewFactory {
+        
+        .init(
+            amountInfo: makeAmountInfoView(),
+            makeOTPView: { Text("OTP") },
+            makeProductPickerView:  { Text("productPicker") })
+    }
+    
+    private func makeOTPView(
+       _ viewModel: TimedOTPInputViewModel
+    ) -> SavingsAccountDomain.OTPView {
+        
+        return .init(
+            viewModel: viewModel,
+            config: .iVortex,
+            iconView: OTPInfoView.init,
+            warningView: {
+                
+                OTPWarningView(text: viewModel.state.warning, config: .iVortex)
+            }
+        )
+    }
+        
+    func makeAmountToString(
+        _ amount: Decimal,
+        _ currencyCode: String
+    ) -> String {
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.maximumFractionDigits = 2
+        formatter.minimumFractionDigits = 0
+        formatter.currencySymbol = ""
+        
+        return (formatter.string(for: amount) ?? "") + " " + currencyCode
+    }
+    
+    func makeAmountInfoView(
+    ) -> AmountInfoView {
+        .init()
+    }
+}
+
+private extension OTPInputState {
+    
+    var warning: String? {
+        
+        guard case let .input(input) = status,
+              case let .failure(.serverError(warning)) = input.otpField.status
+        else { return nil }
+        
+        return warning
+    }
+}
+
+extension OrderSavingsAccount {
+    
+    init(_ data: SavingsAccountDomain.OpenAccountLandingItem) {
+        
+        self.init(currency: .init(code: data.currency.code, symbol: data.currency.symbol), designMd5hash: data.design, fee: .init(open: data.fee.open, subscription: .init(period: "period", value: 1000)), header: .init(title: data.title, subtitle: ""), hint: data.hint, income: data.income, links: .init(conditions: data.conditionsLink, tariff: data.tariffLink))
+    }
+    
+}
+
+extension SavingsAccountDomain.OpenAccountLandingItem {
+    
+    static let empty: Self = .init(conditionsLink: "", currency: .init(code: 0, symbol: ""), description: "", design: "", fee: .init(open: 0, maintenance: .init(period: "", value: 0)), hint: "", productId: 0, income: "", tariffLink: "", title: "")
 }
 
 extension SavingsAccountDomain.LandingItem {

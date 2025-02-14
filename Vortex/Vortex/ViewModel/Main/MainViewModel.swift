@@ -814,7 +814,10 @@ private extension MainViewModel {
             switch payload.type {
             case .cardOrder:
                 action.send(RootEvent.select(.openProduct(.card)))
-                
+            
+            case .savingLanding:
+                action.send(RootEvent.select(.openProduct(.savingsAccount)))
+
             case .payment:
                 rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService)
                 
@@ -1756,7 +1759,7 @@ extension MainViewModel {
         case paymentProviderPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
         case providerServicePicker(Node<AnywayServicePickerFlowModel>)
         case collateralLoanLanding(GetShowcaseDomain.Binder)
-        case savingsAccount(Node<SavingsAccountDomain.Binder>)
+        case savingsAccount(SavingsAccountNodes)
         case orderCard
         
         var id: Case {
@@ -1878,20 +1881,7 @@ extension MainViewModel {
     
     func openSavingsAccount() {
         
-        let binder: SavingsAccountDomain.Binder = bindersFactory.makeSavingsAccountBinder()
-        let cancellable = binder.flow.$state
-            .compactMap {
-                switch $0.navigation {
-                case .main: return ()
-                    
-                default: return nil
-                }
-            }
-            .sink { [weak self] in
-                self?.resetDestination()
-            }
-        
-        route.destination = .savingsAccount(.init(model: binder, cancellable: cancellable))
+        route.destination = .savingsAccount(bindersFactory.makeSavingsAccountNodes(resetDestination))
     }
 }
 

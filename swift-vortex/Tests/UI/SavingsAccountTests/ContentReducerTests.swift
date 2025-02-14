@@ -69,7 +69,7 @@ final class ContentReducerTests: XCTestCase {
         let alert = anyMessage()
         let landing = anyMessage()
         
-        assertState(.failure(.alert(alert)), on: .init(status: .inflight(landing))) {
+        assertState(.failure(.init(kind: .alert(alert))), on: .init(status: .inflight(landing))) {
             
             $0.status = .failure(.alert(alert), landing)
         }
@@ -77,7 +77,7 @@ final class ContentReducerTests: XCTestCase {
     
     func test_reduce_failureAlert_stateInflight_shouldDeliverNoEffect() {
         
-        assert(.failure(.alert(anyMessage())), on: .init(status: .inflight(nil)), effect: nil)
+        assert(.failure(.init(kind: .alert(anyMessage()))), on: .init(status: .inflight(nil)), effect: nil)
     }
     
     func test_reduce_failureInformer_stateInflight_shouldStatusToFailure() {
@@ -85,7 +85,7 @@ final class ContentReducerTests: XCTestCase {
         let informer = anyMessage()
         let landing = anyMessage()
         
-        assertState(.failure(.informer(informer)), on: .init(status: .inflight(landing))) {
+        assertState(.failure(.init(kind: .informer(informer))), on: .init(status: .inflight(landing))) {
             
             $0.status = .failure(.informer(informer), landing)
         }
@@ -93,7 +93,7 @@ final class ContentReducerTests: XCTestCase {
     
     func test_reduce_failureInformer_stateInflight_shouldDeliverNoEffect() {
         
-        assert(.failure(.alert(anyMessage())), on: .init(status: .inflight(nil)), effect: nil)
+        assert(.failure(.init(kind: .alert(anyMessage()))), on: .init(status: .inflight(nil)), effect: nil)
     }
     
     func test_reduce_offsetMoreThenShowTitleOffset_shouldNavTitleToValue() {

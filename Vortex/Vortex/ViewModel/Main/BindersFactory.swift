@@ -14,15 +14,28 @@ typealias MakeCollateralLoanShowcaseBinder = () -> GetShowcaseDomain.Binder
 typealias MakeCollateralLoanLandingBinder = (String) -> GetCollateralLandingDomain.Binder
 typealias MakeCreateDraftCollateralLoanApplicationBinder
     = (CreateDraftCollateralLoanApplicationUIData) -> CreateDraftCollateralLoanApplicationDomain.Binder
-typealias MakeSavingsAccountBinder = () -> SavingsAccountDomain.Binder
+typealias MakeSavingsAccountNodes = (@escaping () -> Void) -> SavingsAccountNodes
 
+struct SavingsAccountNodes {
+    
+    let openSavingsAccountNode: Node<SavingsAccountDomain.OpenAccountBinder>
+    let savingsAccountNode: Node<SavingsAccountDomain.Binder>
+}
+
+extension SavingsAccountNodes {
+    
+    static let preview: Self = .init(
+        openSavingsAccountNode: { fatalError() }(),
+        savingsAccountNode: { fatalError() }()
+    )
+}
 struct BindersFactory {
     
     let bannersBinder: BannersBinder
     let makeCollateralLoanShowcaseBinder: MakeCollateralLoanShowcaseBinder
     let makeCollateralLoanLandingBinder: MakeCollateralLoanLandingBinder
     let makeCreateDraftCollateralLoanApplicationBinder: MakeCreateDraftCollateralLoanApplicationBinder
-    let makeSavingsAccountBinder: MakeSavingsAccountBinder
+    let makeSavingsAccountNodes: MakeSavingsAccountNodes
 }
 
 extension BindersFactory {
@@ -32,7 +45,7 @@ extension BindersFactory {
         makeCollateralLoanShowcaseBinder: { .preview },
         makeCollateralLoanLandingBinder: { _ in .preview },
         makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
-        makeSavingsAccountBinder: { fatalError() }
+        makeSavingsAccountNodes: { _ in .preview }
     )
 }
 
