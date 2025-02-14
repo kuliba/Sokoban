@@ -70,6 +70,7 @@ extension RootViewModelFactory {
         }
     }
     
+    // TODO: repeating code as in RootViewModelFactory+makeCategoryPicker.swift:64
     @inlinable
     func getNavigation(
         category: ServiceCategory,
@@ -99,8 +100,11 @@ extension RootViewModelFactory {
             
             completion(.destination(.transport(transport)))
             
+        case .uin:
+            completion(.outside(.searchByUIN))
+            
         default:
-            completion(.failure(.init(id: .init(), message: "Неизвестная категория платежа. Попробуйте обновить приложение.")))
+            completion(.failure(.init(id: .init(), message: "Обновите приложение до последней версии, чтобы получить доступ к новому разделу.")))
         }
     }
 }
@@ -118,4 +122,5 @@ private extension String {
     static let qr = "QR"
     static let standard = "STANDARD_FLOW"
     static let taxAndStateServices = "TAX_AND_STATE_SERVICE"
+    static let uin = "UIN"
 }

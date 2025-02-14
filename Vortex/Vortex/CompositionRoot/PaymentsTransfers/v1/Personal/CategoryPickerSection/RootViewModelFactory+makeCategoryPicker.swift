@@ -60,6 +60,7 @@ extension RootViewModelFactory {
         }
     }
     
+    // TODO: repeating code as in RootViewModelFactory+makeCategoryPickerSection.swift:75
     @inlinable
     func getNavigation(
         category: ServiceCategory,
@@ -98,7 +99,7 @@ extension RootViewModelFactory {
             completion(.destination(.transport(transport)))
             
         default:
-            completion(.failure(.init(id: .init(), message: "Неизвестная категория платежа. Попробуйте обновить приложение.")))
+            completion(.failure(.init(id: .init(), message: "Обновите приложение до последней версии, чтобы получить доступ к новому разделу.")))
         }
     }
     

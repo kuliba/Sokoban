@@ -158,6 +158,9 @@ private extension FlowState<CategoryPickerSectionDomain.Navigation> {
             case .qr:
                 return .scanQR
                 
+            case .searchByUIN:
+                return .searchByUIN
+                
             case let .standard(category):
                 return .standardPayment(category.type)
             }
