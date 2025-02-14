@@ -119,9 +119,12 @@ extension RootViewFactoryComposer {
 
 extension RootViewFactoryComposer {
     
-    func compose() -> Factory {
+    func compose(
+        rootEvent: @escaping (RootViewSelect) -> Void
+    ) -> Factory {
                 
         return .init(
+            rootEvent: rootEvent,
             infra: infra,
             makeActivateSliderView: ActivateSliderStateWrapperView.init,
             makeAnywayPaymentFactory: makeAnywayPaymentFactory,

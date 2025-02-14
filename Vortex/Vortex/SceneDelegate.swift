@@ -29,7 +29,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     )
     
     private lazy var rootViewFactory = rootViewComposer.makeRootViewFactory(
-        featureFlags: featureFlags
+        featureFlags: featureFlags,
+        rootEvent: { [weak binder] in binder?.flow.event(.select($0)) }
     )
     
     convenience init(
