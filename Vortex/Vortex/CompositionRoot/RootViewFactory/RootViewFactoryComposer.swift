@@ -979,8 +979,7 @@ private extension RootViewFactoryComposer {
         let factory = CollateralLoanLandingGetShowcaseViewFactory(
             makeImageViewWithMD5Hash: { self.makeIconView(.md5Hash(.init($0))) },
             makeImageViewWithURL: { self.makeGeneralIconView(.image($0.addingPercentEncoding())) },
-            // TODO: Need to realized
-            getPDFDocument: { _ in }
+            getPDFDocument: getPDFDocument
         )
         
         return .init(
