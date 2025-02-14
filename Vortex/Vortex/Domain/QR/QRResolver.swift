@@ -22,48 +22,51 @@ extension QRResolver {
     
     func resolve(string: String) -> QRViewModel.ScanResult {
         
+        let qrCode = QRCode(string: string)
+        
         if let url = URL(string: string) {
             
-            if url.absoluteString.contains("qr.nspk.ru") {
-                
-                return .c2bURL(url)
-                
-            } else if url.absoluteString.contains("sub.nspk.ru") {
-                
-                return .c2bSubscribeURL(url)
-                
-            } else if isSberQR(url) {
-                
-                return .sberQR(url)
-                
-            } else if let qrCode = QRCode(string: string) {
-                
-                if let uin = qrCode.uin {
-                    
-                    return .uin(uin)
-                    
-                } else {
-                    
-                    return .qrCode(qrCode)
-                }
-                
-            } else {
-                
-                return .url(url)
+            if let c2 = url.c2 {
+                return c2
             }
             
-        } else if let qrCode = QRCode(string: string) {
+            if isSberQR(url) {
+                return .sberQR(url)
+            }
             
-            return .qrCode(qrCode)
-            
-        } else {
-            
-            return .unknown
+            if qrCode == nil {
+                return .url(url)
+            }
         }
+        
+        if let qrCode {
+            return qrCode.uin.map { .uin($0) } ?? .qrCode(qrCode)
+        }
+        
+        return .unknown
     }
 }
 
-extension QRCode {
+private extension QRCode {
     
-    var uin: String? { rawData["UIN"] }
+    var uin: String? { rawData["UIN".lowercased()] }
+}
+
+private extension URL {
+    
+    var c2: QRViewModel.ScanResult? { c2bURL ?? c2bSubscribeURL }
+    
+    private var c2bURL: QRViewModel.ScanResult? {
+        
+        guard absoluteString.contains("qr.nspk.ru") else { return nil }
+        
+        return .c2bURL(self)
+    }
+    
+    private var c2bSubscribeURL: QRViewModel.ScanResult? {
+        
+        guard absoluteString.contains("sub.nspk.ru") else { return nil }
+        
+        return .c2bSubscribeURL(self)
+    }
 }
