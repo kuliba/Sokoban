@@ -122,3 +122,8 @@ private extension CategoryPickerViewDomain.Navigation {
         }
     }
 }
+
+private extension String {
+    
+    static let qr = "QR"
+}

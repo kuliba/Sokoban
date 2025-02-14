@@ -241,6 +241,18 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
                 return .failure(.makeProductProfileFailure(productID))
             }
             
+        case let .openProduct(openProduct):
+            switch openProduct {
+            case .card:
+                return .openProduct(.card)
+            
+            case .unknown:
+                return .openProduct(.card)
+            }
+            
+        case .orderCardResponse:
+            return .orderCardResponse
+            
         case let .outside(outside):
             switch outside {
             case let .productProfile(profile):
@@ -259,8 +271,8 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         case .templates:
             return .templates
             
-        case .uin:
-            return .uin
+        case .searchByUIN:
+            return .searchByUIN
             
         case .userAccount:
             return .userAccount
@@ -271,10 +283,12 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         
         case failure(Failure)
         case outside(EquatableRootViewOutside)
+        case openProduct(OpenProduct)
+        case orderCardResponse
         case scanQR
         case standardPayment
         case templates
-        case uin
+        case searchByUIN
         case userAccount
         
         enum Failure: Equatable {
@@ -283,6 +297,11 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
             case makeStandardPaymentFailure(ObjectIdentifier)
             case makeUserAccountFailure
             case missingCategoryOfType(ServiceCategory.CategoryType)
+        }
+        
+        enum OpenProduct: Equatable {
+            
+            case card, unknown
         }
         
         enum EquatableRootViewOutside: Equatable {
@@ -577,4 +596,9 @@ extension String {
     static let security                   = "security"
     static let socialAndGames             = "socialAndGames"
     static let taxAndStateService         = "taxAndStateService"
+}
+
+private extension String {
+    
+    static let standard = "STANDARD_FLOW"
 }

@@ -194,3 +194,8 @@ extension HTTPClientSpy {
         XCTAssertNoDiff(lastPathComponents, expectedLastPathComponents, "Expected request(s) with \(expectedLastPathComponents) as lastPathComponents, but got \(self.lastPathComponents) instead.", file: file, line: line)
     }
 }
+
+private extension String {
+    
+    static let standard = "STANDARD_FLOW"
+}

@@ -27,6 +27,7 @@ struct TemplatesListFlowView<AnywayFlowView: View>: View {
     var body: some View {
         
         viewFactory.makeTemplatesListView(model.state.content)
+            .onFirstAppear(model.state.content.bind) // TODO: (hack) need to move expensive work away from TemplatesListViewModel.init
             .alert(
                 item: model.state.alert,
                 content: alertContent
@@ -45,7 +46,7 @@ extension TemplatesListFlowView {
     typealias Model = TemplatesListFlowModel<TemplatesListViewModel, AnywayFlowModel>
 }
 
-extension TemplatesListFlowState {
+extension TemplatesListFlowState<TemplatesListViewModel, AnywayFlowModel> {
     
     var alert: Status.ServiceFailure? {
         
@@ -64,18 +65,17 @@ extension TemplatesListFlowState {
     }
 }
 
-extension TemplatesListFlowState.Status.Destination: Identifiable {
+extension TemplatesListFlowState<TemplatesListViewModel, AnywayFlowModel>.Status.Destination: Identifiable {
     
-    var id: ID {
+    var id: ObjectIdentifier {
         
         switch self {
-        case .payment: return .payment
-        }
-    }
-    
-    enum ID: Hashable {
+        case let .payment(.legacy(paymentsViewModel)):
+            return .init(paymentsViewModel)
         
-        case payment
+        case let .payment(.v1(node)):
+            return .init(node.model)
+        }
     }
 }
 

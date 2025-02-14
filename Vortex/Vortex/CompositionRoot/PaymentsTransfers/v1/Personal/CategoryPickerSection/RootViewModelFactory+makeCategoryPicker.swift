@@ -60,6 +60,7 @@ extension RootViewModelFactory {
         }
     }
     
+    // TODO: repeating code as in RootViewModelFactory+makeCategoryPickerSection.swift:75
     @inlinable
     func getNavigation(
         category: ServiceCategory,
@@ -96,6 +97,9 @@ extension RootViewModelFactory {
             else { return completion(.failure(.transport)) }
             
             completion(.destination(.transport(transport)))
+            
+        default:
+            completion(.failure(.init(id: .init(), message: "Обновите приложение до последней версии, чтобы получить доступ к новому разделу.")))
         }
     }
     
@@ -155,4 +159,11 @@ private extension SelectedCategoryFailure {
         id: .init(),
         message: "Ошибка создания транспортных платежей"
     )
+}
+
+private extension String {
+    
+    static let qr = "QR"
+    static let standard = "STANDARD_FLOW"
+    static let taxAndStateServices = "TAX_AND_STATE_SERVICE"
 }

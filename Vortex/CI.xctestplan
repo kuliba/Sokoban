@@ -657,6 +657,20 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "GetCardOrderFormServiceTests",
+        "name" : "GetCardOrderFormServiceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "OrderCardLandingBackendTests",
+        "name" : "OrderCardLandingBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
         "identifier" : "C2GBackendTests",
         "name" : "C2GBackendTests"
       }

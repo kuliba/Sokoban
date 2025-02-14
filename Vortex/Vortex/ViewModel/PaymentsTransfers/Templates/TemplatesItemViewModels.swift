@@ -396,10 +396,13 @@ extension TemplatesListViewModel {
                 var currencyAmount: String?
                 
                 template.parameterList.forEach { parameter in
+                    
                     if let paramAmount = parameter.amount {
                         amount = NSDecimalNumber(decimal: paramAmount).doubleValue
                     }
-                    currencyAmount = parameter.currencyAmount
+                    if let currency = parameter.currencyAmount {
+                        currencyAmount = currency
+                    }
                 }
                 
                 if let amount = amount,

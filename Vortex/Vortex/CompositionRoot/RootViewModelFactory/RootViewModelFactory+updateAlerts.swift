@@ -65,6 +65,11 @@ extension SessionState {
         
         return true
     }
+    
+    var isNotActive: Bool {
+        
+        !isActive
+    }
 }
 
 extension Result where Success ==  RemoteServices.ResponseMapper.GetNotAuthorizedZoneClientInformDataResponse {

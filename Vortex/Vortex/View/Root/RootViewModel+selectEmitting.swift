@@ -71,7 +71,9 @@ private extension MainViewModel {
     
     private var explicitRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
         
-        sections
+        [action.compactMap(\.rootEvent).eraseToAnyPublisher()]
+        
+        + sections
             .map {
                 
                 $0.action.compactMap(\.rootEvent).eraseToAnyPublisher()
@@ -116,10 +118,10 @@ private extension FastOperations {
     var rootEvent: RootEvent? {
         
         switch self {
+        case .byPhone:   return nil
         case .byQr:      return .select(.scanQR)
         case .templates: return .select(.templates)
-        case .byPhone:   return nil
-        case .uin:       return .select(.uin)
+        case .uin:       return .select(.searchByUIN)
         case .utility:   return nil
         }
     }
@@ -239,8 +241,9 @@ private extension PaymentsTransfersPersonalNavigation {
         switch self {
         case .byPhoneTransfer:           return nil // .byPhoneTransfer
         case .main:                      return .select(.outside(.tab(.main)))
-        case .scanQR:                    return .select(.scanQR)
         case let .standardPayment(type): return .select(.standardPayment(type))
+        case .scanQR:                    return .select(.scanQR)
+        case .searchByUIN:               return .select(.searchByUIN)
         case .templates:                 return .select(.templates)
         case .userAccount:               return .select(.userAccount)
         }

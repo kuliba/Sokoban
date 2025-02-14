@@ -49,9 +49,9 @@ extension RootViewModelFactory {
         switch navigation {
         case let .failure(failure):
             switch failure {
-            case .alert:             return .milliseconds(100)
-            case .makeLatestFailure: return .milliseconds(100)
-            case .makeMeToMeFailure: return .milliseconds(100)
+            case .alert:             return .zero
+            case .makeLatestFailure: return .zero
+            case .makeMeToMeFailure: return .zero
             }
             
         case let .success(success):
@@ -59,7 +59,7 @@ extension RootViewModelFactory {
             case .contacts:      return .milliseconds(100)
             case .meToMe:        return .milliseconds(100)
             case .payments:      return .milliseconds(600)
-            case .scanQR:        return .milliseconds(100)
+            case .scanQR:        return .zero
             case .successMeToMe: return .milliseconds(600)
             }
         }

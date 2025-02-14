@@ -17,6 +17,7 @@ public struct OperationViewConfiguration {
     let amountViewConfig: AmountViewConfiguration
     let resultViewConfiguration: ResultViewConfiguration
     let continueButtonConfiguration: ContinueButtonConfiguration
+    let spinnerIcon: String
     
     public init(
         tipViewConfig: TipViewConfiguration,
@@ -26,7 +27,8 @@ public struct OperationViewConfiguration {
         inputViewConfig: InputConfiguration,
         amountViewConfig: AmountViewConfiguration,
         resultViewConfiguration: ResultViewConfiguration,
-        continueButtonConfiguration: ContinueButtonConfiguration
+        continueButtonConfiguration: ContinueButtonConfiguration,
+        spinnerIcon: String
     ) {
         self.tipViewConfig = tipViewConfig
         self.stickerViewConfig = stickerViewConfig
@@ -36,5 +38,6 @@ public struct OperationViewConfiguration {
         self.amountViewConfig = amountViewConfig
         self.resultViewConfiguration = resultViewConfiguration
         self.continueButtonConfiguration = continueButtonConfiguration
+        self.spinnerIcon = spinnerIcon
     }
 }

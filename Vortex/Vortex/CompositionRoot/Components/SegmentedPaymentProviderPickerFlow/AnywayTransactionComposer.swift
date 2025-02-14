@@ -191,7 +191,8 @@ extension AnywayPaymentOutline {
                 puref: service.puref,
                 title: payload.provider.origin.title,
                 subtitle: payload.provider.origin.inn,
-                icon: payload.provider.origin.icon
+                icon: payload.provider.origin.icon,
+                templateID: nil
             )
         )
     }
@@ -310,7 +311,8 @@ extension AnywayPaymentOutline {
                 puref: payload.puref,
                 title: payload.name,
                 subtitle: nil,
-                icon: payload.md5Hash
+                icon: payload.md5Hash,
+                templateID: nil
             )
         )
     }
@@ -328,7 +330,8 @@ extension AnywayPaymentOutline {
                 puref: puref,
                 title: `operator`.title,
                 subtitle: `operator`.subtitle,
-                icon: `operator`.icon
+                icon: `operator`.icon,
+                templateID: nil
             )
         )
     }

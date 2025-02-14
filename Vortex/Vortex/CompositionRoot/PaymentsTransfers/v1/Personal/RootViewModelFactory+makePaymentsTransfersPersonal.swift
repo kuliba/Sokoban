@@ -62,14 +62,7 @@ extension RootViewModelFactory {
         navigation: PaymentsTransfersPersonalDomain.Navigation
     ) -> Delay {
         
-        switch navigation {
-        case .byPhoneTransfer: return .milliseconds(100)
-        case .main:            return .milliseconds(100)
-        case .scanQR:          return .milliseconds(100)
-        case .standardPayment: return settings.delay
-        case .templates:       return settings.delay
-        case .userAccount:     return settings.delay
-        }
+        return .zero
     }
     
     @inlinable
@@ -164,6 +157,9 @@ private extension FlowState<CategoryPickerSectionDomain.Navigation> {
             switch outside {
             case .qr:
                 return .scanQR
+                
+            case .searchByUIN:
+                return .searchByUIN
                 
             case let .standard(category):
                 return .standardPayment(category.type)

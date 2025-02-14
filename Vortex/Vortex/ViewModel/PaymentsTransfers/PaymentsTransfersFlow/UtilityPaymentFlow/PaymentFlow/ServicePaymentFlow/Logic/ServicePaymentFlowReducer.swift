@@ -99,7 +99,8 @@ private extension ServicePaymentFlowReducer {
                     .showResult(.init(
                         formattedAmount: formattedAmount,
                         merchantIcon: context.outline.payload.icon,
-                        result: .failure(.init(hasExpired: fraud == .expired))
+                        result: .failure(.init(hasExpired: fraud == .expired)), 
+                        templateID: context.outline.payload.templateID
                     )),
                     for: .milliseconds(300)
                 )
@@ -117,7 +118,8 @@ private extension ServicePaymentFlowReducer {
                 .showResult(.init(
                     formattedAmount: formattedAmount,
                     merchantIcon: context.outline.payload.icon,
-                    result: .success(report)
+                    result: .success(report),
+                    templateID: context.outline.payload.templateID
                 )),
                 for: .milliseconds(300)
             )
@@ -134,14 +136,16 @@ private extension ServicePaymentFlowReducer {
             state = .fullScreenCover(.init(
                 formattedAmount: completed.formattedAmount,
                 merchantIcon: completed.merchantIcon,
-                result: .failure(.init(hasExpired: fraud.hasExpired))
+                result: .failure(.init(hasExpired: fraud.hasExpired)),
+                templateID: completed.templateID
             ))
             
         case let .success(report):
             state = .fullScreenCover(.init(
                 formattedAmount: completed.formattedAmount,
                 merchantIcon: completed.merchantIcon,
-                result: .success(report)
+                result: .success(report),
+                templateID: completed.templateID
             ))
         }
     }
