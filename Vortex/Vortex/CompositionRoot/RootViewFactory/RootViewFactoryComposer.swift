@@ -954,6 +954,7 @@ private extension RootViewFactoryComposer {
     }
     
     private func getPDFDocument(
+        payload: CollateralLandingApplicationGetConsentsPayload,
         completion: @escaping (PDFDocument?) -> Void
     ) {
         
@@ -963,12 +964,6 @@ private extension RootViewFactoryComposer {
             mapResponse: RemoteServices.ResponseMapper.mapGetConsentsResponse(_:_:)
         )
         
-        // TODO: Replace to real data
-        let payload: CollateralLandingApplicationGetConsentsPayload = .init(
-            verificationCode: "",
-            applicationID: 1
-        )
-
         getConsents(payload.payload) { [getConsents] in
             
             completion(try? $0.get())

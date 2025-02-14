@@ -154,7 +154,7 @@ extension RootViewModelFactory {
         completion: @escaping (Domain.GetVerificationCodeResult) -> Void
     ) {
         let getVerificationCode = nanoServiceComposer.compose(
-            createRequest: Vortex.RequestFactory.createGetVerificationCodeRequest,
+            createRequest: Vortex.RequestFactory.createGetVerificationCodeOrderCardVerifyRequest,
             mapResponse: AnywayPaymentBackend.ResponseMapper.mapGetVerificationCodeResponse
         )
                 
@@ -178,7 +178,8 @@ extension RootViewModelFactory {
 
         save(payload.payload) { [saveConsents] in
 
-            completion($0.map(\.response).mapError{ .init(message: $0.localizedDescription) })
+            completion($0.map { $0.response(verificationCode: payload.verificationCode) }
+                .mapError{ .init(message: $0.localizedDescription) })
             _ = saveConsents
         }
     }
@@ -196,7 +197,8 @@ extension RootViewModelFactory {
 
         save(payload.payload) { [saveConsents] in
 
-            completion($0.map(\.response).mapError{ .init(message: $0.localizedDescription) })
+            completion($0.map { $0.response(verificationCode: payload.verificationCode) }
+                .mapError{ .init(message: $0.localizedDescription) })
             _ = saveConsents
         }
     }
@@ -283,7 +285,7 @@ extension CollateralLandingApplicationSaveConsentsPayload {
 
 extension CollateralLandingApplicationGetConsentsPayload {
     
-    var payload: RemoteServices.RequestFactory.GetConsentsPayload {
+    public var payload: RemoteServices.RequestFactory.GetConsentsPayload {
         
         .init(
             cryptoVersion: cryptoVersion,
@@ -295,7 +297,7 @@ extension CollateralLandingApplicationGetConsentsPayload {
 
 extension RemoteServices.ResponseMapper.CollateralLoanLandingSaveConsentsResponse {
     
-    var response: CollateralLandingApplicationSaveConsentsResult {
+    func response(verificationCode: String) -> CollateralLandingApplicationSaveConsentsResult {
         
         .init(
             applicationID: applicationID,
@@ -308,7 +310,8 @@ extension RemoteServices.ResponseMapper.CollateralLoanLandingSaveConsentsRespons
             documents: documents,
             cityName: cityName,
             status: status,
-            responseMessage: responseMessage
+            responseMessage: responseMessage,
+            verificationCode: verificationCode
         )
     }
 }

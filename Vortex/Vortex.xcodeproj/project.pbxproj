@@ -3087,6 +3087,7 @@
 		A7E8D03A2CF6E608008DF828 /* CollateralLoanLandingGetShowcaseUI in Frameworks */ = {isa = PBXBuildFile; productRef = A7E8D0392CF6E608008DF828 /* CollateralLoanLandingGetShowcaseUI */; };
 		A7E8D03C2CF6F46D008DF828 /* RequestFactory+createGetShowcaseRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E8D03B2CF6F46D008DF828 /* RequestFactory+createGetShowcaseRequestTests.swift */; };
 		A7ECFEC32CDE0E7A00DA82A6 /* CollateralLoanLandingFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7ECFEC22CDE0E7A00DA82A6 /* CollateralLoanLandingFlag.swift */; };
+		A7EF0ADB2D5E4A5400D3AC5A /* CreateDraftCollateralLoanApplicationCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7EF0ADA2D5E4A5400D3AC5A /* CreateDraftCollateralLoanApplicationCompleteView.swift */; };
 		A7F7FEB52D53255D0022D397 /* PaymentCompleteView.Config+CollateralLoanLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F7FEB42D53255D0022D397 /* PaymentCompleteView.Config+CollateralLoanLanding.swift */; };
 		C1002AC32A2E1E3300BDA817 /* ThreeBounceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1002AC22A2E1E3300BDA817 /* ThreeBounceView.swift */; };
 		C10423952A72789500D0AC63 /* ManagingSubscriptionViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10423942A72789500D0AC63 /* ManagingSubscriptionViewComponent.swift */; };
@@ -6752,6 +6753,7 @@
 		A7E8D0362CF6E3E1008DF828 /* CollateralLoanLandingGetShowcaseUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingGetShowcaseUI.xctestplan; sourceTree = "<group>"; };
 		A7E8D03B2CF6F46D008DF828 /* RequestFactory+createGetShowcaseRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetShowcaseRequestTests.swift"; sourceTree = "<group>"; };
 		A7ECFEC22CDE0E7A00DA82A6 /* CollateralLoanLandingFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollateralLoanLandingFlag.swift; sourceTree = "<group>"; };
+		A7EF0ADA2D5E4A5400D3AC5A /* CreateDraftCollateralLoanApplicationCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDraftCollateralLoanApplicationCompleteView.swift; sourceTree = "<group>"; };
 		A7F7FEB42D53255D0022D397 /* PaymentCompleteView.Config+CollateralLoanLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentCompleteView.Config+CollateralLoanLanding.swift"; sourceTree = "<group>"; };
 		C1002AC22A2E1E3300BDA817 /* ThreeBounceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeBounceView.swift; sourceTree = "<group>"; };
 		C10423942A72789500D0AC63 /* ManagingSubscriptionViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagingSubscriptionViewComponent.swift; sourceTree = "<group>"; };
@@ -12697,7 +12699,6 @@
 				2A0D9B872B0E3BD800F1DFD1 /* StickerViewFactory+makeButtonLabel.swift */,
 				2AE2662E2C195A850054C274 /* TransactionDetailButton.swift */,
 				2AD15D122C19D0FC003329C7 /* TransactionDocumentButton.swift */,
-				A72F3E2E2D5C963C00E25EAD /* PDFDocumentButton.swift */,
 				2AE266302C1975680054C274 /* MOVE */,
 			);
 			path = Buttons;
@@ -16881,6 +16882,8 @@
 			isa = PBXGroup;
 			children = (
 				A7F7FEB42D53255D0022D397 /* PaymentCompleteView.Config+CollateralLoanLanding.swift */,
+				A72F3E2E2D5C963C00E25EAD /* PDFDocumentButton.swift */,
+				A7EF0ADA2D5E4A5400D3AC5A /* CreateDraftCollateralLoanApplicationCompleteView.swift */,
 			);
 			path = Complete;
 			sourceTree = "<group>";
@@ -21845,6 +21848,7 @@
 				774A8B162865FBAC00B81140 /* ProductStatementData.swift in Sources */,
 				2AC2FB172C510452001972CB /* PaymentProviderServicePickerFlowReducer.swift in Sources */,
 				77E1802927AB02630006ACC9 /* ServerCommands+PrintForm.swift in Sources */,
+				A7EF0ADB2D5E4A5400D3AC5A /* CreateDraftCollateralLoanApplicationCompleteView.swift in Sources */,
 				7769F5C227D8AC4800F80607 /* Model+Products.swift in Sources */,
 				68DBA9712881A11400A169B4 /* Model+Consent.swift in Sources */,
 				687ADF1026B07721005A239B /* DataExtension.swift in Sources */,
@@ -26654,7 +26658,6 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/Vortex.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 165;
 				CURRENT_PROJECT_VERSION = 155;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
@@ -26742,7 +26745,6 @@
 				CODE_SIGN_ENTITLEMENTS = VortexPushServiceExtension/VortexPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 165;
 				CURRENT_PROJECT_VERSION = 155;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -27073,7 +27075,6 @@
 				CODE_SIGN_ENTITLEMENTS = VortexPushServiceExtension/VortexPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 165;
 				CURRENT_PROJECT_VERSION = 155;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -27107,7 +27108,6 @@
 				CODE_SIGN_ENTITLEMENTS = VortexPushServiceExtension/VortexPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 165;
 				CURRENT_PROJECT_VERSION = 155;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -27346,7 +27346,6 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/VortexRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 165;
 				CURRENT_PROJECT_VERSION = 155;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
@@ -27432,7 +27431,6 @@
 				CODE_SIGN_ENTITLEMENTS = VortexPushServiceExtension/VortexPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 165;
 				CURRENT_PROJECT_VERSION = 155;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -28413,7 +28411,6 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/Vortex.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 165;
 				CURRENT_PROJECT_VERSION = 155;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
@@ -28451,7 +28448,6 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/VortexRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 165;
 				CURRENT_PROJECT_VERSION = 155;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;

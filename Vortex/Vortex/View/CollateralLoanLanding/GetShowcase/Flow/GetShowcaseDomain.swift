@@ -28,8 +28,6 @@ extension GetShowcaseDomain {
     typealias NotifyEvent = FlowDomain.NotifyEvent
     typealias Notify = (NotifyEvent) -> Void
 
-    typealias ContentError = SavingsAccount.BackendFailure<InformerPayload>
-
     enum Select: Equatable {
 
         case landing(String)

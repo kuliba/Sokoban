@@ -33,11 +33,12 @@ public struct CollateralLoanLandingGetShowcaseViewFactory {
  
 public extension CollateralLoanLandingGetShowcaseViewFactory {
 
+    typealias Payload = CollateralLandingApplicationGetConsentsPayload
     typealias IconView = UIPrimitives.AsyncImage
     typealias MakeImageViewWithMD5Hash = (String) -> IconView
     typealias MakeImageViewWithURL = (String) -> IconView
     typealias GetPDFDocumentCompletion = (PDFDocument?) -> Void
-    typealias GetPDFDocument = (@escaping GetPDFDocumentCompletion) -> Void
+    typealias GetPDFDocument = (Payload, @escaping GetPDFDocumentCompletion) -> Void
 }
 
 // MARK: Preview helpers
@@ -47,7 +48,7 @@ extension CollateralLoanLandingGetShowcaseViewFactory {
     static let preview = Self(
         makeImageViewWithMD5Hash: { _ in .preview },
         makeImageViewWithURL: { _ in .preview },
-        getPDFDocument: { _ in }
+        getPDFDocument: { _,_ in }
     )
 }
 

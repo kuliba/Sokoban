@@ -8,6 +8,7 @@
 import ButtonWithSheet
 import PDFKit
 import SwiftUI
+import CollateralLoanLandingGetShowcaseUI
 
 struct PDFDocumentButton: View {
     
@@ -25,8 +26,10 @@ struct PDFDocumentButton: View {
 
 extension PDFDocumentButton {
     
+    typealias Payload = CollateralLandingApplicationGetConsentsPayload
     typealias GetDocumentCompletion = (PDFDocument?) -> Void
     typealias GetDocument = (@escaping GetDocumentCompletion) -> Void
+    typealias GetPDFDocument = (Payload, @escaping GetDocumentCompletion) -> Void
 }
 
 // MARK: - Helpers
@@ -48,4 +51,9 @@ private extension PDFDocumentButton {
             dismissAction: dismiss
         )
     }
+}
+
+extension PDFDocumentButton {
+    
+    static let preview = Self(getDocument: { _ in })
 }
