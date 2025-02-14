@@ -22,7 +22,11 @@ extension ViewComponents {
                     title: "Заказать карту",
                     dismiss: dismiss
                 )
-            
+          
+        case let .savingsAccount(openSavingsAccount):
+            makeSavingsAccountView(openSavingsAccount)
+                .navigationBarHidden(true)
+
         case .unknown:
             Text("Unknown product")
                 .foregroundStyle(.red)

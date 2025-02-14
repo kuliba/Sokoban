@@ -20,7 +20,7 @@ extension RootViewModelFactory {
         case .insurance:      return .unknown
         case .loan:           return .unknown
         case .mortgage:       return .unknown
-        case .savingsAccount: return .unknown
+        case .savingsAccount: return .savingsAccount(.init(makeOpenSavingsAccountBinder: makeOpenSavingsAccount, makeSavingsAccountBinder: makeSavingsAccount))
         case .sticker:        return .unknown
         }
     }
