@@ -118,10 +118,11 @@ private extension RootBinderView {
         _ searchByUIN: SearchByUINDomain.Binder
     ) -> some View {
         
-        rootViewFactory.components.makeSearchByUINView(searchByUIN) {
-            
-            binder.flow.event(.dismiss)
-        }
+        rootViewFactory.components.makeSearchByUINView(
+            binder: searchByUIN,
+            dismiss: { binder.flow.event(.dismiss) },
+            scanQR: { binder.flow.event(.select(.scanQR)) }
+        )
     }
     
     private func userAccountView(

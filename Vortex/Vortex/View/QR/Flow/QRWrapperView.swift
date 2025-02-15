@@ -157,10 +157,11 @@ private extension QRWrapperView {
                 )
             
         case let .searchByUIN(searchByUIN):
-            factory.components.makeSearchByUINView(searchByUIN) {
-                
-                binder.flow.event(.dismiss)
-            }
+            factory.components.makeSearchByUINView(
+                binder: searchByUIN,
+                dismiss: { binder.flow.event(.dismiss) },
+                scanQR: { binder.flow.event(.dismiss) }
+            )
         }
     }
     

@@ -18,8 +18,9 @@ extension ViewComponents {
     
     @inlinable
     func makeSearchByUINView(
-        _ binder: SearchByUINDomain.Binder,
-        dismiss: @escaping () -> Void
+        binder: SearchByUINDomain.Binder,
+        dismiss: @escaping () -> Void,
+        scanQR: @escaping () -> Void
     ) -> some View {
         
         makeSearchByUINContentView(binder)
@@ -27,7 +28,8 @@ extension ViewComponents {
             .navigationBar(with: navBarModelWithQR(
                 title: "Поиск по УИН",
                 subtitle: "Поиск начислений по УИН",
-                dismiss: dismiss
+                dismiss: dismiss,
+                scanQR: scanQR
             ))
             .disablingLoading(flow: binder.flow)
     }
