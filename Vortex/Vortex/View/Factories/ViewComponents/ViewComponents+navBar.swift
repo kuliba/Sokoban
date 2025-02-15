@@ -11,14 +11,17 @@ extension ViewComponents {
     func navBarModelWithQR(
         title: String,
         subtitle: String? = nil,
-        dismiss: @escaping () -> Void
+        dismiss: @escaping () -> Void,
+        scanQR: (() -> Void)? = nil
     ) -> NavigationBarView.ViewModel {
         
-        navBarModelWithBack(
+        let scanQR = scanQR ?? { rootEvent(.scanQR) }
+        
+        return navBarModelWithBack(
             title: title,
             subtitle: subtitle,
             dismiss: dismiss,
-            rightItem: .barcodeScanner { rootEvent(.scanQR) }
+            rightItem: .barcodeScanner(action: scanQR)
         )
     }
     
