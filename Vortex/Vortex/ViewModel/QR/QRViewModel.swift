@@ -487,11 +487,11 @@ extension QRViewModel {
                 options: [CIDetectorAccuracy: CIDetectorAccuracyHigh]
               ),
               let features = detector.features(in: ciImage) as? [CIQRCodeFeature]
-        else { return nil }
+        else { return "" }
         
         let messages = features.compactMap(\.messageString)
         
-        guard !messages.isEmpty else { return nil }
+        guard !messages.isEmpty else { return "" }
         
         return messages.joined(separator: "\n")
     }
