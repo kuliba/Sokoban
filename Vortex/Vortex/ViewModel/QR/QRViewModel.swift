@@ -478,27 +478,26 @@ extension QRViewModel {
             })]
     }
     
-    func string(from image: UIImage) -> String {
+    func string(from image: UIImage) -> String? {
         
-        var qrAsString = ""
-        guard let detector = CIDetector(ofType: CIDetectorTypeQRCode,
-                                        context: nil,
-                                        options: [CIDetectorAccuracy: CIDetectorAccuracyHigh]),
-              let ciImage = CIImage(image: image),
-              let features = detector.features(in: ciImage) as? [CIQRCodeFeature] else {
-            return qrAsString
-        }
+        guard let ciImage = CIImage(image: image),
+              let detector = CIDetector(
+                ofType: CIDetectorTypeQRCode,
+                context: nil,
+                options: [CIDetectorAccuracy: CIDetectorAccuracyHigh]
+              ),
+              let features = detector.features(in: ciImage) as? [CIQRCodeFeature]
+        else { return nil }
         
-        for feature in features {
-            guard let indeedMessageString = feature.messageString else {
-                continue
-            }
-            qrAsString += indeedMessageString
-        }
-        return qrAsString
+        let messages = features.compactMap(\.messageString)
+        
+        guard !messages.isEmpty else { return nil }
+        
+        return messages.joined(separator: "\n")
     }
     
     func flashlight() throws {
+        
         let device = AVCaptureDevice.default(for: .video)
         if ((device?.hasTorch) != nil) {
             do {
