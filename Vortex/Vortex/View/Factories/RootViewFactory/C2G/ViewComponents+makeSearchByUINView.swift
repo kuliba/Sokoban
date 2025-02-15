@@ -15,6 +15,14 @@ extension ViewComponents {
         _ binder: SearchByUINDomain.Binder
     ) -> some View {
         
+        makeSearchByUINContentView(binder)
+    }
+    
+    @inlinable
+    func makeSearchByUINContentView(
+        _ binder: SearchByUINDomain.Binder
+    ) -> some View {
+        
         VStack(spacing: 16) {
             
             Text("TBD: Search by UIN")
