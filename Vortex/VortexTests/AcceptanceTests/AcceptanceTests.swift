@@ -46,6 +46,7 @@ class AcceptanceTests: QRNavigationTests {
             httpClient: any HTTPClient = HTTPClientSpy(),
             dismiss: @escaping () -> Void = {},
             model: Model = .mockWithEmptyExcept(),
+            rootEvent: @escaping (RootViewSelect) -> Void = { _ in },
             scanResult: Vortex.QRModelResult = .unknown,
             scanner: any QRScannerViewModel = QRScannerViewModelSpy(),
             schedulers: Schedulers = .immediate
@@ -62,7 +63,8 @@ class AcceptanceTests: QRNavigationTests {
                 dismiss: dismiss
             )
             self.rootViewFactory = rootComposer.makeRootViewFactory(
-                featureFlags: .active
+                featureFlags: .active,
+                rootEvent: rootEvent
             )
         }
         
