@@ -39,9 +39,6 @@ extension ViewComponents {
         
         VStack(spacing: 16) {
             
-            Text("TBD: Search by UIN")
-                .font(.headline)
-
             binder.content.map { Text("UIN: \($0)") }
             
             Button("connectivityFailure") {
