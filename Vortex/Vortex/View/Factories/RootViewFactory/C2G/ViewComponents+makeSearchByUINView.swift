@@ -11,11 +11,18 @@ import SwiftUI
 extension ViewComponents {
     
     @inlinable
+    func goToMain() {
+        
+        rootEvent(.outside(.tab(.main)))
+    }
+    
+    @inlinable
     func makeSearchByUINView(
         _ binder: SearchByUINDomain.Binder
     ) -> some View {
         
         makeSearchByUINContentView(binder)
+            .background(searchByUINFlowView(flow: binder.flow))
     }
     
     @inlinable
@@ -49,6 +56,26 @@ extension ViewComponents {
         .buttonStyle(.bordered)
     }
     
+    @inlinable
+    func searchByUINFlowView(
+        flow: SearchByUINDomain.Flow
+    ) -> some View {
+        
+        searchByUINFlowView(flow: flow) {
+            
+            c2gPaymentFlowView(
+                flow: $0,
+                dismiss: { flow.event(.dismiss) }
+            ) { cover in
+                
+                makeC2GPaymentCompleteView(
+                    cover: cover,
+                    goToMain: goToMain
+                )
+            }
+        }
+    }
+
     @inlinable
     func searchByUINFlowView(
         flow: SearchByUINDomain.Flow,
