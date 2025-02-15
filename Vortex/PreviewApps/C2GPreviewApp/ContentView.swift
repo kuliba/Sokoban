@@ -24,24 +24,21 @@ struct ContentView: View {
             
             VStack {
                 
-                RxWrapperView(model: inputViewModel) { state, event in
-                    
-                    TextInputView(
-                        state: state,
-                        event: event,
-                        config: config,
-                        iconView: EmptyView.init
-                    )
-                    .onChange(of: state.uinInputState) { uinInputState = $0 }
-                    .padding()
-                    .background(.orange.opacity(0.15))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .padding()
-                    .keyboardType(.numberPad)
-                    
-                    Text(String(describing: state.uinInputState))
-                        .font(.headline)
-                }
+                TextInputView(
+                    state: inputViewModel.state,
+                    event: inputViewModel.event,
+                    config: config,
+                    iconView: EmptyView.init
+                )
+                .onReceive(inputViewModel.$state.map(\.uinInputState)) { uinInputState = $0 }
+                .padding()
+                .background(.orange.opacity(0.15))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .padding()
+                .keyboardType(.numberPad)
+                
+                Text(String(describing: inputViewModel.state.uinInputState))
+                    .font(.headline)
                 
                 Spacer()
                 
