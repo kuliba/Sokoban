@@ -61,10 +61,10 @@ extension RootViewModelFactory {
         schedulers.background.delay(for: .seconds(2)) {
             
             switch uin.value {
-            case "connectivityFailure":
+            case "01234567890123456789":
                 completion(.failure(.c2gConnectivity))
                 
-            case "serverFailure":
+            case "12345678901234567890":
                 completion(.failure(.server("Server Failure"))) // TODO: pass error message from response
                 
             default:
