@@ -890,7 +890,8 @@ final class QRNavigationComposerTests: QRNavigationTests {
                 makeSberPaymentComplete: makeSberPaymentComplete.process,
                 makeSberQR: makeSberQR.process,
                 makeSearchByUIN: makeSearchByUIN.process,
-                makeServicePicker: makeServicePicker.process
+                makeServicePicker: makeServicePicker.process,
+                makeQRResolve: { _ in { _ in .unknown }} // TODO: improve tests with qr resolve assertions
             )
         }
     }

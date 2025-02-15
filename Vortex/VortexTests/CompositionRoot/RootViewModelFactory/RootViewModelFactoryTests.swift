@@ -17,6 +17,7 @@ class RootViewModelFactoryTests: QRNavigationTests {
         scanResult: Vortex.QRModelResult = .unknown,
         model: Model = .mockWithEmptyExcept(),
         scanner: QRScannerViewModel = QRScannerViewModelSpy(),
+        makeQRResolve: @escaping RootViewModelFactory.MakeResolveQR = { _ in { _ in .unknown }},
         schedulers: Schedulers = .immediate,
         file: StaticString = #file,
         line: UInt = #line
@@ -32,7 +33,7 @@ class RootViewModelFactoryTests: QRNavigationTests {
             httpClient: httpClient,
             logger: logger,
             mapScanResult: { _, completion in completion(scanResult) },
-            resolveQR: { _ in .unknown },
+            makeQRResolve: makeQRResolve,
             scanner: scanner,
             schedulers: schedulers
         )

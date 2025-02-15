@@ -9,6 +9,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func makePaymentsTransfersPersonalContent(
+        c2gFlag: C2GFlag,
         _ nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> PaymentsTransfersPersonalDomain.Content {
         
@@ -30,7 +31,9 @@ extension RootViewModelFactory {
         
         // MARK: - Transfers
         
-        let transfers = makeTransfers(makeQRModel: makeQRScannerModel)
+        let transfers = makeTransfers(
+            makeQRModel: { [makeQRScannerModel] in makeQRScannerModel(c2gFlag) }
+        )
         
         // MARK: - PaymentsTransfers
         

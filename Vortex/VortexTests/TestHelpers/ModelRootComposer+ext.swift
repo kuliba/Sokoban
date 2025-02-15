@@ -14,8 +14,8 @@ extension ModelRootComposer {
         httpClient: any HTTPClient = HTTPClientSpy(),
         logger: any LoggerAgentProtocol = LoggerSpy(),
         mapScanResult: @escaping RootViewModelFactory.MapScanResult = { _, completion in completion(.unknown) },
+        makeQRResolve: @escaping RootViewModelFactory.MakeResolveQR = { _ in { _ in .unknown }},
         model: Model = .mockWithEmptyExcept(),
-        resolveQR: @escaping RootViewModelFactory.ResolveQR = { _ in .unknown },
         scanner: any QRScannerViewModel = QRScannerViewModelSpy(),
         settings: RootViewModelFactorySettings = .prod,
         schedulers: Schedulers
@@ -26,7 +26,7 @@ extension ModelRootComposer {
                 httpClient: httpClient,
                 logger: logger,
                 mapScanResult: mapScanResult,
-                resolveQR: resolveQR,
+                makeQRResolve: makeQRResolve,
                 scanner: scanner,
                 settings: settings,
                 schedulers: schedulers

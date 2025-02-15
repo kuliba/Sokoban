@@ -320,6 +320,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         _ product: ProductData? = nil,
         toDeliver expectedNavigation: EquatableNavigation,
         on action: () -> Void = {},
+        c2gFlag: C2GFlag = .inactive, // TODO: add tests for active flag
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -338,6 +339,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         let exp = expectation(description: "wait for completion")
         
         sut.getRootNavigation(
+            c2gFlag: c2gFlag,
             makeProductProfileByID: { productID,_  in
                 return makeProductProfileViewModel(productID, model)
             },
@@ -359,6 +361,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         toNotifyWith expectedNotifyEvents: [NotifyEvent],
         on assert: @escaping (RootViewNavigation) -> Void,
         action: () -> Void = {},
+        c2gFlag: C2GFlag = .inactive, // TODO: add tests for active flag
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -367,6 +370,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         let exp = expectation(description: "wait for completion")
         
         sut.getRootNavigation(
+            c2gFlag: c2gFlag,
             makeProductProfileByID: {_,_  in nil },
             select: select,
             notify: notifySpy.call

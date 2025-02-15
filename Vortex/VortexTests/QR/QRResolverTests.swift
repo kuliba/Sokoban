@@ -100,9 +100,12 @@ final class QRResolverTests: XCTestCase {
     
     // MARK: - Helpers
     
+    // TODO: improve tests with spies to check getUIN and isSberQR both get correct payload
+    
     private func resolve(
         _ url: URL,
-        isSberQRStub: Bool = false
+        isSberQRStub: Bool = false,
+        getUINStub: String? = nil
     ) -> QRViewModel.ScanResult.EquatableScanResult {
         
         resolve(url.absoluteString, isSberQRStub: isSberQRStub)
@@ -110,10 +113,14 @@ final class QRResolverTests: XCTestCase {
     
     private func resolve(
         _ urlString: String,
-        isSberQRStub: Bool = false
+        isSberQRStub: Bool = false,
+        getUINStub: String? = nil
     ) -> QRViewModel.ScanResult.EquatableScanResult {
         
-        let resolver = QRResolver(isSberQR: { _ in isSberQRStub })
+        let resolver = QRResolver(dependencies: .init(
+            getUIN: { _ in getUINStub },
+            isSberQR: { _ in isSberQRStub }
+        ))
         
         return resolver.resolve(string: urlString).equatable
     }

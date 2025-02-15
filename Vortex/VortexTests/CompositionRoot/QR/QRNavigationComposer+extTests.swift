@@ -30,7 +30,8 @@ extension QRNavigationComposer {
             getSberQRData: getSberQRData,
             makeSegmented: makeSegmented,
             makeServicePicker: makeServicePicker,
-            makeSearchByUIN: makeSearchByUIN,
+            makeSearchByUIN: makeSearchByUIN, 
+            makeQRResolve: { _ in { _ in .unknown }}, // TODO: improve tests with qr resolve assertions
             scanner: QRScannerViewModelSpy(),
             scheduler: scheduler
         )

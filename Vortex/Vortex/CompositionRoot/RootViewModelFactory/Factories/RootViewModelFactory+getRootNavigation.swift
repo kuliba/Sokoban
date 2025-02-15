@@ -20,6 +20,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func getRootNavigation(
+        c2gFlag: C2GFlag,
         makeProductProfileByID: MakeProductProfileByID,
         select: RootViewSelect,
         notify: @escaping RootViewDomain.Notify,
@@ -87,7 +88,7 @@ extension RootViewModelFactory {
         
         func makeScanQR() {
             
-            let qrScanner = makeQRScannerBinder()
+            let qrScanner = makeQRScannerBinder(c2gFlag: c2gFlag)
             let cancellables = bind(qrScanner)
             
             completion(.scanQR(.init(
