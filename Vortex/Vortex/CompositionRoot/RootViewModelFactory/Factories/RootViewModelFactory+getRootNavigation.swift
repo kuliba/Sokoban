@@ -80,7 +80,11 @@ extension RootViewModelFactory {
             initiateStandardPaymentFlow(type)
             
         case .searchByUIN:
-            completion(.searchByUIN(makeSearchByUIN()))
+            if c2gFlag.isActive {
+                completion(.searchByUIN(makeSearchByUIN()))
+            } else {
+                completion(.failure(.featureFailure(.newPaymentFlow)))
+            }
             
         case .userAccount:
             makeUserAccount()
@@ -266,4 +270,11 @@ private extension RootViewNavigation.Failure {
             self = .missingCategoryOfType(categoryType)
         }
     }
+}
+
+// MARK: - Helpers
+
+private extension FeatureFailure {
+    
+    static let newPaymentFlow: Self = .init(message: "Обновите приложение до последней версии, чтобы получить доступ к новому разделу.")
 }

@@ -35,6 +35,10 @@ private extension RootBinderView {
             
             rootView()
                 .navigationBarHidden(true)
+                .alert(
+                    item: state.navigation?.featureFailure,
+                    content: alert
+                )
                 .fullScreenCoverInspectable(
                     item: { state.navigation?.fullScreenCover },
                     dismiss: { event(.dismiss) },
@@ -55,6 +59,18 @@ private extension RootBinderView {
             viewModel: binder.content,
             rootViewFactory: rootViewFactory
         )
+    }
+    
+    // MARK: - Alert
+    
+    func alert(
+        failure: FeatureFailure
+    ) -> Alert {
+        
+        return failure.alert {
+            
+            binder.flow.event(.dismiss)
+        }
     }
     
     // MARK: - Destination
@@ -176,6 +192,21 @@ private extension RootBinderView {
     }
 }
 
+extension FeatureFailure {
+    
+    func alert(
+        action: @escaping () -> Void
+    ) -> SwiftUI.Alert {
+        
+        return .init(
+            title: Text(title),
+            message: Text(message),
+            dismissButton: .default(Text("OK"), action: action)
+        )
+    }
+}
+
+// TODO: extract
 extension RootViewFactory {
     
     func makeQRScannerView(
@@ -204,12 +235,23 @@ extension RootViewFactory {
 
 extension RootViewNavigation {
     
+    var featureFailure: FeatureFailure? {
+        
+        guard case let .failure(.featureFailure(featureFailure)) = self
+        else { return nil }
+        
+        return featureFailure
+    }
+    
     var destination: Destination? {
         
         switch self {
             // TODO: make alert
         case let .failure(failure):
             switch failure {
+            case .featureFailure:
+                return nil
+                
             case let .makeStandardPaymentFailure(binder):
                 return .makeStandardPaymentFailure(binder)
                 
@@ -315,7 +357,7 @@ extension RootViewNavigation.Destination: Identifiable {
                 
             case let .savingsAccount(openSavingsAccount):
                 return .openProduct(.savingsAccount)
-
+                
             case .unknown:
                 return .openProduct(.unknown)
             }

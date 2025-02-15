@@ -52,6 +52,7 @@ enum RootViewNavigation {
     
     enum Failure {
         
+        case featureFailure(FeatureFailure)
         case makeProductProfileFailure(ProductData.ID)
         case makeStandardPaymentFailure(ServiceCategoryFailureDomain.Binder)
         case makeUserAccountFailure
@@ -67,4 +68,20 @@ enum RootViewNavigation {
     typealias SearchByUIN = SearchByUINDomain.Binder
     typealias Templates = PaymentsTransfersFactory.Templates
     typealias TemplatesNode = PaymentsTransfersFactory.TemplatesNode
+}
+
+struct FeatureFailure: Error, Equatable, Identifiable {
+    
+    let title: String
+    let message: String
+    
+    init(
+        title: String = "",
+        message: String
+    ) {
+        self.title = title
+        self.message = message
+    }
+    
+    var id: Int { message.hashValue }
 }

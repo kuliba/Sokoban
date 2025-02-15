@@ -228,6 +228,9 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         switch navigation {
         case let .failure(failure):
             switch failure {
+            case let .featureFailure(featureFailure):
+                return .failure(.featureFailure(featureFailure))
+                
             case let .makeStandardPaymentFailure(binder):
                 return .failure(.makeStandardPaymentFailure(.init(binder)))
                 
@@ -296,6 +299,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         
         enum Failure: Equatable {
             
+            case featureFailure(FeatureFailure)
             case makeProductProfileFailure(ProductData.ID)
             case makeStandardPaymentFailure(ObjectIdentifier)
             case makeUserAccountFailure
