@@ -58,6 +58,7 @@ struct SavingsAccountBinderView: View {
                                 factory: factory
                             )
                             .onFirstAppear { contentEvent(.load) }
+                            .onAppear { flowEvent(.dismiss) }
                         }
                     },
                     informerView: informerView

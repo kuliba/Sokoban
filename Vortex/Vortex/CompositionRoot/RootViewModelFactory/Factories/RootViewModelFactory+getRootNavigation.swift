@@ -41,7 +41,8 @@ extension RootViewModelFactory {
             case .savingsAccount:
                 completion(.openProduct(openProduct(
                     type: type,
-                    notify: { _ in notify(.select(.openProduct(.savingsAccount))) }
+                    notify: { _ in notify(.select(.openProduct(.savingsAccount))) },
+                    dismiss: { notify(.dismiss) }
                 )))
                 
             default:
