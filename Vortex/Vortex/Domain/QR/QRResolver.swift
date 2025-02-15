@@ -49,7 +49,14 @@ extension QRResolver {
 
 private extension QRCode {
     
-    var uin: String? { rawData["UIN".lowercased()] }
+    var uin: String? {
+        
+        guard let uin = rawData["uin"],
+                !uin.isEmpty // no extra validation
+        else { return nil }
+        
+        return uin
+    }
 }
 
 private extension URL {
