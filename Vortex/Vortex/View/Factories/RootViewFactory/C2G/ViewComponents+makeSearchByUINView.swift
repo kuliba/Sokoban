@@ -18,11 +18,18 @@ extension ViewComponents {
     
     @inlinable
     func makeSearchByUINView(
-        _ binder: SearchByUINDomain.Binder
+        _ binder: SearchByUINDomain.Binder,
+        dismiss: @escaping () -> Void
     ) -> some View {
         
         makeSearchByUINContentView(binder)
             .background(searchByUINFlowView(flow: binder.flow))
+            .navigationBar(with: navBarModelWithQR(
+                title: "Поиск по УИН",
+                subtitle: "Поиск начислений по УИН",
+                dismiss: dismiss
+            ))
+            .disablingLoading(flow: binder.flow)
     }
     
     @inlinable

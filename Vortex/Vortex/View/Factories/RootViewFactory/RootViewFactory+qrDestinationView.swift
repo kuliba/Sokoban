@@ -41,7 +41,10 @@ extension RootViewFactory {
             makeSberQRConfirmPaymentView(sberQR)
             
         case let .searchByUIN(searchByUIN):
-            components.makeSearchByUINView(searchByUIN)
+            components.makeSearchByUINView(searchByUIN) {
+                
+                fatalError()
+            }
 
         case let .servicePicker(servicePicker):
             servicePickerView(servicePicker)

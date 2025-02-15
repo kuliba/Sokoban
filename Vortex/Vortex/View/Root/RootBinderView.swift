@@ -118,17 +118,10 @@ private extension RootBinderView {
         _ searchByUIN: SearchByUINDomain.Binder
     ) -> some View {
         
-        rootViewFactory.components.makeSearchByUINView(searchByUIN)
-            .navigationBarWithBack(
-                title: "Поиск по УИН",
-                subtitle: "Поиск начислений по УИН",
-                dismiss: { binder.flow.event(.dismiss) },
-                rightItem: .barcodeScanner {
-                    
-                    binder.flow.event(.select(.scanQR))
-                }
-            )
-            .disablingLoading(flow: searchByUIN.flow)
+        rootViewFactory.components.makeSearchByUINView(searchByUIN) {
+            
+            binder.flow.event(.dismiss)
+        }
     }
     
     private func userAccountView(
