@@ -30,7 +30,7 @@ extension RxInputViewModel {
         let textInputValidator = TextInputValidator(
             hintText: hintText,
             warningText: warningText,
-            validate: { $0.count == 20 || $0.count == 25 }
+            validate: { 20...25 ~= $0.count }
         )
         
         let reducer = TextInputReducer(

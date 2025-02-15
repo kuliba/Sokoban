@@ -56,19 +56,16 @@ struct ContentView: View {
     @ViewBuilder
     private func continueButton() -> some View {
         
-        if !uinInputState.isEditing {
+        Button(action: { print("continue: \(uinInputState.value)") }) {
             
-            Button(action: {}) {
-                
-                Text("Continue")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 44)
-            }
-            .buttonStyle(.borderedProminent)
-            .padding()
-            .disabled(!uinInputState.isValid)
+            Text("Continue")
+                .font(.headline)
+                .frame(maxWidth: .infinity)
+                .frame(height: 44)
         }
+        .buttonStyle(.borderedProminent)
+        .padding()
+        .disabled(!uinInputState.isValid || uinInputState.isEditing)
     }
     
     private func sbpIcon() -> some View {
@@ -117,8 +114,9 @@ struct ContentView: View {
 
 private struct UINInputState: Equatable {
     
-    var isEditing: Bool = false
-    var isValid: Bool = false
+    var isEditing = false
+    var isValid = false
+    var value = ""
 }
 
 private extension TextFieldState {
@@ -138,7 +136,8 @@ private extension TextInputState {
         
         return .init(
             isEditing: textField.isEditing,
-            isValid: message == nil && !textField.text.isNilOrEmpty
+            isValid: message == nil && !textField.text.isNilOrEmpty,
+            value: textField.text ?? ""
         )
     }
 }
