@@ -13,7 +13,7 @@ extension RootViewModelFactory {
     ) -> SearchByUINDomain.Binder {
         
         composeBinder(
-            content: (),
+            content: uin,
             initialState: .init(),
             delayProvider: delayProvider,
             getNavigation: getNavigation,

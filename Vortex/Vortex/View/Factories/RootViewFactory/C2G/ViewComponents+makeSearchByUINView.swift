@@ -41,6 +41,8 @@ extension ViewComponents {
             
             Text("TBD: Search by UIN")
                 .font(.headline)
+
+            binder.content.map { Text("UIN: \($0)") }
             
             Button("connectivityFailure") {
                 
