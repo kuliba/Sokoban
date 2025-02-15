@@ -25,15 +25,20 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeCategoryPickerSection(
+        c2gFlag: C2GFlag
     ) -> CategoryPickerSectionDomain.Binder {
         
         let nanoServices = composePaymentsTransfersPersonalNanoServices()
         
-        return makeCategoryPickerSection(nanoServices: nanoServices)
+        return makeCategoryPickerSection(
+            c2gFlag: c2gFlag,
+            nanoServices: nanoServices
+        )
     }
     
     @inlinable
     func makeCategoryPickerSection(
+        c2gFlag: C2GFlag,
         nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> CategoryPickerSectionDomain.Binder {
         
@@ -42,7 +47,15 @@ extension RootViewModelFactory {
         return composeBinder(
             content: content,
             delayProvider: delayProvider,
-            getNavigation: getNavigation,
+            getNavigation: { [weak self] select, notify, completion in
+                
+                self?.getNavigation(
+                    c2gFlag: c2gFlag,
+                    select: select,
+                    notify: notify,
+                    completion: completion
+                )
+            },
             witnesses: .init(emitting: emitting, dismissing: dismissing)
         )
     }
@@ -57,14 +70,15 @@ extension RootViewModelFactory {
     
     @inlinable
     func getNavigation(
+        c2gFlag: C2GFlag,
         select: CategoryPickerSectionDomain.Select,
         notify: @escaping CategoryPickerSectionDomain.Notify,
         completion: @escaping (CategoryPickerSectionDomain.Navigation) -> Void
     ) {
         switch select {
         case let .category(category):
-            getNavigation(category: category, notify: notify, completion: completion)
-        
+            getNavigation(c2gFlag: c2gFlag, category: category, notify: notify, completion: completion)
+            
         case .qr:
             completion(.outside(.qr))
         }
@@ -73,6 +87,7 @@ extension RootViewModelFactory {
     // TODO: repeating code as in RootViewModelFactory+makeCategoryPicker.swift:64
     @inlinable
     func getNavigation(
+        c2gFlag: C2GFlag,
         category: ServiceCategory,
         notify: @escaping CategoryPickerSectionDomain.Notify,
         completion: @escaping (CategoryPickerSectionDomain.Navigation) -> Void
@@ -91,6 +106,7 @@ extension RootViewModelFactory {
             
         case .taxAndStateServices:
             completion(.destination(.taxAndStateServices(makeTaxPayment(
+                c2gFlag: c2gFlag,
                 closeAction: { notify(.dismiss) }
             ))))
             
