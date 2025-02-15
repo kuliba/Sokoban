@@ -62,10 +62,10 @@ extension RootViewModelFactory {
             
             switch uin.value {
             case "connectivityFailure":
-                completion(.failure(.connectivity("Возникла техническая ошибка")))
+                completion(.failure(.c2gConnectivity))
                 
             case "serverFailure":
-                completion(.failure(.server("Возникла техническая ошибка")))
+                completion(.failure(.server("Server Failure"))) // TODO: pass error message from response
                 
             default:
                 completion(.success(()))
@@ -74,4 +74,9 @@ extension RootViewModelFactory {
     }
     
     typealias GetUINDataResult = Result<Void, BackendFailure> // TODO: replace Void with  GetUINDataResponse from C2GBackend when ready
+}
+
+private extension BackendFailure {
+    
+    static let c2gConnectivity: Self = .connectivity("Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения")
 }
