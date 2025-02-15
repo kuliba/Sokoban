@@ -41,7 +41,7 @@ extension ViewComponents {
         
         VStack(spacing: 16) {
             
-            binder.content.map { Text("UIN: \($0)") }
+            binder.content.state.textField.text.map { Text("UIN: \($0)") }
             
             Button("connectivityFailure") {
                 

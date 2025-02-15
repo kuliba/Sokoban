@@ -18,7 +18,7 @@ extension SearchByUINDomain {
     
     // MARK: - Content
     
-    typealias Content = String?
+    typealias Content = RxInputViewModel
     
     // MARK: - Flow
     
