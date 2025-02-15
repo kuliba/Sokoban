@@ -12,48 +12,40 @@ import TextFieldDomain
 
 struct ContentView: View {
     
-    @State private var uinInputState: UINInputState = .init()
-    
     @ObservedObject var inputViewModel: RxInputViewModel
     
     let config: TextInputConfig
     
     var body: some View {
         
-        ZStack {
+        VStack {
             
-            VStack {
-                
-                TextInputView(
-                    state: inputViewModel.state,
-                    event: inputViewModel.event,
-                    config: config,
-                    iconView: EmptyView.init
-                )
-                .onReceive(inputViewModel.$state.map(\.uinInputState)) { uinInputState = $0 }
-                .padding()
-                .background(.orange.opacity(0.15))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .padding()
-                .keyboardType(.numberPad)
-                
-                Text(String(describing: inputViewModel.state.uinInputState))
-                    .font(.headline)
-                
-                Spacer()
-                
-                continueButton()
-                sbpIcon()
-            }
+            TextInputView(
+                state: inputViewModel.state,
+                event: inputViewModel.event,
+                config: config,
+                iconView: EmptyView.init
+            )
+            .padding()
+            .background(.orange.opacity(0.15))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .padding()
+            .keyboardType(.numberPad)
             
-            settings
+            Text(String(describing: inputViewModel.state.uinInputState))
+                .font(.headline)
+            
+            Spacer()
+            
+            continueButton()
+            sbpIcon()
         }
     }
     
     @ViewBuilder
     private func continueButton() -> some View {
         
-        Button(action: { print("continue: \(uinInputState.value)") }) {
+        Button(action: { print("continue: \(inputViewModel.state.uinInputState.value)") }) {
             
             Text("Continue")
                 .font(.headline)
@@ -62,50 +54,13 @@ struct ContentView: View {
         }
         .buttonStyle(.borderedProminent)
         .padding()
-        .disabled(!uinInputState.isValid || uinInputState.isEditing)
+        .disabled(!inputViewModel.state.uinInputState.isValid || inputViewModel.state.uinInputState.isEditing)
     }
     
     private func sbpIcon() -> some View {
         
         Image(systemName: "envelope")
             .imageScale(.large)
-    }
-    
-    private var settings: some View {
-        
-        VStack(spacing: 16) {
-            
-            Text("UIN Input State")
-                .font(.headline)
-            
-            HStack {
-                
-                Text(uinInputState.isEditing ? "editing" : "noFocus")
-                Divider()
-                Text(uinInputState.isValid ? "valid" : "not valid")
-                    .foregroundStyle(uinInputState.isValid ? .green : .red)
-            }
-            .fixedSize()
-            
-            HStack {
-                
-                Button("editing") { uinInputState.isEditing = true }
-                Divider()
-                Button("no focus") { uinInputState.isEditing = false }
-            }
-            .fixedSize()
-            
-            HStack {
-                
-                Button("valid") { uinInputState.isValid = true }
-                    .foregroundStyle(.green)
-                Divider()
-                Button("invalid") { uinInputState.isValid = false }
-                    .foregroundStyle(.red)
-            }
-            .fixedSize()
-        }
-        .padding()
     }
 }
 
