@@ -9145,6 +9145,15 @@
 			path = InitiateAnywayPayment;
 			sourceTree = "<group>";
 		};
+		2A25A3072D6064A500C5D28F /* ViewComponents */ = {
+			isa = PBXGroup;
+			children = (
+				83CE21742CDDED460008375D /* ViewComponents.swift */,
+				2A25A3052D60644900C5D28F /* ViewComponents+navBar.swift */,
+			);
+			path = ViewComponents;
+			sourceTree = "<group>";
+		};
 		2A273E8C2C770123009935E6 /* OperationPicker */ = {
 			isa = PBXGroup;
 			children = (
@@ -10677,7 +10686,6 @@
 			isa = PBXGroup;
 			children = (
 				2A5D6F552D5DAE3A0011C09E /* ViewComponents+makeSearchByUINView.swift */,
-				2A25A3052D60644900C5D28F /* ViewComponents+navBar.swift */,
 				2A5D98A12D5DED900065C4E3 /* ViewComponents+makeC2GPaymentView.swift */,
 				2A5D98A32D5E11B90065C4E3 /* ViewComponents+makeC2GPaymentCompleteView.swift */,
 			);
@@ -12660,7 +12668,7 @@
 			isa = PBXGroup;
 			children = (
 				2A6371242BF25EF5007E494A /* IconDomain.swift */,
-				83CE21742CDDED460008375D /* ViewComponents.swift */,
+				2A25A3072D6064A500C5D28F /* ViewComponents */,
 				2AD7674D2CF98EDA00BFDA70 /* RootViewFactory */,
 				2A5B22FD2BEDE03F00270D50 /* PaymentsTransfersViewFactory.swift */,
 				8376C1252C08CF0100B482FC /* MyProductsViewFactory.swift */,
