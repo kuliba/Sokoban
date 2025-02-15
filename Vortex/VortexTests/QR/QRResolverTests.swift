@@ -98,6 +98,34 @@ final class QRResolverTests: XCTestCase {
         )
     }
     
+    func test_shouldDeliverQR_onValidQRDataGetUINNil() {
+        
+        XCTAssertNoDiff(
+            resolve("ST00011|UIN=", getUINStub: nil),
+            .qrCode(original: "ST00011|UIN=", rawData: ["uin":""])
+        )
+    }
+    
+    func test_shouldDeliverURL_onInvalidQRDataGetUINNil() throws {
+        
+        let string = anyMessage()
+        
+        XCTAssertNoDiff(
+            resolve(string, getUINStub: nil),
+            try .url(XCTUnwrap(.init(string: string)))
+        )
+    }
+    
+    func test_shouldDeliverUI_onValidQRDataGetUINNotNil() {
+        
+        let uin = anyMessage()
+        
+        XCTAssertNoDiff(
+            resolve("ST00011|UIN=", getUINStub: uin),
+            .uin(uin)
+        )
+    }
+    
     // MARK: - Helpers
     
     // TODO: improve tests with spies to check getUIN and isSberQR both get correct payload
