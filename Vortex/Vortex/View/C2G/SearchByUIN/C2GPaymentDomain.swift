@@ -24,8 +24,10 @@ extension C2GPaymentDomain {
     
     // MARK: - Content
     
-    typealias Content = C2GPaymentViewModel<URL>
-    typealias ContentReducer = C2GPaymentReducer<URL>
+    typealias Content = C2GPaymentViewModel<Context>
+    typealias ContentReducer = C2GPaymentReducer<Context>
+    
+    typealias Context = URL
     
     struct ContentPayload: Equatable {
         

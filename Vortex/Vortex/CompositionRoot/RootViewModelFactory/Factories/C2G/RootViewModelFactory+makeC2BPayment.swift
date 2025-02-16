@@ -132,7 +132,8 @@ private extension C2GPaymentDigest {
     }
 }
 
-private extension C2GPaymentState where Context == URL {
+private extension C2GPaymentState
+where Context == C2GPaymentDomain.Context {
     
     init(payload: C2GPaymentDomain.ContentPayload) {
         
@@ -148,7 +149,7 @@ private extension C2GPaymentState where Context == URL {
 import CombineSchedulers
 
 extension C2GPaymentViewModel
-where State == C2GPaymentState<URL>,
+where State == C2GPaymentState<C2GPaymentDomain.Context>,
       Event == C2GPaymentEvent,
       Effect == C2GPaymentEffect {
     
