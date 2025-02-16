@@ -39,46 +39,11 @@ extension C2GPaymentState {
             return .init(productID: $0.digestProductID, uin: uin)
         }
     }
-    
-    // TODO: rename to C2GPaymentDigest and extract from State
-    
-    public struct Digest: Equatable {
-        
-        public let productID: ProductID
-        public let uin: String
-        
-        public init(
-            productID: ProductID,
-            uin: String
-        ) {
-            self.productID = productID
-            self.uin = uin
-        }
-        
-        public struct ProductID: Equatable {
-            
-            public let id: Int
-            public let type: ProductType
-            
-            public init(
-                id: Int,
-                type: ProductType
-            ) {
-                self.id = id
-                self.type = type
-            }
-            
-            public enum ProductType: Equatable {
-                
-                case account, card
-            }
-        }
-    }
 }
 
 private extension ProductSelect.Product {
     
-    var digestProductID: C2GPaymentState.Digest.ProductID {
+    var digestProductID: Digest.ProductID {
         
         switch type {
         case .account: return .init(id: id.rawValue, type: .account)
