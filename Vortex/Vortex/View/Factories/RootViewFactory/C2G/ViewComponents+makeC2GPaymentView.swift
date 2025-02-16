@@ -46,7 +46,7 @@ extension ViewComponents {
                     
                     // TODO: Use AttributedString to connect to URL
                     makeCheckBoxView(
-                        title: "Включить переводы через СБП, принять условия обслуживания",
+                        title: state.context.term,
                         isChecked: state.termsCheck,
                         toggle: { event(.termsToggle) }
                     )

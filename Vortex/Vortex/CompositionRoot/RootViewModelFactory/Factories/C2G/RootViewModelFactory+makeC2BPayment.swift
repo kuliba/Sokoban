@@ -141,8 +141,27 @@ where Context == C2GPaymentDomain.Context {
             productSelect: .init(selected: payload.selectedProduct),
             termsCheck: payload.termsCheck,
             uin: payload.uin,
-            context: payload.url
+            context: .init(term: .terms(url: payload.url))
         )
+    }
+}
+
+private extension AttributedString {
+    
+    static func terms(url: URL) -> Self {
+        
+        var attributedString = AttributedString("Включить переводы через СБП,\nпринять условия обслуживания")
+        attributedString.foregroundColor = .textPlaceholder
+        attributedString.font = .textBodyMR14200()
+        
+        if let terms = attributedString.range(of: "принять условия обслуживания") {
+            
+            attributedString[terms].link = url
+            attributedString[terms].underlineStyle = .single
+            attributedString[terms].foregroundColor = .textSecondary
+        }
+        
+        return attributedString
     }
 }
 

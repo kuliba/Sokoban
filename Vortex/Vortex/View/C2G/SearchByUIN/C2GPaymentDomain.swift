@@ -27,7 +27,10 @@ extension C2GPaymentDomain {
     typealias Content = C2GPaymentViewModel<Context>
     typealias ContentReducer = C2GPaymentReducer<Context>
     
-    typealias Context = URL
+    struct Context: Equatable {
+        
+        let term: AttributedString
+    }
     
     struct ContentPayload: Equatable {
         
