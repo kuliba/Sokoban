@@ -26,7 +26,7 @@ extension ResponseMapper {
         public let payerName: String?
         public let payerINN: String?
         public let payerKPP: String?
-        public let url: String
+        public let url: URL
         public let uin: String
         
         public init(
@@ -44,7 +44,7 @@ extension ResponseMapper {
             payerName: String?,
             payerINN: String?,
             payerKPP: String?,
-            url: String,
+            url: URL,
             uin: String
         ) {
             self.termsCheck = termsCheck
