@@ -36,9 +36,7 @@ extension RootViewModelFactory {
     ) {
         switch select {
         case let .pay(payload):
-            createC2GPayment(payload) { [weak self] in
-                
-                guard let self else { return }
+            createC2GPayment(payload) {
                 
                 switch $0 {
                 case let .failure(failure):
