@@ -43,9 +43,9 @@ extension C2GPaymentDomain {
     
     enum Select: Equatable {
         
-        case pay(Payload)
+        case pay(Digest)
         
-        typealias Payload = String
+        typealias Digest = C2GPaymentState.Digest
     }
     
     enum Navigation {

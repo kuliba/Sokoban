@@ -73,14 +73,10 @@ extension RootViewModelFactory {
     
     @inlinable
     func createC2GPayment(
-        _ payload: C2GPaymentDomain.Select.Payload,
+        _ digest: C2GPaymentDomain.Select.Digest,
         completion: @escaping (C2GPaymentDomain.Navigation) -> Void
     ) {
-        let payload = RemoteServices.RequestFactory.CreateC2GPaymentPayload(
-            accountID: nil,
-            cardID: 10000239151,
-            uin: payload
-        )
+        let payload = digest.payload
         
         guard !payload.uin.hasEasterEgg
         else { return createC2GPaymentEasterEggs(payload, completion: completion) }
@@ -122,6 +118,8 @@ extension RootViewModelFactory {
     typealias CreateC2GPaymentResult = Result<Void, BackendFailure> // TODO: replace Void with  CreateC2GPaymentResponse from C2GBackend when ready
 }
 
+// MARK: - Helpers
+
 private extension C2GPaymentDomain.Navigation {
     
     static let connectivityFailure: Self = .failure(.connectivity("Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения"))
@@ -133,5 +131,21 @@ private extension String {
     var hasEasterEgg: Bool {
         
         ["01234567890123456789", "12345678901234567890"].contains(self)
+    }
+}
+
+// MARK: - Adapters
+
+private extension C2GPaymentState.Digest {
+    
+    var payload: RemoteServices.RequestFactory.CreateC2GPaymentPayload {
+ 
+        switch productID.type {
+        case .account:
+            return .init(accountID: productID.id, cardID: nil, uin: uin)
+
+        case .card:
+            return .init(accountID: nil, cardID: productID.id, uin: uin)
+        }
     }
 }
