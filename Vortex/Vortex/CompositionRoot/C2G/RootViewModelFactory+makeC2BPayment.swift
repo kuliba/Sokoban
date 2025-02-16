@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 13.02.2025.
 //
 
+import RemoteServices
+
 extension RootViewModelFactory {
     
     @inlinable
@@ -36,33 +38,51 @@ extension RootViewModelFactory {
     ) {
         switch select {
         case let .pay(payload):
-            createC2GPayment(payload) {
-                
-                switch $0 {
-                case let .failure(failure):
-                    completion(.failure(failure))
-                    
-                case let .success(success):
-                    completion(.success(success))
-                }
-            }
+            createC2GPayment(payload, completion: completion)
         }
     }
     
     @inlinable
     func createC2GPayment(
         _ payload: C2GPaymentDomain.Select.Payload,
-        completion: @escaping (CreateC2GPaymentResult) -> Void
+        completion: @escaping (C2GPaymentDomain.Navigation) -> Void
     ) {
-        // TODO: - replace stub with remote service, call on background
+        let payload = RemoteServices.RequestFactory.CreateC2GPaymentPayload(
+            accountID: nil,
+            cardID: 10000239151,
+            uin: payload
+        )
+        
+        guard !payload.uin.hasEasterEgg
+        else { return createC2GPaymentEasterEggs(payload, completion: completion) }
+        
+        let service = onBackground(
+            makeRequest: RequestFactory.createCreateC2GPaymentRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapCreateC2GPaymentResponse
+        )
+        
+        service(payload) {
+            
+            print($0)
+            completion(.success(()))
+            _ = service
+        }
+    }
+    
+    // TODO: remove stub
+    @inlinable
+    func createC2GPaymentEasterEggs(
+        _ payload: RemoteServices.RequestFactory.CreateC2GPaymentPayload,
+        completion: @escaping (C2GPaymentDomain.Navigation) -> Void
+    ) {
         schedulers.background.delay(for: .seconds(2)) {
             
-            switch payload {
-            case "connectivityFailure":
-                completion(.failure(.connectivity("Возникла техническая ошибка")))
+            switch payload.uin {
+            case "01234567890123456789":
+                completion(.connectivityFailure)
                 
-            case "serverFailure":
-                completion(.failure(.server("Возникла техническая ошибка")))
+            case "12345678901234567890":
+                completion(.failure(.server("server error")))
                 
             default:
                 completion(.success(()))
@@ -71,4 +91,18 @@ extension RootViewModelFactory {
     }
     
     typealias CreateC2GPaymentResult = Result<Void, BackendFailure> // TODO: replace Void with  CreateC2GPaymentResponse from C2GBackend when ready
+}
+
+private extension C2GPaymentDomain.Navigation {
+    
+    static let connectivityFailure: Self = .failure(.connectivity("Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения"))
+}
+
+// TODO: remove with stub
+private extension String {
+    
+    var hasEasterEgg: Bool {
+        
+        ["01234567890123456789", "12345678901234567890"].contains(self)
+    }
 }

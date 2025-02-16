@@ -11,6 +11,7 @@ import RemoteServices
 
 extension RequestFactory {
     
+    @inlinable
     static func createCreateC2GPaymentRequest(
         payload: RemoteServices.RequestFactory.CreateC2GPaymentPayload
     ) throws -> URLRequest {
@@ -19,9 +20,11 @@ extension RequestFactory {
         let endpoint = Services.Endpoint.createC2GPayment
         let endpointURL = try! endpoint.url(withBase: base)
         
-        return try RemoteServices.RequestFactory.createCreateC2GPaymentRequest(
+        let request = try RemoteServices.RequestFactory.createCreateC2GPaymentRequest(
             url: endpointURL,
             payload: payload
         )
+        
+        return request
     }
 }

@@ -11,6 +11,7 @@ import RemoteServices
 
 extension RequestFactory {
     
+    @inlinable
     static func createGetUINDataRequest(
         uin: String
     ) throws -> URLRequest {
