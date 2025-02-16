@@ -5,77 +5,8 @@
 //  Created by Igor Malyarov on 16.02.2025.
 //
 
+import C2GBackend
 import RemoteServices
-
-extension ResponseMapper {
-    
-    struct CreateC2GPaymentResponse: Equatable {
-        
-        let amount: Decimal?
-        let documentStatus: String
-        let merchantName: String?
-        let message: String?
-        let paymentOperationDetailID: Int
-        let purpose: String?
-    }
-}
-
-extension ResponseMapper {
-    
-    static func mapCreateC2GPaymentResponse(
-        _ data: Data,
-        _ httpURLResponse: HTTPURLResponse
-    ) -> MappingResult<CreateC2GPaymentResponse> {
-        
-        map(data, httpURLResponse, mapOrThrow: map)
-    }
-    
-    private static func map(
-        _ data: _DTO
-    ) throws -> CreateC2GPaymentResponse {
-        
-        try data.response
-    }
-}
-
-private extension ResponseMapper {
-    
-    struct _DTO: Decodable {
-        
-        let paymentOperationDetailId: Int?
-        let documentStatus: String?
-        let productOrderingResponseMessage: String?
-        let amount: Decimal?
-        let merchantName: String?
-        let purpose: String?
-    }
-}
-
-private extension ResponseMapper._DTO {
-    
-    var response: ResponseMapper.CreateC2GPaymentResponse {
-        
-        get throws {
-            
-            guard let paymentOperationDetailId,
-                  let documentStatus,
-                  !documentStatus.isEmpty
-            else { throw MissingMandatoryFields() }
-            
-            return .init(
-                amount: amount,
-                documentStatus: documentStatus,
-                merchantName: merchantName,
-                message: productOrderingResponseMessage,
-                paymentOperationDetailID: paymentOperationDetailId,
-                purpose: purpose
-            )
-        }
-    }
-    
-    struct MissingMandatoryFields: Error {}
-}
-
 import XCTest
 
 final class ResponseMapper_mapCreateC2GPaymentResponseTests_swift: XCTestCase {
