@@ -7,7 +7,7 @@
 
 import PaymentComponents
 
-public final class C2GPaymentReducer {
+public final class C2GPaymentReducer<Context> {
     
     private let productSelectReduce: ProductSelectReduce
     
@@ -43,7 +43,7 @@ public extension C2GPaymentReducer {
 
 public extension C2GPaymentReducer {
     
-    typealias State = C2GPaymentState
+    typealias State = C2GPaymentState<Context>
     typealias Event = C2GPaymentEvent
     typealias Effect = C2GPaymentEffect
 }

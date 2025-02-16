@@ -13,7 +13,7 @@ import XCTest
 
 class C2GPaymentTests: XCTestCase {
     
-    typealias State = C2GPaymentState
+    typealias State = C2GPaymentState<URL>
     
     func makeState(
         productSelect: ProductSelect? = nil,
@@ -26,7 +26,7 @@ class C2GPaymentTests: XCTestCase {
             productSelect: productSelect ?? makeProductSelect(),
             termsCheck: termsCheck,
             uin: uin,
-            url: url
+            context: url
         )
     }
     

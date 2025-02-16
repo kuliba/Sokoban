@@ -8,25 +8,27 @@
 import Foundation
 import PaymentComponents
 
-public struct C2GPaymentState: Equatable {
+public struct C2GPaymentState<Context> {
     
     public var productSelect: ProductSelect
     public var termsCheck: Bool
-    public let uin: String // et al other constant fields
-    public let url: URL
+    public let uin: String
+    public let context: Context
     
     public init(
         productSelect: ProductSelect,
         termsCheck: Bool,
         uin: String,
-        url: URL
+        context: Context
     ) {
         self.productSelect = productSelect
         self.termsCheck = termsCheck
         self.uin = uin
-        self.url = url
+        self.context = context
     }
 }
+
+extension C2GPaymentState: Equatable where Context: Equatable {}
 
 extension C2GPaymentState {
     

@@ -33,13 +33,13 @@ extension RootViewModelFactory {
             productSelect: .init(selected: payload.selectedProduct),
             termsCheck: payload.termsCheck,
             uin: payload.uin,
-            url: payload.url
+            context: payload.url
         )
         
         let productSelectReducer = ProductSelectReducer(
             getProducts: { payload.products }
         )
-        let reducer = C2GPaymentReducer(
+        let reducer = C2GPaymentDomain.ContentReducer(
             productSelectReduce: productSelectReducer.reduce
         )
         

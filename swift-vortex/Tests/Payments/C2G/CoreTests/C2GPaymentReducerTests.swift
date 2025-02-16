@@ -77,7 +77,7 @@ final class C2GPaymentReducerTests: C2GPaymentTests {
     
     // MARK: - Helpers
     
-    private typealias SUT = C2GPaymentReducer
+    private typealias SUT = C2GPaymentReducer<URL>
     private typealias Event = SUT.Event
     private typealias ProductSelectReduceSpy = CallSpy<(ProductSelect, ProductSelectEvent), ProductSelect>
     
