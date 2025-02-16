@@ -5,20 +5,49 @@
 //  Created by Igor Malyarov on 13.02.2025.
 //
 
+import C2GCore
+import PaymentComponents
 import RemoteServices
 
 extension RootViewModelFactory {
     
     @inlinable
     func makeC2BPayment(
+        payload: C2GPaymentDomain.ContentPayload
     ) -> C2GPaymentDomain.Binder {
         
         composeBinder(
-            content: (),
-            initialState: .init(),
+            content: makeC2BPaymentContent(payload: payload),
             delayProvider: delayProvider,
             getNavigation: getNavigation,
             selectWitnesses: .empty
+        )
+    }
+    
+    @inlinable
+    func makeC2BPaymentContent(
+        payload: C2GPaymentDomain.ContentPayload
+    ) -> C2GPaymentDomain.Content {
+        
+        let initialState = C2GPaymentState(
+            productSelect: .init(selected: payload.selectedProduct),
+            termsCheck: payload.termsCheck,
+            uin: payload.uin,
+            url: payload.url
+        )
+        
+        let productSelectReducer = ProductSelectReducer(
+            getProducts: { payload.products }
+        )
+        let reducer = C2GPaymentReducer(
+            productSelectReduce: productSelectReducer.reduce
+        )
+        
+        return .init(
+            initialState: initialState,
+            reduce: reducer.reduce,
+            handleEffect: { _,_ in },
+            scheduler: schedulers.main
         )
     }
     
