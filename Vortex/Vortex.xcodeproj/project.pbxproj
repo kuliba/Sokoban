@@ -554,6 +554,8 @@
 		2A29B0BC2D3B9D6000EAD554 /* SerialStampedCustomStringConvertibleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A29B0BB2D3B9D6000EAD554 /* SerialStampedCustomStringConvertibleTests.swift */; };
 		2A29B0BE2D3B9FB800EAD554 /* LoggingRemoteNanoServiceComposer+composeSerialResultLoadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A29B0BD2D3B9FB800EAD554 /* LoggingRemoteNanoServiceComposer+composeSerialResultLoadTests.swift */; };
 		2A2A46CE2D60F40D009896F2 /* RootViewModelFactory+makeUINInputViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2A46CD2D60F40D009896F2 /* RootViewModelFactory+makeUINInputViewModel.swift */; };
+		2A2A46D12D61AB0A009896F2 /* RequestFactory+createGetUINDataRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2A46D02D61AB0A009896F2 /* RequestFactory+createGetUINDataRequest.swift */; };
+		2A2A46D32D61AB44009896F2 /* C2G in Frameworks */ = {isa = PBXBuildFile; productRef = 2A2A46D22D61AB44009896F2 /* C2G */; };
 		2A2AB2F42AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2AB2F32AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift */; };
 		2A2AB2F82AF77E0E004023CD /* Services+cvvPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2AB2F72AF77E0E004023CD /* Services+cvvPINServicesClient.swift */; };
 		2A2B91E82C7CBA42008F5186 /* PlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2B91E62C7CBA2E008F5186 /* PlaceholderView.swift */; };
@@ -4259,6 +4261,7 @@
 		2A29B0BB2D3B9D6000EAD554 /* SerialStampedCustomStringConvertibleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerialStampedCustomStringConvertibleTests.swift; sourceTree = "<group>"; };
 		2A29B0BD2D3B9FB800EAD554 /* LoggingRemoteNanoServiceComposer+composeSerialResultLoadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoggingRemoteNanoServiceComposer+composeSerialResultLoadTests.swift"; sourceTree = "<group>"; };
 		2A2A46CD2D60F40D009896F2 /* RootViewModelFactory+makeUINInputViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeUINInputViewModel.swift"; sourceTree = "<group>"; };
+		2A2A46D02D61AB0A009896F2 /* RequestFactory+createGetUINDataRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetUINDataRequest.swift"; sourceTree = "<group>"; };
 		2A2AB2F32AF77DB9004023CD /* Store+deleteCacheIgnoringResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Store+deleteCacheIgnoringResult.swift"; sourceTree = "<group>"; };
 		2A2AB2F72AF77E0E004023CD /* Services+cvvPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+cvvPINServicesClient.swift"; sourceTree = "<group>"; };
 		2A2B91E12C7CB894008F5186 /* CategoryPickerSectionContentViewConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CategoryPickerSectionContentViewConfig+iVortex.swift"; sourceTree = "<group>"; };
@@ -7655,6 +7658,7 @@
 				83B2B8842AE7A90500DAD486 /* PhoneNumberWrapper in Frameworks */,
 				C197FD662CE17D460005A93E /* ModifyC2BSubscriptionService in Frameworks */,
 				847321072D11A6740009C721 /* VortexTools in Frameworks */,
+				2A2A46D32D61AB44009896F2 /* C2G in Frameworks */,
 				2A7AB1932AA1065400D37BD6 /* LinkableText in Frameworks */,
 				A7930E6C2D355F10003D3BB8 /* CollateralLoanLandingGetCollateralLandingUI in Frameworks */,
 				0BA2524726C5DB5600AD087A /* Realm in Frameworks */,
@@ -9227,6 +9231,14 @@
 			path = Infra;
 			sourceTree = "<group>";
 		};
+		2A2A46CF2D61AAF5009896F2 /* C2G */ = {
+			isa = PBXGroup;
+			children = (
+				2A2A46D02D61AB0A009896F2 /* RequestFactory+createGetUINDataRequest.swift */,
+			);
+			path = C2G;
+			sourceTree = "<group>";
+		};
 		2A2B91D92C7CB50A008F5186 /* v1 */ = {
 			isa = PBXGroup;
 			children = (
@@ -10330,6 +10342,7 @@
 		2A5190322A7E106D0014B0B7 /* RequestFactory */ = {
 			isa = PBXGroup;
 			children = (
+				2A2A46CF2D61AAF5009896F2 /* C2G */,
 				2A2E3FC22BB2CB4D00730D37 /* AnywayPayment */,
 				C15CB8E52B7EF2BF00718B49 /* OperatorsList */,
 				2A8B17382A7B6FD4002EBC2E /* RequestFactory.swift */,
@@ -19744,6 +19757,7 @@
 				C19C234E2D562E210026FD0B /* GetCardOrderFormService */,
 				C192C99B2D47966000518831 /* CreateCardApplication */,
 				C10E0F232D5772ED008185D6 /* OrderCard */,
+				2A2A46D22D61AB44009896F2 /* C2G */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* Vortex.app */;
@@ -21800,6 +21814,7 @@
 				EDB165662667A741007E6030 /* ContactInputViewController.swift in Sources */,
 				2A5882032D57235600C68DC4 /* RootViewModelFactory+onBackground.swift in Sources */,
 				831CCF3F2BEA400200DE7D64 /* UnblockCardServices.swift in Sources */,
+				2A2A46D12D61AB0A009896F2 /* RequestFactory+createGetUINDataRequest.swift in Sources */,
 				2A5AEF272B7A075900E935B6 /* OTPInputConfig+iVortex.swift in Sources */,
 				2A7183BA2C5E284C008B222B /* QRScanResultMapperNanoServices.swift in Sources */,
 				686857D8274FA73C00BBF562 /* PaymentsViewCoordinator.swift in Sources */,
@@ -29227,6 +29242,10 @@
 		2A2253F02B64EFD300C44440 /* UIPrimitives */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = UIPrimitives;
+		};
+		2A2A46D22D61AB44009896F2 /* C2G */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = C2G;
 		};
 		2A2F88372BC942EC0097119C /* AnywayPayment */ = {
 			isa = XCSwiftPackageProductDependency;
