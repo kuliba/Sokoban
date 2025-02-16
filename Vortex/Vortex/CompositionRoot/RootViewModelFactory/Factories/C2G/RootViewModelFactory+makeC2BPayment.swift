@@ -136,7 +136,7 @@ private extension String {
 
 // MARK: - Adapters
 
-private extension C2GCore.Digest {
+private extension C2GPaymentDigest {
     
     var payload: RemoteServices.RequestFactory.CreateC2GPaymentPayload {
  

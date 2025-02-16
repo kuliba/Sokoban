@@ -45,7 +45,7 @@ extension C2GPaymentDomain {
         
         case pay(Digest)
         
-        typealias Digest = C2GCore.Digest
+        typealias Digest = C2GCore.C2GPaymentDigest
     }
     
     enum Navigation {

@@ -1,11 +1,11 @@
 //
-//  Digest.swift
+//  C2GPaymentDigest.swift
 //  
 //
 //  Created by Igor Malyarov on 16.02.2025.
 //
 
-public struct Digest: Equatable {
+public struct C2GPaymentDigest: Equatable {
     
     public let productID: ProductID
     public let uin: String

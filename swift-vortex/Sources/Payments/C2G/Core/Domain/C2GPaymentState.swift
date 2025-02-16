@@ -30,7 +30,7 @@ public struct C2GPaymentState: Equatable {
 
 extension C2GPaymentState {
     
-    public var digest: Digest? {
+    public var digest: C2GPaymentDigest? {
         
         guard termsCheck else { return nil }
         
@@ -43,7 +43,7 @@ extension C2GPaymentState {
 
 private extension ProductSelect.Product {
     
-    var digestProductID: Digest.ProductID {
+    var digestProductID: C2GPaymentDigest.ProductID {
         
         switch type {
         case .account: return .init(id: id.rawValue, type: .account)
