@@ -69,7 +69,7 @@ extension RootViewModelFactory {
     ) {
         switch select {
         case .searchByUIN:
-            completion(.searchByUIN)
+            completion(.searchByUIN(makeSearchByUIN()))
         }
     }
     

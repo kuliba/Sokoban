@@ -91,6 +91,8 @@ extension TaxPaymentsDomain {
  
     enum Navigation {
         
-        case searchByUIN
+        case searchByUIN(SearchByUIN)
+        
+        typealias SearchByUIN = SearchByUINDomain.Binder
     }
 }

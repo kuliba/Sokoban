@@ -91,7 +91,17 @@ extension ViewComponents {
                         .navigationLink(
                             value: state.navigation,
                             dismiss: { event(.dismiss) },
-                            content: { Text(String(describing: $0)) }
+                            content: {
+                            
+                                switch $0 {
+                                case let .searchByUIN(searchByUIN):
+                                    makeSearchByUINView(
+                                        binder: searchByUIN,
+                                        dismiss: { event(.dismiss) },
+                                        scanQR: { rootEvent(.scanQR) }
+                                    )
+                                }
+                            }
                         )
                 }
             }
