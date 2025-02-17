@@ -12,63 +12,49 @@ import TextFieldDomain
 
 struct ContentView: View {
     
-    @State private var uinInputState: UINInputState = .init()
-    
     @ObservedObject var inputViewModel: RxInputViewModel
     
     let config: TextInputConfig
     
     var body: some View {
         
-        ZStack {
+        VStack {
             
-            VStack {
-                
-                RxWrapperView(model: inputViewModel) { state, event in
-                    
-                    TextInputView(
-                        state: state,
-                        event: event,
-                        config: config,
-                        iconView: EmptyView.init
-                    )
-                    .onChange(of: state.uinInputState) { uinInputState = $0 }
-                    .padding()
-                    .background(.orange.opacity(0.15))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .padding()
-                    .keyboardType(.numberPad)
-                    
-                    Text(String(describing: state.uinInputState))
-                        .font(.headline)
-                }
-                
-                Spacer()
-                
-                continueButton()
-                sbpIcon()
-            }
+            TextInputView(
+                state: inputViewModel.state,
+                event: inputViewModel.event,
+                config: config,
+                iconView: EmptyView.init
+            )
+            .padding()
+            .background(.orange.opacity(0.15))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .padding()
+            .keyboardType(.numberPad)
             
-            settings
+            Text(String(describing: inputViewModel.state.uinInputState))
+                .font(.headline)
+            
+            Spacer()
+            
+            continueButton()
+            sbpIcon()
         }
     }
     
     @ViewBuilder
     private func continueButton() -> some View {
         
-        if !uinInputState.isEditing {
+        Button(action: { print("continue: \(inputViewModel.state.uinInputState.value)") }) {
             
-            Button(action: {}) {
-                
-                Text("Continue")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 44)
-            }
-            .buttonStyle(.borderedProminent)
-            .padding()
-            .disabled(!uinInputState.isValid)
+            Text("Continue")
+                .font(.headline)
+                .frame(maxWidth: .infinity)
+                .frame(height: 44)
         }
+        .buttonStyle(.borderedProminent)
+        .padding()
+        .disabled(!inputViewModel.state.uinInputState.isValid || inputViewModel.state.uinInputState.isEditing)
     }
     
     private func sbpIcon() -> some View {
@@ -76,49 +62,13 @@ struct ContentView: View {
         Image(systemName: "envelope")
             .imageScale(.large)
     }
-    
-    private var settings: some View {
-        
-        VStack(spacing: 16) {
-            
-            Text("UIN Input State")
-                .font(.headline)
-            
-            HStack {
-                
-                Text(uinInputState.isEditing ? "editing" : "noFocus")
-                Divider()
-                Text(uinInputState.isValid ? "valid" : "not valid")
-                    .foregroundStyle(uinInputState.isValid ? .green : .red)
-            }
-            .fixedSize()
-            
-            HStack {
-                
-                Button("editing") { uinInputState.isEditing = true }
-                Divider()
-                Button("no focus") { uinInputState.isEditing = false }
-            }
-            .fixedSize()
-            
-            HStack {
-                
-                Button("valid") { uinInputState.isValid = true }
-                    .foregroundStyle(.green)
-                Divider()
-                Button("invalid") { uinInputState.isValid = false }
-                    .foregroundStyle(.red)
-            }
-            .fixedSize()
-        }
-        .padding()
-    }
 }
 
 private struct UINInputState: Equatable {
     
-    var isEditing: Bool = false
-    var isValid: Bool = false
+    var isEditing = false
+    var isValid = false
+    var value = ""
 }
 
 private extension TextFieldState {
@@ -138,7 +88,8 @@ private extension TextInputState {
         
         return .init(
             isEditing: textField.isEditing,
-            isValid: message == nil && !textField.text.isNilOrEmpty
+            isValid: message == nil && !textField.text.isNilOrEmpty,
+            value: textField.text ?? ""
         )
     }
 }
