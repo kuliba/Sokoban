@@ -2762,6 +2762,7 @@
 		8331049E2D63415B00177E2B /* BannersBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8331049D2D63415B00177E2B /* BannersBox.swift */; };
 		833104A02D63417200177E2B /* BannersBoxInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8331049F2D63417200177E2B /* BannersBoxInterface.swift */; };
 		833104A22D63474D00177E2B /* RequestFactory+createGetBannersMyProductListV2Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833104A12D63474D00177E2B /* RequestFactory+createGetBannersMyProductListV2Request.swift */; };
+		833104A42D63785500177E2B /* GetBannersMyProductListResponseCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833104A32D63785500177E2B /* GetBannersMyProductListResponseCodable.swift */; };
 		833245E02CAC56F9001AFF9D /* MarketShowcaseComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833245DF2CAC56F9001AFF9D /* MarketShowcaseComposerTests.swift */; };
 		833286D02C91BF4700B6FA3F /* RootViewFactory+banners.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833286CF2C91BF4700B6FA3F /* RootViewFactory+banners.swift */; };
 		833286D32C931DC100B6FA3F /* PaymentsTransfersCorporateContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833286D22C931DC100B6FA3F /* PaymentsTransfersCorporateContent.swift */; };
@@ -6445,6 +6446,7 @@
 		8331049D2D63415B00177E2B /* BannersBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannersBox.swift; sourceTree = "<group>"; };
 		8331049F2D63417200177E2B /* BannersBoxInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannersBoxInterface.swift; sourceTree = "<group>"; };
 		833104A12D63474D00177E2B /* RequestFactory+createGetBannersMyProductListV2Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetBannersMyProductListV2Request.swift"; sourceTree = "<group>"; };
+		833104A32D63785500177E2B /* GetBannersMyProductListResponseCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetBannersMyProductListResponseCodable.swift; sourceTree = "<group>"; };
 		833245DF2CAC56F9001AFF9D /* MarketShowcaseComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseComposerTests.swift; sourceTree = "<group>"; };
 		833286CF2C91BF4700B6FA3F /* RootViewFactory+banners.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+banners.swift"; sourceTree = "<group>"; };
 		833286D22C931DC100B6FA3F /* PaymentsTransfersCorporateContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersCorporateContent.swift; sourceTree = "<group>"; };
@@ -16057,6 +16059,7 @@
 				8331049B2D63413900177E2B /* BannerList.swift */,
 				8331049D2D63415B00177E2B /* BannersBox.swift */,
 				8331049F2D63417200177E2B /* BannersBoxInterface.swift */,
+				833104A32D63785500177E2B /* GetBannersMyProductListResponseCodable.swift */,
 			);
 			path = Banners;
 			sourceTree = "<group>";
@@ -21675,6 +21678,7 @@
 				ED2D89FD286DAF5D0000B391 /* CameraAgentMock.swift in Sources */,
 				5008781C2853453A0033DDD5 /* SpinnerRefreshView.swift in Sources */,
 				2A2E32FB29A3A6F8008B9626 /* Model+PaymentsTransferMobileConnection.swift in Sources */,
+				833104A42D63785500177E2B /* GetBannersMyProductListResponseCodable.swift in Sources */,
 				83CFA29F2C2D7C51003B5E49 /* PanelButtonDetails.swift in Sources */,
 				C1549868290756DC00D00670 /* ContactsBanksSectionViewModel.swift in Sources */,
 				83FAD89B29CDD2C800474B06 /* PaymentsServicesLatestPaymentsSectionView.swift in Sources */,

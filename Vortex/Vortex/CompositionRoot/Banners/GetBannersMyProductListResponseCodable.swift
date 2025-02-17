@@ -1,5 +1,5 @@
 //
-//  BannerList.swift
+//  GetBannersMyProductListResponseCodable.swift
 //  Vortex
 //
 //  Created by Andryusina Nataly on 17.02.2025.
@@ -7,13 +7,13 @@
 
 import Foundation
 
-struct BannerList {
+struct GetBannersMyProductListResponseCodable: Codable {
     
-    let cardBannerList: [Item]?
     let accountBannerList: [Item]?
+    let cardBannerList: [Item]?
     let loanBannerList: [Item]?
     
-    struct Item {
+    struct Item: Codable {
         
         let action: Action?
         let link: String
@@ -21,7 +21,7 @@ struct BannerList {
         let productName: String
     }
     
-    struct Action {
+    struct Action: Codable {
         
         let actionType: String
         let target: String?

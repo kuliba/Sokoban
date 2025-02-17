@@ -686,8 +686,7 @@ private extension MainViewModel {
         if let sticker = banners.first {
             
             let promoItems = makePromoViewModels(promoItems: [
-                .init(sticker),
-                .savingsAccountPreview
+                .init(sticker)
             ]) ?? []
             
             sections.productsSection?.productCarouselViewModel.updatePromo(promoItems)
@@ -697,15 +696,20 @@ private extension MainViewModel {
     func handleBanners(
         _ banners: BannerList
     ) {
-        if let sticker = banners.cardBannerList.first {
-            
-            let promoItems = makePromoViewModels(promoItems: [
-                .init(sticker),
-                .savingsAccountPreview
-            ]) ?? []
-            
-            sections.productsSection?.productCarouselViewModel.updatePromo(promoItems)
+        
+        var promo: [PromoItem] = []
+        
+        if let sticker = banners.cardBannerList?.first {
+            promo.append(.init(item: sticker, productType: .card, promoProduct: .sticker))
         }
+        
+        if let accountBannerList = banners.accountBannerList {
+            promo.append(contentsOf: accountBannerList.map { .init(item: $0, productType: .account, promoProduct: .savingsAccount) })
+        }
+        
+        let promoItems = makePromoViewModels(promoItems: promo) ?? []
+        
+        sections.productsSection?.productCarouselViewModel.updatePromo(promoItems)
     }
 
     func openMoreProducts() { //

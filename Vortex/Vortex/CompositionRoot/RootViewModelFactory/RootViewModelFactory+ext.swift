@@ -416,8 +416,21 @@ extension RootViewModelFactory {
         updateClientInformAlerts()
             .store(in: &bindings)
         
+        let bannersBox = makeBannersBox(flags: featureFlags)
+        
+        // TODO: extract to computer property
+        if featureFlags.savingsAccountFlag.isActive || featureFlags.collateralLoanLandingFlag.isActive ||
+            featureFlags.orderCardFlag.isActive {
+            
+            performOrWaitForAuthorized { [weak bannersBox] in
+                
+                bannersBox?.requestUpdate()
+            }
+        }
+        
         let rootViewModel = make(
-            featureFlags: featureFlags,
+            featureFlags: featureFlags, 
+            bannersBox: bannersBox,
             splash: splash,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeTemplates: makeMakeTemplates(featureFlags.paymentsTransfersFlag),
@@ -802,6 +815,7 @@ private extension RootViewModelFactory {
     
     func make(
         featureFlags: FeatureFlags,
+        bannersBox: any BannersBoxInterface<BannerList>,
         splash: SplashScreenViewModel,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeTemplates: @escaping PaymentsTransfersFactory.MakeTemplates,
@@ -871,9 +885,7 @@ private extension RootViewModelFactory {
                 featureFlags.c2gFlag
             )
         )
-          
-        let bannersBox = makeBannersBox(flags: featureFlags)
-        
+                  
         let mainViewModel = MainViewModel(
             model, 
             bannersBox: bannersBox,
