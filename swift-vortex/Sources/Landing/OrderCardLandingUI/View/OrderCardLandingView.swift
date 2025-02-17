@@ -13,7 +13,6 @@ struct LandingState {
     let conditions: OrderCardVerticalListViewModel
     let security: OrderCardVerticalListViewModel
     let dropDownList: DropDownListViewModel
-    let buttonViewModel: ButtonSimpleView.ViewModel
 }
 
 struct OrderCardLandingView: View {
@@ -39,7 +38,7 @@ struct OrderCardLandingView: View {
                     model: state.conditions,
                     config: config.orderCardVerticalConfig
                 )
-                .background(.mainColorsGrayLightest)
+                .background(.gray)
                 .cornerRadius(12)
                 .padding(.horizontal, 15)
                 .padding(.top, 76)
@@ -48,13 +47,9 @@ struct OrderCardLandingView: View {
                     model: state.security,
                     config: config.orderCardVerticalConfig
                 )
-                .background(.mainColorsGrayLightest)
+                .background(.gray)
                 .cornerRadius(12)
                 .padding(.horizontal, 15)
-                
-                ButtonSimpleView(viewModel: state.buttonViewModel)
-                    .frame(height: 56, alignment: .center)
-                    .padding(.horizontal, 15)
                 
                 DropDownList(
                     viewModel: state.dropDownList,
@@ -154,11 +149,6 @@ struct OrderCardLandingView: View {
                     description: ""
                 )
             ]
-        ),
-        buttonViewModel: .init(
-            title: "Продолжить",
-            style: .red,
-            action: {}
         )
     ), config: .init(
         headerConfig: .init(

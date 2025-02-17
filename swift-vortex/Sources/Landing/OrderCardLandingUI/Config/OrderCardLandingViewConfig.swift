@@ -1,8 +1,16 @@
 //
-//  File.swift
-//  
+//  OrderCardLandingViewConfig.swift
+//  ForaBank
 //
-//  Created by Дмитрий Савушкин on 17.02.2025.
+//  Created by Дмитрий Савушкин on 10.12.2024.
 //
 
 import Foundation
+
+struct OrderCardLandingViewConfig {
+
+    let headerConfig: HeaderViewConfig
+    let orderCardHorizontalConfig: OrderCardHorizontalConfig
+    let orderCardVerticalConfig: OrderCardVerticalListConfig
+    let dropDownListConfig: DropDownListConfig
+}

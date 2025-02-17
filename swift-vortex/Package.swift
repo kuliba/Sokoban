@@ -1567,7 +1567,9 @@ private extension Target {
 
     static let orderCardLandingUI = target(
         name: .orderCardLandingUI,
-        dependencies: [],
+        dependencies: [
+            .sharedConfigs
+        ],
         path: "Sources/Landing/\(String.orderCardLandingUI)"
     )
     

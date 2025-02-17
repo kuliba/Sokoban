@@ -1,8 +1,15 @@
 //
-//  File.swift
-//  
+//  OrderCardHorizontalConfig.swift
+//  ForaBank
 //
-//  Created by Дмитрий Савушкин on 17.02.2025.
+//  Created by Дмитрий Савушкин on 10.12.2024.
 //
 
-import Foundation
+import SwiftUI
+import SharedConfigs
+
+struct OrderCardHorizontalConfig {
+    
+    let title: TextConfig
+    let itemConfig: TextConfig
+}
