@@ -33,6 +33,7 @@ let package = Package(
         .collateralLoanLandingSaveConsentsBackend,
         .orderCardLandingBackend,
         .createCardApplicationBackend,
+        .orderCardLandingUI,
         // Infra
         .ephemeralStores,
         .fetcher,
@@ -171,6 +172,8 @@ let package = Package(
         .orderCardLandingBackend,
         .orderCardLandingBackendTests,
         .createCardApplicationBackend,
+        .orderCardLandingUI,
+        .orderCardLandingUITests,
         // Infra
         .ephemeralStores,
         .ephemeralStoresTests,
@@ -504,7 +507,14 @@ private extension Product {
             .collateralLoanLandingGetCollateralLandingUI
         ]
     )
-        
+    
+    static let orderCardLandingUI = library(
+        name: .orderCardLandingUI,
+        targets: [
+            .orderCardLandingUI
+        ]
+    )
+    
     static let collateralLoanLandingSaveConsentsBackend = library(
         name: .collateralLoanLandingSaveConsentsBackend,
         targets: [
@@ -1555,6 +1565,21 @@ private extension Target {
         path: "Tests/Landing/\(String.collateralLoanTests)/\(String.GetCollateralLanding)Tests/UI"
     )
 
+    static let orderCardLandingUI = target(
+        name: .orderCardLandingUI,
+        dependencies: [],
+        path: "Sources/Landing/\(String.orderCardLandingUI)"
+    )
+    
+    static let orderCardLandingUITests = testTarget(
+        name: .orderCardLandingUITests,
+        dependencies: [
+            .orderCardLandingUI,
+            .customDump
+        ],
+        path: "Tests/Landing/\(String.orderCardLandingUITests)"
+    )
+    
     static let collateralLoanLandingSaveConsentsBackend = target(
         name: .collateralLoanLandingSaveConsentsBackend,
         dependencies: [
@@ -3560,6 +3585,10 @@ private extension Target.Dependency {
         name: .collateralLoanLandingGetCollateralLandingUI
     )
 
+    static let orderCardLandingUI = byName(
+        name: .orderCardLandingUI
+    )
+    
     static let collateralLoanLandingGetCollateralLandingBackend = byName(
         name: .collateralLoanLandingGetCollateralLandingBackend
     )
@@ -4057,7 +4086,10 @@ private extension String {
 
     static let collateralLoanLandingGetCollateralLandingUI = "CollateralLoanLandingGetCollateralLandingUI"
     static let collateralLoanLandingGetCollateralLandingUITests = "CollateralLoanLandingGetCollateralLandingUITests"
-
+    
+    static let orderCardLandingUI = "OrderCardLandingUI"
+    static let orderCardLandingUITests = "OrderCardLandingUITests"
+    
     static let SaveConsents = "SaveConsents"
     static let collateralLoanLandingSaveConsentsBackend = "CollateralLoanLandingSaveConsentsBackend"
     static let collateralLoanLandingSaveConsentsBackendTests = "CollateralLoanLandingSaveConsentsBackendTests"
