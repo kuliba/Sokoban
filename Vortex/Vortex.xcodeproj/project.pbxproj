@@ -1131,6 +1131,8 @@
 		2A77FECE2BB4A40500884D87 /* AnywayPayment in Frameworks */ = {isa = PBXBuildFile; productRef = 2A77FECD2BB4A40500884D87 /* AnywayPayment */; };
 		2A7801512C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7801502C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift */; };
 		2A7801532C898092004898A4 /* CurrencyWalletViewModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7801522C898092004898A4 /* CurrencyWalletViewModelComposer.swift */; };
+		2A78246D2D6241620084B8A9 /* ViewComponents+makeSPBFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A78246C2D6241620084B8A9 /* ViewComponents+makeSPBFooter.swift */; };
+		2A78246F2D6241CC0084B8A9 /* ViewComponents+makeProductSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A78246E2D6241CC0084B8A9 /* ViewComponents+makeProductSelectView.swift */; };
 		2A783A842B5A87CE0035CEAB /* OTPInputComponentPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A783A832B5A87CE0035CEAB /* OTPInputComponentPreviewApp.swift */; };
 		2A783A862B5A87CE0035CEAB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A783A852B5A87CE0035CEAB /* ContentView.swift */; };
 		2A783A882B5A87CF0035CEAB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A783A872B5A87CF0035CEAB /* Assets.xcassets */; };
@@ -4853,6 +4855,8 @@
 		2A77B6602AE004F80022600F /* SadCVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SadCVVPINServicesClient.swift; sourceTree = "<group>"; };
 		2A7801502C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyWalletViewModelComposerTests.swift; sourceTree = "<group>"; };
 		2A7801522C898092004898A4 /* CurrencyWalletViewModelComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyWalletViewModelComposer.swift; sourceTree = "<group>"; };
+		2A78246C2D6241620084B8A9 /* ViewComponents+makeSPBFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeSPBFooter.swift"; sourceTree = "<group>"; };
+		2A78246E2D6241CC0084B8A9 /* ViewComponents+makeProductSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeProductSelectView.swift"; sourceTree = "<group>"; };
 		2A783A812B5A87CE0035CEAB /* OTPInputComponentPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OTPInputComponentPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A783A832B5A87CE0035CEAB /* OTPInputComponentPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPInputComponentPreviewApp.swift; sourceTree = "<group>"; };
 		2A783A852B5A87CE0035CEAB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -10694,6 +10698,8 @@
 			children = (
 				2A5D6F552D5DAE3A0011C09E /* ViewComponents+makeSearchByUINView.swift */,
 				2A5D98A12D5DED900065C4E3 /* ViewComponents+makeC2GPaymentView.swift */,
+				2A78246E2D6241CC0084B8A9 /* ViewComponents+makeProductSelectView.swift */,
+				2A78246C2D6241620084B8A9 /* ViewComponents+makeSPBFooter.swift */,
 				2A5D98A32D5E11B90065C4E3 /* ViewComponents+makeC2GPaymentCompleteView.swift */,
 			);
 			path = C2G;
@@ -22236,6 +22242,7 @@
 				2AAC45D62CB987640096DD71 /* Model+performOrWaitForActive.swift in Sources */,
 				83BD071B2C75F72D0074F444 /* DisableCorCardsView.swift in Sources */,
 				2A61C50B2CEC577700EA9BB7 /* RootViewModelFactory+makeQRScannerBinder.swift in Sources */,
+				2A78246D2D6241620084B8A9 /* ViewComponents+makeSPBFooter.swift in Sources */,
 				2AA3A96E2BFF91EA00AEBCC9 /* AnywayPaymentFooterConfig.swift in Sources */,
 				2AD8E5452C116D2800C31E48 /* FeatureFlagsLoader.swift in Sources */,
 				77F5CE1728060BCC00611B66 /* AtmRegionData.swift in Sources */,
@@ -22585,6 +22592,7 @@
 				A5ECD4C327ECB3B6008FBEEC /* C2BSuccessViewModel.swift in Sources */,
 				2AFF32072D031759006DD60C /* RootViewModelFactory+logDecoratedLocalLoad.swift in Sources */,
 				830408242D3AABB000AA2244 /* AdditionalProductView.swift in Sources */,
+				2A78246F2D6241CC0084B8A9 /* ViewComponents+makeProductSelectView.swift in Sources */,
 				681142E227C90B35008D3D67 /* CardActivateSliderViewComponent.swift in Sources */,
 				6833E0CE273920CE004C070F /* FaceTouchIDCoordinator.swift in Sources */,
 				2AEF68672AE58FDC00E0EBD7 /* RequestFactory+makeBindPublicKeyWithEventIDRequest2.swift in Sources */,

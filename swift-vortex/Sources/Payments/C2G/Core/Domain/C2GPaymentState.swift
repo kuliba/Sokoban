@@ -40,6 +40,8 @@ extension C2GPaymentState {
         }
     }
     
+    // TODO: rename to C2GPaymentDigest and extract from State
+    
     public struct Digest: Equatable {
         
         public let productID: ProductID

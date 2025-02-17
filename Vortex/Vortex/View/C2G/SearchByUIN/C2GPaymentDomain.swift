@@ -5,7 +5,13 @@
 //  Created by Igor Malyarov on 13.02.2025.
 //
 
+import C2GCore
 import FlowCore
+import Foundation
+import PaymentComponents
+import RxViewModel
+
+typealias C2GPaymentViewModel = RxViewModel<C2GPaymentState, C2GPaymentEvent, C2GPaymentEffect>
 
 /// A namespace.
 enum C2GPaymentDomain {}
@@ -18,7 +24,16 @@ extension C2GPaymentDomain {
     
     // MARK: - Content
     
-    typealias Content = Void
+    typealias Content = C2GPaymentViewModel
+    
+    struct ContentPayload: Equatable {
+        
+        let selectedProduct: ProductSelect.Product
+        let products: [ProductSelect.Product]
+        let termsCheck: Bool
+        let uin: String
+        let url: URL
+    }
     
     // MARK: - Flow
     
@@ -28,9 +43,9 @@ extension C2GPaymentDomain {
     
     enum Select: Equatable {
         
-        case pay(Payload)
+        case pay(Digest)
         
-        typealias Payload = String
+        typealias Digest = C2GPaymentState.Digest
     }
     
     enum Navigation {
