@@ -57,6 +57,7 @@ private extension ResponseMapper._DTO {
             
             guard let termsCheck,
                   let url,
+                  let url = URL(string: url),
                   let UIN
             else { throw MissingMandatoryFields() }
             

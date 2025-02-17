@@ -98,19 +98,33 @@ import UtilityServicePrepaymentUI
 /*private*/ extension OperatorLabelConfig {
     
     static func iVortex(
-        height: CGFloat = 46
+        chevron: ChevronConfig? = nil,
+        height: CGFloat = 46,
+        subtitleFont: Font = .textBodyMR14180(),
+        spacing: CGFloat = 16
     ) -> Self {
         
         return .init(
+            chevron: chevron,
             height: height,
             title: .init(
                 textFont: .textH4M16240(),
                 textColor: .textSecondary
             ),
             subtitle: .init(
-                textFont: .textBodyMR14180(),
+                textFont: subtitleFont,
                 textColor: .textPlaceholder
-            )
+            ),
+            spacing: spacing
         )
     }
+}
+
+extension OperatorLabelConfig.ChevronConfig {
+    
+    static let iVortex: Self = .init(
+        color: .iconGray,
+        icon: .ic24ChevronRight,
+        size: .init(width: 40, height: 40)
+    )
 }

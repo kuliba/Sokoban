@@ -249,7 +249,7 @@ final class ResponseMapper_mapGetUINDataResponseTests_swift: XCTestCase {
         payerName: String? = nil,
         payerINN: String? = nil,
         payerKPP: String? = nil,
-        url: String = "https://www.vortex.com/dkbo/dkbo.pdf",
+        url: URL = .init(string: "https://www.vortex.com/dkbo/dkbo.pdf")!,
         uin: String
     ) -> ResponseMapper.GetUINDataResponse {
         
