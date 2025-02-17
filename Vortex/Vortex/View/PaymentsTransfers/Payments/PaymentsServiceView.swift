@@ -90,7 +90,7 @@ struct PaymentsServiceView: View {
             operatorLabel(viewModel)
         }
     }
-            
+    
     private func operatorLabel(
         _ viewModel: PaymentsSelectServiceView.ViewModel.ItemViewModel
     ) -> some View {
@@ -104,14 +104,39 @@ struct PaymentsServiceView: View {
             ),
             iconView: {
                 
-                viewModel.icon
-                    .resizable()
-                    .foregroundStyle(.orange)
+                iconView(title: viewModel.title, icon: viewModel.icon)
+                    .frame(width: 40, height: 40)
             }
         )
         .paddedRoundedBackground()
     }
+    
+    @ViewBuilder
+    private func iconView(
+        title: String,
+        icon: Image
+    ) -> some View {
         
+        if title == "Поиск по УИН" {
+            
+            ZStack {
+                
+                Color.bgIconIndigoLight
+                    .clipShape(Circle())
+                
+                icon
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .foregroundStyle(.iconWhite)
+            }
+        } else {
+            
+            icon
+                .resizable()
+                .foregroundStyle(.orange)
+        }
+    }
+    
     private func navigationLink(
     ) -> some View {
         
