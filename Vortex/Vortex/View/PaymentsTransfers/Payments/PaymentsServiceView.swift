@@ -5,8 +5,9 @@
 //  Created by Константин Савялов on 15.02.2022.
 //
 
-import SwiftUI
 import Combine
+import SwiftUI
+import UtilityServicePrepaymentUI
 
 struct PaymentsServiceViewFactory {
     
@@ -50,7 +51,7 @@ struct PaymentsServiceView: View {
         
         switch viewModel {
         case let viewModel as PaymentsSelectServiceView.ViewModel:
-            PaymentsSelectServiceView(viewModel: viewModel)
+            itemView(viewModel)
             
         default:
             EmptyView()
@@ -62,9 +63,55 @@ struct PaymentsServiceView: View {
         _ viewModel: PaymentsSelectServiceView.ViewModel
     ) -> some View {
         
-        PaymentsSelectServiceView(viewModel: viewModel)
+        if isRounded {
+            withRoundedItems(viewModel)
+        } else {
+            PaymentsSelectServiceView(viewModel: viewModel)
+        }
     }
     
+    private func withRoundedItems(
+        _ viewModel: PaymentsSelectServiceView.ViewModel
+    ) -> some View {
+        
+        VStack(spacing: 16) {
+            
+            ForEach(viewModel.items, content: button)
+        }
+    }
+    
+    private func button(
+        viewModel: PaymentsSelectServiceView.ViewModel.ItemViewModel
+    ) -> some View {
+        
+        Button {
+            viewModel.action(viewModel.service)
+        } label: {
+            operatorLabel(viewModel)
+        }
+    }
+            
+    private func operatorLabel(
+        _ viewModel: PaymentsSelectServiceView.ViewModel.ItemViewModel
+    ) -> some View {
+        
+        OperatorLabel(
+            title: viewModel.title,
+            subtitle: viewModel.subTitle,
+            config: .iVortex(
+                chevron: .iVortex,
+                subtitleFont: .textBodySR12160()
+            ),
+            iconView: {
+                
+                viewModel.icon
+                    .resizable()
+                    .foregroundStyle(.orange)
+            }
+        )
+        .paddedRoundedBackground()
+    }
+        
     private func navigationLink(
     ) -> some View {
         
