@@ -51,7 +51,7 @@ extension CategoryPickerSectionDomain {
         enum Tax {
             
             case legacy(PaymentsViewModel)
-            case v1(Node<PaymentsViewModel>)
+            case v1(Node<TaxPaymentsDomain.Binder>)
         }
         
         typealias Transport = TransportPaymentsViewModel
@@ -61,6 +61,36 @@ extension CategoryPickerSectionDomain {
         
         case qr
         case standard(ServiceCategory)
+        case searchByUIN
+    }
+}
+
+/// A namespace.
+enum TaxPaymentsDomain {}
+
+extension TaxPaymentsDomain {
+    
+    // MARK: Binder
+    
+    typealias Binder = Vortex.Binder<Content, Flow>
+    
+    // MARK: - Content
+    
+    typealias Content = PaymentsViewModel
+    
+    // MARK: - Flow
+    
+    typealias FlowDomain = Vortex.FlowDomain<Select, Navigation>
+    typealias Flow = FlowDomain.Flow
+    typealias Notify = FlowDomain.Notify
+    
+    enum Select {
+    
+        case searchByUIN
+    }
+ 
+    enum Navigation {
+        
         case searchByUIN
     }
 }

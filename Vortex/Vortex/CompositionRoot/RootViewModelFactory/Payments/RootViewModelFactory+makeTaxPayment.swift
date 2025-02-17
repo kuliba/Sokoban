@@ -25,38 +25,51 @@ extension RootViewModelFactory {
         closeAction: @escaping () -> Void
     ) -> CategoryPickerSectionDomain.Destination.Tax {
         
-        let model = PaymentsViewModel(
+        let content = PaymentsViewModel(
             category: .taxes,
             model: model,
             closeAction: closeAction
         )
-        let cancellable = model.$content
-            .handleEvents(receiveOutput: { print("#### model.$content", String(describing: $0)) })
+        let binder: TaxPaymentsDomain.Binder = composeBinder(
+            content: content,
+            getNavigation: getNavigation,
+            witnesses: .empty
+        )
+        let cancellable = content.$content
             .compactMap(\.service)
             .first()
             .flatMap { $0.$content }
             .compactMap { $0.first as? PaymentsSelectServiceView.ViewModel }
             .sink {
-                print("#### model.$content", String(describing: $0))
                 
-                $0.items.append(
-                    .init(
-                        id: UUID().uuidString,
-                        icon: .ic24Contract,
-                        title: "Поиск по УИН",
-                        subTitle: "Поиск начислений по УИН",
-                        service: .fns, // TODO: add new service?
-                        action: { print("#### items.append", String(describing: $0)) }
-                    )
-                )
+                $0.items.append(.init(
+                    id: UUID().uuidString,
+                    icon: .ic24Contract,
+                    title: "Поиск по УИН",
+                    subTitle: "Поиск начислений по УИН",
+                    service: .fns, // TODO: add new service?
+                    action: { _ in binder.flow.event(.select(.searchByUIN)) }
+                ))
             }
         
         switch c2gFlag.rawValue {
         case .active:
-            return .v1(.init(model: model, cancellable: cancellable))
+            return .v1(.init(model: binder, cancellable: cancellable))
             
         case .inactive:
-            return .legacy(model)
+            return .legacy(content)
+        }
+    }
+    
+    @inlinable
+    func getNavigation(
+        select: TaxPaymentsDomain.Select,
+        notify: @escaping TaxPaymentsDomain.Notify,
+        completion: (TaxPaymentsDomain.Navigation) -> Void
+    ) {
+        switch select {
+        case .searchByUIN:
+            completion(.searchByUIN)
         }
     }
     

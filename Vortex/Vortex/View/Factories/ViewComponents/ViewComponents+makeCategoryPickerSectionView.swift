@@ -1,5 +1,5 @@
 //
-//  RootViewFactory+makeCategoryPickerSectionView.swift
+//  ViewComponents+makeCategoryPickerSectionView.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 29.11.2024.
@@ -79,12 +79,21 @@ extension ViewComponents {
                 makePaymentsView(paymentsViewModel)
                 
             case let .v1(node):
-                makePaymentsView(node.model, isRounded: true)
-                    .navigationBarHidden(true)
-                    .navigationBarWithBack(
-                        title: "TBD: + QR button",
-                        dismiss: dismiss
-                    )
+                // TODO: extract
+                RxWrapperView(model: node.model.flow) { state, event in
+                    
+                    makePaymentsView(node.model.content, isRounded: true)
+                        .navigationBarHidden(true)
+                        .navigationBarWithBack(
+                            title: "TBD: + QR button",
+                            dismiss: dismiss
+                        )
+                        .navigationLink(
+                            value: state.navigation,
+                            dismiss: { event(.dismiss) },
+                            content: { Text(String(describing: $0)) }
+                        )
+                }
             }
             
         case let .transport(transport):
