@@ -8,29 +8,31 @@
 import Foundation
 import PaymentComponents
 
-public struct C2GPaymentState: Equatable {
+public struct C2GPaymentState<Context> {
     
     public var productSelect: ProductSelect
     public var termsCheck: Bool
-    public let uin: String // et al other constant fields
-    public let url: URL
+    public let uin: String
+    public let context: Context
     
     public init(
         productSelect: ProductSelect,
         termsCheck: Bool,
         uin: String,
-        url: URL
+        context: Context
     ) {
         self.productSelect = productSelect
         self.termsCheck = termsCheck
         self.uin = uin
-        self.url = url
+        self.context = context
     }
 }
 
+extension C2GPaymentState: Equatable where Context: Equatable {}
+
 extension C2GPaymentState {
     
-    public var digest: Digest? {
+    public var digest: C2GPaymentDigest? {
         
         guard termsCheck else { return nil }
         
@@ -39,46 +41,11 @@ extension C2GPaymentState {
             return .init(productID: $0.digestProductID, uin: uin)
         }
     }
-    
-    // TODO: rename to C2GPaymentDigest and extract from State
-    
-    public struct Digest: Equatable {
-        
-        public let productID: ProductID
-        public let uin: String
-        
-        public init(
-            productID: ProductID,
-            uin: String
-        ) {
-            self.productID = productID
-            self.uin = uin
-        }
-        
-        public struct ProductID: Equatable {
-            
-            public let id: Int
-            public let type: ProductType
-            
-            public init(
-                id: Int,
-                type: ProductType
-            ) {
-                self.id = id
-                self.type = type
-            }
-            
-            public enum ProductType: Equatable {
-                
-                case account, card
-            }
-        }
-    }
 }
 
 private extension ProductSelect.Product {
     
-    var digestProductID: C2GPaymentState.Digest.ProductID {
+    var digestProductID: C2GPaymentDigest.ProductID {
         
         switch type {
         case .account: return .init(id: id.rawValue, type: .account)

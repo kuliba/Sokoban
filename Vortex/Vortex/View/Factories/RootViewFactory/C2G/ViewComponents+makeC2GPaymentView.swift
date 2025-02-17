@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 13.02.2025.
 //
 
+import C2GCore
 import RxViewModel
 import SwiftUI
 
@@ -17,8 +18,22 @@ extension ViewComponents {
         c2gPaymentFlowView: @escaping (C2GPaymentDomain.Flow) -> some View
     ) -> some View {
         
-        // TODO: extract content view
-        RxWrapperView(model: binder.content) { state, event in
+        makeC2GPaymentContentView(content: binder.content) {
+            
+            binder.flow.event(.select(.pay($0)))
+        }
+        .navigationBarWithBack(title: "Оплата", dismiss: dismiss)
+        .background(c2gPaymentFlowView(binder.flow))
+        .disablingLoading(flow: binder.flow)
+    }
+    
+    @inlinable
+    func makeC2GPaymentContentView(
+        content: C2GPaymentDomain.Content,
+        pay: @escaping (C2GPaymentDigest) -> Void
+    ) -> some View {
+        
+        RxWrapperView(model: content) { state, event in
             
             ScrollView(showsIndicators: false) {
                 
@@ -31,7 +46,7 @@ extension ViewComponents {
                     
                     // TODO: Use AttributedString to connect to URL
                     makeCheckBoxView(
-                        title: "Включить переводы через СБП, принять условия обслуживания",
+                        title: state.context.term,
                         isChecked: state.termsCheck,
                         toggle: { event(.termsToggle) }
                     )
@@ -41,17 +56,11 @@ extension ViewComponents {
                 
                 makeSPBFooter(isActive: state.digest != nil) {
                     
-                    state.digest.map {
-                        
-                        binder.flow.event(.select(.pay($0)))
-                    }
+                    state.digest.map(pay)
                 }
             }
         }
         .padding()
-        .navigationBarWithBack(title: "Оплата", dismiss: dismiss)
-        .background(c2gPaymentFlowView(binder.flow))
-        .disablingLoading(flow: binder.flow)
     }
     
     // TODO: - add/extract config

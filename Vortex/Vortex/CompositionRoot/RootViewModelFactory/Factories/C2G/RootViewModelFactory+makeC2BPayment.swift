@@ -6,6 +6,7 @@
 //
 
 import C2GCore
+import Foundation
 import PaymentComponents
 import RemoteServices
 
@@ -29,26 +30,7 @@ extension RootViewModelFactory {
         payload: C2GPaymentDomain.ContentPayload
     ) -> C2GPaymentDomain.Content {
         
-        let initialState = C2GPaymentState(
-            productSelect: .init(selected: payload.selectedProduct),
-            termsCheck: payload.termsCheck,
-            uin: payload.uin,
-            url: payload.url
-        )
-        
-        let productSelectReducer = ProductSelectReducer(
-            getProducts: { payload.products }
-        )
-        let reducer = C2GPaymentReducer(
-            productSelectReduce: productSelectReducer.reduce
-        )
-        
-        return .init(
-            initialState: initialState,
-            reduce: reducer.reduce,
-            handleEffect: { _,_ in },
-            scheduler: schedulers.main
-        )
+        return .init(payload: payload, scheduler: schedulers.main)
     }
     
     @inlinable
@@ -136,16 +118,78 @@ private extension String {
 
 // MARK: - Adapters
 
-private extension C2GPaymentState.Digest {
+private extension C2GPaymentDigest {
     
     var payload: RemoteServices.RequestFactory.CreateC2GPaymentPayload {
- 
+        
         switch productID.type {
         case .account:
             return .init(accountID: productID.id, cardID: nil, uin: uin)
-
+            
         case .card:
             return .init(accountID: nil, cardID: productID.id, uin: uin)
         }
+    }
+}
+
+private extension C2GPaymentState
+where Context == C2GPaymentDomain.Context {
+    
+    init(payload: C2GPaymentDomain.ContentPayload) {
+        
+        self.init(
+            productSelect: .init(selected: payload.selectedProduct),
+            termsCheck: payload.termsCheck,
+            uin: payload.uin,
+            context: .init(term: .terms(url: payload.url))
+        )
+    }
+}
+
+private extension AttributedString {
+    
+    static func terms(url: URL) -> Self {
+        
+        var attributedString = AttributedString("Включить переводы через СБП,\nпринять условия обслуживания")
+        attributedString.foregroundColor = .textPlaceholder
+        attributedString.font = .textBodyMR14200()
+        
+        if let terms = attributedString.range(of: "принять условия обслуживания") {
+            
+            attributedString[terms].link = url
+            attributedString[terms].underlineStyle = .single
+            attributedString[terms].foregroundColor = .textSecondary
+        }
+        
+        return attributedString
+    }
+}
+
+import CombineSchedulers
+
+extension C2GPaymentViewModel
+where State == C2GPaymentState<C2GPaymentDomain.Context>,
+      Event == C2GPaymentEvent,
+      Effect == C2GPaymentEffect {
+    
+    convenience init(
+        payload: C2GPaymentDomain.ContentPayload,
+        scheduler: AnySchedulerOf<DispatchQueue>
+    ) {
+        let initialState = C2GPaymentState(payload: payload)
+        
+        let productSelectReducer = ProductSelectReducer(
+            getProducts: { payload.products }
+        )
+        let reducer = C2GPaymentDomain.ContentReducer(
+            productSelectReduce: productSelectReducer.reduce
+        )
+        
+        self.init(
+            initialState: initialState,
+            reduce: reducer.reduce,
+            handleEffect: { _,_ in },
+            scheduler: scheduler
+        )
     }
 }

@@ -11,7 +11,7 @@ import Foundation
 import PaymentComponents
 import RxViewModel
 
-typealias C2GPaymentViewModel = RxViewModel<C2GPaymentState, C2GPaymentEvent, C2GPaymentEffect>
+typealias C2GPaymentViewModel<Context> = RxViewModel<C2GPaymentState<Context>, C2GPaymentEvent, C2GPaymentEffect>
 
 /// A namespace.
 enum C2GPaymentDomain {}
@@ -24,7 +24,13 @@ extension C2GPaymentDomain {
     
     // MARK: - Content
     
-    typealias Content = C2GPaymentViewModel
+    typealias Content = C2GPaymentViewModel<Context>
+    typealias ContentReducer = C2GPaymentReducer<Context>
+    
+    struct Context: Equatable {
+        
+        let term: AttributedString
+    }
     
     struct ContentPayload: Equatable {
         
@@ -45,7 +51,7 @@ extension C2GPaymentDomain {
         
         case pay(Digest)
         
-        typealias Digest = C2GPaymentState.Digest
+        typealias Digest = C2GCore.C2GPaymentDigest
     }
     
     enum Navigation {
