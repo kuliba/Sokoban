@@ -16,40 +16,61 @@ struct PaymentsServiceViewFactory {
 struct PaymentsServiceView: View {
     
     @ObservedObject var viewModel: PaymentsServiceViewModel
+    
     let viewFactory: PaymentsServiceViewFactory
     
     var body: some View {
         
-        VStack {
+        scrollView()
+            .navigationBar(with: viewModel.navigationBar)
+    }
+    
+    private func scrollView() -> some View {
+        
+        ScrollView {
             
-            ScrollView {
+            ForEach(viewModel.content, content: itemView)
+            navigationLink()
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 20)
+    }
+    
+    @ViewBuilder
+    private func itemView(
+        _ viewModel: PaymentsParameterViewModel
+    ) -> some View {
+        
+        switch viewModel {
+        case let viewModel as PaymentsSelectServiceView.ViewModel:
+            PaymentsSelectServiceView(viewModel: viewModel)
+            
+        default:
+            EmptyView()
+        }
+    }
+    
+    @ViewBuilder
+    private func itemView(
+        _ viewModel: PaymentsSelectServiceView.ViewModel
+    ) -> some View {
+        
+        PaymentsSelectServiceView(viewModel: viewModel)
+    }
+    
+    private func navigationLink(
+    ) -> some View {
+        
+        NavigationLink("", isActive: $viewModel.isLinkActive) {
+            
+            if let link = viewModel.link  {
                 
-                ForEach(viewModel.content) { itemViewModel in
-                    
-                    switch itemViewModel {
-                    case let selectServiceViewModel as PaymentsSelectServiceView.ViewModel:
-                        PaymentsSelectServiceView(viewModel: selectServiceViewModel)
-                     
-                    default:
-                        Color.clear
-                    }
-                }
-
-                NavigationLink("", isActive: $viewModel.isLinkActive) {
-                    
-                    if let link = viewModel.link  {
-                        
-                        switch link {
-                        case let .operation(operationViewModel):
-                            viewFactory.makePaymentsOperationView(operationViewModel)
-                        }
-                    }
+                switch link {
+                case let .operation(operationViewModel):
+                    viewFactory.makePaymentsOperationView(operationViewModel)
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.top, 20)
         }
-        .navigationBar(with: viewModel.navigationBar)
     }
 }
 
