@@ -68,6 +68,7 @@ final class SegmentedPaymentProviderPickerFlowModelIntegrationTests: XCTestCase 
         qrCode: QRCode? = nil,
         qrMapping: QRMapping = .init(parameters: [], operators: []),
         mapScanResult: @escaping RootViewModelFactory.MapScanResult = { _, completion in completion(.unknown) },
+        makeQRResolve: @escaping RootViewModelFactory.MakeResolveQR = { _ in { _ in .unknown }}, // TODO: improve tests with qr resolve assertions
         flag: StubbedFeatureFlag.Option = .stub,
         file: StaticString = #file,
         line: UInt = #line
@@ -83,7 +84,7 @@ final class SegmentedPaymentProviderPickerFlowModelIntegrationTests: XCTestCase 
             httpClient: HTTPClientSpy(),
             logger: LoggerSpy(),
             mapScanResult: mapScanResult,
-            resolveQR: { _ in .unknown },
+            makeQRResolve: makeQRResolve,
             scanner: QRScannerViewModelSpy(),
             schedulers: .immediate
         )

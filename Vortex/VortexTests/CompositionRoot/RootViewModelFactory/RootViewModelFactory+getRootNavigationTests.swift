@@ -228,6 +228,9 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         switch navigation {
         case let .failure(failure):
             switch failure {
+            case let .featureFailure(featureFailure):
+                return .failure(.featureFailure(featureFailure))
+                
             case let .makeStandardPaymentFailure(binder):
                 return .failure(.makeStandardPaymentFailure(.init(binder)))
                 
@@ -296,6 +299,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         
         enum Failure: Equatable {
             
+            case featureFailure(FeatureFailure)
             case makeProductProfileFailure(ProductData.ID)
             case makeStandardPaymentFailure(ObjectIdentifier)
             case makeUserAccountFailure
@@ -320,6 +324,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         _ product: ProductData? = nil,
         toDeliver expectedNavigation: EquatableNavigation,
         on action: () -> Void = {},
+        c2gFlag: C2GFlag = .inactive, // TODO: add tests for active flag
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -338,6 +343,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         let exp = expectation(description: "wait for completion")
         
         sut.getRootNavigation(
+            c2gFlag: c2gFlag,
             makeProductProfileByID: { productID,_  in
                 return makeProductProfileViewModel(productID, model)
             },
@@ -359,6 +365,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         toNotifyWith expectedNotifyEvents: [NotifyEvent],
         on assert: @escaping (RootViewNavigation) -> Void,
         action: () -> Void = {},
+        c2gFlag: C2GFlag = .inactive, // TODO: add tests for active flag
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -367,6 +374,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         let exp = expectation(description: "wait for completion")
         
         sut.getRootNavigation(
+            c2gFlag: c2gFlag,
             makeProductProfileByID: {_,_  in nil },
             select: select,
             notify: notifySpy.call

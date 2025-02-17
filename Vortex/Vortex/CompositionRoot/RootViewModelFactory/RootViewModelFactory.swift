@@ -17,7 +17,7 @@ final class RootViewModelFactory {
     let infra: Infra
     let model: Model
     let mapScanResult: MapScanResult
-    let resolveQR: ResolveQR
+    let makeQRResolve: MakeResolveQR
     let scanner: any QRScannerViewModel
     
     let settings: RootViewModelFactorySettings
@@ -40,7 +40,7 @@ final class RootViewModelFactory {
         infra: Infra,
         model: Model,
         mapScanResult: @escaping MapScanResult,
-        resolveQR: @escaping ResolveQR,
+        makeQRResolve: @escaping MakeResolveQR,
         scanner: any QRScannerViewModel,
         settings: RootViewModelFactorySettings = .prod,
         schedulers: Schedulers
@@ -48,7 +48,7 @@ final class RootViewModelFactory {
         self.infra = infra
         self.model = model
         self.mapScanResult = mapScanResult
-        self.resolveQR = resolveQR
+        self.makeQRResolve = makeQRResolve
         self.scanner = scanner
         self.settings = settings
         self.schedulers = schedulers
@@ -87,7 +87,7 @@ final class RootViewModelFactory {
         self.nanoServiceComposer = nanoServiceComposer
     }
     
-    typealias ResolveQR = (String) -> QRViewModel.ScanResult
+    typealias MakeResolveQR = (QRResolverDependencies) -> (String) -> QRViewModel.ScanResult
     typealias MapScanResult = (QRViewModel.ScanResult, @escaping (QRModelResult) -> Void) -> Void
 }
 
@@ -98,7 +98,7 @@ extension RootViewModelFactory {
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
         mapScanResult: @escaping MapScanResult,
-        resolveQR: @escaping ResolveQR,
+        makeQRResolve: @escaping MakeResolveQR,
         scanner: any QRScannerViewModel,
         settings: RootViewModelFactorySettings = .prod,
         schedulers: Schedulers
@@ -111,7 +111,7 @@ extension RootViewModelFactory {
             ),
             model: model,
             mapScanResult: mapScanResult,
-            resolveQR: resolveQR,
+            makeQRResolve: makeQRResolve,
             scanner: scanner,
             schedulers: schedulers
         )

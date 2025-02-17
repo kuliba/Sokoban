@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 13.02.2025.
 //
 
+import C2GCore
 import RxViewModel
 import SwiftUI
 
@@ -17,33 +18,74 @@ extension ViewComponents {
         c2gPaymentFlowView: @escaping (C2GPaymentDomain.Flow) -> some View
     ) -> some View {
         
-        VStack(spacing: 16) {
+        makeC2GPaymentContentView(content: binder.content) {
             
-            Text("TBD: C2G Payment")
-                .font(.headline)
-            
-            Button("connectivityFailure") {
-                
-                binder.flow.event(.select(.pay("connectivityFailure")))
-            }
-            
-            Button("serverFailure") {
-                
-                binder.flow.event(.select(.pay("serverFailure")))
-            }
-            
-            Button("success") {
-                
-                binder.flow.event(.select(.pay(UUID().uuidString)))
-            }
+            binder.flow.event(.select(.pay($0)))
         }
-        .padding()
-        .frame(maxHeight: .infinity, alignment: .top)
-        .buttonBorderShape(.roundedRectangle)
-        .buttonStyle(.bordered)
         .navigationBarWithBack(title: "Оплата", dismiss: dismiss)
         .background(c2gPaymentFlowView(binder.flow))
         .disablingLoading(flow: binder.flow)
+    }
+    
+    @inlinable
+    func makeC2GPaymentContentView(
+        content: C2GPaymentDomain.Content,
+        pay: @escaping (C2GPaymentDigest) -> Void
+    ) -> some View {
+        
+        RxWrapperView(model: content) { state, event in
+            
+            ScrollView(showsIndicators: false) {
+                
+                VStack(spacing: 16) {
+                    
+                    makeProductSelectView(
+                        state: state.productSelect,
+                        event: { event(.productSelect($0)) }
+                    )
+                    
+                    // TODO: Use AttributedString to connect to URL
+                    makeCheckBoxView(
+                        title: state.context.term,
+                        isChecked: state.termsCheck,
+                        toggle: { event(.termsToggle) }
+                    )
+                }
+            }
+            .safeAreaInset(edge: .bottom) {
+                
+                makeSPBFooter(isActive: state.digest != nil) {
+                    
+                    state.digest.map(pay)
+                }
+            }
+        }
+        .padding()
+    }
+    
+    // TODO: - add/extract config
+    @inlinable
+    func makeCheckBoxView(
+        title: AttributedString,
+        isChecked: Bool,
+        toggle: @escaping () -> Void
+    ) -> some View {
+        
+        HStack {
+            
+            PaymentsCheckView.CheckBoxView(
+                isChecked: isChecked,
+                activeColor: .systemColorActive
+            )
+            .onTapGesture(perform: toggle)
+            
+            // TODO: Use AttributedString to connect to URL
+            Text(title)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .font(.textBodyMR14200())
+                .foregroundColor(.textPlaceholder)
+        }
+        .animation(.easeInOut, value: isChecked)
     }
     
     @inlinable

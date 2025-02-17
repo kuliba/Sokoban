@@ -37,6 +37,8 @@ typealias Completed = UtilityServicePaymentFlowState.FullScreenCover.Completed
 
 struct RootViewFactory {
     
+    let rootEvent: (RootViewSelect) -> Void
+    
     struct Infra {
         
         let imageCache: ImageCache

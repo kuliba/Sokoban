@@ -119,6 +119,7 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
     }
     
     private func makeSwitcher(
+        c2gFlag: C2GFlag = .inactive, // TODO: add tests for active flag
         hasCorporateCardsOnlySubject: PassthroughSubject<Bool, Never>
     ) -> PaymentsTransfersSwitcher {
         
@@ -127,7 +128,7 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
             httpClient: HTTPClientSpy(),
             logger: LoggerSpy(),
             mapScanResult: { _,_ in unimplemented() },
-            resolveQR: { _ in unimplemented() },
+            makeQRResolve: { _ in unimplemented() },
             scanner: QRScannerViewModelSpy(),
             schedulers: .immediate
         )
@@ -140,7 +141,7 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
                     loadBanners: { _ in unimplemented() }
                 )
             ),
-            personal: factory.makePaymentsTransfersPersonal().0,
+            personal: factory.makePaymentsTransfersPersonal(c2gFlag: c2gFlag).0,
             scheduler: .immediate
         )
         

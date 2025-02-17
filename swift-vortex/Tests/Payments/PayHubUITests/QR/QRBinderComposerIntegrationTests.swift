@@ -46,11 +46,13 @@ final class QRBinderComposerIntegrationTests: QRBinderTests {
         let makePayments = MakePayments()
         let makeQRFailure = MakeQRFailure()
         let makeServicePicker = MakeServicePicker()
+        let makeSearchByUIN = MakeSearchByUIN()
         
         let getNavigationComposer = NavigationComposer(
             firstMicroServices: .init(
                 makePayments: makePayments.call,
-                makeQRFailure: makeQRFailure.call
+                makeQRFailure: makeQRFailure.call,
+                makeSearchByUIN: makeSearchByUIN.call
             ),
             secondMicroServices: .init(
                 makeConfirmSberQR: makeConfirmSberQR.process,

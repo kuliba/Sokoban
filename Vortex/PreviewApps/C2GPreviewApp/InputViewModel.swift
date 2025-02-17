@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 12.02.2025.
 //
 
+import CombineSchedulers
 import FlowCore
 import Foundation
 import PaymentComponents
@@ -16,21 +17,23 @@ typealias RxInputViewModel = RxViewModel<TextInputState, TextInputEvent, TextInp
 extension RxInputViewModel {
     
     static func makeUINInputViewModel(
+        value: String = "",
         placeholderText: String = "УИН",
         hintText: String? = nil,
-        warningText: String = "От 20 до 25 знаков"
+        warningText: String = "От 20 до 25 знаков",
+        scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) -> RxInputViewModel {
         
         let textFieldReducer = TransformingReducer(
             placeholderText: placeholderText
         )
         
-        let initialState = TextInputState(textField: .placeholder(placeholderText))
+        let initialState = TextInputState(textField: .noFocus(value))
         
         let textInputValidator = TextInputValidator(
             hintText: hintText,
             warningText: warningText,
-            validate: { $0.count == 20 || $0.count == 25 }
+            validate: { 20...25 ~= $0.count }
         )
         
         let reducer = TextInputReducer(
@@ -43,7 +46,8 @@ extension RxInputViewModel {
         return .init(
             initialState: initialState,
             reduce: reducer.reduce(_:_:),
-            handleEffect: effectHandler.handleEffect(_:_:)
+            handleEffect: effectHandler.handleEffect(_:_:),
+            scheduler: scheduler
         )
     }
     

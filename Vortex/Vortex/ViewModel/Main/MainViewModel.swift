@@ -219,7 +219,7 @@ extension MainViewModel {
         route.modal = nil
     }
     
-    private func openScanner() {
+    private func openScanner() { // TODO: remove with paymentsTransfersFlag
         
         ifNotCorporate { [weak self] in
             
@@ -240,7 +240,7 @@ extension MainViewModel {
         }
     }
     
-    func openTemplates() {
+    func openTemplates() { // TODO: remove with paymentsTransfersFlag
         
         let templates = paymentsTransfersFactory.makeTemplates { [weak self] in
             
@@ -809,15 +809,15 @@ private extension MainViewModel {
             } else {
                 handleLandingAction(payload.target)
             }
-
+            
         case let payload:
             switch payload.type {
             case .cardOrder:
                 action.send(RootEvent.select(.openProduct(.card)))
-            
+                
             case .savingLanding:
                 action.send(RootEvent.select(.openProduct(.savingsAccount)))
-
+                
             case .payment:
                 rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService)
                 
@@ -834,7 +834,7 @@ private extension MainViewModel {
         ifNotCorporate { [weak self] in
             
             guard let self else { return }
-
+            
             guard let walletViewModel = CurrencyWalletViewModel(
                 currency: code,
                 currencyOperation: operation,
@@ -939,27 +939,23 @@ private extension MainViewModel {
             }
     }
     
-    func handleFastPaymentsAction(_ payload: MainSectionViewModelAction.FastPayment.ButtonTapped) {
-        
-        ifNotCorporate { [weak self] in
+    func handleFastPaymentsAction(
+        _ payload: MainSectionViewModelAction.FastPayment.ButtonTapped
+    ) {
+        switch payload.operationType {
+        case .byQr, .templates, .uin:
+            break // handled by root via rootEventPublisher
             
-            guard let self else { return }
-
-            switch payload.operationType {
-            case .templates:
-                openTemplates()
+        case .byPhone:
+            ifNotCorporate { [weak self] in
                 
-            case .byPhone:
-                action.send(MainViewModelAction.Show.Contacts())
+                self?.action.send(MainViewModelAction.Show.Contacts())
+            }
+            
+        case .utility:
+            ifNotCorporate { [weak self] in
                 
-            case .byQr:
-                openScanner()
-                
-            case .uin:
-                break // handled by rootEventPublisher
-                
-            case .utility:
-                self.rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService)
+                self?.rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService)
             }
         }
     }
@@ -1185,6 +1181,9 @@ extension MainViewModel {
             
         case let .sberQR(url):
             handleSberQRURL(url)
+            
+        case .uin:
+            break // handled by root
             
         case let .url(url):
             handleURL(url)

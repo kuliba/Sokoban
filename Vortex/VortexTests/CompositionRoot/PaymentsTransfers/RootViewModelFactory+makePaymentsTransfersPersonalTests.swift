@@ -56,7 +56,9 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalContentTests: XCTe
     private typealias MakeQRModelSpy = CallSpy<Void, QRScannerModel>
     
     private func makeSUT(
+        c2gFlag: C2GFlag = .inactive, // TODO: add tests assertions for active flag
         mapScanResult: @escaping RootViewModelFactory.MapScanResult = { _, completion in completion(.unknown) },
+        makeQRResolve: @escaping RootViewModelFactory.MakeResolveQR = { _ in { _ in .unknown }},
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -73,15 +75,18 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalContentTests: XCTe
             httpClient: HTTPClientSpy(),
             logger: LoggerSpy(),
             mapScanResult: mapScanResult,
-            resolveQR: { _ in .unknown },
+            makeQRResolve: makeQRResolve,
             scanner: QRScannerViewModelSpy(),
             schedulers: .immediate
         )
-        let sut = factory.makePaymentsTransfersPersonalContent(.init(
-            loadCategories: loadCategoriesSpy.process(completion:),
-            reloadCategories: reloadCategoriesSpy.process(_:completion:),
-            loadAllLatest: loadLatestSpy.process(completion:)
-        ))
+        let sut = factory.makePaymentsTransfersPersonalContent(
+            c2gFlag: c2gFlag,
+            .init(
+                loadCategories: loadCategoriesSpy.process(completion:),
+                reloadCategories: reloadCategoriesSpy.process(_:completion:),
+                loadAllLatest: loadLatestSpy.process(completion:)
+            )
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(loadCategoriesSpy, file: file, line: line)

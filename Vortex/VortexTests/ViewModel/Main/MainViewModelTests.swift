@@ -37,7 +37,7 @@ final class MainViewModelTests: XCTestCase {
         XCTAssertNotNil(sut.sections.stickerViewModel)
     }
         
-    func test_tapTemplates_shouldSetLinkToTemplates() {
+    func test_tapTemplates_shouldNotSetLinkToTemplates() {
         
         let (sut, _) = makeSUT(scheduler: .immediate)
         let linkSpy = ValueSpy(sut.$route.map(\.case))
@@ -45,18 +45,7 @@ final class MainViewModelTests: XCTestCase {
         
         sut.fastPayment?.tapFastPaymentButton(type: .templates)
         
-        XCTAssertNoDiff(linkSpy.values, [nil, .templates])
-    }
-    
-    func test_tapTemplates_shouldNotSetLinkToNilOnTemplatesCloseUntilDelay() {
-        
-        let (sut, _) = makeSUT(scheduler: .immediate)
-        let linkSpy = ValueSpy(sut.$route.map(\.case))
-        sut.fastPayment?.tapFastPaymentButton(type: .templates)
-        
-        sut.templatesListViewModel?.closeAndWait()
-        
-        XCTAssertNoDiff(linkSpy.values, [nil, .templates])
+        XCTAssertNoDiff(linkSpy.values, [nil])
     }
     
     func test_tapUserAccount_shouldSendGetSubscriptionRequest() {
@@ -180,40 +169,6 @@ final class MainViewModelTests: XCTestCase {
         XCTAssertNoDiff(spy.values, [.init(promo: .savingsAccount)])
     }
 
-    func test_tapQr_onlyCorporateCards_shouldShowAlert() {
-        
-        let (sut, model) = makeSUT()
-        
-        model.products.value[.card] = [
-            makeCardProduct(id: 1, cardType: .individualBusinessman),
-            makeCardProduct(id: 2, cardType: .corporate)
-        ]
-        
-        XCTAssertNil(sut.route.modal)
-        
-        sut.fastPayment?.tapFastPaymentButtonAndWait(type: .byQr)
-        
-        XCTAssertNotNil(sut.route.modal?.alert)
-    }
-    
-    func test_tapQr_notOnlyCorporateCards_shouldSetModalToQrScanner() {
-        
-        let (sut, model) = makeSUT()
-        
-        model.products.value[.card] = [
-            makeCardProduct(id: 1, cardType: .individualBusinessman),
-            makeCardProduct(id: 2, cardType: .corporate),
-            makeCardProduct(id: 3, cardType: .main, isMain: true),
-        ]
-        
-        XCTAssertNil(sut.route.modal)
-        
-        sut.fastPayment?.tapFastPaymentButtonAndWait(type: .byQr)
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-        
-        XCTAssertNoDiff(sut.route.modal?.case, .qrScanner)
-    }
-    
     func test_tapByPhone_onlyCorporateCards_shouldShowAlert() {
         
         let (sut, model) = makeSUT(scheduler: .immediate)

@@ -19,6 +19,7 @@ extension Model {
 
 extension Model {
     
+    @inlinable
     func paymentEligibleProducts() -> [ProductData] {
         
         allProducts
@@ -26,6 +27,16 @@ extension Model {
             .filter(\.allowDebit)
             .filter(\.isActive)
             .filter(\.isPaymentEligible)
+    }
+    
+    @inlinable
+    func c2gPaymentEligibleProducts() -> [ProductData] {
+        
+        allProducts
+            .filter(\.isRub)
+            .filter(\.allowDebit)
+            .filter(\.isActive)
+            .filter(\.isC2GPaymentEligible)
     }
 }
 
@@ -93,6 +104,22 @@ extension ProductData {
         return false
     }
     
+    var isC2GPaymentEligible: Bool {
+        
+        if let card = self as? ProductCardData,
+           let cardType = card.cardType {
+            
+            return cardType.isC2GPaymentEligible && card.isActivated
+        }
+        
+        if self is ProductAccountData {
+            
+            return true
+        }
+        
+        return false
+    }
+    
     var isRub: Bool {
         
         return currency == "RUB"
@@ -107,5 +134,10 @@ extension ProductCardData.CardType {
         self == .main ||
         self == .additionalSelf ||
         self == .additionalSelfAccOwn
+    }
+    
+    var isC2GPaymentEligible: Bool {
+        
+        [.regular, .main, .additionalSelfAccOwn].contains(self)
     }
 }

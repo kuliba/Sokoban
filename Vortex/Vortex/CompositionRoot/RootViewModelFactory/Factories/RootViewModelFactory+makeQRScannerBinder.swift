@@ -15,10 +15,12 @@ import SberQR
 extension RootViewModelFactory {
     
     @inlinable
-    func makeQRScannerBinder() -> QRScannerDomain.Binder {
+    func makeQRScannerBinder(
+        c2gFlag: C2GFlag
+    ) -> QRScannerDomain.Binder {
         
         return composeBinder(
-            content: makeQRScannerModel(),
+            content: makeQRScannerModel(c2gFlag: c2gFlag),
             delayProvider: delayProvider,
             getNavigation: getQRNavigation,
             witnesses: .init(emitting: emitting, dismissing: dismissing)
@@ -43,6 +45,7 @@ extension RootViewModelFactory {
         case .providerServicePicker: return settings.delay
         case .sberQR:                return .milliseconds(300)
         case .sberQRComplete:        return .milliseconds(300)
+        case .searchByUIN:           return .milliseconds(300)
         }
     }
     
@@ -94,6 +97,9 @@ extension RootViewModelFactory {
                 
                 completion(.sberQR($0))
             }
+            
+        case let .uin(uin):
+            completion(.searchByUIN(makeSearchByUIN(uin: uin)))
             
         case .url, .unknown:
             completion(.failure(

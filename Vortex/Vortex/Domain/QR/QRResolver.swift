@@ -8,13 +8,23 @@
 import Foundation
 import SberQR
 
+struct QRResolverDependencies {
+    
+    let getUIN: GetUIN
+    let isSberQR: IsSberQR
+    
+    typealias GetUIN = (QRCode) -> String?
+    typealias IsSberQR = (URL) -> Bool
+}
+
 struct QRResolver {
     
-    private let isSberQR: (URL) -> Bool
+    private let dependencies: QRResolverDependencies
     
-    init(isSberQR: @escaping (URL) -> Bool) {
-        
-        self.isSberQR = isSberQR
+    init(
+        dependencies: QRResolverDependencies
+    ) {
+        self.dependencies = dependencies
     }
 }
 
@@ -22,36 +32,46 @@ extension QRResolver {
     
     func resolve(string: String) -> QRViewModel.ScanResult {
         
+        let qrCode = QRCode(string: string)
+        
         if let url = URL(string: string) {
             
-            if url.absoluteString.contains("qr.nspk.ru") {
-                
-                return .c2bURL(url)
-                
-            } else if url.absoluteString.contains("sub.nspk.ru") {
-                
-                return .c2bSubscribeURL(url)
-                
-            } else if isSberQR(url) {
-                
-                return .sberQR(url)
-                
-            } else if let qrCode = QRCode(string: string) {
-                
-                return .qrCode(qrCode)
-                
-            } else {
-                
-                return .url(url)
+            if let c2 = url.c2 {
+                return c2
             }
             
-        } else if let qrCode = QRCode(string: string) {
+            if dependencies.isSberQR(url) {
+                return .sberQR(url)
+            }
             
-            return .qrCode(qrCode)
-            
-        } else {
-            
-            return .unknown
+            if qrCode == nil {
+                return .url(url)
+            }
         }
+        
+        if let qrCode {
+            return dependencies.getUIN(qrCode).map { .uin($0) } ?? .qrCode(qrCode)
+        }
+        
+        return .unknown
+    }
+}
+
+private extension URL {
+    
+    var c2: QRViewModel.ScanResult? { c2bURL ?? c2bSubscribeURL }
+    
+    private var c2bURL: QRViewModel.ScanResult? {
+        
+        guard absoluteString.contains("qr.nspk.ru") else { return nil }
+        
+        return .c2bURL(self)
+    }
+    
+    private var c2bSubscribeURL: QRViewModel.ScanResult? {
+        
+        guard absoluteString.contains("sub.nspk.ru") else { return nil }
+        
+        return .c2bSubscribeURL(self)
     }
 }
