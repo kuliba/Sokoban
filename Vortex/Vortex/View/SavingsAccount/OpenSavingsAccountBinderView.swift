@@ -42,19 +42,15 @@ struct OpenSavingsAccountBinderView: View {
                     },
                     informerView: informerView
                 )
-                .padding(.bottom)
                 .onFirstAppear {
                     contentEvent(.load)
                 }
-                .navigationBarWithBack(
-                    title: "Оформление накопительного счета",
-                    subtitle: nil,
-                    dismiss: { flowEvent(.dismiss) }
-                )
                 .navigationDestination(
                     destination: flowState.navigation?.destination,
                     content: makeDestinationView
                 )
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarBackButtonHidden()
             }
         }
     }
@@ -67,7 +63,6 @@ struct OpenSavingsAccountBinderView: View {
         
         EmptyView() // TODO: add success view
     }
-
     
     private func informerView(
         _ informerData: InformerData
@@ -80,7 +75,7 @@ struct OpenSavingsAccountBinderView: View {
                 color: informerData.color)
         )
     }
-        
+    
     @inlinable
     @ViewBuilder
     func makeOpenSavingsAccountView(
@@ -92,17 +87,6 @@ struct OpenSavingsAccountBinderView: View {
             Text("openSavingsAccount")
         }
     }
-        
-    private func backButton(
-        _ back: @escaping () -> Void
-    ) -> some View {
-        Button(action: back) { Image.ic24ChevronLeft }
-    }
-    
-    private func header() -> some View {
-        "Оформление накопительного счета".text(withConfig: .init(textFont: .textH3M18240(), textColor: .textSecondary), alignment: .center)
-    }
-
 }
 
 extension OpenSavingsAccountBinderView {
