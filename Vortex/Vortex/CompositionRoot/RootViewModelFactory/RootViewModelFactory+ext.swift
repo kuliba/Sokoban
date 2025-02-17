@@ -418,9 +418,7 @@ extension RootViewModelFactory {
         
         let bannersBox = makeBannersBox(flags: featureFlags)
         
-        // TODO: extract to computer property
-        if featureFlags.savingsAccountFlag.isActive || featureFlags.collateralLoanLandingFlag.isActive ||
-            featureFlags.orderCardFlag.isActive {
+        if featureFlags.needGetBannersMyProductListV2 {
             
             performOrWaitForAuthorized { [weak bannersBox] in
                 
@@ -516,6 +514,16 @@ extension RootViewModelFactory {
         )
         
         return composer.compose(with: rootViewModel)
+    }
+}
+
+extension FeatureFlags {
+    
+    var needGetBannersMyProductListV2: Bool {
+        
+        return savingsAccountFlag.isActive ||
+        collateralLoanLandingFlag.isActive ||
+        orderCardFlag.isActive
     }
 }
 

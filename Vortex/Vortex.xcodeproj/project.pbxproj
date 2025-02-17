@@ -2763,6 +2763,7 @@
 		833104A02D63417200177E2B /* BannersBoxInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8331049F2D63417200177E2B /* BannersBoxInterface.swift */; };
 		833104A22D63474D00177E2B /* RequestFactory+createGetBannersMyProductListV2Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833104A12D63474D00177E2B /* RequestFactory+createGetBannersMyProductListV2Request.swift */; };
 		833104A42D63785500177E2B /* GetBannersMyProductListResponseCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833104A32D63785500177E2B /* GetBannersMyProductListResponseCodable.swift */; };
+		833104A62D637CBF00177E2B /* RequestFactory+createGetBannersMyProductListV2RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833104A52D637CBF00177E2B /* RequestFactory+createGetBannersMyProductListV2RequestTests.swift */; };
 		833245E02CAC56F9001AFF9D /* MarketShowcaseComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833245DF2CAC56F9001AFF9D /* MarketShowcaseComposerTests.swift */; };
 		833286D02C91BF4700B6FA3F /* RootViewFactory+banners.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833286CF2C91BF4700B6FA3F /* RootViewFactory+banners.swift */; };
 		833286D32C931DC100B6FA3F /* PaymentsTransfersCorporateContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833286D22C931DC100B6FA3F /* PaymentsTransfersCorporateContent.swift */; };
@@ -6447,6 +6448,7 @@
 		8331049F2D63417200177E2B /* BannersBoxInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannersBoxInterface.swift; sourceTree = "<group>"; };
 		833104A12D63474D00177E2B /* RequestFactory+createGetBannersMyProductListV2Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetBannersMyProductListV2Request.swift"; sourceTree = "<group>"; };
 		833104A32D63785500177E2B /* GetBannersMyProductListResponseCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetBannersMyProductListResponseCodable.swift; sourceTree = "<group>"; };
+		833104A52D637CBF00177E2B /* RequestFactory+createGetBannersMyProductListV2RequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetBannersMyProductListV2RequestTests.swift"; sourceTree = "<group>"; };
 		833245DF2CAC56F9001AFF9D /* MarketShowcaseComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseComposerTests.swift; sourceTree = "<group>"; };
 		833286CF2C91BF4700B6FA3F /* RootViewFactory+banners.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+banners.swift"; sourceTree = "<group>"; };
 		833286D22C931DC100B6FA3F /* PaymentsTransfersCorporateContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersCorporateContent.swift; sourceTree = "<group>"; };
@@ -10406,6 +10408,7 @@
 				8343FE2E2BB3EAC700D0C128 /* RequestFactory+createGetProductListByTypeRequestTest.swift */,
 				839914802C6E0CE900E9D275 /* RequestFactory+createGetProductListByTypeV6RequestTest.swift */,
 				83C918182C8705DC00037C11 /* RequestFactory+createGetBannerCatalogListV2Tests.swift */,
+				833104A52D637CBF00177E2B /* RequestFactory+createGetBannersMyProductListV2RequestTests.swift */,
 				A7E8D03B2CF6F46D008DF828 /* RequestFactory+createGetShowcaseRequestTests.swift */,
 				A7B5BD6B2CF766680094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequestTests.swift */,
 			);
@@ -23368,6 +23371,7 @@
 				2A6DC72F2AF3DFF700688401 /* LoggingLoaderDecoratorTests.swift in Sources */,
 				2AA619572C16D04C00043997 /* anyMessage.swift in Sources */,
 				0C69D7FC2951C36E00D161B2 /* DoubleExtensionsTests.swift in Sources */,
+				833104A62D637CBF00177E2B /* RequestFactory+createGetBannersMyProductListV2RequestTests.swift in Sources */,
 				2AA258612CEB2B800038642C /* RootViewModel_Tests.swift in Sources */,
 				77E1804327AC34A90006ACC9 /* ServerCommandsPushDeviceTests.swift in Sources */,
 				830DC3792BCFE1370095AB39 /* Model+allProductTests.swift in Sources */,

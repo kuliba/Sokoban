@@ -11,8 +11,6 @@ import GetBannersMyProductListService
 
 extension RequestFactory {
   
-    // TODO: add tests
-    
     static func createGetBannersMyProductListV2Request(
         _ serial: String?,
         _ timeout: TimeInterval = 120.0
@@ -28,6 +26,9 @@ extension RequestFactory {
             parameters: parameters
         )
         
-        return try RemoteServices.RequestFactory.createGetBannersMyProductListRequest(serial: serial, url: url)
+        var request = try RemoteServices.RequestFactory.createGetBannersMyProductListRequest(serial: serial, url: url)
+        request.timeoutInterval = timeout
+        
+        return request
     }
 }
