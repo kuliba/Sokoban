@@ -5,6 +5,10 @@
 //  Created by Igor Malyarov on 13.02.2025.
 //
 
+import C2GBackend
+import Foundation
+import RemoteServices
+
 extension RootViewModelFactory {
     
     @inlinable
@@ -57,7 +61,28 @@ extension RootViewModelFactory {
         _ uin: SearchByUINDomain.UIN,
         completion: @escaping (GetUINDataResult) -> Void
     ) {
-        // TODO: - replace stub with remote service, call on background
+        guard !uin.hasEasterEgg
+        else { return getUINDataEasterEggs(uin, completion: completion) }
+        
+        let service = onBackground(
+            makeRequest: Vortex.RequestFactory.createGetUINDataRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapGetUINDataResponse
+        )
+        
+        service(uin.value) {
+            
+            print($0) // TODO: use in completion
+            completion(.success(()))
+            _ = service
+        }
+    }
+    
+    // TODO: remove stub
+    @inlinable
+    func getUINDataEasterEggs(
+        _ uin: SearchByUINDomain.UIN,
+        completion: @escaping (GetUINDataResult) -> Void
+    ) {
         schedulers.background.delay(for: .seconds(2)) {
             
             switch uin.value {
@@ -65,7 +90,7 @@ extension RootViewModelFactory {
                 completion(.failure(.c2gConnectivity))
                 
             case "12345678901234567890":
-                completion(.failure(.server("Server Failure"))) // TODO: pass error message from response
+                completion(.failure(.server("Server Failure")))
                 
             default:
                 completion(.success(()))
@@ -79,4 +104,13 @@ extension RootViewModelFactory {
 private extension BackendFailure {
     
     static let c2gConnectivity: Self = .connectivity("Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения")
+}
+
+// TODO: remove with stub
+private extension SearchByUINDomain.UIN {
+    
+    var hasEasterEgg: Bool {
+        
+        ["01234567890123456789", "12345678901234567890"].contains(value)
+    }
 }
