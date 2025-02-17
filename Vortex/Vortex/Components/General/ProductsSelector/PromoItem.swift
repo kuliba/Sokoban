@@ -27,7 +27,7 @@ struct PromoItem: Equatable {
 
 extension PromoItem {
     
-    init(_ item: StickerBannersMyProductList) {
+    init(_ item: CardBannerList) {
         
         self.init(
             productName: item.productName,

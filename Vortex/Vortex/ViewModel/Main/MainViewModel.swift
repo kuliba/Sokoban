@@ -671,7 +671,7 @@ private extension MainViewModel {
     }
     
     func handleBanners(
-        _ banners: [StickerBannersMyProductList]
+        _ banners: [CardBannerList]
     ) {
         if let sticker = banners.first {
             

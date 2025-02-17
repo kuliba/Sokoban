@@ -995,7 +995,7 @@ final class MainViewModelTests: XCTestCase {
     ) throws -> LocalAgent {
         
         let localAgent = LocalAgent(context: LocalAgentTests.context)
-        let stickerData: StickerBannersMyProductList = .init(
+        let stickerData: CardBannerList = .init(
             productName: "productName",
             link: "link",
             md5hash: md5hash,
