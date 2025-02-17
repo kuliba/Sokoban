@@ -9,14 +9,18 @@ import XCTest
 
 func assertBody(
     of request: URLRequest,
-    hasJSON json: String,
+    hasJSON expectedJSON: String,
     file: StaticString = #file,
     line: UInt = #line
 ) throws {
     
-    try XCTAssertNoDiff(
-        String(data: XCTUnwrap(request.httpBody), encoding: .utf8),
-        json.replacingOccurrences(of: "\\s", with: "", options: .regularExpression),
-        file: file, line: line
-    )
+    guard let httpBody = request.httpBody 
+    else { return XCTFail("httpBody is nil", file: file, line: line) }
+    
+    let expectedData = try XCTUnwrap(expectedJSON.data(using: .utf8), "Expected JSON is not valid UTF-8", file: file, line: line)
+    
+    let actualObject = try JSONSerialization.jsonObject(with: httpBody, options: []) as? [String: AnyHashable]
+    let expectedObject = try JSONSerialization.jsonObject(with: expectedData, options: []) as? [String: AnyHashable]
+    
+    XCTAssertNoDiff(actualObject, expectedObject, file: file, line: line)
 }
