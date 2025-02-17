@@ -646,6 +646,7 @@ extension MainViewModel {
     
     static let sample = MainViewModel(
         .emptyMock,
+        bannersBox: BannersBox(load: { $0(nil) }),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
         landingServices: .empty(),

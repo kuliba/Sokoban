@@ -485,6 +485,7 @@ final class RootViewModelTests: XCTestCase {
             tabsViewModel: .init(
                 mainViewModel: .init(
                     model,
+                    bannersBox: BannersBox(load: { $0(nil) }),
                     navigationStateManager: .preview,
                     sberQRServices: .empty(),
                     landingServices: .empty(),
@@ -568,6 +569,7 @@ final class RootViewModelTests: XCTestCase {
             tabsViewModel: .init(
                 mainViewModel: .init(
                     model,
+                    bannersBox: BannersBox(load: { $0(nil) }),
                     navigationStateManager: .preview,
                     sberQRServices: .empty(),
                     landingServices: .empty(),

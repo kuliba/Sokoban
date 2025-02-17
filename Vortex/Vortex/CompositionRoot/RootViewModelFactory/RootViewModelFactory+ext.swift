@@ -871,9 +871,12 @@ private extension RootViewModelFactory {
                 featureFlags.c2gFlag
             )
         )
-                
+          
+        let bannersBox = makeBannersBox(flags: featureFlags)
+        
         let mainViewModel = MainViewModel(
-            model,
+            model, 
+            bannersBox: bannersBox,
             navigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             landingServices: landingServices,

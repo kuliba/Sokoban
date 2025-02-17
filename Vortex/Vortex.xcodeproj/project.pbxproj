@@ -2757,6 +2757,10 @@
 		832F83112BB8292600C97BBD /* CarouselComponentConfig+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832F83102BB8292600C97BBD /* CarouselComponentConfig+iVortex.swift */; };
 		832FB0AD2C215AB7001CE10F /* SVCardLimitAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 832FB0AC2C215AB7001CE10F /* SVCardLimitAPI */; };
 		8330E12F2CEF405B00694AD0 /* SavingsServices in Frameworks */ = {isa = PBXBuildFile; productRef = 8330E12E2CEF405B00694AD0 /* SavingsServices */; };
+		833104992D633EC400177E2B /* RootViewModelFactory+makeBannersBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833104982D633EC400177E2B /* RootViewModelFactory+makeBannersBox.swift */; };
+		8331049C2D63413900177E2B /* BannerList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8331049B2D63413900177E2B /* BannerList.swift */; };
+		8331049E2D63415B00177E2B /* BannersBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8331049D2D63415B00177E2B /* BannersBox.swift */; };
+		833104A02D63417200177E2B /* BannersBoxInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8331049F2D63417200177E2B /* BannersBoxInterface.swift */; };
 		833245E02CAC56F9001AFF9D /* MarketShowcaseComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833245DF2CAC56F9001AFF9D /* MarketShowcaseComposerTests.swift */; };
 		833286D02C91BF4700B6FA3F /* RootViewFactory+banners.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833286CF2C91BF4700B6FA3F /* RootViewFactory+banners.swift */; };
 		833286D32C931DC100B6FA3F /* PaymentsTransfersCorporateContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833286D22C931DC100B6FA3F /* PaymentsTransfersCorporateContent.swift */; };
@@ -6435,6 +6439,10 @@
 		832F2D522BC9570200221360 /* BottomSheetReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetReducer.swift; sourceTree = "<group>"; };
 		832F83102BB8292600C97BBD /* CarouselComponentConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CarouselComponentConfig+iVortex.swift"; sourceTree = "<group>"; };
 		8330E12D2CEF3FED00694AD0 /* SavingsServices.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SavingsServices.xctestplan; sourceTree = "<group>"; };
+		833104982D633EC400177E2B /* RootViewModelFactory+makeBannersBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeBannersBox.swift"; sourceTree = "<group>"; };
+		8331049B2D63413900177E2B /* BannerList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerList.swift; sourceTree = "<group>"; };
+		8331049D2D63415B00177E2B /* BannersBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannersBox.swift; sourceTree = "<group>"; };
+		8331049F2D63417200177E2B /* BannersBoxInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannersBoxInterface.swift; sourceTree = "<group>"; };
 		833245DF2CAC56F9001AFF9D /* MarketShowcaseComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseComposerTests.swift; sourceTree = "<group>"; };
 		833286CF2C91BF4700B6FA3F /* RootViewFactory+banners.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewFactory+banners.swift"; sourceTree = "<group>"; };
 		833286D22C931DC100B6FA3F /* PaymentsTransfersCorporateContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersCorporateContent.swift; sourceTree = "<group>"; };
@@ -11158,6 +11166,7 @@
 				2A5882022D57235600C68DC4 /* RootViewModelFactory+onBackground.swift */,
 				2A11B9382D402D6500BD98C2 /* RootViewModelFactory+Infra.swift */,
 				836801512CC553B700DB8197 /* RootViewModelFactory+ext.swift */,
+				833104982D633EC400177E2B /* RootViewModelFactory+makeBannersBox.swift */,
 				2AB529FC2D296F930016AA6E /* RootViewModelFactory+composeBinder.swift */,
 				2AB79B0E2D4F65B000968537 /* RootViewModelFactory+composeFlow.swift */,
 				2AC2F08F2CC44E97006FCFBC /* RootViewModelFactory+composeLoaders.swift */,
@@ -13121,6 +13130,7 @@
 				2AF50A142B315CB2009CB9E5 /* RootViewFactory */,
 				2A72ACC12CC6CB8B00B8BF5B /* RootViewModelFactory */,
 				2A118E1D2AFEABAE007EF30E /* AuthLogin */,
+				8331049A2D63411B00177E2B /* Banners */,
 				2A5D6F5B2D5DB4140011C09E /* C2G */,
 				ECCFA4092CC7D6FF0009099E /* ClientInformData */,
 				2A3624A42C5F7BD000174C50 /* Components */,
@@ -16036,6 +16046,16 @@
 				832F83102BB8292600C97BBD /* CarouselComponentConfig+iVortex.swift */,
 			);
 			path = Carousel;
+			sourceTree = "<group>";
+		};
+		8331049A2D63411B00177E2B /* Banners */ = {
+			isa = PBXGroup;
+			children = (
+				8331049B2D63413900177E2B /* BannerList.swift */,
+				8331049D2D63415B00177E2B /* BannersBox.swift */,
+				8331049F2D63417200177E2B /* BannersBoxInterface.swift */,
+			);
+			path = Banners;
 			sourceTree = "<group>";
 		};
 		833245DE2CAC56DC001AFF9D /* MarketShowcase */ = {
@@ -21190,6 +21210,7 @@
 				EDDFE3AB2756D39F00F57C71 /* DepositCalculatorViewController.swift in Sources */,
 				C1F799A729D3EDB00048346B /* Model+PaymentsChange.swift in Sources */,
 				EDB02AEA2816F2E0005F64B5 /* AccountCellInfoViewComponent.swift in Sources */,
+				833104A02D63417200177E2B /* BannersBoxInterface.swift in Sources */,
 				77F1581B28108BB500CA5E4E /* SessionAgentProtocol.swift in Sources */,
 				ED0B48A3267E71DC0037EA06 /* FCMToken.swift in Sources */,
 				5088A08928560B3F003C39D7 /* OpenAccountItemViewComponent.swift in Sources */,
@@ -22432,6 +22453,7 @@
 				2A0D9B862B0E2C6100F1DFD1 /* StickerViewFactory+makeDocumentButton.swift in Sources */,
 				EDB14516266526B10028EF5A /* CreditCardEntryView.swift in Sources */,
 				68FB358B2760C1C80097AECE /* AntifraudView.swift in Sources */,
+				8331049E2D63415B00177E2B /* BannersBox.swift in Sources */,
 				ECCA5B532CFDFC250034A64A /* StringSerialRemoteDomain.swift in Sources */,
 				2A43009D2C524CA1002FF8C7 /* AnywayTransactionViewModelComposer.swift in Sources */,
 				777460F32922C5BA00D3FF46 /* ContactsLatestPaymentsSectionViewModel.swift in Sources */,
@@ -22470,6 +22492,7 @@
 				EDB1655C2667A2C8007E6030 /* LoginCardEntryViewController UI.swift in Sources */,
 				8399147B2C6DE7B700E9D275 /* Services+getProductListByTypeV6.swift in Sources */,
 				2A2E3FD52BB3FBDB00730D37 /* RequestFactory+createCreateAnywayTransferNewRequest.swift in Sources */,
+				8331049C2D63413900177E2B /* BannerList.swift in Sources */,
 				2A6CCF502C92D85E008ADA74 /* SerialLoaderComposer.swift in Sources */,
 				0B797C9426E6AD0700589DBF /* BanksListSaved.swift in Sources */,
 				2A7688D32AF3914C00045293 /* Store.swift in Sources */,
@@ -22920,6 +22943,7 @@
 				2A35DDA52C02118100EFF0EB /* AnywayTransactionEffectHandlerNanoServicesComposer.swift in Sources */,
 				77EC58F6277382A60054D75C /* OperationEnvironment.swift in Sources */,
 				2A65F1F82D3504F400C0D724 /* QRMappingFailureView.swift in Sources */,
+				833104992D633EC400177E2B /* RootViewModelFactory+makeBannersBox.swift in Sources */,
 				2A7183BC2C5E290A008B222B /* QRScanResultMapperComposer+ext.swift in Sources */,
 				EDB165762668C5BE007E6030 /* PaymentsCell.swift in Sources */,
 				0BE0BE03290F30BA0064549E /* QROperator.swift in Sources */,

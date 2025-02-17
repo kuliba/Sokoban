@@ -54,11 +54,14 @@ class MainViewModel: ObservableObject, Resetable {
     let viewModelsFactory: MainViewModelsFactory
     let makeOpenNewProductButtons: OpenNewProductsViewModel.MakeNewProductButtons
     
+    let bannersBox: any BannersBoxInterface<BannerList>
+    
     private var bindings = Set<AnyCancellable>()
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
         _ model: Model,
+        bannersBox: any BannersBoxInterface<BannerList>,
         route: Route = .empty,
         navigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
@@ -73,6 +76,7 @@ class MainViewModel: ObservableObject, Resetable {
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.model = model
+        self.bannersBox = bannersBox
         self.updateInfoStatusFlag = updateInfoStatusFlag
         self.navButtonsRight = []
         self.sections = sections
@@ -300,6 +304,11 @@ private extension MainViewModel {
             .receive(on: scheduler)
             .assign(to: &$route)
         
+        bannersBox.banners
+            .receive(on: scheduler)
+            .sink { [weak self] in self?.handleBanners($0) }
+            .store(in: &bindings)
+        
         model.productListBannersWithSticker
             .receive(on: scheduler)
             .sink { [weak self] in self?.handleBanners($0) }
@@ -357,6 +366,7 @@ private extension MainViewModel {
                     
                     model.action.send(ModelAction.Products.Update.Total.All())
                     model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList, .bannerCatalogList]))
+                    bannersBox.requestUpdate()
                     
                 case _ as MainViewModelAction.Close.Link:
                     resetDestination()
@@ -684,6 +694,20 @@ private extension MainViewModel {
         }
     }
     
+    func handleBanners(
+        _ banners: BannerList
+    ) {
+        if let sticker = banners.cardBannerList.first {
+            
+            let promoItems = makePromoViewModels(promoItems: [
+                .init(sticker),
+                .savingsAccountPreview
+            ]) ?? []
+            
+            sections.productsSection?.productCarouselViewModel.updatePromo(promoItems)
+        }
+    }
+
     func openMoreProducts() { //
         
         let myProductsViewModel = MyProductsViewModel(

@@ -112,6 +112,7 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
+            bannersBox: BannersBox(load: { $0(nil) }),
             navigationStateManager: .preview,
             sberQRServices: .empty(),
             landingServices: .empty(),
@@ -766,6 +767,7 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
+            bannersBox: BannersBox(load: { $0(nil) }),
             navigationStateManager: .preview,
             sberQRServices: sberQRServices,
            // qrViewModelFactory: qrViewModelFactory,
@@ -837,6 +839,7 @@ final class MainViewModelTests: XCTestCase {
 
         let sut = MainViewModel(
             model,
+            bannersBox: BannersBox(load: { $0(nil) }),
             navigationStateManager: .preview,
             sberQRServices: sberQRServices,
             landingServices: .empty(),
@@ -921,6 +924,7 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
+            bannersBox: BannersBox(load: { $0(nil) }),
             navigationStateManager: .preview,
             sberQRServices: .empty(),
             landingServices: .empty(),
