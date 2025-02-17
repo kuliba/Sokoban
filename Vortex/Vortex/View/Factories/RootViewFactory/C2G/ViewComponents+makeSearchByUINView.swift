@@ -1,5 +1,5 @@
 //
-//  ViewComponents+searchByUINView.swift
+//  ViewComponents+makeSearchByUINView.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 13.02.2025.
@@ -11,14 +11,37 @@ import SwiftUI
 extension ViewComponents {
     
     @inlinable
-    func searchByUINView(
+    func goToMain() {
+        
+        rootEvent(.outside(.tab(.main)))
+    }
+    
+    @inlinable
+    func makeSearchByUINView(
+        binder: SearchByUINDomain.Binder,
+        dismiss: @escaping () -> Void,
+        scanQR: @escaping () -> Void
+    ) -> some View {
+        
+        makeSearchByUINContentView(binder)
+            .background(searchByUINFlowView(flow: binder.flow))
+            .navigationBar(with: navBarModelWithQR(
+                title: "Поиск по УИН",
+                subtitle: "Поиск начислений по УИН",
+                dismiss: dismiss,
+                scanQR: scanQR
+            ))
+            .disablingLoading(flow: binder.flow)
+    }
+    
+    @inlinable
+    func makeSearchByUINContentView(
         _ binder: SearchByUINDomain.Binder
     ) -> some View {
         
         VStack(spacing: 16) {
             
-            Text("TBD: Search by UIN")
-                .font(.headline)
+            binder.content.map { Text("UIN: \($0)") }
             
             Button("connectivityFailure") {
                 
@@ -41,6 +64,26 @@ extension ViewComponents {
         .buttonStyle(.bordered)
     }
     
+    @inlinable
+    func searchByUINFlowView(
+        flow: SearchByUINDomain.Flow
+    ) -> some View {
+        
+        searchByUINFlowView(flow: flow) {
+            
+            c2gPaymentFlowView(
+                flow: $0,
+                dismiss: { flow.event(.dismiss) }
+            ) { cover in
+                
+                makeC2GPaymentCompleteView(
+                    cover: cover,
+                    goToMain: goToMain
+                )
+            }
+        }
+    }
+
     @inlinable
     func searchByUINFlowView(
         flow: SearchByUINDomain.Flow,

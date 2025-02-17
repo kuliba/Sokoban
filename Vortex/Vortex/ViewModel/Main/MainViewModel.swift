@@ -1186,6 +1186,9 @@ extension MainViewModel {
         case let .sberQR(url):
             handleSberQRURL(url)
             
+        case .uin:
+            break // handled by root
+            
         case let .url(url):
             handleURL(url)
             

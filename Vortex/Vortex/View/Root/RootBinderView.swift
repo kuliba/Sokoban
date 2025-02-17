@@ -118,41 +118,11 @@ private extension RootBinderView {
         _ searchByUIN: SearchByUINDomain.Binder
     ) -> some View {
         
-        rootViewFactory.components.searchByUINView(searchByUIN)
-            .background(searchByUINFlowView(
-                flow: searchByUIN.flow,
-                goToMain: { binder.flow.event(.dismiss) }
-            ))
-            .navigationBarWithBack(
-                title: "Поиск по УИН",
-                subtitle: "Поиск начислений по УИН",
-                dismiss: { binder.flow.event(.dismiss) },
-                rightItem: .barcodeScanner {
-                    
-                    binder.flow.event(.select(.scanQR))
-                }
-            )
-            .disablingLoading(flow: searchByUIN.flow)
-    }
-    
-    func searchByUINFlowView(
-        flow: SearchByUINDomain.Flow,
-        goToMain: @escaping () -> Void
-    ) -> some View {
-        
-        rootViewFactory.components.searchByUINFlowView(flow: flow) {
-            
-            rootViewFactory.components.c2gPaymentFlowView(
-                flow: $0,
-                dismiss: { flow.event(.dismiss) }
-            ) { cover in
-                
-                rootViewFactory.components.makeC2GPaymentCompleteView(
-                    cover: cover,
-                    goToMain: goToMain
-                )
-            }
-        }
+        rootViewFactory.components.makeSearchByUINView(
+            binder: searchByUIN,
+            dismiss: { binder.flow.event(.dismiss) },
+            scanQR: { binder.flow.event(.select(.scanQR)) }
+        )
     }
     
     private func userAccountView(

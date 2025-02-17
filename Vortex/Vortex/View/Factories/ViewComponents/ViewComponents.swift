@@ -51,6 +51,8 @@ typealias MakeOrderCardView = () -> EmptyView
 
 struct ViewComponents {
     
+    let rootEvent: (RootViewSelect) -> Void
+    
     let clearCache: () -> Void
     let isCorporate: () -> Bool
     let getUImage: (Md5hash) -> UIImage?
@@ -125,6 +127,7 @@ extension ViewComponents {
 extension ViewComponents {
     
     static let preview: Self = .init(
+        rootEvent: { _ in },
         clearCache: {},
         isCorporate: { false },
         getUImage: { _ in nil },

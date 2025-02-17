@@ -18,7 +18,7 @@ extension SearchByUINDomain {
     
     // MARK: - Content
     
-    typealias Content = Void
+    typealias Content = String?
     
     // MARK: - Flow
     

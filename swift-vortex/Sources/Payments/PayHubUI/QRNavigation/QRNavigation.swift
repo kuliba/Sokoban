@@ -8,7 +8,7 @@
 import Foundation
 import FlowCore
 
-public enum QRNavigation<ConfirmSberQR, MixedPicker, MultiplePicker, OperatorModel, Payments, QRFailure, ServicePicker> {
+public enum QRNavigation<ConfirmSberQR, MixedPicker, MultiplePicker, OperatorModel, Payments, QRFailure, ServicePicker, SearchByUIN> {
     
     case confirmSberQR(Node<ConfirmSberQR>)
     case failure(Failure)
@@ -17,6 +17,7 @@ public enum QRNavigation<ConfirmSberQR, MixedPicker, MultiplePicker, OperatorMod
     case operatorModel(OperatorModel)
     case payments(Node<Payments>)
     case qrFailure(Node<QRFailure>)
+    case searchByUIN(SearchByUIN)
     case servicePicker(Node<ServicePicker>)
     
     public enum Failure: Equatable {
