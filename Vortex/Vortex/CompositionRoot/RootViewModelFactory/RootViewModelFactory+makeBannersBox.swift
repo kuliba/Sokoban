@@ -6,7 +6,8 @@
 //
 
 import Foundation
-import GetBannerCatalogListAPI
+import RemoteServices
+import GetBannersMyProductListService
 
 extension RootViewModelFactory {
     
@@ -14,14 +15,32 @@ extension RootViewModelFactory {
     func makeBannersBox(
         flags: FeatureFlags
     ) -> BannersBox<BannerList> {
-        //Получение данных мини-баннеров
-        // GET dict/v2/getBannersMyProductList
-        /*let load = onBackground(
-            makeRequest: <#T##RemoteDomainOf<Payload, Response, any Error>.MakeRequest##RemoteDomainOf<Payload, Response, any Error>.MakeRequest##(Payload) throws -> URLRequest#>,
-            mapResponse: <#T##RemoteDomainOf<Payload, Response, any Error>.MapResponse##RemoteDomainOf<Payload, Response, any Error>.MapResponse##(Data, HTTPURLResponse) -> Result<Response, ResponseMapper.MappingError>#>)
-        */
+
+        let load = onBackground(
+            makeRequest: {
+                
+               try RequestFactory.createGetBannersMyProductListV2Request($0)
+            },
+            mapResponse: RemoteServices.ResponseMapper.mapGetBannersMyProductListResponse(_:_:)
+        )
         
+        return .init(load: { completion in
+            
+            load(nil) {
+                completion(try? $0.map(\.bannerList).get())
+            }
+        })
+    }
+}
+private extension RemoteServices.ResponseMapper.GetBannersMyProductListResponse {
+   // TODO: add
+    var bannerList: BannerList {
         
-        return .init(load: { $0(nil) })
+        .init(
+            cardBannerList: [],
+            depositBannerList: [],
+            accountBannerList: [],
+            loanBannerList: []
+        )
     }
 }
