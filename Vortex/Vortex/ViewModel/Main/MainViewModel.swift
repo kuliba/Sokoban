@@ -162,13 +162,6 @@ class MainViewModel: ObservableObject, Resetable {
             }
         }
     }
-
-    private func updatePromo(
-        _ newPromo: [AdditionalProductViewModel]
-    ) {
-       
-        sections.productsSection?.productCarouselViewModel.updatePromo(newPromo)
-    }
     
     private func updateProducts(
         _ model: Model
@@ -309,18 +302,7 @@ private extension MainViewModel {
         
         model.productListBannersWithSticker
             .receive(on: scheduler)
-            .sink { [weak self] in
-                guard let self else { return }
-                
-                if let sticker = $0.first {
-                    
-                    let promoItems = self.makePromoViewModels(promoItems: [
-                        .init(sticker),
-                        .savingsAccountPreview
-                    ]) ?? []
-                    self.updatePromo(promoItems)
-                }
-            }
+            .sink { [weak self] in self?.handleBanners($0) }
             .store(in: &bindings)
         
         if updateInfoStatusFlag.isActive {
@@ -685,6 +667,20 @@ private extension MainViewModel {
                 .sink { [weak self] in
                     self?.handlePromoAction($0.promo) }
                 .store(in: &bindings)
+        }
+    }
+    
+    func handleBanners(
+        _ banners: [StickerBannersMyProductList]
+    ) {
+        if let sticker = banners.first {
+            
+            let promoItems = makePromoViewModels(promoItems: [
+                .init(sticker),
+                .savingsAccountPreview
+            ]) ?? []
+            
+            sections.productsSection?.productCarouselViewModel.updatePromo(promoItems)
         }
     }
     
