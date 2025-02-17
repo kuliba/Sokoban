@@ -16,6 +16,7 @@ extension RootViewModelFactory {
         // MARK: - CategoryPicker
         
         let categoryPicker = makeCategoryPickerSection(
+            c2gFlag: c2gFlag,
             nanoServices: nanoServices
         )
         

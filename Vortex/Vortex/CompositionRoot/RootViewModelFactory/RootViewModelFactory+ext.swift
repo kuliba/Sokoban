@@ -480,10 +480,10 @@ extension RootViewModelFactory {
               
                 // TODO: - extract to helper func
                 switch $0 {
-                case .outside:
+                case .failure, .outside:
                     return .zero
                 
-                case .failure, .orderCardResponse:
+                case .orderCardResponse:
                     return .milliseconds(100)
 
                 case .scanQR, .templates:

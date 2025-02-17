@@ -66,24 +66,28 @@ extension RootViewModelFactory {
             if isUserPersonal() {
                 makeScanQR()
             } else {
-                completion(.outside(.tab(.main)))
+                completion(.disabledForCorporate)
             }
             
         case .templates:
             if isUserPersonal() {
                 makeTemplatesNode()
             } else {
-                completion(.outside(.tab(.main)))
+                completion(.disabledForCorporate)
             }
             
         case let .standardPayment(type):
             initiateStandardPaymentFlow(type)
             
         case .searchByUIN:
-            if c2gFlag.isActive {
-                completion(.searchByUIN(makeSearchByUIN()))
+            if isUserPersonal() {
+                if c2gFlag.isActive {
+                    completion(.searchByUIN(makeSearchByUIN()))
+                } else {
+                    completion(.updateForNewPaymentFlow)
+                }
             } else {
-                completion(.failure(.featureFailure(.newPaymentFlow)))
+                completion(.disabledForCorporate)
             }
             
         case .userAccount:
@@ -274,7 +278,16 @@ private extension RootViewNavigation.Failure {
 
 // MARK: - Helpers
 
+private extension RootViewNavigation {
+    
+    static let disabledForCorporate: Self = .failure(.featureFailure(.disabledForCorporate))
+    
+    static let updateForNewPaymentFlow: Self = .failure(.featureFailure(.updateForNewPaymentFlow))
+}
+
 private extension FeatureFailure {
     
-    static let newPaymentFlow: Self = .init(message: "Обновите приложение до последней версии, чтобы получить доступ к новому разделу.")
+    static let disabledForCorporate: Self = .init(title: "Информация", message: "Данный функционал не доступен\nдля корпоративных карт.\nОткройте продукт как физ. лицо,\nчтобы использовать все\nвозможности приложения.")
+    
+    static let updateForNewPaymentFlow: Self = .init(message: "Обновите приложение до последней версии, чтобы получить доступ к новому разделу.")
 }
