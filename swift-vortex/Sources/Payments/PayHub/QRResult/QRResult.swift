@@ -15,6 +15,7 @@ public enum QRResult<QRCode, Mapped> {
     case failure(QRCode)
     case mapped(Mapped)
     case sberQR(URL)
+    case uin(String)
     case url(URL)
     case unknown
 }

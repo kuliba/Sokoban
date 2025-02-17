@@ -144,6 +144,9 @@ extension QRViewModel.ScanResult {
         case let .sberQR(url):
             return .sberQR(url)
             
+        case let .uin(uin):
+            return .uin(uin)
+            
         case let .url(url):
             return .url(url)
             
@@ -158,6 +161,7 @@ extension QRViewModel.ScanResult {
         case c2bURL(URL)
         case c2bSubscribeURL(URL)
         case sberQR(URL)
+        case uin(String)
         case url(URL)
         case unknown
     }

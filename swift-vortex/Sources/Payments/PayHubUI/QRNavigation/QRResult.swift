@@ -22,6 +22,7 @@ enum First<QRCode, Source> {
     case missingINN(QRCode)
     case none(QRCode)
     case source(Source)
+    case uin(String)
     case url(URL)
     case unknown
 }
@@ -80,6 +81,9 @@ extension QRResult {
         case let .sberQR(url):
             self = .second(.sberQR(url))
             
+        case let .uin(uin):
+            self = .first(.uin(uin))
+            
         case let .url(url):
             self = .first(.url(url))
             
@@ -110,6 +114,9 @@ extension QRResult {
                 
             case let .source(source):
                 return .mapped(.source(source))
+                
+            case let .uin(uin):
+                return .uin(uin)
                 
             case let .url(url):
                 return .url(url)

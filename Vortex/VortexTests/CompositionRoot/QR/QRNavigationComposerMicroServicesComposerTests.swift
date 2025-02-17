@@ -350,7 +350,8 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
             createSberQRPayment: .init(),
             getSberQRData: .init(),
             makeProviderPicker: .init(stubs: [.preview(mix: makeMixedOperators(), qrCode: makeQR(), qrMapping: makeQRMapping())]),
-            makeServicePicker: .init()
+            makeServicePicker: .init(),
+            makeSearchByUIN: .init()
         )
         
         let sut = SUT(
@@ -361,6 +362,7 @@ final class QRNavigationComposerMicroServicesComposerTests: QRNavigationTests {
             getSberQRData: spies.getSberQRData.process(_:completion:),
             makeSegmented: spies.makeProviderPicker.call, 
             makeServicePicker: spies.makeServicePicker.process(_:completion:), 
+            makeSearchByUIN: spies.makeSearchByUIN.process(_:completion:),
             scanner: QRScannerViewModelSpy(),
             scheduler: .immediate
         )

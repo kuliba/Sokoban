@@ -12,8 +12,8 @@ import Foundation
 extension QRNavigation {
     
     var failure: SelectedCategoryFailure? {
-
-        #warning("title is lost - a better way would be to wrap ErrorMessage in SelectedCategoryFailure")
+        
+#warning("title is lost - a better way would be to wrap ErrorMessage in SelectedCategoryFailure")
         return errorMessage.map { .init(id: .init(), message: $0.message) }
     }
     
@@ -60,6 +60,9 @@ extension QRNavigation {
         case let .sberQR(.success(sberQR)):
             return .sberQR(sberQR)
             
+        case let .searchByUIN(searchByUIN):
+            return .searchByUIN(searchByUIN)
+            
         case let .servicePicker(node):
             return .servicePicker(node.model)
         }
@@ -77,7 +80,10 @@ extension QRNavigation {
         case paymentComplete(PaymentComplete)
         case providerPicker(ProviderPicker)
         case sberQR(SberQR)
+        case searchByUIN(SearchByUIN)
         case servicePicker(AnywayServicePickerFlowModel)
+        
+        typealias SearchByUIN = SearchByUINDomain.Binder
     }
 }
 
@@ -107,6 +113,9 @@ extension QRNavigation.Destination: Identifiable {
         case let .sberQR(sberQR):
             return .sberQR(.init(sberQR))
             
+        case let .searchByUIN(searchByUIN):
+            return .searchByUIN(.init(searchByUIN))
+            
         case let .servicePicker(servicePicker):
             return .servicePicker(.init(servicePicker))
         }
@@ -114,13 +123,14 @@ extension QRNavigation.Destination: Identifiable {
     
     enum ID: Hashable {
         
-        case qrFailedViewModel(ObjectIdentifier)
         case internetTV
         case operatorSearch(ObjectIdentifier)
-        case payments(ObjectIdentifier)
         case paymentComplete(ObjectIdentifier)
+        case payments(ObjectIdentifier)
         case providerPicker(ObjectIdentifier)
+        case qrFailedViewModel(ObjectIdentifier)
         case sberQR(ObjectIdentifier)
+        case searchByUIN(ObjectIdentifier)
         case servicePicker(ObjectIdentifier)
     }
 }

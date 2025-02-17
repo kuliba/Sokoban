@@ -9,7 +9,7 @@ import FlowCore
 import PayHub
 
 /// A namespace.
-public enum QRNavigationDomain<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
+public enum QRNavigationDomain<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source, SearchByUIN>
  {}
 
 public extension QRNavigationDomain {
@@ -41,6 +41,6 @@ public extension QRNavigationDomain {
             case chat, main, payments
         }
         
-        public typealias QRNavigation = PayHubUI.QRNavigation<ConfirmSberQR, MixedPicker, MultiplePicker, OperatorModel, Payments, QRFailure, ServicePicker>
+        public typealias QRNavigation = PayHubUI.QRNavigation<ConfirmSberQR, MixedPicker, MultiplePicker, OperatorModel, Payments, QRFailure, ServicePicker, SearchByUIN>
     }
 }

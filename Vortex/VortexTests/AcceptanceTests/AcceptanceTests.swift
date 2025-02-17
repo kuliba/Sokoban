@@ -63,7 +63,7 @@ class AcceptanceTests: QRNavigationTests {
                 dismiss: dismiss
             )
             self.rootViewFactory = rootComposer.makeRootViewFactory(
-                featureFlags: .active,
+                featureFlags: .active, 
                 rootEvent: rootEvent
             )
         }

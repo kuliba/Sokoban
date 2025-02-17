@@ -43,6 +43,7 @@ extension RootViewModelFactory {
         case .providerServicePicker: return settings.delay
         case .sberQR:                return .milliseconds(300)
         case .sberQRComplete:        return .milliseconds(300)
+        case .searchByUIN:           return .milliseconds(300)
         }
     }
     
@@ -94,6 +95,9 @@ extension RootViewModelFactory {
                 
                 completion(.sberQR($0))
             }
+            
+        case let .uin(uin):
+            completion(.searchByUIN(makeSearchByUIN(uin: uin)))
             
         case .url, .unknown:
             completion(.failure(
