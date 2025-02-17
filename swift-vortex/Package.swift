@@ -1781,12 +1781,18 @@ private extension Target {
     
     static let c2gBackend = target(
         name: .c2gBackend,
+        dependencies: [
+            .remoteServices
+        ],
         path: "Sources/Payments/C2G/Backend"
     )
     static let c2gBackendTests = testTarget(
         name: .c2gBackendTests,
         dependencies: [
-            .c2gBackend
+            // external packages
+            .customDump,
+            // internal modules
+            .c2gBackend,
         ],
         path: "Tests/Payments/C2G/BackendTests"
     )

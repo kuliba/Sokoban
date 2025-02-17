@@ -331,6 +331,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         localAgent: LocalAgentProtocol? = nil,
         sessionState: SessionState = .inactive,
         mapScanResult: @escaping RootViewModelFactory.MapScanResult = { _, completion in completion(.unknown) },
+        makeQRResolve: @escaping RootViewModelFactory.MakeResolveQR = { _ in { _ in .unknown }},
         schedulers: Schedulers? = nil,
         file: StaticString = #file,
         line: UInt = #line
@@ -354,7 +355,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
             httpClient: httpClient,
             logger: LoggerSpy(),
             mapScanResult: mapScanResult,
-            resolveQR: { _ in .unknown },
+            makeQRResolve: makeQRResolve,
             scanner: QRScannerViewModelSpy(),
             schedulers: schedulers ?? .test(
                 main: .immediate,

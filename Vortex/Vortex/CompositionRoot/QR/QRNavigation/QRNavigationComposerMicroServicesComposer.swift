@@ -10,6 +10,7 @@ import VortexTools
 import Foundation
 import SberQR
 
+// TODO: need to simplify or remove - way to complex to manage
 final class QRNavigationComposerMicroServicesComposer {
     
     private let httpClient: HTTPClient
@@ -20,6 +21,7 @@ final class QRNavigationComposerMicroServicesComposer {
     private let makeSegmented: MakeSegmented
     private let makeServicePicker: MicroServices.MakeServicePicker
     private let makeSearchByUIN: MicroServices.MakeSearchByUIN
+    private let makeQRResolve: MicroServices.MakeQRResolve
     private let scanner: any QRScannerViewModel
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
@@ -34,6 +36,7 @@ final class QRNavigationComposerMicroServicesComposer {
         // static RootViewModelFactory.makeProviderServicePickerFlowModel(httpClient:log:model:pageSize:flag:scheduler:)
         makeServicePicker: @escaping MicroServices.MakeServicePicker,
         makeSearchByUIN: @escaping MicroServices.MakeSearchByUIN,
+        makeQRResolve: @escaping MicroServices.MakeQRResolve,
         scanner: any QRScannerViewModel,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
@@ -45,6 +48,7 @@ final class QRNavigationComposerMicroServicesComposer {
         self.makeSegmented = makeSegmented
         self.makeServicePicker = makeServicePicker
         self.makeSearchByUIN = makeSearchByUIN
+        self.makeQRResolve = makeQRResolve
         self.scanner = scanner
         self.scheduler = scheduler
     }
@@ -73,7 +77,8 @@ extension QRNavigationComposerMicroServicesComposer {
             makeSberPaymentComplete: makeSberPaymentComplete,
             makeSberQR: makeSberQR,
             makeSearchByUIN: makeSearchByUIN,
-            makeServicePicker: makeServicePicker
+            makeServicePicker: makeServicePicker, 
+            makeQRResolve: makeQRResolve
         )
     }
 }
@@ -199,7 +204,7 @@ private extension QRNavigationComposerMicroServicesComposer {
                 httpClient: httpClient,
                 logger: logger,
                 mapScanResult: mapper.mapScanResult,
-                resolveQR: self.qrResolve,
+                makeQRResolve: makeQRResolve,
                 scanner: scanner,
                 schedulers: .init()
             )
@@ -220,17 +225,5 @@ extension QRNavigation.ErrorMessage {
     static var techError: Self {
         
         return .init(title: "Ошибка", message: "Возникла техническая ошибка")
-    }
-}
-
-private extension QRNavigationComposerMicroServicesComposer {
-    
-    func qrResolve(
-        string: String
-    ) -> QRViewModel.ScanResult {
-        
-        let resolver = QRResolver(isSberQR: model.isSberQR)
-        
-        return resolver.resolve(string: string)
     }
 }

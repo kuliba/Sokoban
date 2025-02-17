@@ -5,8 +5,10 @@
 //  Created by Igor Malyarov on 13.02.2025.
 //
 
+import PaymentComponents
 import RxViewModel
 import SwiftUI
+import TextFieldDomain
 
 extension ViewComponents {
     
@@ -39,29 +41,39 @@ extension ViewComponents {
         _ binder: SearchByUINDomain.Binder
     ) -> some View {
         
-        VStack(spacing: 16) {
+        RxWrapperView(model: binder.content) { state, event in
             
-            binder.content.map { Text("UIN: \($0)") }
-            
-            Button("connectivityFailure") {
+            VStack(spacing: 20) {
                 
-                binder.flow.event(.select(.uin(.init(value: "connectivityFailure"))))
-            }
-            
-            Button("serverFailure") {
+                TextInputView(
+                    state: state,
+                    event: event,
+                    config: .iVortex(keyboard: .number, title: "УИН"),
+                    iconView: {
+                        
+                        Image.ic24FileHash
+                            .foregroundColor(.iconGray)
+                    }
+                )
+                .keyboardType(.numberPad)
+                .paddedRoundedBackground()
                 
-                binder.flow.event(.select(.uin(.init(value: "serverFailure"))))
-            }
-            
-            Button("success") {
+                Spacer()
                 
-                binder.flow.event(.select(.uin(.init(value: UUID().uuidString))))
+                StatefulButtonView(
+                    isActive: state.isContinueActive,
+                    event: {
+                        
+                        binder.flow.event(.select(.uin(.init(value: binder.content.value))))
+                    },
+                    config: .iVortex(title: "Продолжить")
+                )
+                
+                Image.ic72Sbp
+                    .renderingMode(.original)
             }
+            .padding([.horizontal, .top])
         }
-        .padding()
-        .frame(maxHeight: .infinity, alignment: .top)
-        .buttonBorderShape(.roundedRectangle)
-        .buttonStyle(.bordered)
     }
     
     @inlinable
@@ -122,6 +134,46 @@ extension ViewComponents {
                 dismiss: dismiss,
                 c2gPaymentFlowView: c2gPaymentFlowView
             )
+        }
+    }
+}
+
+extension SearchByUINDomain.Content {
+    
+    var value: String { state.uinInputState.value }
+}
+
+private extension TextInputState {
+    
+    var isContinueActive: Bool  {
+        
+        uinInputState.isValid && !uinInputState.isEditing
+    }
+    
+    var uinInputState: UINInputState {
+        
+        return .init(
+            isEditing: textField.isEditing,
+            isValid: message == nil && !textField.text.isNilOrEmpty,
+            value: textField.text ?? ""
+        )
+    }
+}
+
+struct UINInputState: Equatable {
+    
+    var isEditing = false
+    var isValid = false
+    var value = ""
+}
+
+private extension TextFieldState {
+    
+    var isEditing: Bool {
+        
+        switch self {
+        case .editing: return true
+        default:       return false
         }
     }
 }

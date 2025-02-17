@@ -1045,7 +1045,7 @@ extension BannersBinder {
         httpClient: HTTPClientSpy(),
         logger: LoggerSpy(),
         mapScanResult: { _, completion in completion(.unknown) },
-        resolveQR: { _ in .unknown },
+        makeQRResolve: { _ in { _ in .unknown }},
         scanner: QRScannerViewModelSpy(),
         schedulers: .immediate
     ).makeBannersForMainView(

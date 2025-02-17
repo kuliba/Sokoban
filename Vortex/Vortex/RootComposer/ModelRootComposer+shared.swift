@@ -18,7 +18,11 @@ extension ModelRootComposer {
             model: model
         )
         let httpClient = httpClientFactory.makeHTTPClient()
-        let resolver = QRResolver(isSberQR: model.isSberQR)
+        let makeQRResolve = {
+            
+            let resolver = QRResolver(dependencies: $0)
+            return resolver.resolve(string:)
+        }
         let composer = QRScanResultMapperComposer(model: model)
         let mapper = composer.compose()
         let schedulers = Schedulers()
@@ -29,7 +33,7 @@ extension ModelRootComposer {
                 httpClient: httpClient,
                 logger: logger,
                 mapScanResult: mapper.mapScanResult,
-                resolveQR: resolver.resolve,
+                makeQRResolve: makeQRResolve,
                 scanner: QRScannerView.ViewModel(),
                 settings: .prod,
                 schedulers: schedulers

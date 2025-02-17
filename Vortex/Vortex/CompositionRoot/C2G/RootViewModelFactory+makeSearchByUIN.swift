@@ -13,7 +13,7 @@ extension RootViewModelFactory {
     ) -> SearchByUINDomain.Binder {
         
         composeBinder(
-            content: uin,
+            content: makeUINInputViewModel(value: uin ?? ""),
             initialState: .init(),
             delayProvider: delayProvider,
             getNavigation: getNavigation,
@@ -61,11 +61,11 @@ extension RootViewModelFactory {
         schedulers.background.delay(for: .seconds(2)) {
             
             switch uin.value {
-            case "connectivityFailure":
-                completion(.failure(.connectivity("Возникла техническая ошибка")))
+            case "01234567890123456789":
+                completion(.failure(.c2gConnectivity))
                 
-            case "serverFailure":
-                completion(.failure(.server("Возникла техническая ошибка")))
+            case "12345678901234567890":
+                completion(.failure(.server("Server Failure"))) // TODO: pass error message from response
                 
             default:
                 completion(.success(()))
@@ -74,4 +74,9 @@ extension RootViewModelFactory {
     }
     
     typealias GetUINDataResult = Result<Void, BackendFailure> // TODO: replace Void with  GetUINDataResponse from C2GBackend when ready
+}
+
+private extension BackendFailure {
+    
+    static let c2gConnectivity: Self = .connectivity("Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения")
 }

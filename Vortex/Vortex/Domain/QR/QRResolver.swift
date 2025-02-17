@@ -8,13 +8,23 @@
 import Foundation
 import SberQR
 
+struct QRResolverDependencies {
+    
+    let getUIN: GetUIN
+    let isSberQR: IsSberQR
+    
+    typealias GetUIN = (QRCode) -> String?
+    typealias IsSberQR = (URL) -> Bool
+}
+
 struct QRResolver {
     
-    private let isSberQR: (URL) -> Bool
+    private let dependencies: QRResolverDependencies
     
-    init(isSberQR: @escaping (URL) -> Bool) {
-        
-        self.isSberQR = isSberQR
+    init(
+        dependencies: QRResolverDependencies
+    ) {
+        self.dependencies = dependencies
     }
 }
 
@@ -30,7 +40,7 @@ extension QRResolver {
                 return c2
             }
             
-            if isSberQR(url) {
+            if dependencies.isSberQR(url) {
                 return .sberQR(url)
             }
             
@@ -40,22 +50,10 @@ extension QRResolver {
         }
         
         if let qrCode {
-            return qrCode.uin.map { .uin($0) } ?? .qrCode(qrCode)
+            return dependencies.getUIN(qrCode).map { .uin($0) } ?? .qrCode(qrCode)
         }
         
         return .unknown
-    }
-}
-
-private extension QRCode {
-    
-    var uin: String? {
-        
-        guard let uin = rawData["uin"],
-                !uin.isEmpty // no extra validation
-        else { return nil }
-        
-        return uin
     }
 }
 

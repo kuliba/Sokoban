@@ -21,6 +21,7 @@ struct QRNavigationComposerMicroServices {
     let makeSberQR: MakeSberQR
     let makeSearchByUIN: MakeSearchByUIN
     let makeServicePicker: MakeServicePicker
+    let makeQRResolve: MakeQRResolve
 }
 
 extension QRNavigationComposerMicroServices {
@@ -106,6 +107,8 @@ extension QRNavigationComposerMicroServices {
     
     typealias SearchByUIN = SearchByUINDomain.Binder
     typealias MakeSearchByUIN = (String, @escaping (SearchByUIN) -> Void) -> Void
+    
+    typealias MakeQRResolve = (QRResolverDependencies) -> (String) -> QRViewModel.ScanResult
 }
 
 extension QRNavigationComposerMicroServices.MakePaymentsPayload {

@@ -15,10 +15,12 @@ import SberQR
 extension RootViewModelFactory {
     
     @inlinable
-    func makeQRScannerBinder() -> QRScannerDomain.Binder {
+    func makeQRScannerBinder(
+        c2gFlag: C2GFlag
+    ) -> QRScannerDomain.Binder {
         
         return composeBinder(
-            content: makeQRScannerModel(),
+            content: makeQRScannerModel(c2gFlag: c2gFlag),
             delayProvider: delayProvider,
             getNavigation: getQRNavigation,
             witnesses: .init(emitting: emitting, dismissing: dismissing)
