@@ -24,8 +24,12 @@ struct PaymentsServiceView: View {
     
     var body: some View {
         
-        scrollView()
-            .navigationBar(with: viewModel.navigationBar)
+        if isRounded {
+            scrollView()
+        } else {
+            scrollView()
+                .navigationBar(with: viewModel.navigationBar)
+        }
     }
     
     private func scrollView() -> some View {

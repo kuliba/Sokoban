@@ -25,7 +25,6 @@ extension RootViewModelFactory {
         closeAction: @escaping () -> Void
     ) -> CategoryPickerSectionDomain.Destination.Tax {
         
-        //  switch c2gFlag.rawValue {
         let model = PaymentsViewModel(
             category: .taxes,
             model: model,
@@ -40,7 +39,6 @@ extension RootViewModelFactory {
             .sink {
                 print("#### model.$content", String(describing: $0))
                 
-//                let viewModel = PaymentsSelectServiceView.ViewModel(items: [])
                 $0.items.append(
                     .init(
                         id: UUID().uuidString,
@@ -51,9 +49,15 @@ extension RootViewModelFactory {
                         action: { print("#### items.append", String(describing: $0)) }
                     )
                 )
-//                $0.objectWillChange.send()
             }
-        return .init(model: model, cancellable: cancellable)
+        
+        switch c2gFlag.rawValue {
+        case .active:
+            return .v1(.init(model: model, cancellable: cancellable))
+            
+        case .inactive:
+            return .legacy(model)
+        }
     }
     
     @inlinable
@@ -62,7 +66,7 @@ extension RootViewModelFactory {
     ) -> PaymentsViewModel {
         
         return .init(
-            category: .taxes, 
+            category: .taxes,
             model: model,
             closeAction: closeAction
         )

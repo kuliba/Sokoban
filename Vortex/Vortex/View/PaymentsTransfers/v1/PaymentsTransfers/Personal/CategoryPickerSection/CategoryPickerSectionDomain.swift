@@ -47,7 +47,13 @@ extension CategoryPickerSectionDomain {
         case transport(Transport)
         
         typealias Mobile = PaymentsViewModel
-        typealias Tax = Node<PaymentsViewModel>
+        
+        enum Tax {
+            
+            case legacy(PaymentsViewModel)
+            case v1(Node<PaymentsViewModel>)
+        }
+        
         typealias Transport = TransportPaymentsViewModel
     }
     
