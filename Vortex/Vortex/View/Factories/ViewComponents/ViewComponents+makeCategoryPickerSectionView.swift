@@ -84,10 +84,10 @@ extension ViewComponents {
                     
                     makePaymentsView(node.model.content, isRounded: true)
                         .navigationBarHidden(true)
-                        .navigationBarWithBack(
-                            title: "TBD: + QR button",
+                        .navigationBar(with: navBarModelWithQR(
+                            title: "Налоги и госуслуги",
                             dismiss: dismiss
-                        )
+                        ))
                         .navigationLink(
                             value: state.navigation,
                             dismiss: { event(.dismiss) },
