@@ -8,6 +8,7 @@
 extension OperatorLabelConfig {
     
     static let preview: Self = .init(
+        chevron: nil,
         height: 46,
         title: .init(
             textFont: .title3,
@@ -16,6 +17,30 @@ extension OperatorLabelConfig {
         subtitle: .init(
             textFont: .body,
             textColor: .gray
-        )
+        ),
+        spacing: 16
+    )
+    
+    static let previewWithChevron: Self = .init(
+        chevron: .preview,
+        height: 46,
+        title: .init(
+            textFont: .title3,
+            textColor: .black
+        ),
+        subtitle: .init(
+            textFont: .body,
+            textColor: .gray
+        ),
+        spacing: 16
+    )
+}
+
+extension OperatorLabelConfig.ChevronConfig {
+    
+    static let preview: Self = .init(
+        color: .pink,
+        icon: .init(systemName: "chevron.right"),
+        size: .init(width: 40, height: 40)
     )
 }
