@@ -722,6 +722,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         let makePayments: MakePayments
         let makeQRFailure: MakeQRFailure
         let makeServicePicker: MakeServicePicker
+        let makeSearchByUIN: MakeSearchByUIN
     }
     
     private func makeSUT(
@@ -731,6 +732,7 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
         payments: Payments? = nil,
         qrFailure: QRFailure? = nil,
         servicePicker: ServicePicker? = nil,
+        searchByUIN: SearchByUIN = .init(),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -744,12 +746,14 @@ final class QRBinderGetNavigationComposerTests: QRBinderTests {
             makeOperatorModel: .init(stubs: [operatorModel ?? makeOperatorModel()]),
             makePayments: .init(stubs: [payments ?? makePayments()]),
             makeQRFailure: .init(stubs: [qrFailure ?? makeQRFailure()]),
-            makeServicePicker: .init(stubs: [servicePicker ?? makeServicePicker()])
+            makeServicePicker: .init(stubs: [servicePicker ?? makeServicePicker()]),
+            makeSearchByUIN: .init(stubs: [searchByUIN])
         )
         let sut = SUT(
             firstMicroServices: .init(
                 makePayments: spies.makePayments.call,
-                makeQRFailure: spies.makeQRFailure.call
+                makeQRFailure: spies.makeQRFailure.call,
+                makeSearchByUIN: spies.makeSearchByUIN.call
             ),
             secondMicroServices: .init(
                 makeConfirmSberQR: spies.makeConfirmSberQR.process,

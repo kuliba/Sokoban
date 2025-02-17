@@ -42,11 +42,12 @@ extension ModelRootComposer: RootComposer {
 extension ModelRootComposer: RootViewComposer {
 
     func makeRootViewFactory(
-        featureFlags: FeatureFlags
+        featureFlags: FeatureFlags,
+        rootEvent: @escaping (RootViewSelect) -> Void
     ) -> RootViewFactory {
         
         let composer = makeRootViewFactoryComposer(featureFlags)
         
-        return composer.compose()
+        return composer.compose(rootEvent: rootEvent)
     }
 }

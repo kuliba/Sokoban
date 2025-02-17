@@ -1,46 +1,94 @@
 //
-//  ViewComponents+searchByUINView.swift
+//  ViewComponents+makeSearchByUINView.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 13.02.2025.
 //
 
+import PaymentComponents
 import RxViewModel
 import SwiftUI
+import TextFieldDomain
 
 extension ViewComponents {
     
     @inlinable
-    func searchByUINView(
+    func goToMain() {
+        
+        rootEvent(.outside(.tab(.main)))
+    }
+    
+    @inlinable
+    func makeSearchByUINView(
+        binder: SearchByUINDomain.Binder,
+        dismiss: @escaping () -> Void,
+        scanQR: @escaping () -> Void
+    ) -> some View {
+        
+        makeSearchByUINContentView(binder)
+            .background(searchByUINFlowView(flow: binder.flow))
+            .navigationBar(with: navBarModelWithQR(
+                title: "Поиск по УИН",
+                subtitle: "Поиск начислений по УИН",
+                dismiss: dismiss,
+                scanQR: scanQR
+            ))
+            .disablingLoading(flow: binder.flow)
+    }
+    
+    @inlinable
+    func makeSearchByUINContentView(
         _ binder: SearchByUINDomain.Binder
     ) -> some View {
         
-        VStack(spacing: 16) {
+        RxWrapperView(model: binder.content) { state, event in
             
-            Text("TBD: Search by UIN")
-                .font(.headline)
-            
-            Button("connectivityFailure") {
+            VStack(spacing: 20) {
                 
-                binder.flow.event(.select(.uin(.init(value: "connectivityFailure"))))
-            }
-            
-            Button("serverFailure") {
+                TextInputView(
+                    state: state,
+                    event: event,
+                    config: .iVortex(keyboard: .number, title: "УИН"),
+                    iconView: {
+                        
+                        Image.ic24FileHash
+                            .foregroundColor(.iconGray)
+                    }
+                )
+                .keyboardType(.numberPad)
+                .paddedRoundedBackground()
                 
-                binder.flow.event(.select(.uin(.init(value: "serverFailure"))))
-            }
-            
-            Button("success") {
+                Spacer()
                 
-                binder.flow.event(.select(.uin(.init(value: UUID().uuidString))))
+                makeSPBFooter(isActive: state.isContinueActive) {
+                    
+                    binder.flow.event(.select(.uin(.init(value: binder.content.value))))
+                }
             }
+            .padding([.horizontal, .top])
         }
-        .padding()
-        .frame(maxHeight: .infinity, alignment: .top)
-        .buttonBorderShape(.roundedRectangle)
-        .buttonStyle(.bordered)
     }
     
+    @inlinable
+    func searchByUINFlowView(
+        flow: SearchByUINDomain.Flow
+    ) -> some View {
+        
+        searchByUINFlowView(flow: flow) {
+            
+            c2gPaymentFlowView(
+                flow: $0,
+                dismiss: { flow.event(.dismiss) }
+            ) { cover in
+                
+                makeC2GPaymentCompleteView(
+                    cover: cover,
+                    goToMain: goToMain
+                )
+            }
+        }
+    }
+
     @inlinable
     func searchByUINFlowView(
         flow: SearchByUINDomain.Flow,
@@ -79,6 +127,46 @@ extension ViewComponents {
                 dismiss: dismiss,
                 c2gPaymentFlowView: c2gPaymentFlowView
             )
+        }
+    }
+}
+
+extension SearchByUINDomain.Content {
+    
+    var value: String { state.uinInputState.value }
+}
+
+private extension TextInputState {
+    
+    var isContinueActive: Bool  {
+        
+        uinInputState.isValid && !uinInputState.isEditing
+    }
+    
+    var uinInputState: UINInputState {
+        
+        return .init(
+            isEditing: textField.isEditing,
+            isValid: message == nil && !textField.text.isNilOrEmpty,
+            value: textField.text ?? ""
+        )
+    }
+}
+
+struct UINInputState: Equatable {
+    
+    var isEditing = false
+    var isValid = false
+    var value = ""
+}
+
+private extension TextFieldState {
+    
+    var isEditing: Bool {
+        
+        switch self {
+        case .editing: return true
+        default:       return false
         }
     }
 }

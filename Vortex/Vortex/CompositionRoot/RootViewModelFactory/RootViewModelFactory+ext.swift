@@ -112,6 +112,7 @@ extension RootViewModelFactory {
         )
         
         let qrViewModelFactory = makeQRViewModelFactory(
+            c2gFlag: featureFlags.c2gFlag,
             paymentsTransfersFlag: featureFlags.paymentsTransfersFlag
         )
         
@@ -276,7 +277,7 @@ extension RootViewModelFactory {
             //TODO: implement makeOrderCardViewModel composer
         }
         
-        let (paymentsTransfersPersonal, loadCategoriesAndNotifyPicker) = makePaymentsTransfersPersonal()
+        let (paymentsTransfersPersonal, loadCategoriesAndNotifyPicker) = makePaymentsTransfersPersonal(c2gFlag: featureFlags.c2gFlag)
         
         let loadBannersList = makeLoadBanners()
         
@@ -476,6 +477,7 @@ extension RootViewModelFactory {
         let getRootNavigation = { select, notify, completion in
             
             self.getRootNavigation(
+                c2gFlag: featureFlags.c2gFlag, 
                 makeProductProfileByID: makeProductProfileByID,
                 select: select,
                 notify: notify,
@@ -489,10 +491,10 @@ extension RootViewModelFactory {
               
                 // TODO: - extract to helper func
                 switch $0 {
-                case .outside:
+                case .failure, .outside:
                     return .zero
                 
-                case .failure, .orderCardResponse:
+                case .orderCardResponse:
                     return .milliseconds(100)
 
                 case .scanQR, .templates:

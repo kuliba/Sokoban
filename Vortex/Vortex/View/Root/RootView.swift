@@ -411,6 +411,7 @@ private extension RootViewFactory {
         }
         
         return .init(
+            rootEvent: { _ in },
             infra: .init(
                 imageCache: .preview,
                 generalImageCache: .preview,

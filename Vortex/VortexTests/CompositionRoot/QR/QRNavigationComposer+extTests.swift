@@ -19,6 +19,7 @@ extension QRNavigationComposer {
         makeSegmented: @escaping QRNavigationComposerMicroServicesComposer.MakeSegmented,
         // static RootViewModelFactory.makeProviderServicePickerFlowModel(httpClient:log:model:pageSize:flag:scheduler:)
         makeServicePicker: @escaping MicroServices.MakeServicePicker,
+        makeSearchByUIN: @escaping MicroServices.MakeSearchByUIN,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         let composer = QRNavigationComposerMicroServicesComposer(
@@ -29,6 +30,8 @@ extension QRNavigationComposer {
             getSberQRData: getSberQRData,
             makeSegmented: makeSegmented,
             makeServicePicker: makeServicePicker,
+            makeSearchByUIN: makeSearchByUIN, 
+            makeQRResolve: { _ in { _ in .unknown }}, // TODO: improve tests with qr resolve assertions
             scanner: QRScannerViewModelSpy(),
             scheduler: scheduler
         )
@@ -152,7 +155,8 @@ final class QRNavigationComposer_extTests: QRNavigationTests {
             createSberQRPayment: .init(),
             getSberQRData: .init(),
             makeProviderPicker: .init(),
-            makeServicePicker: .init()
+            makeServicePicker: .init(),
+            makeSearchByUIN: .init()
         )
         let sut = SUT(
             httpClient: HTTPClientSpy(),
@@ -162,6 +166,7 @@ final class QRNavigationComposer_extTests: QRNavigationTests {
             getSberQRData: spies.getSberQRData.process(_:completion:),
             makeSegmented: spies.makeProviderPicker.call,
             makeServicePicker: spies.makeServicePicker.process(_:completion:),
+            makeSearchByUIN: spies.makeSearchByUIN.process(_:completion:),
             scheduler: .immediate
         )
         

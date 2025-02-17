@@ -14,10 +14,10 @@ import XCTest
 
 class QRBinderTests: XCTestCase {
     
-    typealias NavigationComposer = QRBinderGetNavigationComposer<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
+    typealias NavigationComposer = QRBinderGetNavigationComposer<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source, SearchByUIN>
     typealias FirstMicroServices = NavigationComposer.FirstMicroServices
     
-    typealias Domain = QRNavigationDomain<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
+    typealias Domain = QRNavigationDomain<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source, SearchByUIN>
     
     typealias Navigation = Domain.Navigation
     typealias Select = Domain.Select
@@ -42,6 +42,8 @@ class QRBinderTests: XCTestCase {
     typealias MakeQRFailure = CallSpy<QRCode?, QRFailure>
     
     typealias MakeServicePicker = CallSpy<ProviderPayload, ServicePicker>
+    
+    typealias MakeSearchByUIN = CallSpy<String, SearchByUIN>
     
     struct Operator: Equatable {
         
@@ -238,6 +240,7 @@ class QRBinderTests: XCTestCase {
         case payments(ObjectIdentifier)
         case qrFailure(ObjectIdentifier)
         case servicePicker(ObjectIdentifier)
+        case searchByUIN(ObjectIdentifier)
         
         enum Failure: Equatable {
             
@@ -289,6 +292,9 @@ class QRBinderTests: XCTestCase {
                 
             case let .servicePicker(node):
                 return .servicePicker(.init(node.model))
+                
+            case let .searchByUIN(searchByUIN):
+                return .searchByUIN(.init(searchByUIN))
             }
         }
     }
@@ -479,4 +485,6 @@ class QRBinderTests: XCTestCase {
         
         return .init()
     }
+    
+    final class SearchByUIN {}
 }

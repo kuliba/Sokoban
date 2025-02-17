@@ -46,7 +46,10 @@ final class RootViewModelFactory_GetSavingsAccountNavigationTests: XCTestCase {
     private typealias Domain = SavingsAccountDomain
     private typealias SUT = RootViewModelFactory
     
+    // TODO: improve tests with QR result assertions
     private func makeSUT(
+        mapScanResult: @escaping SUT.MapScanResult = { _, completion in completion(.unknown) },
+        makeQRResolve: @escaping SUT.MakeResolveQR = { _ in { _ in .unknown }},
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
@@ -55,8 +58,8 @@ final class RootViewModelFactory_GetSavingsAccountNavigationTests: XCTestCase {
             model: .mockWithEmptyExcept(),
             httpClient: HTTPClientSpy(),
             logger: LoggerSpy(),
-            mapScanResult: { _, completion in completion(.unknown) },
-            resolveQR: { _ in .unknown },
+            mapScanResult: mapScanResult,
+            makeQRResolve: makeQRResolve,
             scanner: QRScannerViewModelSpy(),
             schedulers: .immediate
         )
