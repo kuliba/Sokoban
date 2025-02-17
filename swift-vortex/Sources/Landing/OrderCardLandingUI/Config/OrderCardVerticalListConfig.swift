@@ -8,9 +8,19 @@
 import SwiftUI
 import SharedConfigs
 
-struct OrderCardVerticalListConfig {
+public struct OrderCardVerticalListConfig {
     
     let title: TextConfig
     let itemTitle: TextConfig
     let itemSubTitle: TextConfig
+    
+    public init(
+        title: TextConfig,
+        itemTitle: TextConfig,
+        itemSubTitle: TextConfig
+    ) {
+        self.title = title
+        self.itemTitle = itemTitle
+        self.itemSubTitle = itemSubTitle
+    }
 }

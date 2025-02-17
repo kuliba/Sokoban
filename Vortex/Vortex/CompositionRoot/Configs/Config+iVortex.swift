@@ -8,7 +8,7 @@
 import PaymentComponents
 import SberQR
 import ManageSubscriptionsUI
-import OrderCardLanding
+import OrderCardLandingUI
 
 extension SberQR.Config {
     
@@ -256,7 +256,7 @@ extension ManageSubscriptionsUI.ProductViewConfig {
     )
 }
 
-extension DropDownListConfig {
+extension OrderCardLandingUI.DropDownListConfig {
     
     static let iVortex: Self = .init(
         title: .init(
@@ -271,7 +271,7 @@ extension DropDownListConfig {
     )
 }
 
-extension HeaderViewConfig {
+extension OrderCardLandingUI.HeaderViewConfig {
 
     static let iVortex: Self = .init(
         title: .init(
@@ -287,7 +287,7 @@ extension HeaderViewConfig {
     )
 }
 
-extension OrderCardHorizontalConfig {
+extension OrderCardLandingUI.OrderCardHorizontalConfig {
     
     static let iVortex: Self = .init(
         title: .init(textFont: .textH3Sb18240(), textColor: .mainColorsBlack),
@@ -295,7 +295,7 @@ extension OrderCardHorizontalConfig {
     )
 }
 
-extension OrderCardVerticalListConfig {
+extension OrderCardLandingUI.OrderCardVerticalListConfig {
     
     static let iVortex: Self = .init(
         title: .init(textFont: .textH3Sb18240(), textColor: .mainColorsBlack),
