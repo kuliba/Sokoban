@@ -61,6 +61,9 @@ extension RootViewModelFactory {
         _ uin: SearchByUINDomain.UIN,
         completion: @escaping (GetUINDataResult) -> Void
     ) {
+        guard let c2gEligible = model.c2gPaymentEligibleProducts()
+        else { return completion(.missingC2GPaymentEligibleProducts) }
+        
         guard !uin.hasEasterEgg
         else { return getUINDataEasterEggs(uin, completion: completion) }
         
@@ -101,9 +104,24 @@ extension RootViewModelFactory {
     typealias GetUINDataResult = Result<Void, BackendFailure> // TODO: replace Void with  GetUINDataResponse from C2GBackend when ready
 }
 
+private extension RootViewModelFactory.GetUINDataResult {
+
+    static let missingC2GPaymentEligibleProducts: Self = .failure(.missingC2GPaymentEligibleProducts)
+}
+
 private extension BackendFailure {
     
     static let c2gConnectivity: Self = .connectivity("Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения")
+
+    static let missingC2GPaymentEligibleProducts: Self = .connectivity("У вас нет подходящих для платежа продуктов.")
+}
+
+private extension Model {
+    
+    func c2gPaymentEligibleProducts() -> Void? {
+        
+        return ()
+    }
 }
 
 // TODO: remove with stub

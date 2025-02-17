@@ -1,5 +1,5 @@
 //
-//  RequestFactory+createGetUINDataRequest.swift
+//  RequestFactory+createCreateC2GPaymentRequest.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 16.02.2025.
@@ -12,17 +12,19 @@ import RemoteServices
 extension RequestFactory {
     
     @inlinable
-    static func createGetUINDataRequest(
-        uin: String
+    static func createCreateC2GPaymentRequest(
+        payload: RemoteServices.RequestFactory.CreateC2GPaymentPayload
     ) throws -> URLRequest {
         
         let base = Config.serverAgentEnvironment.baseURL
-        let endpoint = Services.Endpoint.getUINData
+        let endpoint = Services.Endpoint.createC2GPayment
         let endpointURL = try! endpoint.url(withBase: base)
         
-        return try RemoteServices.RequestFactory.createGetUINDataRequest(
+        let request = try RemoteServices.RequestFactory.createCreateC2GPaymentRequest(
             url: endpointURL,
-            payload: .init(uin: uin)
+            payload: payload
         )
+        
+        return request
     }
 }
