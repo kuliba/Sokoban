@@ -23,17 +23,20 @@ extension RootViewModelFactory {
         closeAction: @escaping () -> Void
     ) -> CategoryPickerSectionDomain.Destination.Tax {
         
-        switch c2gFlag.rawValue {
-        case .active:
-            return .v1(.init())
-            
-        case .inactive:
-            return .legacy(.init(
-                category: .taxes,
-                model: model,
-                closeAction: closeAction
-            ))
-        }
+        //  switch c2gFlag.rawValue {
+        let model = PaymentsViewModel(
+            category: .taxes,
+            model: model,
+            closeAction: closeAction
+        )
+        let cancellable = model.$content
+            .handleEvents(receiveOutput: { print("#### model.$content", $0) })
+            .compactMap(\.service)
+            .first()
+            .sink {
+                print("#### model.$content switched to PaymentsServiceViewModel", $0)
+            }
+        return .init(model: model, cancellable: cancellable)
     }
     
     @inlinable
@@ -46,5 +49,15 @@ extension RootViewModelFactory {
             model: model,
             closeAction: closeAction
         )
+    }
+}
+
+private extension PaymentsViewModel.ContentType {
+    
+    var service: PaymentsServiceViewModel? {
+        
+        guard case let .service(service) = self else { return nil }
+        
+        return service
     }
 }

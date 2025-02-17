@@ -73,14 +73,8 @@ extension ViewComponents {
         case let .mobile(paymentsViewModel):
             makePaymentsView(paymentsViewModel)
             
-        case let .taxAndStateServices(tax):
-            switch tax {
-            case let .legacy(paymentsViewModel):
-                makePaymentsView(paymentsViewModel)
-                
-            case .v1:
-                Text("TBD: New Taxes Services Picker")
-            }
+        case let .taxAndStateServices(node):
+            makePaymentsView(node.model)
             
         case let .transport(transport):
             transportPaymentsView(transport)
@@ -169,14 +163,8 @@ extension CategoryPickerSectionDomain.Destination: Identifiable {
         case let .mobile(mobile):
             return .init(mobile)
             
-        case let .taxAndStateServices(tax):
-            switch tax {
-            case let .legacy(paymentsViewModel):
-                return .init(paymentsViewModel)
-                
-            case let .v1(v1):
-                return .init(v1)
-            }
+        case let .taxAndStateServices(node):
+            return .init(node.model)
             
         case let .transport(transport):
             return .init(transport)
