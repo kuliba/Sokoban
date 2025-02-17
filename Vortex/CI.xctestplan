@@ -681,6 +681,13 @@
         "identifier" : "C2GCoreTests",
         "name" : "C2GCoreTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetSplashScreenServicesTests",
+        "name" : "GetSplashScreenServicesTests"
+      }
     }
   ],
   "version" : 1

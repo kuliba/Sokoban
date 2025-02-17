@@ -669,6 +669,13 @@
         "identifier" : "OrderCardLandingBackendTests",
         "name" : "OrderCardLandingBackendTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetSplashScreenServicesTests",
+        "name" : "GetSplashScreenServicesTests"
+      }
     }
   ],
   "version" : 1
