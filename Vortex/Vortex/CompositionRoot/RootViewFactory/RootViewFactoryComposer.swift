@@ -665,7 +665,7 @@ private extension RootViewFactoryComposer {
         viewModel: PaymentsServiceViewModel
     ) -> PaymentsServiceView {
         
-        return .init(viewModel: viewModel, viewFactory: makePaymentsServiceViewFactory())
+        return .init(viewModel: viewModel, isRounded: false, viewFactory: makePaymentsServiceViewFactory())
     }
     
     func makePaymentsServiceViewFactory(

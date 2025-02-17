@@ -8,31 +8,38 @@
 extension ViewComponents {
     
     func makePaymentsView(
-        _ viewModel: PaymentsViewModel
+        _ viewModel: PaymentsViewModel,
+        isRounded: Bool = false
     ) -> PaymentsView {
         
         return .init(
             viewModel: viewModel,
-            viewFactory: makePaymentsViewFactory()
+            viewFactory: makePaymentsViewFactory(isRounded: isRounded)
         )
     }
     
     func makePaymentsViewFactory(
+        isRounded: Bool
     ) -> PaymentsViewFactory {
         
         return .init(
             makePaymentsOperationView: makePaymentsOperationView,
-            makePaymentsServiceView: makePaymentsServiceView,
+            makePaymentsServiceView: {
+                
+                makePaymentsServiceView($0, isRounded: isRounded)
+            },
             makePaymentsSuccessView: makePaymentsSuccessView
         )
     }
     
     func makePaymentsServiceView(
-        _ viewModel: PaymentsServiceViewModel
+        _ viewModel: PaymentsServiceViewModel,
+        isRounded: Bool
     ) -> PaymentsServiceView {
         
         return .init(
             viewModel: viewModel,
+            isRounded: isRounded,
             viewFactory: makePaymentsServiceViewFactory()
         )
     }

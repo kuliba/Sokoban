@@ -17,6 +17,9 @@ struct PaymentsServiceView: View {
     
     @ObservedObject var viewModel: PaymentsServiceViewModel
     
+    // deep tree structure prevents injection, need parameter
+    let isRounded: Bool
+    
     let viewFactory: PaymentsServiceViewFactory
     
     var body: some View {
@@ -75,21 +78,21 @@ struct PaymentsServiceView: View {
 }
 
 /*
-//MARK: - Preview
-
-struct PaymentsServicesView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        
-        PaymentsServiceView(viewModel: .sample)
-            .previewLayout(.fixed(width: 375, height: 200))
-    }
-}
-
-//MARK: - Preview Content
-
-extension PaymentsServiceViewModel {
-    
-    static let sample = PaymentsServiceViewModel(header: .init(title: "Налоги и услуги"), parameter: .init(category: .taxes, options: []))
-}
+ //MARK: - Preview
+ 
+ struct PaymentsServicesView_Previews: PreviewProvider {
+ 
+ static var previews: some View {
+ 
+ PaymentsServiceView(viewModel: .sample)
+ .previewLayout(.fixed(width: 375, height: 200))
+ }
+ }
+ 
+ //MARK: - Preview Content
+ 
+ extension PaymentsServiceViewModel {
+ 
+ static let sample = PaymentsServiceViewModel(header: .init(title: "Налоги и услуги"), parameter: .init(category: .taxes, options: []))
+ }
  */
