@@ -17,33 +17,66 @@ extension ViewComponents {
         c2gPaymentFlowView: @escaping (C2GPaymentDomain.Flow) -> some View
     ) -> some View {
         
-        VStack(spacing: 16) {
+        // TODO: extract content view
+        RxWrapperView(model: binder.content) { state, event in
             
-            Text("TBD: C2G Payment")
-                .font(.headline)
-            
-            Button("connectivityFailure") {
+            ScrollView(showsIndicators: false) {
                 
-                binder.flow.event(.select(.pay("connectivityFailure")))
+                VStack(spacing: 16) {
+                    
+                    makeProductSelectView(
+                        state: state.productSelect,
+                        event: { event(.productSelect($0)) }
+                    )
+                    
+                    // TODO: Use AttributedString to connect to URL
+                    makeCheckBoxView(
+                        title: "Включить переводы через СБП, принять условия обслуживания",
+                        isChecked: state.termsCheck,
+                        toggle: { event(.termsToggle) }
+                    )
+                }
             }
-            
-            Button("serverFailure") {
+            .safeAreaInset(edge: .bottom) {
                 
-                binder.flow.event(.select(.pay("serverFailure")))
-            }
-            
-            Button("success") {
-                
-                binder.flow.event(.select(.pay(UUID().uuidString)))
+                makeSPBFooter(isActive: state.digest != nil) {
+                    
+                    state.digest.map {
+                        
+                        binder.flow.event(.select(.pay($0)))
+                    }
+                }
             }
         }
         .padding()
-        .frame(maxHeight: .infinity, alignment: .top)
-        .buttonBorderShape(.roundedRectangle)
-        .buttonStyle(.bordered)
         .navigationBarWithBack(title: "Оплата", dismiss: dismiss)
         .background(c2gPaymentFlowView(binder.flow))
         .disablingLoading(flow: binder.flow)
+    }
+    
+    // TODO: - add/extract config
+    @inlinable
+    func makeCheckBoxView(
+        title: AttributedString,
+        isChecked: Bool,
+        toggle: @escaping () -> Void
+    ) -> some View {
+        
+        HStack {
+            
+            PaymentsCheckView.CheckBoxView(
+                isChecked: isChecked,
+                activeColor: .systemColorActive
+            )
+            .onTapGesture(perform: toggle)
+            
+            // TODO: Use AttributedString to connect to URL
+            Text(title)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .font(.textBodyMR14200())
+                .foregroundColor(.textPlaceholder)
+        }
+        .animation(.easeInOut, value: isChecked)
     }
     
     @inlinable

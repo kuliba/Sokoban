@@ -1799,12 +1799,20 @@ private extension Target {
     
     static let c2gCore = target(
         name: .c2gCore,
+        dependencies: [
+            .paymentComponents,
+            .uiPrimitives,
+        ],
         path: "Sources/Payments/C2G/Core"
     )
     static let c2gCoreTests = testTarget(
         name: .c2gCoreTests,
         dependencies: [
-            .c2gCore
+            // external packages
+            .customDump,
+            // internal modules
+            .c2gCore,
+            .uiPrimitives,
         ],
         path: "Tests/Payments/C2G/CoreTests"
     )

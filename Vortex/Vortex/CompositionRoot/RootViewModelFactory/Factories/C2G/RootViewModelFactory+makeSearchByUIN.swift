@@ -49,8 +49,8 @@ extension RootViewModelFactory {
                 case let .failure(failure):
                     completion(.failure(failure))
                     
-                case .success(()):
-                    completion(.payment(makeC2BPayment()))
+                case let .success(payload):
+                    completion(.payment(makeC2BPayment(payload: payload)))
                 }
             }
         }
@@ -61,7 +61,10 @@ extension RootViewModelFactory {
         _ uin: SearchByUINDomain.UIN,
         completion: @escaping (GetUINDataResult) -> Void
     ) {
-        guard let c2gEligible = model.c2gPaymentEligibleProducts()
+        let products = model.c2gProductSelectProducts()
+        let selectedProduct = model.sbpLinkedProduct() ?? products.first
+        
+        guard let selectedProduct
         else { return completion(.missingC2GPaymentEligibleProducts) }
         
         guard !uin.hasEasterEgg
@@ -74,13 +77,28 @@ extension RootViewModelFactory {
         
         service(uin.value) {
             
-            print($0) // TODO: use in completion
-            completion(.success(()))
+            switch $0 {
+            case let .failure(failure as BackendFailure):
+                completion(.failure(failure))
+                
+            case .failure:
+                completion(.failure(.c2gConnectivity))
+                
+            case let .success(response):
+                completion(.success(.init(
+                    selectedProduct: selectedProduct,
+                    products: products,
+                    termsCheck: response.termsCheck,
+                    uin: response.uin,
+                    url: response.url
+                )))
+            }
+            
             _ = service
         }
     }
     
-    // TODO: remove stub
+    // TODO: remove easter egg stub
     @inlinable
     func getUINDataEasterEggs(
         _ uin: SearchByUINDomain.UIN,
@@ -96,12 +114,12 @@ extension RootViewModelFactory {
                 completion(.failure(.server("Server Failure")))
                 
             default:
-                completion(.success(()))
+                completion(.failure(.server("Server Failure")))
             }
         }
     }
     
-    typealias GetUINDataResult = Result<Void, BackendFailure> // TODO: replace Void with  GetUINDataResponse from C2GBackend when ready
+    typealias GetUINDataResult = Result<C2GPaymentDomain.ContentPayload, BackendFailure>
 }
 
 private extension RootViewModelFactory.GetUINDataResult {
@@ -116,15 +134,7 @@ private extension BackendFailure {
     static let missingC2GPaymentEligibleProducts: Self = .connectivity("У вас нет подходящих для платежа продуктов.")
 }
 
-private extension Model {
-    
-    func c2gPaymentEligibleProducts() -> Void? {
-        
-        return ()
-    }
-}
-
-// TODO: remove with stub
+// TODO: remove with easter egg stub
 private extension SearchByUINDomain.UIN {
     
     var hasEasterEgg: Bool {

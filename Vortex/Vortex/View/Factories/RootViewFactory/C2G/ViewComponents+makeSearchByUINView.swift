@@ -60,17 +60,10 @@ extension ViewComponents {
                 
                 Spacer()
                 
-                StatefulButtonView(
-                    isActive: state.isContinueActive,
-                    event: {
-                        
-                        binder.flow.event(.select(.uin(.init(value: binder.content.value))))
-                    },
-                    config: .iVortex(title: "Продолжить")
-                )
-                
-                Image.ic72Sbp
-                    .renderingMode(.original)
+                makeSPBFooter(isActive: state.isContinueActive) {
+                    
+                    binder.flow.event(.select(.uin(.init(value: binder.content.value))))
+                }
             }
             .padding([.horizontal, .top])
         }
