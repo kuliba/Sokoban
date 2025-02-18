@@ -62,11 +62,16 @@ extension C2GPaymentDomain {
         struct C2GPaymentComplete: Equatable {
             
             let amount: Decimal?
-            let documentStatus: String
+            let status: Status
             let merchantName: String?
             let message: String?
             let paymentOperationDetailID: Int
             let purpose: String?
+            
+            enum Status {
+                
+                case completed, inflight, rejected
+            }
         }
     }
 }

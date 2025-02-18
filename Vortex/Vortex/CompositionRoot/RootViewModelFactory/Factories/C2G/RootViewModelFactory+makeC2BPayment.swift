@@ -97,7 +97,12 @@ extension RootViewModelFactory {
 
 private extension C2GPaymentDomain.Navigation {
     
-    static let connectivityFailure: Self = .failure(.connectivity("Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения"))
+    static let connectivityFailure: Self = .failure(.connectivityFailure)
+}
+
+private extension BackendFailure {
+    
+    static let connectivityFailure: Self = .connectivity("Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения")
 }
 
 // TODO: remove with stub
@@ -124,18 +129,38 @@ where Success == RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
             return .connectivityFailure
             
         case let .success(response):
-            return .success(response.complete)
+            return response.result
         }
     }
 }
 
 private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
     
-    var complete: C2GPaymentDomain.Navigation.C2GPaymentComplete {
+    var result: C2GPaymentDomain.Navigation {
+        
+        guard let status
+        else { return .failure(.connectivityFailure) }
+        
+        return .success(success(status))
+    }
+    
+    private var status: C2GPaymentDomain.Navigation.C2GPaymentComplete.Status? {
+        
+        switch documentStatus {
+        case "COMPLETE":    return .completed
+        case "REJECTED":    return .inflight
+        case "IN_PROGRESS": return .rejected
+        default:            return nil
+        }
+    }
+    
+    private func success(
+        _ status: C2GPaymentDomain.Navigation.C2GPaymentComplete.Status
+    ) -> C2GPaymentDomain.Navigation.C2GPaymentComplete {
         
         return .init(
             amount: amount,
-            documentStatus: documentStatus,
+            status: status,
             merchantName: merchantName,
             message: message,
             paymentOperationDetailID: paymentOperationDetailID,
