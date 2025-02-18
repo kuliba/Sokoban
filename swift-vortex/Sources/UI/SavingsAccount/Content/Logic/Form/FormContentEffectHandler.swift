@@ -10,11 +10,14 @@ import Foundation
 public final class FormContentEffectHandler<Landing, InformerPayload> {
     
     private let loadLanding: LoadLanding
+    private let timeInterval: DispatchTimeInterval
 
     public init(
-        loadLanding: @escaping LoadLanding
+        loadLanding: @escaping LoadLanding,
+        timeInterval: DispatchTimeInterval = .seconds(2)
     ) {
         self.loadLanding = loadLanding
+        self.timeInterval = timeInterval
     }
 }
 
@@ -36,6 +39,11 @@ public extension FormContentEffectHandler {
                 case let .success(landing):
                     dispatch(.loaded(landing))
                 }
+            }
+            
+        case .hideInformer:
+            DispatchQueue.main.asyncAfter(deadline: .now() + timeInterval) {
+                dispatch(.hideInformer)
             }
         }
     }

@@ -10,6 +10,7 @@ import Foundation
 public enum SavingsAccountContentEvent<Landing, InformerPayload> {
     
     case failure(BackendFailure<InformerPayload>)
+    case hideInformer
     case load
     case loaded(Landing)
     case offset(CGFloat)

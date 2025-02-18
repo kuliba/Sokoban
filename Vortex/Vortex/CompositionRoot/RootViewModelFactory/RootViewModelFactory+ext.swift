@@ -534,17 +534,8 @@ extension SavingsAccountDomain.ContentState {
     var select: SavingsAccountDomain.Select? {
         
         switch status {
-        case .initiate, .inflight, .loaded:
+        case .initiate, .inflight, .loaded, .failure:
             return nil
-            
-        case let .failure(failure, _):
-            switch failure{
-            case let .alert(message):
-                return .failure(.error(message))
-                
-            case let .informer(info):
-                return .failure(.timeout(info))
-            }
         }
     }
 }
@@ -554,17 +545,8 @@ extension SavingsAccountDomain.OpenAccountContentState {
     var select: SavingsAccountDomain.Select? {
         
         switch status {
-        case .initiate, .inflight, .loaded:
+        case .initiate, .inflight, .loaded, .failure:
             return nil
-            
-        case let .failure(failure, _):
-            switch failure{
-            case let .alert(message):
-                return .failure(.error(message))
-                
-            case let .informer(info):
-                return .failure(.timeout(info))
-            }
         }
     }
 }

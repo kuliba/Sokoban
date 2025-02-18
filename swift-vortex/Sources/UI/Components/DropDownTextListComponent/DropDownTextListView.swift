@@ -97,7 +97,8 @@ public struct DropDownTextListView: View {
     }
     
     private func subTitleView(_ subTitle: String) -> some View {
-        return Text(subTitle)
+        
+        subTitle.text(withConfig: config.fonts.itemSubtitle)
             .multilineTextAlignment(.leading)
             .modifier(PaddingsModifier(horizontal: config.layouts.horizontalPadding))
             .frame(maxWidth: .infinity, alignment: .leading)
