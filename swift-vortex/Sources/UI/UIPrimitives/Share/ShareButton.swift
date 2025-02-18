@@ -27,7 +27,23 @@ public struct ShareButton<Label: View, ShareView: View>: View {
     
     public var body: some View {
         
-        Button("share") { isSharing = true }
+        Button(action: { isSharing = true }, label: label)
             .sheet(isPresented: $isSharing, onDismiss: onDismiss, content: shareView)
+    }
+}
+
+extension ShareButton
+where ShareView == ShareSheet {
+    
+    public init(
+        payload: ShareSheetPayload,
+        config: ShareSheetConfig,
+        onDismiss: (() -> Void)? = nil,
+        label: @escaping () -> Label
+    ) {
+        self.init(onDismiss: onDismiss, label: label) {
+            
+            ShareView(payload: payload, config: config)
+        }
     }
 }
