@@ -21,6 +21,16 @@ extension PaymentCompletionConfig {
         )
     )
     
+    static let c2g: Self = .init(
+        statuses: .init(
+            completed: .completed(title: "Оплата прошла успешно"),
+            inflight: .inflight(title: "Платеж в обработке"),
+            rejected: .rejected(title: "Платеж отклонен"),
+            fraudCancelled: .fraudCancelled(),
+            fraudExpired: .fraudExpired()
+        )
+    )
+    
     static let orderCard: Self = .init(
         statuses: .init(
             completed: .completed(),
@@ -176,9 +186,9 @@ extension PaymentCompletionConfig.Statuses.Status {
 }
 
 extension PaymentCompletionConfig.Statuses.Status.Config {
- 
+    
     static func fraud() -> Self {
-     
+        
         return .init(
             amount: .init(
                 textFont: .textH1Sb24322(),
@@ -220,7 +230,7 @@ struct PaymentCompletionStatusView_PaymentCompletion_Previews: PreviewProvider {
                 .previewDisplayName("fraud: cancelled")
             statusView(.fraudExpired)
                 .previewDisplayName("fraud: expired")
-
+            
             orderCardView(.inflight)
                 .previewDisplayName("orderCard inflight")
             orderCardView(.rejected)
@@ -233,7 +243,7 @@ struct PaymentCompletionStatusView_PaymentCompletion_Previews: PreviewProvider {
     ) -> some View {
         
         PaymentCompletionStatusView(
-            state: completion, 
+            state: completion,
             makeIconView: {
                 
                 return .init(
@@ -250,7 +260,7 @@ struct PaymentCompletionStatusView_PaymentCompletion_Previews: PreviewProvider {
     ) -> some View {
         
         PaymentCompletionStatusView(
-            state: completion, 
+            state: completion,
             makeIconView: {
                 
                 return .init(
