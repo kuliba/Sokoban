@@ -194,7 +194,7 @@ struct PaymentCompleteView_Previews: PreviewProvider {
             goToMain: {},
             repeat: {},
             factory: .preview,
-            config: .iVortex
+            config: .payment
         )
     }
 }

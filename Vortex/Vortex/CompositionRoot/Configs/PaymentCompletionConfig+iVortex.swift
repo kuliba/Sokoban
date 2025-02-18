@@ -11,7 +11,7 @@ import SwiftUI
 
 extension PaymentCompletionConfig {
     
-    static let iVortex: Self = .init(
+    static let payment: Self = .init(
         statuses: .init(
             completed: .completed(),
             inflight: .inflight(),
@@ -251,7 +251,7 @@ struct PaymentCompletionStatusView_PaymentCompletion_Previews: PreviewProvider {
                     publisher: Just(.init(systemName: $0)).eraseToAnyPublisher()
                 )
             },
-            config: .iVortex
+            config: .payment
         )
     }
     
