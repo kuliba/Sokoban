@@ -76,6 +76,7 @@ let package = Package(
         .getProductListByTypeService,
         .getProductListByTypeV6Service,
         .getProductListByTypeV7Service,
+        .getSplashScreenServices,
         .getClientInformDataServices,
         .savingsServices,
         .getCardOrderFormService,
@@ -262,6 +263,8 @@ let package = Package(
         .getProductListByTypeV6ServiceTests,
         .getProductListByTypeV7Service,
         .getProductListByTypeV7ServiceTests,
+        .getSplashScreenServices,
+        .getSplashScreenServicesTests,
         .getClientInformDataServices,
         .getClientInformDataServicesTests,
         .savingsServices,
@@ -1100,6 +1103,13 @@ private extension Product {
         name: .getClientInformDataServices,
         targets: [
             .getClientInformDataServices
+        ]
+    )
+
+    static let getSplashScreenServices = library(
+        name: .getSplashScreenServices,
+        targets: [
+            .getSplashScreenServices
         ]
     )
     
@@ -2503,7 +2513,6 @@ private extension Target {
         ]
     )
 
-
     static let getClientInformDataServices = target(
         name: .getClientInformDataServices,
         dependencies: [
@@ -2524,6 +2533,22 @@ private extension Target {
         resources: [
 
         ]
+    )
+
+    static let getSplashScreenServices = target(
+        name: .getSplashScreenServices,
+        dependencies: [
+            .remoteServices
+        ],
+        path: "Sources/Services/\(String.getSplashScreenServices)"
+    )
+    
+    static let getSplashScreenServicesTests = testTarget(
+        name: .getSplashScreenServicesTests,
+        dependencies: [
+            .getSplashScreenServices
+        ],
+        path: "Tests/Services/\(String.getSplashScreenServicesTests)"
     )
     
     static let savingsServices = target(
@@ -3978,6 +4003,10 @@ private extension Target.Dependency {
     static let getClientInformDataServices = byName(
         name: .getClientInformDataServices
     )
+
+    static let getSplashScreenServices = byName(
+        name: .getSplashScreenServices
+    )
     
     static let savingsServices = byName(
         name: .savingsServices
@@ -4359,6 +4388,9 @@ private extension String {
 
     static let getClientInformDataServices = "GetClientInformDataServices"
     static let getClientInformDataServicesTests = "GetClientInformDataServicesTests"
+
+    static let getSplashScreenServices = "GetSplashScreenServices"
+    static let getSplashScreenServicesTests = "GetSplashScreenServicesTests"
     
     static let savingsServices = "SavingsServices"
     static let savingsServicesTests = "SavingsServicesTests"
