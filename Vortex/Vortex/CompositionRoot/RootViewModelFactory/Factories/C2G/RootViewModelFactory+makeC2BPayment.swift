@@ -68,9 +68,24 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapCreateC2GPaymentResponse
         )
         
-        service(payload) { completion($0.navigation); _ = service }
+        service(payload) { [weak self] in
+            
+            guard let self else { return }
+            
+            completion($0.navigation(formattedAmount: formatAmount(value: $0.success?.amount)));
+            _ = service
+        }
     }
     
+    private func formatAmount(
+        value: Decimal?
+    ) -> String? {
+        
+        guard let value = value?.doubleValue else { return nil }
+        
+        return model.amountFormatted(amount: value, currencyCode: "RUB", style: .normal)
+    }
+
     // TODO: remove stub
     @inlinable
     func createC2GPaymentEasterEggs(
@@ -119,7 +134,9 @@ private extension String {
 private extension Result
 where Success == RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
     
-    var navigation: C2GPaymentDomain.Navigation {
+    func navigation(
+        formattedAmount: String?
+    ) -> C2GPaymentDomain.Navigation {
         
         switch self {
         case let .failure(failure as BackendFailure):
@@ -129,19 +146,21 @@ where Success == RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
             return .connectivityFailure
             
         case let .success(response):
-            return response.result
+            return response.result(formattedAmount: formattedAmount)
         }
     }
 }
 
 private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
     
-    var result: C2GPaymentDomain.Navigation {
+    func result(
+        formattedAmount: String?
+    ) -> C2GPaymentDomain.Navigation {
         
         guard let status
         else { return .failure(.connectivityFailure) }
         
-        return .success(success(status))
+        return .success(success(formattedAmount: formattedAmount, status: status))
     }
     
     private var status: C2GPaymentDomain.Navigation.C2GPaymentComplete.Status? {
@@ -155,11 +174,12 @@ private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
     }
     
     private func success(
-        _ status: C2GPaymentDomain.Navigation.C2GPaymentComplete.Status
+        formattedAmount: String?,
+        status: C2GPaymentDomain.Navigation.C2GPaymentComplete.Status
     ) -> C2GPaymentDomain.Navigation.C2GPaymentComplete {
         
         return .init(
-            amount: amount,
+            formattedAmount: formattedAmount,
             status: status,
             merchantName: merchantName,
             message: message,

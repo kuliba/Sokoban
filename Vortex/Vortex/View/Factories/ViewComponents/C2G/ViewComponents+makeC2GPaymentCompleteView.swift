@@ -56,7 +56,7 @@ private extension C2GCompleteCover {
     var completion: PaymentCompletion {
         
         return .init(
-            formattedAmount: "12,345 £", // TODO: REPLACE STUBS with real data
+            formattedAmount: success.formattedAmount,
             merchantIcon: nil,
             status: status
         )
@@ -183,7 +183,7 @@ private extension C2GPaymentDomain.Navigation.C2GPaymentComplete {
     
     // ✅ COMPLETED STATUS
     static let completedFull: Self = .init(
-        amount: 100.50,
+        formattedAmount: "100.50 ₽",
         status: .completed,
         merchantName: "Merchant A",
         message: "Payment successful",
@@ -192,7 +192,7 @@ private extension C2GPaymentDomain.Navigation.C2GPaymentComplete {
     )
     
     static let completedNoAmount: Self = .init(
-        amount: nil,
+        formattedAmount: nil,
         status: .completed,
         merchantName: "Merchant B",
         message: "Payment processed",
@@ -201,7 +201,7 @@ private extension C2GPaymentDomain.Navigation.C2GPaymentComplete {
     )
     
     static let completedNoMerchant: Self = .init(
-        amount: 75.00,
+        formattedAmount: "75.00 ₽",
         status: .completed,
         merchantName: nil,
         message: "Transaction complete",
@@ -210,7 +210,7 @@ private extension C2GPaymentDomain.Navigation.C2GPaymentComplete {
     )
     
     static let completedNoMessage: Self = .init(
-        amount: 50.00,
+        formattedAmount: "50.00 ₽",
         status: .completed,
         merchantName: "Merchant C",
         message: nil,
@@ -219,7 +219,7 @@ private extension C2GPaymentDomain.Navigation.C2GPaymentComplete {
     )
     
     static let completedNoPurpose: Self = .init(
-        amount: 125.00,
+        formattedAmount: "125.00 ₽",
         status: .completed,
         merchantName: "Merchant D",
         message: "Transaction successful",
@@ -228,7 +228,7 @@ private extension C2GPaymentDomain.Navigation.C2GPaymentComplete {
     )
     
     static let completedNoMerchantNoMessage: Self = .init(
-        amount: 90.00,
+        formattedAmount: "90.00 ₽",
         status: .completed,
         merchantName: nil,
         message: nil,
@@ -237,7 +237,7 @@ private extension C2GPaymentDomain.Navigation.C2GPaymentComplete {
     )
     
     static let completedMinimal: Self = .init(
-        amount: nil,
+        formattedAmount: nil,
         status: .completed,
         merchantName: nil,
         message: nil,
@@ -248,7 +248,7 @@ private extension C2GPaymentDomain.Navigation.C2GPaymentComplete {
     
     // ✅ INFLIGHT STATUS
     static let inflightFull: Self = .init(
-        amount: 200.00,
+        formattedAmount: "200.00 ₽",
         status: .inflight,
         merchantName: "Merchant E",
         message: "Payment is being processed",
@@ -257,7 +257,7 @@ private extension C2GPaymentDomain.Navigation.C2GPaymentComplete {
     )
     
     static let inflightNoAmount: Self = .init(
-        amount: nil,
+        formattedAmount: nil,
         status: .inflight,
         merchantName: "Merchant F",
         message: "Awaiting confirmation",
@@ -266,7 +266,7 @@ private extension C2GPaymentDomain.Navigation.C2GPaymentComplete {
     )
     
     static let inflightNoMerchant: Self = .init(
-        amount: 150.00,
+        formattedAmount: "150.00 ₽",
         status: .inflight,
         merchantName: nil,
         message: "Processing transaction",
@@ -275,7 +275,7 @@ private extension C2GPaymentDomain.Navigation.C2GPaymentComplete {
     )
     
     static let inflightNoMessage: Self = .init(
-        amount: 175.00,
+        formattedAmount: "175.00 ₽",
         status: .inflight,
         merchantName: "Merchant G",
         message: nil,
@@ -284,7 +284,7 @@ private extension C2GPaymentDomain.Navigation.C2GPaymentComplete {
     )
     
     static let inflightNoPurpose: Self = .init(
-        amount: 120.00,
+        formattedAmount: "120.00 ₽",
         status: .inflight,
         merchantName: "Merchant H",
         message: "Payment pending",
@@ -293,7 +293,7 @@ private extension C2GPaymentDomain.Navigation.C2GPaymentComplete {
     )
     
     static let inflightNoMerchantNoMessage: Self = .init(
-        amount: 130.00,
+        formattedAmount: "130.00 ₽",
         status: .inflight,
         merchantName: nil,
         message: nil,
@@ -302,7 +302,7 @@ private extension C2GPaymentDomain.Navigation.C2GPaymentComplete {
     )
     
     static let inflightMinimal: Self = .init(
-        amount: nil,
+        formattedAmount: nil,
         status: .inflight,
         merchantName: nil,
         message: nil,
@@ -313,7 +313,7 @@ private extension C2GPaymentDomain.Navigation.C2GPaymentComplete {
     
     // ✅ REJECTED STATUS
     static let rejectedFull: Self = .init(
-        amount: 300.75,
+        formattedAmount: "300.75 ₽",
         status: .rejected,
         merchantName: "Merchant I",
         message: "Payment failed due to insufficient funds",
@@ -322,7 +322,7 @@ private extension C2GPaymentDomain.Navigation.C2GPaymentComplete {
     )
     
     static let rejectedNoAmount: Self = .init(
-        amount: nil,
+        formattedAmount: nil,
         status: .rejected,
         merchantName: "Merchant J",
         message: "Transaction declined",
@@ -331,7 +331,7 @@ private extension C2GPaymentDomain.Navigation.C2GPaymentComplete {
     )
     
     static let rejectedNoMerchant: Self = .init(
-        amount: 125.00,
+        formattedAmount: "125.00 ₽",
         status: .rejected,
         merchantName: nil,
         message: "Card not accepted",
@@ -340,7 +340,7 @@ private extension C2GPaymentDomain.Navigation.C2GPaymentComplete {
     )
     
     static let rejectedNoMessage: Self = .init(
-        amount: 140.00,
+        formattedAmount: "140.00 ₽",
         status: .rejected,
         merchantName: "Merchant K",
         message: nil,
@@ -349,7 +349,7 @@ private extension C2GPaymentDomain.Navigation.C2GPaymentComplete {
     )
     
     static let rejectedNoPurpose: Self = .init(
-        amount: 110.00,
+        formattedAmount: "110.00 ₽",
         status: .rejected,
         merchantName: "Merchant L",
         message: "Insufficient funds",
@@ -358,7 +358,7 @@ private extension C2GPaymentDomain.Navigation.C2GPaymentComplete {
     )
     
     static let rejectedNoMerchantNoMessage: Self = .init(
-        amount: 135.00,
+        formattedAmount: "135.00 ₽",
         status: .rejected,
         merchantName: nil,
         message: nil,
@@ -367,7 +367,7 @@ private extension C2GPaymentDomain.Navigation.C2GPaymentComplete {
     )
     
     static let rejectedMinimal: Self = .init(
-        amount: nil,
+        formattedAmount: nil,
         status: .rejected,
         merchantName: nil,
         message: nil,

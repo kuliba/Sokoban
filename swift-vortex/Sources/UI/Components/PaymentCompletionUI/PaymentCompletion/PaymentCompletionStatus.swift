@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PaymentCompletionStatus {
     
-    let formattedAmount: String
+    let formattedAmount: String?
     let merchantIcon: String?
     let status: Status
     

@@ -61,7 +61,7 @@ extension C2GPaymentDomain {
         
         struct C2GPaymentComplete: Equatable {
             
-            let amount: Decimal?
+            let formattedAmount: String?
             let status: Status
             let merchantName: String?
             let message: String?
