@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 protocol TransactionDetailsProviding<TransactionDetails> {
     
@@ -19,6 +20,15 @@ protocol PaymentRequisitesProviding<PaymentRequisites> {
     associatedtype PaymentRequisites
     
     var paymentRequisites: PaymentRequisites { get }
+}
+
+extension PaymentRequisitesProviding
+where PaymentRequisites == [DetailsCell] {
+    
+    var shareItems: [String] {
+        
+        paymentRequisites.map { "\($0.title): \($0.value)" }
+    }
 }
 
 extension ViewComponents {
@@ -44,12 +54,15 @@ extension ViewComponents {
         share: @escaping () -> Void
     ) -> some View {
         
-        c2gDetailsView(details: details.paymentRequisites)
-            .navigationBarWithClose(
-                title: "Реквизиты",
-                dismiss: dismiss,
-                rightButton: .init(icon: .ic24Share, action: share)
-            )
+        SharingView(shareItems: details.shareItems) { share in
+            
+            c2gDetailsView(details: details.paymentRequisites)
+                .navigationBarWithClose(
+                    title: "Реквизиты",
+                    dismiss: dismiss,
+                    rightButton: .init(icon: .ic24Share, action: share)
+                )
+        }
     }
     
     @inlinable
@@ -72,6 +85,31 @@ extension ViewComponents {
         
         DetailsCellView(cell: cell, config: .iVortex)
     }
+}
+
+struct SharingView<Content: View>: View {
+    
+    @State private var isSharing = false
+    
+    let shareItems: [Any]
+    let content: (@escaping () -> Void) -> Content
+    
+    var body: some View {
+        
+        content { isSharing = true }
+            .sheet(
+                isPresented: $isSharing,
+                content: {
+                    
+                    ShareSheet(payload: .init(items: shareItems), config: .iVortex)
+                }
+            )
+    }
+}
+
+extension ShareSheetConfig {
+    
+    static let iVortex: Self = .init()
 }
 
 // MARK: - Previews
