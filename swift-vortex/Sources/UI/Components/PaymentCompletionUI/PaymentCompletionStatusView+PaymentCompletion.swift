@@ -20,9 +20,9 @@ public extension PaymentCompletionStatusView {
         
         self.init(
             state: .init(
-                status: .init(config.content),
                 formattedAmount: state.formattedAmount,
-                merchantIcon: state.merchantIcon
+                merchantIcon: state.merchantIcon,
+                status: .init(config.content)
             ),
             makeIconView: makeIconView,
             config: .init(config.config)
@@ -56,7 +56,7 @@ private extension PaymentCompletionStatusView.Config {
                 innerSize: config.icon.innerSize,
                 outerSize: config.icon.outerSize
             ),
-            logoHeight: config.logoHeight,
+            merchantIconHeight: config.logoHeight,
             title: config.title,
             subtitle: config.subtitle
         )
