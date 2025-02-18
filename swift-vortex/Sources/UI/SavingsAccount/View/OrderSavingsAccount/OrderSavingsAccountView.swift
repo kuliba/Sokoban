@@ -26,6 +26,8 @@ where AmountInfo: View,
     @State private(set) var isShowHeader = false
     @State private(set) var isShowingProducts = false
     
+    @Environment(\.presentationMode) private var mode: Binding<PresentationMode>
+
     public init(
         amountToString: @escaping AmountToString,
         state: OrderSavingsAccountState,
@@ -424,7 +426,7 @@ where AmountInfo: View,
     }
     
     private func backButton() -> some View {
-        Button(action: {  }) { config.images.back }
+        Button(action: { mode.wrappedValue.dismiss() }) { config.images.back }
     }
     
     private func header() -> some View {

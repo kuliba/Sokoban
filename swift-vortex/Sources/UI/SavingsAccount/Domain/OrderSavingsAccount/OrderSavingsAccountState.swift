@@ -15,7 +15,6 @@ public struct OrderSavingsAccountState: Equatable {
     public var consent: Bool = true
     public var isShowingOTP: Bool = false
     
-
     public init(
         status: Status,
         amountValue: Decimal = 0
