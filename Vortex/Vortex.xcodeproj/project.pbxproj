@@ -6887,6 +6887,7 @@
 		C19738E62AF3970100101B1B /* _StickerDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _StickerDictionary.swift; sourceTree = "<group>"; };
 		C19738E82AF3A42F00101B1B /* StickerDictionaryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerDictionaryResponse.swift; sourceTree = "<group>"; };
 		C197FD612CE178180005A93E /* Service+modifyC2B.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Service+modifyC2B.swift"; sourceTree = "<group>"; };
+		C198F83F2D645C4D005D8DE0 /* OrderCardLandingUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = OrderCardLandingUI.xctestplan; sourceTree = "<group>"; };
 		C19C36662B04B57E0052D7F0 /* OperationWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationWrapperView.swift; sourceTree = "<group>"; };
 		C1A2CCE228DB7348009436D6 /* DepositCloseNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositCloseNotification.swift; sourceTree = "<group>"; };
 		C1A4D37B2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ManageSubscriptionUIPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -10473,6 +10474,7 @@
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
+				C198F83F2D645C4D005D8DE0 /* OrderCardLandingUI.xctestplan */,
 				2A50E6C72D5631E500C00949 /* GetCardOrderFormService.xctestplan */,
 				C10B0F982D51047E00508689 /* OrderCardLandingBackend.xctestplan */,
 				2A5D6F542D5DA6990011C09E /* C2G.xctestplan */,

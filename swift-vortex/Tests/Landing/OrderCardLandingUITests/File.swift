@@ -1,8 +1,12 @@
 //
 //  File.swift
-//  
 //
-//  Created by Дмитрий Савушкин on 17.02.2025.
+//
+//  Created by Дмитрий Савушкин on 18.02.2025.
 //
 
-import Foundation
+import XCTest
+
+final class File: XCTestCase {
+    
+}

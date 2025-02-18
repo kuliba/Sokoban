@@ -644,14 +644,14 @@
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-vortex",
+        "containerPath" : "container:",
         "identifier" : "C2GBackendTests",
         "name" : "C2GBackendTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-vortex",
+        "containerPath" : "container:",
         "identifier" : "C2GCoreTests",
         "name" : "C2GCoreTests"
       }
@@ -668,6 +668,13 @@
         "containerPath" : "container:",
         "identifier" : "OrderCardLandingBackendTests",
         "name" : "OrderCardLandingBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "OrderCardLandingUITests",
+        "name" : "OrderCardLandingUITests"
       }
     }
   ],
