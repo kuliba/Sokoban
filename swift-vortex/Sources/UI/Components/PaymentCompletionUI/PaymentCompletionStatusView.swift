@@ -157,8 +157,8 @@ struct PaymentCompletionStatusView_Previews: PreviewProvider {
             makeIconView: {
                 
                 return .init(
-                    image: .init(systemName: $0 ?? "pencil.and.outline"),
-                    publisher: Just(.init(systemName: $0 ?? "tray.full.fill")).eraseToAnyPublisher()
+                    image: .init(systemName: $0),
+                    publisher: Just(.init(systemName: $0)).eraseToAnyPublisher()
                 )
             },
             config: .preview
