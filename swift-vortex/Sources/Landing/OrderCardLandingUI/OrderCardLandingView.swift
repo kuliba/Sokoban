@@ -25,38 +25,35 @@ public struct OrderCardLandingView: View {
     
     public var body: some View {
         
-        ScrollView(.vertical, showsIndicators: false) {
+        LazyVStack(spacing: 16) {
             
-            LazyVStack(spacing: 16) {
-                
-                HeaderView(
-                    model: state.headerViewModel,
-                    config: config.headerConfig
-                )
-                
-                OrderCardVerticalList(
-                    model: state.conditions,
-                    config: config.orderCardVerticalConfig
-                )
-                .background(.gray)
-                .cornerRadius(12)
-                .padding(.horizontal, 15)
-                .padding(.top, 76)
-                
-                OrderCardVerticalList(
-                    model: state.security,
-                    config: config.orderCardVerticalConfig
-                )
-                .background(.gray)
-                .cornerRadius(12)
-                .padding(.horizontal, 15)
-                
-                DropDownList(
-                    viewModel: state.dropDownList,
-                    config: config.dropDownListConfig
-                )
-                .padding(.horizontal, 15)
-            }
+            HeaderView(
+                model: state.headerViewModel,
+                config: config.headerConfig
+            )
+            
+            OrderCardVerticalList(
+                model: state.conditions,
+                config: config.orderCardVerticalConfig
+            )
+            .background(.gray)
+            .cornerRadius(12)
+            .padding(.horizontal, 15)
+            .padding(.top, 76)
+            
+            OrderCardVerticalList(
+                model: state.security,
+                config: config.orderCardVerticalConfig
+            )
+            .background(.gray)
+            .cornerRadius(12)
+            .padding(.horizontal, 15)
+            
+            DropDownList(
+                viewModel: state.dropDownList,
+                config: config.dropDownListConfig
+            )
+            .padding(.horizontal, 15)
         }
     }
 }
