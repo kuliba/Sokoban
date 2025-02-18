@@ -7,23 +7,19 @@
 
 import SwiftUI
 
-public struct SavingsAccountContentViewFactory<RefreshView, Landing, LandingView, InformerPayload, InformerView>
+public struct SavingsAccountContentViewFactory<RefreshView, Landing, LandingView>
 where RefreshView: View,
-      LandingView: View,
-      InformerView: View
+      LandingView: View
 {
     
     let refreshView: RefreshView
-    let makeInformerView: MakeInformerView
     let makeLandingView: MakeLandingView
     
     public init(
         refreshView: RefreshView,
-        makeInformerView: @escaping MakeInformerView,
         makeLandingView: @escaping MakeLandingView
     ) {
         self.refreshView = refreshView
-        self.makeInformerView = makeInformerView
         self.makeLandingView = makeLandingView
     }
 }
@@ -31,5 +27,4 @@ where RefreshView: View,
 public extension SavingsAccountContentViewFactory {
     
     typealias MakeLandingView = (Landing) -> LandingView
-    typealias MakeInformerView = (InformerPayload) -> InformerView
 }

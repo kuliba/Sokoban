@@ -39,7 +39,8 @@ struct OpenSavingsAccountBinderView: View {
                                 factory: factory
                             )
                         }
-                    }
+                    },
+                    informerView: informerView
                 )
                 .onFirstAppear {
                     contentEvent(.load)
@@ -62,7 +63,19 @@ struct OpenSavingsAccountBinderView: View {
         
         EmptyView() // TODO: add success view
     }
+    
+    private func informerView(
+        _ informerData: InformerData
+    ) -> InformerView {
         
+        .init(
+            viewModel: .init(
+                message: informerData.message,
+                icon: informerData.icon.image,
+                color: informerData.color)
+        )
+    }
+    
     @inlinable
     @ViewBuilder
     func makeOpenSavingsAccountView(

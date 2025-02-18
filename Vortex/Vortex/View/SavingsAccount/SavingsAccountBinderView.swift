@@ -60,7 +60,8 @@ struct SavingsAccountBinderView: View {
                             .onFirstAppear { contentEvent(.load) }
                             .onAppear { flowEvent(.dismiss) }
                         }
-                    }
+                    },
+                    informerView: informerView
                 )
                 .padding(.bottom)
                 .navigationBarWithBack(
@@ -80,6 +81,18 @@ struct SavingsAccountBinderView: View {
                 }
             }
         }
+    }
+    
+    private func informerView(
+        _ informerData: InformerData
+    ) -> InformerView {
+        
+        .init(
+            viewModel: .init(
+                message: informerData.message,
+                icon: informerData.icon.image,
+                color: informerData.color)
+        )
     }
     
     private func continueButton(

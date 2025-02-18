@@ -29,14 +29,20 @@ extension SavingsAccountDomain {
         
         case goToMain
         case openSavingsAccount
-        case failure(String)
+        case failure(FlowFailureKind)
     }
     
+    enum FlowFailureKind: Equatable {
+        
+        case timeout(InformerPayload)
+        case error(String)
+    }
+
     enum Navigation {
         
         case main
         case openSavingsAccount
-        case failure(String)
+        case failure(FlowFailureKind)
     }
     
     // MARK: - Binder
@@ -68,9 +74,9 @@ extension SavingsAccountDomain {
     typealias ContentMicroService = SavingsAccount.ContentEffectHandlerMicroServices<Landing, InformerPayload>
     
     typealias Content = RxViewModel<ContentState, ContentEvent, ContentEffect>
-    typealias ContentView = SavingsAccountContentView<SpinnerRefreshView, SavingsAccountView, Landing, InformerPayload, InformerView>
+    typealias ContentView = SavingsAccountContentView<SpinnerRefreshView, SavingsAccountView, Landing, InformerPayload>
     typealias ContentWrapperView = RxWrapperView<ContentView, ContentState, ContentEvent, ContentEffect>
-    typealias WrapperView = RxWrapperView<FlowView<ContentWrapperView>, FlowDomain.State, FlowDomain.Event, FlowDomain.Effect>
+    typealias WrapperView = RxWrapperView<FlowView<ContentWrapperView, InformerView>, FlowDomain.State, FlowDomain.Event, FlowDomain.Effect>
     
     
     // MARK: - OpenAccount
@@ -90,12 +96,12 @@ extension SavingsAccountDomain {
 
     typealias OpenAccountContent = RxViewModel<OpenAccountContentState, OpenAccountContentEvent, OpenAccountContentEffect>
     typealias OpenAccountView = OrderSavingsAccountView<AmountInfoView, Text, Text>
-    typealias OpenAccountContentView = SavingsAccountContentView<SpinnerRefreshView, OrderSavingsAccountWrapperView, OpenAccountLanding, InformerPayload, InformerView>
+    typealias OpenAccountContentView = SavingsAccountContentView<SpinnerRefreshView, OrderSavingsAccountWrapperView, OpenAccountLanding, InformerPayload>
     typealias OpenAccountViewFactory = SavingsAccount.ViewFactory<AmountInfoView, Text, Text>
     
-    typealias OpenAccountLandingViewFactory = SavingsAccountContentViewFactory<SpinnerRefreshView, OpenAccountLanding, OrderSavingsAccountWrapperView, InformerPayload, InformerView>
+    typealias OpenAccountLandingViewFactory = SavingsAccountContentViewFactory<SpinnerRefreshView, OpenAccountLanding, OrderSavingsAccountWrapperView>
 
-    typealias ViewFactory = SavingsAccountContentViewFactory<SpinnerRefreshView, Landing, SavingsAccountView, InformerPayload, InformerView>
+    typealias ViewFactory = SavingsAccountContentViewFactory<SpinnerRefreshView, Landing, SavingsAccountView>
     
     typealias Config = SavingsAccountConfig
     

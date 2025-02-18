@@ -538,11 +538,12 @@ extension SavingsAccountDomain.ContentState {
             return nil
             
         case let .failure(failure, _):
-            switch failure {
+            switch failure{
             case let .alert(message):
-                return .failure(message)
-            case .informer:
-                return nil
+                return .failure(.error(message))
+                
+            case let .informer(info):
+                return .failure(.timeout(info))
             }
         }
     }
@@ -557,12 +558,12 @@ extension SavingsAccountDomain.OpenAccountContentState {
             return nil
             
         case let .failure(failure, _):
-            switch failure {
+            switch failure{
             case let .alert(message):
-                return .failure(message)
+                return .failure(.error(message))
                 
-            case .informer:
-                return nil
+            case let .informer(info):
+                return .failure(.timeout(info))
             }
         }
     }

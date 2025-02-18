@@ -11,29 +11,45 @@ import SavingsAccount
 
 extension SavingsAccountDomain {
     
-    struct FlowView<ContentView>: View
-    where ContentView: View {
+    struct FlowView<ContentView, InformerView>: View
+    where ContentView: View,
+          InformerView: View {
         
         let state: State
         let event: (Event) -> Void
         let contentView: () -> ContentView
+        let informerView: (Informer) -> InformerView
         
         var body: some View {
             
-            contentView()
-                .alert(
-                    item: backendFailure,
-                    content: alert(event: event)
-                )
+            ZStack(alignment: .top) {
+                
+                state.navigation?.informer.map(informerView)
+                    .zIndex(1)
+                
+                contentView()
+                    .alert(
+                        item: backendFailure,
+                        content: alert(event: event)
+                    )
+            }
         }
     }
 }
 
 extension SavingsAccountDomain.Navigation {
+    
+    var informer: SavingsAccountDomain.InformerPayload? {
         
+        guard case let .failure(.timeout(informer)) = self
+        else { return nil }
+        
+        return informer
+    }
+    
     var alertMessage: String? {
         
-        guard case let .failure(message) = self
+        guard case let .failure(.error(message)) = self
         else { return nil }
         
         return message
@@ -76,4 +92,5 @@ extension SavingsAccountDomain.FlowView {
     
     typealias State = SavingsAccountDomain.FlowDomain.State
     typealias Event = SavingsAccountDomain.FlowDomain.Event
+    typealias Informer = SavingsAccountDomain.InformerPayload
 }

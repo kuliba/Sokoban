@@ -5,22 +5,17 @@
 //  Created by Andryusina Nataly on 03.12.2024.
 //
 
-import Foundation
-
 public final class ContentEffectHandler<Landing, InformerPayload> {
     
     private let microServices: MicroServices
     private let landingType: String
-    private let timeInterval: DispatchTimeInterval
-
+    
     public init(
         microServices: MicroServices,
-        landingType: String,
-        timeInterval: DispatchTimeInterval = .seconds(2)
+        landingType: String
     ) {
         self.microServices = microServices
         self.landingType = landingType
-        self.timeInterval = timeInterval
     }
     
     public typealias MicroServices = ContentEffectHandlerMicroServices<Landing, InformerPayload>
@@ -44,11 +39,6 @@ public extension ContentEffectHandler {
                 case let .success(landing):
                     dispatch(.loaded(landing))
                 }
-            }
-            
-        case .hideInformer:
-            DispatchQueue.main.asyncAfter(deadline: .now() + timeInterval) {
-                dispatch(.hideInformer)
             }
         }
     }

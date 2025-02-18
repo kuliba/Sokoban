@@ -31,8 +31,7 @@ extension RootViewFactoryComposer {
     func makeFactory(
     ) -> SavingsAccountDomain.ViewFactory {
         .init(
-            refreshView: makeSpinnerRefreshView(), 
-            makeInformerView: makeInformerView,
+            refreshView: makeSpinnerRefreshView(),
             makeLandingView: {
                 SavingsAccountView(
                     state: .init($0.list.first ?? .empty),
@@ -41,13 +40,6 @@ extension RootViewFactoryComposer {
                 )
             }
         )
-    }
-    
-    func makeInformerView(
-        _ data: InformerData
-    ) -> InformerView {
-        
-        .init(viewModel: .init(message: data.message, icon: data.icon.image, color: data.color))
     }
        
     func makeSpinnerRefreshView(
@@ -76,7 +68,6 @@ extension RootViewFactoryComposer {
         
         .init(
             refreshView: makeSpinnerRefreshView(),
-            makeInformerView: makeInformerView,
             makeLandingView: makeOpenSavingsAccountView
         )
     }

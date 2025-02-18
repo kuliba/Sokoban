@@ -51,16 +51,8 @@ public extension ContentReducer {
             case let .informer(informer):
                 let oldLanding = state.status.oldLanding
                 state.status = .failure(.informer(informer), oldLanding)
-                effect = .hideInformer
             }
-          
-        case .hideInformer:
-            if let oldLanding = state.status.oldLanding {
-                state.status = .loaded(oldLanding)
-            } else {
-                state.status = .initiate
-            }
-            
+                        
         case let .offset(offset):
             if refreshRange.contains(offset), !state.status.isLoading {
                     let oldLanding = state.status.oldLanding
