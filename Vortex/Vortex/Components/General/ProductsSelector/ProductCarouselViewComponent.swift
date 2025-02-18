@@ -21,7 +21,7 @@ extension ProductCarouselView {
         
         @Published var content: Content
         @Published var selector: OptionSelectorView.ViewModel?
-        @Published private(set) var needUpdate: Bool = false
+        @Published private(set) var promoProducts: [AdditionalProductViewModel]?
 
         var isScrollChangeSelectorEnable: Bool
         
@@ -38,7 +38,6 @@ extension ProductCarouselView {
         }
         
         private let products: CurrentValueSubject<[ProductType: [ProductViewModel]], Never> = .init([:])
-        var promoProducts: [AdditionalProductViewModel]?
         
         private var groups: [ProductGroupView.ViewModel] = []
         
@@ -339,10 +338,9 @@ extension ProductCarouselView {
             return groups.last?.productType
         }
         
-        func updatePromo(_ newItems: [AdditionalProductViewModel]?) {
-            needUpdate = true
-            promoProducts = newItems
-            needUpdate = false
+        func updatePromo(_ promo: [AdditionalProductViewModel]?) {
+            
+            promoProducts = promo
         }
         
         func visiblePromoProducts(productType: ProductType) -> Int {

@@ -54,11 +54,14 @@ class MainViewModel: ObservableObject, Resetable {
     let viewModelsFactory: MainViewModelsFactory
     let makeOpenNewProductButtons: OpenNewProductsViewModel.MakeNewProductButtons
     
+    let bannersBox: any BannersBoxInterface<BannerList>
+    
     private var bindings = Set<AnyCancellable>()
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
         _ model: Model,
+        bannersBox: any BannersBoxInterface<BannerList>,
         route: Route = .empty,
         navigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
@@ -73,6 +76,7 @@ class MainViewModel: ObservableObject, Resetable {
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.model = model
+        self.bannersBox = bannersBox
         self.updateInfoStatusFlag = updateInfoStatusFlag
         self.navButtonsRight = []
         self.sections = sections
@@ -161,13 +165,6 @@ class MainViewModel: ObservableObject, Resetable {
                 products.productCarouselViewModel.updatePromo(promoProducts)
             }
         }
-    }
-
-    private func updatePromo(
-        _ newPromo: [AdditionalProductViewModel]
-    ) {
-       
-        sections.productsSection?.productCarouselViewModel.updatePromo(newPromo)
     }
     
     private func updateProducts(
@@ -307,20 +304,14 @@ private extension MainViewModel {
             .receive(on: scheduler)
             .assign(to: &$route)
         
+        bannersBox.banners
+            .receive(on: scheduler)
+            .sink { [weak self] in self?.handleBanners($0) }
+            .store(in: &bindings)
+        
         model.productListBannersWithSticker
             .receive(on: scheduler)
-            .sink { [weak self] in
-                guard let self else { return }
-                
-                if let sticker = $0.first {
-                    
-                    let promoItems = self.makePromoViewModels(promoItems: [
-                        .init(sticker),
-                        .savingsAccountPreview
-                    ]) ?? []
-                    self.updatePromo(promoItems)
-                }
-            }
+            .sink { [weak self] in self?.handleBanners($0) }
             .store(in: &bindings)
         
         if updateInfoStatusFlag.isActive {
@@ -375,6 +366,7 @@ private extension MainViewModel {
                     
                     model.action.send(ModelAction.Products.Update.Total.All())
                     model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList, .bannerCatalogList]))
+                    bannersBox.requestUpdate()
                     
                 case _ as MainViewModelAction.Close.Link:
                     resetDestination()
@@ -688,6 +680,38 @@ private extension MainViewModel {
         }
     }
     
+    func handleBanners(
+        _ banners: [CardBannerList]
+    ) {
+        if let sticker = banners.first {
+            
+            let promoItems = makePromoViewModels(promoItems: [
+                .init(sticker)
+            ]) ?? []
+            
+            sections.productsSection?.productCarouselViewModel.updatePromo(promoItems)
+        }
+    }
+    
+    func handleBanners(
+        _ banners: BannerList
+    ) {
+        
+        var promo: [PromoItem] = []
+        
+        if let sticker = banners.cardBannerList?.first {
+            promo.append(.init(item: sticker, productType: .card, promoProduct: .sticker))
+        }
+        
+        if let accountBannerList = banners.accountBannerList {
+            promo.append(contentsOf: accountBannerList.map { .init(item: $0, productType: .account, promoProduct: .savingsAccount) })
+        }
+        
+        let promoItems = makePromoViewModels(promoItems: promo) ?? []
+        
+        sections.productsSection?.productCarouselViewModel.updatePromo(promoItems)
+    }
+
     func openMoreProducts() { //
         
         let myProductsViewModel = MyProductsViewModel(

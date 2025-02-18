@@ -769,7 +769,7 @@ extension ServerCommands {
                 
                 struct StickerResponseData: Codable, Equatable {
                     
-                    let stickerCardData: [StickerBannersMyProductList]
+                    let stickerCardData: [CardBannerList]
                     let serial: String
                     
                     private enum CodingKeys: String, CodingKey {
