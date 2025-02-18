@@ -684,7 +684,7 @@
     },
     {
       "target" : {
-        "containerPath" : "container:",
+        "containerPath" : "container:..\/swift-vortex",
         "identifier" : "GetSplashScreenServicesTests",
         "name" : "GetSplashScreenServicesTests"
       }
