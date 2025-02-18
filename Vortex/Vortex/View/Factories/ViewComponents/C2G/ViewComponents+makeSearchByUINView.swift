@@ -81,10 +81,7 @@ extension ViewComponents {
                 dismiss: { flow.event(.dismiss) }
             ) { cover in
                 
-                makeC2GPaymentCompleteView(
-                    cover: cover,
-                    goToMain: goToMain
-                )
+                makeC2GPaymentCompleteView(cover: cover)
             }
         }
     }

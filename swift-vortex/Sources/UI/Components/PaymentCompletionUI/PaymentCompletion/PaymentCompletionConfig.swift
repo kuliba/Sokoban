@@ -10,7 +10,7 @@ import SwiftUI
 
 public struct PaymentCompletionConfig: Equatable {
     
-    let statuses: Statuses
+    public let statuses: Statuses
     
     public init(statuses: Statuses) {
         
