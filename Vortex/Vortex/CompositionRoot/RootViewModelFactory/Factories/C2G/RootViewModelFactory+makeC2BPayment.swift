@@ -68,14 +68,24 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapCreateC2GPaymentResponse
         )
         
-        service(payload) {
+        service(payload) { [weak self] in
             
-            print($0)
-            completion(.success(()))
+            guard let self else { return }
+            
+            completion($0.navigation(formattedAmount: formatAmount(value: $0.success?.amount)));
             _ = service
         }
     }
     
+    private func formatAmount(
+        value: Decimal?
+    ) -> String? {
+        
+        guard let value = value?.doubleValue else { return nil }
+        
+        return model.amountFormatted(amount: value, currencyCode: "RUB", style: .normal)
+    }
+
     // TODO: remove stub
     @inlinable
     func createC2GPaymentEasterEggs(
@@ -92,19 +102,22 @@ extension RootViewModelFactory {
                 completion(.failure(.server("server error")))
                 
             default:
-                completion(.success(()))
+                completion(.failure(.server("server error")))
             }
         }
     }
-    
-    typealias CreateC2GPaymentResult = Result<Void, BackendFailure> // TODO: replace Void with  CreateC2GPaymentResponse from C2GBackend when ready
 }
 
 // MARK: - Helpers
 
 private extension C2GPaymentDomain.Navigation {
     
-    static let connectivityFailure: Self = .failure(.connectivity("Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения"))
+    static let connectivityFailure: Self = .failure(.connectivityFailure)
+}
+
+private extension BackendFailure {
+    
+    static let connectivityFailure: Self = .connectivity("Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения")
 }
 
 // TODO: remove with stub
@@ -117,6 +130,64 @@ private extension String {
 }
 
 // MARK: - Adapters
+
+private extension Result
+where Success == RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
+    
+    func navigation(
+        formattedAmount: String?
+    ) -> C2GPaymentDomain.Navigation {
+        
+        switch self {
+        case let .failure(failure as BackendFailure):
+            return .failure(failure)
+            
+        case .failure:
+            return .connectivityFailure
+            
+        case let .success(response):
+            return response.result(formattedAmount: formattedAmount)
+        }
+    }
+}
+
+private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
+    
+    func result(
+        formattedAmount: String?
+    ) -> C2GPaymentDomain.Navigation {
+        
+        guard let status
+        else { return .failure(.connectivityFailure) }
+        
+        return .success(success(formattedAmount: formattedAmount, status: status))
+    }
+    
+    private var status: C2GPaymentDomain.Navigation.C2GPaymentComplete.Status? {
+        
+        switch documentStatus {
+        case "COMPLETE":    return .completed
+        case "REJECTED":    return .inflight
+        case "IN_PROGRESS": return .rejected
+        default:            return nil
+        }
+    }
+    
+    private func success(
+        formattedAmount: String?,
+        status: C2GPaymentDomain.Navigation.C2GPaymentComplete.Status
+    ) -> C2GPaymentDomain.Navigation.C2GPaymentComplete {
+        
+        return .init(
+            formattedAmount: formattedAmount,
+            status: status,
+            merchantName: merchantName,
+            message: message,
+            paymentOperationDetailID: paymentOperationDetailID,
+            purpose: purpose
+        )
+    }
+}
 
 private extension C2GPaymentDigest {
     

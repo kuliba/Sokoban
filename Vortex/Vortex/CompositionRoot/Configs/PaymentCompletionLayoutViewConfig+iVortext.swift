@@ -11,6 +11,6 @@ extension PaymentCompletionLayoutViewConfig {
     
     static let iVortex: Self = .init(
         buttonsPadding: 56,
-        spacing: 24
+        spacing: 0
     )
 }

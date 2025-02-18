@@ -10,12 +10,12 @@ import SwiftUI
 
 public struct PaymentCompletion: Equatable {
     
-    public let formattedAmount: String
+    public let formattedAmount: String?
     public let merchantIcon: String?
     public let status: Status
     
     public init(
-        formattedAmount: String, 
+        formattedAmount: String?,
         merchantIcon: String?,
         status: Status
     ) {
