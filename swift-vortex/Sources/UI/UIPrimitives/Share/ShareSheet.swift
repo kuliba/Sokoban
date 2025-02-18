@@ -8,11 +8,22 @@
 import SwiftUI
 import UIKit
 
+/// A SwiftUI wrapper for `UIActivityViewController` that presents a share sheet.
+///
+/// The `ShareSheet` uses the provided payload and configuration to set up the share sheet.
+/// It leverages iOS 15+ sheet presentation options if available.
 public struct ShareSheet: UIViewControllerRepresentable {
     
+    /// The payload containing items to be shared.
     private let payload: ShareSheetPayload
+    /// The configuration for the share sheet appearance and behavior.
     private let config: ShareSheetConfig
     
+    /// Creates a new `ShareSheet` instance.
+    ///
+    /// - Parameters:
+    ///   - payload: The payload with items to share.
+    ///   - config: The configuration for the share sheet. Defaults to `.default`.
     public init(
         payload: ShareSheetPayload,
         config: ShareSheetConfig = .default
