@@ -43,11 +43,11 @@ extension RootViewModelFactory {
             
             getOpenAccount("") { [weak self] in
                 
-                if case .informer = $0.failure?.kind {
+                if let self, case .informer = $0.failure?.kind {
                     
-                    self?.schedulers.background.delay(for: .seconds(2), dismissInformer)
+                    self.schedulers.background.delay(for: self.settings.informerDelay, dismissInformer)
                 }
-                
+
                 completion($0)
             }
         }
