@@ -1316,9 +1316,37 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "GetCardOrderFormService"
-               BuildableName = "GetCardOrderFormService"
-               BlueprintName = "GetCardOrderFormService"
+               BlueprintIdentifier = "OrderCardLandingBackend"
+               BuildableName = "OrderCardLandingBackend"
+               BlueprintName = "OrderCardLandingBackend"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "GetSplashScreenServices"
+               BuildableName = "GetSplashScreenServices"
+               BlueprintName = "GetSplashScreenServices"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "C2G"
+               BuildableName = "C2G"
+               BlueprintName = "C2G"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -1333,6 +1361,20 @@
                BlueprintIdentifier = "CreateCardApplication"
                BuildableName = "CreateCardApplication"
                BlueprintName = "CreateCardApplication"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "GetCardOrderFormService"
+               BuildableName = "GetCardOrderFormService"
+               BlueprintName = "GetCardOrderFormService"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -2292,9 +2334,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "GetCardOrderFormServiceTests"
-               BuildableName = "GetCardOrderFormServiceTests"
-               BlueprintName = "GetCardOrderFormServiceTests"
+               BlueprintIdentifier = "GetSplashScreenServicesTests"
+               BuildableName = "GetSplashScreenServicesTests"
+               BlueprintName = "GetSplashScreenServicesTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
