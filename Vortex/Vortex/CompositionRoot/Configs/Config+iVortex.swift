@@ -256,21 +256,6 @@ extension ManageSubscriptionsUI.ProductViewConfig {
     )
 }
 
-extension OrderCardLandingUI.DropDownListConfig {
-    
-    static let iVortex: Self = .init(
-        title: .init(
-            textFont: .textH3Sb18240(),
-            textColor: .textSecondary
-        ),
-        itemTitle: .init(
-            textFont: .textBodyMR14200(),
-            textColor: .mainColorsBlack
-        ),
-        backgroundColor: .mainColorsGrayLightest
-    )
-}
-
 extension OrderCardLandingUI.HeaderViewConfig {
 
     static let iVortex: Self = .init(
@@ -278,28 +263,6 @@ extension OrderCardLandingUI.HeaderViewConfig {
             textFont: .marketingH0B40X480(),
             textColor: .mainColorsBlack
         ),
-        optionPlaceholder: .textSecondary,
-        cardHorizontalBackground: .mainColorsGrayLightest,
-        cardHorizontListConfig: .init(
-            title: .init(textFont: .textH3Sb18240(), textColor: .mainColorsBlack),
-            itemConfig: .init(textFont: .textBodySR12160(), textColor: .textSecondary)
-        )
-    )
-}
-
-extension OrderCardLandingUI.OrderCardHorizontalConfig {
-    
-    static let iVortex: Self = .init(
-        title: .init(textFont: .textH3Sb18240(), textColor: .mainColorsBlack),
-        itemConfig: .init(textFont: .textBodySR12160(), textColor: .textSecondary)
-    )
-}
-
-extension OrderCardLandingUI.OrderCardVerticalListConfig {
-    
-    static let iVortex: Self = .init(
-        title: .init(textFont: .textH3Sb18240(), textColor: .mainColorsBlack),
-        itemTitle: .init(textFont: .textH4M16240(), textColor: .textSecondary),
-        itemSubTitle: .init(textFont: .textBodyMR14180(), textColor: .textPlaceholder)
+        optionPlaceholder: .textSecondary
     )
 }
