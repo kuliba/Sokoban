@@ -8,6 +8,7 @@
 import PaymentCompletionUI
 import SharedConfigs
 import SwiftUI
+import UIPrimitives
 
 typealias C2GCompleteCover = C2GPaymentDomain.Navigation.Cover<C2GPaymentDomain.Navigation.C2GPaymentComplete>
 
@@ -23,7 +24,14 @@ extension ViewComponents {
             state: cover.completion,
             statusConfig: .c2g,
             // TODO: replace stub with buttons
-            buttons: { Color.bgIconIndigoLight.frame(height: 92) },
+            buttons: {
+            
+                // TODO: extract helper
+                ShareButton(items: ["Payer: someone"], config: .default) {
+                    
+                    Text("share")
+                }
+            },
             details: { makeC2GPaymentDetailsView(cover: cover, config: config) }
         ) {
             makeSPBFooter(isActive: true, event: goToMain, title: "На главный")

@@ -72,4 +72,31 @@ where ShareView == ShareSheet {
             ShareView(payload: payload, config: config)
         }
     }
+
+    /// Convenience initializer for creating a `ShareButton` that presents the default `ShareSheet`.
+    ///
+    /// This initializer is intended for use when you want to create a share button that automatically
+    /// presents a system share sheet with the specified items. It wraps the given items in a `ShareSheetPayload`
+    /// and applies the provided configuration. The default configuration is used if none is provided.
+    ///
+    /// **Note:** Some customizations in `ShareSheetConfig` (such as custom detents) may not be honored
+    /// by `UIActivityViewController` since its presentation is controlled by the system.
+    ///
+    /// - Parameters:
+    ///   - items: An array of items (e.g., text, URLs, images) to be shared.
+    ///   - config: A `ShareSheetConfig` instance that configures the appearance and behavior of the share sheet.
+    ///             Defaults to `.default`.
+    ///   - onDismiss: An optional closure to execute when the share sheet is dismissed.
+    ///   - label: A closure that returns the view to be used as the share button's label.
+    public init(
+        items: [Any],
+        config: ShareSheetConfig = .default,
+        onDismiss: (() -> Void)? = nil,
+        label: @escaping () -> Label
+    ) {
+        self.init(onDismiss: onDismiss, label: label) {
+            
+            ShareView(payload: .init(items: items), config: config)
+        }
+    }
 }
