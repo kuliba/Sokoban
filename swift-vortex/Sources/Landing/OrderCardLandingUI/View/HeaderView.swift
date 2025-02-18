@@ -23,44 +23,47 @@ struct HeaderView: View {
                 .resizable()
                 .aspectRatio(contentMode: .fill)
             
-            VStack(spacing: 26) {
-                
-                model.title.text(withConfig: config.title)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                
-                VStack(spacing: 20) {
-                    
-                    ForEach(model.options, id: \.self) { option in
-                        
-                        optionView(option, optionPlaceholder: config.optionPlaceholder)
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                
-                Spacer()
-                
-                OrderCardHorizontalList(model: model.horizontList, config: config.cardHorizontListConfig)
-                    .background(config.cardHorizontalBackground)
-                    .cornerRadius(12)
-                    .offset(y: 76)
-            }
-            .padding(.leading, 16)
-            .padding(.trailing, 15)
+            textView()
+                .padding(.leading, 16)
+                .padding(.trailing, 15)
         }
     }
 }
 
-extension HeaderView {
+private extension HeaderView {
     
-    fileprivate func optionView(
-        _ option: String,
-        optionPlaceholder: Color
-    ) -> HStack<TupleView<(some View, some View)>> {
+    func textView() -> some View {
         
-        return HStack(alignment: .center, spacing: 5) {
+        //TODO: constants extract to config
+        VStack(spacing: 26) {
+            
+            model.title.text(withConfig: config.title)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
+            VStack(spacing: 20) {
+                
+                ForEach(model.options, id: \.self, content: optionView)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            
+            Spacer()
+            
+            OrderCardHorizontalList(model: model.horizontList, config: config.cardHorizontListConfig)
+                .background(config.cardHorizontalBackground)
+                .cornerRadius(12)
+                .offset(y: 76)
+        }
+    }
+    
+    func optionView(
+        _ option: String
+    ) -> some View {
+        
+        //TODO: constants extract to config
+        HStack(alignment: .center, spacing: 5) {
             
             Circle()
-                .foregroundStyle(optionPlaceholder)
+                .foregroundStyle(config.optionPlaceholder)
                 .frame(width: 5, height: 5, alignment: .center)
             
             Text(option)
