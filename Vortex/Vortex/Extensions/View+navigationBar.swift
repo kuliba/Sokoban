@@ -83,11 +83,61 @@ extension View {
         ))
     }
     
+    func navigationBarWithClose(
+        title: String,
+        subtitle: String? = nil,
+        dismiss: @escaping () -> Void,
+        rightIcon icon: Image,
+        style: Payments.ParameterHeader.Style = .large,
+        backgroundColor: Color = .clear
+    ) -> some View {
+        
+        navigationBar(
+            with: .init(
+                title: title,
+                subtitle: subtitle,
+                leftItems: [
+                    closeButton(action: dismiss)
+                ],
+                rightItems: [NavigationBarView.ViewModel.IconItemViewModel(icon: icon, style: style)]
+            ),
+            backgroundColor: backgroundColor
+        )
+    }
+    
+    func navigationBarWithClose(
+        title: String,
+        subtitle: String? = nil,
+        dismiss: @escaping () -> Void,
+        rightButton: NavigationBarView.ViewModel.ButtonItemViewModel,
+        backgroundColor: Color = .clear
+    ) -> some View {
+        
+        navigationBar(
+            with: .init(
+                title: title,
+                subtitle: subtitle,
+                leftItems: [
+                    closeButton(action: dismiss)
+                ],
+                rightItems: [rightButton]
+            ),
+            backgroundColor: backgroundColor
+        )
+    }
+    
     private func backButton(
         action: @escaping () -> Void
     ) -> BackButton {
         
         return .init(icon: .ic24ChevronLeft, action: action)
+    }
+    
+    private func closeButton(
+        action: @escaping () -> Void
+    ) -> BackButton {
+        
+        return .init(icon: .ic24Close, action: action)
     }
     
     private typealias BackButton = NavigationBarView.ViewModel.BackButtonItemViewModel

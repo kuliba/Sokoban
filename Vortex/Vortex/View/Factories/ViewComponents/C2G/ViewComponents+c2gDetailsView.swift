@@ -25,18 +25,31 @@ extension ViewComponents {
     
     @inlinable
     func c2gTransactionDetails(
-        details: any TransactionDetailsProviding<[DetailsCell]>
+        details: any TransactionDetailsProviding<[DetailsCell]>,
+        dismiss: @escaping () -> Void
     ) -> some View {
         
         c2gDetailsView(details: details.transactionDetails)
+            .navigationBarWithClose(
+                title: "Детали операции",
+                dismiss: dismiss,
+                rightIcon: .ic24Sbp
+            )
     }
     
     @inlinable
     func c2gPaymentRequisites(
-        details: any PaymentRequisitesProviding<[DetailsCell]>
+        details: any PaymentRequisitesProviding<[DetailsCell]>,
+        dismiss: @escaping () -> Void,
+        share: @escaping () -> Void
     ) -> some View {
         
         c2gDetailsView(details: details.paymentRequisites)
+            .navigationBarWithClose(
+                title: "Реквизиты",
+                dismiss: dismiss,
+                rightButton: .init(icon: .ic24Share, action: share)
+            )
     }
     
     @inlinable
@@ -70,12 +83,15 @@ struct C2GDetailsView_Previews: PreviewProvider {
         Group {
             
             ViewComponents.preview.c2gTransactionDetails(
-                details: PreviewDetails.preview
+                details: PreviewDetails.preview,
+                dismiss: {}
             )
             .previewDisplayName("c2gTransactionDetails")
             
             ViewComponents.preview.c2gPaymentRequisites(
-                details: PreviewDetails.preview
+                details: PreviewDetails.preview,
+                dismiss: {},
+                share: {}
             )
             .previewDisplayName("c2gPaymentRequisites")
         }
