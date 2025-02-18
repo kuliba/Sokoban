@@ -29,6 +29,7 @@ extension SavingsAccountDomain {
         
         case goToMain
         case openSavingsAccount
+        case failure(String)
     }
     
     enum Navigation {

@@ -126,6 +126,8 @@ extension RootViewModelFactory {
             completion(.main)
         case .openSavingsAccount:
             completion(.openSavingsAccount)
+        case let .failure(message):
+            completion(.failure(message))
         }
     }
     
