@@ -70,7 +70,7 @@ private extension PaymentCompletionStatusView {
     
     func formattedAmountView() -> some View {
         
-        state.formattedAmount.text(withConfig: config.amount)
+        state.formattedAmount?.text(withConfig: config.amount)
     }
     
     @ViewBuilder
