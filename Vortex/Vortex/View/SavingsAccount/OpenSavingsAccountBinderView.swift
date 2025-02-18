@@ -42,6 +42,14 @@ struct OpenSavingsAccountBinderView: View {
                     },
                     informerView: informerView
                 )
+                .onChange(of: contentState.status) {
+                    switch $0 {
+                    case .loaded:
+                        flowEvent(.navigation(.loaded))
+                    default:
+                        break
+                    }
+                }
                 .onFirstAppear {
                     contentEvent(.load)
                 }

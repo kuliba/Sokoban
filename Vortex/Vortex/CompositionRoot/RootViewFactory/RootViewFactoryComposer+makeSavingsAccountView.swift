@@ -34,7 +34,7 @@ extension RootViewFactoryComposer {
             refreshView: makeSpinnerRefreshView(),
             makeLandingView: {
                 SavingsAccountView(
-                    state: .init($0.list.first ?? .empty),
+                    state: .init($0?.list.first ?? .empty),
                     config: .iVortex,
                     factory: self.makeImageViewFactory()
                 )
@@ -48,12 +48,20 @@ extension RootViewFactoryComposer {
     }
         
     func makeOpenSavingsAccountView(
-        _ data: SavingsAccountDomain.OpenAccountLanding
+        _ data: SavingsAccountDomain.OpenAccountLanding?
     ) -> OrderSavingsAccountWrapperView {
+        
+        let initialState: OrderSavingsAccountState = {
+            
+            if let value = data?.list.first {
+                return .init(status: .result(.init(value)))
+            }
+            return .init(status: .result(nil))
+        }()
         
         return OrderSavingsAccountWrapperView(
             viewModel: .init(
-                initialState: .init(status: .result(.init(data.list.first ?? .empty))),
+                initialState: initialState,
                 reduce: OrderSavingsAccountReducer().reduce(_:_:),
                 handleEffect: {_,_ in } // TODO: add handler (openUrl)
             ),

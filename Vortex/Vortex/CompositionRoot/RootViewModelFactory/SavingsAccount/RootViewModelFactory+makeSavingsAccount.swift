@@ -51,26 +51,7 @@ extension RootViewModelFactory {
     @inlinable
     func makeSavingsAccount() -> SavingsAccountDomain.Binder {
         
-        let getSavingLanding = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createGetSavingLandingRequest,
-            mapResponse: RemoteServices.ResponseMapper.mapGetSavingLandingResponse,
-            mapError: SavingsAccountDomain.ContentError.init(error:)
-        )
-
-        let nanoServices: SavingsAccountDomain.ComposerLandingNanoService = .init(
-            loadLanding: { getSavingLanding($0, $1) }
-        )
-        
-        return makeSavingsAccount(nanoServices: nanoServices)
-    }
-    
-    @inlinable
-    func makeSavingsAccount(
-        nanoServices: SavingsAccountDomain.ComposerLandingNanoService
-    ) -> SavingsAccountDomain.Binder {
-        
         let content = makeContent(
-            nanoServices: nanoServices,
             status: .initiate
         )
         
@@ -91,19 +72,34 @@ extension RootViewModelFactory {
         case .main:                  return .milliseconds(100)
         case .openSavingsAccount:   return settings.delay
         case .failure:               return settings.delay
+        case .loaded:                return .zero
         }
     }
     
     private func makeContent(
-        nanoServices: SavingsAccountDomain.ComposerLandingNanoService,
         status: SavingsAccountDomain.ContentStatus
     ) -> SavingsAccountDomain.Content {
         
+        let getSavingLanding = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetSavingLandingRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapGetSavingLandingResponse,
+            mapError: SavingsAccountDomain.ContentError.init(error:)
+        )
+        
         let reducer = SavingsAccountDomain.ContentReducer()
         let effectHandler = SavingsAccountDomain.ContentEffectHandler(
-            microServices: .init(
-                loadLanding: nanoServices.loadLanding
-            ),
+            load: { dismissInformer, payload, completion   in
+                
+                getSavingLanding(payload) { [weak self] in
+                    
+                    if case .informer = $0.failure?.kind {
+                        
+                        self?.schedulers.background.delay(for: .seconds(2), dismissInformer)
+                    }
+                    
+                    completion($0)
+                }
+            },
             landingType: "DEFAULT"
         )
         

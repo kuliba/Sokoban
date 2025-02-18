@@ -68,7 +68,11 @@ public extension ContentReducer {
             else if state.navTitle == .savingsAccount {
                 state.navTitle = .empty
             }
+            
+        case let .dismissInformer(oldLanding):
+            state.status = .loaded(oldLanding)
         }
+        
         return (state, effect)
     }
 }

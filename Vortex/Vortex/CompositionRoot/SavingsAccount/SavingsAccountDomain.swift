@@ -43,6 +43,7 @@ extension SavingsAccountDomain {
         case main
         case openSavingsAccount
         case failure(FlowFailureKind)
+        case loaded
     }
     
     // MARK: - Binder

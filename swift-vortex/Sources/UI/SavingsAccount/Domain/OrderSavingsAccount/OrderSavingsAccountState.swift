@@ -29,7 +29,7 @@ public extension OrderSavingsAccountState {
     enum Status: Equatable {
         
         case inflight
-        case result(OrderSavingsAccount)
+        case result(OrderSavingsAccount?)
     }
 }
 
@@ -42,6 +42,17 @@ extension OrderSavingsAccountState {
             
         case let .result(result):
             return result
+        }
+    }
+    
+    var noData: Bool {
+        
+        switch status {
+        case let .result(result):
+            return result == nil
+            
+        default:
+            return false
         }
     }
     

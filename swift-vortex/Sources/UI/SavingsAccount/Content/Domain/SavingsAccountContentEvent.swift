@@ -9,6 +9,7 @@ import Foundation
 
 public enum SavingsAccountContentEvent<Landing, InformerPayload> {
     
+    case dismissInformer(Landing?)
     case failure(BackendFailure<InformerPayload>)
     case load
     case loaded(Landing)

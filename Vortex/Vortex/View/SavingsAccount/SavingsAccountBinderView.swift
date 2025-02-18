@@ -63,6 +63,14 @@ struct SavingsAccountBinderView: View {
                     },
                     informerView: informerView
                 )
+                .onChange(of: contentState.status) {
+                    switch $0 {
+                    case .loaded:
+                        flowEvent(.navigation(.loaded))
+                    default:
+                        break
+                    }
+                }
                 .padding(.bottom)
                 .navigationBarWithBack(
                     title: contentState.navTitle.title,
@@ -147,6 +155,9 @@ extension SavingsAccountDomain.Navigation {
             
         case .openSavingsAccount:
             return .openSavingsAccount
+            
+        case .loaded:
+            return nil
         }
     }
     
