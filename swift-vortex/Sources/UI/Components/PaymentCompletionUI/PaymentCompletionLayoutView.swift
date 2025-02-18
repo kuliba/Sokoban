@@ -6,7 +6,6 @@
 //
 
 import Combine
-import PaymentCompletionUI
 import SwiftUI
 import UIPrimitives
 
@@ -126,24 +125,24 @@ private extension PaymentCompletion {
 }
 
 //private extension PaymentCompletionConfig {
-//    
+//
 //    func config(
 //        for status: PaymentCompletion.Status
 //    ) -> PaymentCompletionConfig.Statuses.Status {
-//        
+//
 //        switch status {
 //        case .completed:
 //            return statuses.completed
-//            
+//
 //        case .inflight:
 //            return statuses.inflight
-//            
+//
 //        case .rejected:
 //            return statuses.rejected
-//            
+//
 //        case .fraud(.cancelled):
 //            return statuses.fraudCancelled
-//            
+//
 //        case .fraud(.expired):
 //            return statuses.fraudExpired
 //        }
