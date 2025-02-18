@@ -681,6 +681,13 @@
         "identifier" : "C2GCoreTests",
         "name" : "C2GCoreTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "OrderCardLandingUITests",
+        "name" : "OrderCardLandingUITests"
+      }
     }
   ],
   "version" : 1
