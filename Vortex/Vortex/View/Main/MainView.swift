@@ -536,7 +536,7 @@ struct NavBarButton: View {
                 icon()
             }
             .padding(8)
-            .background(Color.pink.opacity(0.1)) // TODO: replace with color from design
+            .background(Color.bgIconPinkPurple)
             .clipShape(RoundedRectangle(cornerRadius: 88))
         }
     }
