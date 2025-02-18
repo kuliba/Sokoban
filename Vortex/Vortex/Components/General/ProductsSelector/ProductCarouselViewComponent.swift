@@ -771,15 +771,7 @@ struct ProductCarouselView: View {
                             PlaceholdersView(style: viewModel.style)
                             
                         case let .groups(groups):
-                            
-                            HStack(spacing: 8) {
-                                
-                                ForEach(groups) { groupViewModel in
-                                    ProductGroupView(viewModel: groupViewModel)
-                                        .accessibilityIdentifier("productScrollView")
-                                    promoViews(productType: groupViewModel.productType)
-                                }
-                            }
+                            ForEach(groups, content: makeGroup)
                         }
                         
                         newProductButton().map {
@@ -795,6 +787,37 @@ struct ProductCarouselView: View {
                     self.scrollView = scrollView
                 })
             }
+        }
+    }
+    
+    private func makeGroup(
+        _ groupViewModel: ProductGroupView.ViewModel
+    ) -> some View {
+        
+        HStack(spacing: 8) {
+            if isFirst(groupViewModel.productType) {
+                
+                promoViews(productType: groupViewModel.productType)
+                ProductGroupView(viewModel: groupViewModel)
+                    .accessibilityIdentifier("productScrollView")
+            } else {
+                
+                ProductGroupView(viewModel: groupViewModel)
+                    .accessibilityIdentifier("productScrollView")
+                promoViews(productType: groupViewModel.productType)
+            }
+        }
+    }
+    
+    private func isFirst(
+        _ productType: ProductType
+    ) -> Bool {
+        
+        switch productType {
+        case .card:     return false
+        case .account:  return true
+        case .deposit:  return false
+        case .loan:     return true
         }
     }
     
