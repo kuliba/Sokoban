@@ -57,8 +57,16 @@ extension C2GPaymentDomain {
     enum Navigation {
         
         case failure(BackendFailure)
-        case success(PaymentSuccess)
+        case success(C2GPaymentComplete)
         
-        typealias PaymentSuccess = Void
+        struct C2GPaymentComplete: Equatable {
+            
+            let amount: Decimal?
+            let documentStatus: String
+            let merchantName: String?
+            let message: String?
+            let paymentOperationDetailID: Int
+            let purpose: String?
+        }
     }
 }

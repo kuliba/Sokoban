@@ -68,12 +68,7 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapCreateC2GPaymentResponse
         )
         
-        service(payload) {
-            
-            print($0)
-            completion(.success(()))
-            _ = service
-        }
+        service(payload) { completion($0.navigation); _ = service }
     }
     
     // TODO: remove stub
@@ -92,12 +87,10 @@ extension RootViewModelFactory {
                 completion(.failure(.server("server error")))
                 
             default:
-                completion(.success(()))
+                completion(.failure(.server("server error")))
             }
         }
     }
-    
-    typealias CreateC2GPaymentResult = Result<Void, BackendFailure> // TODO: replace Void with  CreateC2GPaymentResponse from C2GBackend when ready
 }
 
 // MARK: - Helpers
@@ -117,6 +110,39 @@ private extension String {
 }
 
 // MARK: - Adapters
+
+private extension Result
+where Success == RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
+    
+    var navigation: C2GPaymentDomain.Navigation {
+        
+        switch self {
+        case let .failure(failure as BackendFailure):
+            return .failure(failure)
+            
+        case .failure:
+            return .connectivityFailure
+            
+        case let .success(response):
+            return .success(response.complete)
+        }
+    }
+}
+
+private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
+    
+    var complete: C2GPaymentDomain.Navigation.C2GPaymentComplete {
+        
+        return .init(
+            amount: amount,
+            documentStatus: documentStatus,
+            merchantName: merchantName,
+            message: message,
+            paymentOperationDetailID: paymentOperationDetailID,
+            purpose: purpose
+        )
+    }
+}
 
 private extension C2GPaymentDigest {
     
