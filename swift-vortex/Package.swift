@@ -197,6 +197,7 @@ let package = Package(
         .c2gBackendTests,
         .c2gCore,
         .c2gCoreTests,
+        .c2gUI,
         .latestPaymentsBackendV2,
         .latestPaymentsBackendV2Tests,
         .latestPaymentsBackendV3,
@@ -869,6 +870,7 @@ private extension Product {
         targets: [
             .c2gBackend,
             .c2gCore,
+            .c2gUI,
         ]
     )
     
@@ -1825,6 +1827,15 @@ private extension Target {
             .uiPrimitives,
         ],
         path: "Tests/Payments/C2G/CoreTests"
+    )
+
+    static let c2gUI = target(
+        name: .c2gUI,
+        dependencies: [
+            .paymentCompletionUI,
+            .uiPrimitives,
+        ],
+        path: "Sources/Payments/C2G/UI"
     )
     
     static let latestPaymentsBackendV2 = target(
@@ -3851,6 +3862,10 @@ private extension Target.Dependency {
         name: .c2gCore
     )
     
+    static let c2gUI = byName(
+        name: .c2gUI
+    )
+    
     static let latestPaymentsBackendV2 = byName(
         name: .latestPaymentsBackendV2
     )
@@ -4268,6 +4283,8 @@ private extension String {
     
     static let c2gCore = "C2GCore"
     static let c2gCoreTests = "C2GCoreTests"
+
+    static let c2gUI = "C2GUI"
     
     static let latestPaymentsBackendV2 = "LatestPaymentsBackendV2"
     static let latestPaymentsBackendV2Tests = "LatestPaymentsBackendV2Tests"

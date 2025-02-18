@@ -952,7 +952,7 @@ private extension RootViewFactoryComposer {
                 makeTemplateButton: makeTemplateButtonView(with: result),
                 makeTemplateButtonWrapperView: makeTemplateButtonWrapperView
             ),
-            config: .iVortex
+            config: .payment
         )
     }
     
