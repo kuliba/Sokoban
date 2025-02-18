@@ -56,7 +56,7 @@ where AmountInfo: View,
     @ViewBuilder
     private func mainView() -> some View {
         
-        if state.noData {
+        if state.isNoData {
             Color.clear.frame(maxHeight: .infinity)
         } else {
             orderSavingsAccount(state.data)
@@ -124,7 +124,8 @@ where AmountInfo: View,
     
     @ViewBuilder
     private func footer() -> some View {
-        if !state.noData {
+        
+        if !state.isNoData {
             if isShowingProducts, !state.isShowingOTP {
                 amount()
             } else {

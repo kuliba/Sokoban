@@ -30,7 +30,7 @@ public extension ContentEffectHandler {
             
         case .load:
              
-            load({ dispatch(.dismissInformer(self.oldLanding)) }, landingType) { [weak self] in
+            load(landingType, { dispatch(.dismissInformer(self.oldLanding)) }) { [weak self] in
                 switch $0 {
                 case let .failure(backendFailure):
                     
@@ -57,5 +57,5 @@ public extension ContentEffectHandler {
     
     typealias DismissInformer = () -> Void
     typealias LoadLandingCompletion = (Result<Landing, BackendFailure<InformerPayload>>) -> Void
-    typealias Load = (@escaping DismissInformer, String, @escaping LoadLandingCompletion) -> Void
+    typealias Load = (String, @escaping DismissInformer, @escaping LoadLandingCompletion) -> Void
 }

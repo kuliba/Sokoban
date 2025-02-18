@@ -60,7 +60,6 @@ extension RootViewModelFactory {
         )
     }
     
-    
     @inlinable
     func emittingOpen(
         content: SavingsAccountDomain.OpenAccountContent

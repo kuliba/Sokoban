@@ -45,7 +45,7 @@ extension OrderSavingsAccountState {
         }
     }
     
-    var noData: Bool {
+    var isNoData: Bool {
         
         switch status {
         case let .result(result):

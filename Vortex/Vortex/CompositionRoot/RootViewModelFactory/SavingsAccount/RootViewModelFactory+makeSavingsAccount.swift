@@ -22,7 +22,7 @@ extension RootViewModelFactory {
         let binder: SavingsAccountDomain.Binder = makeSavingsAccount()
         let openBinder: SavingsAccountDomain.OpenAccountBinder = makeOpenSavingsAccount()
         
-        let cancellable = binder.flow.$state
+        let flowCancellable = binder.flow.$state
             .compactMap {
                 switch $0.navigation {
                 case .main: return ()
@@ -32,7 +32,17 @@ extension RootViewModelFactory {
             }
             .sink { dismiss() }
         
-        let openCancellable = openBinder.flow.$state
+        let contentCancellable = binder.content.$state
+            .compactMap {
+                switch $0.status {
+                case .loaded: return ()
+                    
+                default: return nil
+                }
+            }
+            .sink { binder.flow.event(.navigation(.loaded)) }
+        
+        let flowOpenCancellable = openBinder.flow.$state
             .compactMap {
                 switch $0.navigation {
                 case .main: return ()
@@ -42,9 +52,19 @@ extension RootViewModelFactory {
             }
             .sink { dismiss() }
         
+        let contentOpenCancellable = openBinder.content.$state
+            .compactMap {
+                switch $0.status {
+                case .loaded: return ()
+                    
+                default: return nil
+                }
+            }
+            .sink { openBinder.flow.event(.navigation(.loaded)) }
+
         return .init(
-            openSavingsAccountNode: .init(model: openBinder, cancellable: openCancellable),
-            savingsAccountNode: .init(model: binder, cancellable: cancellable)
+            openSavingsAccountNode: .init(model: openBinder, cancellables: [flowOpenCancellable, contentOpenCancellable]),
+            savingsAccountNode: .init(model: binder, cancellables: [flowCancellable, contentCancellable])
         )
     }
     
@@ -88,7 +108,7 @@ extension RootViewModelFactory {
         
         let reducer = SavingsAccountDomain.ContentReducer()
         let effectHandler = SavingsAccountDomain.ContentEffectHandler(
-            load: { dismissInformer, payload, completion   in
+            load: { payload, dismissInformer, completion   in
                 
                 getSavingLanding(payload) { [weak self] in
                     
