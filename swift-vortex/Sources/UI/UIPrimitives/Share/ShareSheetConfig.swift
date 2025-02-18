@@ -8,6 +8,10 @@
 import UIKit
 
 /// Configuration options for the share sheet presentation.
+///
+/// **Note:** The `UIActivityViewController` is a system-controlled view controller.
+/// Customizations such as setting detents via `detents` may not be honored by the system.
+/// In practice, the share sheet might always appear at a fixed size regardless of these settings.
 public struct ShareSheetConfig {
     
     /// An array of detents (sizes) for the share sheet.

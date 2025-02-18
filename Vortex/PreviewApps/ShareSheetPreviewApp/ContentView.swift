@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 struct ContentView: View {
     
@@ -13,16 +14,25 @@ struct ContentView: View {
         
         VStack {
             
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            shareButton(config: .default)
+            shareButton(config: .mediumWithGrabber)
+            shareButton(config: .withGrabber)
         }
-        .padding()
+    }
+    
+    private func shareButton(
+        config: ShareSheetConfig
+    ) -> some View {
+        
+        ShareButton(
+            payload: .init(items: ["Payee: someone"]),
+            config: config,
+            label: { Text("Share") }
+        )
     }
 }
 
 #Preview {
-
+    
     ContentView()
 }

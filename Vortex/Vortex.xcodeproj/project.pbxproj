@@ -723,6 +723,7 @@
 		2A3B69282D64BCB0004075A8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3B69272D64BCB0004075A8 /* ContentView.swift */; };
 		2A3B692A2D64BCB1004075A8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A3B69292D64BCB1004075A8 /* Assets.xcassets */; };
 		2A3B692D2D64BCB1004075A8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A3B692C2D64BCB1004075A8 /* Preview Assets.xcassets */; };
+		2A3B69342D64BD33004075A8 /* UIPrimitives in Frameworks */ = {isa = PBXBuildFile; productRef = 2A3B69332D64BD33004075A8 /* UIPrimitives */; };
 		2A3BD5FD2B6CBE9F009B16F7 /* RequestFactory+createFastPaymentContractFindListRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BD5FC2B6CBE9F009B16F7 /* RequestFactory+createFastPaymentContractFindListRequest.swift */; };
 		2A3BD6002B6CD415009B16F7 /* RequestFactory+createFastPaymentContractFindListRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BD5FF2B6CD415009B16F7 /* RequestFactory+createFastPaymentContractFindListRequestTests.swift */; };
 		2A3BD6052B6CDD34009B16F7 /* NanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3BD6042B6CDD34009B16F7 /* NanoServices.swift */; };
@@ -7392,6 +7393,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A3B69342D64BD33004075A8 /* UIPrimitives in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -19250,6 +19252,9 @@
 			dependencies = (
 			);
 			name = ShareSheetPreviewApp;
+			packageProductDependencies = (
+				2A3B69332D64BD33004075A8 /* UIPrimitives */,
+			);
 			productName = ShareSheetPreviewApp;
 			productReference = 2A3B69232D64BCB0004075A8 /* ShareSheetPreviewApp.app */;
 			productType = "com.apple.product-type.application";
@@ -25015,7 +25020,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -25051,7 +25056,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -25086,7 +25091,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -25121,7 +25126,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -29578,6 +29583,10 @@
 		2A3947172A19E84500EB9757 /* TextFieldComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = TextFieldComponent;
+		};
+		2A3B69332D64BD33004075A8 /* UIPrimitives */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UIPrimitives;
 		};
 		2A3D6F032B61902700D19379 /* PaymentComponents */ = {
 			isa = XCSwiftPackageProductDependency;
