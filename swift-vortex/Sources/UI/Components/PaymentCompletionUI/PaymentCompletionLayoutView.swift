@@ -9,21 +9,25 @@ import Combine
 import SwiftUI
 import UIPrimitives
 
-public struct PaymentCompletionLayoutView<Buttons, Footer, StatusView>: View
+public struct PaymentCompletionLayoutView<Buttons, Details, Footer, StatusView>: View
 where Buttons: View,
+      Details: View,
       Footer: View,
       StatusView: View {
     
     private let buttons: () -> Buttons
+    private let details: () -> Details
     private let footer: () -> Footer
     private let statusView: () -> StatusView
     
     public init(
         buttons: @escaping () -> Buttons,
+        details: @escaping () -> Details,
         footer: @escaping () -> Footer,
         statusView: @escaping () -> StatusView
     ) {
         self.buttons = buttons
+        self.details = details
         self.footer = footer
         self.statusView = statusView
     }
@@ -33,13 +37,17 @@ where Buttons: View,
         // TODO: - extract config
         
         VStack {
-            
-            statusView() // PaymentCompletionStatusView
+        
+            VStack(spacing: 24) {
+                
+                statusView() // PaymentCompletionStatusView
+                details()
+            }
             
             Spacer()
             
             buttons()
-                .padding(.bottom, 56)
+                .padding(.bottom, 56) // MOVE TO CONFIG
         }
         .safeAreaInset(edge: .bottom, content: footer)
     }
@@ -53,9 +61,10 @@ where StatusView == PaymentCompletionStatusView {
         makeIconView: @escaping (String) -> UIPrimitives.AsyncImage,
         config: PaymentCompletionConfig,
         buttons: @escaping () -> Buttons,
+        details: @escaping () -> Details,
         footer: @escaping () -> Footer
     ) {
-        self.init(buttons: buttons, footer: footer) {
+        self.init(buttons: buttons, details: details, footer: footer) {
             
             PaymentCompletionStatusView(
                 state: state,
@@ -74,6 +83,7 @@ struct PaymentCompletionLayoutView_Previews: PreviewProvider {
             
             PaymentCompletionLayoutView(
                 buttons: { Color.green.frame(height: 92) },
+                details: { Color.blue.frame(height: 92) },
                 footer: { Color.orange.frame(height: 112)},
                 statusView: { Color.gray.frame(height: 280) }
             )
@@ -110,6 +120,7 @@ struct PaymentCompletionLayoutView_Previews: PreviewProvider {
             },
             config: .preview,
             buttons: { Color.green.frame(height: 92) },
+            details: { Color.blue.frame(height: 92) },
             footer: { Color.orange.frame(height: 112)}
         )
     }
@@ -123,31 +134,6 @@ private extension PaymentCompletion {
     static let fraudCancelled: Self = .init(formattedAmount: "1,000 ¢", merchantIcon: nil, status: .fraud(.cancelled))
     static let fraudExpired: Self = .init(formattedAmount: "1,000 ¢", merchantIcon: nil, status: .fraud(.expired))
 }
-
-//private extension PaymentCompletionConfig {
-//
-//    func config(
-//        for status: PaymentCompletion.Status
-//    ) -> PaymentCompletionConfig.Statuses.Status {
-//
-//        switch status {
-//        case .completed:
-//            return statuses.completed
-//
-//        case .inflight:
-//            return statuses.inflight
-//
-//        case .rejected:
-//            return statuses.rejected
-//
-//        case .fraud(.cancelled):
-//            return statuses.fraudCancelled
-//
-//        case .fraud(.expired):
-//            return statuses.fraudExpired
-//        }
-//    }
-//}
 
 private extension PaymentCompletionConfig {
     
