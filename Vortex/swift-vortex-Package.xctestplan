@@ -673,6 +673,13 @@
     {
       "target" : {
         "containerPath" : "container:",
+        "identifier" : "GetSplashScreenServicesTests",
+        "name" : "GetSplashScreenServicesTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
         "identifier" : "OrderCardLandingUITests",
         "name" : "OrderCardLandingUITests"
       }

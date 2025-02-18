@@ -41,7 +41,7 @@ extension RootViewModelFactory {
         let getUIN: QRResolverDependencies.GetUIN = { qrCode in
             
             if c2gFlag.isActive {
-                return qrCode.uin
+                return qrCode.uin ?? qrCode.docIdx
             } else {
                 return nil
             }
@@ -80,5 +80,14 @@ private extension QRCode {
         else { return nil }
         
         return uin
+    }
+    
+    var docIdx: String? {
+        
+        guard let docIdx = rawData["DocIdx".lowercased()],
+              !docIdx.isEmpty // no extra validation
+        else { return nil }
+        
+        return docIdx
     }
 }

@@ -27,7 +27,7 @@ struct PromoItem: Equatable {
 
 extension PromoItem {
     
-    init(_ item: StickerBannersMyProductList) {
+    init(_ item: CardBannerList) {
         
         self.init(
             productName: item.productName,
@@ -38,6 +38,22 @@ extension PromoItem {
             promoProduct: .sticker
         )
     }
+    
+    init(
+        item: BannerList.Item,
+        productType: ProductType,
+        promoProduct: PromoProduct
+    ) {
+        
+        self.init(
+            productName: item.productName,
+            link: item.link,
+            md5hash: item.md5hash,
+            action: item.action.map { .init($0) },
+            productType: productType,
+            promoProduct: promoProduct
+        )
+    }
 }
 
 extension PromoItem.PromoAction {
@@ -45,6 +61,11 @@ extension PromoItem.PromoAction {
     init(_ action: CardBannerAction) {
         
         self.init(type: action.actionType, target: action.landingDate)
+    }
+    
+    init(_ action: BannerList.Action) {
+        
+        self.init(type: action.actionType, target: action.target)
     }
 }
 

@@ -10,7 +10,7 @@ import SwiftUI
 struct StickerResponseData: Codable {
     
     let serial: String
-    let cardBannerList: [StickerBannersMyProductList]
+    let cardBannerList: [CardBannerList]
     let depositBannerList: [DepositBannerList]
     let accountBannerList: [AccountBannerList]
     let loanBannerList: [LoanBannerList]
@@ -20,7 +20,7 @@ struct DepositBannerList: Codable {}
 struct AccountBannerList: Codable {}
 struct LoanBannerList: Codable {}
 
-struct StickerBannersMyProductList: Codable, Equatable {
+struct CardBannerList: Codable, Equatable {
     
     let productName: String
     let link: String
@@ -35,7 +35,7 @@ struct CardBannerAction: Codable, Equatable {
     let landingDate: String
 }
 
-extension StickerBannersMyProductList {
+extension CardBannerList {
     
     func mapper(
         onTap: @escaping () -> Void,

@@ -138,7 +138,7 @@ extension Model {
             return localAgent.load(type: [BannerCatalogListData].self) != nil
             
         case .bannersMyProductListWithSticker:
-            return localAgent.load(type: [StickerBannersMyProductList].self) != nil
+            return localAgent.load(type: [CardBannerList].self) != nil
             
         case .atmList:
             return localAgent.load(type: [AtmData].self) != nil
@@ -224,7 +224,7 @@ extension Model {
             return localAgent.serial(for: [BannerCatalogListData].self)
             
         case .bannersMyProductListWithSticker:
-            return localAgent.serial(for: [StickerBannersMyProductList].self)
+            return localAgent.serial(for: [CardBannerList].self)
             
         case .atmList:
             return localAgent.serial(for: [AtmData].self)
@@ -310,7 +310,7 @@ extension Model {
             try? localAgent.clear(type: [BannerCatalogListData].self)
             
         case .bannersMyProductListWithSticker:
-            try? localAgent.clear(type: [StickerBannersMyProductList].self)
+            try? localAgent.clear(type: [CardBannerList].self)
             
         case .atmList:
             try? localAgent.clear(type: [AtmData].self)

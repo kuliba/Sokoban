@@ -1,157 +1,155 @@
 //
-//  PaymentCompletionStatusView+PaymentCompletion.swift
+//  PaymentCompletionLayoutView.swift
 //
 //
-//  Created by Igor Malyarov on 30.07.2024.
+//  Created by Igor Malyarov on 16.02.2025.
 //
 
 import Combine
 import SwiftUI
 import UIPrimitives
 
-public extension PaymentCompletionStatusView {
+public struct PaymentCompletionLayoutView<Buttons, Details, Footer, StatusView>: View
+where Buttons: View,
+      Details: View,
+      Footer: View,
+      StatusView: View {
     
-    init(
+    private let config: Config
+    private let buttons: () -> Buttons
+    private let details: () -> Details
+    private let footer: () -> Footer
+    private let statusView: () -> StatusView
+    
+    public init(
+        config: Config,
+        buttons: @escaping () -> Buttons,
+        details: @escaping () -> Details,
+        footer: @escaping () -> Footer,
+        statusView: @escaping () -> StatusView
+    ) {
+        self.config = config
+        self.buttons = buttons
+        self.details = details
+        self.footer = footer
+        self.statusView = statusView
+    }
+    
+    public var body: some View {
+        
+        VStack {
+            
+            VStack(spacing: config.spacing) {
+                
+                statusView() // PaymentCompletionStatusView
+                details()
+            }
+            
+            Spacer()
+            
+            buttons()
+                .padding(.bottom, config.buttonsPadding)
+        }
+        .safeAreaInset(edge: .bottom, content: footer)
+    }
+    
+    public typealias Config = PaymentCompletionLayoutViewConfig
+}
+
+extension PaymentCompletionLayoutView
+where StatusView == PaymentCompletionStatusView {
+    
+    public init(
         state: PaymentCompletion,
-        makeIconView: @escaping MakeIconView,
-        config: PaymentCompletionConfig
-    ) {
-        let config = config.config(for: state.status)
-        
-        self.init(
-            state: .init(
-                status: .init(config.content),
-                formattedAmount: state.formattedAmount,
-                merchantIcon: state.merchantIcon
-            ),
-            makeIconView: makeIconView,
-            config: .init(config.config)
-        )
-    }
-}
-
-private extension PaymentCompletionStatus.Status {
-    
-    init(
-        _ content: PaymentCompletionConfig.Statuses.Status.Content
+        makeIconView: @escaping (String) -> UIPrimitives.AsyncImage,
+        config: Config,
+        statusConfig: PaymentCompletionConfig,
+        buttons: @escaping () -> Buttons,
+        details: @escaping () -> Details,
+        footer: @escaping () -> Footer
     ) {
         self.init(
-            logo: content.logo,
-            title: content.title,
-            subtitle: content.subtitle
-        )
-    }
-}
-
-private extension PaymentCompletionStatusView.Config {
-    
-    init(
-        _ config: PaymentCompletionConfig.Statuses.Status.Config
-    ) {
-        self.init(
-            amount: config.amount,
-            icon: .init(
-                foregroundColor: config.icon.foregroundColor,
-                backgroundColor: config.icon.backgroundColor,
-                innerSize: config.icon.innerSize,
-                outerSize: config.icon.outerSize
-            ),
-            logoHeight: config.logoHeight,
-            title: config.title,
-            subtitle: config.subtitle
-        )
-    }
-}
-
-private extension PaymentCompletionConfig {
-    
-    func config(
-        for status: PaymentCompletion.Status
-    ) -> PaymentCompletionConfig.Statuses.Status {
-        
-        switch status {
-        case .completed:
-            return statuses.completed
-            
-        case .inflight:
-            return statuses.inflight
-            
-        case .rejected:
-            return statuses.rejected
-            
-        case .fraud(.cancelled):
-            return statuses.fraudCancelled
-            
-        case .fraud(.expired):
-            return statuses.fraudExpired
+            config: config,
+            buttons: buttons,
+            details: details,
+            footer: footer
+        ) {
+            PaymentCompletionStatusView(
+                state: state,
+                makeIconView: makeIconView,
+                config: statusConfig
+            )
         }
     }
 }
 
-#if DEBUG
-struct PaymentCompletionStatusView_PaymentCompletion_Previews: PreviewProvider {
+struct PaymentCompletionLayoutView_Previews: PreviewProvider {
     
     static var previews: some View {
         
         Group {
             
-            statusView(.completed)
+            PaymentCompletionLayoutView(
+                config: .preview,
+                buttons: { Color.green.frame(height: 92) },
+                details: { Color.blue.frame(height: 92) },
+                footer: { Color.orange.frame(height: 112)},
+                statusView: { Color.gray.frame(height: 280) }
+            )
+            
+            paymentCompletionLayoutView(.completed)
                 .previewDisplayName("completed")
-            statusView(.inflight)
+            
+            paymentCompletionLayoutView(.inflight)
                 .previewDisplayName("inflight")
-            statusView(.rejected)
+            
+            paymentCompletionLayoutView(.rejected)
                 .previewDisplayName("rejected")
-            statusView(.fraudCancelled)
-                .previewDisplayName("fraud: cancelled")
-            statusView(.fraudExpired)
-                .previewDisplayName("fraud: expired")
+            
+            paymentCompletionLayoutView(.fraudCancelled)
+                .previewDisplayName("fraudCancelled")
+            
+            paymentCompletionLayoutView(.fraudExpired)
+                .previewDisplayName("fraudExpired")
         }
     }
     
-    private static func statusView(
+    private static func paymentCompletionLayoutView(
         _ completion: PaymentCompletion
     ) -> some View {
         
-        PaymentCompletionStatusView(
+        PaymentCompletionLayoutView(
             state: completion,
             makeIconView: {
                 
                 return .init(
-                    image: .init(systemName: $0 ?? "pencil.and.outline"),
-                    publisher: Just(.init(systemName: $0 ?? "tray.full.fill")).eraseToAnyPublisher()
+                    image: .init(systemName: $0),
+                    publisher: Just(.init(systemName: $0)).eraseToAnyPublisher()
                 )
             },
-            config: .preview
+            config: .preview,
+            statusConfig: .preview,
+            buttons: { Color.green.frame(height: 92) },
+            details: { Color.blue.frame(height: 92) },
+            footer: { Color.orange.frame(height: 112)}
         )
     }
 }
 
 private extension PaymentCompletion {
     
-    static let completed: Self = .init(
-        formattedAmount: "1 000 ₽",
-        merchantIcon: "externaldrive.connected.to.line.below",
-        status: .completed
-    )
-    static let inflight: Self = .init(
-        formattedAmount: "1 000 ₽",
-        merchantIcon: "externaldrive.connected.to.line.below",
-        status: .inflight
-    )
-    static let rejected: Self = .init(
-        formattedAmount: "1 000 ₽",
-        merchantIcon: "externaldrive.connected.to.line.below",
-        status: .rejected
-    )
-    static let fraudCancelled: Self = .init(
-        formattedAmount: "1 000 ₽",
-        merchantIcon: "externaldrive.connected.to.line.below",
-        status: .fraud(.cancelled)
-    )
-    static let fraudExpired: Self = .init(
-        formattedAmount: "1 000 ₽",
-        merchantIcon: "externaldrive.connected.to.line.below",
-        status: .fraud(.expired)
+    static let completed: Self = .init(formattedAmount: "1,000 ¢", merchantIcon: nil, status: .completed)
+    static let inflight: Self = .init(formattedAmount: "1,000 ¢", merchantIcon: nil, status: .inflight)
+    static let rejected: Self = .init(formattedAmount: "1,000 ¢", merchantIcon: nil, status: .rejected)
+    static let fraudCancelled: Self = .init(formattedAmount: "1,000 ¢", merchantIcon: nil, status: .fraud(.cancelled))
+    static let fraudExpired: Self = .init(formattedAmount: "1,000 ¢", merchantIcon: nil, status: .fraud(.expired))
+}
+
+private extension PaymentCompletionLayoutViewConfig {
+    
+    static let preview: Self = .init(
+        buttonsPadding: 56,
+        spacing: 24
     )
 }
 
@@ -302,4 +300,3 @@ private extension PaymentCompletionConfig {
         )
     )
 }
-#endif

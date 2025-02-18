@@ -71,7 +71,7 @@ struct ViewComponents {
     let makePaymentsMeToMeView: MakePaymentsMeToMeView
     let makePaymentsServicesOperatorsView: MakePaymentsServicesOperatorsView
     let makePaymentsSuccessView: MakePaymentsSuccessView
-    let makePaymentsView: MakePaymentsView
+    let makeCategoryView: MakeProductsCategoryView
     let makeProductProfileView: MakeProductProfileView
     let makeQRFailedView: MakeQRFailedView
     let makeQRFailedWrapperView: MakeQRFailedWrapperView
@@ -144,8 +144,8 @@ extension ViewComponents {
         makeOperationDetailView: { _,_,_  in fatalError() },
         makePaymentsMeToMeView: makePaymentsMeToMeView,
         makePaymentsServicesOperatorsView: makePaymentsServicesOperatorsView,
-        makePaymentsSuccessView: makePaymentsSuccessView,
-        makePaymentsView: makePaymentsView,
+        makePaymentsSuccessView: makePaymentsSuccessView, 
+        makeCategoryView: { _,_ in fatalError() },
         makeProductProfileView: makeProductProfileView,
         makeQRFailedView: makeQRFailedView,
         makeQRFailedWrapperView: makeQRFailedWrapperView,
@@ -159,20 +159,20 @@ extension ViewComponents {
         makeInfoViews: .default
     )
     
-    static let makeContactsView: MakeContactsView = { .init(viewModel: $0, viewFactory: .preview) }
-    static let makeControlPanelWrapperView: MakeControlPanelWrapperView = { .init(viewModel: $0, config: .default, getUImage: { _ in .checkmark }, viewFactory: .init(makePaymentsView: makePaymentsView, makePaymentsSuccessView: makePaymentsSuccessView)) }
-    static let makeCurrencyWalletView: MakeCurrencyWalletView = { .init(viewModel: $0, viewFactory: .init(makeCurrencySelectorView: { .init(viewModel: $0, viewFactory: .preview)})) }
-    static let makeMainSectionCurrencyMetalView: MakeMainSectionCurrencyMetalView = { .init(viewModel: $0, viewFactory: .preview) }
-    static let makePaymentsView: MakePaymentsView = { .init(viewModel: $0, viewFactory: .preview) }
-    static let makePaymentsSuccessView: MakePaymentsSuccessView = { .init(viewModel: $0, viewFactory: .preview)}
-    static let makeMainSectionProductsView: MakeMainSectionProductsView = { .init(viewModel: $0, viewFactory: .init(makeProductCarouselView: { .init(viewModel: $0, newProductButton: $1, viewFactory: .preview) })) }
-    static let makePaymentsMeToMeView: MakePaymentsMeToMeView = { .init(viewModel: $0, viewFactory: .init(makeProductsSwapView: {.init(viewModel: $0, viewFactory: .preview)})) }
-    static let makePaymentsServicesOperatorsView: MakePaymentsServicesOperatorsView = { .init(viewModel: $0, viewFactory: .preview) }
-    static let makeProductProfileView: MakeProductProfileView = { .init(viewModel: $0, viewFactory: .preview, productProfileViewFactory: .preview, getUImage: { _ in .checkmark })}
-    static let makeQRFailedView: MakeQRFailedView = { .init(viewModel: $0, viewFactory: .init(makeQRSearchOperatorView: { .init(viewModel: $0, viewFactory: .init(makePaymentsView: makePaymentsView))})) }
-    static let makeQRFailedWrapperView: MakeQRFailedWrapperView = {
+    private static let makeContactsView: MakeContactsView = { .init(viewModel: $0, viewFactory: .preview) }
+    private static let makeControlPanelWrapperView: MakeControlPanelWrapperView = { .init(viewModel: $0, config: .default, getUImage: { _ in .checkmark }, viewFactory: .init(makePaymentsView: makePaymentsView, makePaymentsSuccessView: makePaymentsSuccessView)) }
+    private static let makeCurrencyWalletView: MakeCurrencyWalletView = { .init(viewModel: $0, viewFactory: .init(makeCurrencySelectorView: { .init(viewModel: $0, viewFactory: .preview)})) }
+    private static let makeMainSectionCurrencyMetalView: MakeMainSectionCurrencyMetalView = { .init(viewModel: $0, viewFactory: .preview) }
+    private static let makePaymentsView: MakePaymentsView = { .init(viewModel: $0, viewFactory: .preview) }
+    private static let makePaymentsSuccessView: MakePaymentsSuccessView = { .init(viewModel: $0, viewFactory: .preview)}
+    private static let makeMainSectionProductsView: MakeMainSectionProductsView = { .init(viewModel: $0, viewFactory: .init(makeProductCarouselView: { .init(viewModel: $0, newProductButton: $1, viewFactory: .preview) })) }
+    private static let makePaymentsMeToMeView: MakePaymentsMeToMeView = { .init(viewModel: $0, viewFactory: .init(makeProductsSwapView: {.init(viewModel: $0, viewFactory: .preview)})) }
+    private static let makePaymentsServicesOperatorsView: MakePaymentsServicesOperatorsView = { .init(viewModel: $0, viewFactory: .preview) }
+    private static let makeProductProfileView: MakeProductProfileView = { .init(viewModel: $0, viewFactory: .preview, productProfileViewFactory: .preview, getUImage: { _ in .checkmark })}
+    private static let makeQRFailedView: MakeQRFailedView = { .init(viewModel: $0, viewFactory: .init(makeQRSearchOperatorView: { .init(viewModel: $0, viewFactory: .init(makePaymentsView: makePaymentsView))})) }
+    private static let makeQRFailedWrapperView: MakeQRFailedWrapperView = {
         .init(viewModel: $0, viewFactory: .init(makeQRSearchOperatorView: { .init(viewModel: $0, viewFactory: .init(makePaymentsView: makePaymentsView))}), paymentsViewFactory: .preview)
     }
-    static let makeQRSearchOperatorView: MakeQRSearchOperatorView = { .init(viewModel: $0, viewFactory: .init(makePaymentsView: makePaymentsView)) }
-    static let makeQRView: MakeQRView = { .init(qrScanner: $0, viewFactory: .init(makeQRFailedView: { .init(viewModel: $0, viewFactory: .init(makeQRSearchOperatorView: { .init(viewModel: $0, viewFactory: .init(makePaymentsView: makePaymentsView))}))})) }
+    private static let makeQRSearchOperatorView: MakeQRSearchOperatorView = { .init(viewModel: $0, viewFactory: .init(makePaymentsView: makePaymentsView)) }
+    private static let makeQRView: MakeQRView = { .init(qrScanner: $0, viewFactory: .init(makeQRFailedView: { .init(viewModel: $0, viewFactory: .init(makeQRSearchOperatorView: { .init(viewModel: $0, viewFactory: .init(makePaymentsView: makePaymentsView))}))})) }
 }

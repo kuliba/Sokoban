@@ -11,8 +11,8 @@ import SavingsAccount
 
 struct OrderSavingsAccountWrapperView: View {
     
-    let viewModel: ViewModel
-    
+    @ObservedObject var viewModel: ViewModel
+
     let amountToString: OrderSavingsAccountView.AmountToString
     let config: Config
     let imageFactory: SavingsAccount.ImageViewFactory
