@@ -7,23 +7,23 @@
 
 import SwiftUI
 
-struct LandingState {
+public struct OrderCardLandingView: View {
     
-    let headerViewModel: HeaderViewModel
-    let conditions: OrderCardVerticalListViewModel
-    let security: OrderCardVerticalListViewModel
-    let dropDownList: DropDownListViewModel
-}
-
-struct OrderCardLandingView: View {
+    public typealias State = LandingState
+    public typealias Config = OrderCardLandingViewConfig
     
-    typealias State = LandingState
-    typealias Config = OrderCardLandingViewConfig
+    private let state: State
+    private let config: Config
     
-    let state: State
-    let config: Config
+    public init(
+        state: State,
+        config: Config
+    ) {
+        self.state = state
+        self.config = config
+    }
     
-    var body: some View {
+    public var body: some View {
         
         ScrollView(.vertical, showsIndicators: false) {
             
