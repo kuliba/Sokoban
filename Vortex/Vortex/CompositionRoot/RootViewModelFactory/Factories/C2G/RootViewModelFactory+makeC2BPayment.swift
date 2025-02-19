@@ -167,8 +167,8 @@ private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
         
         switch documentStatus {
         case "COMPLETE":    return .completed
-        case "REJECTED":    return .inflight
-        case "IN_PROGRESS": return .rejected
+        case "IN_PROGRESS": return .inflight
+        case "REJECTED":    return .rejected
         default:            return nil
         }
     }
@@ -209,23 +209,23 @@ where Context == C2GPaymentDomain.Context {
     init(payload: C2GPaymentDomain.ContentPayload) {
         
         self.init(
+            context: .init(term: .terms(url: payload.url)),
             productSelect: .init(selected: payload.selectedProduct),
             termsCheck: payload.termsCheck,
-            uin: payload.uin,
-            context: .init(term: .terms(url: payload.url))
+            uin: payload.uin
         )
     }
 }
 
 private extension AttributedString {
     
-    static func terms(url: URL) -> Self {
+    static func terms(url: URL?) -> Self {
         
-        var attributedString = AttributedString("Включить переводы через СБП,\nпринять условия обслуживания")
+        var attributedString = AttributedString.turnSBPOnMessage
         attributedString.foregroundColor = .textPlaceholder
         attributedString.font = .textBodyMR14200()
         
-        if let terms = attributedString.range(of: "принять условия обслуживания") {
+        if let url, let terms = attributedString.range(of: String.termURLPlace) {
             
             attributedString[terms].link = url
             attributedString[terms].underlineStyle = .single
@@ -234,6 +234,16 @@ private extension AttributedString {
         
         return attributedString
     }
+}
+
+private extension AttributedString {
+    
+    static let turnSBPOnMessage: Self = .init("Включить переводы через СБП,\n\(String.termURLPlace)")
+}
+
+private extension String {
+    
+    static let termURLPlace = "принять условия обслуживания"
 }
 
 import CombineSchedulers

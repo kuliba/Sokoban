@@ -44,12 +44,14 @@ extension ViewComponents {
                         event: { event(.productSelect($0)) }
                     )
                     
-                    // TODO: Use AttributedString to connect to URL
-                    makeCheckBoxView(
-                        title: state.context.term,
-                        isChecked: state.termsCheck,
-                        toggle: { event(.termsToggle) }
-                    )
+                    state.termsCheck.map {
+                        
+                        makeCheckBoxView(
+                            title: state.context.term,
+                            isChecked: $0,
+                            toggle: { event(.termsToggle) }
+                        )
+                    }
                 }
             }
             .safeAreaInset(edge: .bottom) {
@@ -79,7 +81,6 @@ extension ViewComponents {
             )
             .onTapGesture(perform: toggle)
             
-            // TODO: Use AttributedString to connect to URL
             Text(title)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.textBodyMR14200())

@@ -36,9 +36,9 @@ extension C2GPaymentDomain {
         
         let selectedProduct: ProductSelect.Product
         let products: [ProductSelect.Product]
-        let termsCheck: Bool
+        let termsCheck: Bool?
         let uin: String
-        let url: URL
+        let url: URL?
     }
     
     // MARK: - Flow

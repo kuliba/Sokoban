@@ -55,12 +55,8 @@ private extension ResponseMapper._DTO {
         
         get throws {
             
-            guard let termsCheck,
-                  let url,
-                  let url = URL(string: url),
-                  let UIN
-            else { throw MissingMandatoryFields() }
-            
+            guard let UIN else { throw MissingMandatoryFields() }
+
             return .init(
                 termsCheck: termsCheck,
                 transAmm: transAmm,
@@ -76,7 +72,7 @@ private extension ResponseMapper._DTO {
                 payerName: payerName,
                 payerINN: payerINN,
                 payerKPP: payerKPP,
-                url: url,
+                url: url.flatMap { URL(string: $0) },
                 uin: UIN
             )
         }

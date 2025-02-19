@@ -10,21 +10,21 @@ import PaymentComponents
 
 public struct C2GPaymentState<Context> {
     
-    public var productSelect: ProductSelect
-    public var termsCheck: Bool
-    public let uin: String
     public let context: Context
+    public var productSelect: ProductSelect
+    public var termsCheck: Bool?
+    public let uin: String
     
     public init(
+        context: Context,
         productSelect: ProductSelect,
-        termsCheck: Bool,
-        uin: String,
-        context: Context
+        termsCheck: Bool?,
+        uin: String
     ) {
+        self.context = context
         self.productSelect = productSelect
         self.termsCheck = termsCheck
         self.uin = uin
-        self.context = context
     }
 }
 
@@ -34,12 +34,17 @@ extension C2GPaymentState {
     
     public var digest: C2GPaymentDigest? {
         
-        guard termsCheck else { return nil }
+        guard isTermsCheckOK else { return nil }
         
         return productSelect.selected.map {
             
             return .init(productID: $0.digestProductID, uin: uin)
         }
+    }
+    
+    private var isTermsCheckOK: Bool {
+        
+        return termsCheck ?? true
     }
 }
 

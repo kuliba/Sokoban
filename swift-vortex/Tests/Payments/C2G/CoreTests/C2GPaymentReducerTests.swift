@@ -11,14 +11,33 @@ import XCTest
 
 final class C2GPaymentReducerTests: C2GPaymentTests {
     
-    func test_termsToggle_shouldToggleTermsCheck() {
+    func test_termsToggle_shouldNotChangeState_onMissingTermsCheck() {
         
-        let state = makeState()
+        let state = makeState(termsCheck: nil)
+        let sut = makeSUT().sut
+        
+        assert(sut: sut, state, event: .termsToggle)
+    }
+
+    func test_termsToggle_shouldSetTermsCheckToTrue_onTermsCheckFalse() {
+        
+        let state = makeState(termsCheck: false)
         let sut = makeSUT().sut
         
         assert(sut: sut, state, event: .termsToggle) {
             
-            $0.termsCheck.toggle()
+            $0.termsCheck = true
+        }
+    }
+    
+    func test_termsToggle_shouldSetTermsCheckToFalse_onTermsCheckTrue() {
+        
+        let state = makeState(termsCheck: true)
+        let sut = makeSUT().sut
+        
+        assert(sut: sut, state, event: .termsToggle) {
+            
+            $0.termsCheck = false
         }
     }
     
