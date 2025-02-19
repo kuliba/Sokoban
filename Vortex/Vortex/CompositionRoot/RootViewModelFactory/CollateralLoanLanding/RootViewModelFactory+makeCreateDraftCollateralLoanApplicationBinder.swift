@@ -235,6 +235,7 @@ extension RootViewModelFactory {
 
             case let .failure(failure):
                 break
+//                completion(.failure(failure))
             }
         }
     }

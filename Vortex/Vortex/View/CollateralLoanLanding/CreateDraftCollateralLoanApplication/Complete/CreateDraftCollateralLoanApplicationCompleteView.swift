@@ -18,6 +18,7 @@ struct CreateDraftCollateralLoanApplicationCompleteView: View {
     let action: () -> Void
     let makeIconView: MakeIconView
     let pdfDocumentButton: PDFDocumentButton
+    let detailsButton: TransactionDetailButton
     
     var body: some View {
         
@@ -54,9 +55,12 @@ private extension CreateDraftCollateralLoanApplicationCompleteView {
     func buttons() -> some View {
         
         HStack {
-            pdfDocumentButton
             
+            pdfDocumentButton
+            Color.clear.frame(width: 8)
+            detailsButton
         }
+        .frame(maxWidth: .infinity)
         .padding(.bottom, 24)
     }
     
@@ -66,7 +70,6 @@ private extension CreateDraftCollateralLoanApplicationCompleteView {
     }
 }
 
-#if DEBUG
 struct CreateDraftCollateralLoanApplicationCompleteView_Previews: PreviewProvider {
     
     static var previews: some View {
@@ -93,8 +96,13 @@ struct CreateDraftCollateralLoanApplicationCompleteView_Previews: PreviewProvide
                         .eraseToAnyPublisher()
                 )
             }, 
-            pdfDocumentButton: .preview
+            pdfDocumentButton: .preview,
+            detailsButton: .preview
         )
     }
 }
-#endif
+
+extension TransactionDetailButton {
+    
+    static let preview = Self(details: .init(logo: nil, cells: []))
+}

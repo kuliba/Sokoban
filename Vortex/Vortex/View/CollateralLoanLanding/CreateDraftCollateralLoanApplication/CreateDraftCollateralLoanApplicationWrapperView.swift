@@ -131,7 +131,8 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
                 pdfDocumentButton: makePDFDocumentButton(
                     payload: saveConsentsResult.payload,
                     getPDFDocument: factory.getPDFDocument
-                )
+                ),
+                detailsButton: makeDetailsButton()
             )
             
         case .failure:
@@ -151,6 +152,20 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     ) -> PDFDocumentButton {
         
         .init(getDocument: { getPDFDocument(payload, $0) })
+    }
+    
+    private func makeDetailsButton() -> TransactionDetailButton {
+        
+        .init(
+            details: .init(
+                logo: nil,
+                cells: [
+                    .init(title: "Detail 1"),
+                    .init(title: "Detail 2"),
+                    .init(title: "Detail 3")
+                ]
+            )
+        )
     }
     
     private func makePaymentCompleteViewFactory() -> PaymentCompleteViewFactory {
