@@ -12,15 +12,18 @@ public struct HeaderViewConfig {
 
     let title: TextConfig
     let optionPlaceholder: Color
+    let option: TextConfig
     let layout: Layout
     
     public init(
         title: TextConfig,
         optionPlaceholder: Color,
+        option: TextConfig,
         layout: Layout
     ) {
         self.title = title
         self.optionPlaceholder = optionPlaceholder
+        self.option = option
         self.layout = layout
     }
     

@@ -54,7 +54,6 @@ private extension HeaderView {
         _ option: String
     ) -> some View {
         
-        //TODO: constants extract to config
         HStack(alignment: .center, spacing: config.layout.itemOption.horizontalSpacing) {
             
             Circle()
@@ -63,6 +62,8 @@ private extension HeaderView {
             
             Text(option)
                 .frame(maxWidth: 150, alignment: .leading)
+                .font(config.option.textFont)
+                .foregroundStyle(config.option.textColor)
         }
     }
 }
@@ -97,6 +98,10 @@ private extension HeaderViewConfig {
             textColor: .black
         ),
         optionPlaceholder: .black,
+        option: .init(
+            textFont: .body,
+            textColor: .red
+        ),
         layout: .init(
             itemOption: .init(
                 horizontalSpacing: 5
