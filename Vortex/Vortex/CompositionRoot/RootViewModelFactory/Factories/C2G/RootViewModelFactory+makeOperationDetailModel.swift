@@ -12,7 +12,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeOperationDetailModel(
-        operationDetailID: Int
+        initialState: OperationDetailDomain.State
     ) -> OperationDetailDomain.Model {
         
         let load = onBackground(
@@ -23,15 +23,22 @@ extension RootViewModelFactory {
         let reducer = OperationDetailDomain.Reducer()
         let effectHandler = OperationDetailDomain.EffectHandler { completion in
             
-            load(.init(operationDetailID)) {
+            load(.init(initialState.response.paymentOperationDetailID)) {
                 
                 completion($0.map { _ in () })
             }
         }
         
         return .init(
-            initialState: .pending,
-            reduce: reducer.reduce,
+            initialState: initialState,
+            reduce: { state, event in
+                
+                var state = state
+                let (details, effect) = reducer.reduce(state.details, event)
+                state.details = details
+                
+                return (state, effect)
+            },
             handleEffect: effectHandler.handleEffect,
             scheduler: schedulers.main
         )

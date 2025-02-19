@@ -55,27 +55,5 @@ extension C2GPaymentDomain {
     }
     
     typealias Navigation = Result<C2GPaymentComplete, BackendFailure>
-    
-    struct C2GPaymentComplete {
-        
-        let detail: OperationDetailDomain.Model?
-        let response: EnhancedResponse
-        
-        struct EnhancedResponse: Equatable {
-            
-            let formattedAmount: String?
-            let merchantName: String?
-            let message: String?
-            let paymentOperationDetailID: Int
-            let product: ProductData // too much
-            let purpose: String?
-            let status: Status
-            let uin: String
-            
-            enum Status {
-                
-                case completed, inflight, rejected
-            }
-        }
-    }
+    typealias C2GPaymentComplete = OperationDetailDomain.Model
 }

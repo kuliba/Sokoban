@@ -46,8 +46,10 @@ extension ViewComponents {
         
         VStack(spacing: config.spacing) {
             
-            cover.content.response.merchantName?.text(withConfig: config.merchantName)
-            cover.content.response.purpose?.text(withConfig: config.purpose)
+            let response = cover.content.state.response
+            
+            response.merchantName?.text(withConfig: config.merchantName)
+            response.purpose?.text(withConfig: config.purpose)
         }
     }
 }
@@ -64,7 +66,7 @@ private extension C2GCompleteCover {
     var completion: PaymentCompletion {
         
         return .init(
-            formattedAmount: content.response.formattedAmount,
+            formattedAmount: content.state.response.formattedAmount,
             merchantIcon: nil,
             status: status
         )
@@ -72,7 +74,7 @@ private extension C2GCompleteCover {
     
     var status: PaymentCompletion.Status {
         
-        switch content.response.status {
+        switch content.state.response.status {
         case .completed: return .completed
         case .inflight:  return .inflight
         case .rejected:  return .rejected
@@ -181,21 +183,32 @@ private extension C2GCompleteCover {
     static var rejectedNoMerchantNoMessage:  Self { make(.rejectedNoMerchantNoMessage) }
     static var rejectedMinimal:              Self { make(.rejectedMinimal) }
     
-    private static func make(_ response: Success.EnhancedResponse) -> Self {
+    private static func make(
+        _ response: OperationDetailDomain.State.EnhancedResponse
+    ) -> Self {
         
         return .init(
             id: .init(),
-            content: .init(detail: .preview, response: response)
+            content: .preview(response: response)
         )
     }
 }
 
 private extension OperationDetailDomain.Model {
     
-    static let preview: OperationDetailDomain.Model = .init(initialState: .pending, reduce: { state, _ in (state, nil) }, handleEffect: { _,_ in })
+    static func preview(
+        response: OperationDetailDomain.State.EnhancedResponse
+    ) -> OperationDetailDomain.Model {
+        
+        return .init(
+            initialState: .init(details: .pending, response: response),
+            reduce: { state, _ in (state, nil) },
+            handleEffect: { _,_ in }
+        )
+    }
 }
 
-private extension C2GPaymentDomain.C2GPaymentComplete.EnhancedResponse {
+private extension OperationDetailDomain.State.EnhancedResponse {
     
     // ✅ COMPLETED STATUS
     static let completedFull: Self = .init(

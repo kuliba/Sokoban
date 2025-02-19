@@ -77,8 +77,8 @@ extension RootViewModelFactory {
                 guard let status = response.status
                 else { return completion(.failure(.connectivityFailure)) }
                 
-                completion(.success(.init(
-                    detail: nil,
+                let initialState = OperationDetailDomain.State(
+                    details: .pending,
                     response: .init(
                         formattedAmount: formatAmount(value: response.amount),
                         merchantName: response.merchantName,
@@ -89,7 +89,10 @@ extension RootViewModelFactory {
                         status: status,
                         uin: payload.uin
                     )
-                )))
+                )
+                let model = makeOperationDetailModel(initialState: initialState)
+                
+                completion(.success(model))
             }
 
             _ = service
@@ -160,7 +163,7 @@ private extension String {
 
 private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
     
-    var status: C2GPaymentDomain.C2GPaymentComplete.EnhancedResponse.Status? {
+    var status: OperationDetailDomain.State.EnhancedResponse.Status? {
         
         switch documentStatus {
         case "COMPLETE":    return .completed

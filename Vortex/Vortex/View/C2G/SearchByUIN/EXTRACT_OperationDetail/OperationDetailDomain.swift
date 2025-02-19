@@ -14,13 +14,35 @@ extension OperationDetailDomain {
     
     typealias Model = RxViewModel<State, Event, Effect>
     
-    typealias Reducer = StateMachines.LoadReducer<Success, Error>
-    typealias EffectHandler = StateMachines.LoadEffectHandler<Success, Error>
+    typealias Reducer = StateMachines.LoadReducer<State.Details, Error>
+    typealias EffectHandler = StateMachines.LoadEffectHandler<State.Details, Error>
     
-    typealias State = StateMachines.LoadState<Success, Error>
-    typealias Event = StateMachines.LoadEvent<Success, Error>
+    typealias Event = StateMachines.LoadEvent<State.Details, Error>
     typealias Effect = StateMachines.LoadEffect
     
-    typealias Success = Void
-    typealias Failure = Error
+    struct State {
+        
+        var details: StateMachines.LoadState<Details, Error>
+        let response: EnhancedResponse
+        
+        typealias State = StateMachines.LoadState<Details, Error>
+        typealias Details = Void // TODO: replace with operation details
+        
+        struct EnhancedResponse: Equatable {
+            
+            let formattedAmount: String?
+            let merchantName: String?
+            let message: String?
+            let paymentOperationDetailID: Int
+            let product: ProductData // too much
+            let purpose: String?
+            let status: Status
+            let uin: String
+            
+            enum Status {
+                
+                case completed, inflight, rejected
+            }
+        }
+    }
 }
