@@ -27,14 +27,20 @@ public struct HeaderViewConfig {
     public struct Layout {
         
         let textViewLeadingPadding: CGFloat
+        let textViewOptionsVerticalSpacing: CGFloat
         let textViewTrailingPadding: CGFloat
+        let textViewVerticalSpacing: CGFloat
         
         public init(
             textViewLeadingPadding: CGFloat,
-            textViewTrailingPadding: CGFloat
+            textViewOptionsVerticalSpacing: CGFloat,
+            textViewTrailingPadding: CGFloat,
+            textViewVerticalSpacing: CGFloat
         ) {
             self.textViewLeadingPadding = textViewLeadingPadding
+            self.textViewOptionsVerticalSpacing = textViewOptionsVerticalSpacing
             self.textViewTrailingPadding = textViewTrailingPadding
+            self.textViewVerticalSpacing = textViewVerticalSpacing
         }
     }
 }

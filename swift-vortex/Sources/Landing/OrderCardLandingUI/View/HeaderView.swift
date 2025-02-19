@@ -38,12 +38,12 @@ private extension HeaderView {
     func textView() -> some View {
         
         //TODO: constants extract to config
-        VStack(spacing: 26) {
+        VStack(spacing: config.layout.textViewVerticalSpacing) {
             
             model.title.text(withConfig: config.title)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
-            VStack(spacing: 20) {
+            VStack(spacing: config.layout.textViewOptionsVerticalSpacing) {
                 
                 ForEach(model.options, id: \.self, content: optionView)
             }
@@ -91,7 +91,9 @@ struct Header {
                     optionPlaceholder: .black,
                     layout: .init(
                         textViewLeadingPadding: 16,
-                        textViewTrailingPadding: 15
+                        textViewOptionsVerticalSpacing: 20,
+                        textViewTrailingPadding: 15,
+                        textViewVerticalSpacing: 26
                     )
                 ),
                 imageFactory: .default
