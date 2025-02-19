@@ -16,30 +16,81 @@ extension ViewComponents {
         _ model: OperationDetailDomain.Model
     ) -> some View {
         
-        RxWrapperView(model: model, makeContentView: makeC2GPaymentCompleteButtonsView)
+        RxWrapperView(model: model) { state, _ in
+            
+            makeC2GPaymentCompleteButtonsView(state: state)
+        }
     }
     
     @inlinable
     @ViewBuilder
     func makeC2GPaymentCompleteButtonsView(
-        state: OperationDetailDomain.State,
-        event: @escaping (OperationDetailDomain.Event) -> Void
+        state: OperationDetailDomain.State
     ) -> some View {
         
-        switch state.details {
-        case let .completed(details):
-            Text("2 buttons")
+        HStack(spacing: 8) {
             
-        case .failure:
-            Text(" 1 button with short details")
-            
-        case .loading:
-            Text("2 button labels")
-                ._shimmering()
-            
-        case .pending:
-            EmptyView()
+            switch state.details {
+            case .completed, .loading:
+                // Text("2 buttons")
+                Group {
+                 
+                    WithSheetView {
+                        circleButton(image: .ic24Info, title: "Детали", action: $0)
+                    } sheet: {
+                         Text("TBD: Детали")
+                        // c2gTransactionDetails(details: <#T##any TransactionDetailsProviding<[DetailsCell]>#>, dismiss: $0)
+                    }
+
+                    WithSheetView {
+                        circleButton(image: .ic24Share, title: "Реквизиты", action: $0)
+                    } sheet: {
+                         Text("TBD: Реквизиты")
+                        // c2gPaymentRequisites(details: <#T##any PaymentRequisitesProviding<[DetailsCell]>#>, dismiss: $0)
+                    }
+                }
+                .disabled(state._details == nil)
+                .redacted(reason: state._details == nil ? .privacy : [])
+                ._shimmering(isActive: state._details == nil)
+                
+            case .failure:
+                // Text(" 1 button with short details")
+                WithSheetView {
+                    circleButton(image: .ic24Info, title: "Детали", action: $0)
+                } sheet: {
+                    Text("TBD: short details")
+                }
+                                
+            case .pending:
+                EmptyView()
+            }
         }
+    }
+    
+    @inlinable
+    func circleButton(
+        image: Image,
+        title: String,
+        action: @escaping () -> Void
+    ) -> some View {
+        
+        ButtonIconTextView(viewModel: .init(
+            icon: .init(image: image, background: .circle),
+            title: .init(text: title),
+            orientation: .vertical,
+            action: action
+        ))
+        .frame(width: 100, height: 92)
+    }
+}
+
+extension OperationDetailDomain.State {
+    
+    var _details: OperationDetailDomain.State.Details? {
+        
+        guard case let .completed(details) = details else { return nil }
+        
+        return details
     }
 }
 
@@ -63,8 +114,7 @@ struct MakeC2GPaymentCompleteButtonsView_Previews: PreviewProvider {
     ) -> some View {
         
         ViewComponents.preview.makeC2GPaymentCompleteButtonsView(
-            state: .init(details: details, response: .preview),
-            event: { print($0) }
+            state: .init(details: details, response: .preview)
         )
     }
 }

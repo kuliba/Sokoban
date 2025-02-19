@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import UIPrimitives
 
 protocol TransactionDetailsProviding<TransactionDetails> {
     
@@ -50,8 +49,7 @@ extension ViewComponents {
     @inlinable
     func c2gPaymentRequisites(
         details: any PaymentRequisitesProviding<[DetailsCell]>,
-        dismiss: @escaping () -> Void,
-        share: @escaping () -> Void
+        dismiss: @escaping () -> Void
     ) -> some View {
         
         SharingView(shareItems: details.shareItems) { share in
@@ -87,31 +85,6 @@ extension ViewComponents {
     }
 }
 
-struct SharingView<Content: View>: View {
-    
-    @State private var isSharing = false
-    
-    let shareItems: [Any]
-    let content: (@escaping () -> Void) -> Content
-    
-    var body: some View {
-        
-        content { isSharing = true }
-            .sheet(
-                isPresented: $isSharing,
-                content: {
-                    
-                    ShareSheet(payload: .init(items: shareItems), config: .iVortex)
-                }
-            )
-    }
-}
-
-extension ShareSheetConfig {
-    
-    static let iVortex: Self = .init()
-}
-
 // MARK: - Previews
 
 struct C2GDetailsView_Previews: PreviewProvider {
@@ -128,8 +101,7 @@ struct C2GDetailsView_Previews: PreviewProvider {
             
             ViewComponents.preview.c2gPaymentRequisites(
                 details: PreviewDetails.preview,
-                dismiss: {},
-                share: {}
+                dismiss: {}
             )
             .previewDisplayName("c2gPaymentRequisites")
         }
