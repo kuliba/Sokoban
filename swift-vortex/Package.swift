@@ -1569,8 +1569,7 @@ private extension Target {
         name: .orderCardLandingUI,
         dependencies: [
             .sharedConfigs,
-            .dropDownTextListComponent,
-            .savingsAccount
+            .dropDownTextListComponent
         ],
         path: "Sources/Landing/\(String.orderCardLandingUI)"
     )
