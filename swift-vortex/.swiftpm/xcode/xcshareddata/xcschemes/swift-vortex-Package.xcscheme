@@ -1406,6 +1406,34 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "OrderCardLandingUI"
+               BuildableName = "OrderCardLandingUI"
+               BlueprintName = "OrderCardLandingUI"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "StateMachines"
+               BuildableName = "StateMachines"
+               BlueprintName = "StateMachines"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -2337,6 +2365,16 @@
                BlueprintIdentifier = "GetSplashScreenServicesTests"
                BuildableName = "GetSplashScreenServicesTests"
                BlueprintName = "GetSplashScreenServicesTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "StateMachinesTests"
+               BuildableName = "StateMachinesTests"
+               BlueprintName = "StateMachinesTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

@@ -5279,6 +5279,7 @@
 		2ACFD66D2C5DEDA8003F08AE /* UtilityPaymentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityPaymentProvider.swift; sourceTree = "<group>"; };
 		2ACFD66F2C5DEDF9003F08AE /* SegmentedOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedOperator.swift; sourceTree = "<group>"; };
 		2ACFD6732C5DFBC6003F08AE /* QRScanResultMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanResultMapperTests.swift; sourceTree = "<group>"; };
+		2AD073702D65A83700922062 /* StateMachines.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = StateMachines.xctestplan; sourceTree = "<group>"; };
 		2AD0928E2BFA30A100777EE4 /* TransactionPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TransactionPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AD092902BFA30A100777EE4 /* TransactionPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionPreviewApp.swift; sourceTree = "<group>"; };
 		2AD092922BFA30A100777EE4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -10554,6 +10555,7 @@
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
+				2AD073702D65A83700922062 /* StateMachines.xctestplan */,
 				C198F83F2D645C4D005D8DE0 /* OrderCardLandingUI.xctestplan */,
 				2A50E6C72D5631E500C00949 /* GetCardOrderFormService.xctestplan */,
 				C10B0F982D51047E00508689 /* OrderCardLandingBackend.xctestplan */,
