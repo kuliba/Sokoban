@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 struct HeaderView: View {
     
@@ -14,18 +15,20 @@ struct HeaderView: View {
     
     let model: Model
     let config: Config
+    let imageFactory: ImageViewFactory
     
     var body: some View {
         
         ZStack(alignment: .top) {
             
-            model.backgroundImage
-                .resizable()
-                .aspectRatio(contentMode: .fill)
+            if let md5Hash = model.md5Hash {
+                
+                imageFactory.makeIconView(md5Hash)
+            }
             
             textView()
-                .padding(.leading, 16)
-                .padding(.trailing, 15)
+                .padding(.leading, config.layout.textViewLeadingPadding)
+                .padding(.trailing, config.layout.textViewTrailingPadding)
         }
     }
 }
@@ -69,7 +72,7 @@ struct Header {
     
     let title: String
     let options: [String]
-    let backgroundImage: Image
+    let md5Hash: String?
 }
 
 #Preview {
@@ -79,23 +82,19 @@ struct Header {
         LazyVStack(spacing: 16) {
             
             HeaderView(
-                model: .init(
-                    title: "Карта МИР «Все включено»",
-                    options: [
-                        "кешбэк до 10 000 ₽ в месяц",
-                        "5% выгода при покупке топлива",
-                        "5% на категории сезона",
-                        "от 0,5% до 1% кешбэк на остальные покупки**"
-                    ],
-                    backgroundImage: Image("orderCardLanding")
-                ),
+                model: .preview,
                 config: .init(
                     title: .init(
                         textFont: .body,
                         textColor: .black
                     ),
-                    optionPlaceholder: .black
-                )
+                    optionPlaceholder: .black,
+                    layout: .init(
+                        textViewLeadingPadding: 16,
+                        textViewTrailingPadding: 15
+                    )
+                ),
+                imageFactory: .default
             )
         }
     }

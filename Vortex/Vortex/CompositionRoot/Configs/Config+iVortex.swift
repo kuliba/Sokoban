@@ -263,6 +263,10 @@ extension OrderCardLandingUI.HeaderViewConfig {
             textFont: .marketingH0B40X480(),
             textColor: .mainColorsBlack
         ),
-        optionPlaceholder: .textSecondary
+        optionPlaceholder: .textSecondary,
+        layout: .init(
+            textViewLeadingPadding: 16,
+            textViewTrailingPadding: 15
+        )
     )
 }
