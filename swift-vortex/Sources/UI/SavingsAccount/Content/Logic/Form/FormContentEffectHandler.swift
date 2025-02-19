@@ -68,24 +68,3 @@ public extension FormContentEffectHandler {
     typealias GetVerificationCodeCompletion = (GetVerificationCodeResult) -> Void
     typealias GetVerificationCode = (@escaping GetVerificationCodeCompletion) -> Void
 }
-
-public struct MakeOpenSavingsAccountPayload: Equatable {
-    
-    public let amount: Double?
-    public let cryptoVersion: String?
-    public let currencyCode: Int?
-    public let sourceAccountId: Int?
-    public let sourceCardId: Int?
-    public let verificationCode: String
-}
-
-
-public struct MakeOpenSavingsAccountResponse: Equatable {
-    
-    public let amount: Double?
-    public let cryptoVersion: String?
-    public let currencyCode: Int?
-    public let sourceAccountId: Int?
-    public let sourceCardId: Int?
-    public let verificationCode: String
-}
