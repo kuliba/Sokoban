@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import DropDownTextListComponent
 
 public struct OrderCardLandingView: View {
     
@@ -29,19 +28,11 @@ public struct OrderCardLandingView: View {
     
     public var body: some View {
         
-        LazyVStack(spacing: 16) {
-            
-            HeaderView(
-                model: state.header,
-                config: config.headerConfig,
-                imageFactory: factory
-            )
-            
-            DropDownTextListView(
-                config: config.dropDownConfig,
-                list: state.dropDownList
-            )
-        }
+        HeaderView(
+            model: state.header,
+            config: config.headerConfig,
+            imageFactory: factory
+        )
     }
 }
 
@@ -49,49 +40,12 @@ public struct OrderCardLandingView: View {
     
     OrderCardLandingView(
         state: .init(
-            dropDownList: .preview,
             header: .preview
         ),
         config: .init(
-            dropDownConfig: .preview,
             headerConfig: .preview
         ),
         factory: .default
-    )
-}
-
-private extension DropDownTextList {
-    
-    static let preview: Self = .init(
-        title: "title",
-        items: [.init(
-            title: "title",
-            subTitle: "subtitle"
-        )]
-    )
-}
-
-private extension DropDownTextListConfig {
-    
-    static let preview: Self = .init(
-        cornerRadius: 12,
-        chevronDownImage: .bolt,
-        layouts: .init(
-            horizontalPadding: 16,
-            verticalPadding: 15
-        ),
-        colors: .init(
-            divider: .gray,
-            background: .accentColor
-        ),
-        fonts: .init(
-            title: .init(textFont: .body, textColor: .red),
-            itemTitle: .init(textFont: .body, textColor: .purple),
-            itemSubtitle: .init(
-                textFont: .body,
-                textColor: .black
-            )
-        )
     )
 }
 

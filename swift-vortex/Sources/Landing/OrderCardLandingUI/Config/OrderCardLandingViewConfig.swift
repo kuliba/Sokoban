@@ -6,18 +6,14 @@
 //
 
 import Foundation
-import DropDownTextListComponent
 
 public struct OrderCardLandingViewConfig {
 
-    let dropDownConfig: DropDownTextListConfig
     let headerConfig: HeaderViewConfig
     
     public init(
-        dropDownConfig: DropDownTextListConfig,
         headerConfig: HeaderViewConfig
     ) {
-        self.dropDownConfig = dropDownConfig
         self.headerConfig = headerConfig
     }
 }
