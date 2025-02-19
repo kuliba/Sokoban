@@ -1546,6 +1546,7 @@
 		2ACFD66E2C5DEDA8003F08AE /* UtilityPaymentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD66D2C5DEDA8003F08AE /* UtilityPaymentProvider.swift */; };
 		2ACFD6702C5DEDF9003F08AE /* SegmentedOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD66F2C5DEDF9003F08AE /* SegmentedOperator.swift */; };
 		2ACFD6742C5DFBC6003F08AE /* QRScanResultMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACFD6732C5DFBC6003F08AE /* QRScanResultMapperTests.swift */; };
+		2AD073722D65B55200922062 /* StateMachines in Frameworks */ = {isa = PBXBuildFile; productRef = 2AD073712D65B55200922062 /* StateMachines */; };
 		2AD092912BFA30A100777EE4 /* TransactionPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092902BFA30A100777EE4 /* TransactionPreviewApp.swift */; };
 		2AD092932BFA30A100777EE4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD092922BFA30A100777EE4 /* ContentView.swift */; };
 		2AD092952BFA30A200777EE4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AD092942BFA30A200777EE4 /* Assets.xcassets */; };
@@ -7687,6 +7688,7 @@
 				2A77FECE2BB4A40500884D87 /* AnywayPayment in Frameworks */,
 				D41D73FA2BA25C47002C0688 /* GetProductListByTypeService in Frameworks */,
 				ED0AF885286B24DF00F86B68 /* AnyImageKit in Frameworks */,
+				2AD073722D65B55200922062 /* StateMachines in Frameworks */,
 				2A6ECBAC2C8AC1F9007C44CB /* ServiceCategoriesBackendV0 in Frameworks */,
 				C19C234F2D562E210026FD0B /* GetCardOrderFormService in Frameworks */,
 				68A40A132771E154007333EA /* FirebaseAnalytics in Frameworks */,
@@ -19883,6 +19885,7 @@
 				C10E0F232D5772ED008185D6 /* OrderCard */,
 				EC0C39F82D634F1100AC79C4 /* GetSplashScreenServices */,
 				2A2A46D22D61AB44009896F2 /* C2G */,
+				2AD073712D65B55200922062 /* StateMachines */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* Vortex.app */;
@@ -29803,6 +29806,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2ACBA6742CE9BC7E00758D71 /* XCRemoteSwiftPackageReference "ViewInspector" */;
 			productName = ViewInspector;
+		};
+		2AD073712D65B55200922062 /* StateMachines */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StateMachines;
 		};
 		2AD0929E2BFA322300777EE4 /* AnywayPayment */ = {
 			isa = XCSwiftPackageProductDependency;
