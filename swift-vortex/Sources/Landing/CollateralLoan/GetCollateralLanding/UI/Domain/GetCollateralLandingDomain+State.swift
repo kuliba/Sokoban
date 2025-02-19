@@ -161,7 +161,7 @@ extension GetCollateralLandingDomain.State {
 
 extension GetCollateralLandingDomain.State {
     
-    public func payload(_ product: GetCollateralLandingProduct) -> CreateDraftCollateralLoanApplicationUIData {
+    public func payload(_ product: GetCollateralLandingProduct) -> CreateDraftCollateralLoanApplication {
         
         return .init(
             amount: desiredAmount,

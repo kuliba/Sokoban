@@ -12,25 +12,42 @@ import OptionalSelectorComponent
 
 extension CreateDraftCollateralLoanApplicationDomain {
     
-    public enum Event {
+    public enum Event<Confirmation, InformerPayload> {
         
+        // MARK: UI events
         case amount(TextInputEvent)
-        case applicationCreated(CreateDraftApplicationResult)
         case checkConsent(String)
         case city(SelectCityEvent)
-        case otp(String)
-        case confirmed(Confirmation)
         case period(SelectPeriodEvent)
-        case getVerificationCode
-        case gettedVerificationCode(GetVerificationCodeResult)
-        case otpValidated
-        case showSaveConsentsResult(SaveConsentsResult)
-        case tappedBack
-        case tappedContinue
-        case tappedSubmit        
+        case back
+        case `continue`
+        case submit
+        case dismissFailure
+        
+        case applicationCreated(CreateDraftApplicationCreatedResult<Confirmation, InformerPayload>)
+        case confirmed(Confirmation)
+        case failure(BackendFailure<InformerPayload>)
+        // case failure(Failure)
+        case gettedVerificationCode(GetVerificationCodeResult<InformerPayload>)
+        case showSaveConsentsResult(SaveConsentsResult<InformerPayload>)
+        case otpEvent(OTPEvent)
+        
+        public enum Failure {
+            case alert(String)
+            case informer(InformerPayload)
+        }
+        
+        public enum OTPEvent {
+        
+            case otp(String)
+            case getVerificationCode
+        }
     }
-    
-    public typealias GetVerificationCodeResult = Result<Int, LoadResultFailure>
-    public typealias SelectPeriodEvent = OptionalSelectorEvent<PeriodItem>
-    public typealias SelectCityEvent = OptionalSelectorEvent<CityItem>
+}
+
+public extension CreateDraftCollateralLoanApplicationDomain {
+
+    typealias GetVerificationCodeResult<InformerPayload> = Result<Int, BackendFailure<InformerPayload>>
+    typealias SelectPeriodEvent = OptionalSelectorEvent<PeriodItem>
+    typealias SelectCityEvent = OptionalSelectorEvent<CityItem>
 }

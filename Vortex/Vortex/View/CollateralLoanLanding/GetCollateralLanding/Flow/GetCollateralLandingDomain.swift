@@ -39,7 +39,9 @@ extension GetCollateralLandingDomain {
     
     enum Navigation {
 
-        case createDraftCollateralLoanApplication(CreateDraftCollateralLoanApplicationDomain.Binder)
+        case createDraftCollateralLoanApplication(DraftDomain.Binder)
         case showBottomSheet(ExternalEvent.CaseType)
     }
+    
+    typealias DraftDomain = CreateDraftCollateralLoanApplicationDomain
 }

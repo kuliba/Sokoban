@@ -25,44 +25,40 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     var body: some View {
         
         RxWrapperView(model: binder.flow) { state, event in
-            
-            RxWrapperView(
-                model: binder.content,
-                makeContentView: makeContentView(state:event:)
-            )
-            .alert(
-                item: state.navigation?.alert,
-                content: makeAlert
-            )
-            .fullScreenCover(
-                cover: state.navigation?.cover,
-                content: fullScreenCoverView
-            )
+
+            content()
+                .alert(
+                    item: state.navigation?.alert,
+                    content: makeAlert
+                )
+                .fullScreenCover(
+                    cover: state.navigation?.cover,
+                    content: fullScreenCoverView
+                )
         }
     }
     
+    private func content() -> some View {
+
+        RxWrapperView(
+            model: binder.content,
+            makeContentView: makeContentView(state:event:)
+        )
+    }
+    
+    @ViewBuilder
     private func makeContentView(
-        state: State,
-        event: @escaping (Event) -> Void
+        state: State<Confirmation, InformerData>,
+        event: @escaping (Event<Confirmation, InformerData>) -> Void
     ) -> some View {
         
-        Group {
-            
-            if state.isLoading {
-                
-                Color.clear
-                    .loader(isLoading: true, color: .clear)
-            } else {
-                
-                content(state: state, event: event)
-            }
-        }
-        .frame(maxHeight: .infinity)
+        content(state: state, event: event)
+            .frame(maxHeight: .infinity)
     }
 
     private func content(
-        state: State,
-        event: @escaping (Event) -> Void
+        state: State<Confirmation, InformerData>,
+        event: @escaping (Event<Confirmation, InformerData>) -> Void
     ) -> some View {
 
         CreateDraftCollateralLoanApplicationView(
@@ -83,9 +79,9 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         }
     }
     
-    func buttonBack(event: @escaping (Event) -> Void) -> some View {
+    func buttonBack(event: @escaping (Event<TimedOTPInputViewModel, InformerData>) -> Void) -> some View {
         
-        Button(action: { event(.tappedBack) }) {
+        Button(action: { event(.back) }) {
             
             HStack {
                 Image.ic16ChevronLeft
@@ -100,6 +96,9 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         switch events {
         case let .showConsent(url):
             openURL(url)
+            
+        case .goToMain:
+            goToMain()
         }
     }
     
@@ -187,17 +186,25 @@ extension CreateDraftCollateralLoanApplicationWrapperView {
     typealias Event = Domain.Event
     typealias SaveConsentsResult = Domain.SaveConsentsResult
     typealias MakeAnywayElementModelMapper = () -> AnywayElementModelMapper
+    typealias Confirmation = CreateDraftCollateralLoanApplicationDomain.Confirmation
 }
 
+// MARK: UI mapping
+
 extension CreateDraftCollateralLoanApplicationDomain.Navigation {
-    
+
     var alert: Alert? {
         
         switch self {
-        case let .failure(failure):
-            return .failure(failure)
-            
-        case .success:
+        case let .failure(kind):
+            switch kind {
+            case let .timeout(informerPayload):
+                return .failure(informerPayload.message)
+
+            case let .error(message):
+                return .failure(message)
+            }
+        case .saveConsents(_):
             return nil
         }
     }
@@ -213,8 +220,8 @@ extension CreateDraftCollateralLoanApplicationDomain.Navigation {
         case .failure:
             return .failure
             
-        case let .success(success):
-            return .success(success)
+        case let .saveConsents(result):
+            return .success(result)
         }
     }
     

@@ -10,7 +10,8 @@ import PaymentComponents
 import SwiftUI
 import UIPrimitives
 
-struct CreateDraftCollateralLoanApplicationCityView: View {
+struct CreateDraftCollateralLoanApplicationCityView<Confirmation, InformerPayload>: View
+    where Confirmation: TimedOTPInputViewModel{
     
     let state: State
     let event: (Event) -> Void
@@ -34,7 +35,7 @@ struct CreateDraftCollateralLoanApplicationCityView: View {
             state: state.city,
             event: { event(.city($0)) },
             factory: .init(
-                makeIconView: { factory.makeImageViewWithMD5Hash(state.data.icons.city) },
+                makeIconView: { factory.makeImageViewWithMD5Hash(state.application.icons.city) },
                 makeItemLabel: { item in IconLabel(
                     text: item.title,
                     image: isItemSelected(item)
@@ -64,7 +65,7 @@ struct CreateDraftCollateralLoanApplicationCityView: View {
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewWithMD5Hash(state.data.icons.city) }
+            icon: { factory.makeImageViewWithMD5Hash(state.application.icons.city) }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
@@ -83,8 +84,8 @@ extension CreateDraftCollateralLoanApplicationCityView {
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    typealias State = Domain.State
-    typealias Event = Domain.Event
+    typealias State = Domain.State<Confirmation, InformerPayload>
+    typealias Event = Domain.Event<Confirmation, InformerPayload>
     typealias IconView = UIPrimitives.AsyncImage
     typealias CityItem = Domain.CityItem
     typealias SelectorView
@@ -93,33 +94,22 @@ extension CreateDraftCollateralLoanApplicationCityView {
 
 // MARK: - Previews
 
-struct CreateDraftCollateralLoanApplicationCityView_Previews: PreviewProvider {
+struct CreateDraftCollateralLoanApplicationCityView_Previews<Confirmation, InformerPayload>: PreviewProvider
+    where Confirmation: TimedOTPInputViewModel {
     
     static var previews: some View {
         
-        CreateDraftCollateralLoanApplicationCityView(
-            state: .init(
-                data: .preview,
-                stage: .correctParameters,
-                confirmation: .preview
-            ),
-            event: {
-                print($0)
-            },
+        CreateDraftCollateralLoanApplicationCityView<Confirmation, InformerPayload>(
+            state: .init(application: .preview, stage: .correctParameters),
+            event: { print($0) },
             config: .default,
             factory: .preview
         )
         .previewDisplayName("Edit mode")
 
-        CreateDraftCollateralLoanApplicationCityView(
-            state: .init(
-                data: .preview,
-                stage: .confirm,
-                confirmation: .preview
-            ),
-            event: {
-                print($0)
-            },
+        CreateDraftCollateralLoanApplicationCityView<Confirmation, InformerPayload>(
+            state: .init(application: .preview, stage: .confirm),
+            event: { print($0) },
             config: .default,
             factory: .preview
         )
@@ -128,5 +118,5 @@ struct CreateDraftCollateralLoanApplicationCityView_Previews: PreviewProvider {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias Data = CreateDraftCollateralLoanApplicationUIData
+    typealias Application = CreateDraftCollateralLoanApplication
 }

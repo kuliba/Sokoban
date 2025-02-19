@@ -32,9 +32,6 @@ public struct CreateDraftCollateralLoanApplicationFactory {
     public typealias MakeImageViewWithMD5Hash = ShowcaseFactory.MakeImageViewWithMD5Hash
     public typealias MakeImageViewWithURL = ShowcaseFactory.MakeImageViewWithURL
     public typealias GetPDFDocument = ShowcaseFactory.GetPDFDocument
-    public typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    public typealias Event = Domain.Event
-    public typealias EventDispatcher = (Event) -> Void
 }
 
 // MARK: Preview helpers
