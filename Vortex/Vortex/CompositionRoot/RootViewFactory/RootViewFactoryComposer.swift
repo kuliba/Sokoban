@@ -234,7 +234,7 @@ private extension RootViewFactoryComposer {
                 makePaymentCompleteView: makePaymentCompleteView,
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                 makeUserAccountView: makeUserAccountView,
-                components: makeViewComponents(), 
+                components: makeViewComponents(rootEvent: rootEvent),
                 makeCollateralLoanShowcaseWrapperView: makeCollateralLoanShowcaseWrapperView
             ),
             productProfileViewFactory: .init(
@@ -854,7 +854,7 @@ private extension RootViewFactoryComposer {
             makePaymentCompleteView: makePaymentCompleteView(result:goToMain:),
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView(viewModel:),
             makeUserAccountView: makeUserAccountView(viewModel:),
-            components: makeViewComponents(),
+            components: makeViewComponents(rootEvent: rootEvent),
             makeCollateralLoanShowcaseWrapperView: makeCollateralLoanShowcaseWrapperView
         )
     }

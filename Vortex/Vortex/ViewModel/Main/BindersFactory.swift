@@ -15,6 +15,7 @@ typealias MakeCollateralLoanLandingBinder = (String) -> GetCollateralLandingDoma
 typealias MakeSavingsAccountBinder = () -> SavingsAccountDomain.Binder
 typealias MakeCreateDraftCollateralLoanApplicationBinder = (CreateDraftCollateralLoanApplication)
     -> CreateDraftCollateralLoanApplicationDomain.Binder
+typealias MakeSavingsAccountNodes = (@escaping () -> Void) -> SavingsAccountNodes
 
 struct SavingsAccountNodes {
     
