@@ -11,11 +11,14 @@ public final class FormContentEffectHandler<Landing, InformerPayload> {
     
     private let load: Load
     private var oldLanding: Landing? = nil
+    private let getVerificationCode: GetVerificationCode
 
     public init(
-        load: @escaping Load
+        load: @escaping Load,
+        getVerificationCode: @escaping GetVerificationCode
     ) {
         self.load = load
+        self.getVerificationCode = getVerificationCode
     }
 }
 
@@ -41,6 +44,11 @@ public extension FormContentEffectHandler {
             }
         case .dismissInformer:
             dispatch(.dismissInformer(oldLanding))
+            
+        case .getVerificationCode:
+            getVerificationCode {
+                dispatch(.verificationCode($0))
+            }
         }
     }
 }
@@ -55,4 +63,29 @@ public extension FormContentEffectHandler {
     typealias DismissInformer = () -> Void
     typealias LoadLandingCompletion = (Result<Landing, BackendFailure<InformerPayload>>) -> Void
     typealias Load = (@escaping DismissInformer, @escaping LoadLandingCompletion) -> Void
+    
+    typealias GetVerificationCodeResult = Result<Int, BackendFailure<InformerPayload>>
+    typealias GetVerificationCodeCompletion = (GetVerificationCodeResult) -> Void
+    typealias GetVerificationCode = (@escaping GetVerificationCodeCompletion) -> Void
+}
+
+public struct MakeOpenSavingsAccountPayload: Equatable {
+    
+    public let amount: Double?
+    public let cryptoVersion: String?
+    public let currencyCode: Int?
+    public let sourceAccountId: Int?
+    public let sourceCardId: Int?
+    public let verificationCode: String
+}
+
+
+public struct MakeOpenSavingsAccountResponse: Equatable {
+    
+    public let amount: Double?
+    public let cryptoVersion: String?
+    public let currencyCode: Int?
+    public let sourceAccountId: Int?
+    public let sourceCardId: Int?
+    public let verificationCode: String
 }

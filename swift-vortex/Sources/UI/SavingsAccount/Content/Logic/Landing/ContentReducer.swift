@@ -71,6 +71,12 @@ public extension ContentReducer {
             
         case let .dismissInformer(oldLanding):
             state.status = .loaded(oldLanding)
+            
+        case .getVerificationCode:
+            break
+            
+        case .verificationCode:
+            break
         }
         
         return (state, effect)

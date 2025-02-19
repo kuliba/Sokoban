@@ -49,6 +49,12 @@ public extension FormContentReducer {
             
         case let .dismissInformer(oldLanding):
             state.status = .loaded(oldLanding)
+            
+        case .getVerificationCode:
+            effect = .getVerificationCode
+            
+        case let .verificationCode(code):
+            break
         }
         return (state, effect)
     }

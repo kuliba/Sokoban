@@ -44,6 +44,9 @@ public extension ContentEffectHandler {
             
         case .dismissInformer:
             dispatch(.dismissInformer(oldLanding))
+            
+        case .getVerificationCode:
+            break
         }
     }
 }

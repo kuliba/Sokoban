@@ -38,19 +38,40 @@ extension RootViewModelFactory {
             mapError: SavingsAccountDomain.ContentError.init(error:)
         )
 
-        let reducer = SavingsAccountDomain.OpenAccountContentReducer()
-        let effectHandler = SavingsAccountDomain.OpenAccountContentEffectHandler { dismissInformer, completion in
-            
-            getOpenAccount("") { [weak self] in
-                
-                if let self, case .informer = $0.failure?.kind {
-                    
-                    self.schedulers.background.delay(for: self.settings.informerDelay, dismissInformer)
-                }
+        let getVerificationCode = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createPrepareOpenSavingsAccountRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapPrepareOpenSavingsAccountResponse,
+            mapError: SavingsAccountDomain.ContentError.init(error:)
+        )
 
-                completion($0)
+        let reducer = SavingsAccountDomain.OpenAccountContentReducer()
+        let effectHandler = SavingsAccountDomain.OpenAccountContentEffectHandler(
+            load: { dismissInformer, completion in
+                
+                getOpenAccount("") { [weak self] in
+                    
+                    if let self, case .informer = $0.failure?.kind {
+                        
+                        self.schedulers.background.delay(for: self.settings.informerDelay, dismissInformer)
+                    }
+
+                    completion($0)
+                }
+            },
+            getVerificationCode: { completion in
+                
+                getVerificationCode(()) {
+                    
+                    switch $0 {
+                    case let .failure(failure):
+                        completion(.failure(failure))
+                        
+                    default:
+                        completion(.success(1))
+                    }
+                }
             }
-        }
+        )
         
         return .init(
             initialState: .init(status: status, navTitle: .init(title: "", subtitle: "")),

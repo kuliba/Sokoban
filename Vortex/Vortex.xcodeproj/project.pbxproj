@@ -2885,6 +2885,9 @@
 		838C09242C8B59C400E894AC /* NanoServices+makeGetBannersList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838C09202C8B59C400E894AC /* NanoServices+makeGetBannersList.swift */; };
 		838C09252C8B59C400E894AC /* RootViewModelFactory+makeLoadBannersList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838C09212C8B59C400E894AC /* RootViewModelFactory+makeLoadBannersList.swift */; };
 		838C09602C8DD9E700E894AC /* Banners in Frameworks */ = {isa = PBXBuildFile; productRef = 838C095F2C8DD9E700E894AC /* Banners */; };
+		838DCBE82D65E054009BE9DF /* RequestFactory+createPrepareOpenSavingsAccountRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838DCBE72D65E054009BE9DF /* RequestFactory+createPrepareOpenSavingsAccountRequest.swift */; };
+		838DCBEA2D65F637009BE9DF /* RequestFactory+createChangeSVCardLimitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838DCBE92D65F637009BE9DF /* RequestFactory+createChangeSVCardLimitTests.swift */; };
+		838DCBED2D65F73E009BE9DF /* RequestFactory_createPrepareOpenSavingsAccountRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838DCBEC2D65F73E009BE9DF /* RequestFactory_createPrepareOpenSavingsAccountRequestTests.swift */; };
 		838F00912D40EEC00032EE92 /* PromoProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838F00902D40EEC00032EE92 /* PromoProduct.swift */; };
 		839109262C381C8B007F5257 /* Services+makeGetSVCardLimitsServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839109252C381C8B007F5257 /* Services+makeGetSVCardLimitsServices.swift */; };
 		839109282C381D86007F5257 /* GetSVCardLimitsServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839109272C381D86007F5257 /* GetSVCardLimitsServices.swift */; };
@@ -6473,7 +6476,6 @@
 		8328ABF42C3BFF4900AD05E0 /* Services+makeChangeSVCardLimitServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeChangeSVCardLimitServices.swift"; sourceTree = "<group>"; };
 		8328ABF62C3BFF7C00AD05E0 /* ChangeSVCardLimitServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeSVCardLimitServices.swift; sourceTree = "<group>"; };
 		8328ABF82C3C018000AD05E0 /* RequestFactory+createChangeSVCardLimitRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createChangeSVCardLimitRequest.swift"; sourceTree = "<group>"; };
-		8328ABFA2C3C033900AD05E0 /* RequestFactory+createChangeSVCardLimitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "RequestFactory+createChangeSVCardLimitTests.swift"; path = "ForaBankTests/Services/RequestFactory/RequestFactory+createChangeSVCardLimitTests.swift"; sourceTree = SOURCE_ROOT; };
 		832CB0A22D3E780500370E7F /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		832CB0A42D3E822900370E7F /* CarouselWithPromoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselWithPromoView.swift; sourceTree = "<group>"; };
 		832CB0A62D3FEC1700370E7F /* Logic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logic.swift; sourceTree = "<group>"; };
@@ -6589,6 +6591,9 @@
 		838C091F2C8B59C400E894AC /* ItemsWithSerial+BannersData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ItemsWithSerial+BannersData.swift"; sourceTree = "<group>"; };
 		838C09202C8B59C400E894AC /* NanoServices+makeGetBannersList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NanoServices+makeGetBannersList.swift"; sourceTree = "<group>"; };
 		838C09212C8B59C400E894AC /* RootViewModelFactory+makeLoadBannersList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeLoadBannersList.swift"; sourceTree = "<group>"; };
+		838DCBE72D65E054009BE9DF /* RequestFactory+createPrepareOpenSavingsAccountRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createPrepareOpenSavingsAccountRequest.swift"; sourceTree = "<group>"; };
+		838DCBE92D65F637009BE9DF /* RequestFactory+createChangeSVCardLimitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createChangeSVCardLimitTests.swift"; sourceTree = "<group>"; };
+		838DCBEC2D65F73E009BE9DF /* RequestFactory_createPrepareOpenSavingsAccountRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestFactory_createPrepareOpenSavingsAccountRequestTests.swift; sourceTree = "<group>"; };
 		838F00902D40EEC00032EE92 /* PromoProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromoProduct.swift; sourceTree = "<group>"; };
 		839109252C381C8B007F5257 /* Services+makeGetSVCardLimitsServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeGetSVCardLimitsServices.swift"; sourceTree = "<group>"; };
 		839109272C381D86007F5257 /* GetSVCardLimitsServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetSVCardLimitsServices.swift; sourceTree = "<group>"; };
@@ -9388,9 +9393,10 @@
 		2A2E3FBE2BB2C6D500730D37 /* RequestFactory */ = {
 			isa = PBXGroup;
 			children = (
+				838DCBEB2D65F71D009BE9DF /* SavingsAccount */,
 				8391092B2C382A6F007F5257 /* RequestFactory+createGetSVCardLimitsTests.swift */,
-				8328ABFA2C3C033900AD05E0 /* RequestFactory+createChangeSVCardLimitTests.swift */,
 				2AE838E42C6B3A6B009E1E39 /* RequestFactory+createGetServiceCategoryListRequestTests.swift */,
+				838DCBE92D65F637009BE9DF /* RequestFactory+createChangeSVCardLimitTests.swift */,
 				2A79A5282C8A03DB00224469 /* RequestFactory+createGetPaymentTemplateListRequestV3Tests.swift */,
 				2A2E3FBF2BB2C6DF00730D37 /* AnywayPayment */,
 				C17F3C932BF2631800AE1EB4 /* LatestPayments */,
@@ -16276,6 +16282,7 @@
 			children = (
 				2A5D6F522D5D251F0011C09E /* RequestFactory+createGetSavingLanding.swift */,
 				8342393F2D4D55100074D331 /* RequestFactory+createGetOpenAccountFormRequest.swift */,
+				838DCBE72D65E054009BE9DF /* RequestFactory+createPrepareOpenSavingsAccountRequest.swift */,
 			);
 			path = SavingsAccount;
 			sourceTree = "<group>";
@@ -16399,6 +16406,14 @@
 				838C09212C8B59C400E894AC /* RootViewModelFactory+makeLoadBannersList.swift */,
 			);
 			path = LoadBannersList;
+			sourceTree = "<group>";
+		};
+		838DCBEB2D65F71D009BE9DF /* SavingsAccount */ = {
+			isa = PBXGroup;
+			children = (
+				838DCBEC2D65F73E009BE9DF /* RequestFactory_createPrepareOpenSavingsAccountRequestTests.swift */,
+			);
+			path = SavingsAccount;
 			sourceTree = "<group>";
 		};
 		839331932C8EEC5500D15379 /* v2 */ = {
@@ -22469,6 +22484,7 @@
 				833D3E212C2DAD76006626F2 /* ControlPanelPanelViewConfig+ext.swift in Sources */,
 				77BF27AF284651D4009624BB /* Model+Formatters.swift in Sources */,
 				77448C1328734643009EEEA8 /* ChangeReturnView+Legacy.swift in Sources */,
+				838DCBE82D65E054009BE9DF /* RequestFactory+createPrepareOpenSavingsAccountRequest.swift in Sources */,
 				68FFA5402682C6CF002DADFA /* LastPaymentsCollectionViewCell.swift in Sources */,
 				2ACFD6672C5CDDF2003F08AE /* QRScanResultMapperComposer.swift in Sources */,
 				2AFC3A932C53C721000252A1 /* PaymentProviderServicePickerFlowModelFactory.swift in Sources */,
@@ -23918,6 +23934,7 @@
 				2AC2ADB62B221D4F0049EE9B /* QRResolverTests.swift in Sources */,
 				C1A7FF222A8DC6ED00FBDFA3 /* Model+SbpPayTests.swift in Sources */,
 				83B2B8892AE94E2A00DAD486 /* ContactsListSectionViewModelTests.swift in Sources */,
+				838DCBED2D65F73E009BE9DF /* RequestFactory_createPrepareOpenSavingsAccountRequestTests.swift in Sources */,
 				834838F32AEBE6CE001E5DBA /* ContactsListSectionViewModelTests.swift in Sources */,
 				2A9338632A17CF1200397C88 /* PhoneValidatorTests.swift in Sources */,
 				2AC2ADB92B2240EC0049EE9B /* RequestFactory+getSberQRDataTests.swift in Sources */,
@@ -24006,6 +24023,7 @@
 				8353CD5E2B57C2FE005F7D1A /* Services+getCardStatementServiceTests.swift in Sources */,
 				2AC396A72A3CAAFB00A26938 /* PaymentsOperationSourceAvtodorCase.swift in Sources */,
 				68DF16D72808A741005D8D3E /* ProductModelTests.swift in Sources */,
+				838DCBEA2D65F637009BE9DF /* RequestFactory+createChangeSVCardLimitTests.swift in Sources */,
 				2A8A28442A4089FF000D3807 /* LocalAgentStub+convenience.swift in Sources */,
 				2AE9835329A238C10001DF72 /* ArrayOfProductViewModelHelpersTests.swift in Sources */,
 				2A2E3FD02BB3F22600730D37 /* RequestFactory+createCreateAnywayTransferRequestTests.swift in Sources */,
