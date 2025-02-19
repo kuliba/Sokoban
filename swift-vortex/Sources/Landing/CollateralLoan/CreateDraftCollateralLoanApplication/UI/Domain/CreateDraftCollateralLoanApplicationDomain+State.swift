@@ -14,17 +14,6 @@ import Combine
 
 extension CreateDraftCollateralLoanApplicationDomain {
     
-//    public struct Confirmation {
-//        
-//        public let otpViewModel: TimedOTPInputViewModel
-//        
-//        public init(
-//            otpViewModel: TimedOTPInputViewModel
-//        ) {
-//            self.otpViewModel = otpViewModel
-//        }
-//    }
-    
     public struct State<Confirmation, InformerPayload> where Confirmation: TimedOTPInputViewModel {
         
         public let application: Application
