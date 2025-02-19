@@ -40,6 +40,7 @@ let package = Package(
         .genericLoader,
         .keyChainStore,
         .serialComponents,
+        .stateMachines,
         // Payments
         .anywayPayment,
         .c2g,
@@ -186,6 +187,8 @@ let package = Package(
         .keyChainStoreTests,
         .serialComponents,
         .serialComponentsTests,
+        .stateMachines,
+        .stateMachinesTests,
         // Payments
         .anywayPaymentAdapters,
         .anywayPaymentAdaptersTests,
@@ -859,6 +862,13 @@ private extension Product {
         name: .serialComponents,
         targets: [
             .serialComponents
+        ]
+    )
+    
+    static let stateMachines = library(
+        name: .stateMachines,
+        targets: [
+            .stateMachines
         ]
     )
     
@@ -1695,6 +1705,24 @@ private extension Target {
             .serialComponents,
         ],
         path: "Tests/Infra/\(String.serialComponentsTests)"
+    )
+    
+    static let stateMachines = target(
+        name: .stateMachines,
+        dependencies: [
+            .vortexTools,
+        ],
+        path: "Sources/Infra/\(String.stateMachines)"
+    )
+    static let stateMachinesTests = testTarget(
+        name: .stateMachinesTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .stateMachines,
+        ],
+        path: "Tests/Infra/\(String.stateMachinesTests)"
     )
     
     // MARK: - Payments
@@ -3861,6 +3889,10 @@ private extension Target.Dependency {
         name: .serialComponents
     )
     
+    static let stateMachines = byName(
+        name: .stateMachines
+    )
+    
     // MARK: - Payments
     
     static let anywayPaymentAdapters = byName(
@@ -4294,6 +4326,9 @@ private extension String {
     
     static let serialComponents = "SerialComponents"
     static let serialComponentsTests = "SerialComponentsTests"
+    
+    static let stateMachines = "StateMachines"
+    static let stateMachinesTests = "StateMachinesTests"
     
     // MARK: - Payments
     
