@@ -27,36 +27,33 @@ struct CollateralLoanShowcaseWrapperView: View {
         
         RxWrapperView(model: binder.flow) { state, event in
             
-            RxWrapperView(
-                model: binder.content,
-                makeContentView: content(state:event:)
-            )
-            .navigationDestination(
-                destination: state.navigation,
-                content: destinationView
-            )
+            content()
+                .navigationDestination(
+                    destination: state.navigation,
+                    content: destinationView
+                )
         }
     }
     
-    private func content(
-        state: GetShowcaseDomain.State,
-        event: @escaping (GetShowcaseDomain.Event) -> Void
-    ) -> some View {
+    private func content() -> some View {
         
-        Group {
+        RxWrapperView(model: binder.content) { state, event in
             
-            switch state.showcase {
-            case .none:
-                Color.clear
-                    .loader(isLoading: state.showcase == nil, color: .clear)
+            Group {
                 
-            case let .some(showcase):
-                getShowcaseView(showcase)
+                switch state.showcase {
+                case .none:
+                    Color.clear
+                        .loader(isLoading: state.showcase == nil, color: .clear)
+                    
+                case let .some(showcase):
+                    getShowcaseView(showcase)
+                }
             }
+            .onFirstAppear { event(.load) }
         }
-        .onFirstAppear { event(.load) }
     }
-    
+        
     private func getShowcaseView(_ showcase: GetShowcaseDomain.ShowCase) -> some View {
         
         CollateralLoanLandingGetShowcaseView(
@@ -86,6 +83,7 @@ struct CollateralLoanShowcaseWrapperView: View {
         
         switch navigation {
         case let .landing(_, landing):
+            // TODO: Remove to factory
             CollateralLoanLandingWrapperView(
                 binder: landing,
                 factory: .init(
