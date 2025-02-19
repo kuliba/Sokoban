@@ -1,5 +1,5 @@
 //
-//  RootViewFactory+makeCategoryPickerSectionView.swift
+//  ViewComponents+makeCategoryPickerSectionView.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 29.11.2024.
@@ -78,8 +78,32 @@ extension ViewComponents {
             case let .legacy(paymentsViewModel):
                 makePaymentsView(paymentsViewModel)
                 
-            case .v1:
-                Text("TBD: New Taxes Services Picker")
+            case let .v1(node):
+                // TODO: extract
+                RxWrapperView(model: node.model.flow) { state, event in
+                    
+                    makePaymentsView(node.model.content, isRounded: true)
+                        .navigationBarHidden(true)
+                        .navigationBar(with: navBarModelWithQR(
+                            title: "Налоги и госуслуги",
+                            dismiss: dismiss
+                        ))
+                        .navigationLink(
+                            value: state.navigation,
+                            dismiss: { event(.dismiss) },
+                            content: {
+                            
+                                switch $0 {
+                                case let .searchByUIN(searchByUIN):
+                                    makeSearchByUINView(
+                                        binder: searchByUIN,
+                                        dismiss: { event(.dismiss) },
+                                        scanQR: { rootEvent(.scanQR) }
+                                    )
+                                }
+                            }
+                        )
+                }
             }
             
         case let .transport(transport):
@@ -174,8 +198,8 @@ extension CategoryPickerSectionDomain.Destination: Identifiable {
             case let .legacy(paymentsViewModel):
                 return .init(paymentsViewModel)
                 
-            case let .v1(v1):
-                return .init(v1)
+            case let .v1(node):
+                return .init(node.model)
             }
             
         case let .transport(transport):

@@ -25,6 +25,8 @@ extension NavigationBarView {
         
         @Published var background: Color
         @Published var foreground: Color
+        @Published var subtitleForeground: Color
+
         @Published var backgroundDimm: BackgroundColorDimm?
         
         init(title: String = "",
@@ -35,7 +37,9 @@ extension NavigationBarView {
              rightItems: [ItemViewModel] = [],
              background: Color = Color.textWhite,
              foreground: Color = Color.textSecondary,
-             backgroundDimm: BackgroundColorDimm? = nil) {
+             subtitleForeground: Color = Color.textSecondary,
+             backgroundDimm: BackgroundColorDimm? = nil
+        ) {
             
             self.title = title
             self.titleButton = titleButton
@@ -45,6 +49,7 @@ extension NavigationBarView {
             self.rightItems = rightItems
             self.background = background
             self.foreground = foreground
+            self.subtitleForeground = subtitleForeground
             self.backgroundDimm = backgroundDimm
         }
 
@@ -325,7 +330,7 @@ struct NavigationBarView: View {
                         
                         Text(subtitle)
                             .font(.textBodySR12160())
-                            .foregroundColor(viewModel.foreground)
+                            .foregroundColor(viewModel.subtitleForeground)
                             .lineLimit(1)
                             .opacity(viewModel.opacity)
                             .accessibilityIdentifier("NavigationBarSubTitle")

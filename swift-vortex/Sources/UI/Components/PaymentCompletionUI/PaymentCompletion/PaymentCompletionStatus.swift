@@ -9,9 +9,9 @@ import SwiftUI
 
 struct PaymentCompletionStatus {
     
-    let status: Status
-    let formattedAmount: String
+    let formattedAmount: String?
     let merchantIcon: String?
+    let status: Status
     
     struct Status: Equatable {
         

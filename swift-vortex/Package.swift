@@ -40,6 +40,7 @@ let package = Package(
         .genericLoader,
         .keyChainStore,
         .serialComponents,
+        .stateMachines,
         // Payments
         .anywayPayment,
         .c2g,
@@ -77,6 +78,7 @@ let package = Package(
         .getProductListByTypeService,
         .getProductListByTypeV6Service,
         .getProductListByTypeV7Service,
+        .getSplashScreenServices,
         .getClientInformDataServices,
         .savingsServices,
         .getCardOrderFormService,
@@ -185,6 +187,8 @@ let package = Package(
         .keyChainStoreTests,
         .serialComponents,
         .serialComponentsTests,
+        .stateMachines,
+        .stateMachinesTests,
         // Payments
         .anywayPaymentAdapters,
         .anywayPaymentAdaptersTests,
@@ -199,6 +203,7 @@ let package = Package(
         .c2gBackendTests,
         .c2gCore,
         .c2gCoreTests,
+        .c2gUI,
         .latestPaymentsBackendV2,
         .latestPaymentsBackendV2Tests,
         .latestPaymentsBackendV3,
@@ -264,6 +269,8 @@ let package = Package(
         .getProductListByTypeV6ServiceTests,
         .getProductListByTypeV7Service,
         .getProductListByTypeV7ServiceTests,
+        .getSplashScreenServices,
+        .getSplashScreenServicesTests,
         .getClientInformDataServices,
         .getClientInformDataServicesTests,
         .savingsServices,
@@ -858,6 +865,13 @@ private extension Product {
         ]
     )
     
+    static let stateMachines = library(
+        name: .stateMachines,
+        targets: [
+            .stateMachines
+        ]
+    )
+    
     // MARK: - Payments
     
     static let anywayPayment = library(
@@ -876,6 +890,7 @@ private extension Product {
         targets: [
             .c2gBackend,
             .c2gCore,
+            .c2gUI,
         ]
     )
     
@@ -1108,6 +1123,13 @@ private extension Product {
         name: .getClientInformDataServices,
         targets: [
             .getClientInformDataServices
+        ]
+    )
+
+    static let getSplashScreenServices = library(
+        name: .getSplashScreenServices,
+        targets: [
+            .getSplashScreenServices
         ]
     )
     
@@ -1688,6 +1710,24 @@ private extension Target {
         path: "Tests/Infra/\(String.serialComponentsTests)"
     )
     
+    static let stateMachines = target(
+        name: .stateMachines,
+        dependencies: [
+            .vortexTools,
+        ],
+        path: "Sources/Infra/\(String.stateMachines)"
+    )
+    static let stateMachinesTests = testTarget(
+        name: .stateMachinesTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .stateMachines,
+        ],
+        path: "Tests/Infra/\(String.stateMachinesTests)"
+    )
+    
     // MARK: - Payments
     
     static let anywayPaymentAdapters = target(
@@ -1843,6 +1883,15 @@ private extension Target {
             .uiPrimitives,
         ],
         path: "Tests/Payments/C2G/CoreTests"
+    )
+
+    static let c2gUI = target(
+        name: .c2gUI,
+        dependencies: [
+            .paymentCompletionUI,
+            .uiPrimitives,
+        ],
+        path: "Sources/Payments/C2G/UI"
     )
     
     static let latestPaymentsBackendV2 = target(
@@ -2520,7 +2569,6 @@ private extension Target {
         ]
     )
 
-
     static let getClientInformDataServices = target(
         name: .getClientInformDataServices,
         dependencies: [
@@ -2541,6 +2589,22 @@ private extension Target {
         resources: [
 
         ]
+    )
+
+    static let getSplashScreenServices = target(
+        name: .getSplashScreenServices,
+        dependencies: [
+            .remoteServices
+        ],
+        path: "Sources/Services/\(String.getSplashScreenServices)"
+    )
+    
+    static let getSplashScreenServicesTests = testTarget(
+        name: .getSplashScreenServicesTests,
+        dependencies: [
+            .getSplashScreenServices
+        ],
+        path: "Tests/Services/\(String.getSplashScreenServicesTests)"
     )
     
     static let savingsServices = target(
@@ -3828,6 +3892,10 @@ private extension Target.Dependency {
         name: .serialComponents
     )
     
+    static let stateMachines = byName(
+        name: .stateMachines
+    )
+    
     // MARK: - Payments
     
     static let anywayPaymentAdapters = byName(
@@ -3856,6 +3924,10 @@ private extension Target.Dependency {
     
     static let c2gCore = byName(
         name: .c2gCore
+    )
+    
+    static let c2gUI = byName(
+        name: .c2gUI
     )
     
     static let latestPaymentsBackendV2 = byName(
@@ -3994,6 +4066,10 @@ private extension Target.Dependency {
 
     static let getClientInformDataServices = byName(
         name: .getClientInformDataServices
+    )
+
+    static let getSplashScreenServices = byName(
+        name: .getSplashScreenServices
     )
     
     static let savingsServices = byName(
@@ -4254,6 +4330,9 @@ private extension String {
     static let serialComponents = "SerialComponents"
     static let serialComponentsTests = "SerialComponentsTests"
     
+    static let stateMachines = "StateMachines"
+    static let stateMachinesTests = "StateMachinesTests"
+    
     // MARK: - Payments
     
     static let anywayPayment = "AnywayPayment"
@@ -4274,6 +4353,8 @@ private extension String {
     
     static let c2gCore = "C2GCore"
     static let c2gCoreTests = "C2GCoreTests"
+
+    static let c2gUI = "C2GUI"
     
     static let latestPaymentsBackendV2 = "LatestPaymentsBackendV2"
     static let latestPaymentsBackendV2Tests = "LatestPaymentsBackendV2Tests"
@@ -4377,6 +4458,9 @@ private extension String {
 
     static let getClientInformDataServices = "GetClientInformDataServices"
     static let getClientInformDataServicesTests = "GetClientInformDataServicesTests"
+
+    static let getSplashScreenServices = "GetSplashScreenServices"
+    static let getSplashScreenServicesTests = "GetSplashScreenServicesTests"
     
     static let savingsServices = "SavingsServices"
     static let savingsServicesTests = "SavingsServicesTests"

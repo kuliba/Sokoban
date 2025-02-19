@@ -176,8 +176,8 @@ extension RootViewFactoryComposer {
             makeOperationDetailView: makeOperationDetailView,
             makePaymentsMeToMeView: makePaymentsMeToMeView,
             makePaymentsServicesOperatorsView: makePaymentsServicesOperatorsView,
-            makePaymentsSuccessView: makePaymentsSuccessView,
-            makePaymentsView: makePaymentsView,
+            makePaymentsSuccessView: makePaymentsSuccessView, 
+            makeCategoryView: makeCategoryView(savingsAccountFlag: savingsAccountFlag.isActive),
             makeProductProfileView: {
                 
                 self.makeProductProfileView(viewModel: $0, rootEvent: rootEvent)
@@ -665,7 +665,7 @@ private extension RootViewFactoryComposer {
         viewModel: PaymentsServiceViewModel
     ) -> PaymentsServiceView {
         
-        return .init(viewModel: viewModel, viewFactory: makePaymentsServiceViewFactory())
+        return .init(viewModel: viewModel, isRounded: false, viewFactory: makePaymentsServiceViewFactory())
     }
     
     func makePaymentsServiceViewFactory(
@@ -952,7 +952,7 @@ private extension RootViewFactoryComposer {
                 makeTemplateButton: makeTemplateButtonView(with: result),
                 makeTemplateButtonWrapperView: makeTemplateButtonWrapperView
             ),
-            config: .iVortex
+            config: .payment
         )
     }
     

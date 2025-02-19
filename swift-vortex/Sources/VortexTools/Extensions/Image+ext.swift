@@ -5,11 +5,11 @@
 //  Created by Igor Malyarov on 14.12.2023.
 //
 
+#if os(iOS)
 import Foundation
 import SVGKit
 import SwiftUI
 
-#if os(iOS)
 public extension Image {
     
     init?(svg: String, retry attempts: Int = 0) {

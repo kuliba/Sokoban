@@ -28,11 +28,11 @@ common:
 # [optional] iOS export parameters
 ios:
   # Path to xcodeproj
-  xcodeprojPath: "./ForaBank.xcodeproj"
+  xcodeprojPath: "./Vortex.xcodeproj"
   # Xcode Target containing resources and corresponding swift code
-  target: "ForaBank"
+  target: "Vortex"
   # Absolute or relative path to the Assets.xcassets directory
-  xcassetsPath: "./ForaBank/Assets.xcassets"
+  xcassetsPath: "./Vortex/Assets.xcassets"
   # Is Assets.xcassets located in the main bundle?
   xcassetsInMainBundle: true
   # [optional] Is Assets.xcassets located in a swift package? Default value is false.
@@ -49,7 +49,7 @@ ios:
     # [optional] Absolute or relative path to swift file where to export UIKit colors (UIColor) for accessing from the code (e.g. UIColor.backgroundPrimary)
     # colorSwift: "./FigmaExportSample/Extensions/UIColor+Extensions.swift"
     # [optional] Absolute or relative path to swift file where to export SwiftUI colors (Color) for accessing from the code (e.g. Color.backgroundPrimary)
-    swiftuiColorSwift: "./ForaBank/Extensions/Assets/Color+Assets.swift"
+    swiftuiColorSwift: "./Vortex/Extensions/Assets/Color+Assets.swift"
 
   # Parameters for exporting icons
   icons:
@@ -65,7 +65,7 @@ ios:
     # - ic24TabBarEvents
     # - ic24TabBarProfile
     # [optional] Absolute or relative path to swift file where to export icons (SwiftUI’s Image) for accessing from the code (e.g. Image.illZeroNoInternet)
-    swiftUIImageSwift: "./ForaBank/Extensions/Assets/Image+Icons.swift"
+    swiftUIImageSwift: "./Vortex/Extensions/Assets/Image+Icons.swift"
     # [optional] Absolute or relative path to swift file where to generate extension for UIImage for accessing icons from the code (e.g. UIImage.ic24ArrowRight)
     # imageSwift: "./FigmaExportSample/Extensions/UIImage+Extensions.swift"
 
@@ -76,7 +76,7 @@ ios:
     # Image name style: camelCase or snake_case
     nameStyle: camelCase
     # [optional] Absolute or relative path to swift file where to export images (SwiftUI’s Image) for accessing from the code (e.g. Image.illZeroNoInternet)
-    swiftUIImageSwift: "./ForaBank/Extensions/Assets/Image+Illustrations.swift"
+    swiftUIImageSwift: "./Vortex/Extensions/Assets/Image+Illustrations.swift"
     # [optional] Absolute or relative path to swift file where to generate extension for UIImage for accessing illustrations from the code (e.g. UIImage.illZeroNoInternet)
     # imageSwift: "./Example/Source/UIImage+extension_illustrations.swift"
 
@@ -85,7 +85,7 @@ ios:
     # [optional] Absolute or relative path to swift file where to export UIKit fonts (UIFont extension).
     # fontSwift: "./Source/UIComponents/UIFont+extension.swift"
     # [optional] Absolute or relative path to swift file where to export SwiftUI fonts (Font extension).
-    swiftUIFontSwift: "./ForaBank/Extensions/Assets/Font+Assets.swift"
+    swiftUIFontSwift: "./Vortex/Extensions/Assets/Font+Assets.swift"
     # Should FigmaExport generate UILabel for each text style (font)? E.g. HeaderLabel, BodyLabel, CaptionLabel
     generateLabels: false
     # Relative or absolute path to directory where to place UILabel for each text style (font) (Requred if generateLabels = true)

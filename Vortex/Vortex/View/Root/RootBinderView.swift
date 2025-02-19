@@ -219,7 +219,7 @@ extension RootViewFactory {
                 makeAnywayServicePickerFlowView: components.makeAnywayServicePickerFlowView,
                 makeIconView: makeIconView,
                 makeOperatorView: InternetTVDetailsView.init,
-                makePaymentsView: components.makePaymentsView,
+                makePaymentsView: { components.makePaymentsView($0, isRounded: false) },
                 makeQRFailedWrapperView: components.makeQRFailedWrapperView,
                 makeQRSearchOperatorView: components.makeQRSearchOperatorView,
                 makeQRView: components.makeQRView,

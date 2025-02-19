@@ -99,6 +99,7 @@ extension Services {
             case getAuthorizedZoneClientInformData
             case getBankDefault
             case getBannerCatalogList
+            case getBannersMyProductList
             case getC2BSub
             case getCardOrderForm
             case getCardStatementForPeriod
@@ -312,6 +313,12 @@ extension Services.Endpoint {
         pathPrefix: .dict,
         version: .v2,
         serviceName: .getBannerCatalogList
+    )
+
+    static let getBannersMyProductListV2: Self = .init(
+        pathPrefix: .dict,
+        version: .v2,
+        serviceName: .getBannersMyProductList
     )
 
     static let getC2BSub: Self = .init(

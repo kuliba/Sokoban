@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "39DAE103-264C-4F50-9419-5192FB426376",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "StateMachinesTests",
+        "name" : "StateMachinesTests"
+      }
+    }
+  ],
+  "version" : 1
+}

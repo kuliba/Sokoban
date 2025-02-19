@@ -58,6 +58,7 @@ struct SavingsAccountBinderView: View {
                                 factory: factory
                             )
                             .onFirstAppear { contentEvent(.load) }
+                            .onAppear { flowEvent(.dismiss) }
                         }
                     },
                     informerView: informerView
@@ -66,6 +67,7 @@ struct SavingsAccountBinderView: View {
                 .navigationBarWithBack(
                     title: contentState.navTitle.title,
                     subtitle: contentState.navTitle.subtitle,
+                    subtitleForegroundColor: .textPlaceholder,
                     dismiss: { flowEvent(.dismiss) }
                 )
                 .navigationDestination(

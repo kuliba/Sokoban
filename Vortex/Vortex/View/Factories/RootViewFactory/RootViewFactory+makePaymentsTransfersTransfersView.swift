@@ -58,7 +58,7 @@ private extension ViewComponents {
         return .init(
             makeContactsView: makeContactsView,
             makePaymentsMeToMeView: makePaymentsMeToMeView,
-            makePaymentsView: makePaymentsView,
+            makePaymentsView: { makePaymentsView($0, isRounded: false) },
             makePaymentsSuccessView: makePaymentsSuccessView
         )
     }

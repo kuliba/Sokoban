@@ -417,8 +417,19 @@ extension RootViewModelFactory {
         updateClientInformAlerts()
             .store(in: &bindings)
         
+        let bannersBox = makeBannersBox(flags: featureFlags)
+        
+        if featureFlags.needGetBannersMyProductListV2 {
+            
+            performOrWaitForAuthorized { [weak bannersBox] in
+                
+                bannersBox?.requestUpdate()
+            }
+        }
+        
         let rootViewModel = make(
-            featureFlags: featureFlags,
+            featureFlags: featureFlags, 
+            bannersBox: bannersBox,
             splash: splash,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeTemplates: makeMakeTemplates(featureFlags.paymentsTransfersFlag),
@@ -505,6 +516,16 @@ extension RootViewModelFactory {
         )
         
         return composer.compose(with: rootViewModel)
+    }
+}
+
+extension FeatureFlags {
+    
+    var needGetBannersMyProductListV2: Bool {
+        
+        return savingsAccountFlag.isActive ||
+        collateralLoanLandingFlag.isActive ||
+        orderCardFlag.isActive
     }
 }
 
@@ -804,6 +825,7 @@ private extension RootViewModelFactory {
     
     func make(
         featureFlags: FeatureFlags,
+        bannersBox: any BannersBoxInterface<BannerList>,
         splash: SplashScreenViewModel,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeTemplates: @escaping PaymentsTransfersFactory.MakeTemplates,
@@ -873,9 +895,10 @@ private extension RootViewModelFactory {
                 featureFlags.c2gFlag
             )
         )
-                
+                  
         let mainViewModel = MainViewModel(
-            model,
+            model, 
+            bannersBox: bannersBox,
             navigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             landingServices: landingServices,

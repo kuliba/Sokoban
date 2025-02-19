@@ -685,8 +685,22 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "GetSplashScreenServicesTests",
+        "name" : "GetSplashScreenServicesTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
         "identifier" : "OrderCardLandingUITests",
         "name" : "OrderCardLandingUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "StateMachinesTests",
+        "name" : "StateMachinesTests"
       }
     }
   ],

@@ -101,6 +101,7 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
+            bannersBox: BannersBox(load: { $0(nil) }),
             navigationStateManager: .preview,
             sberQRServices: .empty(),
             landingServices: .empty(),
@@ -721,6 +722,7 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
+            bannersBox: BannersBox(load: { $0(nil) }),
             navigationStateManager: .preview,
             sberQRServices: sberQRServices,
            // qrViewModelFactory: qrViewModelFactory,
@@ -792,6 +794,7 @@ final class MainViewModelTests: XCTestCase {
 
         let sut = MainViewModel(
             model,
+            bannersBox: BannersBox(load: { $0(nil) }),
             navigationStateManager: .preview,
             sberQRServices: sberQRServices,
             landingServices: .empty(),
@@ -876,6 +879,7 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
+            bannersBox: BannersBox(load: { $0(nil) }),
             navigationStateManager: .preview,
             sberQRServices: .empty(),
             landingServices: .empty(),
@@ -950,7 +954,7 @@ final class MainViewModelTests: XCTestCase {
     ) throws -> LocalAgent {
         
         let localAgent = LocalAgent(context: LocalAgentTests.context)
-        let stickerData: StickerBannersMyProductList = .init(
+        let stickerData: CardBannerList = .init(
             productName: "productName",
             link: "link",
             md5hash: md5hash,

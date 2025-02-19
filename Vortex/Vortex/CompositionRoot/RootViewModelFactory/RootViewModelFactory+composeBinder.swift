@@ -27,7 +27,7 @@ extension RootViewModelFactory {
     func composeBinder<Content, Select, Navigation>(
         content: Content,
         initialState: FlowDomain<Select, Navigation>.State = .init(),
-        delayProvider: @escaping (Navigation) -> Delay,
+        delayProvider: @escaping (Navigation) -> Delay = { _ in .zero },
         getNavigation: @escaping FlowDomain<Select, Navigation>.GetNavigation,
         witnesses: ContentWitnesses<Content, FlowEvent<Select, Never>>
     ) -> Binder<Content, FlowDomain<Select, Navigation>.Flow> {
@@ -61,7 +61,7 @@ extension RootViewModelFactory {
     func composeBinder<Content, Select, Navigation>(
         content: Content,
         initialState: FlowDomain<Select, Navigation>.State = .init(),
-        delayProvider: @escaping (Navigation) -> Delay,
+        delayProvider: @escaping (Navigation) -> Delay = { _ in .zero },
         getNavigation: @escaping FlowDomain<Select, Navigation>.GetNavigation,
         selectWitnesses witnesses: ContentWitnesses<Content, Select>
     ) -> Binder<Content, FlowDomain<Select, Navigation>.Flow> {
