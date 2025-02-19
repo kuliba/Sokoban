@@ -265,8 +265,11 @@ extension OrderCardLandingUI.HeaderViewConfig {
         ),
         optionPlaceholder: .textSecondary,
         layout: .init(
+            itemOption: .init(horizontalSpacing: 5),
             textViewLeadingPadding: 16,
-            textViewTrailingPadding: 15
+            textViewOptionsVerticalSpacing: 26,
+            textViewTrailingPadding: 15,
+            textViewVerticalSpacing: 20
         )
     )
 }

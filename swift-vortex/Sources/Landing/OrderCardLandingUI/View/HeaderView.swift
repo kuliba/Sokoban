@@ -37,7 +37,6 @@ private extension HeaderView {
     
     func textView() -> some View {
         
-        //TODO: constants extract to config
         VStack(spacing: config.layout.textViewVerticalSpacing) {
             
             model.title.text(withConfig: config.title)
@@ -56,7 +55,7 @@ private extension HeaderView {
     ) -> some View {
         
         //TODO: constants extract to config
-        HStack(alignment: .center, spacing: 5) {
+        HStack(alignment: .center, spacing: config.layout.itemOption.horizontalSpacing) {
             
             Circle()
                 .foregroundStyle(config.optionPlaceholder)
@@ -90,6 +89,9 @@ struct Header {
                     ),
                     optionPlaceholder: .black,
                     layout: .init(
+                        itemOption: .init(
+                            horizontalSpacing: 5
+                        ),
                         textViewLeadingPadding: 16,
                         textViewOptionsVerticalSpacing: 20,
                         textViewTrailingPadding: 15,
