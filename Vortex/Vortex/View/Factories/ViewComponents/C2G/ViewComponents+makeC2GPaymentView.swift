@@ -64,31 +64,7 @@ extension ViewComponents {
         }
         .padding()
     }
-    
-    // TODO: - add/extract config
-    @inlinable
-    func makeCheckBoxView(
-        title: AttributedString,
-        isChecked: Bool,
-        toggle: @escaping () -> Void
-    ) -> some View {
         
-        HStack {
-            
-            PaymentsCheckView.CheckBoxView(
-                isChecked: isChecked,
-                activeColor: .systemColorActive
-            )
-            .onTapGesture(perform: toggle)
-            
-            Text(title)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .font(.textBodyMR14200())
-                .foregroundColor(.textPlaceholder)
-        }
-        .animation(.easeInOut, value: isChecked)
-    }
-    
     @inlinable
     func c2gPaymentFlowView(
         flow: C2GPaymentDomain.Flow,
