@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import Combine
 import PhoneNumberWrapper
+import UIPrimitives
 
 final class OperationDetailInfoViewModel: Identifiable {
     
@@ -2799,7 +2800,26 @@ extension OperationDetailInfoViewModel {
             super.init(title: title)
         }
     }
-    
+
+    class AsyncPropertyCellViewModel: PropertyCellViewModel{
+        
+        let asyncImage: UIPrimitives.AsyncImage?
+
+        internal init(
+            asyncImage: UIPrimitives.AsyncImage? = nil,
+            iconType: Image? = nil,
+            title: String,
+            value: String
+        ) {
+            self.asyncImage = asyncImage
+            super.init(
+                title: title,
+                iconType: iconType,
+                value: value
+            )
+        }
+    }
+
     class IconCellViewModel: DefaultCellViewModel {
         
         var icon: Image

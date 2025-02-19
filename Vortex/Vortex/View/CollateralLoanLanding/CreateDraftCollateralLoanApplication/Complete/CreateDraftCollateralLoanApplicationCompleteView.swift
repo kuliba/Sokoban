@@ -18,7 +18,7 @@ struct CreateDraftCollateralLoanApplicationCompleteView: View {
     let action: () -> Void
     let makeIconView: MakeIconView
     let pdfDocumentButton: PDFDocumentButton
-    let detailsButton: TransactionDetailButton
+    let detailsButton: CollateralLoanLandingDetailsButton
     
     var body: some View {
         
@@ -27,8 +27,9 @@ struct CreateDraftCollateralLoanApplicationCompleteView: View {
             statusView()
             Spacer()
             buttons()
-            heroButton()
         }
+        .safeAreaInset(edge: .bottom, content: heroButton)
+        .frame(maxHeight: .infinity)
         .padding(.bottom)
         .padding(.horizontal)
     }
@@ -60,8 +61,9 @@ private extension CreateDraftCollateralLoanApplicationCompleteView {
             Color.clear.frame(width: 8)
             detailsButton
         }
+        .frame(height: 50)
         .frame(maxWidth: .infinity)
-        .padding(.bottom, 24)
+        .padding(.bottom, 50)
     }
     
     func heroButton() -> some View {
@@ -100,9 +102,4 @@ struct CreateDraftCollateralLoanApplicationCompleteView_Previews: PreviewProvide
             detailsButton: .preview
         )
     }
-}
-
-extension TransactionDetailButton {
-    
-    static let preview = Self(details: .init(logo: nil, cells: []))
 }

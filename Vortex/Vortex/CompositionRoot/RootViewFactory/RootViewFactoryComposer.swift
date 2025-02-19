@@ -1071,9 +1071,15 @@ private extension RootViewFactoryComposer {
             getPDFDocument: getPDFDocument
         )
         
+        let viewModelFactory = CollateralLoanLandingViewModelFactory(
+            model: model,
+            makeImageViewWithMD5Hash: { self.makeIconView(.md5Hash(.init($0))) }
+        )
+        
         return .init(
             binder: binder,
             factory: factory,
+            viewModelFactory: viewModelFactory,
             goToMain: goToMain
         )
     }

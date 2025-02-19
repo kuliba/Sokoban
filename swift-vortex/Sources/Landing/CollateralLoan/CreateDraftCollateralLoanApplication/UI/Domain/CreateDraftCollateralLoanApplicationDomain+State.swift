@@ -161,12 +161,20 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
     
     func saveConsentsPayload(
         applicationID: UInt,
-        verificationCode: String
+        verificationCode: String,
+        icons: CreateDraftCollateralLoanApplication.Icons
     ) -> CollateralLandingApplicationSaveConsentsPayload {
         
         .init(
             applicationID: applicationID,
-            verificationCode: otp
+            verificationCode: otp,
+            icons: .init(
+                productName: icons.productName,
+                amount: icons.amount,
+                term: icons.term,
+                rate: icons.rate,
+                city: icons.city
+            )
         )
     }
 }

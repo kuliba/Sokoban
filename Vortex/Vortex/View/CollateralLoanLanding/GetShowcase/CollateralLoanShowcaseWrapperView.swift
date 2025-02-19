@@ -20,6 +20,7 @@ struct CollateralLoanShowcaseWrapperView: View {
     
     let binder: GetShowcaseDomain.Binder
     let factory: Factory
+    let viewModelFactory: ViewModelFactory
     let goToMain: () -> Void
 
     var body: some View {
@@ -92,6 +93,7 @@ struct CollateralLoanShowcaseWrapperView: View {
                     makeImageViewWithURL: factory.makeImageViewWithURL,
                     getPDFDocument: factory.getPDFDocument
                 ),
+                viewModelFactory: viewModelFactory,
                 goToMain: goToMain
             )
             .onAppear { UINavigationBar.appearance().backgroundColor = UIColor(.clear) }
@@ -101,6 +103,7 @@ struct CollateralLoanShowcaseWrapperView: View {
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
     typealias SaveConsentsResult = Domain.SaveConsentsResult
     typealias Factory = CollateralLoanLandingGetShowcaseViewFactory
+    typealias ViewModelFactory = CollateralLoanLandingViewModelFactory
 }
 
 extension GetShowcaseDomain.Navigation: Identifiable {
@@ -118,6 +121,7 @@ extension CollateralLoanShowcaseWrapperView {
     static let preview = Self(
         binder: .preview,
         factory: .preview,
+        viewModelFactory: .preview,
         goToMain: {}
     )
 }

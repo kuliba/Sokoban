@@ -80,7 +80,10 @@ struct OperationDetailInfoInternalView: View {
                     ForEach(cells) { item in
                         
                         switch item{
-                            
+
+                        case let asyncPropertyViewModel as OperationDetailInfoViewModel.AsyncPropertyCellViewModel:
+                            AsyncPropertyCellView(viewModel: asyncPropertyViewModel)
+
                         case let propertyViewModel as OperationDetailInfoViewModel.PropertyCellViewModel:
                             PropertyCellView(viewModel: propertyViewModel)
                             
@@ -106,6 +109,57 @@ struct OperationDetailInfoInternalView: View {
 }
 
 extension OperationDetailInfoInternalView {
+    
+    struct AsyncPropertyCellView: View {
+        
+        var viewModel: OperationDetailInfoViewModel.AsyncPropertyCellViewModel
+        
+        var body: some View {
+            
+            HStack(alignment: .bottom, spacing: 15) {
+                
+                icon()
+                    .frame(width: 32, height: 32, alignment: .bottom)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    
+                    Text(viewModel.title)
+                        .foregroundColor(.textPlaceholder)
+                        .font(.textBodySR12160())
+                        .accessibilityIdentifier("OperationDetailInfoItemTitle")
+
+                    Text(viewModel.value)
+                        .font(.textBodyMM14200())
+                        .foregroundColor(.textSecondary)
+                        .accessibilityIdentifier("OperationDetailInfoItemData")
+
+                    Color.bordersDivaiderDisabled
+                        .frame(height: 1)
+                }
+            }.padding(.init(top: 10, leading: 20, bottom: 10, trailing: 20))
+        }
+
+        @ViewBuilder
+        private func icon() -> some View {
+            
+            if let image = viewModel.asyncImage {
+                
+                image
+                    .accessibilityIdentifier("OperationDetailInfoItemIcon")
+            } else if let image = viewModel.iconType {
+                
+                image
+                    .resizable()
+                    .renderingMode(.original)
+                    .accessibilityIdentifier("OperationDetailInfoItemIcon")
+
+            } else {
+                
+                Color.clear
+                    .accessibilityIdentifier("OperationDetailInfoMissingIcon")
+            }
+        }
+    }
     
     struct PropertyCellView: View {
         

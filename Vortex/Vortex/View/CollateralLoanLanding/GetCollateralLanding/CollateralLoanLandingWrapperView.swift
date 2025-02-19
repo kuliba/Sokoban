@@ -17,6 +17,7 @@ struct CollateralLoanLandingWrapperView: View {
 
     let binder: GetCollateralLandingDomain.Binder
     let factory: Factory
+    let viewModelFactory: ViewModelFactory
     let goToMain: () -> Void
     
     var body: some View {
@@ -106,6 +107,7 @@ struct CollateralLoanLandingWrapperView: View {
                     makeImageViewWithURL: factory.makeImageViewWithURL,
                     getPDFDocument: factory.getPDFDocument
                 ),
+                viewModelFactory: viewModelFactory,
                 goToMain: goToMain
             )
             .navigationBarWithBack(title: "Оформление заявки", dismiss: dissmiss)
@@ -170,6 +172,7 @@ struct CollateralLoanLandingWrapperView: View {
 extension CollateralLoanLandingWrapperView {
     
     typealias Factory = GetCollateralLandingFactory
+    typealias ViewModelFactory = CollateralLoanLandingViewModelFactory
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
     typealias SaveConsentsResult = Domain.SaveConsentsResult
 

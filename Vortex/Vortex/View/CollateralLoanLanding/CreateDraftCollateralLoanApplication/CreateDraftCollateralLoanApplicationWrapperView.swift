@@ -12,6 +12,7 @@ import OTPInputComponent
 import RemoteServices
 import RxViewModel
 import SwiftUI
+import ButtonWithSheet
 
 struct CreateDraftCollateralLoanApplicationWrapperView: View {
     
@@ -20,6 +21,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     let binder: Domain.Binder
     let config: Config
     let factory: Factory
+    let viewModelFactory: ViewModelFactory
     let goToMain: () -> Void
     
     var body: some View {
@@ -132,7 +134,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
                     payload: saveConsentsResult.payload,
                     getPDFDocument: factory.getPDFDocument
                 ),
-                detailsButton: makeDetailsButton()
+                detailsButton: makeDetailButton(payload: saveConsentsResult)
             )
             
         case .failure:
@@ -154,20 +156,17 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         .init(getDocument: { getPDFDocument(payload, $0) })
     }
     
-    private func makeDetailsButton() -> TransactionDetailButton {
+    func makeDetailButton(payload: CollateralLandingApplicationSaveConsentsResult) -> CollateralLoanLandingDetailsButton {
         
-        .init(
-            details: .init(
-                logo: nil,
-                cells: [
-                    .init(title: "Detail 1"),
-                    .init(title: "Detail 2"),
-                    .init(title: "Detail 3")
-                ]
+            .init(
+                viewModel: viewModelFactory.makeOperationDetailInfoViewModel(
+                    payload: payload,
+                    dismiss: goToMain
+                ),
+                payload: payload
             )
-        )
     }
-    
+
     private func makePaymentCompleteViewFactory() -> PaymentCompleteViewFactory {
         
         return .init(
@@ -195,6 +194,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
 extension CreateDraftCollateralLoanApplicationWrapperView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
+    typealias ViewModelFactory = CollateralLoanLandingViewModelFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
     typealias State = Domain.State

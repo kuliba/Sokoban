@@ -196,7 +196,7 @@ extension RootViewModelFactory {
 
         save(payload.payload) { [saveConsents] in
 
-            completion($0.map { $0.response(verificationCode: payload.verificationCode) })
+            completion($0.map {$0.response(payload: payload)})
             _ = saveConsents
         }
     }
@@ -215,7 +215,7 @@ extension RootViewModelFactory {
 
         save(payload.payload) { [saveConsents] in
 
-            completion($0.map { $0.response(verificationCode: payload.verificationCode) })
+            completion($0.map { $0.response(payload: payload) })
             _ = saveConsents
         }
     }
@@ -289,7 +289,9 @@ extension CollateralLandingApplicationSaveConsentsPayload {
 
 extension RemoteServices.ResponseMapper.CollateralLoanLandingSaveConsentsResponse {
     
-    func response(verificationCode: String) -> CollateralLandingApplicationSaveConsentsResult {
+    func response(
+        payload: CollateralLandingApplicationSaveConsentsPayload
+    ) -> CollateralLandingApplicationSaveConsentsResult {
         
         .init(
             applicationID: applicationID,
@@ -303,7 +305,8 @@ extension RemoteServices.ResponseMapper.CollateralLoanLandingSaveConsentsRespons
             cityName: cityName,
             status: status,
             responseMessage: responseMessage,
-            verificationCode: verificationCode
+            verificationCode: payload.verificationCode,
+            icons: payload.icons
         )
     }
 }

@@ -85,7 +85,8 @@ extension CreateDraftCollateralLoanApplicationDomain {
                     effect = .saveConsents(
                         state.saveConsentsPayload(
                             applicationID: applicationID,
-                            verificationCode: state.otp
+                            verificationCode: state.otp,
+                            icons: state.application.icons
                         )
                     )
                 }
