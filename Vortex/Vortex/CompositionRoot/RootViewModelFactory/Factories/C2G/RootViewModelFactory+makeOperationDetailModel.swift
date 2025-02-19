@@ -6,7 +6,6 @@
 //
 
 import RemoteServices
-import StateMachines
 import RxViewModel
 
 extension RootViewModelFactory {
@@ -37,21 +36,4 @@ extension RootViewModelFactory {
             scheduler: schedulers.main
         )
     }
-}
-
-enum OperationDetailDomain {}
-
-extension OperationDetailDomain {
-    
-    typealias Model = RxViewModel<State, Event, Effect>
-    
-    typealias Reducer = StateMachines.LoadReducer<Success, Error>
-    typealias EffectHandler = StateMachines.LoadEffectHandler<Success, Error>
-    
-    typealias State = StateMachines.LoadState<Success, Error>
-    typealias Event = StateMachines.LoadEvent<Success, Error>
-    typealias Effect = StateMachines.LoadEffect
-    
-    typealias Success = Void
-    typealias Failure = Error
 }

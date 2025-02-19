@@ -10,7 +10,7 @@ import SharedConfigs
 import SwiftUI
 import UIPrimitives
 
-typealias C2GCompleteCover = C2GPaymentDomain.Navigation.Cover<C2GPaymentDomain.Navigation.C2GPaymentComplete>
+typealias C2GCompleteCover = C2GPaymentDomain.Navigation.Cover<C2GPaymentDomain.C2GPaymentComplete>
 
 extension ViewComponents {
     
@@ -46,8 +46,8 @@ extension ViewComponents {
         
         VStack(spacing: config.spacing) {
             
-            cover.success.merchantName?.text(withConfig: config.merchantName)
-            cover.success.purpose?.text(withConfig: config.purpose)
+            cover.content.response.merchantName?.text(withConfig: config.merchantName)
+            cover.content.response.purpose?.text(withConfig: config.purpose)
         }
     }
 }
@@ -64,7 +64,7 @@ private extension C2GCompleteCover {
     var completion: PaymentCompletion {
         
         return .init(
-            formattedAmount: success.formattedAmount,
+            formattedAmount: content.response.formattedAmount,
             merchantIcon: nil,
             status: status
         )
@@ -72,7 +72,7 @@ private extension C2GCompleteCover {
     
     var status: PaymentCompletion.Status {
         
-        switch success.status {
+        switch content.response.status {
         case .completed: return .completed
         case .inflight:  return .inflight
         case .rejected:  return .rejected
@@ -181,13 +181,21 @@ private extension C2GCompleteCover {
     static var rejectedNoMerchantNoMessage:  Self { make(.rejectedNoMerchantNoMessage) }
     static var rejectedMinimal:              Self { make(.rejectedMinimal) }
     
-    private static func make(_ success: Success) -> Self {
+    private static func make(_ response: Success.Response) -> Self {
         
-        return .init(id: .init(), success: success)
+        return .init(
+            id: .init(),
+            content: .init(detail: .preview, response: response)
+        )
     }
 }
 
-private extension C2GPaymentDomain.Navigation.C2GPaymentComplete {
+private extension OperationDetailDomain.Model {
+    
+    static let preview: OperationDetailDomain.Model = .init(initialState: .pending, reduce: { state, _ in (state, nil) }, handleEffect: { _,_ in })
+}
+
+private extension C2GPaymentDomain.C2GPaymentComplete.Response {
     
     // ✅ COMPLETED STATUS
     static let completedFull: Self = .init(

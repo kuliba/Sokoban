@@ -19,7 +19,6 @@ extension RootViewModelFactory {
         
         composeBinder(
             content: makeC2BPaymentContent(payload: payload),
-            delayProvider: delayProvider,
             getNavigation: getNavigation,
             selectWitnesses: .empty
         )
@@ -31,14 +30,6 @@ extension RootViewModelFactory {
     ) -> C2GPaymentDomain.Content {
         
         return .init(payload: payload, scheduler: schedulers.main)
-    }
-    
-    @inlinable
-    func delayProvider(
-        navigation: C2GPaymentDomain.Navigation
-    ) -> Delay {
-        
-        return .zero
     }
     
     @inlinable
@@ -72,7 +63,19 @@ extension RootViewModelFactory {
             
             guard let self else { return }
             
-            completion($0.navigation(formattedAmount: formatAmount(value: $0.success?.amount)));
+            let intermediaryResult = $0.intermediaryResult(
+                formattedAmount: formatAmount(value: $0.success?.amount)
+            )
+            
+            completion(intermediaryResult.map {
+                
+                return C2GPaymentDomain.C2GPaymentComplete(
+                    detail: self.makeOperationDetailModel(
+                        operationDetailID: $0.paymentOperationDetailID
+                    ),
+                    response: $0
+                )
+            })
             _ = service
         }
     }
@@ -85,7 +88,7 @@ extension RootViewModelFactory {
         
         return model.amountFormatted(amount: value, currencyCode: "RUB", style: .normal)
     }
-
+    
     // TODO: remove stub
     @inlinable
     func createC2GPaymentEasterEggs(
@@ -117,7 +120,7 @@ private extension C2GPaymentDomain.Navigation {
 
 private extension BackendFailure {
     
-    static let connectivityFailure: Self = .connectivity("Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения")
+    static let connectivityFailure: Self = .connectivity(.connectivity)
 }
 
 // TODO: remove with stub
@@ -131,19 +134,21 @@ private extension String {
 
 // MARK: - Adapters
 
+private typealias IntermediaryResult = Result<C2GPaymentDomain.C2GPaymentComplete.Response, BackendFailure>
+
 private extension Result
 where Success == RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
     
-    func navigation(
+    func intermediaryResult(
         formattedAmount: String?
-    ) -> C2GPaymentDomain.Navigation {
+    ) -> IntermediaryResult {
         
         switch self {
         case let .failure(failure as BackendFailure):
             return .failure(failure)
             
         case .failure:
-            return .connectivityFailure
+            return .failure(.connectivityFailure)
             
         case let .success(response):
             return response.result(formattedAmount: formattedAmount)
@@ -155,15 +160,17 @@ private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
     
     func result(
         formattedAmount: String?
-    ) -> C2GPaymentDomain.Navigation {
+    ) -> IntermediaryResult {
         
-        guard let status
-        else { return .failure(.connectivityFailure) }
+        guard let status else { return .failure(.connectivityFailure) }
         
-        return .success(success(formattedAmount: formattedAmount, status: status))
+        return .success(success(
+            formattedAmount: formattedAmount,
+            status: status
+        ))
     }
     
-    private var status: C2GPaymentDomain.Navigation.C2GPaymentComplete.Status? {
+    private var status: C2GPaymentDomain.C2GPaymentComplete.Response.Status? {
         
         switch documentStatus {
         case "COMPLETE":    return .completed
@@ -175,8 +182,8 @@ private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
     
     private func success(
         formattedAmount: String?,
-        status: C2GPaymentDomain.Navigation.C2GPaymentComplete.Status
-    ) -> C2GPaymentDomain.Navigation.C2GPaymentComplete {
+        status: C2GPaymentDomain.C2GPaymentComplete.Response.Status
+    ) -> C2GPaymentDomain.C2GPaymentComplete.Response {
         
         return .init(
             formattedAmount: formattedAmount,
@@ -243,6 +250,7 @@ private extension AttributedString {
 
 private extension String {
     
+    static let connectivity = "Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения"
     static let termURLPlace = "принять условия обслуживания"
 }
 
