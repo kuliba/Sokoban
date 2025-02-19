@@ -119,6 +119,6 @@ private extension HeaderView.Model {
     static let preview: Self = .init(
         title: "titile",
         options: ["option"],
-        md5Hash: nil
+        md5Hash: "1"
     )
 }

@@ -11,7 +11,7 @@ import SwiftUI
 import UIPrimitives
 
 public struct ImageViewFactory {
-
+    
     let makeIconView: MakeIconView
     
     public init(
@@ -22,23 +22,32 @@ public struct ImageViewFactory {
 }
 
 public extension ImageViewFactory {
-        
+    
     typealias MakeIconView = (String) -> UIPrimitives.AsyncImage
 }
 
 extension ImageViewFactory {
     
     static let `default`: Self = .init(
-        makeIconView: { _ in 
-            return  .init(
-                image: .bolt,
-                publisher: Just(.bolt).eraseToAnyPublisher()
-            )
-        }
+        makeIconView: {
+            switch $0 {
+            case "1":
+                return  .init(
+                    image: .bolt,
+                    publisher: Just(.bolt).eraseToAnyPublisher()
+                )
+            default:
+                return .init(
+                    image: .flag,
+                    publisher: Just(.flag).eraseToAnyPublisher()
+                )
+            }}
     )
 }
 
 extension Image {
     
     static let bolt: Self = .init(systemName: "bolt")
+    static let flag: Self = .init(systemName: "flag")
 }
+
