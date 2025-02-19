@@ -6,7 +6,7 @@
 //
 
 /// Represents the events that can trigger state transitions during loading.
-enum LoadEvent<Success, Failure: Error> {
+public enum LoadEvent<Success, Failure: Error> {
     
     /// Initiates the loading process.
     case load

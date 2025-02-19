@@ -6,7 +6,7 @@
 //
 
 /// Represents the side effects that should be executed during loading.
-enum LoadEffect: Equatable {
+public enum LoadEffect: Equatable {
     
     /// Triggers the loading effect.
     case load

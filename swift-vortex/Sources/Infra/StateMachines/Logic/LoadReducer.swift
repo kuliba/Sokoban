@@ -6,13 +6,13 @@
 //
 
 /// Reducer that handles state transitions based on load events.
-final class LoadReducer<Success, Failure: Error> {
+public final class LoadReducer<Success, Failure: Error> {
     
     /// Initializes a new instance of `LoadReducer`.
-    init() {}
+    public init() {}
 }
 
-extension LoadReducer {
+public extension LoadReducer {
     
     /// Transitions the state based on the given event.
     ///
@@ -60,7 +60,7 @@ extension LoadReducer {
     }
 }
 
-extension LoadReducer {
+public extension LoadReducer {
     
     /// Type alias for the state managed by `LoadReducer`.
     typealias State = LoadState<Success, Failure>

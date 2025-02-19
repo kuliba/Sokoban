@@ -6,25 +6,25 @@
 //
 
 /// Handles the side effects of the loading process.
-final class LoadEffectHandler<Success, Failure: Error> {
+public final class LoadEffectHandler<Success, Failure: Error> {
     
     private let load: Load
     
     /// Initializes a new instance of `LoadEffectHandler`.
     ///
     /// - Parameter load: A closure that performs the load action.
-    init(load: @escaping Load) {
+    public init(load: @escaping Load) {
         
         self.load = load
     }
     
     /// Completion type alias for the load process.
-    typealias LoadCompletion = (Result<Success, Failure>) -> Void
+    public typealias LoadCompletion = (Result<Success, Failure>) -> Void
     /// Type alias for the load closure.
-    typealias Load = (@escaping LoadCompletion) -> Void
+    public typealias Load = (@escaping LoadCompletion) -> Void
 }
 
-extension LoadEffectHandler {
+public extension LoadEffectHandler {
     
     /// Handles the specified effect.
     ///
@@ -42,7 +42,7 @@ extension LoadEffectHandler {
     }
 }
 
-extension LoadEffectHandler {
+public extension LoadEffectHandler {
     
     /// Type alias for the dispatch function.
     typealias Dispatch = (Event) -> Void
