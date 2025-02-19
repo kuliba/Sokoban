@@ -12,16 +12,16 @@ where AmountInfo: View,
       OTPView: View,
       ProductPicker: View {
 
-    let makeAmountInfoView: MakeAmountInfoView
+    let amountInfo: AmountInfo
     let makeOTPView: MakeOTPView
     let makeProductPickerView: MakeProductPickerView
     
     public init(
-        makeAmountInfoView: @escaping MakeAmountInfoView,
+        amountInfo: AmountInfo,
         makeOTPView: @escaping MakeOTPView,
         makeProductPickerView: @escaping MakeProductPickerView
     ) {
-        self.makeAmountInfoView = makeAmountInfoView
+        self.amountInfo = amountInfo
         self.makeOTPView = makeOTPView
         self.makeProductPickerView = makeProductPickerView
     }
@@ -29,7 +29,6 @@ where AmountInfo: View,
 
 public extension ViewFactory {
      
-    typealias MakeAmountInfoView = () -> AmountInfo
     typealias MakeOTPView = () -> OTPView
     typealias MakeProductPickerView = () -> ProductPicker
 }

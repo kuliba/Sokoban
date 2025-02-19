@@ -7,11 +7,46 @@
 
 import Combine
 import Foundation
+import FlowCore
 import GenericRemoteService
 import RemoteServices
 import SavingsServices
 
 extension RootViewModelFactory {
+    
+    @inlinable
+    func makeSavingsNodes(
+        _ dismiss: @escaping () -> Void
+    ) -> SavingsAccountNodes {
+        
+        let binder: SavingsAccountDomain.Binder = makeSavingsAccount()
+        let openBinder: SavingsAccountDomain.OpenAccountBinder = makeOpenSavingsAccount()
+        
+        let cancellable = binder.flow.$state
+            .compactMap {
+                switch $0.navigation {
+                case .main: return ()
+                    
+                default: return nil
+                }
+            }
+            .sink { dismiss() }
+        
+        let openCancellable = openBinder.flow.$state
+            .compactMap {
+                switch $0.navigation {
+                case .main: return ()
+                    
+                default: return nil
+                }
+            }
+            .sink { dismiss() }
+        
+        return .init(
+            openSavingsAccountNode: .init(model: openBinder, cancellable: openCancellable),
+            savingsAccountNode: .init(model: binder, cancellable: cancellable)
+        )
+    }
     
     @inlinable
     func makeSavingsAccount() -> SavingsAccountDomain.Binder {
@@ -22,15 +57,8 @@ extension RootViewModelFactory {
             mapError: SavingsAccountDomain.ContentError.init(error:)
         )
 
-        let getOpenAccount = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createGetOpenAccountFormRequest,
-            mapResponse: RemoteServices.ResponseMapper.mapGetOpenAccountFormResponse,
-            mapError: SavingsAccountDomain.ContentError.init(error:)
-        )
-
-        let nanoServices: SavingsAccountDomain.ComposerNanoServices = .init(
-            loadLanding: { getSavingLanding($0, $1) },
-            orderAccount: { getOpenAccount("", $0) }
+        let nanoServices: SavingsAccountDomain.ComposerLandingNanoService = .init(
+            loadLanding: { getSavingLanding($0, $1) }
         )
         
         return makeSavingsAccount(nanoServices: nanoServices)
@@ -38,7 +66,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeSavingsAccount(
-        nanoServices: SavingsAccountDomain.ComposerNanoServices
+        nanoServices: SavingsAccountDomain.ComposerLandingNanoService
     ) -> SavingsAccountDomain.Binder {
         
         let content = makeContent(
@@ -67,7 +95,7 @@ extension RootViewModelFactory {
     }
     
     private func makeContent(
-        nanoServices: SavingsAccountDomain.ComposerNanoServices,
+        nanoServices: SavingsAccountDomain.ComposerLandingNanoService,
         status: SavingsAccountDomain.ContentStatus
     ) -> SavingsAccountDomain.Content {
         
@@ -120,7 +148,7 @@ extension RootViewModelFactory {
     }
 }
 
-private extension SavingsAccountDomain.ContentError {
+extension SavingsAccountDomain.ContentError {
     
     typealias RemoteError = RemoteServiceError<Error, Error, RemoteServices.ResponseMapper.MappingError>
     

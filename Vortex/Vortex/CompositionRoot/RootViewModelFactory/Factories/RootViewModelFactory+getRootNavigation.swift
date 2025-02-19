@@ -20,6 +20,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func getRootNavigation(
+        c2gFlag: C2GFlag,
         makeProductProfileByID: MakeProductProfileByID,
         select: RootViewSelect,
         notify: @escaping RootViewDomain.Notify,
@@ -30,10 +31,24 @@ extension RootViewModelFactory {
             completion(.orderCardResponse(orderCardResponse))
             
         case let .openProduct(type):
-            completion(.openProduct(openProduct(
-                type: type,
-                notify: { notify(.select(.orderCardResponse($0))) }
-            )))
+            
+            switch type {
+            case .card:
+                completion(.openProduct(openProduct(
+                    type: type,
+                    notify: { notify(.select(.orderCardResponse($0))) }
+                )))
+                
+            case .savingsAccount:
+                completion(.openProduct(openProduct(
+                    type: type,
+                    notify: { _ in notify(.select(.openProduct(.savingsAccount))) },
+                    dismiss: { notify(.dismiss) }
+                )))
+                
+            default:
+                break
+            }
             
         case let .outside(outside):
             switch outside {
@@ -52,21 +67,29 @@ extension RootViewModelFactory {
             if isUserPersonal() {
                 makeScanQR()
             } else {
-                completion(.outside(.tab(.main)))
+                completion(.disabledForCorporate)
             }
             
         case .templates:
             if isUserPersonal() {
                 makeTemplatesNode()
             } else {
-                completion(.outside(.tab(.main)))
+                completion(.disabledForCorporate)
             }
             
         case let .standardPayment(type):
             initiateStandardPaymentFlow(type)
             
         case .searchByUIN:
-            completion(.searchByUIN(makeSearchByUIN()))
+            if isUserPersonal() {
+                if c2gFlag.isActive {
+                    completion(.searchByUIN(makeSearchByUIN()))
+                } else {
+                    completion(.updateForNewPaymentFlow)
+                }
+            } else {
+                completion(.disabledForCorporate)
+            }
             
         case .userAccount:
             makeUserAccount()
@@ -74,7 +97,7 @@ extension RootViewModelFactory {
         
         func makeScanQR() {
             
-            let qrScanner = makeQRScannerBinder()
+            let qrScanner = makeQRScannerBinder(c2gFlag: c2gFlag)
             let cancellables = bind(qrScanner)
             
             completion(.scanQR(.init(
@@ -252,4 +275,20 @@ private extension RootViewNavigation.Failure {
             self = .missingCategoryOfType(categoryType)
         }
     }
+}
+
+// MARK: - Helpers
+
+private extension RootViewNavigation {
+    
+    static let disabledForCorporate: Self = .failure(.featureFailure(.disabledForCorporate))
+    
+    static let updateForNewPaymentFlow: Self = .failure(.featureFailure(.updateForNewPaymentFlow))
+}
+
+private extension FeatureFailure {
+    
+    static let disabledForCorporate: Self = .init(title: "Информация", message: "Данный функционал не доступен\nдля корпоративных карт.\nОткройте продукт как физ. лицо,\nчтобы использовать все\nвозможности приложения.")
+    
+    static let updateForNewPaymentFlow: Self = .init(message: "Обновите приложение до последней версии, чтобы получить доступ к новому разделу.")
 }

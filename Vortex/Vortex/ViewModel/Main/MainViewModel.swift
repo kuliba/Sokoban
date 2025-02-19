@@ -54,11 +54,14 @@ class MainViewModel: ObservableObject, Resetable {
     let viewModelsFactory: MainViewModelsFactory
     let makeOpenNewProductButtons: OpenNewProductsViewModel.MakeNewProductButtons
     
+    let bannersBox: any BannersBoxInterface<BannerList>
+    
     private var bindings = Set<AnyCancellable>()
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     init(
         _ model: Model,
+        bannersBox: any BannersBoxInterface<BannerList>,
         route: Route = .empty,
         navigationStateManager: UserAccountNavigationStateManager,
         sberQRServices: SberQRServices,
@@ -73,6 +76,7 @@ class MainViewModel: ObservableObject, Resetable {
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.model = model
+        self.bannersBox = bannersBox
         self.updateInfoStatusFlag = updateInfoStatusFlag
         self.navButtonsRight = []
         self.sections = sections
@@ -162,13 +166,6 @@ class MainViewModel: ObservableObject, Resetable {
             }
         }
     }
-
-    private func updatePromo(
-        _ newPromo: [AdditionalProductViewModel]
-    ) {
-       
-        sections.productsSection?.productCarouselViewModel.updatePromo(newPromo)
-    }
     
     private func updateProducts(
         _ model: Model
@@ -219,7 +216,7 @@ extension MainViewModel {
         route.modal = nil
     }
     
-    private func openScanner() {
+    private func openScanner() { // TODO: remove with paymentsTransfersFlag
         
         ifNotCorporate { [weak self] in
             
@@ -240,7 +237,7 @@ extension MainViewModel {
         }
     }
     
-    func openTemplates() {
+    func openTemplates() { // TODO: remove with paymentsTransfersFlag
         
         let templates = paymentsTransfersFactory.makeTemplates { [weak self] in
             
@@ -307,20 +304,14 @@ private extension MainViewModel {
             .receive(on: scheduler)
             .assign(to: &$route)
         
+        bannersBox.banners
+            .receive(on: scheduler)
+            .sink { [weak self] in self?.handleBanners($0) }
+            .store(in: &bindings)
+        
         model.productListBannersWithSticker
             .receive(on: scheduler)
-            .sink { [weak self] in
-                guard let self else { return }
-                
-                if let sticker = $0.first {
-                    
-                    let promoItems = self.makePromoViewModels(promoItems: [
-                        .init(sticker),
-                        .savingsAccountPreview
-                    ]) ?? []
-                    self.updatePromo(promoItems)
-                }
-            }
+            .sink { [weak self] in self?.handleBanners($0) }
             .store(in: &bindings)
         
         if updateInfoStatusFlag.isActive {
@@ -375,6 +366,7 @@ private extension MainViewModel {
                     
                     model.action.send(ModelAction.Products.Update.Total.All())
                     model.action.send(ModelAction.Dictionary.UpdateCache.List(types: [.currencyWalletList, .currencyList, .bannerCatalogList]))
+                    bannersBox.requestUpdate()
                     
                 case _ as MainViewModelAction.Close.Link:
                     resetDestination()
@@ -688,6 +680,38 @@ private extension MainViewModel {
         }
     }
     
+    func handleBanners(
+        _ banners: [CardBannerList]
+    ) {
+        if let sticker = banners.first {
+            
+            let promoItems = makePromoViewModels(promoItems: [
+                .init(sticker)
+            ]) ?? []
+            
+            sections.productsSection?.productCarouselViewModel.updatePromo(promoItems)
+        }
+    }
+    
+    func handleBanners(
+        _ banners: BannerList
+    ) {
+        
+        var promo: [PromoItem] = []
+        
+        if let sticker = banners.cardBannerList?.first {
+            promo.append(.init(item: sticker, productType: .card, promoProduct: .sticker))
+        }
+        
+        if let accountBannerList = banners.accountBannerList {
+            promo.append(contentsOf: accountBannerList.map { .init(item: $0, productType: .account, promoProduct: .savingsAccount) })
+        }
+        
+        let promoItems = makePromoViewModels(promoItems: promo) ?? []
+        
+        sections.productsSection?.productCarouselViewModel.updatePromo(promoItems)
+    }
+
     func openMoreProducts() { //
         
         let myProductsViewModel = MyProductsViewModel(
@@ -809,11 +833,14 @@ private extension MainViewModel {
             } else {
                 handleLandingAction(payload.target)
             }
-
+            
         case let payload:
             switch payload.type {
             case .cardOrder:
                 action.send(RootEvent.select(.openProduct(.card)))
+                
+            case .savingLanding:
+                action.send(RootEvent.select(.openProduct(.savingsAccount)))
                 
             case .payment:
                 rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService)
@@ -831,7 +858,7 @@ private extension MainViewModel {
         ifNotCorporate { [weak self] in
             
             guard let self else { return }
-
+            
             guard let walletViewModel = CurrencyWalletViewModel(
                 currency: code,
                 currencyOperation: operation,
@@ -936,27 +963,23 @@ private extension MainViewModel {
             }
     }
     
-    func handleFastPaymentsAction(_ payload: MainSectionViewModelAction.FastPayment.ButtonTapped) {
-        
-        ifNotCorporate { [weak self] in
+    func handleFastPaymentsAction(
+        _ payload: MainSectionViewModelAction.FastPayment.ButtonTapped
+    ) {
+        switch payload.operationType {
+        case .byQr, .templates, .uin:
+            break // handled by root via rootEventPublisher
             
-            guard let self else { return }
-
-            switch payload.operationType {
-            case .templates:
-                openTemplates()
+        case .byPhone:
+            ifNotCorporate { [weak self] in
                 
-            case .byPhone:
-                action.send(MainViewModelAction.Show.Contacts())
+                self?.action.send(MainViewModelAction.Show.Contacts())
+            }
+            
+        case .utility:
+            ifNotCorporate { [weak self] in
                 
-            case .byQr:
-                openScanner()
-                
-            case .uin:
-                break // handled by rootEventPublisher
-                
-            case .utility:
-                self.rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService)
+                self?.rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService)
             }
         }
     }
@@ -1182,6 +1205,9 @@ extension MainViewModel {
             
         case let .sberQR(url):
             handleSberQRURL(url)
+            
+        case .uin:
+            break // handled by root
             
         case let .url(url):
             handleURL(url)
@@ -1756,7 +1782,7 @@ extension MainViewModel {
         case paymentProviderPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
         case providerServicePicker(Node<AnywayServicePickerFlowModel>)
         case collateralLoanLanding(GetShowcaseDomain.Binder)
-        case savingsAccount(Node<SavingsAccountDomain.Binder>)
+        case savingsAccount(SavingsAccountNodes)
         case orderCard
         
         var id: Case {
@@ -1878,20 +1904,7 @@ extension MainViewModel {
     
     func openSavingsAccount() {
         
-        let binder: SavingsAccountDomain.Binder = bindersFactory.makeSavingsAccountBinder()
-        let cancellable = binder.flow.$state
-            .compactMap {
-                switch $0.navigation {
-                case .main: return ()
-                    
-                default: return nil
-                }
-            }
-            .sink { [weak self] in
-                self?.resetDestination()
-            }
-        
-        route.destination = .savingsAccount(.init(model: binder, cancellable: cancellable))
+        route.destination = .savingsAccount(bindersFactory.makeSavingsAccountNodes(resetDestination))
     }
 }
 

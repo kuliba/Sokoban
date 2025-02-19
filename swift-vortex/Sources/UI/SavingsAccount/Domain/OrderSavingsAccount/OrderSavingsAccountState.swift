@@ -10,12 +10,11 @@ import AmountComponent
 
 public struct OrderSavingsAccountState: Equatable {
     
-    let status: Status
-    var amountValue: Decimal
-    var consent: Bool = true
-    var isShowingOTP: Bool = false
+    public let status: Status
+    public var amountValue: Decimal
+    public var consent: Bool = true
+    public var isShowingOTP: Bool = false
     
-
     public init(
         status: Status,
         amountValue: Decimal = 0

@@ -35,6 +35,10 @@ private extension RootBinderView {
             
             rootView()
                 .navigationBarHidden(true)
+                .alert(
+                    item: state.navigation?.featureFailure,
+                    content: alert
+                )
                 .fullScreenCoverInspectable(
                     item: { state.navigation?.fullScreenCover },
                     dismiss: { event(.dismiss) },
@@ -55,6 +59,18 @@ private extension RootBinderView {
             viewModel: binder.content,
             rootViewFactory: rootViewFactory
         )
+    }
+    
+    // MARK: - Alert
+    
+    func alert(
+        failure: FeatureFailure
+    ) -> Alert {
+        
+        return failure.alert {
+            
+            binder.flow.event(.dismiss)
+        }
     }
     
     // MARK: - Destination
@@ -118,41 +134,11 @@ private extension RootBinderView {
         _ searchByUIN: SearchByUINDomain.Binder
     ) -> some View {
         
-        rootViewFactory.components.searchByUINView(searchByUIN)
-            .background(searchByUINFlowView(
-                flow: searchByUIN.flow,
-                goToMain: { binder.flow.event(.dismiss) }
-            ))
-            .navigationBarWithBack(
-                title: "Поиск по УИН",
-                subtitle: "Поиск начислений по УИН",
-                dismiss: { binder.flow.event(.dismiss) },
-                rightItem: .barcodeScanner {
-                    
-                    binder.flow.event(.select(.scanQR))
-                }
-            )
-            .disablingLoading(flow: searchByUIN.flow)
-    }
-    
-    func searchByUINFlowView(
-        flow: SearchByUINDomain.Flow,
-        goToMain: @escaping () -> Void
-    ) -> some View {
-        
-        rootViewFactory.components.searchByUINFlowView(flow: flow) {
-            
-            rootViewFactory.components.c2gPaymentFlowView(
-                flow: $0,
-                dismiss: { flow.event(.dismiss) }
-            ) { cover in
-                
-                rootViewFactory.components.makeC2GPaymentCompleteView(
-                    cover: cover,
-                    goToMain: goToMain
-                )
-            }
-        }
+        rootViewFactory.components.makeSearchByUINView(
+            binder: searchByUIN,
+            dismiss: { binder.flow.event(.dismiss) },
+            scanQR: { binder.flow.event(.select(.scanQR)) }
+        )
     }
     
     private func userAccountView(
@@ -206,6 +192,21 @@ private extension RootBinderView {
     }
 }
 
+extension FeatureFailure {
+    
+    func alert(
+        action: @escaping () -> Void
+    ) -> SwiftUI.Alert {
+        
+        return .init(
+            title: Text(title),
+            message: Text(message),
+            dismissButton: .default(Text("OK"), action: action)
+        )
+    }
+}
+
+// TODO: extract
 extension RootViewFactory {
     
     func makeQRScannerView(
@@ -218,7 +219,7 @@ extension RootViewFactory {
                 makeAnywayServicePickerFlowView: components.makeAnywayServicePickerFlowView,
                 makeIconView: makeIconView,
                 makeOperatorView: InternetTVDetailsView.init,
-                makePaymentsView: components.makePaymentsView,
+                makePaymentsView: { components.makePaymentsView($0, isRounded: false) },
                 makeQRFailedWrapperView: components.makeQRFailedWrapperView,
                 makeQRSearchOperatorView: components.makeQRSearchOperatorView,
                 makeQRView: components.makeQRView,
@@ -234,12 +235,23 @@ extension RootViewFactory {
 
 extension RootViewNavigation {
     
+    var featureFailure: FeatureFailure? {
+        
+        guard case let .failure(.featureFailure(featureFailure)) = self
+        else { return nil }
+        
+        return featureFailure
+    }
+    
     var destination: Destination? {
         
         switch self {
             // TODO: make alert
         case let .failure(failure):
             switch failure {
+            case .featureFailure:
+                return nil
+                
             case let .makeStandardPaymentFailure(binder):
                 return .makeStandardPaymentFailure(binder)
                 
@@ -343,6 +355,9 @@ extension RootViewNavigation.Destination: Identifiable {
             case let .card(openCard):
                 return .openProduct(.card(.init(openCard.model)))
                 
+            case let .savingsAccount(openSavingsAccount):
+                return .openProduct(.savingsAccount)
+                
             case .unknown:
                 return .openProduct(.unknown)
             }
@@ -373,6 +388,7 @@ extension RootViewNavigation.Destination: Identifiable {
         enum OpenProductID: Hashable {
             
             case card(ObjectIdentifier)
+            case savingsAccount
             case unknown
         }
     }

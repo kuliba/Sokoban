@@ -38,6 +38,7 @@ public struct StatefulButtonView: View {
         .frame(height: config.buttonHeight)
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .contentShape(Rectangle())
+        .disabled(!isActive)
     }
 }
 

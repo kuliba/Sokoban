@@ -669,6 +669,27 @@
         "identifier" : "OrderCardLandingBackendTests",
         "name" : "OrderCardLandingBackendTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetSplashScreenServicesTests",
+        "name" : "GetSplashScreenServicesTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "OrderCardLandingUITests",
+        "name" : "OrderCardLandingUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "StateMachinesTests",
+        "name" : "StateMachinesTests"
+      }
     }
   ],
   "version" : 1

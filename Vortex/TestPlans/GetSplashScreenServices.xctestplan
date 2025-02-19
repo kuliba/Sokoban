@@ -1,0 +1,18 @@
+{
+  "configurations" : [
+    {
+      "id" : "30EB7927-669F-45D8-9B2B-F06DC9B95D64",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+
+  ],
+  "version" : 1
+}

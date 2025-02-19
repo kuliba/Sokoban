@@ -17,6 +17,7 @@ class QRNavigationTests: XCTestCase {
     typealias GetSberQRDataSpy = Spy<URL, GetSberQRDataResponse, Error>
     typealias MakeProviderPickerSpy = CallSpy<(MultiElementArray<SegmentedOperatorProvider>, QRCode, QRMapping), SegmentedPaymentProviderPickerFlowModel>
     typealias MakeServicePickerSpy = Spy<PaymentProviderServicePickerPayload, AnywayServicePickerFlowModel, Never>
+    typealias MakeSearchByUINSpy = Spy<String, SearchByUINDomain.Binder, Never>
     
     struct Spies {
         
@@ -24,6 +25,7 @@ class QRNavigationTests: XCTestCase {
         let getSberQRData: GetSberQRDataSpy
         let makeProviderPicker: MakeProviderPickerSpy
         let makeServicePicker: MakeServicePickerSpy
+        let makeSearchByUIN: MakeSearchByUINSpy
     }
     
     func eligible(

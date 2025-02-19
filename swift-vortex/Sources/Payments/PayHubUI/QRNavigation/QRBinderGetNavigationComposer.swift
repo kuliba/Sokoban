@@ -9,7 +9,7 @@ import Combine
 import FlowCore
 import Foundation
 
-public final class QRBinderGetNavigationComposer<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source> {
+public final class QRBinderGetNavigationComposer<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source, SearchByUIN> {
     
     private let firstMicroServices: FirstMicroServices
     private let secondMicroServices: SecondMicroServices
@@ -25,7 +25,7 @@ public final class QRBinderGetNavigationComposer<ConfirmSberQR, MixedPicker, Mul
         self.witnesses = witnesses
     }
     
-    public typealias FirstMicroServices = FirstQRBinderGetNavigationComposerMicroServices<Payments, QRCode, QRFailure, Source>
+    public typealias FirstMicroServices = FirstQRBinderGetNavigationComposerMicroServices<Payments, QRCode, QRFailure, Source, SearchByUIN>
     public typealias SecondMicroServices = SecondQRBinderGetNavigationComposerMicroServices<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Provider, QRCode, QRMapping, ServicePicker>
     public typealias Witnesses = QRBinderGetNavigationWitnesses<MixedPicker, MultiplePicker, Payments, QRFailure, ServicePicker>
 }
@@ -46,7 +46,7 @@ public extension QRBinderGetNavigationComposer {
         }
     }
     
-    typealias Domain = QRNavigationDomain<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source>
+    typealias Domain = QRNavigationDomain<ConfirmSberQR, MixedPicker, MultiplePicker, Operator, OperatorModel, Payments, Provider, QRCode, QRFailure, QRMapping, ServicePicker, Source, SearchByUIN>
     
     typealias FlowDomain = Domain.FlowDomain
     
@@ -112,6 +112,10 @@ private extension QRBinderGetNavigationComposer {
         case let .source(source):
             let payments = firstMicroServices.makePayments(.source(source))
             completion(.payments(bind(payments, to: notify)))
+            
+        case let .uin(uin):
+            let searchByUIN = firstMicroServices.makeSearchByUIN(uin)
+            completion(.searchByUIN(searchByUIN))
             
         case .url:
             let qrFailure = firstMicroServices.makeQRFailure(nil)

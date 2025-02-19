@@ -281,9 +281,8 @@ struct MainView<NavigationOperationView: View>: View {
         case .orderCard:
             viewFactory.components.makeOrderCardView()
             
-        case let .savingsAccount(node):
-            viewFactory.components.makeSavingsAccountView(node.model)
-                .onFirstAppear { node.model.content.event(.load) }
+        case let .savingsAccount(nodes):
+            viewFactory.components.makeSavingsAccountView(nodes)
                 .navigationBarHidden(true)
         }
     }
@@ -526,7 +525,7 @@ struct NavBarButton: View {
                 icon()
             }
             .padding(8)
-            .background(Color.pink.opacity(0.1)) // TODO: replace with color from design
+            .background(Color.bgIconPinkPurple)
             .clipShape(RoundedRectangle(cornerRadius: 88))
         }
     }
@@ -637,6 +636,7 @@ extension MainViewModel {
     
     static let sample = MainViewModel(
         .emptyMock,
+        bannersBox: BannersBox(load: { $0(nil) }),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
         landingServices: .empty(),

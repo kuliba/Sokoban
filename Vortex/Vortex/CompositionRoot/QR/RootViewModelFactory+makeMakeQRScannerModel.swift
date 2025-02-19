@@ -10,16 +10,13 @@ import Combine
 extension RootViewModelFactory {
     
     @inlinable
-    func makeQRScannerModel() -> QRScannerModel {
-        
-        // TODO: make async and move all QR mapping from QRViewModel to special new QRResolver component
-        
-        let composer = QRScanResultMapperComposer(model: model)
-        let mapper = composer.compose()
+    func makeQRScannerModel(
+        c2gFlag: C2GFlag
+    ) -> QRScannerModel {
         
         return .init(
             mapScanResult: mapScanResult(result:completion:),
-            makeQRScanner: makeQRScanner,
+            makeQRScanner: { [makeQRScanner] in makeQRScanner(c2gFlag, $0) },
             scheduler: schedulers.main
         )
     }
@@ -37,12 +34,27 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeQRScanner(
+        c2gFlag: C2GFlag,
         closeAction: @escaping () -> Void
     ) -> QRScanner {
         
-        QRViewModel(
-            closeAction: closeAction, 
-            qrResolve: resolveQR,
+        let getUIN: QRResolverDependencies.GetUIN = { qrCode in
+            
+            if c2gFlag.isActive {
+                return qrCode.uin ?? qrCode.docIdx
+            } else {
+                return nil
+            }
+        }
+        
+        let qrResolve = makeQRResolve(.init(
+            getUIN: getUIN,
+            isSberQR: model.isSberQR(_:)
+        ))
+        
+        return QRViewModel(
+            closeAction: closeAction,
+            qrResolve: qrResolve,
             scanner: scanner
         )
     }
@@ -56,5 +68,26 @@ extension QRViewModel: QRScanner {
             .compactMap { $0 as? QRViewModelAction.Result }
             .map(\.result)
             .eraseToAnyPublisher()
+    }
+}
+
+private extension QRCode {
+    
+    var uin: String? {
+        
+        guard let uin = rawData["uin"],
+              !uin.isEmpty // no extra validation
+        else { return nil }
+        
+        return uin
+    }
+    
+    var docIdx: String? {
+        
+        guard let docIdx = rawData["DocIdx".lowercased()],
+              !docIdx.isEmpty // no extra validation
+        else { return nil }
+        
+        return docIdx
     }
 }

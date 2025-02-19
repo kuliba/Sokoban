@@ -15,7 +15,7 @@ struct C2GPreviewAppApp: App {
         WindowGroup {
             
             ContentView(
-                inputViewModel: .makeUINInputViewModel(),
+                inputViewModel: .makeUINInputViewModel(value: "1234567890123456789"),
                 config: .preview
             )
             .preferredColorScheme(.light)

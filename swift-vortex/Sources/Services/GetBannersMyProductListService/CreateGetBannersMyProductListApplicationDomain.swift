@@ -12,15 +12,15 @@ extension ResponseMapper {
     public struct GetBannersMyProductListResponse: Equatable {
         
         public let serial: String
-        public let accountBannerList: [Banner]
-        public let cardBannerList: [Banner]
-        public let loanBannerList: [Banner]
+        public let accountBannerList: [Banner]?
+        public let cardBannerList: [Banner]?
+        public let loanBannerList: [Banner]?
 
         public init(
             serial: String,
-            accountBannerList: [Banner],
-            cardBannerList: [Banner],
-            loanBannerList: [Banner]
+            accountBannerList: [Banner]?,
+            cardBannerList: [Banner]?,
+            loanBannerList: [Banner]?
         ) {
             self.serial = serial
             self.accountBannerList = accountBannerList

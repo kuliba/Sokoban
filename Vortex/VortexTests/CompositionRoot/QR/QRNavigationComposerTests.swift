@@ -876,7 +876,8 @@ final class QRNavigationComposerTests: QRNavigationTests {
         let makeSberPaymentComplete: MakeSberPaymentCompleteSpy
         let makeSberQR: MakeSberQRSpy
         let makeServicePicker: MakeServicePickerSpy
-        
+        let makeSearchByUIN: MakeSearchByUINSpy
+
         var microServices: SUT.MicroServices {
             
             return .init(
@@ -888,7 +889,9 @@ final class QRNavigationComposerTests: QRNavigationTests {
                 makeQRFailureWithQR: makeQRFailureWithQR.process,
                 makeSberPaymentComplete: makeSberPaymentComplete.process,
                 makeSberQR: makeSberQR.process,
-                makeServicePicker: makeServicePicker.process
+                makeSearchByUIN: makeSearchByUIN.process,
+                makeServicePicker: makeServicePicker.process,
+                makeQRResolve: { _ in { _ in .unknown }} // TODO: improve tests with qr resolve assertions
             )
         }
     }
@@ -901,15 +904,16 @@ final class QRNavigationComposerTests: QRNavigationTests {
         microServices: MicroServicesSpy
     ) {
         let microServicesSpy = MicroServicesSpy(
-            makeInternetTV: MakeInternetTVSpy(),
-            makeOperatorSearch: MakeOperatorSearchSpy(),
-            makePayments: MakePaymentsSpy(),
-            makeProviderPicker: MakeProviderPickerSpy(),
-            makeQRFailure: MakeQRFailureSpy(),
-            makeQRFailureWithQR: MakeQRFailureWithQRSpy(),
-            makeSberPaymentComplete: MakeSberPaymentCompleteSpy(),
-            makeSberQR: MakeSberQRSpy(),
-            makeServicePicker: MakeServicePickerSpy()
+            makeInternetTV: .init(),
+            makeOperatorSearch: .init(),
+            makePayments: .init(),
+            makeProviderPicker: .init(),
+            makeQRFailure: .init(),
+            makeQRFailureWithQR: .init(),
+            makeSberPaymentComplete: .init(),
+            makeSberQR: .init(),
+            makeServicePicker: .init(),
+            makeSearchByUIN: .init()
         )
         let sut = SUT(microServices: microServicesSpy.microServices)
         
@@ -922,6 +926,7 @@ final class QRNavigationComposerTests: QRNavigationTests {
         trackForMemoryLeaks(microServicesSpy.makeOperatorSearch, file: file, line: line)
         trackForMemoryLeaks(microServicesSpy.makeSberQR, file: file, line: line)
         trackForMemoryLeaks(microServicesSpy.makeServicePicker, file: file, line: line)
+        trackForMemoryLeaks(microServicesSpy.makeSearchByUIN, file: file, line: line)
         
         return (sut, microServicesSpy)
     }
@@ -1226,6 +1231,9 @@ extension QRNavigation {
         case let .sberQR(.success(sberQR)):
             return .sberQR(.success(.init(sberQR)))
             
+        case let .searchByUIN(searchByUIN):
+            return .searchByUIN(.init(searchByUIN))
+            
         case let .servicePicker(node):
             return .servicePicker(.init(node.model))
         }
@@ -1241,6 +1249,7 @@ extension QRNavigation {
         case providerPicker(ObjectIdentifier)
         case sberQR(SberQRResult)
         case servicePicker(ObjectIdentifier)
+        case searchByUIN(ObjectIdentifier)
         
         typealias OperatorSearch = QRSearchOperatorViewModel
         typealias PaymentCompleteResult = Result<ObjectIdentifier, ErrorMessage>

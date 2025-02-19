@@ -104,6 +104,9 @@ private extension QRNavigationComposer {
                 }
             }
             
+        case let .uin(uin):
+            microServices.makeSearchByUIN(uin) { completion(.searchByUIN($0)) }
+            
         case .url(_):
             makeQRFailure(with: notify) { completion(.failure($0)) }
             

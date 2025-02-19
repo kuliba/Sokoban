@@ -19,7 +19,7 @@ public struct PaymentCompletionStatusView: View {
         
         VStack(spacing: 24) {
             
-            iconView()
+            logoView()
             titleView()
             subtitleView()
             formattedAmountView()
@@ -40,7 +40,7 @@ extension PaymentCompletionStatusView {
 
 private extension PaymentCompletionStatusView {
     
-    func iconView() -> some View {
+    func logoView() -> some View {
         
         state.status.logo
             .resizable()
@@ -72,14 +72,17 @@ private extension PaymentCompletionStatusView {
     
     func formattedAmountView() -> some View {
         
-        state.formattedAmount.text(withConfig: config.amount)
+        state.formattedAmount?.text(withConfig: config.amount)
     }
     
     @ViewBuilder
     func merchantLogoView() -> some View {
         
         state.merchantIcon.map(makeIconView)
-            .frame(width: config.logoHeight, height: config.logoHeight)
+            .frame(
+                width: config.merchantIconHeight,
+                height: config.merchantIconHeight
+            )
     }
 }
 
@@ -87,15 +90,15 @@ private extension PaymentCompletionStatusView {
 private extension PaymentCompletionStatus {
     
     static let preview: Self = .init(
-        status: .preview,
         formattedAmount: "1 000 ₽",
-        merchantIcon: nil
+        merchantIcon: nil,
+        status: .preview
     )
     
     static let withSubtitle: Self = .init(
-        status: .withSubtitle,
         formattedAmount: "1 000 ₽",
-        merchantIcon: nil
+        merchantIcon: nil,
+        status: .withSubtitle
     )
 }
 
@@ -127,7 +130,7 @@ private extension PaymentCompletionStatusViewConfig {
             innerSize: .init(width: 44, height: 44),
             outerSize: .init(width: 88, height: 88)
         ),
-        logoHeight: 40,
+        merchantIconHeight: 40,
         title: .init(
             textFont: .title3,
             textColor: .blue
@@ -159,8 +162,8 @@ struct PaymentCompletionStatusView_Previews: PreviewProvider {
             makeIconView: {
                 
                 return .init(
-                    image: .init(systemName: $0 ?? "pencil.and.outline"),
-                    publisher: Just(.init(systemName: $0 ?? "tray.full.fill")).eraseToAnyPublisher()
+                    image: .init(systemName: $0),
+                    publisher: Just(.init(systemName: $0)).eraseToAnyPublisher()
                 )
             },
             config: .preview

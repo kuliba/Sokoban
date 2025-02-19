@@ -112,6 +112,7 @@ extension RootViewModelFactory {
         )
         
         let qrViewModelFactory = makeQRViewModelFactory(
+            c2gFlag: featureFlags.c2gFlag,
             paymentsTransfersFlag: featureFlags.paymentsTransfersFlag
         )
         
@@ -276,7 +277,7 @@ extension RootViewModelFactory {
             //TODO: implement makeOrderCardViewModel composer
         }
         
-        let (paymentsTransfersPersonal, loadCategoriesAndNotifyPicker) = makePaymentsTransfersPersonal()
+        let (paymentsTransfersPersonal, loadCategoriesAndNotifyPicker) = makePaymentsTransfersPersonal(c2gFlag: featureFlags.c2gFlag)
         
         let loadBannersList = makeLoadBanners()
         
@@ -416,8 +417,19 @@ extension RootViewModelFactory {
         updateClientInformAlerts()
             .store(in: &bindings)
         
+        let bannersBox = makeBannersBox(flags: featureFlags)
+        
+        if featureFlags.needGetBannersMyProductListV2 {
+            
+            performOrWaitForAuthorized { [weak bannersBox] in
+                
+                bannersBox?.requestUpdate()
+            }
+        }
+        
         let rootViewModel = make(
-            featureFlags: featureFlags,
+            featureFlags: featureFlags, 
+            bannersBox: bannersBox,
             splash: splash,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makeTemplates: makeMakeTemplates(featureFlags.paymentsTransfersFlag),
@@ -465,6 +477,7 @@ extension RootViewModelFactory {
         let getRootNavigation = { select, notify, completion in
             
             self.getRootNavigation(
+                c2gFlag: featureFlags.c2gFlag, 
                 makeProductProfileByID: makeProductProfileByID,
                 select: select,
                 notify: notify,
@@ -478,10 +491,10 @@ extension RootViewModelFactory {
               
                 // TODO: - extract to helper func
                 switch $0 {
-                case .outside:
+                case .failure, .outside:
                     return .zero
                 
-                case .failure, .orderCardResponse:
+                case .orderCardResponse:
                     return .milliseconds(100)
 
                 case .scanQR, .templates:
@@ -506,7 +519,37 @@ extension RootViewModelFactory {
     }
 }
 
+extension FeatureFlags {
+    
+    var needGetBannersMyProductListV2: Bool {
+        
+        return savingsAccountFlag.isActive ||
+        collateralLoanLandingFlag.isActive ||
+        orderCardFlag.isActive
+    }
+}
+
 extension SavingsAccountDomain.ContentState {
+    
+    var select: SavingsAccountDomain.Select? {
+        
+        switch status {
+        case .initiate, .inflight, .loaded:
+            return nil
+            
+        case let .failure(failure, _):
+            switch failure{
+            case let .alert(message):
+                return .failure(.error(message))
+                
+            case let .informer(info):
+                return .failure(.timeout(info))
+            }
+        }
+    }
+}
+
+extension SavingsAccountDomain.OpenAccountContentState {
     
     var select: SavingsAccountDomain.Select? {
         
@@ -782,6 +825,7 @@ private extension RootViewModelFactory {
     
     func make(
         featureFlags: FeatureFlags,
+        bannersBox: any BannersBoxInterface<BannerList>,
         splash: SplashScreenViewModel,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeTemplates: @escaping PaymentsTransfersFactory.MakeTemplates,
@@ -851,9 +895,10 @@ private extension RootViewModelFactory {
                 featureFlags.c2gFlag
             )
         )
-        
+                  
         let mainViewModel = MainViewModel(
-            model,
+            model, 
+            bannersBox: bannersBox,
             navigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
             landingServices: landingServices,
@@ -866,7 +911,7 @@ private extension RootViewModelFactory {
                 makeCollateralLoanShowcaseBinder: makeCollateralLoanLandingShowcaseBinder,
                 makeCollateralLoanLandingBinder: makeCollateralLoanLandingBinder,
                 makeCreateDraftCollateralLoanApplicationBinder: makeCreateDraftCollateralLoanApplicationBinder,
-                makeSavingsAccountBinder: makeSavingsAccount
+                makeSavingsAccountNodes: makeSavingsNodes(_:)
             ),
             viewModelsFactory: mainViewModelsFactory,
             makeOpenNewProductButtons: makeOpenNewProductButtons,

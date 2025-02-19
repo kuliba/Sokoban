@@ -29,7 +29,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     )
     
     private lazy var rootViewFactory = rootViewComposer.makeRootViewFactory(
-        featureFlags: featureFlags
+        featureFlags: featureFlags,
+        rootEvent: { [weak binder] select in
+            
+            binder?.flow.event(.select(select))
+            
+            DispatchQueue.main.delay(for: .milliseconds(100)) {
+         
+                binder?.content.tabsViewModel.reset()
+            }
+        }
     )
     
     convenience init(

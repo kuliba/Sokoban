@@ -12,17 +12,24 @@ import UIPrimitives
 struct SavingsAccountBinderView: View {
         
     private let binder: SavingsAccountDomain.Binder
+    private let openAccountBinder: SavingsAccountDomain.OpenAccountBinder
+
     private let config: Config
     private let factory: Factory
+    private let openAccountFactory: OpenAccountFactory
     
     init(
         binder: SavingsAccountDomain.Binder,
+        openAccountBinder: SavingsAccountDomain.OpenAccountBinder,
         config: Config,
-        factory: Factory
+        factory: Factory,
+        openAccountFactory: OpenAccountFactory
     ) {
         self.binder = binder
+        self.openAccountBinder = openAccountBinder
         self.config = config
         self.factory = factory
+        self.openAccountFactory = openAccountFactory
     }
     
     var body: some View {
@@ -50,14 +57,17 @@ struct SavingsAccountBinderView: View {
                                 config: .prod,
                                 factory: factory
                             )
+                            .onFirstAppear { contentEvent(.load) }
+                            .onAppear { flowEvent(.dismiss) }
                         }
                     },
-                    informerView: { InformerView(viewModel: .init(message: $0.message, icon: $0.icon.image, color: $0.color))}
+                    informerView: informerView
                 )
                 .padding(.bottom)
                 .navigationBarWithBack(
                     title: contentState.navTitle.title,
                     subtitle: contentState.navTitle.subtitle,
+                    subtitleForegroundColor: .textPlaceholder,
                     dismiss: { flowEvent(.dismiss) }
                 )
                 .navigationDestination(
@@ -71,6 +81,18 @@ struct SavingsAccountBinderView: View {
                 }
             }
         }
+    }
+    
+    private func informerView(
+        _ informerData: InformerData
+    ) -> InformerView {
+        
+        .init(
+            viewModel: .init(
+                message: informerData.message,
+                icon: informerData.icon.image,
+                color: informerData.color)
+        )
     }
     
     private func continueButton(
@@ -99,7 +121,7 @@ struct SavingsAccountBinderView: View {
         
         switch destination {
         case .openSavingsAccount:
-            Text("openSavingsAccount")
+            OpenSavingsAccountBinderView(binder: openAccountBinder, config: .prod, factory: openAccountFactory)
         }
     }
 }
@@ -108,6 +130,8 @@ extension SavingsAccountBinderView {
     
     typealias Config = SavingsAccountDomain.Config
     typealias Factory = SavingsAccountDomain.ViewFactory
+    typealias OpenAccountFactory = SavingsAccountDomain.OpenAccountLandingViewFactory
+
 }
 
 extension SavingsAccountDomain.Navigation {

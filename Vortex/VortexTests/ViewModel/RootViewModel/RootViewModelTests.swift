@@ -485,6 +485,7 @@ final class RootViewModelTests: XCTestCase {
             tabsViewModel: .init(
                 mainViewModel: .init(
                     model,
+                    bannersBox: BannersBox(load: { $0(nil) }),
                     navigationStateManager: .preview,
                     sberQRServices: .empty(),
                     landingServices: .empty(),
@@ -497,7 +498,7 @@ final class RootViewModelTests: XCTestCase {
                         makeCollateralLoanShowcaseBinder: { .preview },
                         makeCollateralLoanLandingBinder: { _ in .preview },
                         makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
-                        makeSavingsAccountBinder: { fatalError() }
+                        makeSavingsAccountNodes: { _ in .preview }
                     ),
                     viewModelsFactory: .preview,
                     makeOpenNewProductButtons: { _ in [] },
@@ -568,6 +569,7 @@ final class RootViewModelTests: XCTestCase {
             tabsViewModel: .init(
                 mainViewModel: .init(
                     model,
+                    bannersBox: BannersBox(load: { $0(nil) }),
                     navigationStateManager: .preview,
                     sberQRServices: .empty(),
                     landingServices: .empty(),
@@ -580,7 +582,7 @@ final class RootViewModelTests: XCTestCase {
                         makeCollateralLoanShowcaseBinder: { .preview },
                         makeCollateralLoanLandingBinder: { _ in .preview },
                         makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
-                        makeSavingsAccountBinder: { fatalError() }
+                        makeSavingsAccountNodes: { _ in .preview }
                     ),
                     viewModelsFactory: .preview,
                     makeOpenNewProductButtons: { _ in [] },
@@ -1045,7 +1047,7 @@ extension BannersBinder {
         httpClient: HTTPClientSpy(),
         logger: LoggerSpy(),
         mapScanResult: { _, completion in completion(.unknown) },
-        resolveQR: { _ in .unknown },
+        makeQRResolve: { _ in { _ in .unknown }},
         scanner: QRScannerViewModelSpy(),
         schedulers: .immediate
     ).makeBannersForMainView(

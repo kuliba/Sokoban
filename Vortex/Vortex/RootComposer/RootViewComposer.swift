@@ -8,6 +8,7 @@
 protocol RootViewComposer {
     
     func makeRootViewFactory(
-        featureFlags: FeatureFlags
+        featureFlags: FeatureFlags,
+        rootEvent: @escaping (RootViewSelect) -> Void
     ) -> RootViewFactory
 }

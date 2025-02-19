@@ -12,6 +12,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeQRViewModelFactory(
+        c2gFlag: C2GFlag,
         paymentsTransfersFlag: PaymentsTransfersFlag
     ) -> QRViewModelFactory {
         
@@ -25,7 +26,7 @@ extension RootViewModelFactory {
                     return nil
                     
                 case .inactive:
-                    return self?.makeQRScannerModel()
+                    return self?.makeQRScannerModel(c2gFlag: c2gFlag)
                 }
             }
         )

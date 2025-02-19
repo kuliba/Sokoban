@@ -65,7 +65,7 @@ class Model {
     let dictionariesUpdating: CurrentValueSubject<Set<DictionaryType>, Never>
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
     let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
-    let productListBannersWithSticker: CurrentValueSubject<[StickerBannersMyProductList], Never>
+    let productListBannersWithSticker: CurrentValueSubject<[CardBannerList], Never>
     let currencyList: CurrentValueSubject<[CurrencyData], Never>
     let countriesList: CurrentValueSubject<[CountryData], Never>
     let countriesListWithSevice: CurrentValueSubject<[CountryWithServiceData], Never>
@@ -1215,7 +1215,7 @@ private extension Model {
             self.catalogBanners.value = catalogBanner
         }
         
-        if let productListBannersWithSticker = localAgent.load(type: [StickerBannersMyProductList].self) {
+        if let productListBannersWithSticker = localAgent.load(type: [CardBannerList].self) {
             
             self.productListBannersWithSticker.value = productListBannersWithSticker
         }

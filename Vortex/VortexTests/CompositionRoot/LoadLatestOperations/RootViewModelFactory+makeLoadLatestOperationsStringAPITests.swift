@@ -169,6 +169,7 @@ final class RootViewModelFactory_makeLoadLatestOperationsStringAPITests: XCTestC
     private func makeSUT(
         hardcoded: [String]? = nil,
         mapScanResult: @escaping RootViewModelFactory.MapScanResult = { _, completion in completion(.unknown) },
+        makeQRResolve: @escaping RootViewModelFactory.MakeResolveQR = { _ in { _ in .unknown }},
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -185,7 +186,7 @@ final class RootViewModelFactory_makeLoadLatestOperationsStringAPITests: XCTestC
                 httpClient: HTTPClientSpy(),
                 logger: LoggerSpy(),
                 mapScanResult: mapScanResult,
-                resolveQR: { _ in .unknown },
+                makeQRResolve: makeQRResolve,
                 scanner: QRScannerViewModelSpy(),
                 schedulers: .immediate
             ).makeLoadLatestOperations(
@@ -199,7 +200,7 @@ final class RootViewModelFactory_makeLoadLatestOperationsStringAPITests: XCTestC
                 httpClient: HTTPClientSpy(),
                 logger: LoggerSpy(),
                 mapScanResult: mapScanResult,
-                resolveQR: { _ in .unknown },
+                makeQRResolve: makeQRResolve,
                 scanner: QRScannerViewModelSpy(),
                 schedulers: .immediate
             ).makeLoadLatestOperations(

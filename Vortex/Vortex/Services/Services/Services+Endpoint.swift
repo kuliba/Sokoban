@@ -32,10 +32,10 @@ extension Services {
                 switch self {
                 case .binding:
                     return "rest/binding"
-
+                    
                 case .dict:
                     return "dict"
-
+                    
                 case .collateralLoanLanding:
                     return "rest/v1/pages/collateral"
                     
@@ -53,7 +53,7 @@ extension Services {
                     
                 case .transfer:
                     return "rest/transfer"
-                
+                    
                 case .verify:
                     return "verify"
                 }
@@ -86,6 +86,8 @@ extension Services {
             case changePIN
             case changeSVCardLimit
             case createAnywayTransfer
+            case createC2GPayment
+            case createCardApplication
             case createCommissionProductTransfer
             case createDraftCollateralLoanApplication
             case createFastPaymentContract
@@ -94,8 +96,10 @@ extension Services {
             case fastPaymentContractFindList
             case formSessionKey
             case getAllLatestPayments
+            case getAuthorizedZoneClientInformData
             case getBankDefault
             case getBannerCatalogList
+            case getBannersMyProductList
             case getC2BSub
             case getCardOrderForm
             case getCardStatementForPeriod
@@ -106,6 +110,8 @@ extension Services {
             case getDigitalCardLanding
             case getInfoForRepeatPayment
             case getJsonAbroad
+            case getNotAuthorizedZoneClientInformData
+            case getOpenAccountForm
             case getOperationDetailByPaymentId
             case getOperatorsListByParam
             case getPaymentTemplateList
@@ -123,15 +129,13 @@ extension Services {
             case getStickerPayment
             case getSVCardLimits
             case getSvgImageList
+            case getUINData
             case getVerificationCode
-            case getAuthorizedZoneClientInformData
-            case getNotAuthorizedZoneClientInformData
             case makeDeleteBankDefault
             case makeSetBankDefault
             case makeTransfer
             case modifyC2BSubAcc
             case modifyC2BSubCard
-            case openAccountForm
             case prepareDeleteBankDefault
             case prepareSetBankDefault
             case processPublicKeyAuthenticationRequest
@@ -140,7 +144,6 @@ extension Services {
             case unblockCard
             case updateFastPaymentContract
             case userVisibilityProductsSettings
-            case createCardApplication
         }
     }
 }
@@ -264,12 +267,18 @@ extension Services.Endpoint {
         serviceName: .getSavingLanding
     )
 
-    static let openAccountFormRequest: Self = .init(
+    static let getOpenAccountFormRequest: Self = .init(
         pathPrefix: .savingsAccount,
         version: .none,
-        serviceName: .openAccountForm
+        serviceName: .getOpenAccountForm
     )
 
+    static let createC2GPayment: Self = .init(
+        pathPrefix: .transfer,
+        version: .none,
+        serviceName: .createC2GPayment
+    )
+    
     static let createStickerPayment: Self = .init(
         pathPrefix: .binding,
         version: .v1,
@@ -304,6 +313,12 @@ extension Services.Endpoint {
         pathPrefix: .dict,
         version: .v2,
         serviceName: .getBannerCatalogList
+    )
+
+    static let getBannersMyProductListV2: Self = .init(
+        pathPrefix: .dict,
+        version: .v2,
+        serviceName: .getBannersMyProductList
     )
 
     static let getC2BSub: Self = .init(
@@ -388,6 +403,12 @@ extension Services.Endpoint {
         pathPrefix: .binding,
         version: .v3,
         serviceName: .getScenarioQRData
+    )
+    
+    static let getUINData: Self = .init(
+        pathPrefix: .transfer,
+        version: .none,
+        serviceName: .getUINData
     )
     
     static let modifyC2BSubCardData: Self = .init(
