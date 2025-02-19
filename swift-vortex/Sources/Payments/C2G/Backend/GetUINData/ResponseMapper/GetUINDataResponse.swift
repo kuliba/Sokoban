@@ -12,7 +12,7 @@ extension ResponseMapper {
     
     public struct GetUINDataResponse: Equatable {
         
-        public let termsCheck: Bool
+        public let termsCheck: Bool?
         public let transAmm: Decimal?
         public let purpose: String?
         public let merchantName: String?
@@ -26,11 +26,11 @@ extension ResponseMapper {
         public let payerName: String?
         public let payerINN: String?
         public let payerKPP: String?
-        public let url: URL
+        public let url: URL?
         public let uin: String
         
         public init(
-            termsCheck: Bool,
+            termsCheck: Bool?,
             transAmm: Decimal?,
             purpose: String?,
             merchantName: String?,
@@ -44,7 +44,7 @@ extension ResponseMapper {
             payerName: String?,
             payerINN: String?,
             payerKPP: String?,
-            url: URL,
+            url: URL?,
             uin: String
         ) {
             self.termsCheck = termsCheck

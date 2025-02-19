@@ -34,7 +34,9 @@ public extension C2GPaymentReducer {
             state.productSelect = productSelectReduce(state.productSelect, productSelectEvent)
             
         case .termsToggle:
-            state.termsCheck.toggle()
+            if let termsCheck = state.termsCheck {
+                state.termsCheck = !termsCheck
+            }
         }
         
         return (state, nil)
