@@ -9,5 +9,6 @@ import Foundation
 
 public enum SavingsAccountContentEffect: Equatable {
     
+    case dismissInformer
     case load
 }

@@ -46,11 +46,21 @@ where AmountInfo: View,
     
     public var body: some View {
         
-        orderSavingsAccount(state.data)
+        mainView()
             .toolbar(content: toolbarContent)
             .safeAreaInset(edge: .bottom, spacing: 0, content: footer)
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden()
+    }
+    
+    @ViewBuilder
+    private func mainView() -> some View {
+        
+        if state.isNoData {
+            Color.clear.frame(maxHeight: .infinity)
+        } else {
+            orderSavingsAccount(state.data)
+        }
     }
     
     private func orderSavingsAccount(
@@ -114,10 +124,13 @@ where AmountInfo: View,
     
     @ViewBuilder
     private func footer() -> some View {
-        if isShowingProducts, !state.isShowingOTP {
-            amount()
-        } else {
-            openButton()
+        
+        if !state.isNoData {
+            if isShowingProducts, !state.isShowingOTP {
+                amount()
+            } else {
+                openButton()
+            }
         }
     }
     
