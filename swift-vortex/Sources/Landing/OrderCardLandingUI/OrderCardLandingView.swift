@@ -7,7 +7,6 @@
 
 import SwiftUI
 import DropDownTextListComponent
-import SavingsAccount
 
 public struct OrderCardLandingView: View {
     
@@ -16,13 +15,16 @@ public struct OrderCardLandingView: View {
     
     private let state: State
     private let config: Config
+    private let factory: ImageViewFactory
     
     public init(
         state: State,
-        config: Config
+        config: Config,
+        factory: ImageViewFactory
     ) {
         self.state = state
         self.config = config
+        self.factory = factory
     }
     
     public var body: some View {
@@ -31,7 +33,13 @@ public struct OrderCardLandingView: View {
             
             HeaderView(
                 model: state.header,
-                config: config.headerConfig
+                config: config.headerConfig,
+                imageFactory: factory
+            )
+            
+            DropDownTextListView(
+                config: config.dropDownConfig,
+                list: state.dropDownList
             )
         }
     }
@@ -41,15 +49,53 @@ public struct OrderCardLandingView: View {
     
     OrderCardLandingView(
         state: .init(
+            dropDownList: .preview,
             header: .preview
         ),
         config: .init(
+            dropDownConfig: .preview,
             headerConfig: .preview
+        ),
+        factory: .default
+    )
+}
+
+private extension DropDownTextList {
+    
+    static let preview: Self = .init(
+        title: "title",
+        items: [.init(
+            title: "title",
+            subTitle: "subtitle"
+        )]
+    )
+}
+
+private extension DropDownTextListConfig {
+    
+    static let preview: Self = .init(
+        cornerRadius: 12,
+        chevronDownImage: .bolt,
+        layouts: .init(
+            horizontalPadding: 16,
+            verticalPadding: 15
+        ),
+        colors: .init(
+            divider: .gray,
+            background: .accentColor
+        ),
+        fonts: .init(
+            title: .init(textFont: .body, textColor: .red),
+            itemTitle: .init(textFont: .body, textColor: .purple),
+            itemSubtitle: .init(
+                textFont: .body,
+                textColor: .black
+            )
         )
     )
 }
 
-private extension HeaderView.Model {
+extension HeaderView.Model {
     
     static let preview: Self = .init(
         title: "Карта МИР «Все включено»",
@@ -59,7 +105,7 @@ private extension HeaderView.Model {
             "5% на категории сезона",
             "от 0,5% до 1% кешбэк на остальные покупки**"
         ],
-        backgroundImage: Image("orderCardLanding")
+        md5Hash: "orderCardLanding"
     )
 }
 
@@ -70,6 +116,10 @@ private extension HeaderViewConfig {
             textFont: .body,
             textColor: .black
         ),
-        optionPlaceholder: .black
+        optionPlaceholder: .black,
+        layout: .init(
+            textViewLeadingPadding: 16,
+            textViewTrailingPadding: 15
+        )
     )
 }
