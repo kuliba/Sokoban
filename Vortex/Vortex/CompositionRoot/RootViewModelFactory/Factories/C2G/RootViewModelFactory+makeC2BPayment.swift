@@ -90,7 +90,9 @@ extension RootViewModelFactory {
                         uin: payload.uin
                     )
                 )
+                
                 let model = makeOperationDetailModel(initialState: initialState)
+                model.event(.load)
                 
                 completion(.success(model))
             }
