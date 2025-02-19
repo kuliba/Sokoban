@@ -167,8 +167,8 @@ private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
         
         switch documentStatus {
         case "COMPLETE":    return .completed
-        case "REJECTED":    return .inflight
-        case "IN_PROGRESS": return .rejected
+        case "IN_PROGRESS": return .inflight
+        case "REJECTED":    return .rejected
         default:            return nil
         }
     }
