@@ -38,7 +38,7 @@ public struct DropDownTextListView: View {
                         .accessibilityIdentifier("ListTitle")
                     
                     config.colors.divider
-                        .frame(height: 0.5)
+                        .frame(height: 0.6)
                 }
             }
             

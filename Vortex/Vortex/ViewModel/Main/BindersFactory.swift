@@ -12,9 +12,9 @@ import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 
 typealias MakeCollateralLoanShowcaseBinder = () -> GetShowcaseDomain.Binder
 typealias MakeCollateralLoanLandingBinder = (String) -> GetCollateralLandingDomain.Binder
-typealias MakeCreateDraftCollateralLoanApplicationBinder
-    = (CreateDraftCollateralLoanApplicationUIData) -> CreateDraftCollateralLoanApplicationDomain.Binder
 typealias MakeSavingsAccountBinder = () -> SavingsAccountDomain.Binder
+typealias MakeCreateDraftCollateralLoanApplicationBinder = (CreateDraftCollateralLoanApplication)
+    -> CreateDraftCollateralLoanApplicationDomain.Binder
 
 struct BindersFactory {
     
@@ -69,30 +69,39 @@ private extension GetCollateralLandingDomain.Flow {
 
 private extension CreateDraftCollateralLoanApplicationDomain.Binder {
     
-    static let preview = CreateDraftCollateralLoanApplicationDomain.Binder(
-        content: .preview,
-        flow: .preview,
-        bind: { _,_ in [] }
-    )
+    static var preview: CreateDraftCollateralLoanApplicationDomain.Binder {
+     
+        .init(
+            content: .contentPreview,
+            flow: .flowPreview,
+            bind: { _,_ in [] }
+        )
+    }
 }
 
 private extension CreateDraftCollateralLoanApplicationDomain.Content {
     
-    static let preview = CreateDraftCollateralLoanApplicationDomain.Content(
-        initialState: .init(
-            data: .preview,
-            stage: .correctParameters
-        ),
-        reduce: { state,_ in (state, nil) },
-        handleEffect: { _,_ in }
-    )
+    static var contentPreview: CreateDraftCollateralLoanApplicationDomain.Content {
+     
+        .init(
+            initialState: .init(
+                application: .preview,
+                stage: .correctParameters
+            ),
+            reduce: { state,_ in (state, nil) },
+            handleEffect: { _,_ in }
+        )
+    }
 }
 
 private extension CreateDraftCollateralLoanApplicationDomain.Flow {
     
-    static let preview = CreateDraftCollateralLoanApplicationDomain.Flow(
-        initialState: .init(),
-        reduce: { state,_ in (state, nil) },
-        handleEffect: { _,_ in }
-    )
+    static var flowPreview: CreateDraftCollateralLoanApplicationDomain.Flow {
+        
+        .init(
+            initialState: .init(),
+            reduce: { state,_ in (state, nil) },
+            handleEffect: { _,_ in }
+        )
+    }
 }

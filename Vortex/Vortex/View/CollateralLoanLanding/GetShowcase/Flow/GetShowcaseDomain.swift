@@ -27,7 +27,7 @@ extension GetShowcaseDomain {
     
     typealias NotifyEvent = FlowDomain.NotifyEvent
     typealias Notify = (NotifyEvent) -> Void
-    
+
     enum Select: Equatable {
 
         case landing(String)

@@ -6,7 +6,9 @@
 //
 
 import ButtonWithSheet
+import CollateralLoanLandingGetConsentsBackend
 import PDFKit
+import RemoteServices
 import SwiftUI
 
 struct PDFDocumentButton: View {
@@ -25,8 +27,10 @@ struct PDFDocumentButton: View {
 
 extension PDFDocumentButton {
     
+    typealias Payload = RemoteServices.RequestFactory.GetConsentsPayload
     typealias GetDocumentCompletion = (PDFDocument?) -> Void
     typealias GetDocument = (@escaping GetDocumentCompletion) -> Void
+    typealias GetPDFDocument = (Payload, @escaping GetDocumentCompletion) -> Void
 }
 
 // MARK: - Helpers
@@ -48,4 +52,9 @@ private extension PDFDocumentButton {
             dismissAction: dismiss
         )
     }
+}
+
+extension PDFDocumentButton {
+    
+    static let preview = Self(getDocument: { _ in })
 }

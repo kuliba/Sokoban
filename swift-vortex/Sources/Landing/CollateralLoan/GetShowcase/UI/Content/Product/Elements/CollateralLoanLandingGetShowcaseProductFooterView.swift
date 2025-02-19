@@ -23,12 +23,14 @@ struct CollateralLoanLandingGetShowcaseProductFooterView: View {
 
                 HStack(spacing: config.footerView.spacing) {
                     
-                    Image(systemName: "info.circle")
+                    config.footerView.icon
                         .resizable()
                         .frame(width: 24, height: 24)
-                    Text("Подробные условия")
+                    ("Подробные условия").text(withConfig: config.footerView.textConfig)
                         .multilineTextAlignment(.leading)
+                        .lineLimit(2)
                 }
+                .padding(.trailing, config.footerView.trailingPadding)
             }
             .foregroundColor(theme.foregroundColor)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)

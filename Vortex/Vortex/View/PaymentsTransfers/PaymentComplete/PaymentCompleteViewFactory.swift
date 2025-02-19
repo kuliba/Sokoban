@@ -6,7 +6,6 @@
 //
 
 import UIPrimitives
-import CollateralLoanLandingGetShowcaseUI
 
 struct PaymentCompleteViewFactory {
     
@@ -15,22 +14,19 @@ struct PaymentCompleteViewFactory {
     let makeIconView: MakeIconView
     let makeTemplateButton: MakeTemplateButtonView
     let makeTemplateButtonWrapperView: MakeTemplateButtonWrapperView
-    let makePDFDocumentButton: MakePDFDocumentButton?
     
     init(
         makeDetailButton: @escaping MakeDetailButton,
         makeDocumentButton: @escaping MakeDocumentButton,
         makeIconView: @escaping MakeIconView,
         makeTemplateButton: @escaping MakeTemplateButtonView,
-        makeTemplateButtonWrapperView: @escaping MakeTemplateButtonWrapperView,
-        makePDFDocumentButton: MakePDFDocumentButton? = nil
+        makeTemplateButtonWrapperView: @escaping MakeTemplateButtonWrapperView
     ) {
         self.makeDetailButton = makeDetailButton
         self.makeDocumentButton = makeDocumentButton
         self.makeIconView = makeIconView
         self.makeTemplateButton = makeTemplateButton
         self.makeTemplateButtonWrapperView = makeTemplateButtonWrapperView
-        self.makePDFDocumentButton = makePDFDocumentButton
     }
 }
 
@@ -40,5 +36,4 @@ extension PaymentCompleteViewFactory {
     typealias MakeDocumentButton = (DocumentID, RequestFactory.PrintFormType) -> TransactionDocumentButton
     typealias MakeIconView = (String?) -> UIPrimitives.AsyncImage
     typealias MakeTemplateButtonView = () -> TemplateButtonStateWrapperView?
-    typealias MakePDFDocumentButton = (CollateralLandingApplicationGetConsentsPayload) -> PDFDocumentButton
 }

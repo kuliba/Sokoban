@@ -45,7 +45,8 @@ extension RequestFactory.GetConsentsPayload {
         get throws {
 
             [
-                "applicationId": String(applicationId)
+                "applicationId": String(applicationId),
+                "verificationCode": String(verificationCode)
             ]
         }
     }

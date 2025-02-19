@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import CollateralLoanLandingGetConsentsBackend
+import RemoteServices
 
 public struct CollateralLandingApplicationSaveConsentsResult: Equatable {
     
@@ -20,6 +22,7 @@ public struct CollateralLandingApplicationSaveConsentsResult: Equatable {
     public let cityName: String
     public let status: String
     public let responseMessage: String
+    public let verificationCode: String
     
     public init(
         applicationID: UInt,
@@ -32,7 +35,8 @@ public struct CollateralLandingApplicationSaveConsentsResult: Equatable {
         documents: [String],
         cityName: String,
         status: String,
-        responseMessage: String
+        responseMessage: String,
+        verificationCode: String
     ) {
         self.applicationID = applicationID
         self.name = name
@@ -45,6 +49,7 @@ public struct CollateralLandingApplicationSaveConsentsResult: Equatable {
         self.cityName = cityName
         self.status = status
         self.responseMessage = responseMessage
+        self.verificationCode = verificationCode
     }
 }
 
@@ -53,6 +58,15 @@ public extension CollateralLandingApplicationSaveConsentsResult {
     var formattedAmount: String {
         
         amount.formattedCurrency()
+    }
+    
+    var payload: RemoteServices.RequestFactory.GetConsentsPayload {
+        
+        .init(
+            cryptoVersion: "1.0", // Constant, can be skipped in request
+            applicationId: applicationID,
+            verificationCode: verificationCode
+        )
     }
 }
 
@@ -72,6 +86,7 @@ public extension CollateralLandingApplicationSaveConsentsResult {
         ],
         cityName: "Москва",
         status: "submitted_for_review",
-        responseMessage: "Специалист банка свяжется с Вами в ближайшее время."
+        responseMessage: "Специалист банка свяжется с Вами в ближайшее время.",
+        verificationCode: "123456"
     )
 }

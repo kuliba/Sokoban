@@ -94,7 +94,7 @@ struct CollateralLoanShowcaseWrapperView: View {
                 ),
                 goToMain: goToMain
             )
-            .navigationBarWithBack(title: "", dismiss: { binder.flow.event(.dismiss) })
+            .onAppear { UINavigationBar.appearance().backgroundColor = UIColor(.clear) }
         }
     }
     
@@ -105,10 +105,10 @@ struct CollateralLoanShowcaseWrapperView: View {
 
 extension GetShowcaseDomain.Navigation: Identifiable {
 
-    var id: String {
+    var id: ObjectIdentifier {
         
         switch self {
-        case let .landing(id, _): return id
+        case let .landing(_, binder): return .init(binder)
         }
     }
 }
@@ -156,7 +156,7 @@ extension CollateralLoanLandingGetShowcaseViewFactory {
     static let preview = Self(
         makeImageViewWithMD5Hash: { _ in .preview },
         makeImageViewWithURL: {_ in .preview },
-        getPDFDocument: { _ in }
+        getPDFDocument: { _,_ in }
     )
 }
 

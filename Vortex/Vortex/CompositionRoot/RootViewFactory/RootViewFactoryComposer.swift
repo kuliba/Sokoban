@@ -7,6 +7,7 @@
 
 import ActivateSlider
 import AnywayPaymentDomain
+import CollateralLoanLandingGetConsentsBackend
 import CollateralLoanLandingGetShowcaseUI
 import Combine
 import GenericRemoteService
@@ -24,7 +25,6 @@ import SplashScreen
 import SwiftUI
 import UIKit
 import UIPrimitives
-import CollateralLoanLandingGetConsentsBackend
 
 final class RootViewFactoryComposer {
     
@@ -952,7 +952,25 @@ private extension RootViewFactoryComposer {
             }
         }
     }
+    
+    private func getPDFDocument(
+        payload: RemoteServices.RequestFactory.GetConsentsPayload,
+        completion: @escaping (PDFDocument?) -> Void
+    ) {
         
+        let getConsents = RemoteService(
+            createRequest: RequestFactory.createGetConsentsRequest(with:),
+            performRequest: httpClient.performRequest(_:completion:),
+            mapResponse: RemoteServices.ResponseMapper.mapGetConsentsResponse(_:_:)
+        )
+        
+        getConsents(payload) { [getConsents] in
+            
+            completion(try? $0.get())
+            _ = getConsents
+        }
+    }
+    
     func makeCollateralLoanShowcaseWrapperView(
         binder: GetShowcaseDomain.Binder,
         goToMain: @escaping () -> Void
@@ -961,8 +979,7 @@ private extension RootViewFactoryComposer {
         let factory = CollateralLoanLandingGetShowcaseViewFactory(
             makeImageViewWithMD5Hash: { self.makeIconView(.md5Hash(.init($0))) },
             makeImageViewWithURL: { self.makeGeneralIconView(.image($0.addingPercentEncoding())) },
-            // TODO: Need to realized
-            getPDFDocument: { _ in }
+            getPDFDocument: getPDFDocument
         )
         
         return .init(

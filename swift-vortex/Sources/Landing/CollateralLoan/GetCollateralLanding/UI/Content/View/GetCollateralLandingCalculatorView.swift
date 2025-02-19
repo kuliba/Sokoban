@@ -35,7 +35,6 @@ struct GetCollateralLandingCalculatorView: View {
         self.domainEvent = domainEvent
         self.externalEvent = externalEvent
         self.toggleIsOn = toggleIsOn
-        self.sliderCurrentValue = Double(state.desiredAmount)
     }
     
     var body: some View {
@@ -58,6 +57,7 @@ struct GetCollateralLandingCalculatorView: View {
                 calculatorBottomSectionView(config: config)
             }
         }
+        .onFirstAppear { sliderCurrentValue = Double(state.desiredAmount) }
         .frame(height: config.calculator.root.layouts.height)
         .padding(.leading, config.paddings.outerLeading)
         .padding(.trailing, config.paddings.outerTrailing)

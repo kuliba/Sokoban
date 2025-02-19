@@ -98,6 +98,7 @@ public struct CreateDraftCollateralLoanApplicationConfig {
         public let cornerRadius: CGFloat
         public let contentHorizontalSpacing: CGFloat
         public let contentVerticalSpacing: CGFloat
+        public let shimmeringHeight: CGFloat
         public let paddings: Paddings
 
         public init(
@@ -105,12 +106,14 @@ public struct CreateDraftCollateralLoanApplicationConfig {
             cornerRadius: CGFloat,
             contentHorizontalSpacing: CGFloat,
             contentVerticalSpacing: CGFloat,
+            shimmeringHeight: CGFloat,
             paddings: Paddings
         ) {
             self.iconSize = iconSize
             self.cornerRadius = cornerRadius
             self.contentHorizontalSpacing = contentHorizontalSpacing
             self.contentVerticalSpacing = contentVerticalSpacing
+            self.shimmeringHeight = shimmeringHeight
             self.paddings = paddings
         }
         
@@ -175,6 +178,7 @@ extension CreateDraftCollateralLoanApplicationConfig {
             cornerRadius: 12,
             contentHorizontalSpacing: 12,
             contentVerticalSpacing: 4,
+            shimmeringHeight: 150,
             paddings: .init(
                 stack: .init(
                     top: 10,
@@ -211,4 +215,10 @@ private extension Color {
     
     static let title: Self = .init(red: 0.6, green: 0.6, blue: 0.6)
     static let background: Self = .init(red: 0.96, green: 0.96, blue: 0.97)
+    static let shimmering: Self = .init(red: 0.77, green: 0.77, blue: 0.77)
+}
+
+extension CreateDraftCollateralLoanApplicationConfig {
+    
+    var shimmeringGradient: Gradient { .init(colors: [.shimmering, .clear]) }
 }
