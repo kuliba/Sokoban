@@ -6,7 +6,7 @@
 //
 
 /// Represents the various states of a loading process.
-enum LoadState<Success, Failure> {
+public enum LoadState<Success, Failure> {
     
     /// Loading completed successfully with a value.
     case completed(Success)
