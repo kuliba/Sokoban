@@ -25,7 +25,7 @@ extension ViewComponents {
             statusConfig: .c2g,
             // TODO: replace stub with buttons
             buttons: {
-            
+                
                 // TODO: extract helper
                 ShareButton(items: ["Payer: someone"], config: .default) {
                     
@@ -181,7 +181,7 @@ private extension C2GCompleteCover {
     static var rejectedNoMerchantNoMessage:  Self { make(.rejectedNoMerchantNoMessage) }
     static var rejectedMinimal:              Self { make(.rejectedMinimal) }
     
-    private static func make(_ response: Success.Response) -> Self {
+    private static func make(_ response: Success.EnhancedResponse) -> Self {
         
         return .init(
             id: .init(),
@@ -195,199 +195,244 @@ private extension OperationDetailDomain.Model {
     static let preview: OperationDetailDomain.Model = .init(initialState: .pending, reduce: { state, _ in (state, nil) }, handleEffect: { _,_ in })
 }
 
-private extension C2GPaymentDomain.C2GPaymentComplete.Response {
+private extension C2GPaymentDomain.C2GPaymentComplete.EnhancedResponse {
     
     // ✅ COMPLETED STATUS
     static let completedFull: Self = .init(
         formattedAmount: "100.50 ₽",
-        status: .completed,
         merchantName: "Merchant A",
         message: "Payment successful",
         paymentOperationDetailID: 1,
-        purpose: "Purchase"
+        product: .preview,
+        purpose: "Purchase",
+        status: .completed,
+        uin: UUID().uuidString
     )
     
     static let completedNoAmount: Self = .init(
         formattedAmount: nil,
-        status: .completed,
         merchantName: "Merchant B",
         message: "Payment processed",
         paymentOperationDetailID: 2,
-        purpose: "Subscription"
+        product: .preview,
+        purpose: "Subscription",
+        status: .completed,
+        uin: UUID().uuidString
     )
     
     static let completedNoMerchant: Self = .init(
         formattedAmount: "75.00 ₽",
-        status: .completed,
         merchantName: nil,
         message: "Transaction complete",
         paymentOperationDetailID: 3,
-        purpose: "Service Payment"
+        product: .preview,
+        purpose: "Service Payment",
+        status: .completed,
+        uin: UUID().uuidString
     )
     
     static let completedNoMessage: Self = .init(
         formattedAmount: "50.00 ₽",
-        status: .completed,
         merchantName: "Merchant C",
         message: nil,
         paymentOperationDetailID: 4,
-        purpose: "Gift"
+        product: .preview,
+        purpose: "Gift",
+        status: .completed,
+        uin: UUID().uuidString
     )
     
     static let completedNoPurpose: Self = .init(
         formattedAmount: "125.00 ₽",
-        status: .completed,
         merchantName: "Merchant D",
         message: "Transaction successful",
         paymentOperationDetailID: 5,
-        purpose: nil
+        product: .preview,
+        purpose: nil,
+        status: .completed,
+        uin: UUID().uuidString
     )
     
     static let completedNoMerchantNoMessage: Self = .init(
         formattedAmount: "90.00 ₽",
-        status: .completed,
         merchantName: nil,
         message: nil,
         paymentOperationDetailID: 6,
-        purpose: "Utilities"
+        product: .preview,
+        purpose: "Utilities",
+        status: .completed,
+        uin: UUID().uuidString
     )
     
     static let completedMinimal: Self = .init(
         formattedAmount: nil,
-        status: .completed,
         merchantName: nil,
         message: nil,
         paymentOperationDetailID: 7,
-        purpose: nil
+        product: .preview,
+        purpose: nil,
+        status: .completed,
+        uin: UUID().uuidString
     )
-    
     
     // ✅ INFLIGHT STATUS
     static let inflightFull: Self = .init(
         formattedAmount: "200.00 ₽",
-        status: .inflight,
         merchantName: "Merchant E",
         message: "Payment is being processed",
         paymentOperationDetailID: 8,
-        purpose: "Transfer"
+        product: .preview,
+        purpose: "Transfer",
+        status: .inflight,
+        uin: UUID().uuidString
     )
     
     static let inflightNoAmount: Self = .init(
         formattedAmount: nil,
-        status: .inflight,
         merchantName: "Merchant F",
         message: "Awaiting confirmation",
         paymentOperationDetailID: 9,
-        purpose: "Deposit"
+        product: .preview,
+        purpose: "Deposit",
+        status: .inflight,
+        uin: UUID().uuidString
     )
     
     static let inflightNoMerchant: Self = .init(
         formattedAmount: "150.00 ₽",
-        status: .inflight,
         merchantName: nil,
         message: "Processing transaction",
         paymentOperationDetailID: 10,
-        purpose: "Bill Payment"
+        product: .preview,
+        purpose: "Bill Payment",
+        status: .inflight,
+        uin: UUID().uuidString
     )
     
     static let inflightNoMessage: Self = .init(
         formattedAmount: "175.00 ₽",
-        status: .inflight,
         merchantName: "Merchant G",
         message: nil,
         paymentOperationDetailID: 11,
-        purpose: "Subscription Renewal"
+        product: .preview,
+        purpose: "Subscription Renewal",
+        status: .inflight,
+        uin: UUID().uuidString
     )
     
     static let inflightNoPurpose: Self = .init(
         formattedAmount: "120.00 ₽",
-        status: .inflight,
         merchantName: "Merchant H",
         message: "Payment pending",
         paymentOperationDetailID: 12,
-        purpose: nil
+        product: .preview,
+        purpose: nil,
+        status: .inflight,
+        uin: UUID().uuidString
     )
     
     static let inflightNoMerchantNoMessage: Self = .init(
         formattedAmount: "130.00 ₽",
-        status: .inflight,
         merchantName: nil,
         message: nil,
         paymentOperationDetailID: 13,
-        purpose: "Loan Payment"
+        product: .preview,
+        purpose: "Loan Payment",
+        status: .inflight,
+        uin: UUID().uuidString
     )
     
     static let inflightMinimal: Self = .init(
         formattedAmount: nil,
-        status: .inflight,
         merchantName: nil,
         message: nil,
         paymentOperationDetailID: 14,
-        purpose: nil
+        product: .preview,
+        purpose: nil,
+        status: .inflight,
+        uin: UUID().uuidString
     )
-    
     
     // ✅ REJECTED STATUS
     static let rejectedFull: Self = .init(
         formattedAmount: "300.75 ₽",
-        status: .rejected,
         merchantName: "Merchant I",
         message: "Payment failed due to insufficient funds",
         paymentOperationDetailID: 15,
-        purpose: "Online Shopping"
+        product: .preview,
+        purpose: "Online Shopping",
+        status: .rejected,
+        uin: UUID().uuidString
     )
     
     static let rejectedNoAmount: Self = .init(
         formattedAmount: nil,
-        status: .rejected,
         merchantName: "Merchant J",
         message: "Transaction declined",
         paymentOperationDetailID: 16,
-        purpose: "Loan Payment"
+        product: .preview,
+        purpose: "Loan Payment",
+        status: .rejected,
+        uin: UUID().uuidString
     )
     
     static let rejectedNoMerchant: Self = .init(
         formattedAmount: "125.00 ₽",
-        status: .rejected,
         merchantName: nil,
         message: "Card not accepted",
         paymentOperationDetailID: 17,
-        purpose: "Charity Donation"
+        product: .preview,
+        purpose: "Charity Donation",
+        status: .rejected,
+        uin: UUID().uuidString
     )
     
     static let rejectedNoMessage: Self = .init(
         formattedAmount: "140.00 ₽",
-        status: .rejected,
         merchantName: "Merchant K",
         message: nil,
         paymentOperationDetailID: 18,
-        purpose: "Food Order"
+        product: .preview,
+        purpose: "Food Order",
+        status: .rejected,
+        uin: UUID().uuidString
     )
     
     static let rejectedNoPurpose: Self = .init(
         formattedAmount: "110.00 ₽",
-        status: .rejected,
         merchantName: "Merchant L",
         message: "Insufficient funds",
         paymentOperationDetailID: 19,
-        purpose: nil
+        product: .preview,
+        purpose: nil,
+        status: .rejected,
+        uin: UUID().uuidString
     )
     
     static let rejectedNoMerchantNoMessage: Self = .init(
         formattedAmount: "135.00 ₽",
-        status: .rejected,
         merchantName: nil,
         message: nil,
         paymentOperationDetailID: 20,
-        purpose: "Membership Fee"
+        product: .preview,
+        purpose: "Membership Fee",
+        status: .rejected,
+        uin: UUID().uuidString
     )
     
     static let rejectedMinimal: Self = .init(
         formattedAmount: nil,
-        status: .rejected,
         merchantName: nil,
         message: nil,
         paymentOperationDetailID: 21,
-        purpose: nil
+        product: .preview,
+        purpose: nil,
+        status: .rejected,
+        uin: UUID().uuidString
     )
+}
+
+private extension ProductData {
+    
+    static let preview: ProductData = .init(id: 1, productType: .account, number: nil, numberMasked: nil, accountNumber: nil, balance: nil, balanceRub: nil, currency: "RUB", mainField: "", additionalField: nil, customName: nil, productName: "", openDate: nil, ownerId: 1, branchId: nil, allowCredit: false, allowDebit: true, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [], order: 1, isVisible: true, smallDesignMd5hash: "", smallBackgroundDesignHash: "")
 }

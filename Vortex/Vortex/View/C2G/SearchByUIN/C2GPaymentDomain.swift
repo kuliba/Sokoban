@@ -58,17 +58,19 @@ extension C2GPaymentDomain {
     
     struct C2GPaymentComplete {
         
-        let detail: OperationDetailDomain.Model
-        let response: Response
+        let detail: OperationDetailDomain.Model?
+        let response: EnhancedResponse
         
-        struct Response: Equatable {
+        struct EnhancedResponse: Equatable {
             
             let formattedAmount: String?
-            let status: Status
             let merchantName: String?
             let message: String?
             let paymentOperationDetailID: Int
+            let product: ProductData // too much
             let purpose: String?
+            let status: Status
+            let uin: String
             
             enum Status {
                 

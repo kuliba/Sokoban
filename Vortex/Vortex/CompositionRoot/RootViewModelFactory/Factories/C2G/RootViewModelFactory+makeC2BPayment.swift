@@ -49,6 +49,9 @@ extension RootViewModelFactory {
         _ digest: C2GPaymentDomain.Select.Digest,
         completion: @escaping (C2GPaymentDomain.Navigation) -> Void
     ) {
+        guard let product = product(for: digest)
+        else { return completion(.failure(.connectivityFailure)) } // Strictly speaking, not exactly connectivity failure but missing product, which should not occur if the digest could've held everything needed to form a product cell for details
+        
         let payload = digest.payload
         
         guard !payload.uin.hasEasterEgg
@@ -63,21 +66,42 @@ extension RootViewModelFactory {
             
             guard let self else { return }
             
-            let intermediaryResult = $0.intermediaryResult(
-                formattedAmount: formatAmount(value: $0.success?.amount)
-            )
-            
-            completion(intermediaryResult.map {
+            switch $0 {
+            case let .failure(failure as BackendFailure):
+                completion(.failure(failure))
                 
-                return C2GPaymentDomain.C2GPaymentComplete(
-                    detail: self.makeOperationDetailModel(
-                        operationDetailID: $0.paymentOperationDetailID
-                    ),
-                    response: $0
-                )
-            })
+            case .failure:
+                completion(.failure(.connectivityFailure))
+                
+            case let .success(response):
+                guard let status = response.status
+                else { return completion(.failure(.connectivityFailure)) }
+                
+                completion(.success(.init(
+                    detail: nil,
+                    response: .init(
+                        formattedAmount: formatAmount(value: response.amount),
+                        merchantName: response.merchantName,
+                        message: response.message,
+                        paymentOperationDetailID: response.paymentOperationDetailID,
+                        product: product,
+                        purpose: response.purpose,
+                        status: status,
+                        uin: payload.uin
+                    )
+                )))
+            }
+
             _ = service
         }
+    }
+    
+    @inlinable
+    func product(
+        for digest: C2GPaymentDomain.Select.Digest
+    ) -> ProductData? {
+        
+        model.product(productId: digest.productID.id)
     }
     
     private func formatAmount(
@@ -134,43 +158,9 @@ private extension String {
 
 // MARK: - Adapters
 
-private typealias IntermediaryResult = Result<C2GPaymentDomain.C2GPaymentComplete.Response, BackendFailure>
-
-private extension Result
-where Success == RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
-    
-    func intermediaryResult(
-        formattedAmount: String?
-    ) -> IntermediaryResult {
-        
-        switch self {
-        case let .failure(failure as BackendFailure):
-            return .failure(failure)
-            
-        case .failure:
-            return .failure(.connectivityFailure)
-            
-        case let .success(response):
-            return response.result(formattedAmount: formattedAmount)
-        }
-    }
-}
-
 private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
     
-    func result(
-        formattedAmount: String?
-    ) -> IntermediaryResult {
-        
-        guard let status else { return .failure(.connectivityFailure) }
-        
-        return .success(success(
-            formattedAmount: formattedAmount,
-            status: status
-        ))
-    }
-    
-    private var status: C2GPaymentDomain.C2GPaymentComplete.Response.Status? {
+    var status: C2GPaymentDomain.C2GPaymentComplete.EnhancedResponse.Status? {
         
         switch documentStatus {
         case "COMPLETE":    return .completed
@@ -178,21 +168,6 @@ private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
         case "REJECTED":    return .rejected
         default:            return nil
         }
-    }
-    
-    private func success(
-        formattedAmount: String?,
-        status: C2GPaymentDomain.C2GPaymentComplete.Response.Status
-    ) -> C2GPaymentDomain.C2GPaymentComplete.Response {
-        
-        return .init(
-            formattedAmount: formattedAmount,
-            status: status,
-            merchantName: merchantName,
-            message: message,
-            paymentOperationDetailID: paymentOperationDetailID,
-            purpose: purpose
-        )
     }
 }
 
