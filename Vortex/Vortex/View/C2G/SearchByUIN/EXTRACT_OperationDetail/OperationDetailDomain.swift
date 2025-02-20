@@ -22,9 +22,10 @@ extension OperationDetailDomain {
     
     struct State {
         
-        var details: StateMachines.LoadState<Details, Error>
+        var details: DetailsState
         let response: EnhancedResponse
         
+        typealias DetailsState = StateMachines.LoadState<Details, Error>
         typealias Details = Int // TODO: replace with operation details
         
         struct EnhancedResponse: Equatable {

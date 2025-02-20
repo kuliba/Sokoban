@@ -9,27 +9,6 @@ import RxViewModel
 import StateMachines
 import SwiftUI
 
-extension OperationDetailDomain.State.Details: TransactionDetailsProviding {
-    
-    var transactionDetails: [DetailsCell] {
-        []
-    }
-}
-
-extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
-    
-    var paymentRequisites: [DetailsCell] {
-        []
-    }
-}
-
-extension OperationDetailDomain.State.EnhancedResponse: TransactionDetailsProviding {
-    
-    var transactionDetails: [DetailsCell] {
-        []
-    }
-}
-
 extension ViewComponents {
     
     @inlinable
@@ -164,7 +143,7 @@ struct MakeC2GPaymentCompleteButtonsView_Previews: PreviewProvider {
     }
 }
 
-private extension OperationDetailDomain.State.EnhancedResponse {
+extension OperationDetailDomain.State.EnhancedResponse {
     
     static let preview: Self = .init(formattedAmount: nil, merchantName: nil, message: nil, paymentOperationDetailID: 1, product: .preview, purpose: nil, status: .completed, uin: UUID().uuidString)
 }
