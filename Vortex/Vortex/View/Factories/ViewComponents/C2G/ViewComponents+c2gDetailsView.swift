@@ -53,7 +53,7 @@ extension ViewComponents {
         dismiss: @escaping () -> Void
     ) -> some View {
         
-        SharingView(shareItems: details.shareItems) { share in
+        SharingView(shareItems: details.shareItems, config: .iVortex) { share in
             
             c2gDetailsView(details: details.paymentRequisites.map { .field($0) })
                 .navigationBarWithClose(

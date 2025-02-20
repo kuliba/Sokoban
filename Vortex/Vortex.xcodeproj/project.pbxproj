@@ -1520,8 +1520,6 @@
 		2AC8478E2A02747A00FC1A1F /* createC2BPaymentAcc_5_1.json in Resources */ = {isa = PBXBuildFile; fileRef = 2AC8478D2A02747A00FC1A1F /* createC2BPaymentAcc_5_1.json */; };
 		2AC882A32D61F21000066AEE /* RequestFactory+createCreateC2GPaymentRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC882A22D61F21000066AEE /* RequestFactory+createCreateC2GPaymentRequest.swift */; };
 		2AC8C91B2D66178400BFDA60 /* ViewComponents+makeC2GPaymentCompleteButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC8C91A2D66178400BFDA60 /* ViewComponents+makeC2GPaymentCompleteButtonsView.swift */; };
-		2AC8C91E2D66589F00BFDA60 /* SharingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC8C91D2D66589F00BFDA60 /* SharingView.swift */; };
-		2AC8C9202D6658B800BFDA60 /* WithSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC8C91F2D6658B800BFDA60 /* WithSheetView.swift */; };
 		2AC8C9222D6658F700BFDA60 /* ShareSheetConfig+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC8C9212D6658F700BFDA60 /* ShareSheetConfig+iVortex.swift */; };
 		2AC9D7922992250A003CBACD /* ProductCarouselViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AC9D7912992250A003CBACD /* ProductCarouselViewComponent.swift */; };
 		2ACA3F022B7639A600FD920F /* RootViewModelFactory+makeSubscriptionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACA3F012B7639A600FD920F /* RootViewModelFactory+makeSubscriptionsViewModel.swift */; };
@@ -5262,8 +5260,6 @@
 		2AC8478D2A02747A00FC1A1F /* createC2BPaymentAcc_5_1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = createC2BPaymentAcc_5_1.json; sourceTree = "<group>"; };
 		2AC882A22D61F21000066AEE /* RequestFactory+createCreateC2GPaymentRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCreateC2GPaymentRequest.swift"; sourceTree = "<group>"; };
 		2AC8C91A2D66178400BFDA60 /* ViewComponents+makeC2GPaymentCompleteButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeC2GPaymentCompleteButtonsView.swift"; sourceTree = "<group>"; };
-		2AC8C91D2D66589F00BFDA60 /* SharingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingView.swift; sourceTree = "<group>"; };
-		2AC8C91F2D6658B800BFDA60 /* WithSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithSheetView.swift; sourceTree = "<group>"; };
 		2AC8C9212D6658F700BFDA60 /* ShareSheetConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ShareSheetConfig+iVortex.swift"; sourceTree = "<group>"; };
 		2AC9D7912992250A003CBACD /* ProductCarouselViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCarouselViewComponent.swift; sourceTree = "<group>"; };
 		2ACA3F012B7639A600FD920F /* RootViewModelFactory+makeSubscriptionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeSubscriptionsViewModel.swift"; sourceTree = "<group>"; };
@@ -10821,7 +10817,6 @@
 				2AC8C91A2D66178400BFDA60 /* ViewComponents+makeC2GPaymentCompleteButtonsView.swift */,
 				2A3B69372D650F3B004075A8 /* ViewComponents+c2gDetailsView.swift */,
 				2A05163A2D66F1030098A878 /* OperationDetails */,
-				2AC8C91C2D66589400BFDA60 /* REUSABLE */,
 			);
 			path = C2G;
 			sourceTree = "<group>";
@@ -12584,15 +12579,6 @@
 				2AED642F2A416BBA00A52C35 /* TransportPaymentsHelpers.swift */,
 			);
 			path = Transport;
-			sourceTree = "<group>";
-		};
-		2AC8C91C2D66589400BFDA60 /* REUSABLE */ = {
-			isa = PBXGroup;
-			children = (
-				2AC8C91D2D66589F00BFDA60 /* SharingView.swift */,
-				2AC8C91F2D6658B800BFDA60 /* WithSheetView.swift */,
-			);
-			path = REUSABLE;
 			sourceTree = "<group>";
 		};
 		2ACBA6772CE9BD2F00758D71 /* AcceptanceTests */ = {
@@ -21807,7 +21793,6 @@
 				2A1E76B82AEE9B6400B33AF7 /* CVVPINCrypto.swift in Sources */,
 				77F5CE0F28056DC000611B66 /* LocationAgentMock.swift in Sources */,
 				2AE2B9B42B8E05AC00B86D56 /* UtilityService.swift in Sources */,
-				2AC8C91E2D66589F00BFDA60 /* SharingView.swift in Sources */,
 				A5ECD4CC27ECC2DC008FBEEC /* C2BDetailsFormViewModel.swift in Sources */,
 				68FFA54C2684C854002DADFA /* PDFViewerViewController.swift in Sources */,
 				2ABC575E2D65EAFB001E94BC /* OperationDetailDomain.swift in Sources */,
@@ -22051,7 +22036,6 @@
 				7744940027FDE3B9001E2B9E /* PlacesFilterViewModel.swift in Sources */,
 				2AAF3E242BF37C1800A623DA /* CacheSberOperator.swift in Sources */,
 				EDE7090627976AB90048CA94 /* TemplatesListViewModelAction.swift in Sources */,
-				2AC8C9202D6658B800BFDA60 /* WithSheetView.swift in Sources */,
 				2A267D4F2D4BFEAE001F725C /* RootViewModelFactory+makeCorporateTransfers.swift in Sources */,
 				774A8B4B2865FD3600B81140 /* MyProductsMoneyView.swift in Sources */,
 				2A8301BD2D647B9400A971F7 /* C2GPaymentCompleteViewConfig+iVortex.swift in Sources */,
