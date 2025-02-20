@@ -34,7 +34,7 @@ extension RootViewFactoryComposer {
             refreshView: makeSpinnerRefreshView(),
             makeLandingView: {
                 SavingsAccountView(
-                    state: .init($0.list.first ?? .empty),
+                    state: .init($0?.list.first),
                     config: .iVortex,
                     factory: self.makeImageViewFactory()
                 )
@@ -48,12 +48,12 @@ extension RootViewFactoryComposer {
     }
         
     func makeOpenSavingsAccountView(
-        _ data: SavingsAccountDomain.OpenAccountLanding
+        _ data: SavingsAccountDomain.OpenAccountLanding?
     ) -> OrderSavingsAccountWrapperView {
-        
+                
         return OrderSavingsAccountWrapperView(
             viewModel: .init(
-                initialState: .init(status: .result(.init(data.list.first ?? .empty))),
+                initialState: .init(status: .result(.init(data?.list.first))),
                 reduce: OrderSavingsAccountReducer().reduce(_:_:),
                 handleEffect: {_,_ in } // TODO: add handler (openUrl)
             ),
@@ -129,7 +129,9 @@ private extension OTPInputState {
 
 extension OrderSavingsAccount {
     
-    init(_ data: SavingsAccountDomain.OpenAccountLandingItem) {
+    init?(_ data: SavingsAccountDomain.OpenAccountLandingItem?) {
+        
+        guard let data else { return nil }
         
         self.init(currency: .init(code: data.currency.code, symbol: data.currency.symbol), designMd5hash: data.design, fee: .init(open: data.fee.open, subscription: .init(period: "period", value: 1000)), header: .init(title: data.title, subtitle: ""), hint: data.hint, income: data.income, links: .init(conditions: data.conditionsLink, tariff: data.tariffLink))
     }
@@ -155,7 +157,9 @@ extension SavingsAccountDomain.LandingItem {
 
 extension SavingsAccountState {
     
-    init(_ data: SavingsAccountDomain.LandingItem) {
+    init?(_ data: SavingsAccountDomain.LandingItem?) {
+        
+        guard let data else { return nil }
         
         let titles = SavingsAccountDomain.Titles.iVortex
         self.init(

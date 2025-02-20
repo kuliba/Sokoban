@@ -12,32 +12,11 @@ import RemoteServices
 import SavingsServices
 
 extension RootViewModelFactory {
-    
+       
     @inlinable
     func makeOpenSavingsAccount() -> SavingsAccountDomain.OpenAccountBinder {
         
-        let getOpenAccount = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createGetOpenAccountFormRequest,
-            mapResponse: RemoteServices.ResponseMapper.mapGetOpenAccountFormResponse,
-            mapError: SavingsAccountDomain.ContentError.init(error:)
-        )
-
-        let nanoServices: SavingsAccountDomain.ComposerOpenNanoServices = .init(
-            loadLanding: {
-               getOpenAccount("", $0)
-            }
-        )
-        
-        return makeOpenSavingsAccount(nanoServices: nanoServices)
-    }
-   
-    @inlinable
-    func makeOpenSavingsAccount(
-        nanoServices: SavingsAccountDomain.ComposerOpenNanoServices
-    ) -> SavingsAccountDomain.OpenAccountBinder {
-        
         let content = makeOpenSavingsAccountContent(
-            nanoServices: nanoServices,
             status: .initiate
         )
         
@@ -50,14 +29,28 @@ extension RootViewModelFactory {
     }
     
     private func makeOpenSavingsAccountContent(
-        nanoServices: SavingsAccountDomain.ComposerOpenNanoServices,
         status: SavingsAccountDomain.OpenAccountContentStatus
     ) -> SavingsAccountDomain.OpenAccountContent {
         
-        let reducer = SavingsAccountDomain.OpenAccountContentReducer()
-        let effectHandler = SavingsAccountDomain.OpenAccountContentEffectHandler(
-            loadLanding: nanoServices.loadLanding
+        let getOpenAccount = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetOpenAccountFormRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapGetOpenAccountFormResponse,
+            mapError: SavingsAccountDomain.ContentError.init(error:)
         )
+
+        let reducer = SavingsAccountDomain.OpenAccountContentReducer()
+        let effectHandler = SavingsAccountDomain.OpenAccountContentEffectHandler { dismissInformer, completion in
+            
+            getOpenAccount("") { [weak self] in
+                
+                if let self, case .informer = $0.failure?.kind {
+                    
+                    self.schedulers.background.delay(for: self.settings.informerDelay, dismissInformer)
+                }
+
+                completion($0)
+            }
+        }
         
         return .init(
             initialState: .init(status: status, navTitle: .init(title: "", subtitle: "")),
@@ -66,7 +59,6 @@ extension RootViewModelFactory {
             scheduler: schedulers.main
         )
     }
-    
     
     @inlinable
     func emittingOpen(

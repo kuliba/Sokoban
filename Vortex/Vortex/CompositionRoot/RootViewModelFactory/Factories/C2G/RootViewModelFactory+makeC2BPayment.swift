@@ -19,7 +19,6 @@ extension RootViewModelFactory {
         
         composeBinder(
             content: makeC2BPaymentContent(payload: payload),
-            delayProvider: delayProvider,
             getNavigation: getNavigation,
             selectWitnesses: .empty
         )
@@ -31,14 +30,6 @@ extension RootViewModelFactory {
     ) -> C2GPaymentDomain.Content {
         
         return .init(payload: payload, scheduler: schedulers.main)
-    }
-    
-    @inlinable
-    func delayProvider(
-        navigation: C2GPaymentDomain.Navigation
-    ) -> Delay {
-        
-        return .zero
     }
     
     @inlinable
@@ -58,6 +49,9 @@ extension RootViewModelFactory {
         _ digest: C2GPaymentDomain.Select.Digest,
         completion: @escaping (C2GPaymentDomain.Navigation) -> Void
     ) {
+        guard let product = product(for: digest)
+        else { return completion(.failure(.connectivityFailure)) } // Strictly speaking, not exactly connectivity failure but missing product, which should not occur if the digest could've held everything needed to form a product cell for details
+        
         let payload = digest.payload
         
         guard !payload.uin.hasEasterEgg
@@ -72,9 +66,47 @@ extension RootViewModelFactory {
             
             guard let self else { return }
             
-            completion($0.navigation(formattedAmount: formatAmount(value: $0.success?.amount)));
+            switch $0 {
+            case let .failure(failure as BackendFailure):
+                completion(.failure(failure))
+                
+            case .failure:
+                completion(.failure(.connectivityFailure))
+                
+            case let .success(response):
+                guard let status = response.status
+                else { return completion(.failure(.connectivityFailure)) }
+                
+                let initialState = OperationDetailDomain.State(
+                    details: .pending,
+                    response: .init(
+                        formattedAmount: formatAmount(value: response.amount),
+                        merchantName: response.merchantName,
+                        message: response.message,
+                        paymentOperationDetailID: response.paymentOperationDetailID,
+                        product: product,
+                        purpose: response.purpose,
+                        status: status,
+                        uin: payload.uin
+                    )
+                )
+                
+                let model = makeOperationDetailModel(initialState: initialState)
+                model.event(.load)
+                
+                completion(.success(model))
+            }
+
             _ = service
         }
+    }
+    
+    @inlinable
+    func product(
+        for digest: C2GPaymentDomain.Select.Digest
+    ) -> ProductData? {
+        
+        model.product(productId: digest.productID.id)
     }
     
     private func formatAmount(
@@ -85,7 +117,7 @@ extension RootViewModelFactory {
         
         return model.amountFormatted(amount: value, currencyCode: "RUB", style: .normal)
     }
-
+    
     // TODO: remove stub
     @inlinable
     func createC2GPaymentEasterEggs(
@@ -117,7 +149,7 @@ private extension C2GPaymentDomain.Navigation {
 
 private extension BackendFailure {
     
-    static let connectivityFailure: Self = .connectivity("Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения")
+    static let connectivityFailure: Self = .connectivity(.connectivity)
 }
 
 // TODO: remove with stub
@@ -131,61 +163,16 @@ private extension String {
 
 // MARK: - Adapters
 
-private extension Result
-where Success == RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
-    
-    func navigation(
-        formattedAmount: String?
-    ) -> C2GPaymentDomain.Navigation {
-        
-        switch self {
-        case let .failure(failure as BackendFailure):
-            return .failure(failure)
-            
-        case .failure:
-            return .connectivityFailure
-            
-        case let .success(response):
-            return response.result(formattedAmount: formattedAmount)
-        }
-    }
-}
-
 private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
     
-    func result(
-        formattedAmount: String?
-    ) -> C2GPaymentDomain.Navigation {
-        
-        guard let status
-        else { return .failure(.connectivityFailure) }
-        
-        return .success(success(formattedAmount: formattedAmount, status: status))
-    }
-    
-    private var status: C2GPaymentDomain.Navigation.C2GPaymentComplete.Status? {
+    var status: OperationDetailDomain.State.EnhancedResponse.Status? {
         
         switch documentStatus {
         case "COMPLETE":    return .completed
-        case "REJECTED":    return .inflight
-        case "IN_PROGRESS": return .rejected
+        case "IN_PROGRESS": return .inflight
+        case "REJECTED":    return .rejected
         default:            return nil
         }
-    }
-    
-    private func success(
-        formattedAmount: String?,
-        status: C2GPaymentDomain.Navigation.C2GPaymentComplete.Status
-    ) -> C2GPaymentDomain.Navigation.C2GPaymentComplete {
-        
-        return .init(
-            formattedAmount: formattedAmount,
-            status: status,
-            merchantName: merchantName,
-            message: message,
-            paymentOperationDetailID: paymentOperationDetailID,
-            purpose: purpose
-        )
     }
 }
 
@@ -209,23 +196,23 @@ where Context == C2GPaymentDomain.Context {
     init(payload: C2GPaymentDomain.ContentPayload) {
         
         self.init(
+            context: .init(term: .terms(url: payload.url)),
             productSelect: .init(selected: payload.selectedProduct),
             termsCheck: payload.termsCheck,
-            uin: payload.uin,
-            context: .init(term: .terms(url: payload.url))
+            uin: payload.uin
         )
     }
 }
 
 private extension AttributedString {
     
-    static func terms(url: URL) -> Self {
+    static func terms(url: URL?) -> Self {
         
-        var attributedString = AttributedString("Включить переводы через СБП,\nпринять условия обслуживания")
+        var attributedString = AttributedString.turnSBPOnMessage
         attributedString.foregroundColor = .textPlaceholder
         attributedString.font = .textBodyMR14200()
         
-        if let terms = attributedString.range(of: "принять условия обслуживания") {
+        if let url, let terms = attributedString.range(of: String.termURLPlace) {
             
             attributedString[terms].link = url
             attributedString[terms].underlineStyle = .single
@@ -234,6 +221,17 @@ private extension AttributedString {
         
         return attributedString
     }
+}
+
+private extension AttributedString {
+    
+    static let turnSBPOnMessage: Self = .init("Включить переводы через СБП,\n\(String.termURLPlace)")
+}
+
+private extension String {
+    
+    static let connectivity = "Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения"
+    static let termURLPlace = "принять условия обслуживания"
 }
 
 import CombineSchedulers

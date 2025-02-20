@@ -22,7 +22,7 @@ extension RootViewModelFactory {
         let binder: SavingsAccountDomain.Binder = makeSavingsAccount()
         let openBinder: SavingsAccountDomain.OpenAccountBinder = makeOpenSavingsAccount()
         
-        let cancellable = binder.flow.$state
+        let flowCancellable = binder.flow.$state
             .compactMap {
                 switch $0.navigation {
                 case .main: return ()
@@ -32,7 +32,17 @@ extension RootViewModelFactory {
             }
             .sink { dismiss() }
         
-        let openCancellable = openBinder.flow.$state
+        let contentCancellable = binder.content.$state
+            .compactMap {
+                switch $0.status {
+                case .loaded: return ()
+                    
+                default: return nil
+                }
+            }
+            .sink { binder.flow.event(.navigation(.loaded)) }
+        
+        let flowOpenCancellable = openBinder.flow.$state
             .compactMap {
                 switch $0.navigation {
                 case .main: return ()
@@ -42,35 +52,26 @@ extension RootViewModelFactory {
             }
             .sink { dismiss() }
         
+        let contentOpenCancellable = openBinder.content.$state
+            .compactMap {
+                switch $0.status {
+                case .loaded: return ()
+                    
+                default: return nil
+                }
+            }
+            .sink { openBinder.flow.event(.navigation(.loaded)) }
+
         return .init(
-            openSavingsAccountNode: .init(model: openBinder, cancellable: openCancellable),
-            savingsAccountNode: .init(model: binder, cancellable: cancellable)
+            openSavingsAccountNode: .init(model: openBinder, cancellables: [flowOpenCancellable, contentOpenCancellable]),
+            savingsAccountNode: .init(model: binder, cancellables: [flowCancellable, contentCancellable])
         )
     }
     
     @inlinable
     func makeSavingsAccount() -> SavingsAccountDomain.Binder {
         
-        let getSavingLanding = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createGetSavingLandingRequest,
-            mapResponse: RemoteServices.ResponseMapper.mapGetSavingLandingResponse,
-            mapError: SavingsAccountDomain.ContentError.init(error:)
-        )
-
-        let nanoServices: SavingsAccountDomain.ComposerLandingNanoService = .init(
-            loadLanding: { getSavingLanding($0, $1) }
-        )
-        
-        return makeSavingsAccount(nanoServices: nanoServices)
-    }
-    
-    @inlinable
-    func makeSavingsAccount(
-        nanoServices: SavingsAccountDomain.ComposerLandingNanoService
-    ) -> SavingsAccountDomain.Binder {
-        
         let content = makeContent(
-            nanoServices: nanoServices,
             status: .initiate
         )
         
@@ -91,19 +92,34 @@ extension RootViewModelFactory {
         case .main:                  return .milliseconds(100)
         case .openSavingsAccount:   return settings.delay
         case .failure:               return settings.delay
+        case .loaded:                return .zero
         }
     }
     
     private func makeContent(
-        nanoServices: SavingsAccountDomain.ComposerLandingNanoService,
         status: SavingsAccountDomain.ContentStatus
     ) -> SavingsAccountDomain.Content {
         
+        let getSavingLanding = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetSavingLandingRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapGetSavingLandingResponse,
+            mapError: SavingsAccountDomain.ContentError.init(error:)
+        )
+        
         let reducer = SavingsAccountDomain.ContentReducer()
         let effectHandler = SavingsAccountDomain.ContentEffectHandler(
-            microServices: .init(
-                loadLanding: nanoServices.loadLanding
-            ),
+            load: { payload, dismissInformer, completion   in
+                
+                getSavingLanding(payload) { [weak self] in
+                    
+                    if let self, case .informer = $0.failure?.kind {
+                        
+                        self.schedulers.background.delay(for: self.settings.informerDelay, dismissInformer)
+                    }
+                    
+                    completion($0)
+                }
+            },
             landingType: "DEFAULT"
         )
         
@@ -158,7 +174,7 @@ extension SavingsAccountDomain.ContentError {
         switch error {
         case let .performRequest(error):
             if error.isNotConnectedToInternetOrTimeout() {
-                self = .init(kind: .informer(.init(message: "Проверьте подключение к сети", icon: .wifiOff)))
+                self = .init(kind: .informer(.init(message: "Ошибка загрузки данных.\nПопробуйте позже.", icon: .close)))
             } else {
                 self = .init(kind: .alert("Попробуйте позже."))
             }

@@ -351,6 +351,12 @@ extension Services.Endpoint {
         serviceName: .getOperationDetailByPaymentId
     )
     
+    static let getOperationDetailByPaymentIDV3: Self = .init(
+        pathPrefix: .rest,
+        version: .v3,
+        serviceName: .getOperationDetailByPaymentId
+    )
+    
     static let getPINConfirmationCode: Self = .init(
         pathPrefix: .processing(.cardInfo),
         version: .v1,

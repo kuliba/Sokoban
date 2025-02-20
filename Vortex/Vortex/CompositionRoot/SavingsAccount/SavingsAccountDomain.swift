@@ -43,6 +43,7 @@ extension SavingsAccountDomain {
         case main
         case openSavingsAccount
         case failure(FlowFailureKind)
+        case loaded
     }
     
     // MARK: - Binder
@@ -71,7 +72,6 @@ extension SavingsAccountDomain {
     
     typealias ContentReducer = SavingsAccount.ContentReducer<Landing, InformerPayload>
     typealias ContentEffectHandler = SavingsAccount.ContentEffectHandler<Landing, InformerPayload>
-    typealias ContentMicroService = SavingsAccount.ContentEffectHandlerMicroServices<Landing, InformerPayload>
     
     typealias Content = RxViewModel<ContentState, ContentEvent, ContentEffect>
     typealias ContentView = SavingsAccountContentView<SpinnerRefreshView, SavingsAccountView, Landing, InformerPayload>
