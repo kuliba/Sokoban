@@ -1244,6 +1244,8 @@
 		2A93385E2A17CA5500397C88 /* PhoneValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A93385D2A17CA5500397C88 /* PhoneValidator.swift */; };
 		2A9338632A17CF1200397C88 /* PhoneValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338622A17CF1200397C88 /* PhoneValidatorTests.swift */; };
 		2A9338662A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A9338652A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift */; };
+		2A939C692D6775880032B83D /* PaymentCompleteButtonsPlaceholderViewConfig+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A939C682D6775880032B83D /* PaymentCompleteButtonsPlaceholderViewConfig+iVortex.swift */; };
+		2A939C6B2D6775B80032B83D /* PaymentCompleteButtonsPlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A939C6A2D6775B80032B83D /* PaymentCompleteButtonsPlaceholderView.swift */; };
 		2A945B3C2CE3731B00A68FB1 /* RootViewModel+selectEmitting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A945B3B2CE3731B00A68FB1 /* RootViewModel+selectEmitting.swift */; };
 		2A945B402CE3D65100A68FB1 /* QRFailedViewModelWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A945B3F2CE3D65100A68FB1 /* QRFailedViewModelWrapper.swift */; };
 		2A945B462CE49E8E00A68FB1 /* PaymentsTransfersPersonalTransfersFlowViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A945B452CE49E8E00A68FB1 /* PaymentsTransfersPersonalTransfersFlowViewFactory.swift */; };
@@ -4997,6 +4999,8 @@
 		2A93385D2A17CA5500397C88 /* PhoneValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneValidator.swift; sourceTree = "<group>"; };
 		2A9338622A17CF1200397C88 /* PhoneValidatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneValidatorTests.swift; sourceTree = "<group>"; };
 		2A9338652A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneKitReducerTextFieldViewModelTests.swift; sourceTree = "<group>"; };
+		2A939C682D6775880032B83D /* PaymentCompleteButtonsPlaceholderViewConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentCompleteButtonsPlaceholderViewConfig+iVortex.swift"; sourceTree = "<group>"; };
+		2A939C6A2D6775B80032B83D /* PaymentCompleteButtonsPlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCompleteButtonsPlaceholderView.swift; sourceTree = "<group>"; };
 		2A945B3B2CE3731B00A68FB1 /* RootViewModel+selectEmitting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModel+selectEmitting.swift"; sourceTree = "<group>"; };
 		2A945B3F2CE3D65100A68FB1 /* QRFailedViewModelWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRFailedViewModelWrapper.swift; sourceTree = "<group>"; };
 		2A945B452CE49E8E00A68FB1 /* PaymentsTransfersPersonalTransfersFlowViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersPersonalTransfersFlowViewFactory.swift; sourceTree = "<group>"; };
@@ -9066,6 +9070,7 @@
 				2AD8243A2C8712CC0007B8DF /* PaymentsTransfersPersonalViewConfig+iVortex.swift */,
 				2A3624762C5E6BCA00174C50 /* SegmentedPaymentProviderPickerViewConfig+iVortex.swift */,
 				2A234FC52D47AE9400EE97BF /* SplashScreenStaticConfig+prod.swift */,
+				2A939C682D6775880032B83D /* PaymentCompleteButtonsPlaceholderViewConfig+iVortex.swift */,
 				2AC8C9212D6658F700BFDA60 /* ShareSheetConfig+iVortex.swift */,
 				2ABB63112C640B6300541DE7 /* TextInputConfig+iVortex.swift */,
 				2A6679DE2C58ACF3003ACA31 /* TransactionCompleteViewConfig+iVortex.swift */,
@@ -10815,6 +10820,7 @@
 				2A78246C2D6241620084B8A9 /* ViewComponents+makeSPBFooter.swift */,
 				2A5D98A32D5E11B90065C4E3 /* ViewComponents+makeC2GPaymentCompleteView.swift */,
 				2AC8C91A2D66178400BFDA60 /* ViewComponents+makeC2GPaymentCompleteButtonsView.swift */,
+				2A939C6A2D6775B80032B83D /* PaymentCompleteButtonsPlaceholderView.swift */,
 				2A3B69372D650F3B004075A8 /* ViewComponents+c2gDetailsView.swift */,
 				2A05163A2D66F1030098A878 /* OperationDetails */,
 			);
@@ -22584,6 +22590,7 @@
 				2A9CB0882BEFC84C00DA5EF3 /* UtilityPaymentOperator.swift in Sources */,
 				7769F5C627D8B19300F80607 /* ProductDynamicParams.swift in Sources */,
 				8306C12F2B63A4A4007FDA89 /* RequestFactory+getProductDynamicParamsList.swift in Sources */,
+				2A939C692D6775880032B83D /* PaymentCompleteButtonsPlaceholderViewConfig+iVortex.swift in Sources */,
 				C143D1A22D0092E9009C4F3E /* OrderCardVerticalListView.swift in Sources */,
 				8328ABF72C3BFF7C00AD05E0 /* ChangeSVCardLimitServices.swift in Sources */,
 				2A556B4C2C7CEAE0002050C2 /* OperationPickerStateItemLabelConfig+iVortex.swift in Sources */,
@@ -22750,6 +22757,7 @@
 				68E803E627D9280B00B75D41 /* ProductProfileViewModel.swift in Sources */,
 				EC554A442CC9291E002A8C3A /* RootViewModelFactory+Load.swift in Sources */,
 				8306C12A2B5FB3B3007FDA89 /* RequestFactory+getCardStatementForPeriod.swift in Sources */,
+				2A939C6B2D6775B80032B83D /* PaymentCompleteButtonsPlaceholderView.swift in Sources */,
 				2A01F93F2AE50F340064F15B /* ComposedCVVPINService+ActivateCVVPINClient.swift in Sources */,
 				2A9499202B7362DA00C67F05 /* RemoteServiceErrorOf.swift in Sources */,
 				2AA3A9552BFF8D5D00AEBCC9 /* ProductSelectStateWrapperView.swift in Sources */,
