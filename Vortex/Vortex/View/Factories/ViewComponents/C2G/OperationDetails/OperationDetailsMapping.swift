@@ -14,7 +14,24 @@ extension OperationDetailDomain.State.Details: TransactionDetailsProviding {
     var transactionDetails: [DetailsCell] {
         
         return [
-            .field(.init(image: .ic16Tv, title: "Sample title", value: "Sample value"))
+            transAmmField.map(DetailsCell.field),
+            discountField.map(DetailsCell.field),
+            discountExpiryField.map(DetailsCell.field),
+            formattedAmountField.map(DetailsCell.field),
+            dateForDetailField.map(DetailsCell.field),
+            // operationStatus // Статус операции- operationStatus (возможные значения: Успешно, Отказ, В обработке)
+            // productWidget // Счет списания-  payerCardId или payerAccountId
+            payeeFullNameField.map(DetailsCell.field),
+            supplierBillIDField.map(DetailsCell.field),
+            commentField.map(DetailsCell.field),
+            realPayerFIOField.map(DetailsCell.field),
+            realPayerINNField.map(DetailsCell.field),
+            realPayerKPPField.map(DetailsCell.field),
+            dateNField.map(DetailsCell.field),
+            paymentTermField.map(DetailsCell.field),
+            legalActField.map(DetailsCell.field),
+            upnoField.map(DetailsCell.field),
+            transferNumberField.map(DetailsCell.field),
         ].compactMap { $0 }
     }
 }
