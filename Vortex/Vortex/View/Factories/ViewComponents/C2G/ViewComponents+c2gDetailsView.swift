@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIPrimitives
 
 protocol TransactionDetailsProviding<TransactionDetails> {
     
@@ -139,4 +140,21 @@ extension DetailsCell {
         
         return field
     }
+}
+
+extension [DetailsCell] {
+    
+    static let preview: Self = [
+        .field(.init(
+            image: .init(systemName: "calendar"),
+            title: "Дата и время операции (МСК)",
+            value: "06.05.2021 15:38:12")
+        ),
+        .field(.init(
+            image: nil,
+            title: "Назначение платежа",
+            value: "Транспортный налог")
+        ),
+        .product(.init(title: "Product"))
+    ]
 }
