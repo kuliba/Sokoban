@@ -39,14 +39,8 @@ extension ViewComponents {
                 makeC2GPaymentCompleteShortDetailsButton(response: state.response)
                 
             case .loading:
-                Group {
-                    
-                    circleButton(image: .init(""), title: "Детали") {}
-                    circleButton(image: .init(""), title: "Реквизиты") {}
-                }
-                .disabled(true)
-                .redacted(reason: .placeholder)
-                ._shimmering()
+                circleButtonPlaceholder()
+                circleButtonPlaceholder()
                 
             case .pending:
                 EmptyView()
@@ -103,7 +97,15 @@ extension ViewComponents {
             orientation: .vertical,
             action: action
         ))
-        .frame(width: 100, height: 92)
+        .frame(width: 100, height: 92, alignment: .top)
+    }
+    
+    @inlinable
+    func circleButtonPlaceholder() -> some View {
+        
+        PaymentCompleteButtonsPlaceholderView(config: .iVortex)
+            ._shimmering()
+            .frame(width: 100, height: 92, alignment: .top)
     }
 }
 
