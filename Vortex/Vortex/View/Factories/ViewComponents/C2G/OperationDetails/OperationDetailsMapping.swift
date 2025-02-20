@@ -65,7 +65,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         payeeFullName.map {
             
-            .init(image: .ic24Bank, title: "Информация о плательщике", value: $0)
+            .init(image: .ic24Bank, title: "Получатель", value: $0)
         }
     }
     
@@ -81,7 +81,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         comment.map {
          
-            .init(image: .ic24Tax, title: "Номер документа (УИН)", value: $0)
+            .init(image: .ic24Tax, title: "Назначение платежа", value: $0)
         }
     }
     
@@ -89,7 +89,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         realPayerINN.map {
          
-            .init(image: .ic24FileHash, title: "Номер документа (УИН)", value: $0)
+            .init(image: .ic24FileHash, title: "ИНН плательщика", value: $0)
         }
     }
     
@@ -97,7 +97,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         realPayerKPP.map {
          
-            .init(image: .ic24Hash, title: "Номер документа (УИН)", value: $0)
+            .init(image: .ic24Hash, title: "КПП плательщика", value: $0)
         }
     }
     
@@ -105,7 +105,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         dateN.map {
          
-            .init(image: .ic24Calendar, title: "Номер документа (УИН)", value: $0)
+            .init(image: .ic24Calendar, title: "Дата начисления", value: $0)
         }
     }
     
@@ -113,7 +113,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         paymentTerm.map {
          
-            .init(image: .ic24CalendarPayment, title: "Номер документа (УИН)", value: $0)
+            .init(image: .ic24CalendarPayment, title: "Срок оплаты", value: $0)
         }
     }
     
@@ -121,7 +121,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         legalAct.map {
          
-            .init(image: .ic24FileText, title: "Номер документа (УИН)", value: $0)
+            .init(image: .ic24FileText, title: "Информация о НПА", value: $0)
         }
     }
     
@@ -129,7 +129,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         transAmm.map {
          
-            .init(image: .ic24Cash, title: "Номер документа (УИН)", value: $0)
+            .init(image: .ic24Cash, title: "Сумма начисления", value: $0)
         }
     }
     
@@ -137,7 +137,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         discount.map {
          
-            .init(image: .ic24Percent, title: "Номер документа (УИН)", value: $0)
+            .init(image: .ic24Percent, title: "Скидка", value: $0)
         }
     }
     
@@ -145,7 +145,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         discountExpiry.map {
          
-            .init(image: .ic24Clock, title: "Номер документа (УИН)", value: $0)
+            .init(image: .ic24Clock, title: "Срок действия скидки", value: $0)
         }
     }
     
@@ -153,7 +153,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         formattedAmount.map {
          
-            .init(image: .ic24Coins, title: "Номер документа (УИН)", value: $0)
+            .init(image: .ic24Coins, title: "Сумма платежа", value: $0)
         }
     }
     
@@ -161,7 +161,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         upno.map {
          
-            .init(image: .ic24FileHash, title: "Номер документа (УИН)", value: $0)
+            .init(image: .ic24FileHash, title: "УПНО", value: $0)
         }
     }
     
@@ -169,7 +169,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         transferNumber.map {
          
-            .init(image: .ic24Hash, title: "Номер документа (УИН)", value: $0)
+            .init(image: .ic24Hash, title: "Идентификатор операции СБП", value: $0)
         }
     }
 }
