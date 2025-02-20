@@ -41,8 +41,8 @@ extension ViewComponents {
             case .loading:
                 Group {
                     
-                    circleButton(image: .ic24Info, title: "Детали") {}
-                    circleButton(image: .ic24Share, title: "Реквизиты") {}
+                    circleButton(image: .init(""), title: "Детали") {}
+                    circleButton(image: .init(""), title: "Реквизиты") {}
                 }
                 .disabled(true)
                 .redacted(reason: .placeholder)
@@ -107,7 +107,7 @@ extension ViewComponents {
     }
 }
 
-extension OperationDetailDomain.State {
+private extension OperationDetailDomain.State {
     
     var _details: OperationDetailDomain.State.Details? {
         
