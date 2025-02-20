@@ -15,26 +15,31 @@ extension OperationDetailDomain.State.Details: TransactionDetailsProviding {
     var transactionDetails: [DetailsCell] {
         
         return [
-            transAmmField.map(DetailsCell.field),
-            discountField.map(DetailsCell.field),
-            discountExpiryField.map(DetailsCell.field),
-            formattedAmountField.map(DetailsCell.field),
-            dateForDetailField.map(DetailsCell.field),
-            statusField.map(DetailsCell.field),
+            transAmmField.asField,
+            discountField.asField,
+            discountExpiryField.asField,
+            formattedAmountField.asField,
+            dateForDetailField.asField,
+            statusField.asField,
             .product(product.cellProduct),
-            payeeFullNameField.map(DetailsCell.field),
-            supplierBillIDField.map(DetailsCell.field),
-            commentField.map(DetailsCell.field),
-            realPayerFIOField.map(DetailsCell.field),
-            realPayerINNField.map(DetailsCell.field),
-            realPayerKPPField.map(DetailsCell.field),
-            dateNField.map(DetailsCell.field),
-            paymentTermField.map(DetailsCell.field),
-            legalActField.map(DetailsCell.field),
-            upnoField.map(DetailsCell.field),
-            transferNumberField.map(DetailsCell.field),
+            payeeFullNameField.asField,
+            supplierBillIDField.asField,
+            commentField.asField,
+            realPayerFIOField.asField,
+            realPayerINNField.asField,
+            realPayerKPPField.asField,
+            dateNField.asField,
+            paymentTermField.asField,
+            legalActField.asField,
+            upnoField.asField,
+            transferNumberField.asField,
         ].compactMap { $0 }
     }
+}
+
+private extension Optional where Wrapped == DetailsCell.Field {
+    
+    var asField: DetailsCell? { map(DetailsCell.field) }
 }
 
 // MARK: - Payment Requisites
