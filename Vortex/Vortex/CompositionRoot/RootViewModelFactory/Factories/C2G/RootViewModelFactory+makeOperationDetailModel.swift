@@ -25,7 +25,7 @@ extension RootViewModelFactory {
             
             load(.init(initialState.response.paymentOperationDetailID)) {
                 
-                completion($0.map { _ in 1 })
+                completion($0.map(\.details))
             }
         }
         
@@ -41,6 +41,31 @@ extension RootViewModelFactory {
             },
             handleEffect: effectHandler.handleEffect,
             scheduler: schedulers.main
+        )
+    }
+}
+
+extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse {
+    
+    var details: OperationDetailDomain.State.Details {
+        
+        return .init(
+            dateForDetail: dateForDetail,
+            realPayerFIO: realPayerFIO,
+            payeeFullName: payeeFullName,
+            supplierBillID: supplierBillID,
+            comment: comment,
+            realPayerINN: realPayerINN,
+            realPayerKPP: realPayerKPP,
+            dateN: dateN,
+            paymentTerm: paymentTerm,
+            legalAct: legalAct,
+            transAmm: transAmm,
+            discount: discount,
+            discountExpiry: discountExpiry,
+            formattedAmount: formattedAmount,
+            upno: upno,
+            transferNumber: transferNumber
         )
     }
 }

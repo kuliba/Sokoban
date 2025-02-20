@@ -81,6 +81,7 @@ extension RootViewModelFactory {
                     details: .pending,
                     response: .init(
                         formattedAmount: formatAmount(value: response.amount),
+                        formattedDate: nil, // TODO: extract from new version of response
                         merchantName: response.merchantName,
                         message: response.message,
                         paymentOperationDetailID: response.paymentOperationDetailID,
