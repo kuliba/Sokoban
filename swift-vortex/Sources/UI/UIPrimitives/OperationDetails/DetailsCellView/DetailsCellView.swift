@@ -7,12 +7,20 @@
 
 import SwiftUI
 
-struct DetailsCellView: View {
+public struct DetailsCellView: View {
     
-    let cell: DetailsCell
-    let config: DetailCellViewConfig
+    private let cell: DetailsCell
+    private let config: DetailCellViewConfig
     
-    var body: some View {
+    public init(
+        cell: DetailsCell,
+        config: DetailCellViewConfig
+    ) {
+        self.cell = cell
+        self.config = config
+    }
+    
+    public var body: some View {
         
         switch cell {
         case let .field(field):     fieldView(field)
@@ -51,9 +59,11 @@ private extension DetailsCellView {
             
             Color.clear
             
-            field.image.map {
+            field.image.map { image in
                 
-                $0.renderingMode(.original)
+                image
+                    .resizable()
+                    .renderingMode(.original)
             }
         }
     }
@@ -64,4 +74,38 @@ private extension DetailsCellView {
         
         Text("TBD: productView")
     }
+}
+
+// MARK: - Previews
+
+struct DetailsCellView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        VStack(spacing: 16) {
+            
+            detailsCellView(.fieldPreview)
+            detailsCellView(.productPreview)
+        }
+    }
+    
+    private static func detailsCellView(
+        _ cell: DetailsCell
+    ) -> some View {
+        
+        DetailsCellView(cell: cell, config: .preview)
+    }
+}
+
+extension DetailsCell {
+    
+    static let fieldPreview: Self = .field(.init(
+        image: .init(systemName: "scribble"),
+        title: "Field Title",
+        value: "Field Value"
+    ))
+    
+    static let productPreview: Self = .product(.init(
+        title: "Product Title"
+    ))
 }

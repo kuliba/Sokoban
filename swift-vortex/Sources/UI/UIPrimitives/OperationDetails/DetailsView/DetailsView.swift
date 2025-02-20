@@ -7,13 +7,23 @@
 
 import SwiftUI
 
-struct DetailsView<DetailsCellView: View>: View {
+public struct DetailsView<DetailsCellView: View>: View {
     
-    let detailsCells: [DetailsCell]
-    let config: DetailsViewConfig
-    let detailsCellView: (DetailsCell) -> DetailsCellView
+    private let detailsCells: [DetailsCell]
+    private let config: DetailsViewConfig
+    private let detailsCellView: (DetailsCell) -> DetailsCellView
     
-    var body: some View {
+    public init(
+        detailsCells: [DetailsCell],
+        config: DetailsViewConfig,
+        detailsCellView: @escaping (DetailsCell) -> DetailsCellView
+    ) {
+        self.detailsCells = detailsCells
+        self.config = config
+        self.detailsCellView = detailsCellView
+    }
+    
+    public var body: some View {
         
         ScrollView(showsIndicators: false) {
             
@@ -43,9 +53,9 @@ struct DetailsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        DetailsView(detailsCells: .preview, config: .iVortex) {
+        DetailsView(detailsCells: .preview, config: .preview) {
             
-            DetailsCellView(cell: $0, config: .iVortex)
+            DetailsCellView(cell: $0, config: .preview)
         }
     }
 }
@@ -54,7 +64,7 @@ extension [DetailsCell] {
     
     static let preview: Self = [
         .field(.init(
-            image: .ic24Calendar,
+            image: .init(systemName: "calendar"),
             title: "Дата и время операции (МСК)",
             value: "06.05.2021 15:38:12")
         ),
