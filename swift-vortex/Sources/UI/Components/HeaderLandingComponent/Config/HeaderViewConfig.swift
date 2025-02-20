@@ -10,10 +10,10 @@ import SharedConfigs
 
 public struct HeaderViewConfig {
 
-    let title: TextConfig
-    let optionPlaceholder: Color
-    let option: TextConfig
-    let layout: Layout
+    public let title: TextConfig
+    public let optionPlaceholder: Color
+    public let option: TextConfig
+    public let layout: Layout
     
     public init(
         title: TextConfig,
@@ -29,11 +29,11 @@ public struct HeaderViewConfig {
     
     public struct Layout {
         
-        let itemOption: ItemOption
-        let textViewLeadingPadding: CGFloat
-        let textViewOptionsVerticalSpacing: CGFloat
-        let textViewTrailingPadding: CGFloat
-        let textViewVerticalSpacing: CGFloat
+        public let itemOption: ItemOption
+        public let textViewLeadingPadding: CGFloat
+        public let textViewOptionsVerticalSpacing: CGFloat
+        public let textViewTrailingPadding: CGFloat
+        public let textViewVerticalSpacing: CGFloat
         
         public init(
             itemOption: ItemOption,
@@ -51,7 +51,7 @@ public struct HeaderViewConfig {
         
         public struct ItemOption {
             
-            let horizontalSpacing: CGFloat
+            public let horizontalSpacing: CGFloat
             
             public init(
                 horizontalSpacing: CGFloat

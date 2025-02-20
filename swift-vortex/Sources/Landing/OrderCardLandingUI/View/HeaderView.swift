@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UIPrimitives
+import HeaderLandingComponent
 
 struct HeaderView: View {
     
@@ -82,24 +83,30 @@ struct Header {
             
             HeaderView(
                 model: .preview,
-                config: .init(
-                    title: .init(
-                        textFont: .body,
-                        textColor: .black
-                    ),
-                    optionPlaceholder: .black,
-                    layout: .init(
-                        itemOption: .init(
-                            horizontalSpacing: 5
-                        ),
-                        textViewLeadingPadding: 16,
-                        textViewOptionsVerticalSpacing: 20,
-                        textViewTrailingPadding: 15,
-                        textViewVerticalSpacing: 26
-                    )
-                ),
+                config: .preview,
                 imageFactory: .default
             )
         }
     }
+}
+
+private extension HeaderViewConfig {
+    
+    static let preview: Self = .init(
+        title: .init(
+            textFont: .body,
+            textColor: .black
+        ),
+        optionPlaceholder: .black,
+        option: .init(textFont: .body, textColor: .red),
+        layout: .init(
+            itemOption: .init(
+                horizontalSpacing: 5
+            ),
+            textViewLeadingPadding: 16,
+            textViewOptionsVerticalSpacing: 20,
+            textViewTrailingPadding: 15,
+            textViewVerticalSpacing: 26
+        )
+    )
 }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import HeaderLandingComponent
 
 public struct OrderCardLandingView: View {
     
@@ -71,6 +72,7 @@ private extension HeaderViewConfig {
             textColor: .black
         ),
         optionPlaceholder: .black,
+        option: .init(textFont: .body, textColor: .red),
         layout: .init(
             itemOption: .init(
                 horizontalSpacing: 5
