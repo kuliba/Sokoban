@@ -11,10 +11,9 @@ import HeaderLandingComponent
 
 struct HeaderView: View {
     
-    typealias Model = Header
     typealias Config = HeaderViewConfig
     
-    let model: Model
+    let header: Header
     let config: Config
     let imageFactory: ImageViewFactory
     
@@ -22,10 +21,7 @@ struct HeaderView: View {
         
         ZStack(alignment: .top) {
             
-            if let md5Hash = model.md5Hash {
-                
-                imageFactory.makeIconView(md5Hash)
-            }
+            header.md5Hash.map(imageFactory.makeIconView)
             
             textView()
                 .padding(.leading, config.layout.textViewLeadingPadding)
@@ -40,12 +36,12 @@ private extension HeaderView {
         
         VStack(spacing: config.layout.textViewVerticalSpacing) {
             
-            model.title.text(withConfig: config.title)
+            header.title.text(withConfig: config.title)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
             VStack(spacing: config.layout.textViewOptionsVerticalSpacing) {
                 
-                ForEach(model.options, id: \.self, content: optionView)
+                ForEach(header.options, id: \.self, content: optionView)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -82,7 +78,7 @@ struct Header {
         LazyVStack(spacing: 16) {
             
             HeaderView(
-                model: .preview,
+                header: .preview,
                 config: .preview,
                 imageFactory: .default
             )

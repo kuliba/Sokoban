@@ -10,19 +10,18 @@ import HeaderLandingComponent
 
 public struct OrderCardLandingView: View {
     
-    public typealias State = Landing
     public typealias Config = OrderCardLandingViewConfig
     
-    private let state: State
+    private let landing: Landing
     private let config: Config
     private let factory: ImageViewFactory
     
     public init(
-        state: State,
+        landing: Landing,
         config: Config,
         factory: ImageViewFactory
     ) {
-        self.state = state
+        self.landing = landing
         self.config = config
         self.factory = factory
     }
@@ -30,7 +29,7 @@ public struct OrderCardLandingView: View {
     public var body: some View {
         
         HeaderView(
-            model: state.header,
+            header: landing.header,
             config: config.headerConfig,
             imageFactory: factory
         )
@@ -40,7 +39,7 @@ public struct OrderCardLandingView: View {
 #Preview {
     
     OrderCardLandingView(
-        state: .init(
+        landing: .init(
             header: .preview
         ),
         config: .init(
@@ -50,7 +49,7 @@ public struct OrderCardLandingView: View {
     )
 }
 
-extension HeaderView.Model {
+extension Header {
     
     static let preview: Self = .init(
         title: "Карта МИР «Все включено»",
