@@ -8680,6 +8680,15 @@
 			path = NanoServices;
 			sourceTree = "<group>";
 		};
+		2A05163A2D66F1030098A878 /* OperationDetails */ = {
+			isa = PBXGroup;
+			children = (
+				2A3B69352D6509A4004075A8 /* DetailsView.swift */,
+				2A0516382D66ED000098A878 /* OperationDetailsMapping.swift */,
+			);
+			path = OperationDetails;
+			sourceTree = "<group>";
+		};
 		2A0776F62A02514200118373 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -10813,9 +10822,8 @@
 				2A78246C2D6241620084B8A9 /* ViewComponents+makeSPBFooter.swift */,
 				2A5D98A32D5E11B90065C4E3 /* ViewComponents+makeC2GPaymentCompleteView.swift */,
 				2AC8C91A2D66178400BFDA60 /* ViewComponents+makeC2GPaymentCompleteButtonsView.swift */,
-				2A0516382D66ED000098A878 /* OperationDetailsMapping.swift */,
 				2A3B69372D650F3B004075A8 /* ViewComponents+c2gDetailsView.swift */,
-				2A3B69352D6509A4004075A8 /* DetailsView.swift */,
+				2A05163A2D66F1030098A878 /* OperationDetails */,
 				2AC8C91C2D66589400BFDA60 /* REUSABLE */,
 			);
 			path = C2G;

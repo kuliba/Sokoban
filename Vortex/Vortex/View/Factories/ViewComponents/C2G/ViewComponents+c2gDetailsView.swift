@@ -22,7 +22,7 @@ protocol PaymentRequisitesProviding<PaymentRequisites> {
 }
 
 extension PaymentRequisitesProviding
-where PaymentRequisites == [DetailsCell] {
+where PaymentRequisites == [DetailsCell.Field] {
     
     var shareItems: [String] {
         
@@ -48,13 +48,13 @@ extension ViewComponents {
     
     @inlinable
     func c2gPaymentRequisites(
-        details: any PaymentRequisitesProviding<[DetailsCell]>,
+        details: any PaymentRequisitesProviding<[DetailsCell.Field]>,
         dismiss: @escaping () -> Void
     ) -> some View {
         
         SharingView(shareItems: details.shareItems) { share in
             
-            c2gDetailsView(details: details.paymentRequisites)
+            c2gDetailsView(details: details.paymentRequisites.map { .field($0) })
                 .navigationBarWithClose(
                     title: "Реквизиты",
                     dismiss: dismiss,
@@ -117,16 +117,35 @@ extension PreviewDetails {
 
 extension PreviewDetails: TransactionDetailsProviding {
     
-    var transactionDetails: [DetailsCell] {
-        
-        [
-            .init(image: .ic24Calendar, title: "Дата и время операции (МСК)", value: "06.05.2021 15:38:12"),
-            .init(image: nil, title: "Назначение платежа", value: "Транспортный налог")
-        ]
-    }
+    var transactionDetails: [DetailsCell] { [
+        .field(.init(
+            image: .ic24Calendar, 
+            title: "Дата и время операции (МСК)", 
+            value: "06.05.2021 15:38:12")
+        ),
+        .field(.init(
+            image: nil, 
+            title: "Назначение платежа", 
+            value: "Транспортный налог")
+        ),
+        .product(.init(title: "Product"))
+    ] }
 }
 
 extension PreviewDetails: PaymentRequisitesProviding {
     
-    var paymentRequisites: [DetailsCell] { transactionDetails }
+    var paymentRequisites: [DetailsCell.Field] {
+        transactionDetails.compactMap(\.fieldCase)
+    }
+}
+
+extension DetailsCell {
+    
+    var fieldCase: Field? {
+        
+        guard case let .field(field) = self
+        else { return nil }
+
+        return field
+    }
 }

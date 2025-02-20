@@ -8,19 +8,22 @@
 import SharedConfigs
 import SwiftUI
 
-struct Details {}
-
-extension Details {
+enum DetailsCell: Equatable {
     
-    var transactionDetails: [DetailsCell] { [] }
-    var paymentRequisites: [DetailsCell] { [] }
-}
-
-struct DetailsCell: Equatable {
+    case field(Field)
+    case product(Product)
+ 
+    struct Field: Equatable {
+        
+        let image: Image?
+        let title: String
+        let value: String
+    }
     
-    let image: Image?
-    let title: String
-    let value: String
+    struct Product: Equatable {
+        
+        let title: String
+    }
 }
 
 struct DetailCellViewConfig: Equatable {
@@ -41,36 +44,55 @@ struct DetailsCellView: View {
     
     var body: some View {
         
-        HStack(alignment: .top, spacing: config.hSpacing) {
-            
-            imageView()
-                .frame(config.imageSize)
-                .padding(.top, config.imageTopPadding)
-            
-            VStack(alignment: .leading, spacing: config.vSpacing) {
-                
-                cell.title.text(withConfig: config.title)
-                cell.value.text(withConfig: config.value)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
+        switch cell {
+        case let .field(field):     fieldView(field)
+        case let .product(product): productView(product)
         }
-        .padding(config.insets)
     }
 }
 
 private extension DetailsCellView {
     
-    func imageView() -> some View {
+    func fieldView(
+        _ field: DetailsCell.Field
+    ) -> some View {
+        
+        HStack(alignment: .top, spacing: config.hSpacing) {
+            
+            imageView(field)
+                .frame(config.imageSize)
+                .padding(.top, config.imageTopPadding)
+            
+            VStack(alignment: .leading, spacing: config.vSpacing) {
+                
+                field.title.text(withConfig: config.title)
+                field.value.text(withConfig: config.value)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(config.insets)
+    }
+    
+    func imageView(
+        _ field: DetailsCell.Field
+    ) -> some View {
         
         ZStack {
             
             Color.clear
             
-            cell.image.map {
+            field.image.map {
                 
                 $0.renderingMode(.original)
             }
         }
+    }
+    
+    func productView(
+        _ product: DetailsCell.Product
+    ) -> some View {
+        
+        Text("TBD: productView")
     }
 }
 
@@ -99,5 +121,16 @@ struct DetailsView<DetailsCellView: View, Footer: View>: View {
         }
         .padding(config.padding)
         .safeAreaInset(edge: .bottom, content: footer)
+    }
+}
+
+private extension DetailsCell {
+    
+    var title: String {
+        
+        switch self {
+        case let .field(field):     return field.title
+        case let .product(product): return product.title
+        }
     }
 }
