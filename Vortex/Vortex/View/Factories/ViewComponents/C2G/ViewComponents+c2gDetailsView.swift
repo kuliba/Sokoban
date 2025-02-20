@@ -120,19 +120,7 @@ extension PreviewDetails {
 
 extension PreviewDetails: TransactionDetailsProviding {
     
-    var transactionDetails: [DetailsCell] { [
-        .field(.init(
-            image: .ic24Calendar,
-            title: "Дата и время операции (МСК)",
-            value: "06.05.2021 15:38:12")
-        ),
-        .field(.init(
-            image: nil,
-            title: "Назначение платежа",
-            value: "Транспортный налог")
-        ),
-        .product(.init(title: "Product"))
-    ] }
+    var transactionDetails: [DetailsCell] { .preview }
 }
 
 extension PreviewDetails: PaymentRequisitesProviding {
