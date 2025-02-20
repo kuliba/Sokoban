@@ -24,6 +24,21 @@ extension DetailCellViewConfig {
         value: .init(
             textFont: .textBodyMM14200(),
             textColor: .textSecondary
-        )
+        ),
+        product: .iVortex
     )
+}
+
+
+extension DetailCellViewConfig.ProductConfig {
+    
+    // TODO: fix on design fixes - Nika
+    static let iVortex: Self = .init(
+        balance: .init(textFont: .body, textColor: .orange),
+        description: .init(textFont: .caption, textColor: .orange),
+        hSpacing: 16,
+        iconSize: .init(width: 32, height: 32),
+        name: .init(textFont: .headline, textColor: .orange),
+        title: .init(textFont: .footnote, textColor: .orange),
+        vStackVPadding: 6    )
 }

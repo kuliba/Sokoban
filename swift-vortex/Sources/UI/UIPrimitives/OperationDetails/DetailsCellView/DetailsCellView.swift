@@ -23,8 +23,11 @@ public struct DetailsCellView: View {
     public var body: some View {
         
         switch cell {
-        case let .field(field):     fieldView(field)
-        case let .product(product): productView(product)
+        case let .field(field):
+            fieldView(field)
+            
+        case let .product(product):
+            ProductView(product: product, config: config.product)
         }
     }
 }
@@ -64,16 +67,10 @@ private extension DetailsCellView {
                 image
                     .resizable()
                     .renderingMode(.template)
+                    .aspectRatio(contentMode: .fit)
                     .foregroundColor(config.imageForegroundColor)
             }
         }
-    }
-    
-    func productView(
-        _ product: DetailsCell.Product
-    ) -> some View {
-        
-        Text("TBD: productView")
     }
 }
 
@@ -86,8 +83,11 @@ struct DetailsCellView_Previews: PreviewProvider {
         VStack(spacing: 16) {
             
             detailsCellView(.fieldPreview)
+                .border(.red.opacity(0.3))
             detailsCellView(.productPreview)
+                .border(.red.opacity(0.3))
         }
+        .padding(.horizontal)
     }
     
     private static func detailsCellView(
@@ -106,7 +106,5 @@ extension DetailsCell {
         value: "Field Value"
     ))
     
-    static let productPreview: Self = .product(.init(
-        title: "Product Title"
-    ))
+    static let productPreview: Self = .product(.preview)
 }

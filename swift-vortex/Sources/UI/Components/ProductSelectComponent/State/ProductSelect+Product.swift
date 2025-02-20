@@ -17,12 +17,12 @@ public extension ProductSelect {
         public let id: ID
         public let type: ProductType
         public let isAdditional: Bool
-        let header: String
-        let title: String
-        let number: String
-        let amountFormatted: String
+        public let header: String
+        public let title: String
+        public let number: String
+        public let amountFormatted: String
         public let balance: Decimal
-        let look: Look
+        public let look: Look
         
         public init(
             id: ID,
@@ -55,9 +55,9 @@ public extension ProductSelect.Product {
     
     struct Look: Equatable {
         
-        let background: Icon
-        let color: Color
-        let icon: Icon
+        public let background: Icon
+        public let color: Color
+        public let icon: Icon
         
         public init(
             background: Icon,

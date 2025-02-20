@@ -20,7 +20,7 @@ extension OperationDetailDomain.State.Details: TransactionDetailsProviding {
             formattedAmountField.map(DetailsCell.field),
             dateForDetailField.map(DetailsCell.field),
             // operationStatus // Статус операции- operationStatus (возможные значения: Успешно, Отказ, В обработке)
-            // productWidget // Счет списания-  payerCardId или payerAccountId
+            .product(product.cellProduct), // productWidget // Счет списания-  payerCardId или payerAccountId
             payeeFullNameField.map(DetailsCell.field),
             supplierBillIDField.map(DetailsCell.field),
             commentField.map(DetailsCell.field),
@@ -61,6 +61,8 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
             transferNumberField,
         ].compactMap { $0 }
     }
+    
+    // TODO: extract titles to static strings in fileprivate scape
     
     private var dateForDetailField: DetailsCell.Field? {
         
@@ -206,7 +208,7 @@ extension OperationDetailDomain.State.EnhancedResponse: TransactionDetailsProvid
     
     private var productCell: DetailsCell {
         
-        .product(.init(title: "Счет списания"))
+        .product(product.cellProduct)
     }
     
     private var formattedAmountField: DetailsCell.Field? {
@@ -223,5 +225,13 @@ extension OperationDetailDomain.State.EnhancedResponse: TransactionDetailsProvid
             
             .init(image: .ic24Calendar, title: "Дата и время операции (МСК)", value: $0)
         }
+    }
+}
+
+extension OperationDetailDomain.State.Product {
+    
+    var cellProduct: DetailsCell.Product { 
+    
+        return .init(title: header, icon: look.icon.image, name: title, formattedBalance: amountFormatted, description: number)
     }
 }

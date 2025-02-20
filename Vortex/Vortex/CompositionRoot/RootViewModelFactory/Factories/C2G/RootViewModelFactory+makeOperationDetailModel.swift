@@ -25,7 +25,11 @@ extension RootViewModelFactory {
             
             load(.init(initialState.response.paymentOperationDetailID)) {
                 
-                completion($0.map(\.details))
+                completion($0.map { $0.details(
+                    formattedAmount: initialState.response.formattedAmount,
+                    product: initialState.response.product,
+                    status: initialState.response.status
+                )})
             }
         }
         
@@ -47,9 +51,15 @@ extension RootViewModelFactory {
 
 extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse {
     
-    var details: OperationDetailDomain.State.Details {
+    func details(
+        formattedAmount: String?,
+        product: OperationDetailDomain.State.Product,
+        status: OperationDetailDomain.State.Status
+    ) -> OperationDetailDomain.State.Details {
         
         return .init(
+            product: product,
+            status: status,
             dateForDetail: dateForDetail,
             realPayerFIO: realPayerFIO,
             payeeFullName: payeeFullName,
@@ -60,7 +70,7 @@ extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse {
             dateN: dateN,
             paymentTerm: paymentTerm,
             legalAct: legalAct,
-            transAmm: transAmm.map { "\($0)" }, // should be formatted
+            transAmm: formattedAmount,
             discount: discount,
             discountExpiry: discountExpiry,
             formattedAmount: formattedAmount,

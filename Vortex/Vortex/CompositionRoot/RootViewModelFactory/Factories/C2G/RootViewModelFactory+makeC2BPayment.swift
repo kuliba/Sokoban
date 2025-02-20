@@ -50,17 +50,12 @@ extension RootViewModelFactory {
         _ digest: C2GPaymentDomain.Select.Digest,
         completion: @escaping (C2GPaymentDomain.Navigation) -> Void
     ) {
-        guard let product = product(for: digest)
-        else { return completion(.connectivityFailure) } // Strictly speaking, not exactly connectivity failure but missing product, which should not occur if the digest could've held everything needed to form a product cell for details
-        
-        let payload = digest.payload
-        
-        guard !payload.uin.hasEasterEgg else {
+        guard !digest.uin.hasEasterEgg else {
             
-            return easterEggsCreateC2GPayment(payload, product, .completed, completion)
+            return easterEggsCreateC2GPayment(digest, .completed, completion)
         }
         
-        createC2GPayment(payload: payload, product: product) { [weak self] in
+        createC2GPayment(digest: digest) { [weak self] in
             
             guard let self else { return }
             
@@ -84,8 +79,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func createC2GPayment(
-        payload: RemoteServices.RequestFactory.CreateC2GPaymentPayload,
-        product: ProductData,
+        digest: C2GPaymentDomain.Select.Digest,
         completion: @escaping (EnhancedResponseResult) -> Void
     ) {
         let service = onBackground(
@@ -93,7 +87,7 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapCreateC2GPaymentResponse
         )
         
-        service(payload) { [weak self] in
+        service(digest.payload) { [weak self] in
             
             guard let self else { return }
             
@@ -109,25 +103,17 @@ extension RootViewModelFactory {
                 
                 completion(.success(.init(
                     formattedAmount: formatAmount(value: response.amount),
-                    formattedDate: nil, // TODO: extract from new version of response
+                    formattedDate: nil, // TODO: extract from new version of response - Lera
                     merchantName: response.merchantName,
                     message: response.message,
                     paymentOperationDetailID: response.paymentOperationDetailID,
-                    product: product,
+                    product: digest.product,
                     purpose: response.purpose,
                     status: status,
-                    uin: payload.uin
+                    uin: digest.uin
                 )))
             }
         }
-    }
-    
-    @inlinable
-    func product(
-        for digest: C2GPaymentDomain.Select.Digest
-    ) -> ProductData? {
-        
-        model.product(productId: digest.productID.id)
     }
     
     private func formatAmount(
@@ -142,16 +128,15 @@ extension RootViewModelFactory {
     // TODO: remove stub
     @inlinable
     func easterEggsCreateC2GPayment(
-        _ payload: RemoteServices.RequestFactory.CreateC2GPaymentPayload,
-        _ product: ProductData,
-        _ status: OperationDetailDomain.State.EnhancedResponse.Status,
+        _ digest: C2GPaymentDomain.Select.Digest,
+        _ status: OperationDetailDomain.State.Status,
         _ completion: @escaping (C2GPaymentDomain.Navigation) -> Void
     ) {
         schedulers.background.delay(for: .seconds(2)) { [weak self] in
             
             guard let self else { return }
             
-            switch payload.uin {
+            switch digest.uin {
             case "01234567890123456789":
                 completion(.connectivityFailure)
                 
@@ -161,7 +146,7 @@ extension RootViewModelFactory {
             case "99999999999999999999":
                 let initialState = OperationDetailDomain.State(
                     details: .pending,
-                    response: .stub(product: product, status: status, uin: payload.uin)
+                    response: .stub(digest: digest, status: status)
                 )
                 
                 let model = makeOperationDetailModel(initialState: initialState)
@@ -201,7 +186,7 @@ private extension String {
 
 private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
     
-    var status: OperationDetailDomain.State.EnhancedResponse.Status? {
+    var status: OperationDetailDomain.State.Status? {
         
         switch documentStatus {
         case "COMPLETE":    return .completed
@@ -216,12 +201,12 @@ private extension C2GPaymentDigest {
     
     var payload: RemoteServices.RequestFactory.CreateC2GPaymentPayload {
         
-        switch productID.type {
+        switch product.type {
         case .account:
-            return .init(accountID: productID.id, cardID: nil, uin: uin)
+            return .init(accountID: product.id.rawValue, cardID: nil, uin: uin)
             
         case .card:
-            return .init(accountID: nil, cardID: productID.id, uin: uin)
+            return .init(accountID: nil, cardID: product.id.rawValue, uin: uin)
         }
     }
 }
@@ -303,9 +288,8 @@ where State == C2GPaymentState<C2GPaymentDomain.Context>,
 private extension OperationDetailDomain.State.EnhancedResponse {
     
     static func stub(
-        product: ProductData,
-        status: Status,
-        uin: String
+        digest: C2GPaymentDomain.Select.Digest,
+        status: OperationDetailDomain.State.Status
     ) -> Self {
         
         return .init(
@@ -314,10 +298,10 @@ private extension OperationDetailDomain.State.EnhancedResponse {
             merchantName: "merchantName",
             message: "message",
             paymentOperationDetailID: 122004,
-            product: product,
+            product: digest.product,
             purpose: "purpose",
             status: status,
-            uin: uin
+            uin: digest.uin
         )
     }
 }

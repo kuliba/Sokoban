@@ -18,6 +18,7 @@ public struct DetailCellViewConfig: Equatable {
     public let vSpacing: CGFloat
     public let title: TextConfig
     public let value: TextConfig
+    public let product: ProductConfig
     
     public init(
         labelVPadding: CGFloat,
@@ -27,7 +28,8 @@ public struct DetailCellViewConfig: Equatable {
         hSpacing: CGFloat,
         vSpacing: CGFloat,
         title: TextConfig,
-        value: TextConfig
+        value: TextConfig,
+        product: ProductConfig
     ) {
         self.labelVPadding = labelVPadding
         self.imageForegroundColor = imageForegroundColor
@@ -37,5 +39,35 @@ public struct DetailCellViewConfig: Equatable {
         self.vSpacing = vSpacing
         self.title = title
         self.value = value
+        self.product = product
+    }
+    
+    public struct ProductConfig: Equatable {
+        
+        public let balance: TextConfig
+        public let description: TextConfig
+        public let hSpacing: CGFloat
+        public let iconSize: CGSize
+        public let name: TextConfig
+        public let title: TextConfig
+        public let vStackVPadding: CGFloat
+        
+        public init(
+            balance: TextConfig,
+            description: TextConfig,
+            hSpacing: CGFloat,
+            iconSize: CGSize,
+            name: TextConfig,
+            title: TextConfig,
+            vStackVPadding: CGFloat
+        ) {
+            self.balance = balance
+            self.description = description
+            self.hSpacing = hSpacing
+            self.iconSize = iconSize
+            self.name = name
+            self.title = title
+            self.vStackVPadding = vStackVPadding
+        }
     }
 }
