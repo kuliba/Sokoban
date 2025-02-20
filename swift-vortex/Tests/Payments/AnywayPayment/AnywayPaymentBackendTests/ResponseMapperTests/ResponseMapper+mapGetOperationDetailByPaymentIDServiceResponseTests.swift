@@ -14,10 +14,10 @@ final class ResponseMapper_mapGetOperationDetailByPaymentIDResponseTests: XCTest
     func test_map_shouldDeliverInvalidFailureOnEmptyData() {
         
         let emptyData: Data = .empty
-
+        
         XCTAssertNoDiff(
             map(emptyData),
-                .failure(.invalid(statusCode: 200, data: emptyData))
+            .failure(.invalid(statusCode: 200, data: emptyData))
         )
     }
     
@@ -27,7 +27,7 @@ final class ResponseMapper_mapGetOperationDetailByPaymentIDResponseTests: XCTest
         
         XCTAssertNoDiff(
             map(invalidData),
-                .failure(.invalid(statusCode: 200, data: invalidData))
+            .failure(.invalid(statusCode: 200, data: invalidData))
         )
     }
     
@@ -37,7 +37,7 @@ final class ResponseMapper_mapGetOperationDetailByPaymentIDResponseTests: XCTest
         
         XCTAssertNoDiff(
             map(emptyJSON),
-                .failure(.invalid(statusCode: 200, data: emptyJSON))
+            .failure(.invalid(statusCode: 200, data: emptyJSON))
         )
     }
     
@@ -102,15 +102,15 @@ final class ResponseMapper_mapGetOperationDetailByPaymentIDResponseTests: XCTest
     func test_map_shouldDeliverResponseRichV2() throws {
         
         try assert(.validDataRichV2, .valid(
-            externalTransferType: .entity,
-            operationStatus: .inProgress,
-            paymentMethod: .cashless,
             documentNumber: "330322",
+            externalTransferType: .entity,
+            operationCategory: "ЖКХ",
+            operationStatus: .inProgress,
             paymentFlow: "STANDARD_FLOW",
-            operationCategory: "ЖКХ"
+            paymentMethod: .cashless
         ))
     }
-
+    
     // MARK: - Helpers
     
     private typealias Response = ResponseMapper.GetOperationDetailByPaymentIDResponse
@@ -139,66 +139,199 @@ final class ResponseMapper_mapGetOperationDetailByPaymentIDResponseTests: XCTest
 private extension ResponseMapper.GetOperationDetailByPaymentIDResponse {
     
     static func valid(
-        account: String = "766440148001",
-        accountTitle: String = "Лицевой счет",
-        currencyAmount: String = "RUB",
-        externalTransferType: ExternalTransferType? = nil,
-        operationStatus: OperationStatus? = nil,
-        payeeFullName: String = "ПАО ТНС ЭНЕРГО ЯРОСЛАВЛЬ",
-        payeeINN: String = "7606052264",
-        payeeKPP: String = "760601001",
-        payerCardID: Int = 10000204785,
-        payerCardNumber: String = "**** **** **92 6035",
-        payerINN: String = "692502219386",
-        payerMiddleName: String = "Сергеевич",
-        paymentMethod: PaymentMethod? = nil,
-        paymentTemplateID: Int = 2773,
-        puref: String = "iVortex||TNS",
-        returned: Bool = false,
-        transfer: Transfer = .housingAndCommunalService,
+        account: String? = "766440148001",
+        accountTitle: String? = "Лицевой счет",
+        amount: Decimal = 1_000,
+        billDate: String? = nil,
+        billNumber: String? = nil,
+        cityName: String? = nil,
+        claimID: String = "7877f00d-0f37-46f7-a9d5-4eaf1ac84e32",
+        comment: String? = nil,
+        countryName: String? = nil,
+        currencyAmount: String? = "RUB",
+        currencyRate: Decimal? = nil,
+        cursiveAmount: String? = nil,
+        cursivePayeeAmount: String? = nil,
+        cursivePayerAmount: String? = nil,
+        dateForDetail: String = "17 апреля 2023, 17:13",
+        dateN: String? = nil,
+        depositDateOpen: String? = nil,
+        depositNumber: String? = nil,
+        discount: String? = nil,
+        discountExpiry: String? = nil,
+        division: String? = nil,
         documentNumber: String? = nil,
+        driverLicense: String? = nil,
+        externalTransferType: ExternalTransferType? = nil,
+        formattedAmount: String? = nil,
+        isForaBank: Bool? = nil,
+        isTrafficPoliceService: Bool = false,
+        legalAct: String? = nil,
+        mcc: String? = nil,
+        memberID: String? = nil,
+        merchantIcon: String? = nil,
+        merchantSubName: String? = nil,
+        oktmo: String? = nil,
+        operation: String? = nil,
+        operationCategory: String? = nil,
+        operationStatus: OperationStatus? = nil,
+        payeeAccountID: Int? = nil,
+        payeeAccountNumber: String? = nil,
+        payeeAmount: Decimal? = nil,
+        payeeBankBIC: String? = nil,
+        payeeBankCorrAccount: String? = nil,
+        payeeBankName: String? = nil,
+        payeeCardID: Int? = nil,
+        payeeCardNumber: String? = nil,
+        payeeCheckAccount: String? = nil,
+        payeeCurrency: String? = nil,
+        payeeFirstName: String? = nil,
+        payeeFullName: String? = "ПАО ТНС ЭНЕРГО ЯРОСЛАВЛЬ",
+        payeeINN: String? = "7606052264",
+        payeeKPP: String? = "760601001",
+        payeeMiddleName: String? = nil,
+        payeePhone: String? = nil,
+        payeeSurName: String? = nil,
+        payerAccountID: Int = 10004333104,
+        payerAccountNumber: String = "40817810543005000761",
+        payerAddress: String = "РОССИЙСКАЯ ФЕДЕРАЦИЯ",
+        payerAmount: Decimal = 1_000,
+        payerCardID: Int? = 10000204785,
+        payerCardNumber: String? = "**** **** **92 6035",
+        payerCurrency: String = "RUB",
+        payerDocument: String? = nil,
+        payerFee: Decimal = 0,
+        payerFirstName: String = "Кирилл",
+        payerFullName: String = "Большаков Кирилл Сергеевич",
+        payerINN: String? = "692502219386",
+        payerMiddleName: String? = "Сергеевич",
+        payerPhone: String? = nil,
+        payerSurName: String? = nil,
         paymentFlow: String? = nil,
-        operationCategory: String? = nil
+        paymentMethod: PaymentMethod? = nil,
+        paymentOperationDetailID: Int = 57723,
+        paymentTemplateID: Int? = 2773,
+        paymentTerm: String? = nil,
+        period: String? = nil,
+        printFormType: PrintFormType = "housingAndCommunalService",
+        provider: String? = nil,
+        puref: String? = "iVortex||TNS",
+        realPayerFIO: String? = nil,
+        realPayerINN: String? = nil,
+        realPayerKPP: String? = nil,
+        regCert: String? = nil,
+        requestDate: String = "17.04.2023 17:13:36",
+        responseDate: String = "17.04.2023 17:13:38",
+        returned: Bool? = false,
+        serviceName: String? = nil,
+        serviceSelect: String? = nil,
+        shopLink: String? = nil,
+        supplierBillID: String? = nil,
+        transAmm: String? = nil,
+        transfer: Transfer? = .housingAndCommunalService,
+        transferDate: String = "17.04.2023",
+        transferNumber: String? = nil,
+        transferReference: String? = nil,
+        trnPickupPointName: String? = nil,
+        upno: String? = nil
     ) -> Self {
         
-        .init(
+        return .init(
             account: account,
             accountTitle: accountTitle,
-            amount: 1_000,
-            claimID: "7877f00d-0f37-46f7-a9d5-4eaf1ac84e32",
+            amount: amount,
+            billDate: billDate,
+            billNumber: billNumber,
+            cityName: cityName,
+            claimID: claimID,
+            comment: comment,
+            countryName: countryName,
             currencyAmount: currencyAmount,
-            dateForDetail: "17 апреля 2023, 17:13",
+            currencyRate: currencyRate,
+            cursiveAmount: cursiveAmount,
+            cursivePayeeAmount: cursivePayeeAmount,
+            cursivePayerAmount: cursivePayerAmount,
+            dateForDetail: dateForDetail,
+            dateN: dateN,
+            depositDateOpen: depositDateOpen,
+            depositNumber: depositNumber,
+            discount: discount,
+            discountExpiry: discountExpiry,
+            division: division,
             documentNumber: documentNumber,
+            driverLicense: driverLicense,
             externalTransferType: externalTransferType,
-            isTrafficPoliceService: false,
+            formattedAmount: formattedAmount,
+            isForaBank: isForaBank,
+            isTrafficPoliceService: isTrafficPoliceService,
+            legalAct: legalAct,
+            mcc: mcc,
+            memberID: memberID,
+            merchantIcon: merchantIcon,
+            merchantSubName: merchantSubName,
+            oktmo: oktmo,
+            operation: operation,
             operationCategory: operationCategory,
             operationStatus: operationStatus,
+            payeeAccountID: payeeAccountID,
+            payeeAccountNumber: payeeAccountNumber,
+            payeeAmount: payeeAmount,
+            payeeBankBIC: payeeBankBIC,
+            payeeBankCorrAccount: payeeBankCorrAccount,
+            payeeBankName: payeeBankName,
+            payeeCardID: payeeCardID,
+            payeeCardNumber: payeeCardNumber,
+            payeeCheckAccount: payeeCheckAccount,
+            payeeCurrency: payeeCurrency,
+            payeeFirstName: payeeFirstName,
             payeeFullName: payeeFullName,
             payeeINN: payeeINN,
-            payeeKPP: payeeKPP, 
-            payerAccountID: 10004333104,
-            payerAccountNumber: "40817810543005000761",
-            payerAddress: "РОССИЙСКАЯ ФЕДЕРАЦИЯ",
-            payerAmount: 1_000,
+            payeeKPP: payeeKPP,
+            payeeMiddleName: payeeMiddleName,
+            payeePhone: payeePhone,
+            payeeSurName: payeeSurName,
+            payerAccountID: payerAccountID,
+            payerAccountNumber: payerAccountNumber,
+            payerAddress: payerAddress,
+            payerAmount: payerAmount,
             payerCardID: payerCardID,
             payerCardNumber: payerCardNumber,
-            payerCurrency: "RUB",
-            payerFee: 0,
-            payerFirstName: "Кирилл",
-            payerFullName: "Большаков Кирилл Сергеевич",
+            payerCurrency: payerCurrency,
+            payerDocument: payerDocument,
+            payerFee: payerFee,
+            payerFirstName: payerFirstName,
+            payerFullName: payerFullName,
             payerINN: payerINN,
             payerMiddleName: payerMiddleName,
+            payerPhone: payerPhone,
+            payerSurName: payerSurName,
             paymentFlow: paymentFlow,
             paymentMethod: paymentMethod,
-            paymentOperationDetailID: 57723,
+            paymentOperationDetailID: paymentOperationDetailID,
             paymentTemplateID: paymentTemplateID,
-            printFormType: "housingAndCommunalService",
+            paymentTerm: paymentTerm,
+            period: period,
+            printFormType: printFormType,
+            provider: provider,
             puref: puref,
-            requestDate: "17.04.2023 17:13:36",
-            responseDate: "17.04.2023 17:13:38",
+            realPayerFIO: realPayerFIO,
+            realPayerINN: realPayerINN,
+            realPayerKPP: realPayerKPP,
+            regCert: regCert,
+            requestDate: requestDate,
+            responseDate: responseDate,
             returned: returned,
+            serviceName: serviceName,
+            serviceSelect: serviceSelect,
+            shopLink: shopLink,
+            supplierBillID: supplierBillID,
+            transAmm: transAmm,
             transfer: transfer,
-            transferDate: "17.04.2023"
+            transferDate: transferDate,
+            transferNumber: transferNumber,
+            transferReference: transferReference,
+            trnPickupPointName: trnPickupPointName,
+            upno: upno
         )
     }
 }
@@ -477,5 +610,5 @@ private extension String {
     }
 }
 """
-
+    
 }

@@ -49,6 +49,23 @@ extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse {
     
     var details: OperationDetailDomain.State.Details {
         
-        fatalError()
+        return .init(
+            dateForDetail: dateForDetail,
+            realPayerFIO: realPayerFIO,
+            payeeFullName: payeeFullName,
+            supplierBillID: supplierBillID,
+            comment: comment,
+            realPayerINN: realPayerINN,
+            realPayerKPP: realPayerKPP,
+            dateN: dateN,
+            paymentTerm: paymentTerm,
+            legalAct: legalAct,
+            transAmm: transAmm,
+            discount: discount,
+            discountExpiry: discountExpiry,
+            formattedAmount: formattedAmount,
+            upno: upno,
+            transferNumber: transferNumber
+        )
     }
 }

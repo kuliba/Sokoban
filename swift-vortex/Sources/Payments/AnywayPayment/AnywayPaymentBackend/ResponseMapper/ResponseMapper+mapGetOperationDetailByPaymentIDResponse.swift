@@ -36,25 +36,30 @@ private extension ResponseMapper.GetOperationDetailByPaymentIDResponse {
             currencyAmount: data.currencyAmount,
             currencyRate: data.currencyRate,
             cursiveAmount: data.cursiveAmount,
-            cursivePayerAmount: data.cursivePayerAmount,
             cursivePayeeAmount: data.cursivePayeeAmount,
+            cursivePayerAmount: data.cursivePayerAmount,
             dateForDetail: data.dateForDetail,
+            dateN: data.dateN,
             depositDateOpen: data.depositDateOpen,
             depositNumber: data.depositNumber,
+            discount: data.discount,
+            discountExpiry: data.discountExpiry,
             division: data.division,
             documentNumber: data.docNumber,
             driverLicense: data.driverLicense,
             externalTransferType: .init(data.externalTransferType),
+            formattedAmount: data.formattedAmount,
             isForaBank: data.isForaBank,
             isTrafficPoliceService: data.isTrafficPoliceService,
+            legalAct: data.legalAct,
             mcc: data.MCC,
             memberID: data.memberId,
             merchantIcon: data.merchantIcon,
             merchantSubName: data.merchantSubName,
+            oktmo: data.OKTMO,
             operation: data.operation,
             operationCategory: data.operationCategory,
             operationStatus: .init(data.operationStatus),
-            oktmo: data.OKTMO,
             payeeAccountID: data.payeeAccountId,
             payeeAccountNumber: data.payeeAccountNumber,
             payeeAmount: data.payeeAmount,
@@ -91,22 +96,29 @@ private extension ResponseMapper.GetOperationDetailByPaymentIDResponse {
             paymentMethod: .init(data.paymentMethod),
             paymentOperationDetailID: data.paymentOperationDetailId,
             paymentTemplateID: data.paymentTemplateId,
+            paymentTerm: data.paymentTerm,
             period: data.period,
             printFormType: data.printFormType,
             provider: data.provider,
             puref: data.puref,
+            realPayerFIO: data.realPayerFIO,
+            realPayerINN: data.realPayerINN,
+            realPayerKPP: data.realPayerKPP,
             regCert: data.regCert,
             requestDate: data.requestDate,
             responseDate: data.responseDate,
             returned: data.returned,
-            serviceSelect: data.serviceSelect,
             serviceName: data.serviceName,
+            serviceSelect: data.serviceSelect,
             shopLink: data.shopLink,
+            supplierBillID: data.supplierBillID,
+            transAmm: data.transAmm,
             transfer: .init(data.transferEnum),
             transferDate: data.transferDate,
             transferNumber: data.transferNumber,
             transferReference: data.transferReference,
-            trnPickupPointName: data.trnPickupPointName
+            trnPickupPointName: data.trnPickupPointName,
+            upno: data.upno
         )
     }
 }
@@ -232,25 +244,30 @@ private extension ResponseMapper {
         let currencyAmount: String?
         let currencyRate: Decimal?
         let cursiveAmount: String?
-        let cursivePayerAmount: String?
         let cursivePayeeAmount: String?
+        let cursivePayerAmount: String?
         let dateForDetail: String
+        let dateN: String?
         let depositDateOpen: String?
         let depositNumber: String?
+        let discount: String?
+        let discountExpiry: String?
         let division: String?
         let docNumber: String?
         let driverLicense: String?
         let externalTransferType: String?
+        let formattedAmount: String?
         let isForaBank: Bool?
         let isTrafficPoliceService: Bool
+        let legalAct: String?
         let MCC: String?
         let memberId: String?
         let merchantIcon: String?
         let merchantSubName: String?
+        let OKTMO: String?
         let operation: String?
         let operationCategory: String?
         let operationStatus: String?
-        let OKTMO: String?
         let payeeAccountId: Int?
         let payeeAccountNumber: String?
         let payeeAmount: Decimal?
@@ -287,22 +304,29 @@ private extension ResponseMapper {
         let paymentMethod: String?
         let paymentOperationDetailId: Int
         let paymentTemplateId: Int?
+        let paymentTerm: String?
         let period: String?
         let printFormType: PrintFormType
         let provider: String?
         let puref: String?
+        let realPayerFIO: String?
+        let realPayerINN: String?
+        let realPayerKPP: String?
         let regCert: String?
         let requestDate: String
         let responseDate: String
         let returned: Bool?
-        let serviceSelect: String?
         let serviceName: String?
+        let serviceSelect: String?
         let shopLink: String?
+        let supplierBillID: String?
+        let transAmm: String?
         let transferDate: String
         let transferEnum: String?
         let transferNumber: String?
         let transferReference: String?
         let trnPickupPointName: String?
+        let upno: String?
     }
 }
 
