@@ -31,6 +31,7 @@ extension OperationDetailDomain {
         struct EnhancedResponse: Equatable {
             
             let formattedAmount: String?
+            let formattedDate: String?
             let merchantName: String?
             let message: String?
             let paymentOperationDetailID: Int

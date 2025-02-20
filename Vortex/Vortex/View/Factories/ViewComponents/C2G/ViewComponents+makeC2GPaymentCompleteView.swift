@@ -249,6 +249,7 @@ private extension OperationDetailDomain.State.EnhancedResponse {
     // ✅ COMPLETED STATUS
     static let completedFull: Self = .init(
         formattedAmount: "100.50 ₽",
+        formattedDate: "06.05.2021 15:38:12",
         merchantName: "Merchant A",
         message: "Payment successful",
         paymentOperationDetailID: 1,
@@ -260,6 +261,7 @@ private extension OperationDetailDomain.State.EnhancedResponse {
     
     static let completedNoAmount: Self = .init(
         formattedAmount: nil,
+        formattedDate: "06.05.2021 15:38:12",
         merchantName: "Merchant B",
         message: "Payment processed",
         paymentOperationDetailID: 2,
@@ -271,6 +273,7 @@ private extension OperationDetailDomain.State.EnhancedResponse {
     
     static let completedNoMerchant: Self = .init(
         formattedAmount: "75.00 ₽",
+        formattedDate: "06.05.2021 15:38:12",
         merchantName: nil,
         message: "Transaction complete",
         paymentOperationDetailID: 3,
@@ -282,6 +285,7 @@ private extension OperationDetailDomain.State.EnhancedResponse {
     
     static let completedNoMessage: Self = .init(
         formattedAmount: "50.00 ₽",
+        formattedDate: "06.05.2021 15:38:12",
         merchantName: "Merchant C",
         message: nil,
         paymentOperationDetailID: 4,
@@ -293,6 +297,7 @@ private extension OperationDetailDomain.State.EnhancedResponse {
     
     static let completedNoPurpose: Self = .init(
         formattedAmount: "125.00 ₽",
+        formattedDate: "06.05.2021 15:38:12",
         merchantName: "Merchant D",
         message: "Transaction successful",
         paymentOperationDetailID: 5,
@@ -304,6 +309,7 @@ private extension OperationDetailDomain.State.EnhancedResponse {
     
     static let completedNoMerchantNoMessage: Self = .init(
         formattedAmount: "90.00 ₽",
+        formattedDate: "06.05.2021 15:38:12",
         merchantName: nil,
         message: nil,
         paymentOperationDetailID: 6,
@@ -315,6 +321,7 @@ private extension OperationDetailDomain.State.EnhancedResponse {
     
     static let completedMinimal: Self = .init(
         formattedAmount: nil,
+        formattedDate: "06.05.2021 15:38:12",
         merchantName: nil,
         message: nil,
         paymentOperationDetailID: 7,
@@ -327,6 +334,7 @@ private extension OperationDetailDomain.State.EnhancedResponse {
     // ✅ INFLIGHT STATUS
     static let inflightFull: Self = .init(
         formattedAmount: "200.00 ₽",
+        formattedDate: "06.05.2021 15:38:12",
         merchantName: "Merchant E",
         message: "Payment is being processed",
         paymentOperationDetailID: 8,
@@ -338,6 +346,7 @@ private extension OperationDetailDomain.State.EnhancedResponse {
     
     static let inflightNoAmount: Self = .init(
         formattedAmount: nil,
+        formattedDate: "06.05.2021 15:38:12",
         merchantName: "Merchant F",
         message: "Awaiting confirmation",
         paymentOperationDetailID: 9,
@@ -349,6 +358,7 @@ private extension OperationDetailDomain.State.EnhancedResponse {
     
     static let inflightNoMerchant: Self = .init(
         formattedAmount: "150.00 ₽",
+        formattedDate: "06.05.2021 15:38:12",
         merchantName: nil,
         message: "Processing transaction",
         paymentOperationDetailID: 10,
@@ -360,6 +370,7 @@ private extension OperationDetailDomain.State.EnhancedResponse {
     
     static let inflightNoMessage: Self = .init(
         formattedAmount: "175.00 ₽",
+        formattedDate: "06.05.2021 15:38:12",
         merchantName: "Merchant G",
         message: nil,
         paymentOperationDetailID: 11,
@@ -371,6 +382,7 @@ private extension OperationDetailDomain.State.EnhancedResponse {
     
     static let inflightNoPurpose: Self = .init(
         formattedAmount: "120.00 ₽",
+        formattedDate: "06.05.2021 15:38:12",
         merchantName: "Merchant H",
         message: "Payment pending",
         paymentOperationDetailID: 12,
@@ -382,6 +394,7 @@ private extension OperationDetailDomain.State.EnhancedResponse {
     
     static let inflightNoMerchantNoMessage: Self = .init(
         formattedAmount: "130.00 ₽",
+        formattedDate: "06.05.2021 15:38:12",
         merchantName: nil,
         message: nil,
         paymentOperationDetailID: 13,
@@ -393,6 +406,7 @@ private extension OperationDetailDomain.State.EnhancedResponse {
     
     static let inflightMinimal: Self = .init(
         formattedAmount: nil,
+        formattedDate: "06.05.2021 15:38:12",
         merchantName: nil,
         message: nil,
         paymentOperationDetailID: 14,
@@ -405,6 +419,7 @@ private extension OperationDetailDomain.State.EnhancedResponse {
     // ✅ REJECTED STATUS
     static let rejectedFull: Self = .init(
         formattedAmount: "300.75 ₽",
+        formattedDate: "06.05.2021 15:38:12",
         merchantName: "Merchant I",
         message: "Payment failed due to insufficient funds",
         paymentOperationDetailID: 15,
@@ -416,6 +431,7 @@ private extension OperationDetailDomain.State.EnhancedResponse {
     
     static let rejectedNoAmount: Self = .init(
         formattedAmount: nil,
+        formattedDate: "06.05.2021 15:38:12",
         merchantName: "Merchant J",
         message: "Transaction declined",
         paymentOperationDetailID: 16,
@@ -427,6 +443,7 @@ private extension OperationDetailDomain.State.EnhancedResponse {
     
     static let rejectedNoMerchant: Self = .init(
         formattedAmount: "125.00 ₽",
+        formattedDate: "06.05.2021 15:38:12",
         merchantName: nil,
         message: "Card not accepted",
         paymentOperationDetailID: 17,
@@ -438,6 +455,7 @@ private extension OperationDetailDomain.State.EnhancedResponse {
     
     static let rejectedNoMessage: Self = .init(
         formattedAmount: "140.00 ₽",
+        formattedDate: "06.05.2021 15:38:12",
         merchantName: "Merchant K",
         message: nil,
         paymentOperationDetailID: 18,
@@ -449,6 +467,7 @@ private extension OperationDetailDomain.State.EnhancedResponse {
     
     static let rejectedNoPurpose: Self = .init(
         formattedAmount: "110.00 ₽",
+        formattedDate: "06.05.2021 15:38:12",
         merchantName: "Merchant L",
         message: "Insufficient funds",
         paymentOperationDetailID: 19,
@@ -460,6 +479,7 @@ private extension OperationDetailDomain.State.EnhancedResponse {
     
     static let rejectedNoMerchantNoMessage: Self = .init(
         formattedAmount: "135.00 ₽",
+        formattedDate: "06.05.2021 15:38:12",
         merchantName: nil,
         message: nil,
         paymentOperationDetailID: 20,
@@ -471,6 +491,7 @@ private extension OperationDetailDomain.State.EnhancedResponse {
     
     static let rejectedMinimal: Self = .init(
         formattedAmount: nil,
+        formattedDate: "06.05.2021 15:38:12",
         merchantName: nil,
         message: nil,
         paymentOperationDetailID: 21,

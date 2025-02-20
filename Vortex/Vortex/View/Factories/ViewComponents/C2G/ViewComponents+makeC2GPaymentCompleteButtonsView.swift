@@ -146,5 +146,5 @@ struct MakeC2GPaymentCompleteButtonsView_Previews: PreviewProvider {
 
 extension OperationDetailDomain.State.EnhancedResponse {
     
-    static let preview: Self = .init(formattedAmount: nil, merchantName: nil, message: nil, paymentOperationDetailID: 1, product: .preview, purpose: nil, status: .completed, uin: UUID().uuidString)
+    static let preview: Self = .init(formattedAmount: nil, formattedDate: nil, merchantName: nil, message: nil, paymentOperationDetailID: 1, product: .preview, purpose: nil, status: .completed, uin: UUID().uuidString)
 }

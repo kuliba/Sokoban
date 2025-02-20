@@ -29,7 +29,33 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
 
 extension OperationDetailDomain.State.EnhancedResponse: TransactionDetailsProviding {
     
-    var transactionDetails: [DetailsCell] { [
-        .field(.init(image: .ic16Tv, title: "Sample title", value: "Sample value"))
-    ] }
+    var transactionDetails: [DetailsCell] {
+        
+        return [
+            productCell,
+            formattedAmountField.map(DetailsCell.field),
+            formattedDateField.map(DetailsCell.field),
+        ].compactMap { $0 }
+    }
+    
+    private var productCell: DetailsCell {
+        
+        .product(.init(title: "Счет списания"))
+    }
+    
+    private var formattedAmountField: DetailsCell.Field? {
+        
+        formattedAmount.map {
+            
+            .init(image: .ic24Coins, title: "Сумма платежа", value: $0)
+        }
+    }
+    
+    private var formattedDateField: DetailsCell.Field? {
+        
+        formattedDate.map {
+            
+            .init(image: .ic24Calendar, title: "Дата и время операции (МСК)", value: $0)
+        }
+    }
 }
