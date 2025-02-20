@@ -59,7 +59,7 @@ extension ViewComponents {
         details: OperationDetailDomain.State.Details
     ) -> some View {
         
-        WithSheetView {
+        WithFullScreenCoverView {
             circleButton(image: .ic24Info, title: "Детали", action: $0)
         } sheet: {
             c2gTransactionDetails(details: details, dismiss: $0)
@@ -71,7 +71,7 @@ extension ViewComponents {
         response: OperationDetailDomain.State.EnhancedResponse
     ) -> some View {
         
-        WithSheetView {
+        WithFullScreenCoverView {
             circleButton(image: .ic24Info, title: "Детали", action: $0)
         } sheet: {
             c2gTransactionDetails(details: response, dismiss: $0)
@@ -83,7 +83,7 @@ extension ViewComponents {
         details: OperationDetailDomain.State.Details
     ) -> some View {
         
-        WithSheetView {
+        WithFullScreenCoverView {
             circleButton(image: .ic24Share, title: "Реквизиты", action: $0)
         } sheet: {
             c2gPaymentRequisites(details: details, dismiss: $0)
