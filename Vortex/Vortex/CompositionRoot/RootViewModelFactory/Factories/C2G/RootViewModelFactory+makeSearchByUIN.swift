@@ -19,7 +19,6 @@ extension RootViewModelFactory {
         
         composeBinder(
             content: makeUINInputViewModel(value: uin ?? ""),
-            initialState: .init(),
             getNavigation: getNavigation,
             selectWitnesses: .empty
         )
@@ -72,11 +71,10 @@ extension RootViewModelFactory {
         service(uin.value) {
             
             switch $0 {
-            case let .failure(failure as BackendFailure):
-                completion(.failure(failure))
-                
-            case .failure:
-                completion(.failure(.c2gConnectivity))
+            case let .failure(failure):
+                completion(.failure(
+                    failure.backendFailure(connectivityMessage: .connectivity)
+                ))
                 
             case let .success(response):
                 completion(.success(.init(
@@ -126,6 +124,16 @@ extension RootViewModelFactory {
     typealias GetUINDataResult = Result<C2GPaymentDomain.ContentPayload, BackendFailure>
 }
 
+extension Error {
+    
+    func backendFailure(
+        connectivityMessage: String
+    ) -> BackendFailure {
+        
+        return (self as? BackendFailure) ?? .connectivity(connectivityMessage)
+    }
+}
+
 private extension RootViewModelFactory.GetUINDataResult {
     
     static let missingC2GPaymentEligibleProducts: Self = .failure(.missingC2GPaymentEligibleProducts)
@@ -133,9 +141,16 @@ private extension RootViewModelFactory.GetUINDataResult {
 
 private extension BackendFailure {
     
-    static let c2gConnectivity: Self = .connectivity("Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения")
+    static let c2gConnectivity: Self = .connectivity(.connectivity)
     
-    static let missingC2GPaymentEligibleProducts: Self = .connectivity("У вас нет подходящих для платежа продуктов.")
+    static let missingC2GPaymentEligibleProducts: Self = .connectivity(.missingC2GPaymentEligibleProducts)
+}
+
+private extension String {
+    
+    static let connectivity: Self = "Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения"
+    
+    static let missingC2GPaymentEligibleProducts: Self = "У вас нет подходящих для платежа продуктов."
 }
 
 // TODO: remove with easter egg stub
