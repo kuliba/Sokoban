@@ -256,8 +256,10 @@ extension OperationDetailInfoInternalView {
     }
 }
 
-struct DetailsView_Previews: PreviewProvider {
+struct OperationDetailInfoView_Previews: PreviewProvider {
+    
     static var previews: some View {
+        
         OperationDetailInfoView(viewModel: .detailMockData())
     }
 }

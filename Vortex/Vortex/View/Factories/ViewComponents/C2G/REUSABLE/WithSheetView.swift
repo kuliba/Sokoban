@@ -26,8 +26,8 @@ struct WithSheetView<Content: View, Sheet: View>: View {
     ///   - sheet: A closure that returns the sheet view. It receives an action to dismiss the sheet.
     init(
         isPresented: Bool = false,
-        content: @escaping (@escaping () -> Void) -> Content,
-        sheet: @escaping (@escaping () -> Void) -> Sheet
+        @ViewBuilder content: @escaping (@escaping () -> Void) -> Content,
+        @ViewBuilder sheet: @escaping (@escaping () -> Void) -> Sheet
     ) {
         self.isPresented = isPresented
         self.content = content
@@ -50,8 +50,8 @@ extension WithSheetView {
     ///   - sheet: A closure that returns the sheet view.
     init(
         isPresented: Bool = false,
-        content: @escaping (@escaping () -> Void) -> Content,
-        sheet: @escaping () -> Sheet
+        @ViewBuilder content: @escaping (@escaping () -> Void) -> Content,
+        @ViewBuilder sheet: @escaping () -> Sheet
     ) {
         self.init(isPresented: isPresented, content: content, sheet: { _ in sheet() })
     }
