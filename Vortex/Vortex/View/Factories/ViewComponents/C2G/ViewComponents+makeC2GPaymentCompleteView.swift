@@ -224,9 +224,26 @@ private extension C2GCompleteCover {
     
 }
 
-private extension OperationDetailDomain.State.Details {
+extension OperationDetailDomain.State.Details {
     
-    static let preview: Self = .init()
+    static let preview: Self = .init(
+        dateForDetail: "06.05.2021 15:38:12",
+        realPayerFIO: "ООО “Альфа”",
+        payeeFullName: "УФК Владимирской области",
+        supplierBillID: "15877744552012365487",
+        comment: "Единый налоговый платеж",
+        realPayerINN: "771400007",
+        realPayerKPP: "545345724",
+        dateN: "06.05.2021",
+        paymentTerm: "06.05.2021",
+        legalAct: "Часть 1 статьи 12.16 КоАП, а так же ин...",
+        transAmm: "2 000 ₽",
+        discount: "50 %",
+        discountExpiry: "До 06.05.2024",
+        formattedAmount: "1 000 ₽",
+        upno: "10422026034290522711202464279130",
+        transferNumber: "А917910371020400SlfufFP7C847889D4"
+    )
 }
 
 private extension OperationDetailDomain.Model {

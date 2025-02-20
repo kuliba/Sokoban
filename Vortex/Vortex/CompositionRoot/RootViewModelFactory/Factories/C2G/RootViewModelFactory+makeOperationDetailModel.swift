@@ -25,7 +25,7 @@ extension RootViewModelFactory {
             
             load(.init(initialState.response.paymentOperationDetailID)) {
                 
-                completion($0.map { _ in 1 })
+                completion($0.map(\.details))
             }
         }
         
@@ -42,5 +42,13 @@ extension RootViewModelFactory {
             handleEffect: effectHandler.handleEffect,
             scheduler: schedulers.main
         )
+    }
+}
+
+extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse {
+    
+    var details: OperationDetailDomain.State.Details {
+        
+        fatalError()
     }
 }

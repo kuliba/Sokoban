@@ -127,7 +127,7 @@ struct MakeC2GPaymentCompleteButtonsView_Previews: PreviewProvider {
         
         VStack(spacing: 32) {
             
-            view(.completed(1))
+            view(.completed(.preview))
             view(.failure(NSError(domain: "Failure", code: -1)))
             view(.loading(nil))
             view(.pending)
@@ -146,5 +146,15 @@ struct MakeC2GPaymentCompleteButtonsView_Previews: PreviewProvider {
 
 extension OperationDetailDomain.State.EnhancedResponse {
     
-    static let preview: Self = .init(formattedAmount: nil, formattedDate: nil, merchantName: nil, message: nil, paymentOperationDetailID: 1, product: .preview, purpose: nil, status: .completed, uin: UUID().uuidString)
+    static let preview: Self = .init(
+        formattedAmount: "2 000 ₽",
+        formattedDate: "06.05.2021 15:38:12",
+        merchantName: "2 000 ₽",
+        message: nil,
+        paymentOperationDetailID: 1,
+        product: .preview,
+        purpose: "Единый налоговый платеж",
+        status: .completed,
+        uin: UUID().uuidString
+    )
 }
