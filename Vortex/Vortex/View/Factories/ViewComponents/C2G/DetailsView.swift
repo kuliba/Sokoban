@@ -79,6 +79,7 @@ struct DetailsViewConfig: Equatable {
     let padding: CGFloat
     let spacing: CGFloat
 }
+
 struct DetailsView<DetailsCellView: View, Footer: View>: View {
     
     let detailsCells: [DetailsCell]
