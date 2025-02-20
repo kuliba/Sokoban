@@ -19,18 +19,9 @@ extension RootViewModelFactory {
         composeBinder(
             content: makeUINInputViewModel(value: uin ?? ""),
             initialState: .init(),
-            delayProvider: delayProvider,
             getNavigation: getNavigation,
             selectWitnesses: .empty
         )
-    }
-    
-    @inlinable
-    func delayProvider(
-        navigation: SearchByUINDomain.Navigation
-    ) -> Delay {
-        
-        return .zero
     }
     
     @inlinable
