@@ -71,9 +71,12 @@ extension ViewComponents {
         DetailsView(
             detailsCells: details,
             config: .iVortex,
-            detailsCellView: detailsCellView,
-            footer: { Image.ic72Sbp.renderingMode(.original) }
+            detailsCellView: detailsCellView
         )
+        .safeAreaInset(edge: .bottom) {
+            
+            Image.ic72Sbp.renderingMode(.original)
+        }
     }
     
     @inlinable
@@ -119,13 +122,13 @@ extension PreviewDetails: TransactionDetailsProviding {
     
     var transactionDetails: [DetailsCell] { [
         .field(.init(
-            image: .ic24Calendar, 
-            title: "Дата и время операции (МСК)", 
+            image: .ic24Calendar,
+            title: "Дата и время операции (МСК)",
             value: "06.05.2021 15:38:12")
         ),
         .field(.init(
-            image: nil, 
-            title: "Назначение платежа", 
+            image: nil,
+            title: "Назначение платежа",
             value: "Транспортный налог")
         ),
         .product(.init(title: "Product"))
@@ -145,7 +148,7 @@ extension DetailsCell {
         
         guard case let .field(field) = self
         else { return nil }
-
+        
         return field
     }
 }
