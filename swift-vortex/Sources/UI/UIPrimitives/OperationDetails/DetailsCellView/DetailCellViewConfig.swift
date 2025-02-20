@@ -11,6 +11,7 @@ import SharedConfigs
 public struct DetailCellViewConfig: Equatable {
     
     public let insets: EdgeInsets
+    public let imageForegroundColor: Color
     public let imageSize: CGSize
     public let imageTopPadding: CGFloat
     public let hSpacing: CGFloat
@@ -20,6 +21,7 @@ public struct DetailCellViewConfig: Equatable {
     
     public init(
         insets: EdgeInsets,
+        imageForegroundColor: Color,
         imageSize: CGSize,
         imageTopPadding: CGFloat,
         hSpacing: CGFloat,
@@ -28,6 +30,7 @@ public struct DetailCellViewConfig: Equatable {
         value: TextConfig
     ) {
         self.insets = insets
+        self.imageForegroundColor = imageForegroundColor
         self.imageSize = imageSize
         self.imageTopPadding = imageTopPadding
         self.hSpacing = hSpacing

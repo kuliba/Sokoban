@@ -9,6 +9,7 @@ extension DetailCellViewConfig {
     
     static let preview: Self = .init(
         insets: .init(top: 0, leading: 4, bottom: 12, trailing: 0),
+        imageForegroundColor: .orange,
         imageSize: .init(width: 24, height: 24),
         imageTopPadding: 8,
         hSpacing: 20,

@@ -63,7 +63,8 @@ private extension DetailsCellView {
                 
                 image
                     .resizable()
-                    .renderingMode(.original)
+                    .renderingMode(.template)
+                    .foregroundColor(config.imageForegroundColor)
             }
         }
     }
