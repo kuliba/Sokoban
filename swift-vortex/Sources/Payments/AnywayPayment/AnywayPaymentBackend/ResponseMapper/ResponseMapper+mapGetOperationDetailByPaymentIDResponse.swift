@@ -320,7 +320,7 @@ private extension ResponseMapper {
         let serviceSelect: String?
         let shopLink: String?
         let supplierBillID: String?
-        let transAmm: String?
+        let transAmm: Int?
         let transferDate: String
         let transferEnum: String?
         let transferNumber: String?

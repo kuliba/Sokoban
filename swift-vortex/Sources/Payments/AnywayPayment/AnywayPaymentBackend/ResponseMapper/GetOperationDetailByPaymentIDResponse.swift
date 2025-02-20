@@ -100,7 +100,7 @@ extension ResponseMapper {
         public let serviceSelect: String?
         public let shopLink: String?
         public let supplierBillID: String?
-        public let transAmm: String?
+        public let transAmm: Int?
         public let transfer: Transfer?
         public let transferDate: String
         public let transferNumber: String?
@@ -197,7 +197,7 @@ extension ResponseMapper {
             serviceSelect: String?,
             shopLink: String?,
             supplierBillID: String?,
-            transAmm: String?,
+            transAmm: Int?,
             transfer: Transfer?,
             transferDate: String,
             transferNumber: String?,

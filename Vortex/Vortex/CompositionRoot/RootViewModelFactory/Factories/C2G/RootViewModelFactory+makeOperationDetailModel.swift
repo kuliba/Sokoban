@@ -60,7 +60,7 @@ extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse {
             dateN: dateN,
             paymentTerm: paymentTerm,
             legalAct: legalAct,
-            transAmm: transAmm,
+            transAmm: transAmm.map { "\($0)" }, // should be formatted
             discount: discount,
             discountExpiry: discountExpiry,
             formattedAmount: formattedAmount,

@@ -227,7 +227,7 @@ private extension ResponseMapper.GetOperationDetailByPaymentIDResponse {
         serviceSelect: String? = nil,
         shopLink: String? = nil,
         supplierBillID: String? = nil,
-        transAmm: String? = nil,
+        transAmm: Int? = nil,
         transfer: Transfer? = .housingAndCommunalService,
         transferDate: String = "17.04.2023",
         transferNumber: String? = nil,
