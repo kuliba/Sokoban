@@ -23,15 +23,7 @@ extension ViewComponents {
         makePaymentCompletionLayoutView(
             state: cover.completion,
             statusConfig: .c2g,
-            // TODO: replace stub with buttons
-            buttons: {
-                
-                // TODO: extract helper
-                ShareButton(items: ["Payer: someone"], config: .default) {
-                    
-                    Text("share")
-                }
-            },
+            buttons: { makeC2GPaymentCompleteButtonsView(cover.content) },
             details: { makeC2GPaymentDetailsView(cover: cover, config: config) }
         ) {
             makeSPBFooter(isActive: true, event: goToMain, title: "На главный")
