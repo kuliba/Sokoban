@@ -52,7 +52,7 @@ extension RootViewModelFactory {
     ) {
         guard !digest.uin.hasEasterEgg else {
             
-            return easterEggsCreateC2GPayment(digest, .completed, completion)
+            return easterEggsCreateC2GPayment(digest, .inflight, completion)
         }
         
         createC2GPayment(digest: digest) { [weak self] in

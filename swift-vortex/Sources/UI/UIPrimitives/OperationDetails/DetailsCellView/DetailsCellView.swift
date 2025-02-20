@@ -41,7 +41,8 @@ private extension DetailsCellView {
         HStack(alignment: .top, spacing: config.hSpacing) {
             
             imageView(field)
-                .frame(config.imageSize)
+                .frame(field.isLarge ? .init(width: 32, height: 32) : config.imageSize)
+                .frame(width: 32, height: 32)
                 .padding(config.imagePadding)
             
             VStack(alignment: .leading, spacing: config.vSpacing) {
@@ -66,7 +67,7 @@ private extension DetailsCellView {
                 
                 image
                     .resizable()
-                    .renderingMode(.template)
+                    .renderingMode(field.isLarge ? .original : .template)
                     .aspectRatio(contentMode: .fit)
                     .foregroundColor(config.imageForegroundColor)
             }
@@ -84,6 +85,10 @@ struct DetailsCellView_Previews: PreviewProvider {
             
             detailsCellView(.fieldPreview)
                 .border(.red.opacity(0.3))
+            
+            detailsCellView(.fieldLargePreview)
+                .border(.red.opacity(0.3))
+            
             detailsCellView(.productPreview)
                 .border(.red.opacity(0.3))
         }
@@ -102,6 +107,13 @@ extension DetailsCell {
     
     static let fieldPreview: Self = .field(.init(
         image: .init(systemName: "scribble"),
+        title: "Field Title",
+        value: "Field Value"
+    ))
+    
+    static let fieldLargePreview: Self = .field(.init(
+        image: .init(systemName: "scribble"),
+        isLarge: true,
         title: "Field Title",
         value: "Field Value"
     ))

@@ -15,15 +15,18 @@ public enum DetailsCell: Equatable {
     public struct Field: Equatable {
         
         public let image: Image?
+        public let isLarge: Bool
         public let title: String
         public let value: String
         
         public init(
             image: Image?,
+            isLarge: Bool = false,
             title: String,
             value: String
         ) {
             self.image = image
+            self.isLarge = isLarge
             self.title = title
             self.value = value
         }

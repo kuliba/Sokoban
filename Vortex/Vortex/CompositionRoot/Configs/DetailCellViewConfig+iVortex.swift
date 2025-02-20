@@ -14,8 +14,8 @@ extension DetailCellViewConfig {
         labelVPadding: 6,
         imageForegroundColor: .iconGray,
         imageSize: .init(width: 24, height: 24),
-        imagePadding: .init(top: 14, leading: 4, bottom: 0, trailing: 0),
-        hSpacing: 20,
+        imagePadding: .init(top: 14, leading: 0, bottom: 0, trailing: 0),
+        hSpacing: 16,
         vSpacing: 4,
         title: .init(
             textFont: .textBodySR12160(),

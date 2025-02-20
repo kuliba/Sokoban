@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 20.02.2025.
 //
 
+import SwiftUI
 import UIPrimitives
 
 // MARK: - Transaction Details
@@ -19,8 +20,8 @@ extension OperationDetailDomain.State.Details: TransactionDetailsProviding {
             discountExpiryField.map(DetailsCell.field),
             formattedAmountField.map(DetailsCell.field),
             dateForDetailField.map(DetailsCell.field),
-            // operationStatus // Статус операции- operationStatus (возможные значения: Успешно, Отказ, В обработке)
-            .product(product.cellProduct), // productWidget // Счет списания-  payerCardId или payerAccountId
+            statusField.map(DetailsCell.field),
+            .product(product.cellProduct),
             payeeFullNameField.map(DetailsCell.field),
             supplierBillIDField.map(DetailsCell.field),
             commentField.map(DetailsCell.field),
@@ -64,6 +65,12 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
     
     // TODO: extract titles to static strings in fileprivate scape
     
+    private var statusField: DetailsCell.Field? {
+        
+        .init(image: status.image, isLarge: true, title: "Статус операции", value: status.title)
+        
+    }
+    
     private var dateForDetailField: DetailsCell.Field? {
         
         dateForDetail.map {
@@ -91,7 +98,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
     private var supplierBillIDField: DetailsCell.Field? {
         
         supplierBillID.map {
-         
+            
             .init(image: .ic24File, title: "Номер документа (УИН)", value: $0)
         }
     }
@@ -99,7 +106,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
     private var commentField: DetailsCell.Field? {
         
         comment.map {
-         
+            
             .init(image: .ic24Tax, title: "Назначение платежа", value: $0)
         }
     }
@@ -107,7 +114,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
     private var realPayerINNField: DetailsCell.Field? {
         
         realPayerINN.map {
-         
+            
             .init(image: .ic24FileHash, title: "ИНН плательщика", value: $0)
         }
     }
@@ -115,7 +122,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
     private var realPayerKPPField: DetailsCell.Field? {
         
         realPayerKPP.map {
-         
+            
             .init(image: .ic24Hash, title: "КПП плательщика", value: $0)
         }
     }
@@ -123,7 +130,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
     private var dateNField: DetailsCell.Field? {
         
         dateN.map {
-         
+            
             .init(image: .ic24Calendar, title: "Дата начисления", value: $0)
         }
     }
@@ -131,7 +138,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
     private var paymentTermField: DetailsCell.Field? {
         
         paymentTerm.map {
-         
+            
             .init(image: .ic24CalendarPayment, title: "Срок оплаты", value: $0)
         }
     }
@@ -139,7 +146,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
     private var legalActField: DetailsCell.Field? {
         
         legalAct.map {
-         
+            
             .init(image: .ic24FileText, title: "Информация о НПА", value: $0)
         }
     }
@@ -147,7 +154,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
     private var transAmmField: DetailsCell.Field? {
         
         transAmm.map {
-         
+            
             .init(image: .ic24Cash, title: "Сумма начисления", value: $0)
         }
     }
@@ -155,7 +162,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
     private var discountField: DetailsCell.Field? {
         
         discount.map {
-         
+            
             .init(image: .ic24Percent, title: "Скидка", value: $0)
         }
     }
@@ -163,7 +170,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
     private var discountExpiryField: DetailsCell.Field? {
         
         discountExpiry.map {
-         
+            
             .init(image: .ic24Clock, title: "Срок действия скидки", value: $0)
         }
     }
@@ -171,7 +178,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
     private var formattedAmountField: DetailsCell.Field? {
         
         formattedAmount.map {
-         
+            
             .init(image: .ic24Coins, title: "Сумма платежа", value: $0)
         }
     }
@@ -179,7 +186,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
     private var upnoField: DetailsCell.Field? {
         
         upno.map {
-         
+            
             .init(image: .ic24FileHash, title: "УПНО", value: $0)
         }
     }
@@ -187,8 +194,29 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
     private var transferNumberField: DetailsCell.Field? {
         
         transferNumber.map {
-         
+            
             .init(image: .ic24Hash, title: "Идентификатор операции СБП", value: $0)
+        }
+    }
+}
+
+private extension OperationDetailDomain.State.Status {
+    
+    var image: Image {
+        
+        switch self {
+        case .completed: return .init("OkOperators")
+        case .inflight:  return .ic16Waiting
+        case .rejected:  return .ic16Denied
+        }
+    }
+    
+    var title: String {
+        
+        switch self {
+        case .completed: return "Успешно"
+        case .inflight:  return "В обработке"
+        case .rejected:  return "Отказ"
         }
     }
 }
@@ -230,8 +258,8 @@ extension OperationDetailDomain.State.EnhancedResponse: TransactionDetailsProvid
 
 extension OperationDetailDomain.State.Product {
     
-    var cellProduct: DetailsCell.Product { 
-    
+    var cellProduct: DetailsCell.Product {
+        
         return .init(title: header, icon: look.icon.image, name: title, formattedBalance: amountFormatted, description: number)
     }
 }
