@@ -14,7 +14,7 @@ extension DetailCellViewConfig {
         labelVPadding: 6,
         imageForegroundColor: .iconGray,
         imageSize: .init(width: 24, height: 24),
-        imagePadding: .init(top: 14, leading: 0, bottom: 0, trailing: 0),
+        imagePadding: .init(top: 10, leading: 0, bottom: 0, trailing: 0),
         hSpacing: 16,
         vSpacing: 4,
         title: .init(
@@ -40,5 +40,6 @@ extension DetailCellViewConfig.ProductConfig {
         iconSize: .init(width: 32, height: 32),
         name: .init(textFont: .headline, textColor: .orange),
         title: .init(textFont: .footnote, textColor: .orange),
-        vStackVPadding: 6    )
+        vStackVPadding: 6
+    )
 }

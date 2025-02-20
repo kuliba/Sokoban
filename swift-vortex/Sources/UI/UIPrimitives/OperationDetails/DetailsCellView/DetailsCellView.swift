@@ -49,6 +49,7 @@ private extension DetailsCellView {
                 
                 field.title.text(withConfig: config.title)
                 field.value.text(withConfig: config.value)
+                    .frame(minHeight: 24)
             }
             .padding(.vertical, config.labelVPadding)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -83,6 +84,9 @@ struct DetailsCellView_Previews: PreviewProvider {
         
         VStack(spacing: 16) {
             
+            detailsCellView(.fieldEmptyImagePreview)
+                .border(.red.opacity(0.3))
+            
             detailsCellView(.fieldPreview)
                 .border(.red.opacity(0.3))
             
@@ -105,17 +109,23 @@ struct DetailsCellView_Previews: PreviewProvider {
 
 extension DetailsCell {
     
+    static let fieldEmptyImagePreview: Self = .field(.init(
+        image: nil,
+        title: "Field Title",
+        value: "Field with missing image"
+    ))
+    
     static let fieldPreview: Self = .field(.init(
         image: .init(systemName: "scribble"),
         title: "Field Title",
-        value: "Field Value"
+        value: "Field with normal image"
     ))
     
     static let fieldLargePreview: Self = .field(.init(
         image: .init(systemName: "scribble"),
         isLarge: true,
         title: "Field Title",
-        value: "Field Value"
+        value: "Field with large image"
     ))
     
     static let productPreview: Self = .product(.preview)
