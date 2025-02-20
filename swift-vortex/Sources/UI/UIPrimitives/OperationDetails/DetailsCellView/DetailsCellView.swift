@@ -39,16 +39,16 @@ private extension DetailsCellView {
             
             imageView(field)
                 .frame(config.imageSize)
-                .padding(.top, config.imageTopPadding)
+                .padding(config.imagePadding)
             
             VStack(alignment: .leading, spacing: config.vSpacing) {
                 
                 field.title.text(withConfig: config.title)
                 field.value.text(withConfig: config.value)
             }
+            .padding(.vertical, config.labelVPadding)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding(config.insets)
     }
     
     func imageView(

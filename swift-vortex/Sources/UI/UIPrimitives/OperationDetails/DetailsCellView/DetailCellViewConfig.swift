@@ -10,29 +10,29 @@ import SharedConfigs
 
 public struct DetailCellViewConfig: Equatable {
     
-    public let insets: EdgeInsets
+    public let labelVPadding: CGFloat
     public let imageForegroundColor: Color
     public let imageSize: CGSize
-    public let imageTopPadding: CGFloat
+    public let imagePadding: EdgeInsets
     public let hSpacing: CGFloat
     public let vSpacing: CGFloat
     public let title: TextConfig
     public let value: TextConfig
     
     public init(
-        insets: EdgeInsets,
+        labelVPadding: CGFloat,
         imageForegroundColor: Color,
         imageSize: CGSize,
-        imageTopPadding: CGFloat,
+        imagePadding: EdgeInsets,
         hSpacing: CGFloat,
         vSpacing: CGFloat,
         title: TextConfig,
         value: TextConfig
     ) {
-        self.insets = insets
+        self.labelVPadding = labelVPadding
         self.imageForegroundColor = imageForegroundColor
         self.imageSize = imageSize
-        self.imageTopPadding = imageTopPadding
+        self.imagePadding = imagePadding
         self.hSpacing = hSpacing
         self.vSpacing = vSpacing
         self.title = title
