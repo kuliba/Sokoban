@@ -9,9 +9,8 @@ import Foundation
 
 public struct BackendFailure<InformerPayload>: Error, Identifiable {
     
-    public var id: UUID
-
-    let kind: Kind
+    public let id: UUID
+    public let kind: Kind
     
     public init(
         id: UUID = UUID(),

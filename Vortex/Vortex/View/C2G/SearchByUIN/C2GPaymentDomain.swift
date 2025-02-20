@@ -36,9 +36,9 @@ extension C2GPaymentDomain {
         
         let selectedProduct: ProductSelect.Product
         let products: [ProductSelect.Product]
-        let termsCheck: Bool
+        let termsCheck: Bool?
         let uin: String
-        let url: URL
+        let url: URL?
     }
     
     // MARK: - Flow
@@ -54,12 +54,14 @@ extension C2GPaymentDomain {
         typealias Digest = C2GCore.C2GPaymentDigest
     }
     
-    enum Navigation {
+    typealias Navigation = Result<C2GPaymentComplete, BackendFailure>
+    
+    struct C2GPaymentComplete {
         
-        case failure(BackendFailure)
-        case success(C2GPaymentComplete)
+        let detail: OperationDetailDomain.Model
+        let response: Response
         
-        struct C2GPaymentComplete: Equatable {
+        struct Response: Equatable {
             
             let formattedAmount: String?
             let status: Status

@@ -17,16 +17,16 @@ class C2GPaymentTests: XCTestCase {
     
     func makeState(
         productSelect: ProductSelect? = nil,
-        termsCheck: Bool = false,
+        termsCheck: Bool? = nil,
         uin: String = anyMessage(),
         url: URL = anyURL()
     ) -> State {
         
         return .init(
+            context: url,
             productSelect: productSelect ?? makeProductSelect(),
             termsCheck: termsCheck,
-            uin: uin,
-            context: url
+            uin: uin
         )
     }
     

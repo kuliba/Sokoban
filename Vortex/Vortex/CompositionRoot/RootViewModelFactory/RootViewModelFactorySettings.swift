@@ -13,6 +13,7 @@ struct RootViewModelFactorySettings {
     let batchDelay: DispatchQueue.SchedulerTimeType.Stride
     /// interval to protect calls from being discarded on quick succession
     let delay: DispatchQueue.SchedulerTimeType.Stride
+    let informerDelay: DispatchQueue.SchedulerTimeType.Stride
     let fraudDelay: Double
     let observeLast: Int
     let operationPickerPlaceholderCount: Int
@@ -28,6 +29,7 @@ extension RootViewModelFactorySettings {
         categoryPickerPlaceholderCount: 6,
         batchDelay: .milliseconds(500),
         delay: .milliseconds(600),
+        informerDelay: .seconds(2),
         fraudDelay: 120,
         observeLast: 10,
         operationPickerPlaceholderCount: 4,

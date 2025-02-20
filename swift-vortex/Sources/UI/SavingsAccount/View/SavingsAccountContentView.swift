@@ -37,12 +37,7 @@ where RefreshView: View,
                 .frame(maxHeight: .infinity)
             
         case let .failure(_, oldLanding):
-            if let oldLanding {
-                factory.makeLandingView(oldLanding)
-            } else {
-                Color.clear
-                    .frame(maxHeight: .infinity)
-            }
+            factory.makeLandingView(oldLanding)
             
         case let .loaded(landing):
             factory.makeLandingView(landing)
@@ -83,7 +78,7 @@ where RefreshView == Text,
         config: .prod,
         factory: .init(
             refreshView: Text("Refresh"),
-            makeLandingView: { Text($0) }
+            makeLandingView: { _ in Text("Landing") }
         ))
 }
 

@@ -26,5 +26,5 @@ where RefreshView: View,
 
 public extension SavingsAccountContentViewFactory {
     
-    typealias MakeLandingView = (Landing) -> LandingView
+    typealias MakeLandingView = (Landing?) -> LandingView
 }

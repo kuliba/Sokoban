@@ -27,7 +27,7 @@ public enum SavingsAccountContentStatus<Landing, InformerPayload> {
     
     case initiate
     case inflight(Landing?)
-    case loaded(Landing)
+    case loaded(Landing?)
     case failure(Failure, Landing?)
 
     public enum Selection: Equatable {

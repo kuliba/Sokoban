@@ -113,6 +113,7 @@ let package = Package(
         .productProfileComponents,
         .selectorComponents,
         .toggleComponent,
+        .headerLandingComponent,
         // Utilities
         .remoteServices,
         // tools
@@ -335,6 +336,7 @@ let package = Package(
         .infoComponent,
         .checkBoxComponent,
         .dropDownTextListComponent,
+        .headerLandingComponent,
         .footerComponent,
         .nameComponent,
         .openNewProductComponent,
@@ -763,7 +765,12 @@ private extension Product {
         name: .dropDownTextListComponent,
         targets: [.dropDownTextListComponent]
     )
-
+    
+    static let headerLandingComponent = library(
+        name: .headerLandingComponent,
+        targets: [.headerLandingComponent]
+    )
+    
     static let openNewProductComponent = library(
         name: .openNewProductComponent,
         targets: [.openNewProductComponent]
@@ -3203,6 +3210,14 @@ private extension Target {
         path: "Sources/UI/Components/\(String.dropDownTextListComponent)"
     )
     
+    static let headerLandingComponent = target(
+        name: .headerLandingComponent,
+        dependencies: [
+            .sharedConfigs
+        ],
+        path: "Sources/UI/Components/\(String.headerLandingComponent)"
+    )
+    
     static let footerComponent = target(
         name: .footerComponent,
         dependencies: [
@@ -3804,6 +3819,10 @@ private extension Target.Dependency {
         name: .dropDownTextListComponent
     )
     
+    static let headerLandingComponent = byName(
+        name: .headerLandingComponent
+    )
+    
     static let footerComponent = byName(
         name: .footerComponent
     )
@@ -4268,6 +4287,7 @@ private extension String {
     static let checkBoxComponent = "CheckBoxComponent"
 
     static let dropDownTextListComponent = "DropDownTextListComponent"
+    static let headerLandingComponent = "HeaderLandingComponent"
     
     static let footerComponent = "FooterComponent"
     

@@ -147,6 +147,9 @@ extension SavingsAccountDomain.Navigation {
             
         case .openSavingsAccount:
             return .openSavingsAccount
+            
+        case .loaded:
+            return nil
         }
     }
     

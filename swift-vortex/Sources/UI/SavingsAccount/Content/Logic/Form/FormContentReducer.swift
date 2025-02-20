@@ -44,8 +44,11 @@ public extension FormContentReducer {
                 state.status = .failure(.informer(informer), oldLanding)
             }
                         
-        case let .offset(offset):
+        case .offset:
             break
+            
+        case let .dismissInformer(oldLanding):
+            state.status = .loaded(oldLanding)
         }
         return (state, effect)
     }

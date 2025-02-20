@@ -11,14 +11,14 @@ import DropDownTextListComponent
 
 public struct SavingsAccountView: View {
     
-    let state: SavingsAccountState
+    let state: SavingsAccountState?
     let config: Config
     let factory: Factory
         
     @State private(set) var selectedQuestion: Question?
     
     public init(
-        state: SavingsAccountState,
+        state: SavingsAccountState?,
         config: Config,
         factory: Factory
     ) {
@@ -29,23 +29,34 @@ public struct SavingsAccountView: View {
     
     public var body: some View {
         
-        VStack(alignment: .leading, spacing: config.spacing) {
-            factory.makeBannerImageView(state.imageLink)
-                .frame(height: config.bannerHeight)
-                .aspectRatio(contentMode: .fit)
-                .modifier(PaddingsModifier(bottom: -config.paddings.negativeBottomPadding, vertical: config.paddings.vertical))
+        mainView()
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden()
+    }
+    
+    @ViewBuilder
+    private func mainView() -> some View {
+        
+        if let state {
             
-            list(items: state.advantages)
-                .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
-            
-            list(items: state.basicConditions)
-                .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
-            
-            questionsView()
-                .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
+            VStack(alignment: .leading, spacing: config.spacing) {
+                factory.makeBannerImageView(state.imageLink)
+                    .frame(height: config.bannerHeight)
+                    .aspectRatio(contentMode: .fit)
+                    .modifier(PaddingsModifier(bottom: -config.paddings.negativeBottomPadding, vertical: config.paddings.vertical))
+                
+                list(items: state.advantages)
+                    .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
+                
+                list(items: state.basicConditions)
+                    .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
+                
+                questionsView()
+                    .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal))
+            }
+        } else {
+            Color.clear.frame(maxHeight: .infinity)
         }
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden()
     }
         
     private func list(
@@ -91,12 +102,15 @@ public struct SavingsAccountView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
     
+    @ViewBuilder
     private func questionsView() -> some View {
 
-        DropDownTextListView(
-            config: config.dropDownTextListConfig,
-            list: state.questions.dropDownTextList
-        )
+        if let list = state?.questions.dropDownTextList {
+            DropDownTextListView(
+                config: config.dropDownTextListConfig,
+                list: list
+            )
+        }
     }
 }
 

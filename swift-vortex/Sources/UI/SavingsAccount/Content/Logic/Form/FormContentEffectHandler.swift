@@ -9,12 +9,13 @@ import Foundation
 
 public final class FormContentEffectHandler<Landing, InformerPayload> {
     
-    private let loadLanding: LoadLanding
+    private let load: Load
+    private var oldLanding: Landing? = nil
 
     public init(
-        loadLanding: @escaping LoadLanding
+        load: @escaping Load
     ) {
-        self.loadLanding = loadLanding
+        self.load = load
     }
 }
 
@@ -27,16 +28,19 @@ public extension FormContentEffectHandler {
         switch effect {
             
         case .load:
-            loadLanding() {
+            load({ dispatch(.dismissInformer(self.oldLanding)) }) { [weak self] in
                 switch $0 {
                     
                 case let .failure(backendFailure):
                     dispatch(.failure(backendFailure))
                     
                 case let .success(landing):
+                    self?.oldLanding = landing
                     dispatch(.loaded(landing))
                 }
             }
+        case .dismissInformer:
+            dispatch(.dismissInformer(oldLanding))
         }
     }
 }
@@ -48,6 +52,7 @@ public extension FormContentEffectHandler {
     typealias Event = SavingsAccountContentEvent<Landing, InformerPayload>
     typealias Effect = SavingsAccountContentEffect
     
+    typealias DismissInformer = () -> Void
     typealias LoadLandingCompletion = (Result<Landing, BackendFailure<InformerPayload>>) -> Void
-    typealias LoadLanding = (@escaping LoadLandingCompletion) -> Void
+    typealias Load = (@escaping DismissInformer, @escaping LoadLandingCompletion) -> Void
 }
