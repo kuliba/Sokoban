@@ -72,7 +72,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
     
     private var statusField: DetailsCell.Field? {
         
-        .init(image: status.image, isLarge: true, title: "Статус операции", value: status.title)
+        .init(image: status.image, isLarge: true, title: .status, value: status.title)
         
     }
     
@@ -80,7 +80,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         dateForDetail.map {
             
-            .init(image: .ic24Calendar, title: "Дата и время операции (МСК)", value: $0)
+            .init(image: .ic24Calendar, title: .dateForDetail, value: $0)
         }
     }
     
@@ -88,7 +88,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         realPayerFIO.map {
             
-            .init(image: .ic24User, title: "Информация о плательщике", value: $0)
+            .init(image: .ic24User, title: .realPayerFIO, value: $0)
         }
     }
     
@@ -96,7 +96,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         payeeFullName.map {
             
-            .init(image: .ic24Bank, title: "Получатель", value: $0)
+            .init(image: .ic24Bank, title: .payeeFullName, value: $0)
         }
     }
     
@@ -104,7 +104,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         supplierBillID.map {
             
-            .init(image: .ic24File, title: "Номер документа (УИН)", value: $0)
+            .init(image: .ic24File, title: .supplierBillID, value: $0)
         }
     }
     
@@ -112,7 +112,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         comment.map {
             
-            .init(image: .ic24Tax, title: "Назначение платежа", value: $0)
+            .init(image: .ic24Tax, title: .comment, value: $0)
         }
     }
     
@@ -120,7 +120,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         realPayerINN.map {
             
-            .init(image: .ic24FileHash, title: "ИНН плательщика", value: $0)
+            .init(image: .ic24FileHash, title: .realPayerINN, value: $0)
         }
     }
     
@@ -128,7 +128,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         realPayerKPP.map {
             
-            .init(image: .ic24Hash, title: "КПП плательщика", value: $0)
+            .init(image: .ic24Hash, title: .realPayerKPP, value: $0)
         }
     }
     
@@ -136,7 +136,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         dateN.map {
             
-            .init(image: .ic24Calendar, title: "Дата начисления", value: $0)
+            .init(image: .ic24Calendar, title: .dateNField, value: $0)
         }
     }
     
@@ -144,7 +144,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         paymentTerm.map {
             
-            .init(image: .ic24CalendarPayment, title: "Срок оплаты", value: $0)
+            .init(image: .ic24CalendarPayment, title: .paymentTerm, value: $0)
         }
     }
     
@@ -152,7 +152,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         legalAct.map {
             
-            .init(image: .ic24FileText, title: "Информация о НПА", value: $0)
+            .init(image: .ic24FileText, title: .legalAct, value: $0)
         }
     }
     
@@ -160,7 +160,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         transAmm.map {
             
-            .init(image: .ic24Cash, title: "Сумма начисления", value: $0)
+            .init(image: .ic24Cash, title: .transAmm, value: $0)
         }
     }
     
@@ -168,7 +168,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         discount.map {
             
-            .init(image: .ic24Percent, title: "Скидка", value: $0)
+            .init(image: .ic24Percent, title: .discount, value: $0)
         }
     }
     
@@ -176,7 +176,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         discountExpiry.map {
             
-            .init(image: .ic24Clock, title: "Срок действия скидки", value: $0)
+            .init(image: .ic24Clock, title: .discountExpiry, value: $0)
         }
     }
     
@@ -184,7 +184,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         formattedAmount.map {
             
-            .init(image: .ic24Coins, title: "Сумма платежа", value: $0)
+            .init(image: .ic24Coins, title: .formattedAmount, value: $0)
         }
     }
     
@@ -192,7 +192,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         upno.map {
             
-            .init(image: .ic24FileHash, title: "УПНО", value: $0)
+            .init(image: .ic24FileHash, title: .upno, value: $0)
         }
     }
     
@@ -200,9 +200,30 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         transferNumber.map {
             
-            .init(image: .ic24Hash, title: "Идентификатор операции СБП", value: $0)
+            .init(image: .ic24Hash, title: .transferNumber, value: $0)
         }
     }
+}
+
+private extension String {
+    
+    static let comment = "Назначение платежа"
+    static let dateForDetail = "Дата и время операции (МСК)"
+    static let dateNField = "Дата начисления"
+    static let discount = "Скидка"
+    static let discountExpiry = "Срок действия скидки"
+    static let formattedAmount = "Сумма платежа"
+    static let legalAct = "Информация о НПА"
+    static let payeeFullName = "Получатель"
+    static let paymentTerm = "Срок оплаты"
+    static let realPayerFIO = "Информация о плательщике"
+    static let realPayerINN = "ИНН плательщика"
+    static let realPayerKPP = "КПП плательщика"
+    static let status = "Статус операции"
+    static let supplierBillID = "Номер документа (УИН)"
+    static let transAmm = "Сумма начисления"
+    static let transferNumber = "Идентификатор операции СБП"
+    static let upno = "УПНО"
 }
 
 private extension OperationDetailDomain.State.Status {
