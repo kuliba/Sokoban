@@ -25,7 +25,7 @@ extension OperationDetailDomain {
         var details: StateMachines.LoadState<Details, Error>
         let response: EnhancedResponse
         
-        typealias Details = Void // TODO: replace with operation details
+        typealias Details = Int // TODO: replace with operation details
         
         struct EnhancedResponse: Equatable {
             

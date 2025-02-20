@@ -25,7 +25,7 @@ extension RootViewModelFactory {
             
             load(.init(initialState.response.paymentOperationDetailID)) {
                 
-                completion($0.map { _ in () })
+                completion($0.map { _ in 1 })
             }
         }
         

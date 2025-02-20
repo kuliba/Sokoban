@@ -9,6 +9,27 @@ import RxViewModel
 import StateMachines
 import SwiftUI
 
+extension OperationDetailDomain.State.Details: TransactionDetailsProviding {
+    
+    var transactionDetails: [DetailsCell] {
+        []
+    }
+}
+
+extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
+    
+    var paymentRequisites: [DetailsCell] {
+        []
+    }
+}
+
+extension OperationDetailDomain.State.EnhancedResponse: TransactionDetailsProviding {
+    
+    var transactionDetails: [DetailsCell] {
+        []
+    }
+}
+
 extension ViewComponents {
     
     @inlinable
@@ -23,7 +44,6 @@ extension ViewComponents {
     }
     
     @inlinable
-    @ViewBuilder
     func makeC2GPaymentCompleteButtonsView(
         state: OperationDetailDomain.State
     ) -> some View {
@@ -31,39 +51,62 @@ extension ViewComponents {
         HStack(spacing: 8) {
             
             switch state.details {
-            case .completed, .loading:
-                // Text("2 buttons")
-                Group {
-                 
-                    WithSheetView {
-                        circleButton(image: .ic24Info, title: "Детали", action: $0)
-                    } sheet: {
-                         Text("TBD: Детали")
-                        // c2gTransactionDetails(details: <#T##any TransactionDetailsProviding<[DetailsCell]>#>, dismiss: $0)
-                    }
-
-                    WithSheetView {
-                        circleButton(image: .ic24Share, title: "Реквизиты", action: $0)
-                    } sheet: {
-                         Text("TBD: Реквизиты")
-                        // c2gPaymentRequisites(details: <#T##any PaymentRequisitesProviding<[DetailsCell]>#>, dismiss: $0)
-                    }
-                }
-                .disabled(state._details == nil)
-                .redacted(reason: state._details == nil ? .privacy : [])
-                ._shimmering(isActive: state._details == nil)
+            case let .completed(details):
+                makeC2GPaymentCompleteDetailsButton(details: details)
+                makeC2GPaymentCompleteRequisitesButton(details: details)
                 
             case .failure:
-                // Text(" 1 button with short details")
-                WithSheetView {
-                    circleButton(image: .ic24Info, title: "Детали", action: $0)
-                } sheet: {
-                    Text("TBD: short details")
+                makeC2GPaymentCompleteShortDetailsButton(response: state.response)
+                
+            case .loading:
+                Group {
+                    
+                    circleButton(image: .ic24Info, title: "Детали") {}
+                    circleButton(image: .ic24Share, title: "Реквизиты") {}
                 }
-                                
+                .disabled(true)
+                .redacted(reason: .placeholder)
+                ._shimmering()
+                
             case .pending:
                 EmptyView()
             }
+        }
+    }
+    
+    @inlinable
+    func makeC2GPaymentCompleteDetailsButton(
+        details: OperationDetailDomain.State.Details
+    ) -> some View {
+        
+        WithSheetView {
+            circleButton(image: .ic24Info, title: "Детали", action: $0)
+        } sheet: {
+            c2gTransactionDetails(details: details, dismiss: $0)
+        }
+    }
+    
+    @inlinable
+    func makeC2GPaymentCompleteShortDetailsButton(
+        response: OperationDetailDomain.State.EnhancedResponse
+    ) -> some View {
+        
+        WithSheetView {
+            circleButton(image: .ic24Info, title: "Детали", action: $0)
+        } sheet: {
+            c2gTransactionDetails(details: response, dismiss: $0)
+        }
+    }
+    
+    @inlinable
+    func makeC2GPaymentCompleteRequisitesButton(
+        details: OperationDetailDomain.State.Details
+    ) -> some View {
+        
+        WithSheetView {
+            circleButton(image: .ic24Share, title: "Реквизиты", action: $0)
+        } sheet: {
+            c2gPaymentRequisites(details: details, dismiss: $0)
         }
     }
     
@@ -94,6 +137,8 @@ extension OperationDetailDomain.State {
     }
 }
 
+// MARK: - Previews
+
 struct MakeC2GPaymentCompleteButtonsView_Previews: PreviewProvider {
     
     typealias Details = StateMachines.LoadState<OperationDetailDomain.State.Details, Error>
@@ -102,7 +147,7 @@ struct MakeC2GPaymentCompleteButtonsView_Previews: PreviewProvider {
         
         VStack(spacing: 32) {
             
-            view(.completed(()))
+            view(.completed(1))
             view(.failure(NSError(domain: "Failure", code: -1)))
             view(.loading(nil))
             view(.pending)
@@ -123,4 +168,3 @@ private extension OperationDetailDomain.State.EnhancedResponse {
     
     static let preview: Self = .init(formattedAmount: nil, merchantName: nil, message: nil, paymentOperationDetailID: 1, product: .preview, purpose: nil, status: .completed, uin: UUID().uuidString)
 }
-
