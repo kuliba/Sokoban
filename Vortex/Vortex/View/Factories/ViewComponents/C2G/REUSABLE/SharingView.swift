@@ -15,6 +15,7 @@ struct SharingView<Content: View>: View {
     @State private var isSharing = false
     
     let shareItems: [Any]
+    @ViewBuilder
     let content: (@escaping () -> Void) -> Content
     
     var body: some View {
