@@ -22,6 +22,7 @@ public struct CollateralLandingApplicationSaveConsentsResult: Equatable {
     public let cityName: String
     public let status: String
     public let responseMessage: String
+    public let description: String?
     public let verificationCode: String
     public let icons: Icons
     
@@ -37,6 +38,7 @@ public struct CollateralLandingApplicationSaveConsentsResult: Equatable {
         cityName: String,
         status: String,
         responseMessage: String,
+        description: String?,
         verificationCode: String,
         icons: Icons
     ) {
@@ -51,6 +53,7 @@ public struct CollateralLandingApplicationSaveConsentsResult: Equatable {
         self.cityName = cityName
         self.status = status
         self.responseMessage = responseMessage
+        self.description = description
         self.verificationCode = verificationCode
         self.icons = icons
     }
@@ -113,6 +116,7 @@ public extension CollateralLandingApplicationSaveConsentsResult {
         cityName: "Москва",
         status: "submitted_for_review",
         responseMessage: "Специалист банка свяжется с Вами в ближайшее время.",
+        description: "Яхта",
         verificationCode: "123456",
         icons: .init(
             productName: "",

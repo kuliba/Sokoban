@@ -42,7 +42,8 @@ extension CollateralLandingApplicationSaveConsentsResult {
     func makeCells(
         _ makeImageViewWithMD5Hash: @escaping (String) -> UIPrimitives.AsyncImage
     ) -> [OperationDetailInfoViewModel.AsyncPropertyCellViewModel] {
-        
+
+        var out: [OperationDetailInfoViewModel.AsyncPropertyCellViewModel] =
         [
             .init(
                 asyncImage: makeImageViewWithMD5Hash(icons.productName),
@@ -63,14 +64,39 @@ extension CollateralLandingApplicationSaveConsentsResult {
                 iconType: .ic24Coins,
                 title: "Сумма кредита",
                 value: amount.formattedCurrency()
-                )
-//            ),
-//            .init(
-//                iconType: .ic24Coins,
-//                title: "Тип залога",
-//                value: collateralInfo
-//            )
+            ),
         ]
+        
+        if let description {
+            
+            var iconType = Image.ic24MoreHorizontal
+            
+            if ["CAR", "OTHER_MOVABLE_PROPERTY"].contains(collateralType) {
+                
+                iconType = .ic24Car
+            } else if ["APARTMENT", "HOUSE", "LAND_PLOT", "COMMERCIAL_PROPERTY"].contains(collateralType) {
+                
+                iconType = .ic24Home
+            }
+            
+            out.append(
+                .init(
+                    iconType: iconType,
+                    title: "Тип залога",
+                    value: description
+                )
+            )
+        }
+        
+        out.append(
+            .init(
+                iconType: .ic24Egrn,
+                title: "Город получения кредита",
+                value: cityName
+            )
+        )
+        
+        return out
     }
 }
 

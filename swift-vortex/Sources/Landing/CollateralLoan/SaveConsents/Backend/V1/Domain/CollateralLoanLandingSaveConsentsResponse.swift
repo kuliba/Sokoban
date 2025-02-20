@@ -22,6 +22,7 @@ extension ResponseMapper {
         public let cityName: String
         public let status: String
         public let responseMessage: String
+        public let description: String?
         
         public init(
             applicationID: UInt,
@@ -34,7 +35,8 @@ extension ResponseMapper {
             documents: [String],
             cityName: String,
             status: String,
-            responseMessage: String
+            responseMessage: String,
+            description: String?
         ) {
             self.applicationID = applicationID
             self.name = name
@@ -47,6 +49,7 @@ extension ResponseMapper {
             self.cityName = cityName
             self.status = status
             self.responseMessage = responseMessage
+            self.description = description
         }
     }
 }

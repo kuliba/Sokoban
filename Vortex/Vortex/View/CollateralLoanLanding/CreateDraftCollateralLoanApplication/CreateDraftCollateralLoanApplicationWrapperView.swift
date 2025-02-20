@@ -58,26 +58,34 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
             .frame(maxHeight: .infinity)
     }
 
+    @ViewBuilder
     private func content(
         state: State<Confirmation, InformerData>,
         event: @escaping (Event<Confirmation, InformerData>) -> Void
     ) -> some View {
 
-        CreateDraftCollateralLoanApplicationView(
-            state: state,
-            event: event,
-            externalEvent: handleExternalEvent(events:),
-            config: .default,
-            factory: .init(
-                makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
-                makeImageViewWithURL: factory.makeImageViewWithURL,
-                getPDFDocument: factory.getPDFDocument
+        if state.isLoading {
+            
+            Color.clear
+                .loader(isLoading: state.isLoading, color: .clear)
+        } else {
+            
+            CreateDraftCollateralLoanApplicationView(
+                state: state,
+                event: event,
+                externalEvent: handleExternalEvent(events:),
+                config: .default,
+                factory: .init(
+                    makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
+                    makeImageViewWithURL: factory.makeImageViewWithURL,
+                    getPDFDocument: factory.getPDFDocument
+                )
             )
-        )
-        .if(state.stage == .confirm) {
-        
-            $0.navigationBarBackButtonHidden(true)
-              .navigationBarItems(leading: buttonBack(event: event))
+            .if(state.stage == .confirm) {
+                
+                $0.navigationBarBackButtonHidden(true)
+                    .navigationBarItems(leading: buttonBack(event: event))
+            }
         }
     }
     

@@ -65,7 +65,8 @@ private extension ResponseMapper._Data {
             documents: documents,
             cityName: cityName,
             status: status,
-            responseMessage: responseMessage
+            responseMessage: responseMessage,
+            description: description
         )
     }
 }
@@ -85,5 +86,6 @@ private extension ResponseMapper {
         let cityName: String?
         let status: String?
         let responseMessage: String?
+        let description: String?
     }
 }

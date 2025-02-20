@@ -94,7 +94,7 @@ struct CollateralLoanShowcaseWrapperView: View {
                 viewModelFactory: viewModelFactory,
                 goToMain: goToMain
             )
-            .onAppear { UINavigationBar.appearance().backgroundColor = UIColor(.clear) }
+            .navigationBarWithBack(title: "") { binder.flow.event(.dismiss) }
         }
     }
     

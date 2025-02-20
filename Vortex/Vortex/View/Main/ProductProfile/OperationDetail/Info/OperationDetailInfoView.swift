@@ -150,7 +150,7 @@ extension OperationDetailInfoInternalView {
                 
                 image
                     .resizable()
-                    .renderingMode(.original)
+                    .foregroundColor(.iconGray)
                     .accessibilityIdentifier("OperationDetailInfoItemIcon")
 
             } else {

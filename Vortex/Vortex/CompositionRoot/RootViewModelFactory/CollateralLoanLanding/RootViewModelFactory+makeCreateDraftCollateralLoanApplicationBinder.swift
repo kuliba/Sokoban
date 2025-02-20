@@ -305,6 +305,7 @@ extension RemoteServices.ResponseMapper.CollateralLoanLandingSaveConsentsRespons
             cityName: cityName,
             status: status,
             responseMessage: responseMessage,
+            description: description,
             verificationCode: payload.verificationCode,
             icons: payload.icons
         )
