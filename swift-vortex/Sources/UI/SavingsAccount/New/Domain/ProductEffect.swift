@@ -29,4 +29,23 @@ extension ProductEffect {
             self.tariff = tariff
         }
     }
+    
+    public struct OrderAccountPayload: Equatable {
+        
+        public let amount: Double?
+        public let cryptoVersion: String?
+        public let currencyCode: Int?
+        public let sourceAccountId: Int?
+        public let sourceCardId: Int?
+        public let verificationCode: String
+        
+        public init(amount: Double?, cryptoVersion: String?, currencyCode: Int?, sourceAccountId: Int?, sourceCardId: Int?, verificationCode: String) {
+            self.amount = amount
+            self.cryptoVersion = cryptoVersion
+            self.currencyCode = currencyCode
+            self.sourceAccountId = sourceAccountId
+            self.sourceCardId = sourceCardId
+            self.verificationCode = verificationCode
+        }
+    }
 }

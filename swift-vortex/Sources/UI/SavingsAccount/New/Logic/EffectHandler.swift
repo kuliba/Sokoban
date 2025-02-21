@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import LoadableState
 
 public final class EffectHandler<Confirmation> {
     
@@ -31,17 +32,12 @@ public final class EffectHandler<Confirmation> {
         case dismissInformer
         case otp(String)
     }
-    
-    public typealias ConfirmationNotify = (ConfirmationEvent) -> Void
-    public typealias LoadConfirmation = (ProductEffect.LoadConfirmationPayload, @escaping ConfirmationNotify, @escaping (LoadConfirmationResult<Confirmation>) -> Void) -> Void
-    
-    public typealias OrderAccount = (OrderAccountPayload, @escaping (ProductEvent.OrderAccountResult) -> Void) -> Void
 }
 
 public extension EffectHandler {
     
     func handleEffect(
-        _ effect: ProductEffect,
+        _ effect: Effect,
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
@@ -66,6 +62,15 @@ public extension EffectHandler {
             orderAccount(payload) { dispatch(.orderAccountResult($0)) }
         }
     }
+}
+
+public extension EffectHandler {
     
     typealias Dispatch = (ProductEvent<Confirmation>) -> Void
+    typealias Effect = ProductEffect
+
+    typealias ConfirmationNotify = (ConfirmationEvent) -> Void
+    typealias LoadConfirmation = (ProductEffect.LoadConfirmationPayload, @escaping ConfirmationNotify, @escaping (LoadConfirmationResult<Confirmation>) -> Void) -> Void
+    
+    typealias OrderAccount = (ProductEffect.OrderAccountPayload, @escaping (ProductEvent.OrderAccountResult) -> Void) -> Void
 }

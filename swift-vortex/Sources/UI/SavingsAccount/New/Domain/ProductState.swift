@@ -46,7 +46,7 @@ public extension ProductState {
     
     var isValid: Bool { form?.isValid ?? false } // rename to `canOrder`
     
-    var payload: OrderAccountPayload? {
+    var payload: ProductEffect.OrderAccountPayload? {
         
         guard isValid,
               let form,

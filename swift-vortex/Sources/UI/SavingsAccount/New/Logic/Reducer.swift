@@ -23,12 +23,12 @@ public final class Reducer<Confirmation> {
 public extension Reducer {
     
     func reduce(
-        _ state: ProductState<Confirmation>,
-        _ event: ProductEvent<Confirmation>
-    ) -> (ProductState<Confirmation>, ProductEffect?) {
+        _ state: State,
+        _ event: Event
+    ) -> (State, Effect?) {
         
         var state = state
-        var effect: ProductEffect?
+        var effect: Effect?
         
         switch event {
         case .continue:
@@ -79,11 +79,11 @@ public extension Reducer {
 private extension Reducer {
     
     func reduceContinue(
-        _ state: ProductState<Confirmation>,
-        _ effect: ProductEffect?
+        _ state: State,
+        _ effect: Effect?
     ) {
         var state = state
-        var effect: ProductEffect?
+        var effect: Effect?
 
         guard let form = state.loadableForm.state else { return }
         
@@ -108,12 +108,12 @@ private extension Reducer {
     }
     
     func reduceDismissInformer(
-        _ state: ProductState<Confirmation>,
-        _ effect: ProductEffect?
+        _ state: State,
+        _ effect: Effect?
     ) {
         
         var state = state
-        var effect: ProductEffect?
+        var effect: Effect?
 
         // reset form informer
         if case let .loaded(.failure(failure)) = state.loadableForm,
@@ -131,13 +131,13 @@ private extension Reducer {
     }
     
     func reduceOrderAccount(
-        _ state: ProductState<Confirmation>,
-        _ effect: ProductEffect?,
+        _ state: State,
+        _ effect: Effect?,
         with orderAccountResult: ProductEvent.OrderAccountResult
     ) {
         
         var state = state
-        var effect: ProductEffect?
+        var effect: Effect?
 
         switch (state.loadableForm, orderAccountResult) {
         case (.loaded, _):
@@ -156,6 +156,13 @@ private extension Reducer {
             state.loadableForm = .loaded(.success(form))
         }
     }
+}
+
+public extension Reducer {
+    
+    typealias State = ProductState<Confirmation>
+    typealias Event = ProductEvent<Confirmation>
+    typealias Effect = ProductEffect
 }
 
 private extension Form {
