@@ -719,7 +719,7 @@ extension ProductProfileViewModel {
                 makePaymentsTransfers: makePaymentsTransfers
             )
             
-            let makeOperationDetailViewModel: OperationDetailFactory.MakeOperationDetailViewModel = { productStatementData, productData, model in
+            let makeOperationDetailViewModel: OperationDetailFactory.MakeOperationDetailViewModel = { productStatementData, productData in
                 
                 return .init(
                     productStatement: productStatementData,

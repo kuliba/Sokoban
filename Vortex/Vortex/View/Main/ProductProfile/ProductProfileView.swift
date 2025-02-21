@@ -734,7 +734,7 @@ extension QRViewModel {
 
 extension OperationDetailFactory {
     
-    static let preview: Self = .init(makeOperationDetailViewModel: { _,_,_ in
+    static let preview: Self = .init(makeOperationDetailViewModel: { _,_ in
             .sampleComplete
     })
 }

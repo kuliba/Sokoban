@@ -1109,13 +1109,12 @@ private extension ProductProfileViewModel {
                           latestStatementData.paymentDetailType != .notFinance,
                           let productData = self.model.products.value.values
                         .flatMap({ $0 })
-                        .first(where: { $0.id == self.product.activeProductId }) 
+                        .first(where: { $0.id == self.product.activeProductId })
                     else { return }
                     
                     let operationDetailViewModel = operationDetailFactory.makeOperationDetailViewModel(
                         latestStatementData,
-                        productData,
-                        self.model
+                        productData
                     )
                     self.bottomSheet = .init(type: .operationDetail(operationDetailViewModel))
                     
@@ -1126,7 +1125,8 @@ private extension ProductProfileViewModel {
                 default:
                     break
                 }
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
     func bind(detail: ProductProfileDetailView.ViewModel?) {
