@@ -270,7 +270,12 @@ extension HeaderLandingComponent.HeaderViewConfig {
             textColor: .textSecondary
         ),
         layout: .init(
-            itemOption: .init(horizontalSpacing: 5),
+            itemOption: .init(
+                circleHeight: 5,
+                circleWidth: 5,
+                horizontalSpacing: 5,
+                optionWidth: 150
+            ),
             textViewLeadingPadding: 16,
             textViewOptionsVerticalSpacing: 26,
             textViewTrailingPadding: 15,

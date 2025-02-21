@@ -6,25 +6,30 @@
 //
 
 import SwiftUI
-import UIPrimitives
 
-struct HeaderView: View {
+public struct HeaderView: View {
     
-    typealias Model = Header
-    typealias Config = HeaderViewConfig
+    public typealias Config = HeaderViewConfig
     
-    let model: Model
+    let header: Header
     let config: Config
     let imageFactory: ImageViewFactory
     
-    var body: some View {
+    public init(
+        header: Header,
+        config: Config,
+        imageFactory: ImageViewFactory
+    ) {
+        self.header = header
+        self.config = config
+        self.imageFactory = imageFactory
+    }
+    
+    public var body: some View {
         
         ZStack(alignment: .top) {
             
-            if let md5Hash = model.md5Hash {
-                
-                imageFactory.makeIconView(md5Hash)
-            }
+            header.md5Hash.map(imageFactory.makeIconView)
             
             textView()
                 .padding(.leading, config.layout.textViewLeadingPadding)
@@ -39,12 +44,12 @@ private extension HeaderView {
         
         VStack(spacing: config.layout.textViewVerticalSpacing) {
             
-            model.title.text(withConfig: config.title)
+            header.title.text(withConfig: config.title)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
             VStack(spacing: config.layout.textViewOptionsVerticalSpacing) {
                 
-                ForEach(model.options, id: \.self, content: optionView)
+                ForEach(header.options, id: \.self, content: optionView)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -58,21 +63,15 @@ private extension HeaderView {
             
             Circle()
                 .foregroundStyle(config.optionPlaceholder)
-                .frame(width: 5, height: 5, alignment: .center)
+                .frame(width: config.layout.itemOption.circleWidth, height: config.layout.itemOption.circleHeight, alignment: .center)
             
             Text(option)
-                .frame(maxWidth: 150, alignment: .leading)
+                .frame(maxWidth:
+                        config.layout.itemOption.optionWidth, alignment: .leading)
                 .font(config.option.textFont)
                 .foregroundStyle(config.option.textColor)
         }
     }
-}
-
-struct Header {
-    
-    let title: String
-    let options: [String]
-    let md5Hash: String?
 }
 
 #Preview {
@@ -82,7 +81,7 @@ struct Header {
         LazyVStack(spacing: 16) {
             
             HeaderView(
-                model: .preview,
+                header: .preview,
                 config: .preview,
                 imageFactory: .default
             )
@@ -91,7 +90,7 @@ struct Header {
 }
 
 private extension HeaderViewConfig {
-
+    
     static let preview: Self = .init(
         title: .init(
             textFont: .body,
@@ -104,7 +103,10 @@ private extension HeaderViewConfig {
         ),
         layout: .init(
             itemOption: .init(
-                horizontalSpacing: 5
+                circleHeight: 5,
+                circleWidth: 5,
+                horizontalSpacing: 5,
+                optionWidth: 150
             ),
             textViewLeadingPadding: 16,
             textViewOptionsVerticalSpacing: 20,
@@ -114,7 +116,7 @@ private extension HeaderViewConfig {
     )
 }
 
-private extension HeaderView.Model {
+private extension Header {
     
     static let preview: Self = .init(
         title: "titile",

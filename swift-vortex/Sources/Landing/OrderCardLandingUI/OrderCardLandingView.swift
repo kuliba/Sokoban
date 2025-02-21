@@ -31,7 +31,7 @@ public struct OrderCardLandingView: View {
         HeaderView(
             header: landing.header,
             config: config.headerConfig,
-            imageFactory: factory
+            imageFactory: .init(makeIconView: factory.makeIconView)
         )
     }
 }
@@ -74,7 +74,10 @@ private extension HeaderViewConfig {
         option: .init(textFont: .body, textColor: .red),
         layout: .init(
             itemOption: .init(
-                horizontalSpacing: 5
+                circleHeight: 5,
+                circleWidth: 5,
+                horizontalSpacing: 5,
+                optionWidth: 150
             ),
             textViewLeadingPadding: 16,
             textViewOptionsVerticalSpacing: 26,
