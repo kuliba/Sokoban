@@ -1710,6 +1710,7 @@
 		2AE34ACC2C6559B8004D5DDD /* AnywayElementModelMapper+makeSelectorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE34ACB2C6559B8004D5DDD /* AnywayElementModelMapper+makeSelectorViewModel.swift */; };
 		2AE34ACE2C655CE0004D5DDD /* OptionalSelectorViewConfig+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE34ACD2C655CE0004D5DDD /* OptionalSelectorViewConfig+iVortex.swift */; };
 		2AE350CB2C770C9700A766EE /* PaymentsTransfersPersonalContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE350CA2C770C9700A766EE /* PaymentsTransfersPersonalContent.swift */; };
+		2AE508C32D68561B0055BB35 /* RootViewModelFactory+makeOperationDetailFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE508C22D68561B0055BB35 /* RootViewModelFactory+makeOperationDetailFactory.swift */; };
 		2AE5972D29F918C20083F138 /* PhoneNumberTextViewPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE5972C29F918C20083F138 /* PhoneNumberTextViewPreviewApp.swift */; };
 		2AE5972F29F918C20083F138 /* PhoneNumberTextContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE5972E29F918C20083F138 /* PhoneNumberTextContentView.swift */; };
 		2AE5973129F918C30083F138 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AE5973029F918C30083F138 /* Assets.xcassets */; };
@@ -5454,6 +5455,7 @@
 		2AE34ACB2C6559B8004D5DDD /* AnywayElementModelMapper+makeSelectorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnywayElementModelMapper+makeSelectorViewModel.swift"; sourceTree = "<group>"; };
 		2AE34ACD2C655CE0004D5DDD /* OptionalSelectorViewConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OptionalSelectorViewConfig+iVortex.swift"; sourceTree = "<group>"; };
 		2AE350CA2C770C9700A766EE /* PaymentsTransfersPersonalContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersPersonalContent.swift; sourceTree = "<group>"; };
+		2AE508C22D68561B0055BB35 /* RootViewModelFactory+makeOperationDetailFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeOperationDetailFactory.swift"; sourceTree = "<group>"; };
 		2AE5972A29F918C20083F138 /* PhoneNumberTextViewPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhoneNumberTextViewPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2AE5972C29F918C20083F138 /* PhoneNumberTextViewPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberTextViewPreviewApp.swift; sourceTree = "<group>"; };
 		2AE5972E29F918C20083F138 /* PhoneNumberTextContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberTextContentView.swift; sourceTree = "<group>"; };
@@ -11983,6 +11985,7 @@
 			children = (
 				2A6167322D5BE7970026B036 /* C2G */,
 				2AA258642CEB969F0038642C /* RootViewModelFactory+getRootNavigation.swift */,
+				2AE508C12D68560B0055BB35 /* OperationDetail */,
 				2A9ACA582D54F66D00BF5D6E /* RootViewModelFactory+openProduct.swift */,
 				2A9ACA5A2D54FAF600BF5D6E /* RootViewModelFactory+openCardProduct.swift */,
 				A787C45B2D159310007DD401 /* RootViewModelFactory+makeMainViewModelSections.swift */,
@@ -13107,6 +13110,14 @@
 				2A6826C22C9D320F00B8057F /* Personal */,
 			);
 			path = v1;
+			sourceTree = "<group>";
+		};
+		2AE508C12D68560B0055BB35 /* OperationDetail */ = {
+			isa = PBXGroup;
+			children = (
+				2AE508C22D68561B0055BB35 /* RootViewModelFactory+makeOperationDetailFactory.swift */,
+			);
+			path = OperationDetail;
 			sourceTree = "<group>";
 		};
 		2AE5972529F9182B0083F138 /* PreviewApps */ = {
@@ -22033,6 +22044,7 @@
 				ED84995A26A8831E005205C6 /* EPContact.swift in Sources */,
 				2A118E1F2AFEABCE007EF30E /* ModelAuthLoginViewModelFactory.swift in Sources */,
 				2A3B69382D650F3B004075A8 /* ViewComponents+c2gDetailsView.swift in Sources */,
+				2AE508C32D68561B0055BB35 /* RootViewModelFactory+makeOperationDetailFactory.swift in Sources */,
 				0B283FC126FCB31600B5E925 /* GetPhoneInfoDecodableModel.swift in Sources */,
 				A5F15C11274985C900DC91DA /* InternetTVLatestOperationsModel.swift in Sources */,
 				2A5457552A3B471D007617C3 /* TransportPaymentsViewModel.swift in Sources */,

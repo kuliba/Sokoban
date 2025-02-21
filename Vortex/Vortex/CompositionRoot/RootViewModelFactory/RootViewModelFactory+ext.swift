@@ -303,29 +303,6 @@ extension RootViewModelFactory {
             performOrWaitForActive(loadCategoriesAndNotifyPicker)
         }
         
-        let makeOperationDetailViewModel: OperationDetailFactory.MakeOperationDetailViewModel = { [weak self] productID, productStatementID in
-            
-            guard let self,
-                  let (statementData, productData) = model.latestStatementWithProductData(
-                for: productID,
-                and: productStatementID
-            ) else { return nil }
-            
-            return .init(
-                productStatement: statementData,
-                product: productData,
-                updateFastAll: { [weak self] in
-                    
-                    self?.model.action.send(ModelAction.Products.Update.Fast.All())
-                },
-                model: model
-            )
-        }
-        
-        let operationDetailFactory = OperationDetailFactory(
-            makeOperationDetailViewModel: makeOperationDetailViewModel
-        )
-        
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
@@ -347,7 +324,7 @@ extension RootViewModelFactory {
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder,
             makeOpenNewProductButtons: { _ in [] },
-            operationDetailFactory: operationDetailFactory,
+            operationDetailFactory: makeOperationDetailFactory(),
             makeOrderCardViewModel: makeOrderCardViewModel,
             makePaymentsTransfers: { paymentsTransfersSwitcher }
         )
@@ -803,30 +780,6 @@ extension ProductProfileViewModel {
                 makeOpenNewProductButtons: makeOpenNewProductButtons
             )
         }
-    }
-}
-
-// MARK: - Helpers
-
-extension Model {
-    
-    func latestStatementWithProductData(
-        for productID: ProductData.ID,
-        and statementID: ProductStatementData.ID
-    ) -> (ProductStatementData, ProductData)? {
-        
-        guard let storage = statements.value[productID],
-              let latestStatementData = storage.statements
-            .filter({ $0.operationId == statementID })
-            .sorted(by: { ($0.tranDate ?? $0.date) > ($1.tranDate ?? $1.date) })
-            .first,
-              latestStatementData.paymentDetailType != .notFinance,
-              let productData = products.value.values
-            .flatMap({ $0 })
-            .first(where: { $0.id == productID })
-        else { return nil }
-        
-        return (latestStatementData, productData)
     }
 }
 
