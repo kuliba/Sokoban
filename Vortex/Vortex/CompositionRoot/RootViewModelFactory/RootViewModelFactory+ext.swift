@@ -719,12 +719,18 @@ extension ProductProfileViewModel {
                 makePaymentsTransfers: makePaymentsTransfers
             )
             
-            let makeOperationDetailViewModel: OperationDetailFactory.MakeOperationDetailViewModel = { productStatementData, productData in
+            let makeOperationDetailViewModel: OperationDetailFactory.MakeOperationDetailViewModel = { productID, productStatementID in
                 
+                guard let (statementData, productData) = model.latestStatementWithProductData(
+                    for: productID,
+                    and: productStatementID
+                ) else { return nil }
+
                 return .init(
-                    productStatement: productStatementData,
+                    productStatement: statementData,
                     product: productData,
                     updateFastAll: {
+                        
                         model.action.send(ModelAction.Products.Update.Fast.All())
                     },
                     model: model
@@ -793,6 +799,30 @@ extension ProductProfileViewModel {
                 makeOpenNewProductButtons: makeOpenNewProductButtons
             )
         }
+    }
+}
+
+// MARK: - Helpers
+
+extension Model {
+    
+    func latestStatementWithProductData(
+        for productID: ProductData.ID,
+        and statementID: ProductStatementData.ID
+    ) -> (ProductStatementData, ProductData)? {
+        
+        guard let storage = statements.value[productID],
+              let latestStatementData = storage.statements
+            .filter({ $0.operationId == statementID })
+            .sorted(by: { ($0.tranDate ?? $0.date) > ($1.tranDate ?? $1.date) })
+            .first,
+              latestStatementData.paymentDetailType != .notFinance,
+              let productData = products.value.values
+            .flatMap({ $0 })
+            .first(where: { $0.id == productID })
+        else { return nil }
+        
+        return (latestStatementData, productData)
     }
 }
 

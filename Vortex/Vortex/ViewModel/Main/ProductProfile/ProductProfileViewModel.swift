@@ -1101,15 +1101,11 @@ private extension ProductProfileViewModel {
                 switch action {
                 case let payload as ProductProfileHistoryViewModelAction.DidTapped.Detail:
                     
-                    guard let (latestStatementData, productData) = model.latestStatementWithProductData(
-                        for: product.activeProductId,
-                        and: payload.statementId
+                    guard let operationDetailViewModel = operationDetailFactory.makeOperationDetailViewModel(
+                        product.activeProductId,
+                        payload.statementId
                     ) else { return }
                     
-                    let operationDetailViewModel = operationDetailFactory.makeOperationDetailViewModel(
-                        latestStatementData,
-                        productData
-                    )
                     self.bottomSheet = .init(type: .operationDetail(operationDetailViewModel))
                     self.bind(operationDetailViewModel)
                     
@@ -1762,30 +1758,6 @@ private extension ProductProfileViewModel {
             dismissAction: dismissAction,
             makeOpenNewProductButtons: makeOpenNewProductButtons
         )
-    }
-}
-
-// MARK: - Helpers
-
-extension Model {
-    
-    func latestStatementWithProductData(
-        for productID: ProductData.ID,
-        and statementID: ProductStatementData.ID
-    ) -> (ProductStatementData, ProductData)? {
-        
-        guard let storage = statements.value[productID],
-              let latestStatementData = storage.statements
-            .filter({ $0.operationId == statementID })
-            .sorted(by: { ($0.tranDate ?? $0.date) > ($1.tranDate ?? $1.date) })
-            .first,
-              latestStatementData.paymentDetailType != .notFinance,
-              let productData = products.value.values
-            .flatMap({ $0 })
-            .first(where: { $0.id == productID })
-        else { return nil }
-        
-        return (latestStatementData, productData)
     }
 }
 

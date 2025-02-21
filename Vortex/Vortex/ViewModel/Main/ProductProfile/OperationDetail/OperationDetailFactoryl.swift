@@ -11,5 +11,5 @@ struct OperationDetailFactory {
     
     let makeOperationDetailViewModel: MakeOperationDetailViewModel
       
-    typealias MakeOperationDetailViewModel = (ProductStatementData, ProductData) -> OperationDetailViewModel
+    typealias MakeOperationDetailViewModel = (ProductData.ID, ProductStatementData.ID) -> OperationDetailViewModel?
 }
