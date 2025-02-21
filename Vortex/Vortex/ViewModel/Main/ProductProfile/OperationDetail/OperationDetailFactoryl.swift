@@ -10,6 +10,12 @@ import Foundation
 struct OperationDetailFactory {
     
     let makeOperationDetailViewModel: MakeOperationDetailViewModel
-      
-    typealias MakeOperationDetailViewModel = (ProductData.ID, ProductStatementData.ID) -> OperationDetailViewModel?
+    
+    enum OperationDetail {
+        
+        case legacy(OperationDetailViewModel)
+        case v3(String)
+    }
+    
+    typealias MakeOperationDetailViewModel = (ProductData.ID, ProductStatementData.ID) -> OperationDetail?
 }

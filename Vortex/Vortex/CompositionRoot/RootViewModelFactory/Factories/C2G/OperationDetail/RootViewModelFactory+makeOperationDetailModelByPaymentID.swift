@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makeOperationDetailModel.swift
+//  RootViewModelFactory+makeOperationDetailModelByPaymentID.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 19.02.2025.
@@ -7,49 +7,45 @@
 
 import RemoteServices
 import RxViewModel
+import ProductSelectComponent
 
 extension RootViewModelFactory {
     
     @inlinable
-    func makeOperationDetailModel(
+    func makeOperationDetailModelByPaymentID(
         initialState: OperationDetailDomain.State
     ) -> OperationDetailDomain.Model {
         
+        return makeOperationDetailModel(
+            initialState: initialState,
+            load: getOperationDetailByPaymentID
+        )
+    }
+    
+    @inlinable
+    func getOperationDetailByPaymentID(
+        payload: OperationDetailDomain.EnhancedPayload,
+        completion: @escaping (Result<OperationDetailDomain.State.Details, Error>) -> Void
+    ) {
         let load = onBackground(
             makeRequest: RequestFactory.createGetOperationDetailByPaymentIDRequestV3,
             mapResponse: RemoteServices.ResponseMapper.mapGetOperationDetailByPaymentIDResponse
         )
         
-        let reducer = OperationDetailDomain.Reducer()
-        let effectHandler = OperationDetailDomain.EffectHandler { completion in
+        load(.init(payload.paymentOperationDetailID)) {
             
-            load(.init(initialState.response.paymentOperationDetailID)) {
-                
-                completion($0.map { $0.details(
-                    formattedAmount: initialState.response.formattedAmount,
-                    product: initialState.response.product,
-                    status: initialState.response.status
-                )})
-            }
+            completion($0.map { $0.details(
+                formattedAmount: payload.formattedAmount,
+                product: payload.product,
+                status: payload.status
+            )})
         }
-        
-        return .init(
-            initialState: initialState,
-            reduce: { state, event in
-                
-                var state = state
-                let (details, effect) = reducer.reduce(state.details, event)
-                state.details = details
-                
-                return (state, effect)
-            },
-            handleEffect: effectHandler.handleEffect,
-            scheduler: schedulers.main
-        )
     }
 }
 
-extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse {
+// MARK: - Adapters
+
+private extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse {
     
     func details(
         formattedAmount: String?,

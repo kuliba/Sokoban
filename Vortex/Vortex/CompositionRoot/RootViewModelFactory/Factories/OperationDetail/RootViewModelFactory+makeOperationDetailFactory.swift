@@ -15,22 +15,28 @@ extension RootViewModelFactory {
     func makeOperationDetailViewModel(
         productID: ProductData.ID,
         productStatementID: ProductStatementData.ID
-    ) -> OperationDetailViewModel? {
+    ) -> OperationDetailFactory.OperationDetail? {
         
         guard let (statementData, productData) = model.nonFinanceStatementsWithProductData(
             for: productID,
             and: productStatementID
         ) else { return nil }
         
-        return .init(
-            productStatement: statementData,
-            product: productData,
-            updateFastAll: { [weak self] in
-                
-                self?.model.action.send(ModelAction.Products.Update.Fast.All())
-            },
-            model: model
-        )
+        switch statementData.paymentDetailType {
+        case "C2G_PAYMENT": // extract to String private static let
+            return .v3("C2G_PAYMENT")
+            
+        default:
+            return .legacy(.init(
+                productStatement: statementData,
+                product: productData,
+                updateFastAll: { [weak self] in
+                    
+                    self?.model.action.send(ModelAction.Products.Update.Fast.All())
+                },
+                model: model
+            ))
+        }
     }
 }
 
