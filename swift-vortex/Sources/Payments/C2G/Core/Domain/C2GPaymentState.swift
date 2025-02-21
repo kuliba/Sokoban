@@ -38,23 +38,12 @@ extension C2GPaymentState {
         
         return productSelect.selected.map {
             
-            return .init(productID: $0.digestProductID, uin: uin)
+            return .init(product: $0, uin: uin)
         }
     }
     
     private var isTermsCheckOK: Bool {
         
         return termsCheck ?? true
-    }
-}
-
-private extension ProductSelect.Product {
-    
-    var digestProductID: C2GPaymentDigest.ProductID {
-        
-        switch type {
-        case .account: return .init(id: id.rawValue, type: .account)
-        case .card:    return .init(id: id.rawValue, type: .card)
-        }
     }
 }

@@ -63,6 +63,7 @@ struct DetailsView_Previews: PreviewProvider {
 extension [DetailsCell] {
     
     static let preview: Self = [
+        .fieldPreview,
         .field(.init(
             image: .init(systemName: "calendar"),
             title: "Дата и время операции (МСК)",
@@ -73,6 +74,6 @@ extension [DetailsCell] {
             title: "Назначение платежа",
             value: "Транспортный налог")
         ),
-        .product(.init(title: "Product"))
+        .productPreview
     ]
 }

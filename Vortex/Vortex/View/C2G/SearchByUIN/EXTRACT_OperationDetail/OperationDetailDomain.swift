@@ -7,6 +7,7 @@
 
 import StateMachines
 import RxViewModel
+import ProductSelectComponent
 
 enum OperationDetailDomain {}
 
@@ -28,6 +29,10 @@ extension OperationDetailDomain {
         typealias DetailsState = StateMachines.LoadState<Details, Error>
         
         struct Details: Equatable {
+            
+            // kinda duplication - same fields are present in `response: EnhancedResponse`, but loaded details are used reports
+            let product: Product
+            let status: Status
             
             let dateForDetail: String?   // Дата и время операции (МСК) - dateForDetail
             let realPayerFIO: String?    // Информация о плательщике - "realPayerFIO"
@@ -57,15 +62,17 @@ extension OperationDetailDomain {
             let merchantName: String?
             let message: String?
             let paymentOperationDetailID: Int
-            let product: ProductData // too much
+            let product: Product
             let purpose: String?
             let status: Status
             let uin: String
+        }
+        
+        typealias Product = ProductSelect.Product // TODO: decouple or leave as is
+        
+        enum Status {
             
-            enum Status {
-                
-                case completed, inflight, rejected
-            }
+            case completed, inflight, rejected
         }
     }
 }
