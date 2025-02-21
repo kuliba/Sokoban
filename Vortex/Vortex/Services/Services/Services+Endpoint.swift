@@ -132,6 +132,7 @@ extension Services {
             case getUINData
             case getVerificationCode
             case makeDeleteBankDefault
+            case makeOpenSavingsAccount
             case makeSetBankDefault
             case makeTransfer
             case modifyC2BSubAcc
@@ -278,6 +279,12 @@ extension Services.Endpoint {
         pathPrefix: .rest,
         version: .none,
         serviceName: .prepareOpenSavingsAccount
+    )
+    
+    static let makeOpenSavingsAccountRequest: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .makeOpenSavingsAccount
     )
 
     static let createC2GPayment: Self = .init(

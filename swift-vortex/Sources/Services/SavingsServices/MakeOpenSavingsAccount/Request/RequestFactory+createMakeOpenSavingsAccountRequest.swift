@@ -18,7 +18,8 @@ public extension RequestFactory {
         
         var request = createEmptyRequest(.post, with: url)
         request.httpBody = try payload.httpBody()
-
+        request.httpMethod = "POST"
+        
         return request
     }
 }
