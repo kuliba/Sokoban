@@ -10,6 +10,7 @@ import PaymentComponents
 import SharedConfigs
 import SwiftUI
 import ToggleComponent
+import UIPrimitives
 
 public struct OrderSavingsAccountView<AmountInfo, OTPView, ProductPicker>: View
 where AmountInfo: View,
