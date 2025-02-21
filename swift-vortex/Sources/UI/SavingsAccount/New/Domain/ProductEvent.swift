@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import LoadableState
 
 public enum ProductEvent<Confirmation> {
     

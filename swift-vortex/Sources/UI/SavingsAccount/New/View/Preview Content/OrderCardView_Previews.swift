@@ -6,6 +6,7 @@
 //
 
 import Combine
+import LoadableState
 import SwiftUI
 
 struct OrderCardView_Previews: PreviewProvider {
@@ -160,7 +161,7 @@ private extension Constants {
 }
 
 private extension Loadable
-where ProductState == PreviewConfirmation {
+where State == PreviewConfirmation {
     
     static let idle: Self = .loaded(nil)
     

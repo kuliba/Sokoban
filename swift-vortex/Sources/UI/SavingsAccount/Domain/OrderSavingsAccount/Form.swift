@@ -5,6 +5,7 @@
 //  Created by Andryusina Nataly on 27.11.2024.
 //
 
+import LoadableState
 import SwiftUI
 
 public struct Form<Confirmation> {

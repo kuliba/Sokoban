@@ -5,45 +5,7 @@
 //  Created by Andryusina Nataly on 20.02.2025.
 //
 
-public enum Loadable<ProductState> {
-    
-    /// `nil` represents clean state, `some` - previously loaded.
-    case loading(ProductState?)
-    
-    /// `nil` represents idle state, `some` - loaded result.
-    case loaded(Loaded?)
-    
-    public typealias Loaded = Result<ProductState, LoadFailure>
-}
-
-public extension Loadable {
-    
-    var isLoading: Bool {
-        
-        guard case .loading = self else { return false }
-        
-        return true
-    }
-    
-    var state: ProductState? {
-        
-        get {
-            
-            guard case let .loaded(.success(state)) = self
-            else { return nil }
-            
-            return state
-        }
-        
-        set(newValue) {
-            
-            guard let newValue, case .loaded(.success) = self
-            else { return }
-            
-            self = .loaded(.success(newValue))
-        }
-    }
-}
+import LoadableState
 
 public struct ProductState<Confirmation> {
     

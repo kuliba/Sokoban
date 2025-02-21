@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import LoadableState
 
 public final class Reducer<Confirmation> {
     

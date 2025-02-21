@@ -5,6 +5,7 @@
 //  Created by Andryusina Nataly on 09.02.2025.
 //
 
+import LoadableState
 import SwiftUI
 
 public struct OrderAccountView<Confirmation, ConfirmationView>: View
