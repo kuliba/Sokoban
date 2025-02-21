@@ -161,6 +161,6 @@ private extension Form {
     
     var payload: ProductEffect.LoadConfirmationPayload {
         
-        .init(condition: links.conditions, tariff: links.tariff)
+        .init(condition: constants.links.conditions, tariff: constants.links.tariff)
     }
 }

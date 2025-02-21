@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ProductData {
+struct Product {
     
     let designMd5hash: String?
     let header: Header
@@ -25,7 +25,7 @@ import SwiftUI
 struct ProductView<IconView>: View
 where IconView: View {
 
-    let data: ProductData
+    let data: Product
     let config: OrderSavingsAccountConfig
     let makeIconView: (String) -> IconView
     let isLoading: Bool = false

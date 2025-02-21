@@ -94,7 +94,10 @@ public extension ProductState {
         return .init(
             amount: form.amount,
             cryptoVersion: "1.0",
-            currencyCode: form.currency.code, sourceAccountId: form.sourceAccountId, sourceCardId: form.sourceCardId, verificationCode: otp
+            currencyCode: form.constants.currencyCode, 
+            sourceAccountId: form.sourceAccountId,
+            sourceCardId: form.sourceCardId,
+            verificationCode: otp
         )
     }
 }

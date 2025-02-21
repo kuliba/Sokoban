@@ -127,13 +127,7 @@ where Confirmation == PreviewConfirmation {
     static let confirmationSuccess: Self = .preview(confirmation: .success, consent: false)
     
     static func preview(
-        conditions: String = "conditions",
-        tariff: String = "tariff",
-        income: String = "income",
-        hint: String = "hint",
-        title: String = "title",
-        subtitle: String = "subtitle",
-        fee: Fee = .init(open: 1, subscription: .init(period: "", value: 1)),
+        constants: Constants = .preview,
         confirmation: Loadable<PreviewConfirmation>,
         consent: Bool = true,
         messages: Messages = .preview(),
@@ -142,16 +136,27 @@ where Confirmation == PreviewConfirmation {
     ) -> Self {
         
         return .init(
-            currency: .init(code: 810, symbol: "rub"),
-            designMd5hash: "",
-            fee: fee,
-            header: .init(title: title, subtitle: subtitle),
-            hint: hint,
-            income: income,
-            links: .init(conditions: conditions, tariff: tariff),
+            constants: constants,
             confirmation: confirmation,
-            messages: messages)
+            messages: messages,
+            otp: otp,
+            orderAccountResponse: orderAccountResponse
+        )
     }
+}
+
+private extension Constants {
+    
+    static let preview: Self = .init(
+        currencyCode: 810,
+        designMd5hash: "",
+        header: .init(title: "title", subtitle: "subtitle"),
+        hint: "hint",
+        income: "income",
+        links: .init(conditions: "conditions", tariff: "tariff"),
+        openValue: "openValue",
+        orderServiceOption: "orderServiceOption"
+    )
 }
 
 private extension Loadable
@@ -168,7 +173,7 @@ where ProductState == PreviewConfirmation {
     static let success: Self = .loaded(.success)
 }
 
-private extension ProductData {
+private extension Product {
     
     static let preview: Self = .init(designMd5hash: "designMd5hash", header: .init(title: "title", subtitle: "subtitle"), openValue: "openValue", orderServiceOption: "orderServiceOption")
 }

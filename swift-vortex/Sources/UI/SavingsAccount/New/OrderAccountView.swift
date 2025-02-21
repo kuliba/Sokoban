@@ -121,13 +121,13 @@ private extension OrderAccountView {
         
         VStack(spacing: config.padding) {
             
-            productView(form.product)
+            productView(product(form))
         }
         .disabled(state.hasConfirmation)
     }
     
     func productView(
-        _ product: ProductData
+        _ product: Product
     ) -> some View {
         
         ProductView(
@@ -138,22 +138,21 @@ private extension OrderAccountView {
         .rounded(RoundedConfig(padding: config.padding, cornerRadius: config.cornerRadius, background: config.background))
     }
     
-    
-    /*func messageView(
-        _ messages: Messages
-    ) -> some View {
+    func product(
+        _ form: Form<Confirmation>
+    ) -> Product {
         
-        // TODO: fix: message has link
-        MessageView(
-            state: messages,
-            event: { event(.setMessages($0)) },
-            config: config.messages
-        )
-        .rounded(config.roundedConfig)
-    }*/
+        .init(
+            designMd5hash: form.constants.designMd5hash,
+            header: .init(
+                title: form.constants.header.title,
+                subtitle: form.constants.header.subtitle),
+            openValue: form.constants.openValue,
+            orderServiceOption: form.constants.orderServiceOption)
+    }
 }
 
-private extension ProductData {
+private extension Product {
     
     static let sample: Self = .init(designMd5hash: "", header: .init(title: "", subtitle: ""), openValue: "", orderServiceOption: "")
 }
