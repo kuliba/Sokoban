@@ -2883,6 +2883,7 @@
 		8372A8AA2D6851C900CD1CFB /* OpenSavingsAccountDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8372A8A92D6851C900CD1CFB /* OpenSavingsAccountDomain.swift */; };
 		8372A8AC2D6855A400CD1CFB /* ViewComponents+makeOrderSavingsAccountCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8372A8AB2D6855A400CD1CFB /* ViewComponents+makeOrderSavingsAccountCompleteView.swift */; };
 		8372A8AE2D6856E200CD1CFB /* OrderSavingsAccountCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8372A8AD2D6856E200CD1CFB /* OrderSavingsAccountCompleteView.swift */; };
+		8372A8B22D688B1D00CD1CFB /* LoadableState in Frameworks */ = {isa = PBXBuildFile; productRef = 8372A8B12D688B1D00CD1CFB /* LoadableState */; };
 		8375C01E2C0851D900E4498E /* PaymentsTransfersViewModelGetSectionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8375C01D2C0851D900E4498E /* PaymentsTransfersViewModelGetSectionsTests.swift */; };
 		8376C1242C08950200B482FC /* Model+makeSectionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8376C1232C08950200B482FC /* Model+makeSectionsTests.swift */; };
 		8376C1262C08CF0100B482FC /* MyProductsViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8376C1252C08CF0100B482FC /* MyProductsViewFactory.swift */; };
@@ -7705,6 +7706,7 @@
 				2AD7EBDF2B0CB292009FDCAB /* ButtonWithSheet in Frameworks */,
 				835D0DF72BEA667A00FFE90B /* ProductProfile in Frameworks */,
 				836B81CB2CCFACEB006FACE3 /* GetProductListByTypeV7Service in Frameworks */,
+				8372A8B22D688B1D00CD1CFB /* LoadableState in Frameworks */,
 				C14F85532AF537B000749534 /* PaymentSticker in Frameworks */,
 				2A1F08682A7951E600C5B11B /* GenericRemoteService in Frameworks */,
 				2A06DC302AFACBDD0049709E /* ServerAgent in Frameworks */,
@@ -19977,6 +19979,7 @@
 				EC0C39F82D634F1100AC79C4 /* GetSplashScreenServices */,
 				2A2A46D22D61AB44009896F2 /* C2G */,
 				2AD073712D65B55200922062 /* StateMachines */,
+				8372A8B12D688B1D00CD1CFB /* LoadableState */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* Vortex.app */;
@@ -30106,6 +30109,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 836DE2EA2AC72A7B00D4C754 /* XCRemoteSwiftPackageReference "swift-tagged" */;
 			productName = Tagged;
+		};
+		8372A8B12D688B1D00CD1CFB /* LoadableState */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LoadableState;
 		};
 		8376CE532AA7395000DCDE63 /* LandingUIComponent */ = {
 			isa = XCSwiftPackageProductDependency;

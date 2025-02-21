@@ -8,6 +8,7 @@
 import Foundation
 import FlowCore
 import Foundation
+import LoadableState
 import SavingsAccount
 import OTPInputComponent
 import PayHub
@@ -67,9 +68,9 @@ enum OpenSavingsAccountDomain {
     }
     
     typealias LoadFormResult = SavingsAccount.LoadFormResult<Confirmation>
-    typealias LoadFailure = SavingsAccount.LoadFailure
+    typealias LoadFailure = LoadableState.LoadFailure
     
-    typealias OrderAccountPayload = SavingsAccount.OrderAccountPayload
+    typealias OrderAccountPayload = SavingsAccount.ProductEffect.OrderAccountPayload
     typealias OrderAccountesult = Event.OrderAccountResult
     typealias OrderAccountResponse = SavingsAccount.OrderAccountResponse
 }
