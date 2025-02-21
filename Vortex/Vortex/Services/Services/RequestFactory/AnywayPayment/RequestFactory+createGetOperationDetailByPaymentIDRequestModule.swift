@@ -24,4 +24,18 @@ extension Vortex.RequestFactory {
             payload: payload
         )
     }
+    
+    static func createGetOperationDetailByPaymentIDRequestV3(
+        _ payload: RemoteServices.RequestFactory.OperationDetailID
+    ) throws -> URLRequest {
+        
+        let base = Config.serverAgentEnvironment.baseURL
+        let endpoint = Services.Endpoint.getOperationDetailByPaymentIDV3
+        let endpointURL = try! endpoint.url(withBase: base)
+        
+        return try RemoteServices.RequestFactory.createGetOperationDetailByPaymentIDRequest(
+            url: endpointURL,
+            payload: payload
+        )
+    }
 }

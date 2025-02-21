@@ -23,11 +23,15 @@ protocol PaymentRequisitesProviding<PaymentRequisites> {
 }
 
 extension PaymentRequisitesProviding
-where PaymentRequisites == [DetailsCell] {
+where PaymentRequisites == [DetailsCell.Field] {
     
-    var shareItems: [String] {
+    var shareItems: [String] { [shareItem] }
+    
+    private var shareItem: String {
         
-        paymentRequisites.map { "\($0.title): \($0.value)" }
+        paymentRequisites
+            .map { "\($0.title): \($0.value)" }
+            .joined(separator: "\n")
     }
 }
 
@@ -49,14 +53,13 @@ extension ViewComponents {
     
     @inlinable
     func c2gPaymentRequisites(
-        details: any PaymentRequisitesProviding<[DetailsCell]>,
-        dismiss: @escaping () -> Void,
-        share: @escaping () -> Void
+        details: any PaymentRequisitesProviding<[DetailsCell.Field]>,
+        dismiss: @escaping () -> Void
     ) -> some View {
         
-        SharingView(shareItems: details.shareItems) { share in
+        SharingView(shareItems: details.shareItems, config: .iVortex) { share in
             
-            c2gDetailsView(details: details.paymentRequisites)
+            c2gDetailsView(details: details.paymentRequisites.map { .field($0) })
                 .navigationBarWithClose(
                     title: "Реквизиты",
                     dismiss: dismiss,
@@ -73,9 +76,12 @@ extension ViewComponents {
         DetailsView(
             detailsCells: details,
             config: .iVortex,
-            detailsCellView: detailsCellView,
-            footer: { Image.ic72Sbp.renderingMode(.original) }
+            detailsCellView: detailsCellView
         )
+        .safeAreaInset(edge: .bottom) {
+            
+            Image.ic72Sbp.renderingMode(.original)
+        }
     }
     
     @inlinable
@@ -85,31 +91,6 @@ extension ViewComponents {
         
         DetailsCellView(cell: cell, config: .iVortex)
     }
-}
-
-struct SharingView<Content: View>: View {
-    
-    @State private var isSharing = false
-    
-    let shareItems: [Any]
-    let content: (@escaping () -> Void) -> Content
-    
-    var body: some View {
-        
-        content { isSharing = true }
-            .sheet(
-                isPresented: $isSharing,
-                content: {
-                    
-                    ShareSheet(payload: .init(items: shareItems), config: .iVortex)
-                }
-            )
-    }
-}
-
-extension ShareSheetConfig {
-    
-    static let iVortex: Self = .init()
 }
 
 // MARK: - Previews
@@ -128,8 +109,7 @@ struct C2GDetailsView_Previews: PreviewProvider {
             
             ViewComponents.preview.c2gPaymentRequisites(
                 details: PreviewDetails.preview,
-                dismiss: {},
-                share: {}
+                dismiss: {}
             )
             .previewDisplayName("c2gPaymentRequisites")
         }
@@ -145,16 +125,51 @@ extension PreviewDetails {
 
 extension PreviewDetails: TransactionDetailsProviding {
     
-    var transactionDetails: [DetailsCell] {
-        
-        [
-            .init(image: .ic24Calendar, title: "Дата и время операции (МСК)", value: "06.05.2021 15:38:12"),
-            .init(image: nil, title: "Назначение платежа", value: "Транспортный налог")
-        ]
-    }
+    var transactionDetails: [DetailsCell] { .preview }
 }
 
 extension PreviewDetails: PaymentRequisitesProviding {
     
-    var paymentRequisites: [DetailsCell] { transactionDetails }
+    var paymentRequisites: [DetailsCell.Field] {
+        transactionDetails.compactMap(\.fieldCase)
+    }
+}
+
+extension DetailsCell {
+    
+    var fieldCase: Field? {
+        
+        guard case let .field(field) = self
+        else { return nil }
+        
+        return field
+    }
+}
+
+extension [DetailsCell] {
+    
+    static let preview: Self = [
+        .field(.init(
+            image: .init(systemName: "calendar"),
+            title: "Дата и время операции (МСК)",
+            value: "06.05.2021 15:38:12")
+        ),
+        .field(.init(
+            image: nil,
+            title: "Назначение платежа",
+            value: "Транспортный налог")
+        ),
+        .product(.preview)
+    ]
+}
+
+extension DetailsCell.Product {
+    
+    static let preview: Self = .init(
+        title: "Product Title",
+        icon: .init(systemName: "creditcard"),
+        name: "product name",
+        formattedBalance: "$ 1 000.00",
+        description: "- 3456"
+    )
 }

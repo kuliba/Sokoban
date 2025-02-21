@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 13.02.2025.
 //
 
+import C2GBackend
 import C2GCore
 import Foundation
 import PaymentComponents
@@ -19,7 +20,6 @@ extension RootViewModelFactory {
         
         composeBinder(
             content: makeC2BPaymentContent(payload: payload),
-            delayProvider: delayProvider,
             getNavigation: getNavigation,
             selectWitnesses: .empty
         )
@@ -31,14 +31,6 @@ extension RootViewModelFactory {
     ) -> C2GPaymentDomain.Content {
         
         return .init(payload: payload, scheduler: schedulers.main)
-    }
-    
-    @inlinable
-    func delayProvider(
-        navigation: C2GPaymentDomain.Navigation
-    ) -> Delay {
-        
-        return .zero
     }
     
     @inlinable
@@ -58,22 +50,69 @@ extension RootViewModelFactory {
         _ digest: C2GPaymentDomain.Select.Digest,
         completion: @escaping (C2GPaymentDomain.Navigation) -> Void
     ) {
-        let payload = digest.payload
+        guard !digest.uin.hasEasterEgg else {
+            
+            return easterEggsCreateC2GPayment(digest, .inflight, completion)
+        }
         
-        guard !payload.uin.hasEasterEgg
-        else { return createC2GPaymentEasterEggs(payload, completion: completion) }
-        
+        createC2GPayment(digest: digest) { [weak self] in
+            
+            guard let self else { return }
+            
+            switch $0 {
+            case let .failure(failure):
+                completion(.failure(failure))
+                
+            case let .success(enhancedResponse):
+                let model = makeOperationDetailModel(initialState: .init(
+                    details: .pending,
+                    response: enhancedResponse
+                ))
+                model.event(.load)
+                
+                completion(.success(model))
+            }
+        }
+    }
+    
+    typealias EnhancedResponseResult = Result<OperationDetailDomain.State.EnhancedResponse, BackendFailure>
+    
+    @inlinable
+    func createC2GPayment(
+        digest: C2GPaymentDomain.Select.Digest,
+        completion: @escaping (EnhancedResponseResult) -> Void
+    ) {
         let service = onBackground(
             makeRequest: RequestFactory.createCreateC2GPaymentRequest,
             mapResponse: RemoteServices.ResponseMapper.mapCreateC2GPaymentResponse
         )
         
-        service(payload) { [weak self] in
+        service(digest.payload) { [weak self] in
             
             guard let self else { return }
             
-            completion($0.navigation(formattedAmount: formatAmount(value: $0.success?.amount)));
-            _ = service
+            switch $0 {
+            case let .failure(failure):
+                completion(.failure(
+                    failure.backendFailure(connectivityMessage: .connectivity)
+                ))
+
+            case let .success(response):
+                guard let status = response.status
+                else { return completion(.failure(.connectivityFailure)) }
+                
+                completion(.success(.init(
+                    formattedAmount: formatAmount(value: response.amount),
+                    formattedDate: nil, // TODO: extract from new version of response - Lera
+                    merchantName: response.merchantName,
+                    message: response.message,
+                    paymentOperationDetailID: response.paymentOperationDetailID,
+                    product: digest.product,
+                    purpose: response.purpose,
+                    status: status,
+                    uin: digest.uin
+                )))
+            }
         }
     }
     
@@ -85,21 +124,35 @@ extension RootViewModelFactory {
         
         return model.amountFormatted(amount: value, currencyCode: "RUB", style: .normal)
     }
-
+    
     // TODO: remove stub
     @inlinable
-    func createC2GPaymentEasterEggs(
-        _ payload: RemoteServices.RequestFactory.CreateC2GPaymentPayload,
-        completion: @escaping (C2GPaymentDomain.Navigation) -> Void
+    func easterEggsCreateC2GPayment(
+        _ digest: C2GPaymentDomain.Select.Digest,
+        _ status: OperationDetailDomain.State.Status,
+        _ completion: @escaping (C2GPaymentDomain.Navigation) -> Void
     ) {
-        schedulers.background.delay(for: .seconds(2)) {
+        schedulers.background.delay(for: .seconds(2)) { [weak self] in
             
-            switch payload.uin {
+            guard let self else { return }
+            
+            switch digest.uin {
             case "01234567890123456789":
                 completion(.connectivityFailure)
                 
             case "12345678901234567890":
                 completion(.failure(.server("server error")))
+                
+            case "99999999999999999999":
+                let initialState = OperationDetailDomain.State(
+                    details: .pending,
+                    response: .stub(digest: digest, status: status)
+                )
+                
+                let model = makeOperationDetailModel(initialState: initialState)
+                model.event(.load)
+                
+                completion(.success(model))
                 
             default:
                 completion(.failure(.server("server error")))
@@ -117,7 +170,7 @@ private extension C2GPaymentDomain.Navigation {
 
 private extension BackendFailure {
     
-    static let connectivityFailure: Self = .connectivity("Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения")
+    static let connectivityFailure: Self = .connectivity(.connectivity)
 }
 
 // TODO: remove with stub
@@ -125,45 +178,15 @@ private extension String {
     
     var hasEasterEgg: Bool {
         
-        ["01234567890123456789", "12345678901234567890"].contains(self)
+        ["01234567890123456789", "12345678901234567890", "99999999999999999999"].contains(self)
     }
 }
 
 // MARK: - Adapters
 
-private extension Result
-where Success == RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
-    
-    func navigation(
-        formattedAmount: String?
-    ) -> C2GPaymentDomain.Navigation {
-        
-        switch self {
-        case let .failure(failure as BackendFailure):
-            return .failure(failure)
-            
-        case .failure:
-            return .connectivityFailure
-            
-        case let .success(response):
-            return response.result(formattedAmount: formattedAmount)
-        }
-    }
-}
-
 private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
     
-    func result(
-        formattedAmount: String?
-    ) -> C2GPaymentDomain.Navigation {
-        
-        guard let status
-        else { return .failure(.connectivityFailure) }
-        
-        return .success(success(formattedAmount: formattedAmount, status: status))
-    }
-    
-    private var status: C2GPaymentDomain.Navigation.C2GPaymentComplete.Status? {
+    var status: OperationDetailDomain.State.Status? {
         
         switch documentStatus {
         case "COMPLETE":    return .completed
@@ -172,33 +195,18 @@ private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
         default:            return nil
         }
     }
-    
-    private func success(
-        formattedAmount: String?,
-        status: C2GPaymentDomain.Navigation.C2GPaymentComplete.Status
-    ) -> C2GPaymentDomain.Navigation.C2GPaymentComplete {
-        
-        return .init(
-            formattedAmount: formattedAmount,
-            status: status,
-            merchantName: merchantName,
-            message: message,
-            paymentOperationDetailID: paymentOperationDetailID,
-            purpose: purpose
-        )
-    }
 }
 
 private extension C2GPaymentDigest {
     
     var payload: RemoteServices.RequestFactory.CreateC2GPaymentPayload {
         
-        switch productID.type {
+        switch product.type {
         case .account:
-            return .init(accountID: productID.id, cardID: nil, uin: uin)
+            return .init(accountID: product.id.rawValue, cardID: nil, uin: uin)
             
         case .card:
-            return .init(accountID: nil, cardID: productID.id, uin: uin)
+            return .init(accountID: nil, cardID: product.id.rawValue, uin: uin)
         }
     }
 }
@@ -243,6 +251,8 @@ private extension AttributedString {
 
 private extension String {
     
+    static let connectivity = "Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения"
+    
     static let termURLPlace = "принять условия обслуживания"
 }
 
@@ -273,4 +283,81 @@ where State == C2GPaymentState<C2GPaymentDomain.Context>,
             scheduler: scheduler
         )
     }
+}
+
+private extension OperationDetailDomain.State.EnhancedResponse {
+    
+    static func stub(
+        digest: C2GPaymentDomain.Select.Digest,
+        status: OperationDetailDomain.State.Status
+    ) -> Self {
+        
+        return .init(
+            formattedAmount: "100 ₽",
+            formattedDate: "06.05.2021 15:38:12",
+            merchantName: "merchantName",
+            message: "message",
+            paymentOperationDetailID: 122004,
+            product: digest.product,
+            purpose: "purpose",
+            status: status,
+            uin: digest.uin
+        )
+    }
+}
+
+extension String {
+    
+    static let createC2GPaymentResponse = """
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": {
+    "claimId": "122004",
+    "requestDate": "19.02.2025 12:44:56",
+    "responseDate": "19.02.2025 12:45:00",
+    "transferDate": "19.02.2025",
+    "payerCardId": 10000239151,
+    "payerCardNumber": "**** **** **01 3245",
+    "payerAccountId": 10004766557,
+    "payerAccountNumber": "40817810000055004276",
+    "payerFullName": "Третьякова Людмила Владимировна",
+    "payerAddress": "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 346782, Ростовская обл, Азов г, Осипенко пер ,  д. 47,  кв. 35",
+    "payerAmount": 200.00,
+    "payerFee": 0.00,
+    "payerCurrency": "RUB",
+    "payeeFullName": "Федеральное Казначейство",
+    "payeeBankName": "Федеральное казначейство",
+    "amount": 200.00,
+    "currencyAmount": "RUB",
+    "comment": "Штраф ГИБДД",
+    "transferEnum": "C2G_PAYMENT",
+    "payerFirstName": "Людмила",
+    "payerMiddleName": "Владимировна",
+    "payerPhone": "+79896220672",
+    "puref": "0||PaymentsC2G",
+    "memberId": "100000000300",
+    "isTrafficPoliceService": false,
+    "merchantSubName": "Федеральное Казначейство",
+    "merchantIcon": "<svg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M0 20C0 8.95431 8.95431 0 20 0C31.0457 0 40 8.95431 40 20C40 31.0457 31.0457 40 20 40C8.95431 40 0 31.0457 0 20Z\" fill=\"#F5C5FE\"/>\n<path d=\"M26.5626 20.125C26.8733 20.125 27.1251 19.8732 27.1251 19.5625C27.1251 19.2518 26.8733 19 26.5626 19C26.252 19 26.0001 19.2518 26.0001 19.5625C26.0001 19.8732 26.252 20.125 26.5626 20.125Z\" fill=\"white\" stroke=\"white\" stroke-width=\"1.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n<path opacity=\"0.3\" d=\"M12.5626 20.125C12.8733 20.125 13.1251 19.8732 13.1251 19.5625C13.1251 19.2518 12.8733 19 12.5626 19C12.252 19 12.0001 19.2518 12.0001 19.5625C12.0001 19.8732 12.252 20.125 12.5626 20.125Z\" fill=\"white\" stroke=\"white\" stroke-width=\"1.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n<path opacity=\"0.6\" d=\"M19.5626 20.125C19.8733 20.125 20.1251 19.8732 20.1251 19.5625C20.1251 19.2518 19.8733 19 19.5626 19C19.252 19 19.0001 19.2518 19.0001 19.5625C19.0001 19.8732 19.252 20.125 19.5626 20.125Z\" fill=\"white\" stroke=\"white\" stroke-width=\"1.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n</svg>\n",
+    "operationStatus": "REJECTED",
+    "payeeCheckAccount": "03100643000000019500",
+    "paymentOperationDetailId": 122004,
+    "printFormType": "c2g",
+    "dateForDetail": "19 февраля 2025, 12:44",
+    "transAmm": 200,
+    "discountSizeValue": 50.0,
+    "discountExpiry": "2024-12-25",
+    "dateN": "2024-08-26",
+    "legalAct": "Часть 1 статьи 12.16 КоАП",
+    "supplierBillId": "18810192085432512980",
+    "realPayerFIO": "-",
+    "realPayerINN": "000000000000",
+    "realPayerKPP": "000000000",
+    "returned": false,
+    "payerINN": "614210868146",
+    "UPNO": "10445253410000001902202500000002"
+  }
+}
+"""
 }

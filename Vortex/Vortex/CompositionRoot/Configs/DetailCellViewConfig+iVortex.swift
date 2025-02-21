@@ -6,14 +6,16 @@
 //
 
 import Foundation
+import UIPrimitives
 
 extension DetailCellViewConfig {
     
     static let iVortex: Self = .init(
-        insets: .init(top: 0, leading: 4, bottom: 12, trailing: 0),
+        labelVPadding: 6,
+        imageForegroundColor: .iconGray,
         imageSize: .init(width: 24, height: 24),
-        imageTopPadding: 8,
-        hSpacing: 20,
+        imagePadding: .init(top: 10, leading: 0, bottom: 0, trailing: 0),
+        hSpacing: 16,
         vSpacing: 4,
         title: .init(
             textFont: .textBodySR12160(),
@@ -22,6 +24,22 @@ extension DetailCellViewConfig {
         value: .init(
             textFont: .textBodyMM14200(),
             textColor: .textSecondary
-        )
+        ),
+        product: .iVortex
+    )
+}
+
+
+extension DetailCellViewConfig.ProductConfig {
+    
+    // TODO: fix on design fixes - Nika
+    static let iVortex: Self = .init(
+        balance: .init(textFont: .body, textColor: .orange),
+        description: .init(textFont: .caption, textColor: .orange),
+        hSpacing: 16,
+        iconSize: .init(width: 32, height: 32),
+        name: .init(textFont: .headline, textColor: .orange),
+        title: .init(textFont: .footnote, textColor: .orange),
+        vStackVPadding: 6
     )
 }

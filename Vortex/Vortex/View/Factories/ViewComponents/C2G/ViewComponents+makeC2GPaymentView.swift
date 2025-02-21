@@ -64,36 +64,12 @@ extension ViewComponents {
         }
         .padding()
     }
-    
-    // TODO: - add/extract config
-    @inlinable
-    func makeCheckBoxView(
-        title: AttributedString,
-        isChecked: Bool,
-        toggle: @escaping () -> Void
-    ) -> some View {
         
-        HStack {
-            
-            PaymentsCheckView.CheckBoxView(
-                isChecked: isChecked,
-                activeColor: .systemColorActive
-            )
-            .onTapGesture(perform: toggle)
-            
-            Text(title)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .font(.textBodyMR14200())
-                .foregroundColor(.textPlaceholder)
-        }
-        .animation(.easeInOut, value: isChecked)
-    }
-    
     @inlinable
     func c2gPaymentFlowView(
         flow: C2GPaymentDomain.Flow,
         dismiss: @escaping () -> Void,
-        successView: @escaping (C2GPaymentDomain.Navigation.Cover<C2GPaymentDomain.Navigation.C2GPaymentComplete>) -> some View
+        successView: @escaping (C2GPaymentDomain.Navigation.Cover<C2GPaymentDomain.C2GPaymentComplete>) -> some View
     ) -> some View {
         
         RxWrapperView(model: flow) { state, _ in
@@ -124,7 +100,7 @@ struct C2GPaymentFlowView<SuccessView: View>: View {
 extension C2GPaymentFlowView {
     
     typealias State = C2GPaymentDomain.Navigation
-    typealias PaymentSuccess = C2GPaymentDomain.Navigation.C2GPaymentComplete
+    typealias PaymentSuccess = C2GPaymentDomain.C2GPaymentComplete
     typealias Cover = C2GPaymentDomain.Navigation.Cover<PaymentSuccess>
 }
 
@@ -147,16 +123,16 @@ extension C2GPaymentDomain.Navigation {
         return backendFailure
     }
     
-    var cover: Cover<C2GPaymentDomain.Navigation.C2GPaymentComplete>? {
+    var cover: Cover<C2GPaymentDomain.C2GPaymentComplete>? {
         
-        guard case let .success(success) = self else { return nil }
+        guard case let .success(content) = self else { return nil }
         
-        return .init(id: .init(), success: success)
+        return .init(id: .init(), content: content)
     }
     
-    struct Cover<Success>: Identifiable {
+    struct Cover<Content>: Identifiable {
         
         let id: UUID
-        let success: Success
+        let content: Content
     }
 }
