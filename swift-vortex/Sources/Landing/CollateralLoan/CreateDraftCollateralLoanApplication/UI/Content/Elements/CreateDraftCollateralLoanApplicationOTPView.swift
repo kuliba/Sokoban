@@ -10,7 +10,8 @@ import OTPInputComponent
 import PaymentComponents
 import SwiftUI
 
-struct CreateDraftCollateralLoanApplicationOTPView: View {
+struct CreateDraftCollateralLoanApplicationOTPView<Confirmation, InformerPayload>: View
+    where Confirmation: TimedOTPInputViewModel {
 
     let state: State
     let event: (Event) -> Void
@@ -34,21 +35,19 @@ extension CreateDraftCollateralLoanApplicationOTPView {
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    typealias State = Domain.State
-    typealias Event = Domain.Event
+    typealias State = Domain.State<Confirmation, InformerPayload>
+    typealias Event = Domain.Event<Confirmation, InformerPayload>
 }
 
 // MARK: - Previews
 
-struct CreateDraftCollateralLoanApplicationOTPView_Previews: PreviewProvider {
+struct CreateDraftCollateralLoanApplicationOTPView_Previews<Confirmation, InformerPayload>: PreviewProvider
+    where Confirmation: TimedOTPInputViewModel {
     
     static var previews: some View {
         
-        CreateDraftCollateralLoanApplicationOTPView(
-            state: .init(
-                data: .preview,
-                confirmation: .preview
-            ),
+        CreateDraftCollateralLoanApplicationOTPView<Confirmation, InformerPayload>(
+            state: .init(application: .preview),
             event: {
                 print($0)
             },
@@ -57,8 +56,4 @@ struct CreateDraftCollateralLoanApplicationOTPView_Previews: PreviewProvider {
             otpViewModel: .preview
         )
     }
-    
-    typealias Factory = CreateDraftCollateralLoanApplicationFactory
-    typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias Data = CreateDraftCollateralLoanApplicationUIData
 }

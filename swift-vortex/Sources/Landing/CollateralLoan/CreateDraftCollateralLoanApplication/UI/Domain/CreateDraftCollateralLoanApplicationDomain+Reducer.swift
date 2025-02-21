@@ -1,6 +1,6 @@
 //
 //  CreateDraftCollateralLoanApplicationDomain+Reducer.swift
-//  
+//
 //
 //  Created by Valentin Ozerov on 16.01.2025.
 //
@@ -14,12 +14,12 @@ import TextFieldDomain
 
 extension CreateDraftCollateralLoanApplicationDomain {
     
-    public final class Reducer<Confirmation> {
+    public final class Reducer<Confirmation, InformerPayload> where Confirmation: TimedOTPInputViewModel {
         
         private let amountReduce: AmountReduce
         private let citySelectReduce: CitySelectReduce
         private let periodSelectReduce: PeriodSelectReduce
-
+        
         public init(
             amountReduce: @escaping AmountReduce,
             citySelectReduce: @escaping CitySelectReduce,
@@ -30,8 +30,11 @@ extension CreateDraftCollateralLoanApplicationDomain {
             self.periodSelectReduce = periodSelectReduce
         }
         
-        public func reduce(_ state: State, _ event: Event)
-            -> (State, Effect?) {
+        public func reduce(
+            _ state: State<Confirmation, InformerPayload>,
+            _ event: Event<Confirmation, InformerPayload>
+        )
+        -> (State<Confirmation, InformerPayload>, Effect?) {
             
             var state = state
             var effect: Effect?
@@ -41,61 +44,66 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 state.amount = amountReduce(state.amount, amountEvent)
                 if state.isAmountVaild {
                     
-                    state.amount.message = .hint(state.data.hintText)
+                    state.amount.message = .hint(state.application.hintText)
                 } else {
-
+                    
                     state.amount.message = .warning("Некорректная сумма")
                 }
-                state.isButtonDisabled = !state.checkButtonStatus
                 
             case let .period(periodEvent):
                 state.period = periodSelectReduce(state.period, periodEvent)
-                state.isButtonDisabled = !state.checkButtonStatus
                 
             case let .city(cityEvent):
                 state.city = citySelectReduce(state.city, cityEvent)
-                state.isButtonDisabled = !state.checkButtonStatus
                 
-            case .tappedContinue:
+            case .continue:
                 state.isLoading = true
+                state.stage = .confirm
                 effect = .createDraftApplication(state.createDraftApplicationPayload)
                 
             case let .applicationCreated(result):
-                state.applicationID = try? result.get().applicationID
-                state.stage = .confirm
-                state.isButtonDisabled = !state.checkButtonStatus
                 state.isLoading = false
-                effect = .confirm
+
+                guard
+                    state.confirmation == nil,
+                    state.applicationID == nil
+                else { break }
                 
-            case .tappedSubmit:
+                switch result {
+                case let .success(success):
+                    state.confirmation = success.confirmation
+                    state.applicationID = try? success.applicationResult.get().applicationID
+                    
+                case let .failure(failure):
+                    state.failure = failure
+                }
+                
+            case .submit:
+                state.isLoading = true
                 if let applicationID = state.applicationID {
                     
                     effect = .saveConsents(
-                        state.saveConsentspayload(
+                        state.saveConsentsPayload(
                             applicationID: applicationID,
                             verificationCode: state.otp
                         )
                     )
                 }
                 
-            case .tappedBack:
+            case .back:
                 if state.stage == .confirm {
                     
                     state.stage = .correctParameters
                 }
-                state.isButtonDisabled = !state.checkButtonStatus
                 
             case let .showSaveConsentsResult(result):
-                state.isLoading = false
-                state.saveConsentsResult = result     
-                state.isButtonDisabled = !state.checkButtonStatus
-                
-            case let .otp(otp):
-                state.otp = otp
-                state.isButtonDisabled = !state.checkButtonStatus
-                
-            case .getVerificationCode:
-                effect = .getVerificationCode
+                switch result {
+                case let .success(success):
+                    state.saveConsentsResult = success
+                    
+                case let .failure(failure):
+                    state.failure = failure
+                }
                 
             case .gettedVerificationCode:
                 break
@@ -106,36 +114,49 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 } else {
                     state.checkedConsents.append(consentName)
                 }
-                state.isButtonDisabled = !state.checkButtonStatus
                 
             case let .confirmed(confirmation):
                 state.confirmation = confirmation
-                state.isButtonDisabled = !state.checkButtonStatus
                 
-            case .otpValidated:
-                state.otpValidated = true
-                state.isButtonDisabled = !state.checkButtonStatus
+            case let .failure(failure):
+                state.failure = failure
+                
+            case let .otpEvent(event):
+                switch event {
+                    
+                case let .otp(otp):
+                    state.otp = otp
+                    
+                case .getVerificationCode:
+                    effect = .getVerificationCode
+                }
+                
+            case .dismissFailure:
+                state.failure = nil
             }
             
             return (state, effect)
         }
     }
-    
-    public typealias TextFieldReduce = (TextInputState, TextInputEvent) -> TextInputState
-    public typealias Validate = (TextFieldState) -> TextInputState.Message?
-    public typealias AmountReduce = TextFieldReduce
-    public typealias CitySelectState = OptionalSelectorState<CityItem>
-    public typealias CitySelectEvent = OptionalSelectorEvent<CityItem>
-    public typealias PeriodSelectState = OptionalSelectorState<PeriodItem>
-    public typealias PeriodSelectEvent = OptionalSelectorEvent<PeriodItem>
-    public typealias CitySelectReduce = (CitySelectState, CitySelectEvent) -> CitySelectState
-    public typealias PeriodSelectReduce = (PeriodSelectState, PeriodSelectEvent) -> PeriodSelectState
+}
+  
+public extension CreateDraftCollateralLoanApplicationDomain {
+
+    typealias TextFieldReduce = (TextInputState, TextInputEvent) -> TextInputState
+    typealias Validate = (TextFieldState) -> TextInputState.Message?
+    typealias AmountReduce = TextFieldReduce
+    typealias CitySelectState = OptionalSelectorState<CityItem>
+    typealias CitySelectEvent = OptionalSelectorEvent<CityItem>
+    typealias PeriodSelectState = OptionalSelectorState<PeriodItem>
+    typealias PeriodSelectEvent = OptionalSelectorEvent<PeriodItem>
+    typealias CitySelectReduce = (CitySelectState, CitySelectEvent) -> CitySelectState
+    typealias PeriodSelectReduce = (PeriodSelectState, PeriodSelectEvent) -> PeriodSelectState
 }
 
 public extension CreateDraftCollateralLoanApplicationDomain.Reducer {
     
     convenience init(
-        data: CreateDraftCollateralLoanApplicationUIData,
+        application: CreateDraftCollateralLoanApplication,
         placeholderText: String = "Введите значение",
         warningText: String = "Некорректная сумма"
     ) {
@@ -144,7 +165,7 @@ public extension CreateDraftCollateralLoanApplicationDomain.Reducer {
         let textFieldReducer = ChangingReducer.decimal(formatter: decimalFormatter)
         
         let textInputValidator = TextInputValidator(
-            hintText: data.hintText,
+            hintText: application.hintText,
             warningText: warningText,
             validate: { isValid($0) }
         )
@@ -167,7 +188,7 @@ public extension CreateDraftCollateralLoanApplicationDomain.Reducer {
             
             guard let amount = Int(amount.filter { $0.isNumber }) else { return false }
             
-            return amount >= data.minAmount && amount <= data.maxAmount
+            return amount >= application.minAmount && amount <= application.maxAmount
         }
     }
     

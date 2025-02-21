@@ -43,7 +43,7 @@ private extension ResponseMapper._Data {
             let applicationID = self.applicationId,
             let name = self.name,
             let amount = self.amount,
-            let termMonth = self.termMonth,
+            let term = self.term,
             let collateralType = self.collateralType,
             let interestRate = self.interestRate,
             let documents = self.documents,
@@ -55,10 +55,10 @@ private extension ResponseMapper._Data {
         }
 
         return .init(
-            applicationID: applicationID,
+            applicationID: UInt(applicationID),
             name: name,
-            amount: amount,
-            termMonth: termMonth,
+            amount: UInt(amount),
+            term: term,
             collateralType: collateralType,
             interestRate: interestRate,
             collateralInfo: collateralInfo,
@@ -74,12 +74,12 @@ private extension ResponseMapper {
 
     struct _Data: Decodable {
         
-        let applicationId: UInt?
+        let applicationId: Int?
         let name: String?
-        let amount: UInt?
-        let termMonth: UInt?
+        let amount: Int?
+        let term: String?
         let collateralType: String?
-        let interestRate: UInt?
+        let interestRate: Double?
         let collateralInfo: String?
         let documents: [String]?
         let cityName: String?

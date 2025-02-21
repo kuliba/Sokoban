@@ -7,56 +7,61 @@
 
 extension CreateDraftCollateralLoanApplicationDomain {
     
-    public final class EffectHandler {
+    public final class EffectHandler<Confirmation, InformerPayload> {
 
         private let createDraftApplication: CreateDraftApplication
         private let getVerificationCode: GetVerificationCode
         private let saveConsents: SaveConsents
-        private let confirm: Confirm
 
         public init(
             createDraftApplication: @escaping CreateDraftApplication,
             getVerificationCode: @escaping GetVerificationCode,
-            saveConsents: @escaping SaveConsents,
-            confirm: @escaping Confirm
+            saveConsents: @escaping SaveConsents
         ) {
             self.createDraftApplication = createDraftApplication
             self.getVerificationCode = getVerificationCode
             self.saveConsents = saveConsents
-            self.confirm = confirm
         }
         
         public func handleEffect(_ effect: Effect, dispatch: @escaping Dispatch) {
             
             switch effect {
             case let .createDraftApplication(payload):
-                createDraftApplication(payload) { dispatch(.applicationCreated($0)) }
+                createDraftApplication(
+                    payload,
+                    { dispatch(.otpEvent($0)) },
+                    { dispatch(.applicationCreated($0)) }
+                )
                 
             case let .saveConsents(payload):
-                saveConsents(payload) { 
+                saveConsents(payload) {
                     dispatch(.showSaveConsentsResult($0))
                 }
                 
             case .getVerificationCode:
                 getVerificationCode { dispatch(.gettedVerificationCode($0)) }
-                
-            case .confirm:
-                confirm { event in dispatch(event) }
             }
         }
-
-        public typealias Domain = CreateDraftCollateralLoanApplicationDomain
-        public typealias Event = Domain.Event
-        public typealias Confirm = (@escaping (Event) -> Void) -> Void
-        public typealias Dispatch = (Event) -> Void
-        public typealias CreateDraftApplicationPayload = CollateralLandingApplicationCreateDraftPayload
-        public typealias SaveConsentsPayload = CollateralLandingApplicationSaveConsentsPayload
-        public typealias CreateDraftApplication = (CreateDraftApplicationPayload, @escaping CreateDraftApplicationCompletion) -> Void
-        public typealias SaveConsents = (SaveConsentsPayload, @escaping SaveConsentsCompletion) -> Void
-        public typealias GetVerificationCode = (@escaping GetVerificationCodeCompletion) -> Void
-        public typealias CreateDraftApplicationCompletion = (CreateDraftApplicationResult) -> Void
-        public typealias SaveConsentsCompletion = (SaveConsentsResult) -> Void
-        public typealias GetVerificationCodeCompletion = (GetVerificationCodeResult) -> Void
-        public typealias GetVerificationCodeResult = Result<Int, LoadResultFailure>
     }
+}
+
+public extension CreateDraftCollateralLoanApplicationDomain.EffectHandler {
+    
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias Event = Domain.Event
+    typealias Dispatch = (Event<Confirmation, InformerPayload>) -> Void
+    typealias CreateDraftApplicationPayload = CollateralLandingApplicationCreateDraftPayload
+    typealias SaveConsentsPayload = CollateralLandingApplicationSaveConsentsPayload
+    typealias GetVerificationCode = (@escaping GetVerificationCodeCompletion) -> Void
+    typealias GetVerificationCodeCompletion = (GetVerificationCodeResult) -> Void
+    typealias GetVerificationCodeResult = Result<Int, BackendFailure<InformerPayload>>
+    typealias SaveConsentsCompletion = (Domain.SaveConsentsResult<InformerPayload>) -> Void
+    typealias SaveConsents = (SaveConsentsPayload, @escaping SaveConsentsCompletion) -> Void
+    typealias CreateDraftApplicationCompletion
+        = (Domain.CreateDraftApplicationCreatedResult<Confirmation, InformerPayload>) -> Void
+    typealias CreateDraftApplication = (
+        CreateDraftApplicationPayload,
+        @escaping (Event<Confirmation, InformerPayload>.OTPEvent) -> Void,
+        @escaping CreateDraftApplicationCompletion
+    ) -> Void
 }

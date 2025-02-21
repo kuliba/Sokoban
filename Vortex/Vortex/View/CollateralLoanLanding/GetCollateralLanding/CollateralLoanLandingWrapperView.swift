@@ -13,6 +13,8 @@ import UIPrimitives
 
 struct CollateralLoanLandingWrapperView: View {
     
+    @Environment(\.openURL) var openURL
+
     let binder: GetCollateralLandingDomain.Binder
     let factory: Factory
     let goToMain: () -> Void
@@ -27,7 +29,7 @@ struct CollateralLoanLandingWrapperView: View {
             )
             .navigationDestination(
                 destination: state.navigation?.destination,
-                content: destinationView
+                content: { destinationView(destination: $0) { event(.dismiss) }}
             )
             .bottomSheet(
                 sheet: state.navigation?.bottomSheet,
@@ -42,6 +44,26 @@ struct CollateralLoanLandingWrapperView: View {
         event: @escaping (GetCollateralLandingDomain.Event) -> Void
     ) -> some View {
         
+        Group {
+            
+            switch state.product {
+            case .none:
+                Color.clear
+                    .loader(isLoading: state.product == nil, color: .clear)
+                
+            case let .some(product):
+                getCollateralLandingView(product, state, event)
+            }
+        }
+        .onFirstAppear { event(.load(state.landingID)) }
+    }
+    
+    private func getCollateralLandingView(
+        _ product: GetCollateralLandingProduct,
+        _ state: GetCollateralLandingDomain.State,
+        _ event: @escaping (GetCollateralLandingDomain.Event) -> Void
+    ) -> some View {
+        
         GetCollateralLandingView(
             state: state,
             domainEvent: event,
@@ -49,25 +71,29 @@ struct CollateralLoanLandingWrapperView: View {
                 switch $0 {
                 case let .showCaseList(id):
                     binder.flow.event(.select(.showCaseList(id)))
-
+                    
                 case let .createDraftApplication(product):
                     let payload = state.payload(product)
-                        binder.flow.event(.select(.createDraftCollateralLoanApplication(payload)))
+                    binder.flow.event(.select(.createDraftCollateralLoanApplication(payload)))
+                    
+                case let .openDocument(link):
+                    if let url = URL(string: link) {
+                        openURL(url)
+                    }
                 }
             },
             factory: .init(
                 makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
-                makeImageViewWithURL: factory.makeImageViewWithURL
+                makeImageViewWithURL: factory.makeImageViewWithURL,
+                getPDFDocument: factory.getPDFDocument
             )
         )
-        .onFirstAppear {
-            event(.load(state.landingID))
-        }
     }
     
     @ViewBuilder
     private func destinationView(
-        destination: GetCollateralLandingDomain.Navigation.Destination
+        destination: GetCollateralLandingDomain.Navigation.Destination,
+        dissmiss: @escaping () -> Void
     ) -> some View {
         
         switch destination {
@@ -77,10 +103,12 @@ struct CollateralLoanLandingWrapperView: View {
                 config: .default,
                 factory: .init(
                     makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
-                    makeImageViewWithURL: factory.makeImageViewWithURL
-                ), 
+                    makeImageViewWithURL: factory.makeImageViewWithURL,
+                    getPDFDocument: factory.getPDFDocument
+                ),
                 goToMain: goToMain
             )
+            .navigationBarWithBack(title: "Оформление заявки", dismiss: dissmiss)
         }
     }
     
@@ -164,7 +192,7 @@ extension GetCollateralLandingDomain.Navigation {
     
     enum Destination {
         
-        case createDraftCollateralLoanApplication(CreateDraftCollateralLoanApplicationDomain.Binder)
+        case createDraftCollateralLoanApplication(Domain.Binder)
     }
     
     var bottomSheet: BottomSheet? {
@@ -182,6 +210,8 @@ extension GetCollateralLandingDomain.Navigation {
         
         case showBottomSheet(GetCollateralLandingDomain.ExternalEvent.CaseType)
     }
+    
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
 }
 
 extension GetCollateralLandingDomain.Navigation.Destination: Identifiable {
@@ -213,5 +243,5 @@ extension GetCollateralLandingDomain.Navigation.BottomSheet: Identifiable, Botto
 
 extension GetCollateralLandingDomain {
     
-    typealias Payload = CreateDraftCollateralLoanApplicationUIData
+    typealias Payload = CreateDraftCollateralLoanApplication
 }

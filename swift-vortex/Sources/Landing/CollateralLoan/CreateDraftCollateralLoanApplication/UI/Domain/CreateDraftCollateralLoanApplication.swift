@@ -1,5 +1,5 @@
 //
-//  CreateDraftCollateralLoanApplicationData.swift
+//  CreateDraftCollateralLoanApplication.swift
 //
 //
 //  Created by Valentin Ozerov on 30.12.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct CreateDraftCollateralLoanApplicationUIData {
+public struct CreateDraftCollateralLoanApplication {
     
     public let amount: UInt
     public let cities: [String]
@@ -96,7 +96,7 @@ public struct CreateDraftCollateralLoanApplicationUIData {
     }
 }
 
-extension CreateDraftCollateralLoanApplicationUIData {
+extension CreateDraftCollateralLoanApplication {
     
     var formattedPercent: String {
         
@@ -105,7 +105,7 @@ extension CreateDraftCollateralLoanApplicationUIData {
     
     var formattedAmount: String {
         
-        String(format: "%ld %@", locale: Locale.current, amount, rubSymbol)
+        amount.formattedCurrency()
     }
     
     var selectedPeriodTitle: String {
@@ -115,8 +115,8 @@ extension CreateDraftCollateralLoanApplicationUIData {
     
     public var hintText: String {
         
-        let minAmount = String(format: "%ld %@", locale: Locale.current, minAmount, rubSymbol)
-        let maxAmount = String(format: "%ld %@", locale: Locale.current, maxAmount, rubSymbol)
+        let minAmount = minAmount.formattedCurrency()
+        let maxAmount = maxAmount.formattedCurrency()
         
         return "Мин. - \(minAmount), Макс. - \(maxAmount)"
     }
@@ -131,7 +131,7 @@ extension CreateDraftCollateralLoanApplicationUIData {
     }
 }
 
-extension CreateDraftCollateralLoanApplicationUIData {
+extension CreateDraftCollateralLoanApplication {
     
     public static let preview = Self(
         amount: 1_234_567,
@@ -205,11 +205,30 @@ extension CreateDraftCollateralLoanApplicationUIData {
     )
 }
 
-extension CreateDraftCollateralLoanApplicationUIData: Equatable {}
-extension CreateDraftCollateralLoanApplicationUIData.Icons: Equatable {}
-extension CreateDraftCollateralLoanApplicationUIData.Consent: Equatable {}
+extension CreateDraftCollateralLoanApplication: Equatable {}
+extension CreateDraftCollateralLoanApplication.Icons: Equatable {}
+extension CreateDraftCollateralLoanApplication.Consent: Equatable {}
 
-extension CreateDraftCollateralLoanApplicationUIData: Identifiable {
+extension CreateDraftCollateralLoanApplication: Identifiable {
     
     public var id: String { name }
+}
+
+extension UInt {
+    
+    func formattedCurrency(_ currencySymbol: String = "₽") -> String {
+        
+        let currencyFormatter = NumberFormatter()
+        currencyFormatter.numberStyle = .currency
+        currencyFormatter.currencySymbol = currencySymbol
+        currencyFormatter.usesGroupingSeparator = true
+        currencyFormatter.locale = Locale(identifier: "ru_RU")
+        currencyFormatter.maximumFractionDigits = 0
+
+        if let value = currencyFormatter.string(from: NSNumber(value: self)) {
+            return value
+        }
+        
+        return String(self)
+    }
 }

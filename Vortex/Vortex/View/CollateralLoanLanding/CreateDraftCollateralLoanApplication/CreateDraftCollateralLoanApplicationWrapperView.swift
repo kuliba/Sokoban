@@ -6,8 +6,10 @@
 //
 
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
+import CollateralLoanLandingGetConsentsBackend
 import InputComponent
 import OTPInputComponent
+import RemoteServices
 import RxViewModel
 import SwiftUI
 
@@ -23,42 +25,40 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     var body: some View {
         
         RxWrapperView(model: binder.flow) { state, event in
-            
-            RxWrapperView(
-                model: binder.content,
-                makeContentView: makeContentView(state:event:)
-            )
-            .alert(
-                item: state.navigation?.alert,
-                content: makeAlert
-            )
-            .fullScreenCover(
-                cover: state.navigation?.cover,
-                content: fullScreenCoverView
-            )
+
+            content()
+                .alert(
+                    item: state.navigation?.alert,
+                    content: makeAlert
+                )
+                .fullScreenCover(
+                    cover: state.navigation?.cover,
+                    content: fullScreenCoverView
+                )
         }
     }
     
+    private func content() -> some View {
+
+        RxWrapperView(
+            model: binder.content,
+            makeContentView: makeContentView(state:event:)
+        )
+    }
+    
+    @ViewBuilder
     private func makeContentView(
-        state: State,
-        event: @escaping (Event) -> Void
+        state: State<Confirmation, InformerData>,
+        event: @escaping (Event<Confirmation, InformerData>) -> Void
     ) -> some View {
         
-        ZStack {
-            
-            if state.isLoading {
-                
-                SpinnerView(viewModel: .init())
-                    .zIndex(1.0)
-            }
-            content(state: state, event: event)
-        }
-        .frame(maxHeight: .infinity)
+        content(state: state, event: event)
+            .frame(maxHeight: .infinity)
     }
 
     private func content(
-        state: State,
-        event: @escaping (Event) -> Void
+        state: State<Confirmation, InformerData>,
+        event: @escaping (Event<Confirmation, InformerData>) -> Void
     ) -> some View {
 
         CreateDraftCollateralLoanApplicationView(
@@ -68,7 +68,8 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
             config: .default,
             factory: .init(
                 makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
-                makeImageViewWithURL: factory.makeImageViewWithURL
+                makeImageViewWithURL: factory.makeImageViewWithURL,
+                getPDFDocument: factory.getPDFDocument
             )
         )
         .if(state.stage == .confirm) {
@@ -78,9 +79,9 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         }
     }
     
-    func buttonBack(event: @escaping (Event) -> Void) -> some View {
+    func buttonBack(event: @escaping (Event<TimedOTPInputViewModel, InformerData>) -> Void) -> some View {
         
-        Button(action: { event(.tappedBack) }) {
+        Button(action: { event(.back) }) {
             
             HStack {
                 Image.ic16ChevronLeft
@@ -95,6 +96,9 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         switch events {
         case let .showConsent(url):
             openURL(url)
+            
+        case .goToMain:
+            goToMain()
         }
     }
     
@@ -120,12 +124,14 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         
         switch cover {
         case let .success(saveConsentsResult):
-            PaymentCompleteView(
-                state: makePaymentCompleteState(from: saveConsentsResult),
-                goToMain: goToMain,
-                repeat: {},
-                factory: makePaymentCompleteViewFactory(),
-                config: .collateralLoanLanding
+            CreateDraftCollateralLoanApplicationCompleteView(
+                state: .completed,
+                action: goToMain,
+                makeIconView: factory.makeImageViewWithMD5Hash,
+                pdfDocumentButton: makePDFDocumentButton(
+                    payload: saveConsentsResult.payload,
+                    getPDFDocument: factory.getPDFDocument
+                )
             )
             
         case .failure:
@@ -139,28 +145,12 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         }
     }
     
-    private func makePaymentCompleteState(
-        from saveConsentsResult: CollateralLandingApplicationSaveConsentsResult
-    ) -> PaymentCompleteState {
+    private func makePDFDocumentButton(
+        payload: RemoteServices.RequestFactory.GetConsentsPayload,
+        getPDFDocument: @escaping PDFDocumentButton.GetPDFDocument
+    ) -> PDFDocumentButton {
         
-        .init(
-            formattedAmount: saveConsentsResult.formattedAmount(),
-            merchantIcon: nil,
-            result: .success(makeReport(from: saveConsentsResult))
-        )
-    }
-    
-    private func makeReport(
-        from saveConsentsResult: CollateralLandingApplicationSaveConsentsResult
-    ) -> PaymentCompleteState.Report {
-        
-        .init(
-            detailID: 123,
-            details: operationDetails(from: saveConsentsResult),
-            operationDetail: nil,
-            printFormType: "",
-            status: .completed
-        )
+        .init(getDocument: { getPDFDocument(payload, $0) })
     }
     
     private func makePaymentCompleteViewFactory() -> PaymentCompleteViewFactory {
@@ -183,22 +173,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         documentID: DocumentID,
         printFormType: RequestFactory.PrintFormType
     ) -> TransactionDocumentButton {
-        .init(getDocument: { _ in }) // TODO: Load PDFDocument via getConsents request
-    }
-    
-    // TODO: realize map
-    private func operationDetails(
-        from saveConsentsResult: CollateralLandingApplicationSaveConsentsResult
-    ) -> TransactionDetailButton.Details {
-
-        .init(
-            logo: nil,
-            cells: [
-                .init(title: "Деталь 1"),
-                .init(title: "Деталь 2"),
-                .init(title: "Деталь 3")
-            ]
-        )
+        .init(getDocument: { _ in })
     }
 }
 
@@ -211,17 +186,25 @@ extension CreateDraftCollateralLoanApplicationWrapperView {
     typealias Event = Domain.Event
     typealias SaveConsentsResult = Domain.SaveConsentsResult
     typealias MakeAnywayElementModelMapper = () -> AnywayElementModelMapper
+    typealias Confirmation = CreateDraftCollateralLoanApplicationDomain.Confirmation
 }
 
+// MARK: UI mapping
+
 extension CreateDraftCollateralLoanApplicationDomain.Navigation {
-    
+
     var alert: Alert? {
         
         switch self {
-        case let .failure(failure):
-            return .failure(failure)
-            
-        case .success:
+        case let .failure(kind):
+            switch kind {
+            case let .timeout(informerPayload):
+                return .failure(informerPayload.message)
+
+            case let .error(message):
+                return .failure(message)
+            }
+        case .saveConsents(_):
             return nil
         }
     }
@@ -237,8 +220,8 @@ extension CreateDraftCollateralLoanApplicationDomain.Navigation {
         case .failure:
             return .failure
             
-        case let .success(success):
-            return .success(success)
+        case let .saveConsents(result):
+            return .success(result)
         }
     }
     

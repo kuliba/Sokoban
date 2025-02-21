@@ -1,28 +1,44 @@
 //
 //  CreateDraftCollateralLoanApplicationDomain.swift
-//  
+//
 //
 //  Created by Valentin Ozerov on 16.01.2025.
 //
 
-public enum CreateDraftCollateralLoanApplicationDomain {
+// Namespace
+public enum CreateDraftCollateralLoanApplicationDomain {}
 
-    public struct LoadResultFailure: Equatable, Error {
-        
-        public let message: String
-        
-        public init(message: String) {
+public extension CreateDraftCollateralLoanApplicationDomain {
+    
+    typealias CreateDraftApplicationCreatedResult<Confirmation, InformerPayload> = Swift.Result<
+        DraftApplicationCreatedResult<Confirmation, InformerPayload>,
+        BackendFailure<InformerPayload>
+    >
+    
+    typealias CreateDraftApplicationResult<Confirmation, InformerPayload> = Swift.Result<
+        CollateralLandingApplicationCreateDraftResult,
+        BackendFailure<InformerPayload>
+    >
+    
+    typealias SaveConsentsResult<InformerPayload> = Swift.Result<
+        CollateralLandingApplicationSaveConsentsResult,
+        BackendFailure<InformerPayload>
+    >
+}
 
-            self.message = message
+public extension CreateDraftCollateralLoanApplicationDomain {
+    
+    struct DraftApplicationCreatedResult<Confirmation, InformerPayload> {
+        
+        let applicationResult: CreateDraftApplicationResult<Confirmation, InformerPayload>
+        let confirmation: Confirmation
+        
+        public init(
+            applicationResult: CreateDraftApplicationResult<Confirmation, InformerPayload>,
+            confirmation: Confirmation
+        ) {
+            self.applicationResult = applicationResult
+            self.confirmation = confirmation
         }
     }
-    
-    public typealias CreateDraftApplicationResult = Swift.Result<
-        CollateralLandingApplicationCreateDraftResult,
-        LoadResultFailure
-    >
-    
-    public typealias SaveConsentsResult = Swift.Result<
-        CollateralLandingApplicationSaveConsentsResult, LoadResultFailure
-    >
 }

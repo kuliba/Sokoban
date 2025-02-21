@@ -28,7 +28,8 @@ extension GetCollateralLandingDomain {
         
         case createDraftApplication(Product)
         case showCaseList(CaseType)
-        
+        case openDocument(String)
+
         public enum CaseType: Equatable {
             
             case periods([Period])

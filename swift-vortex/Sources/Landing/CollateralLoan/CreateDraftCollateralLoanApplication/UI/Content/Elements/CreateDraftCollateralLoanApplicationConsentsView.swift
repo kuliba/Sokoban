@@ -9,7 +9,8 @@ import LinkableText
 import OTPInputComponent
 import SwiftUI
 
-struct CreateDraftCollateralLoanApplicationConsentsView: View {
+struct CreateDraftCollateralLoanApplicationConsentsView<Confirmation, InformerPayload>: View
+    where Confirmation: TimedOTPInputViewModel{
     
     let state: State
     let event: (Event) -> Void
@@ -21,7 +22,7 @@ struct CreateDraftCollateralLoanApplicationConsentsView: View {
         
         VStack {
             
-            ForEach(state.data.consents, id: (\.name), content: consent)
+            ForEach(state.application.consents, id: (\.name), content: consent)
         }
         .padding(config.layouts.paddings.contentStack)
     }
@@ -54,52 +55,44 @@ struct CreateDraftCollateralLoanApplicationConsentsView: View {
 
 extension CreateDraftCollateralLoanApplicationConsentsView {
     
-    typealias Consent = CreateDraftCollateralLoanApplicationUIData.Consent
+    typealias Consent = CreateDraftCollateralLoanApplication.Consent
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    typealias State = Domain.State
-    typealias Event = Domain.Event
+    typealias State = Domain.State<Confirmation, InformerPayload>
+    typealias Event = Domain.Event<Confirmation, InformerPayload>
 }
 
 // MARK: - Previews
 
-struct CreateDraftCollateralLoanApplicationConsentsView_Previews: PreviewProvider {
+struct CreateDraftCollateralLoanApplicationConsentsView_Previews<Confirmation, InformerPayload>: PreviewProvider
+    where Confirmation: TimedOTPInputViewModel {
     
     static var previews: some View {
         
-        CreateDraftCollateralLoanApplicationConsentsView(
+        CreateDraftCollateralLoanApplicationConsentsView<Confirmation, InformerPayload>(
             state: .init(
-                data: .preview,
-                stage: .correctParameters,
-                confirmation: .preview
+                application: .preview,
+                stage: .correctParameters
             ),
-            event: {
-                print($0)
-            },
+            event: { print($0) },
             externalEvent: { print($0) },
             config: .default,
             factory: .preview
         )
         .previewDisplayName("Edit mode")
         
-        CreateDraftCollateralLoanApplicationConsentsView(
+        CreateDraftCollateralLoanApplicationConsentsView<Confirmation, InformerPayload>(
             state: .init(
-                data: .preview,
-                stage: .confirm,
-                confirmation: .preview
+                application: .preview,
+                stage: .confirm
             ),
-            event: {
-                print($0)
-            },
+            event: { print($0) },
             externalEvent: { print($0) },
             config: .default,
             factory: .preview
         )
         .previewDisplayName("Read only mode")
     }
-    
-    typealias Factory = CreateDraftCollateralLoanApplicationFactory
-    typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias Data = CreateDraftCollateralLoanApplicationUIData
 }
+

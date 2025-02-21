@@ -17,25 +17,31 @@ extension CreateDraftCollateralLoanApplicationDomain {
     
     // MARK: - Content
     
-    typealias Content = RxViewModel<State, Event, Effect>
-    
+    typealias Content = RxViewModel<State<Confirmation, InformerData>, Event<Confirmation, InformerData>, Effect>
+    typealias ContentError = CollateralLoanLandingCreateDraftCollateralLoanApplicationUI.BackendFailure<InformerData>
+
     // MARK: - Flow
     
     typealias FlowDomain = Vortex.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
+    typealias Notify = FlowDomain.Notify
     
-    typealias NotifyEvent = FlowDomain.NotifyEvent
-    typealias Notify = (NotifyEvent) -> Void
+    typealias Confirmation = TimedOTPInputViewModel
     
     enum Select: Equatable {
         
-        case showSaveConsentsResult(SaveConsentsResult)
+        case showSaveConsentsResult(SaveConsentsResult<InformerData>)
     }
     
     enum Navigation {
 
-        // TODO: реализовать 2 кейса для failure: informer и alert
-        case failure(String)
-        case success(CollateralLandingApplicationSaveConsentsResult)
+        case failure(FlowFailure)
+        case saveConsents(CollateralLandingApplicationSaveConsentsResult)
+        
+        enum FlowFailure {
+            
+            case timeout(InformerData)
+            case error(String)
+        }
     }
 }

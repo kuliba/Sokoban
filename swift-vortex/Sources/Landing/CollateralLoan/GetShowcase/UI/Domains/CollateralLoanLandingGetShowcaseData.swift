@@ -25,9 +25,10 @@ public struct CollateralLoanLandingGetShowcaseData {
         
         public enum Theme: String {
 
+            case black
             case gray
-            case white
             case unknown
+            case white
         }
         
         public init(
@@ -95,11 +96,15 @@ extension CollateralLoanLandingGetShowcaseData.Product.Theme {
     public func map() -> CollateralLoanLandingGetShowcaseTheme {
 
         switch self {
-
         case .white:
             return .white
+        
         case .gray:
             return .gray
+        
+        case .black:
+            return .black
+            
         default:
             return .white
         }

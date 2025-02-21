@@ -8,7 +8,8 @@
 import SwiftUI
 import OTPInputComponent
 
-struct CreateDraftCollateralLoanApplicationButtonView: View {
+struct CreateDraftCollateralLoanApplicationButtonView<Confirmation, InformerPayload>: View
+    where Confirmation: TimedOTPInputViewModel{
     
     let state: State
     let event: (Event) -> Void
@@ -27,7 +28,7 @@ struct CreateDraftCollateralLoanApplicationButtonView: View {
                 .cornerRadius(config.elements.button.layouts.cornerRadius)
                 .font(config.elements.button.font.font)
         }
-        .disabled(state.isButtonDisabled)
+        .disabled(!state.isButtonEnabled)
         .padding(config.elements.button.layouts.paddings)
     }
         
@@ -40,14 +41,20 @@ struct CreateDraftCollateralLoanApplicationButtonView: View {
     
     private var backgroundColor: Color {
         
-        state.isButtonDisabled
-            ? config.elements.button.colors.disabled
-            : config.elements.button.colors.background
+        state.isButtonEnabled
+            ? config.elements.button.colors.background
+            : config.elements.button.colors.disabled
     }
     
     private func tapped() {
         
-        event(state.stage == .correctParameters ? .tappedContinue : .tappedSubmit)
+        if state.stage == .correctParameters {
+            
+            event(.continue)
+        } else {
+            
+            event(.submit)
+        }
     }
 }
 
@@ -55,54 +62,26 @@ extension CreateDraftCollateralLoanApplicationButtonView {
     
     typealias Config = CreateDraftCollateralLoanApplicationConfig
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    typealias Event = Domain.Event
-    typealias State = Domain.State
+    typealias Event = Domain.Event<Confirmation, InformerPayload>
+    typealias State = Domain.State<Confirmation, InformerPayload>
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
 }
 
 // MARK: - Previews
 
-struct CreateDraftCollateralLoanApplicationButtonView_Previews: PreviewProvider {
+struct CreateDraftCollateralLoanApplicationButtonView_Previews<Confirmation, InformerPayload>: PreviewProvider
+    where Confirmation: TimedOTPInputViewModel{
     
     static var previews: some View {
         
         VStack {
             
-            CreateDraftCollateralLoanApplicationButtonView(
-                state: .init(
-                    data: .preview,
-                    stage: .correctParameters,
-                    confirmation: .preview
-                ),
+            CreateDraftCollateralLoanApplicationButtonView<Confirmation, InformerPayload>(
+                state: .init(application: .preview),
                 event: { print($0) },
                 config: .default,
                 factory: .preview
             )
-            .previewDisplayName("1st stage. Enabled button")
-            
-            CreateDraftCollateralLoanApplicationButtonView(
-                state: .init(
-                    data: .preview,
-                    stage: .correctParameters,
-                    confirmation: .preview
-                ),
-                event: { print($0) },
-                config: .default,
-                factory: .preview
-            )
-            .previewDisplayName("1st stage. Disabled button")
-
-            CreateDraftCollateralLoanApplicationButtonView(
-                state: .init(
-                    data: .preview,
-                    stage: .confirm,
-                    confirmation: .preview
-                ),
-                event: { print($0) },
-                config: .default,
-                factory: .preview
-            )
-            .previewDisplayName("2st stage")
         }
     }
     

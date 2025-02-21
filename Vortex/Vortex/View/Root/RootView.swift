@@ -360,7 +360,7 @@ struct RootView_Previews: PreviewProvider {
         
         RootView(
             viewModel: .init(
-                fastPaymentsFactory: .legacy, 
+                fastPaymentsFactory: .legacy,
                 stickerViewFactory: .preview,
                 navigationStateManager: .preview,
                 productNavigationStateManager: .preview,
@@ -371,7 +371,7 @@ struct RootView_Previews: PreviewProvider {
                 showLoginAction: { _ in
                     
                         .init(viewModel: .init(authLoginViewModel: .preview))
-                }, 
+                },
                 landingServices: .empty()
             ),
             rootViewFactory: .preview
@@ -437,7 +437,8 @@ private extension RootViewFactory {
                             
                             return .init(viewModel: $0, config: .preview, viewFactory: .preview)
                         },
-                        components: .preview
+                        components: .preview,
+                        makeCollateralLoanShowcaseWrapperView: { _,_ in .preview }
                     ),
                     productProfileViewFactory: .init(
                         makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
@@ -468,7 +469,8 @@ private extension RootViewFactory {
             makeUpdatingUserAccountButtonLabel: {
                 
                 .init(label: .init(avatar: nil, name: ""), publisher: Empty().eraseToAnyPublisher(), config: .preview)
-            }
+            },
+            makeCollateralLoanShowcaseWrapperView: { _,_ in .preview }
         )
     }
 }

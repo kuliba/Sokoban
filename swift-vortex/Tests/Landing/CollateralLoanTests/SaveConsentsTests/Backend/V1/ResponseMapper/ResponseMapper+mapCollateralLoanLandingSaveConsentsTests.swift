@@ -194,7 +194,7 @@ private extension ResponseMapper.CollateralLoanLandingSaveConsentsResponse {
         applicationID: 9,
         name: "Кредит под залог транспорта",
         amount: 99998,
-        termMonth: 365,
+        term: "365",
         collateralType: "CAR",
         interestRate: 18,
         collateralInfo: "Лада",

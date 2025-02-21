@@ -35,14 +35,16 @@ public struct DropDownTextListConfig {
         
         public let horizontalPadding: CGFloat?
         public let verticalPadding: CGFloat?
+        public let minCellHeight: CGFloat?
         
         public init(
             horizontalPadding: CGFloat? = nil,
-            verticalPadding: CGFloat? = nil
+            verticalPadding: CGFloat? = nil,
+            minCellHeight: CGFloat? = nil
         ) {
-            
             self.horizontalPadding = horizontalPadding
             self.verticalPadding = verticalPadding
+            self.minCellHeight = minCellHeight
         }
     }
     

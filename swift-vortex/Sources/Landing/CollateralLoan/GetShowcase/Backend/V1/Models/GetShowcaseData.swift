@@ -31,9 +31,10 @@ extension ResponseMapper {
             
             public enum Theme: String {
 
+                case black
                 case gray
-                case white
                 case unknown
+                case white
             }
             
             public init(
