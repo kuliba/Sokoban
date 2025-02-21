@@ -298,7 +298,15 @@ struct ProductProfileView: View {
         
         switch sheet.type {
         case let .operationDetail(operationDetail):
-            viewFactory.components.makeOperationDetailView(operationDetail, productProfileViewFactory.makeRepeatButtonView, { viewModel.payment(operationID: operationDetail.operationId, productStatement: operationDetail.productStatement) })
+            switch operationDetail {
+            case let .legacy(operationDetail):
+                viewFactory.components.makeOperationDetailView(operationDetail, productProfileViewFactory.makeRepeatButtonView, { viewModel.payment(operationID: operationDetail.operationId, productStatement: operationDetail.productStatement) })
+                
+            case let .v3(v3):
+                Text(String(describing: v3))
+                    .padding(.vertical, 40)
+                    .edgesIgnoringSafeArea(.bottom)
+            }
             
         case let .optionsPannel(viewModel):
             ProductProfileOptionsPannelView(viewModel: viewModel)
@@ -734,9 +742,9 @@ extension QRViewModel {
 
 extension OperationDetailFactory {
     
-    static let preview: Self = .init(makeOperationDetailViewModel: { _,_ in
-            .sampleComplete
-    })
+    static let preview: Self = .init(
+        makeOperationDetailViewModel: { _,_ in .legacy(.sampleComplete) }
+    )
 }
 
 extension Date {

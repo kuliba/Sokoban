@@ -1101,13 +1101,13 @@ private extension ProductProfileViewModel {
                 switch action {
                 case let payload as ProductProfileHistoryViewModelAction.DidTapped.Detail:
                     
-                    guard let operationDetailViewModel = operationDetailFactory.makeOperationDetailViewModel(
+                    guard let operationDetail = operationDetailFactory.makeOperationDetailViewModel(
                         product.activeProductId,
                         payload.statementId
                     ) else { return }
                     
-                    self.bottomSheet = .init(type: .operationDetail(operationDetailViewModel))
-                    self.bind(operationDetailViewModel)
+                    self.bottomSheet = .init(type: .operationDetail(operationDetail))
+                    self.bind(operationDetail)
                     
                 default:
                     break
@@ -1138,6 +1138,17 @@ private extension ProductProfileViewModel {
                 }
                 
             }.store(in: &bindings)
+    }
+    
+    func bind(_ operationDetail: OperationDetailFactory.OperationDetail) {
+        
+        switch operationDetail {
+        case let .legacy(operationDetailViewModel):
+            bind(operationDetailViewModel)
+            
+        case .v3:
+            break
+        }
     }
     
     func bind(_ operationDetailViewModel: OperationDetailViewModel) {
@@ -2537,7 +2548,7 @@ extension ProductProfileViewModel {
         
         enum Kind {
             
-            case operationDetail(OperationDetailViewModel)
+            case operationDetail(OperationDetail)
             case optionsPannel(ProductProfileOptionsPannelView.ViewModel)
             case optionsPanelNew([PanelButtonDetails])
             case meToMe(PaymentsMeToMeViewModel)
@@ -2545,6 +2556,8 @@ extension ProductProfileViewModel {
             case printForm(PrintFormView.ViewModel)
             case placesMap(PlacesViewModel)
             case info(OperationDetailInfoViewModel)
+            
+            typealias OperationDetail = OperationDetailFactory.OperationDetail
         }
     }
     
