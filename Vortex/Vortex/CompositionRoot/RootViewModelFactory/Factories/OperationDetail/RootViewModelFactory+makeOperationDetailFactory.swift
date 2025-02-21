@@ -17,7 +17,7 @@ extension RootViewModelFactory {
         productStatementID: ProductStatementData.ID
     ) -> OperationDetailViewModel? {
         
-        guard let (statementData, productData) = model.statementsWithProductData(
+        guard let (statementData, productData) = model.nonFinanceStatementsWithProductData(
             for: productID,
             and: productStatementID
         ) else { return nil }
@@ -38,22 +38,47 @@ extension RootViewModelFactory {
 
 extension Model {
     
-    func statementsWithProductData(
+    func nonFinanceStatementsWithProductData(
         for productID: ProductData.ID,
         and statementID: ProductStatementData.ID
     ) -> (ProductStatementData, ProductData)? {
         
-        guard let storage = statements.value[productID],
-              let statements = storage.statements
-            .filter({ $0.operationId == statementID })
-            .sorted(by: { ($0.tranDate ?? $0.date) > ($1.tranDate ?? $1.date) })
-            .first,
+        guard let statements = latestStatements(for: productID, and: statementID),
               statements.paymentDetailType != .notFinance,
-              let productData = products.value.values
-            .flatMap({ $0 })
-            .first(where: { $0.id == productID })
+              let productData = productData(for: productID)
         else { return nil }
         
         return (statements, productData)
+    }
+    
+    func latestStatements(
+        for productID: ProductData.ID,
+        and statementID: ProductStatementData.ID
+    ) -> ProductStatementData? {
+        
+        statements.value[productID]?.latest(for: productID, and: statementID)
+    }
+    
+    func productData(
+        for productID: ProductData.ID
+    ) -> ProductData? {
+        
+        return products.value.values
+            .flatMap { $0 }
+            .first { $0.id == productID }
+    }
+}
+
+extension ProductStatementsStorage {
+    
+    func latest(
+        for productID: ProductData.ID,
+        and statementID: ProductStatementData.ID
+    ) -> ProductStatementData? {
+        
+        return statements
+            .filter { $0.operationId == statementID }
+            .sorted { ($0.tranDate ?? $0.date) > ($1.tranDate ?? $1.date) }
+            .first
     }
 }
