@@ -64,10 +64,12 @@ extension RootViewModelFactory {
                 completion(.failure(failure))
                 
             case let .success(enhancedResponse):
-                let model = makeOperationDetailModel(initialState: .init(
-                    details: .pending,
-                    response: enhancedResponse
-                ))
+                let model = makeOperationDetailModelByPaymentID(
+                    initialState: .init(
+                        details: .pending,
+                        response: enhancedResponse
+                    )
+                )
                 model.event(.load)
                 
                 completion(.success(model))
@@ -149,7 +151,9 @@ extension RootViewModelFactory {
                     response: .stub(digest: digest, status: status)
                 )
                 
-                let model = makeOperationDetailModel(initialState: initialState)
+                let model = makeOperationDetailModelByPaymentID(
+                    initialState: initialState
+                )
                 model.event(.load)
                 
                 completion(.success(model))
