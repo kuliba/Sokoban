@@ -10,6 +10,5 @@ import Foundation
 public enum SavingsAccountContentEffect: Equatable {
     
     case dismissInformer
-    case getVerificationCode
     case load
 }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension View {
+public extension View {
     
     func rounded(
         _ config: RoundedConfig

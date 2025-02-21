@@ -7,6 +7,7 @@
 
 import LoadableState
 import SwiftUI
+import UIPrimitives
 
 public struct OrderAccountView<Confirmation, ConfirmationView>: View
 where ConfirmationView: View{
@@ -67,8 +68,10 @@ private extension OrderAccountView {
         ProductView(
             data: .sample,
             config: config,
-            makeIconView: { _ in EmptyView() })
-        .rounded(RoundedConfig(padding: config.padding, cornerRadius: config.cornerRadius, background: config.background))
+            makeIconView: { _ in EmptyView() }, 
+            isLoading: true
+        )
+        .rounded(config.roundedConfig)
     }
     
     @ViewBuilder
@@ -134,9 +137,10 @@ private extension OrderAccountView {
         ProductView(
             data: product,
             config: config,
-            makeIconView: factory.makeIconView
+            makeIconView: factory.makeIconView, 
+            isLoading: state.loadableForm.isLoading
         )
-        .rounded(RoundedConfig(padding: config.padding, cornerRadius: config.cornerRadius, background: config.background))
+        .rounded(config.roundedConfig)
     }
     
     func product(
@@ -156,4 +160,12 @@ private extension OrderAccountView {
 private extension Product {
     
     static let sample: Self = .init(designMd5hash: "", header: .init(title: "", subtitle: ""), openValue: "", orderServiceOption: "")
+}
+
+private extension OrderSavingsAccountConfig {
+    
+    var roundedConfig: RoundedConfig {
+        
+        RoundedConfig(padding: padding, cornerRadius: cornerRadius, background: background)
+    }
 }

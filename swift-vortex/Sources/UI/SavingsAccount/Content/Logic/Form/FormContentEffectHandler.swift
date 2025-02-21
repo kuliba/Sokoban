@@ -11,14 +11,11 @@ public final class FormContentEffectHandler<Landing, InformerPayload> {
     
     private let load: Load
     private var oldLanding: Landing? = nil
-    private let getVerificationCode: GetVerificationCode
 
     public init(
-        load: @escaping Load,
-        getVerificationCode: @escaping GetVerificationCode
+        load: @escaping Load
     ) {
         self.load = load
-        self.getVerificationCode = getVerificationCode
     }
 }
 
@@ -44,11 +41,6 @@ public extension FormContentEffectHandler {
             }
         case .dismissInformer:
             dispatch(.dismissInformer(oldLanding))
-            
-        case .getVerificationCode:
-            getVerificationCode {
-                dispatch(.verificationCode($0))
-            }
         }
     }
 }

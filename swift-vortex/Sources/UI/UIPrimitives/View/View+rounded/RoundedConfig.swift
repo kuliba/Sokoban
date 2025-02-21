@@ -2,7 +2,7 @@
 //  RoundedConfig.swift
 //  
 //
-//  Created by Igor Malyarov on 09.02.2025.
+//  Created by Andryusina Nataly on 21.02.2025.
 //
 
 import SwiftUI

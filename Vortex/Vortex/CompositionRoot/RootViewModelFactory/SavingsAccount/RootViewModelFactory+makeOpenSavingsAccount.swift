@@ -38,12 +38,6 @@ extension RootViewModelFactory {
             mapError: SavingsAccountDomain.ContentError.init(error:)
         )
 
-        let getVerificationCode = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createPrepareOpenSavingsAccountRequest,
-            mapResponse: RemoteServices.ResponseMapper.mapPrepareOpenSavingsAccountResponse,
-            mapError: SavingsAccountDomain.ContentError.init(error:)
-        )
-
         let reducer = SavingsAccountDomain.OpenAccountContentReducer()
         let effectHandler = SavingsAccountDomain.OpenAccountContentEffectHandler(
             load: { dismissInformer, completion in
@@ -56,19 +50,6 @@ extension RootViewModelFactory {
                     }
 
                     completion($0)
-                }
-            },
-            getVerificationCode: { completion in
-                
-                getVerificationCode(()) {
-                    
-                    switch $0 {
-                    case let .failure(failure):
-                        completion(.failure(failure))
-                        
-                    default:
-                        completion(.success(1))
-                    }
                 }
             }
         )
