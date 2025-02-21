@@ -2880,6 +2880,9 @@
 		836DE2EE2ACAE86C00D4C754 /* C2BSubscribeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836DE2ED2ACAE86C00D4C754 /* C2BSubscribeFactory.swift */; };
 		836E333F2BFE1D3A006848E2 /* Dictionary+ProductData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836E333E2BFE1D3A006848E2 /* Dictionary+ProductData.swift */; };
 		836E33412BFE1E50006848E2 /* DictionaryExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836E33402BFE1E50006848E2 /* DictionaryExtensionsTests.swift */; };
+		8372A8AA2D6851C900CD1CFB /* OpenSavingsAccountDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8372A8A92D6851C900CD1CFB /* OpenSavingsAccountDomain.swift */; };
+		8372A8AC2D6855A400CD1CFB /* ViewComponents+makeOrderSavingsAccountCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8372A8AB2D6855A400CD1CFB /* ViewComponents+makeOrderSavingsAccountCompleteView.swift */; };
+		8372A8AE2D6856E200CD1CFB /* OrderSavingsAccountCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8372A8AD2D6856E200CD1CFB /* OrderSavingsAccountCompleteView.swift */; };
 		8375C01E2C0851D900E4498E /* PaymentsTransfersViewModelGetSectionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8375C01D2C0851D900E4498E /* PaymentsTransfersViewModelGetSectionsTests.swift */; };
 		8376C1242C08950200B482FC /* Model+makeSectionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8376C1232C08950200B482FC /* Model+makeSectionsTests.swift */; };
 		8376C1262C08CF0100B482FC /* MyProductsViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8376C1252C08CF0100B482FC /* MyProductsViewFactory.swift */; };
@@ -2918,7 +2921,7 @@
 		8399147F2C6DE8BD00E9D275 /* RequestFactory+createGetProductListByTypeV6Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8399147E2C6DE8BD00E9D275 /* RequestFactory+createGetProductListByTypeV6Request.swift */; };
 		839914812C6E0CE900E9D275 /* RequestFactory+createGetProductListByTypeV6RequestTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839914802C6E0CE900E9D275 /* RequestFactory+createGetProductListByTypeV6RequestTest.swift */; };
 		839914832C6E2EF000E9D275 /* Model+ProductsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839914822C6E2EF000E9D275 /* Model+ProductsTests.swift */; };
-		83996F882D67935E00F31950 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83996F872D67935E00F31950 /* File.swift */; };
+		83996F882D67935E00F31950 /* ViewComponents+makeOpenSavingsAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83996F872D67935E00F31950 /* ViewComponents+makeOpenSavingsAccountView.swift */; };
 		839E53072BC996EC007192C2 /* ProductProfileViewModel+createCardGuardianPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839E53062BC996EC007192C2 /* ProductProfileViewModel+createCardGuardianPanel.swift */; };
 		83A219B02A4D8FD500A34482 /* ProductConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A219AF2A4D8FD500A34482 /* ProductConfig.swift */; };
 		83A219B22A4D940900A34482 /* ProductConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A219B12A4D940900A34482 /* ProductConfigTests.swift */; };
@@ -6598,6 +6601,9 @@
 		836DE2ED2ACAE86C00D4C754 /* C2BSubscribeFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C2BSubscribeFactory.swift; sourceTree = "<group>"; };
 		836E333E2BFE1D3A006848E2 /* Dictionary+ProductData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+ProductData.swift"; sourceTree = "<group>"; };
 		836E33402BFE1E50006848E2 /* DictionaryExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryExtensionsTests.swift; sourceTree = "<group>"; };
+		8372A8A92D6851C900CD1CFB /* OpenSavingsAccountDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSavingsAccountDomain.swift; sourceTree = "<group>"; };
+		8372A8AB2D6855A400CD1CFB /* ViewComponents+makeOrderSavingsAccountCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeOrderSavingsAccountCompleteView.swift"; sourceTree = "<group>"; };
+		8372A8AD2D6856E200CD1CFB /* OrderSavingsAccountCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSavingsAccountCompleteView.swift; sourceTree = "<group>"; };
 		8375C01D2C0851D900E4498E /* PaymentsTransfersViewModelGetSectionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewModelGetSectionsTests.swift; sourceTree = "<group>"; };
 		8376C1232C08950200B482FC /* Model+makeSectionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+makeSectionsTests.swift"; sourceTree = "<group>"; };
 		8376C1252C08CF0100B482FC /* MyProductsViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProductsViewFactory.swift; sourceTree = "<group>"; };
@@ -6633,7 +6639,7 @@
 		8399147E2C6DE8BD00E9D275 /* RequestFactory+createGetProductListByTypeV6Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetProductListByTypeV6Request.swift"; sourceTree = "<group>"; };
 		839914802C6E0CE900E9D275 /* RequestFactory+createGetProductListByTypeV6RequestTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetProductListByTypeV6RequestTest.swift"; sourceTree = "<group>"; };
 		839914822C6E2EF000E9D275 /* Model+ProductsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+ProductsTests.swift"; sourceTree = "<group>"; };
-		83996F872D67935E00F31950 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		83996F872D67935E00F31950 /* ViewComponents+makeOpenSavingsAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeOpenSavingsAccountView.swift"; sourceTree = "<group>"; };
 		839E53062BC996EC007192C2 /* ProductProfileViewModel+createCardGuardianPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductProfileViewModel+createCardGuardianPanel.swift"; sourceTree = "<group>"; };
 		83A219AF2A4D8FD500A34482 /* ProductConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductConfig.swift; sourceTree = "<group>"; };
 		83A219B12A4D940900A34482 /* ProductConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductConfigTests.swift; sourceTree = "<group>"; };
@@ -11935,6 +11941,7 @@
 		2A9ACA502D54F21300BF5D6E /* OpenProduct */ = {
 			isa = PBXGroup;
 			children = (
+				8372A8A82D6851B300CD1CFB /* OpenSavingsAccount */,
 				2A9ACA532D54F2C300BF5D6E /* OpenProduct.swift */,
 				2A9ACA512D54F22500BF5D6E /* OpenProductType.swift */,
 				2A9ACA552D54F46C00BF5D6E /* OpenCard */,
@@ -16433,6 +16440,14 @@
 			path = LandingsAdapters;
 			sourceTree = "<group>";
 		};
+		8372A8A82D6851B300CD1CFB /* OpenSavingsAccount */ = {
+			isa = PBXGroup;
+			children = (
+				8372A8A92D6851C900CD1CFB /* OpenSavingsAccountDomain.swift */,
+			);
+			path = OpenSavingsAccount;
+			sourceTree = "<group>";
+		};
 		8377ED022C36B51100493D17 /* ControlPanel */ = {
 			isa = PBXGroup;
 			children = (
@@ -16565,7 +16580,9 @@
 		83996F862D67934F00F31950 /* SavingsAccount */ = {
 			isa = PBXGroup;
 			children = (
-				83996F872D67935E00F31950 /* File.swift */,
+				83996F872D67935E00F31950 /* ViewComponents+makeOpenSavingsAccountView.swift */,
+				8372A8AB2D6855A400CD1CFB /* ViewComponents+makeOrderSavingsAccountCompleteView.swift */,
+				8372A8AD2D6856E200CD1CFB /* OrderSavingsAccountCompleteView.swift */,
 			);
 			path = SavingsAccount;
 			sourceTree = "<group>";
@@ -21579,6 +21596,7 @@
 				0B11A78A2922C8B400C9BDD0 /* QRFailedView.swift in Sources */,
 				831AB0E429CB22670091B6FD /* Model+PaymentsServices.swift in Sources */,
 				77A76A7A27FAFD3E00A271B3 /* AtmTypeData.swift in Sources */,
+				8372A8AA2D6851C900CD1CFB /* OpenSavingsAccountDomain.swift in Sources */,
 				0B283FBF26FBCA0A00B5E925 /* Router.swift in Sources */,
 				0C8CF960282179E80047DDAE /* SendMailView.swift in Sources */,
 				0B22AEAC26CE8DD100B11E7F /* GKHDataSorted.swift in Sources */,
@@ -22748,6 +22766,7 @@
 				77A76A9427FB69D200A271B3 /* AtmCollectionViewCell.swift in Sources */,
 				0BB015DA26C9378200E7A85B /* GKHOperatorsModel.swift in Sources */,
 				2A887DE22D1700C50094840E /* GetInfoRepeatPaymentDomain.GetInfoRepeatPayment+ext.swift in Sources */,
+				8372A8AE2D6856E200CD1CFB /* OrderSavingsAccountCompleteView.swift in Sources */,
 				2AD15D1B2C1A02E7003329C7 /* PaymentCompleteViewFactory.swift in Sources */,
 				0C42457C2846D51700899EB2 /* Model+Contacts.swift in Sources */,
 				832F83112BB8292600C97BBD /* CarouselComponentConfig+iVortex.swift in Sources */,
@@ -22894,7 +22913,7 @@
 				2A5B23252BEE379E00270D50 /* ServicePickerFlowView.swift in Sources */,
 				0BB24AB126F0C3DC00DDA4F6 /* GetCardStatementDecodableModel.swift in Sources */,
 				689A99AE2779E73600D1FDAE /* OperationDetailInfoViewModel.swift in Sources */,
-				83996F882D67935E00F31950 /* File.swift in Sources */,
+				83996F882D67935E00F31950 /* ViewComponents+makeOpenSavingsAccountView.swift in Sources */,
 				2A3BD6072B6CDD57009B16F7 /* NanoServices+loggingRemoteService.swift in Sources */,
 				77F9F2602A45BF3800699433 /* OperationDetailData+ParameterReducerCase.swift in Sources */,
 				2A1A8E562B27172E008B896D /* RootViewModelFactory+makeMakeQRScannerModel.swift in Sources */,
@@ -22966,6 +22985,7 @@
 				834731E32A1388A6002590A3 /* Model+PaymentsTransfersServices.swift in Sources */,
 				77499C462773C0D100F6C079 /* ButtonStyles.swift in Sources */,
 				83CE89FB2BC417BA008CA98C /* ProductNavigationStateManager+ButtonEvent.swift in Sources */,
+				8372A8AC2D6855A400CD1CFB /* ViewComponents+makeOrderSavingsAccountCompleteView.swift in Sources */,
 				77448C0B2872F54D009EEEA8 /* PDFDocumentView.swift in Sources */,
 				5066506F2857D9130039A745 /* Model+Account.swift in Sources */,
 				7744944927FED1BE001E2B9E /* AtmFilter.swift in Sources */,
