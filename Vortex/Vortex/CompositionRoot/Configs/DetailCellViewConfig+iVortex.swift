@@ -33,6 +33,7 @@ extension DetailCellViewConfig.ProductConfig {
     
     static let iVortex: Self = .init(
         balance: .init(textFont: .textBodyMM14200(), textColor: .textSecondary),
+        balanceTrailingPadding: 40,
         description: .init(textFont: .textBodySR12160(), textColor: .textPlaceholder),
         hSpacing: 16,
         iconSize: .init(width: 32, height: 32),

@@ -45,6 +45,7 @@ public struct DetailCellViewConfig: Equatable {
     public struct ProductConfig: Equatable {
         
         public let balance: TextConfig
+        public let balanceTrailingPadding: CGFloat
         public let description: TextConfig
         public let hSpacing: CGFloat
         public let iconSize: CGSize
@@ -54,6 +55,7 @@ public struct DetailCellViewConfig: Equatable {
         
         public init(
             balance: TextConfig,
+            balanceTrailingPadding: CGFloat,
             description: TextConfig,
             hSpacing: CGFloat,
             iconSize: CGSize,
@@ -62,6 +64,7 @@ public struct DetailCellViewConfig: Equatable {
             vStackVPadding: CGFloat
         ) {
             self.balance = balance
+            self.balanceTrailingPadding = balanceTrailingPadding
             self.description = description
             self.hSpacing = hSpacing
             self.iconSize = iconSize

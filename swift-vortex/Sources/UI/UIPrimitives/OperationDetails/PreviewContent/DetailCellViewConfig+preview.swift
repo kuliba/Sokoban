@@ -24,6 +24,7 @@ extension DetailCellViewConfig.ProductConfig {
     
     static let preview: Self = .init(
         balance: .init(textFont: .body, textColor: .primary),
+        balanceTrailingPadding: 40,
         description: .init(textFont: .caption, textColor: .secondary),
         hSpacing: 16,
         iconSize: .init(width: 32, height: 32),
