@@ -7,6 +7,7 @@
 
 import RemoteServices
 import RxViewModel
+import ProductSelectComponent
 
 extension RootViewModelFactory {
     
@@ -15,22 +16,25 @@ extension RootViewModelFactory {
         initialState: OperationDetailDomain.State
     ) -> OperationDetailDomain.Model {
         
-        let load = onBackground(
-            makeRequest: RequestFactory.createGetOperationDetailByPaymentIDRequestV3,
-            mapResponse: RemoteServices.ResponseMapper.mapGetOperationDetailByPaymentIDResponse
+        return makeOperationDetailModel(
+            initialState: initialState,
+            load: getOperationDetailByPaymentID
         )
+    }
+    
+    typealias LoadOperationDetailCompletion = (Result<OperationDetailDomain.State.Details, Error>) -> Void
+    typealias LoadOperationDetail = (OperationDetailDomain.EnhancedPayload, @escaping LoadOperationDetailCompletion) -> Void
+    
+    @inlinable
+    func makeOperationDetailModel(
+        initialState: OperationDetailDomain.State,
+        load: @escaping LoadOperationDetail
+    ) -> OperationDetailDomain.Model {
         
         let reducer = OperationDetailDomain.Reducer()
         let effectHandler = OperationDetailDomain.EffectHandler { completion in
             
-            load(.init(initialState.response.paymentOperationDetailID)) {
-                
-                completion($0.map { $0.details(
-                    formattedAmount: initialState.response.formattedAmount,
-                    product: initialState.response.product,
-                    status: initialState.response.status
-                )})
-            }
+            load(initialState.payload, completion)
         }
         
         return .init(
@@ -47,9 +51,31 @@ extension RootViewModelFactory {
             scheduler: schedulers.main
         )
     }
+    
+    @inlinable
+    func getOperationDetailByPaymentID(
+        payload: OperationDetailDomain.EnhancedPayload,
+        completion: @escaping (Result<OperationDetailDomain.State.Details, Error>) -> Void
+    ) {
+        let load = onBackground(
+            makeRequest: RequestFactory.createGetOperationDetailByPaymentIDRequestV3,
+            mapResponse: RemoteServices.ResponseMapper.mapGetOperationDetailByPaymentIDResponse
+        )
+        
+        load(.init(payload.paymentOperationDetailID)) {
+            
+            completion($0.map { $0.details(
+                formattedAmount: payload.formattedAmount,
+                product: payload.product,
+                status: payload.status
+            )})
+        }
+    }
 }
 
-extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse {
+// MARK: - Adapters
+
+private extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse {
     
     func details(
         formattedAmount: String?,
@@ -77,5 +103,29 @@ extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse {
             upno: upno,
             transferNumber: transferNumber
         )
+    }
+}
+
+private extension OperationDetailDomain.State {
+    
+    var payload: OperationDetailDomain.EnhancedPayload {
+        
+        return .init(
+            formattedAmount: response.formattedAmount,
+            paymentOperationDetailID: response.paymentOperationDetailID,
+            product: response.product,
+            status: response.status
+        )
+    }
+}
+
+extension OperationDetailDomain {
+    
+    struct EnhancedPayload: Equatable {
+        
+        let formattedAmount: String?
+        let paymentOperationDetailID: Int
+        let product: ProductSelect.Product
+        let status: OperationDetailDomain.State.Status
     }
 }
