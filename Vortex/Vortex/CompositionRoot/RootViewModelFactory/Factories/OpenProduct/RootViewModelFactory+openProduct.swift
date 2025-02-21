@@ -16,12 +16,14 @@ extension RootViewModelFactory {
         
         switch type {
         case .account:        return .unknown
-        case .card:           return .card(openCardProduct(notify: notify))
+        case .card:           
+            return .card(openCardProduct(notify: notify))
         case .deposit:        return .unknown
         case .insurance:      return .unknown
         case .loan:           return .unknown
         case .mortgage:       return .unknown
-        case .savingsAccount: return .savingsAccount(makeSavingsNodes(dismiss))
+        case .savingsAccount: 
+            return .savingsAccount(makeSavingsNodes(dismiss))
         case .sticker:        return .unknown
         }
     }
