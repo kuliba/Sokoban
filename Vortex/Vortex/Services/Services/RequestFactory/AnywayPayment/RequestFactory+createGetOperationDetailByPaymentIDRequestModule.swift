@@ -7,6 +7,7 @@
 
 import AnywayPaymentBackend
 import Foundation
+import GetOperationDetailService
 import RemoteServices
 
 extension Vortex.RequestFactory {
@@ -36,6 +37,20 @@ extension Vortex.RequestFactory {
         return try RemoteServices.RequestFactory.createGetOperationDetailByPaymentIDRequest(
             url: endpointURL,
             payload: payload
+        )
+    }
+    
+    static func createGetOperationDetailRequestV3(
+        detailID: Int
+    ) throws -> URLRequest {
+        
+        let base = Config.serverAgentEnvironment.baseURL
+        let endpoint = Services.Endpoint.getOperationDetailV3
+        let endpointURL = try! endpoint.url(withBase: base)
+        
+        return try RemoteServices.RequestFactory.createGetOperationDetailRequest(
+            url: endpointURL,
+            detailID: detailID
         )
     }
 }
