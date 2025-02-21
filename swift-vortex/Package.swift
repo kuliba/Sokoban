@@ -2435,6 +2435,7 @@ private extension Target {
             .customDump,
             // internal modules
             .getOperationDetailService,
+            .remoteServices,
         ],
         path: "Tests/Services/\(String.getOperationDetailService)Tests"
     )
