@@ -74,7 +74,7 @@ struct CollateralLoanLandingWrapperView: View {
                     
                 case let .createDraftApplication(product):
                     let payload = state.payload(product)
-                    binder.flow.event(.select(.createDraftCollateralLoanApplication(payload)))
+                    binder.flow.event(.select(.createDraft(payload)))
                     
                 case let .openDocument(link):
                     if let url = URL(string: link) {
@@ -97,7 +97,7 @@ struct CollateralLoanLandingWrapperView: View {
     ) -> some View {
         
         switch destination {
-        case let .createDraftCollateralLoanApplication(binder):
+        case let .createDraft(binder):
             CreateDraftCollateralLoanApplicationWrapperView(
                 binder: binder,
                 config: .default,
@@ -182,8 +182,8 @@ extension GetCollateralLandingDomain.Navigation {
     var destination: Destination? {
         
         switch self {
-        case let .createDraftCollateralLoanApplication(binder):
-            return .createDraftCollateralLoanApplication(binder)
+        case let .createDraft(binder):
+            return .createDraft(binder)
             
         case .showBottomSheet:
             return nil
@@ -192,13 +192,13 @@ extension GetCollateralLandingDomain.Navigation {
     
     enum Destination {
         
-        case createDraftCollateralLoanApplication(Domain.Binder)
+        case createDraft(Domain.Binder)
     }
     
     var bottomSheet: BottomSheet? {
         
             switch self {
-            case .createDraftCollateralLoanApplication:
+            case .createDraft:
                 return nil
                 
             case let .showBottomSheet(id):
@@ -219,7 +219,7 @@ extension GetCollateralLandingDomain.Navigation.Destination: Identifiable {
     var id: ObjectIdentifier {
         
         switch self {
-        case let .createDraftCollateralLoanApplication(binder): return .init(binder)
+        case let .createDraft(binder): return .init(binder)
         }
     }
 }

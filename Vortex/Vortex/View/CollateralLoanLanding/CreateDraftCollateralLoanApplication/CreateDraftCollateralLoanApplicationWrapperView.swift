@@ -48,8 +48,8 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     
     @ViewBuilder
     private func makeContentView(
-        state: State<Confirmation, InformerData>,
-        event: @escaping (Event<Confirmation, InformerData>) -> Void
+        state: State,
+        event: @escaping (Event) -> Void
     ) -> some View {
         
         content(state: state, event: event)
@@ -57,8 +57,8 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     }
 
     private func content(
-        state: State<Confirmation, InformerData>,
-        event: @escaping (Event<Confirmation, InformerData>) -> Void
+        state: State,
+        event: @escaping (Event) -> Void
     ) -> some View {
 
         CreateDraftCollateralLoanApplicationView(
@@ -79,7 +79,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         }
     }
     
-    func buttonBack(event: @escaping (Event<TimedOTPInputViewModel, InformerData>) -> Void) -> some View {
+    func buttonBack(event: @escaping (Event) -> Void) -> some View {
         
         Button(action: { event(.back) }) {
             
@@ -182,8 +182,8 @@ extension CreateDraftCollateralLoanApplicationWrapperView {
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    typealias State = Domain.State
-    typealias Event = Domain.Event
+    typealias State = Domain.ContentState
+    typealias Event = Domain.ContentEvent
     typealias SaveConsentsResult = Domain.SaveConsentsResult
     typealias MakeAnywayElementModelMapper = () -> AnywayElementModelMapper
     typealias Confirmation = CreateDraftCollateralLoanApplicationDomain.Confirmation
