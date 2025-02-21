@@ -6,18 +6,19 @@
 //
 
 import RemoteServices
-import RxViewModel
-import ProductSelectComponent
 
 extension RootViewModelFactory {
     
     @inlinable
     func makeOperationDetailModelByPaymentID(
-        initialState: OperationDetailDomain.State
+        response: OperationDetailDomain.State.EnhancedResponse
     ) -> OperationDetailDomain.Model {
         
         return makeOperationDetailModel(
-            initialState: initialState,
+            initialState: .init(
+                details: .pending,
+                response: response
+            ),
             load: getOperationDetailByPaymentID
         )
     }

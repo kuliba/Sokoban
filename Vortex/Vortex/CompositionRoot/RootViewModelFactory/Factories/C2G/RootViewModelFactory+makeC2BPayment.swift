@@ -65,10 +65,7 @@ extension RootViewModelFactory {
                 
             case let .success(enhancedResponse):
                 let model = makeOperationDetailModelByPaymentID(
-                    initialState: .init(
-                        details: .pending,
-                        response: enhancedResponse
-                    )
+                    response: enhancedResponse
                 )
                 model.event(.load)
                 
@@ -146,13 +143,8 @@ extension RootViewModelFactory {
                 completion(.failure(.server("server error")))
                 
             case "99999999999999999999":
-                let initialState = OperationDetailDomain.State(
-                    details: .pending,
-                    response: .stub(digest: digest, status: status)
-                )
-                
                 let model = makeOperationDetailModelByPaymentID(
-                    initialState: initialState
+                    response: .stub(digest: digest, status: status)
                 )
                 model.event(.load)
                 
