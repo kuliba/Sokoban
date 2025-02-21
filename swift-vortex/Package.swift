@@ -2425,6 +2425,9 @@ private extension Target {
     
     static let getOperationDetailService = target(
         name: .getOperationDetailService,
+        dependencies: [
+            .remoteServices
+        ],
         path: "Sources/Services/\(String.getOperationDetailService)"
     )
     
