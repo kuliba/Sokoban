@@ -55,4 +55,8 @@ public extension FormContentEffectHandler {
     typealias DismissInformer = () -> Void
     typealias LoadLandingCompletion = (Result<Landing, BackendFailure<InformerPayload>>) -> Void
     typealias Load = (@escaping DismissInformer, @escaping LoadLandingCompletion) -> Void
+    
+    typealias GetVerificationCodeResult = Result<Int, BackendFailure<InformerPayload>>
+    typealias GetVerificationCodeCompletion = (GetVerificationCodeResult) -> Void
+    typealias GetVerificationCode = (@escaping GetVerificationCodeCompletion) -> Void
 }
