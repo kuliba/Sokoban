@@ -1763,6 +1763,30 @@ private extension ProductProfileViewModel {
 
 // MARK: - Reducers
 
+extension Model {
+    
+    func latestStatementWithProductData(
+        for productID: ProductData.ID,
+        and statementID: ProductStatementData.ID
+    ) -> (ProductStatementData, ProductData)? {
+        
+        guard let storage = statements.value[productID],
+              let latestStatementData = storage.statements
+            .filter({ $0.operationId == statementID })
+            .sorted(by: { ($0.tranDate ?? $0.date) > ($1.tranDate ?? $1.date) })
+            .first,
+              latestStatementData.paymentDetailType != .notFinance,
+              let productData = products.value.values
+            .flatMap({ $0 })
+            .first(where: { $0.id == productID })
+        else { return nil }
+        
+        return (latestStatementData, productData)
+    }
+}
+
+// MARK: - Reducers
+
 private extension ProductProfileViewModel {
     
     func makeAlert(_ message: String) {
