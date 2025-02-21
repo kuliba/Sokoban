@@ -70,6 +70,7 @@ let package = Package(
         .cvvPINServices,
         .vortexCrypto,
         .genericRemoteService,
+        .getOperationDetailService,
         .getProcessingSessionCodeService,
         .getInfoRepeatPaymentService,
         .serverAgent,
@@ -254,6 +255,8 @@ let package = Package(
         .vortexCryptoTests,
         .genericRemoteService,
         .genericRemoteServiceTests,
+        .getOperationDetailService,
+        .getOperationDetailServiceTests,
         .getProcessingSessionCodeService,
         .getProcessingSessionCodeServiceTests,
         .getInfoRepeatPaymentService,
@@ -1054,6 +1057,13 @@ private extension Product {
         name: .vortexCrypto,
         targets: [
             .vortexCrypto,
+        ]
+    )
+    
+    static let getOperationDetailService = library(
+        name: .getOperationDetailService,
+        targets: [
+            .getOperationDetailService,
         ]
     )
     
@@ -2411,6 +2421,23 @@ private extension Target {
             .genericRemoteService,
         ],
         path: "Tests/Services/\(String.genericRemoteServiceTests)"
+    )
+    
+    static let getOperationDetailService = target(
+        name: .getOperationDetailService,
+        path: "Sources/Services/\(String.getOperationDetailService)"
+    )
+    
+    static let getOperationDetailServiceTests = testTarget(
+        name: .getOperationDetailServiceTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .getOperationDetailService,
+            .remoteServices,
+        ],
+        path: "Tests/Services/\(String.getOperationDetailService)Tests"
     )
     
     static let getProcessingSessionCodeService = target(
@@ -4068,6 +4095,10 @@ private extension Target.Dependency {
         name: .genericRemoteService
     )
     
+    static let getOperationDetailService = byName(
+        name: .getOperationDetailService
+    )
+    
     static let getProcessingSessionCodeService = byName(
         name: .getProcessingSessionCodeService
     )
@@ -4215,6 +4246,7 @@ private extension String {
     static let orderCardLandingBackendTests = "OrderCardLandingBackendTests"
     
     static let createCardApplicationBackend = "CreateCardApplication"
+    
     // MARK: - UI
     
     static let activateSlider = "ActivateSlider"
@@ -4467,6 +4499,9 @@ private extension String {
     
     static let genericRemoteService = "GenericRemoteService"
     static let genericRemoteServiceTests = "GenericRemoteServiceTests"
+    
+    static let getOperationDetailService = "GetOperationDetailService"
+    static let getOperationDetailServiceTests = "GetOperationDetailServiceTests"
     
     static let getProcessingSessionCodeService = "GetProcessingSessionCodeService"
     static let getProcessingSessionCodeServiceTests = "GetProcessingSessionCodeServiceTests"

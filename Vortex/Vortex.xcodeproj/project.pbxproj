@@ -4683,6 +4683,7 @@
 		2A5AEF2B2B7A3DD900E935B6 /* FastPaymentsSettingsConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FastPaymentsSettingsConfig+iVortex.swift"; sourceTree = "<group>"; };
 		2A5AEF2D2B7A485E00E935B6 /* TextConfig+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextConfig+ext.swift"; sourceTree = "<group>"; };
 		2A5AFD962D68BA3F00BD15EC /* RootViewModelFactory+makeOperationDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeOperationDetailModel.swift"; sourceTree = "<group>"; };
+		2A5AFD982D68CCB200BD15EC /* GetOperationDetailService.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = GetOperationDetailService.xctestplan; sourceTree = "<group>"; };
 		2A5B1B482B1C438300C17A35 /* QRViewModelScanResultTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRViewModelScanResultTests.swift; sourceTree = "<group>"; };
 		2A5B22FB2BEDE02A00270D50 /* MainViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewFactory.swift; sourceTree = "<group>"; };
 		2A5B22FD2BEDE03F00270D50 /* PaymentsTransfersViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewFactory.swift; sourceTree = "<group>"; };
@@ -10613,6 +10614,7 @@
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
+				2A5AFD982D68CCB200BD15EC /* GetOperationDetailService.xctestplan */,
 				2AD073702D65A83700922062 /* StateMachines.xctestplan */,
 				C198F83F2D645C4D005D8DE0 /* OrderCardLandingUI.xctestplan */,
 				2A50E6C72D5631E500C00949 /* GetCardOrderFormService.xctestplan */,
