@@ -303,6 +303,29 @@ extension RootViewModelFactory {
             performOrWaitForActive(loadCategoriesAndNotifyPicker)
         }
         
+        let makeOperationDetailViewModel: OperationDetailFactory.MakeOperationDetailViewModel = { [weak self] productID, productStatementID in
+            
+            guard let self,
+                  let (statementData, productData) = model.latestStatementWithProductData(
+                for: productID,
+                and: productStatementID
+            ) else { return nil }
+            
+            return .init(
+                productStatement: statementData,
+                product: productData,
+                updateFastAll: { [weak self] in
+                    
+                    self?.model.action.send(ModelAction.Products.Update.Fast.All())
+                },
+                model: model
+            )
+        }
+        
+        let operationDetailFactory = OperationDetailFactory(
+            makeOperationDetailViewModel: makeOperationDetailViewModel
+        )
+        
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
@@ -324,6 +347,7 @@ extension RootViewModelFactory {
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder,
             makeOpenNewProductButtons: { _ in [] },
+            operationDetailFactory: operationDetailFactory,
             makeOrderCardViewModel: makeOrderCardViewModel,
             makePaymentsTransfers: { paymentsTransfersSwitcher }
         )
@@ -667,6 +691,7 @@ extension ProductProfileViewModel {
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
+        operationDetailFactory: OperationDetailFactory,
         makeOrderCardViewModel: @escaping MakeOrderCardViewModel,
         makePaymentsTransfers: @escaping PaymentsTransfersFactory.MakePaymentsTransfers
     ) -> MakeProductProfileViewModel {
@@ -694,6 +719,7 @@ extension ProductProfileViewModel {
                 makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
                 makeServicePaymentBinder: makeServicePaymentBinder,
                 makeOpenNewProductButtons: makeOpenNewProductButtons,
+                operationDetailFactory: operationDetailFactory,
                 makeOrderCardViewModel: makeOrderCardViewModel,
                 makePaymentsTransfers: makePaymentsTransfers
             )
@@ -717,28 +743,6 @@ extension ProductProfileViewModel {
                 makeTemplates: makeTemplates,
                 makeUtilitiesViewModel: makeUtilitiesViewModel,
                 makePaymentsTransfers: makePaymentsTransfers
-            )
-            
-            let makeOperationDetailViewModel: OperationDetailFactory.MakeOperationDetailViewModel = { productID, productStatementID in
-                
-                guard let (statementData, productData) = model.latestStatementWithProductData(
-                    for: productID,
-                    and: productStatementID
-                ) else { return nil }
-
-                return .init(
-                    productStatement: statementData,
-                    product: productData,
-                    updateFastAll: {
-                        
-                        model.action.send(ModelAction.Products.Update.Fast.All())
-                    },
-                    model: model
-                )
-            }
-            
-            let operationDetailFactory = OperationDetailFactory(
-                makeOperationDetailViewModel: makeOperationDetailViewModel
             )
             
             let makeProductProfileViewModelFactory: ProductProfileViewModelFactory = .init(
