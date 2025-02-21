@@ -11,9 +11,10 @@ extension RootViewModelFactory {
     
     @inlinable
     func makePaymentsSuccessViewModel(
-    ) -> QRViewModelFactory.MakePaymentsSuccessViewModel {
+        response: CreateSberQRPaymentResponse
+    ) -> PaymentsSuccessViewModel {
         
-        return { .init(paymentSuccess: $0.success, self.model) }
+        return .init(paymentSuccess: response.success, model)
     }
 }
 
