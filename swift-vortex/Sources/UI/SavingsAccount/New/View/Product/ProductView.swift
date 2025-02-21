@@ -28,7 +28,7 @@ where IconView: View {
     let data: Product
     let config: OrderSavingsAccountConfig
     let makeIconView: (String) -> IconView
-    let isLoading: Bool = false
+    let isLoading: Bool
     
     var body: some View {
         order(
@@ -73,7 +73,7 @@ where IconView: View {
     private func shadow() -> some View {
         
         RoundedRectangle(cornerRadius: config.cornerRadius)
-            .frame(width: config.order.card.width - config.cornerRadius * 2, height: config.order.card.height)
+            .frame(width: config.frame.width, height: config.frame.height)
             .foregroundColor(config.shadowColor)
             .offset(x: 0, y: config.cornerRadius)
             .blur(radius: 8)
@@ -177,5 +177,16 @@ private extension String {
         _ needShimmering: Bool
     ) -> String {
         needShimmering ? "" : self
+    }
+}
+
+private extension OrderSavingsAccountConfig {
+    
+    var frame: CGSize {
+        
+        .init(
+            width: order.card.width - cornerRadius * 2,
+            height: order.card.height
+        )
     }
 }
