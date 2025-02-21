@@ -35,13 +35,13 @@ extension CreateDraftCollateralLoanApplicationDomain {
     
     enum Navigation {
 
-        case failure(FlowFailure)
+        case failure(CollateralLoanLandingCreateDraftCollateralLoanApplicationUI.BackendFailure<InformerData>)
         case saveConsents(CollateralLandingApplicationSaveConsentsResult)
         
-        enum FlowFailure {
-            
-            case timeout(InformerData)
-            case error(String)
-        }
+//        enum FlowFailure {
+//            
+//            case timeout(InformerData)
+//            case error(String)
+//        }
     }
 }

@@ -79,7 +79,7 @@ public extension GetCollateralLandingConfig {
         paddings: .init(
             outerLeading: 16,
             outerTrailing: 15,
-            outerBottom: 20,
+            outerBottom: 110,
             outerTop: 16
         ),
         spacing: 16,

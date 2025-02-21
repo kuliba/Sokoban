@@ -75,11 +75,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
                 event: event,
                 externalEvent: handleExternalEvent(events:),
                 config: .default,
-                factory: .init(
-                    makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
-                    makeImageViewWithURL: factory.makeImageViewWithURL,
-                    getPDFDocument: factory.getPDFDocument
-                )
+                factory: factory
             )
             .if(state.stage == .confirm) {
                 
@@ -122,10 +118,10 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
             return .init(
                 title: Text("Ошибка"),
                 message: Text(failure),
-                dismissButton: .default(Text("ОK")) { goToMain() }
+                dismissButton: .cancel(Text("ОK"))
             )
         }
-    }
+    }  
     
     @ViewBuilder
     private func fullScreenCoverView(
@@ -169,7 +165,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
             .init(
                 viewModel: viewModelFactory.makeOperationDetailInfoViewModel(
                     payload: payload,
-                    dismiss: goToMain
+                    dismiss: {}
                 ),
                 payload: payload
             )
@@ -217,16 +213,20 @@ extension CreateDraftCollateralLoanApplicationWrapperView {
 extension CreateDraftCollateralLoanApplicationDomain.Navigation {
 
     var alert: Alert? {
-        
-        switch self {
-        case let .failure(kind):
-            switch kind {
-            case let .timeout(informerPayload):
-                return .failure(informerPayload.message)
 
-            case let .error(message):
+        switch self {
+        case let .failure(failure):
+            if case let .alert(message) = failure.kind {
+
                 return .failure(message)
+            } else if case let .informer(informerPayload) = failure.kind {
+                
+                return .failure(informerPayload.message)
+            } else {
+                
+                return .failure(failure.localizedDescription)
             }
+            
         case .saveConsents(_):
             return nil
         }

@@ -234,8 +234,7 @@ extension RootViewModelFactory {
                 completion(.saveConsents(success))
 
             case let .failure(failure):
-                break
-//                completion(.failure(failure))
+                completion(.failure(failure))
             }
         }
     }
@@ -322,13 +321,18 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
         switch error {
         case let .performRequest(error):
             if error.isNotConnectedToInternetOrTimeout() {
+                
                 self = .init(kind: .informer(.init(message: "Проверьте подключение к сети", icon: .wifiOff)))
-            } else {
-                self = .init(kind: .alert("Попробуйте позже."))
-            }
-            
+            } else { self = .default }
+        case let .mapResponse(error):
+            if case .server(statusCode: _, errorMessage: let errorMessage) = error {
+                
+                self = .init(kind: .alert(errorMessage))
+            } else { self = .default }
         default:
-            self = .init(kind: .alert("Попробуйте позже."))
+            self = .default
         }
     }
+    
+    static let `default` = Self(kind: .alert("Попробуйте позже."))
 }
