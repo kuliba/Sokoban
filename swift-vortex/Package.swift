@@ -3006,6 +3006,7 @@ private extension Target {
             // internal packages
             .dropDownTextListComponent,
             .linkableText,
+            .loadableState,
             .paymentComponents,
             .sharedConfigs,
             .toggleComponent,
