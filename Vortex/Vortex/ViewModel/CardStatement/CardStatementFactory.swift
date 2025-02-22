@@ -37,7 +37,7 @@ extension Services {
         )
         let data = try await getCardStatementForPeriod(httpClient: httpClient).process(payload).get()
         
-        return data.operationList.map({ .init(data: $0) })
+        return data.map { .init(data: $0) }
     }
     
     private func getCardStatementForPeriod(

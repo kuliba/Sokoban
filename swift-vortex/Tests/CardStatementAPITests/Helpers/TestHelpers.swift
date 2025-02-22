@@ -8,7 +8,7 @@
 import CardStatementAPI
 import RemoteServices
 
-typealias Result = Swift.Result<ProductStatementWithExtendedInfo, CardStatementAPI.MappingError>
+typealias Result = Swift.Result<[ProductStatementData], CardStatementAPI.MappingError>
 
 func сardStatementError(
     _ message: String

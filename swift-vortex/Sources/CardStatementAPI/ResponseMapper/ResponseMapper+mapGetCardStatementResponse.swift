@@ -13,7 +13,7 @@ public extension ResponseMapper {
     static func mapGetCardStatementResponse(
         _ data: Data,
         _ response: HTTPURLResponse
-    ) -> Swift.Result<ProductStatementWithExtendedInfo, CardStatementAPI.MappingError> {
+    ) -> Swift.Result<[ProductStatementData], CardStatementAPI.MappingError> {
         
         map(data, response, dateDecodingStrategy: .formatted(.iso8601), mapOrThrow: map)
             .mapError {
@@ -29,20 +29,11 @@ public extension ResponseMapper {
     }
     
     private static func map(
-        _ data: _Data
-    ) throws -> ProductStatementWithExtendedInfo {
+        _ data: [_DTO.ProductStatementData]
+    ) throws -> [ProductStatementData] {
         
-        .init(
-            summary: .init(data: data.summary),
-            aggregated: data.aggregated.map({ $0.map({ .init(data: $0) }) }),
-            operationList: data.operationList.map({ .init(data: $0 )})
-        )
+        data.map { .init(data: $0 ) }
     }
-}
-
-private extension ResponseMapper {
-    
-    typealias _Data = _DTO
 }
 
 private extension ResponseMapper {
@@ -225,7 +216,7 @@ private struct GetCardStatementForPeriodResponse: Decodable {
     
     let statusCode: Int
     let errorMessage: String?
-    let data: ResponseMapper._Data?
+    let data: ResponseMapper._DTO?
 }
 
 private extension ProductStatementWithExtendedInfo.ProductStatementAggregated {
