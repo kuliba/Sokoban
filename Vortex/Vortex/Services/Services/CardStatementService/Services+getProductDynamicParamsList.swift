@@ -5,9 +5,10 @@
 //  Created by Andryusina Nataly on 26.01.2024.
 //
 
+import CardStatementAPI
 import Foundation
 import GenericRemoteService
-import CardStatementAPI
+import RemoteServices
 
 extension Services {
     
@@ -22,7 +23,7 @@ extension Services {
         LoggingRemoteServiceDecorator(
             createRequest: RequestFactory.getProductDynamicParamsList,
             performRequest: httpClient.performRequest,
-            mapResponse: CardStatementAPI.ResponseMapper.mapGetProductDynamicParamsList,
+            mapResponse: RemoteServices.ResponseMapper.mapGetProductDynamicParamsList,
             log: log
         ).remoteService
     }

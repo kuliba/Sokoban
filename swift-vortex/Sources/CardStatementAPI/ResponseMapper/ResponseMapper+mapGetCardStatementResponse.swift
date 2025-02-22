@@ -6,15 +6,26 @@
 //
 
 import Foundation
+import RemoteServices
 
 public extension ResponseMapper {
     
     static func mapGetCardStatementResponse(
         _ data: Data,
         _ response: HTTPURLResponse
-    ) -> Swift.Result<ProductStatementWithExtendedInfo, MappingError> {
+    ) -> Swift.Result<ProductStatementWithExtendedInfo, CardStatementAPI.MappingError> {
         
-        map(data, response, mapOrThrow: map)
+        map(data, response, dateDecodingStrategy: .formatted(.iso8601), mapOrThrow: map)
+            .mapError {
+                
+                switch $0 {
+                case .invalid:
+                    return .mappingFailure(.defaultErrorMessage)
+                    
+                case let .server(statusCode: _, errorMessage: errorMessage):
+                    return .not200Status(errorMessage)
+                }
+            }
     }
     
     private static func map(

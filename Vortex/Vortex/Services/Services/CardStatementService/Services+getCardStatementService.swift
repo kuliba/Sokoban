@@ -5,9 +5,10 @@
 //  Created by Andryusina Nataly on 17.01.2024.
 //
 
+import CardStatementAPI
 import Foundation
 import GenericRemoteService
-import CardStatementAPI
+import RemoteServices
 
 extension Services {
     
@@ -22,7 +23,7 @@ extension Services {
         return .init(
             createRequest: RequestFactory.getCardStatementForPeriod,
             performRequest: httpClient.performRequest,
-            mapResponse: CardStatementAPI.ResponseMapper.mapGetCardStatementResponse
+            mapResponse: RemoteServices.ResponseMapper.mapGetCardStatementResponse
         )
     }
 }
