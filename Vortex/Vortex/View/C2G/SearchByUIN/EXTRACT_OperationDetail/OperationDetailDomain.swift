@@ -35,7 +35,22 @@ extension OperationDetailDomain {
     typealias Event = StateMachines.LoadEvent<ExtendedDetails, Error>
     typealias Effect = StateMachines.LoadEffect
     
-    // MARK: - Digests
+    // MARK: - Digests,...
+        
+    struct ModelPayload: Equatable {
+        
+        let product: Product
+        let status: Status
+        
+        // from payment (on payment completion)
+        let formattedAmount: String?
+        let formattedDate: String?
+        let merchantName: String?
+        let message: String?
+        let paymentOperationDetailID: Int
+        let purpose: String?
+        let uin: String
+    }
     
     typealias PaymentDigest = C2GCore.C2GPaymentDigest // TODO: decouple or leave as is
     
@@ -61,24 +76,16 @@ extension OperationDetailDomain {
     
     struct BasicDetails: Equatable {
         
-        let product: Product
-        let status: Status
-        
-        // from payment (on payment completion)
         let formattedAmount: String?
         let formattedDate: String?
-        let merchantName: String?
-        let message: String?
-        let paymentOperationDetailID: Int
-        let purpose: String?
-        let uin: String
+        let product: Product
     }
 
-    struct CoreDetails: Equatable {
-        
-        let product: Product
-        let status: Status
-    }
+//    struct CoreDetails: Equatable {
+//        
+//        let product: Product
+//        let status: Status
+//    }
     
     struct ExtendedDetails: Equatable {
         

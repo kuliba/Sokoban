@@ -63,21 +63,21 @@ extension RootViewModelFactory {
             case let .failure(failure):
                 completion(.failure(failure))
                 
-            case let .success(basicDetails):
-                let model = makeOperationDetailModelByPaymentID(basicDetails)
+            case let .success(payload):
+                let model = makeOperationDetailModelByPaymentID(payload)
                 model.event(.load)
                 
-                completion(.success(model))
+                completion(.success(.init(fields: .init(payload), details: model)))
             }
         }
     }
     
-    typealias BasicDetailsResult = Result<OperationDetailDomain.BasicDetails, BackendFailure>
+    typealias ModelPayloadResult = Result<OperationDetailDomain.ModelPayload, BackendFailure>
     
     @inlinable
     func createC2GPayment(
         digest: C2GPaymentDomain.Select.Digest,
-        completion: @escaping (BasicDetailsResult) -> Void
+        completion: @escaping (ModelPayloadResult) -> Void
     ) {
         let service = onBackground(
             makeRequest: RequestFactory.createCreateC2GPaymentRequest,
@@ -94,7 +94,7 @@ extension RootViewModelFactory {
                 completion(.failure(failure))
 
             case let .success(response):
-                guard let basicDetails = response.basicDetails(
+                guard let basicDetails = response.payload(
                     digest: digest,
                     formattedAmount: formatAmount(value: response.amount)
                 ) else { return completion(.failure(.connectivityFailure)) }
@@ -132,13 +132,14 @@ extension RootViewModelFactory {
                 completion(.failure(.server("server error")))
                 
             case "99999999999999999999":
-                let model = makeOperationDetailModelByPaymentID(.stub(
-                    digest: digest, 
+                let basicDetails: OperationDetailDomain.ModelPayload = .stub(
+                    digest: digest,
                     status: status
-                ))
+                )
+                let model = makeOperationDetailModelByPaymentID(basicDetails)
                 model.event(.load)
                 
-                completion(.success(model))
+                completion(.success(.init(fields: .init(basicDetails), details: model)))
                 
             default:
                 completion(.failure(.server("server error")))
@@ -169,6 +170,31 @@ private extension String {
 }
 
 // MARK: - Adapters
+
+private extension C2GPaymentDomain.Complete.Fields {
+    
+    init(_ payload: OperationDetailDomain.ModelPayload) {
+        
+        self.init(
+            formattedAmount: payload.formattedAmount,
+            merchantName: payload.merchantName,
+            purpose: payload.purpose,
+            status: payload.status.status
+        )
+    }
+}
+
+private extension OperationDetailDomain.Status {
+    
+    var status: C2GPaymentDomain.Complete.Fields.Status {
+        
+        switch self {
+        case .completed: return .completed
+        case .inflight:  return .inflight
+        case .rejected:  return .rejected
+        }
+    }
+}
 
 private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
     
@@ -244,10 +270,10 @@ private extension String {
 
 private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
     
-    func basicDetails(
+    func payload(
         digest: OperationDetailDomain.PaymentDigest,
         formattedAmount: String?
-    ) -> OperationDetailDomain.BasicDetails? {
+    ) -> OperationDetailDomain.ModelPayload? {
         
         guard let status else { return nil }
         
@@ -297,7 +323,7 @@ where State == C2GPaymentState<C2GPaymentDomain.Context>,
 
 // MARK: - Stub
 
-private extension OperationDetailDomain.BasicDetails {
+private extension OperationDetailDomain.ModelPayload {
     
     static func stub(
         digest: C2GPaymentDomain.Select.Digest,

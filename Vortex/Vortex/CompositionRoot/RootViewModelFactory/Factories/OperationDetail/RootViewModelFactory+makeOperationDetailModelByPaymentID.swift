@@ -11,43 +11,58 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeOperationDetailModelByPaymentID(
-        _ basicDetails: OperationDetailDomain.BasicDetails
+        _ payload: OperationDetailDomain.ModelPayload
     ) -> OperationDetailDomain.Model {
         
         return makeOperationDetailModel(
-            basicDetails: basicDetails,
-            load: getOperationDetailByPaymentID
+            basicDetails: payload.basicDetails,
+            load: { [weak self] completion in
+                
+                self?.getOperationDetailByPaymentID(payload, completion)
+            }
         )
     }
     
     @inlinable
     func getOperationDetailByPaymentID(
-        basicDetails: OperationDetailDomain.BasicDetails,
-        completion: @escaping (Result<OperationDetailDomain.ExtendedDetails, Error>) -> Void
+        _ payload: OperationDetailDomain.ModelPayload,
+        _ completion: @escaping (Result<OperationDetailDomain.ExtendedDetails, Error>) -> Void
     ) {
         let load = onBackground(
             makeRequest: RequestFactory.createGetOperationDetailByPaymentIDRequestV3,
             mapResponse: RemoteServices.ResponseMapper.mapGetOperationDetailByPaymentIDResponse
         )
         
-        load(.init(basicDetails.paymentOperationDetailID)) {
+        load(.init(payload.paymentOperationDetailID)) {
             
-            completion($0.map { $0.details(basicDetails: basicDetails) })
+            completion($0.map { $0.details(payload: payload) })
         }
     }
 }
 
 // MARK: - Adapters
 
+extension OperationDetailDomain.ModelPayload {
+    
+    var basicDetails: OperationDetailDomain.BasicDetails {
+        
+        return .init(
+            formattedAmount: formattedAmount,
+            formattedDate: formattedDate,
+            product: product
+        )
+    }
+}
+
 private extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse {
     
     func details(
-        basicDetails: OperationDetailDomain.BasicDetails
+        payload: OperationDetailDomain.ModelPayload
     ) -> OperationDetailDomain.ExtendedDetails {
         
         return .init(
-            product: basicDetails.product,
-            status: basicDetails.status,
+            product: payload.product,
+            status: payload.status,
             comment: comment,
             dateForDetail: dateForDetail,
             dateN: dateN,
