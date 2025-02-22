@@ -65,64 +65,6 @@ struct ProductStatementData: Identifiable, Equatable, Hashable {
     let terminalCode: String?
     let tranDate: Date?
     let type: OperationEnvironment
-    
-    init(
-        mcc: Int?,
-        accountId: Int?,
-        accountNumber: String,
-        amount: Double,
-        cardTranNumber: String?,
-        city: String?,
-        comment: String,
-        country: String?,
-        currencyCodeNumeric: Int,
-        date: Date,
-        deviceCode: String?,
-        documentAmount: Double?,
-        documentId: Int?,
-        fastPayment: ProductStatementData.FastPayment?,
-        groupName: String,
-        isCancellation: Bool?,
-        md5hash: String,
-        merchantName: String?,
-        merchantNameRus: String?,
-        opCode: Int?,
-        operationId: String,
-        operationType: OperationType,
-        paymentDetailType: ProductStatementData.Kind,
-        svgImage: SVGImageData?,
-        terminalCode: String?,
-        tranDate: Date?,
-        type: OperationEnvironment
-    ) {
-        self.mcc = mcc
-        self.accountId = accountId
-        self.accountNumber = accountNumber
-        self.amount = amount
-        self.cardTranNumber = cardTranNumber
-        self.city = city
-        self.comment = comment
-        self.country = country
-        self.currencyCodeNumeric = currencyCodeNumeric
-        self.date = date
-        self.deviceCode = deviceCode
-        self.documentAmount = documentAmount
-        self.documentId = documentId
-        self.fastPayment = fastPayment
-        self.groupName = groupName
-        self.isCancellation = isCancellation
-        self.md5hash = md5hash
-        self.merchantName = merchantName
-        self.merchantNameRus = merchantNameRus
-        self.opCode = opCode
-        self.operationId = operationId
-        self.operationType = operationType
-        self.paymentDetailType = paymentDetailType
-        self.svgImage = svgImage
-        self.terminalCode = terminalCode
-        self.tranDate = tranDate
-        self.type = type
-    }
 }
 
 extension ProductStatementData {
