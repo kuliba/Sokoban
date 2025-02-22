@@ -83,7 +83,8 @@ extension RootViewModelFactory {
     ) {
         let service = onBackground(
             makeRequest: RequestFactory.createCreateC2GPaymentRequest,
-            mapResponse: RemoteServices.ResponseMapper.mapCreateC2GPaymentResponse
+            mapResponse: RemoteServices.ResponseMapper.mapCreateC2GPaymentResponse,
+            connectivityFailureMessage: .connectivity
         )
         
         service(digest.payload) { [weak self] in
@@ -92,9 +93,7 @@ extension RootViewModelFactory {
             
             switch $0 {
             case let .failure(failure):
-                completion(.failure(
-                    failure.backendFailure(connectivityMessage: .connectivity)
-                ))
+                completion(.failure(failure))
 
             case let .success(response):
                 guard let status = response.status
