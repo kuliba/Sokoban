@@ -146,43 +146,58 @@ class ServerCommandsDepositControllerTests: XCTestCase {
         let json = try Data(contentsOf: url)
         let date = try Date.date(from: "2022-03-28T21:00:00.000Z", formatter: .iso8601)
         
-        let data = ProductStatementData(mcc: 3245,
-                                        accountId: 10004111477,
-                                        accountNumber: "70601810711002740401",
-                                        amount: 144.21,
-                                        cardTranNumber: "4256901080508437",
-                                        city: "string",
-                                        comment: "Перевод денежных средств. НДС не облагается.",
-                                        country: "string",
-                                        currencyCodeNumeric: 810,
-                                        date: date,
-                                        deviceCode: "string",
-                                        documentAmount: 144.21,
-                                        documentId: 10230444722,
-                                        fastPayment: .init(documentComment: "string",
-                                                           foreignBankBIC: "044525491",
-                                                           foreignBankID: "10000001153",
-                                                           foreignBankName: "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"",
-                                                           foreignName: "Петров Петр Петрович",
-                                                           foreignPhoneNumber: "70115110217",
-                                                           opkcid: "A1355084612564010000057CAFC75755", operTypeFP: "string", tradeName: "string", guid: "string"),
-                                        groupName: "Прочие операции",
-                                        isCancellation: false,
-                                        md5hash: "75f3ee3b2d44e5808f41777c613f23c9",
-                                        merchantName: "DBO MERCHANT VORTEX, Zubovskiy 2",
-                                        merchantNameRus: "DBO MERCHANT VORTEX, Zubovskiy 2",
-                                        opCode: 1,
-                                        operationId: "909743",
-                                        operationType: .debit,
-                                        paymentDetailType: .betweenTheir,
-                                        svgImage: .init(description: "string"),
-                                        terminalCode: "41010601",
-                                        tranDate: date,
-                                        type: .inside)
+        let data = ProductStatementData(
+            mcc: 3245,
+            accountId: 10004111477,
+            accountNumber: "70601810711002740401",
+            amount: 144.21,
+            cardTranNumber: "4256901080508437",
+            city: "string",
+            comment: "Перевод денежных средств. НДС не облагается.",
+            country: "string",
+            currencyCodeNumeric: 810,
+            date: date,
+            deviceCode: "string",
+            documentAmount: 144.21,
+            documentId: 10230444722,
+            fastPayment: .init(documentComment: "string",
+                               foreignBankBIC: "044525491",
+                               foreignBankID: "10000001153",
+                               foreignBankName: "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"",
+                               foreignName: "Петров Петр Петрович",
+                               foreignPhoneNumber: "70115110217",
+                               opkcid: "A1355084612564010000057CAFC75755", operTypeFP: "string", tradeName: "string", guid: "string"),
+            groupName: "Прочие операции",
+            isCancellation: false,
+            md5hash: "75f3ee3b2d44e5808f41777c613f23c9",
+            merchantName: "DBO MERCHANT VORTEX, Zubovskiy 2",
+            merchantNameRus: "DBO MERCHANT VORTEX, Zubovskiy 2",
+            opCode: 1,
+            operationId: "909743",
+            operationType: .debit,
+            paymentDetailType: .betweenTheir,
+            svgImage: .init(description: "string"),
+            terminalCode: "41010601",
+            tranDate: date,
+            type: .inside,
+            discount: nil,
+            transAmm: nil,
+            discountExpiry: nil,
+            dateN: nil,
+            paymentTerm: nil,
+            legalAct: nil,
+            supplierBillId: nil,
+            realPayerFIO: nil,
+            realPayerINN: nil,
+            realPayerKPP: nil,
+            upno: nil
+        )
         
-        let expected = ServerCommands.DepositController.GetDepositStatement.Response(statusCode: .ok,
-                                                                                     errorMessage: "string",
-                                                                                     data: [data])
+        let expected = ServerCommands.DepositController.GetDepositStatement.Response(
+            statusCode: .ok,
+            errorMessage: "string",
+            data: [data]
+        )
         
         // when
         let result = try decoder.decode(ServerCommands.DepositController.GetDepositStatement.Response.self, from: json)
@@ -198,33 +213,46 @@ class ServerCommandsDepositControllerTests: XCTestCase {
         let json = try Data(contentsOf: url)
         let date = try Date.date(from: "2022-03-28T21:00:00.000Z", formatter: .iso8601)
         
-        let data = ProductStatementData(mcc: nil,
-                                        accountId: nil,
-                                        accountNumber: "70601810711002740401",
-                                        amount: 144.21,
-                                        cardTranNumber: nil,
-                                        city: nil,
-                                        comment: "Перевод денежных средств. НДС не облагается.",
-                                        country: nil,
-                                        currencyCodeNumeric: 810,
-                                        date: date,
-                                        deviceCode: nil,
-                                        documentAmount: nil,
-                                        documentId: nil,
-                                        fastPayment: nil,
-                                        groupName: "Прочие операции",
-                                        isCancellation: nil,
-                                        md5hash: "75f3ee3b2d44e5808f41777c613f23c9",
-                                        merchantName: nil,
-                                        merchantNameRus: nil,
-                                        opCode: nil,
-                                        operationId: "123",
-                                        operationType: .debit,
-                                        paymentDetailType: .betweenTheir,
-                                        svgImage: nil,
-                                        terminalCode: nil,
-                                        tranDate: nil,
-                                        type: .inside)
+        let data = ProductStatementData(
+            mcc: nil,
+            accountId: nil,
+            accountNumber: "70601810711002740401",
+            amount: 144.21,
+            cardTranNumber: nil,
+            city: nil,
+            comment: "Перевод денежных средств. НДС не облагается.",
+            country: nil,
+            currencyCodeNumeric: 810,
+            date: date,
+            deviceCode: nil,
+            documentAmount: nil,
+            documentId: nil,
+            fastPayment: nil,
+            groupName: "Прочие операции",
+            isCancellation: nil,
+            md5hash: "75f3ee3b2d44e5808f41777c613f23c9",
+            merchantName: nil,
+            merchantNameRus: nil,
+            opCode: nil,
+            operationId: "123",
+            operationType: .debit,
+            paymentDetailType: .betweenTheir,
+            svgImage: nil,
+            terminalCode: nil,
+            tranDate: nil,
+            type: .inside,
+            discount: nil,
+            transAmm: nil,
+            discountExpiry: nil,
+            dateN: nil,
+            paymentTerm: nil,
+            legalAct: nil,
+            supplierBillId: nil,
+            realPayerFIO: nil,
+            realPayerINN: nil,
+            realPayerKPP: nil,
+            upno: nil
+        )
         
         let expected = ServerCommands.DepositController.GetDepositStatement.Response(statusCode: .ok,
                                                                                      errorMessage: "string",
@@ -413,17 +441,17 @@ class ServerCommandsDepositControllerTests: XCTestCase {
         let json = try Data(contentsOf: url)
         
         let expected = ServerCommands.DepositController.CloseDeposit.Response(statusCode: .ok, data: .init(paymentOperationDetailId: 1, documentStatus: .unknown, accountNumber: "42317810000000000001", closeDate: 1, comment: "Закрытие срочного банковского вклада по договору № 04913_224RUB0000/22  от 22/04/2022. НДС не облагается.", category: "Закрытие вклада"), errorMessage: "string")
-
+        
         // when
         let result = try decoder.decode(ServerCommands.DepositController.CloseDeposit.Response.self, from: json)
         
         // then
         XCTAssertEqual(result, expected)
     }
-
+    
     
     func testBeforeClosing_Response_Decoding() throws {
-
+        
         // given
         guard let url = bundle.url(forResource: "BeforeClosingResponseGeneric", withExtension: "json") else {
             XCTFail("testBeforeClosing_Response_Decoding : Missing file: BeforeClosingResponseGeneric.json")
@@ -431,9 +459,9 @@ class ServerCommandsDepositControllerTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-
+        
         let expected = ServerCommands.DepositController.GetDepositRestBeforeClosing.Response(statusCode: .ok, errorMessage: "string", data: 0)
-
+        
         // when
         let result = try decoder.decode(ServerCommands.DepositController.GetDepositRestBeforeClosing.Response.self, from: json)
         

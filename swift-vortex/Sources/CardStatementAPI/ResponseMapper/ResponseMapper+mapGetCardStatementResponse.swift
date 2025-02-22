@@ -92,6 +92,20 @@ private extension ResponseMapper {
             let date: Date
             let tranDate: Date?
             let MCC: Int?
+            
+            // V3
+            let discount: String?
+            let transAmm: String?
+            let discountExpiry: String?
+            let dateN: String?
+            let paymentTerm: String?
+            let legalAct: String?
+            let supplierBillId: String?
+            let realPayerFIO: String?
+            let realPayerINN: String?
+            let realPayerKPP: String?
+            let upno: String?
+
         }
     }
 }
@@ -206,6 +220,7 @@ private struct GetCardStatementForPeriodResponse: Decodable {
 private extension ProductStatementWithExtendedInfo.ProductStatementAggregated {
 
     init(data: ResponseMapper._DTO.ProductStatementAggregated?) {
+        
         self.init(
             groupByName: data?.groupByName,
             baseColor: data?.baseColor,
@@ -232,7 +247,6 @@ private extension ProductStatementData {
     init(
         data: ResponseMapper._DTO.ProductStatementData
     ) {
-        
         let fastPayment: ProductStatementData.FastPayment? = data.fastPayment.map {
             .init(data: $0)
         }
@@ -264,7 +278,20 @@ private extension ProductStatementData {
             opCode: data.opCode,
             date: data.date,
             tranDate: data.tranDate,
-            MCC: data.MCC)
+            MCC: data.MCC,
+            // V3
+            discount: data.discount,
+            transAmm: data.transAmm,
+            discountExpiry: data.discountExpiry,
+            dateN: data.dateN,
+            paymentTerm: data.paymentTerm,
+            legalAct: data.legalAct,
+            supplierBillId: data.supplierBillId,
+            realPayerFIO: data.realPayerFIO,
+            realPayerINN: data.realPayerINN,
+            realPayerKPP: data.realPayerKPP,
+            upno: data.upno
+        )
     }
 }
 

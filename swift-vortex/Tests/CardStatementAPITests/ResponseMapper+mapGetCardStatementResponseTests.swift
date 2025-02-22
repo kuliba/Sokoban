@@ -161,7 +161,18 @@ private extension ProductStatementData {
         opCode: 1,
         date: Date(timeIntervalSince1970: 978307200),
         tranDate: nil,
-        MCC: 0
+        MCC: 0,
+        discount: nil,
+        transAmm: nil,
+        discountExpiry: nil,
+        dateN: nil,
+        paymentTerm: nil,
+        legalAct: nil,
+        supplierBillId: nil,
+        realPayerFIO: nil,
+        realPayerINN: nil,
+        realPayerKPP: nil,
+        upno: nil
     )
 }
 
