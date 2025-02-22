@@ -12,7 +12,7 @@ public extension RequestFactory {
     
     static func createGetOperationDetailRequest(
         url: URL,
-        detailID: Int
+        detailID: String
     ) throws -> URLRequest {
         
         var request = createEmptyRequest(.post, with: url)
@@ -22,15 +22,15 @@ public extension RequestFactory {
     }
 }
 
-private extension Int {
+private extension String {
     
     var httpBody: Data {
         
         get throws {
             
             try JSONSerialization.data(withJSONObject: [
-                "paymentOperationDetailId": self
-            ] as [String: Int])
+                "documentId": self
+            ] as [String: String])
         }
     }
 }
