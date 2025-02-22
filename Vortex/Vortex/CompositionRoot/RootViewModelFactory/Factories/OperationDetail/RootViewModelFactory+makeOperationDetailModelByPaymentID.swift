@@ -11,13 +11,13 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeOperationDetailModelByPaymentID(
-        response: OperationDetailDomain.State.EnhancedResponse
+        basicDetails: OperationDetailDomain.BasicDetails
     ) -> OperationDetailDomain.Model {
         
         return makeOperationDetailModel(
             initialState: .init(
-                details: .pending,
-                response: response
+                basicDetails: basicDetails,
+                extendedDetails: .pending
             ),
             load: getOperationDetailByPaymentID
         )
@@ -26,7 +26,7 @@ extension RootViewModelFactory {
     @inlinable
     func getOperationDetailByPaymentID(
         payload: OperationDetailDomain.EnhancedPayload,
-        completion: @escaping (Result<OperationDetailDomain.State.Details, Error>) -> Void
+        completion: @escaping (Result<OperationDetailDomain.ExtendedDetails, Error>) -> Void
     ) {
         let load = onBackground(
             makeRequest: RequestFactory.createGetOperationDetailByPaymentIDRequestV3,
@@ -50,29 +50,29 @@ private extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDRes
     
     func details(
         formattedAmount: String?,
-        product: OperationDetailDomain.State.Product,
-        status: OperationDetailDomain.State.Status
-    ) -> OperationDetailDomain.State.Details {
+        product: OperationDetailDomain.Product,
+        status: OperationDetailDomain.Status
+    ) -> OperationDetailDomain.ExtendedDetails {
         
         return .init(
             product: product,
             status: status,
-            dateForDetail: dateForDetail,
-            realPayerFIO: realPayerFIO,
-            payeeFullName: payeeFullName,
-            supplierBillID: supplierBillID,
             comment: comment,
-            realPayerINN: realPayerINN,
-            realPayerKPP: realPayerKPP,
+            dateForDetail: dateForDetail,
             dateN: dateN,
-            paymentTerm: paymentTerm,
-            legalAct: legalAct,
-            transAmm: formattedAmount,
             discount: discount,
             discountExpiry: discountExpiry,
             formattedAmount: formattedAmount,
-            upno: upno,
-            transferNumber: transferNumber
+            legalAct: legalAct,
+            payeeFullName: payeeFullName,
+            paymentTerm: paymentTerm,
+            realPayerFIO: realPayerFIO,
+            realPayerINN: realPayerINN,
+            realPayerKPP: realPayerKPP,
+            supplierBillID: supplierBillID,
+            transAmm: formattedAmount,
+            transferNumber: transferNumber,
+            upno: upno
         )
     }
 }

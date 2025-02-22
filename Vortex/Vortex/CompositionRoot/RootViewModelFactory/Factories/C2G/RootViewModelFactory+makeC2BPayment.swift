@@ -63,9 +63,9 @@ extension RootViewModelFactory {
             case let .failure(failure):
                 completion(.failure(failure))
                 
-            case let .success(enhancedResponse):
+            case let .success(basicDetails):
                 let model = makeOperationDetailModelByPaymentID(
-                    response: enhancedResponse
+                    basicDetails: basicDetails
                 )
                 model.event(.load)
                 
@@ -74,12 +74,12 @@ extension RootViewModelFactory {
         }
     }
     
-    typealias EnhancedResponseResult = Result<OperationDetailDomain.State.EnhancedResponse, BackendFailure>
+    typealias BasicDetailsResult = Result<OperationDetailDomain.BasicDetails, BackendFailure>
     
     @inlinable
     func createC2GPayment(
         digest: C2GPaymentDomain.Select.Digest,
-        completion: @escaping (EnhancedResponseResult) -> Void
+        completion: @escaping (BasicDetailsResult) -> Void
     ) {
         let service = onBackground(
             makeRequest: RequestFactory.createCreateC2GPaymentRequest,
@@ -101,14 +101,14 @@ extension RootViewModelFactory {
                 else { return completion(.failure(.connectivityFailure)) }
                 
                 completion(.success(.init(
+                    product: digest.product,
+                    status: status,
                     formattedAmount: formatAmount(value: response.amount),
                     formattedDate: nil, // TODO: extract from new version of response - Lera
                     merchantName: response.merchantName,
                     message: response.message,
                     paymentOperationDetailID: response.paymentOperationDetailID,
-                    product: digest.product,
                     purpose: response.purpose,
-                    status: status,
                     uin: digest.uin
                 )))
             }
@@ -128,7 +128,7 @@ extension RootViewModelFactory {
     @inlinable
     func easterEggsCreateC2GPayment(
         _ digest: C2GPaymentDomain.Select.Digest,
-        _ status: OperationDetailDomain.State.Status,
+        _ status: OperationDetailDomain.Status,
         _ completion: @escaping (C2GPaymentDomain.Navigation) -> Void
     ) {
         schedulers.background.delay(for: .seconds(2)) { [weak self] in
@@ -144,7 +144,7 @@ extension RootViewModelFactory {
                 
             case "99999999999999999999":
                 let model = makeOperationDetailModelByPaymentID(
-                    response: .stub(digest: digest, status: status)
+                    basicDetails: .stub(digest: digest, status: status)
                 )
                 model.event(.load)
                 
@@ -182,7 +182,7 @@ private extension String {
 
 private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
     
-    var status: OperationDetailDomain.State.Status? {
+    var status: OperationDetailDomain.Status? {
         
         switch documentStatus {
         case "COMPLETE":    return .completed
@@ -281,22 +281,22 @@ where State == C2GPaymentState<C2GPaymentDomain.Context>,
     }
 }
 
-private extension OperationDetailDomain.State.EnhancedResponse {
+private extension OperationDetailDomain.BasicDetails {
     
     static func stub(
         digest: C2GPaymentDomain.Select.Digest,
-        status: OperationDetailDomain.State.Status
+        status: OperationDetailDomain.Status
     ) -> Self {
         
         return .init(
+            product: digest.product,
+            status: status,
             formattedAmount: "100 ₽",
             formattedDate: "06.05.2021 15:38:12",
             merchantName: "merchantName",
             message: "message",
             paymentOperationDetailID: 122004,
-            product: digest.product,
             purpose: "purpose",
-            status: status,
             uin: digest.uin
         )
     }

@@ -11,7 +11,7 @@ import ProductSelectComponent
 
 extension RootViewModelFactory {
     
-    typealias LoadOperationDetailCompletion = (Result<OperationDetailDomain.State.Details, Error>) -> Void
+    typealias LoadOperationDetailCompletion = (Result<OperationDetailDomain.ExtendedDetails, Error>) -> Void
     typealias LoadOperationDetail = (OperationDetailDomain.EnhancedPayload, @escaping LoadOperationDetailCompletion) -> Void
     
     @inlinable
@@ -31,8 +31,8 @@ extension RootViewModelFactory {
             reduce: { state, event in
                 
                 var state = state
-                let (details, effect) = reducer.reduce(state.details, event)
-                state.details = details
+                let (details, effect) = reducer.reduce(state.extendedDetails, event)
+                state.extendedDetails = details
                 
                 return (state, effect)
             },
@@ -49,10 +49,10 @@ private extension OperationDetailDomain.State {
     var payload: OperationDetailDomain.EnhancedPayload {
         
         return .init(
-            formattedAmount: response.formattedAmount,
-            paymentOperationDetailID: response.paymentOperationDetailID,
-            product: response.product,
-            status: response.status
+            formattedAmount: basicDetails.formattedAmount,
+            paymentOperationDetailID: basicDetails.paymentOperationDetailID,
+            product: basicDetails.product,
+            status: basicDetails.status
         )
     }
 }
@@ -64,6 +64,6 @@ extension OperationDetailDomain {
         let formattedAmount: String?
         let paymentOperationDetailID: Int
         let product: ProductSelect.Product
-        let status: OperationDetailDomain.State.Status
+        let status: OperationDetailDomain.Status
     }
 }
