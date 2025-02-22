@@ -128,7 +128,7 @@ extension ProductStatementData {
             dateN: data.dateN,
             paymentTerm: data.paymentTerm,
             legalAct: data.legalAct,
-            supplierBillId: data.supplierBillId,
+            supplierBillID: data.supplierBillId,
             realPayerFIO: data.realPayerFIO,
             realPayerINN: data.realPayerINN,
             realPayerKPP: data.realPayerKPP,
