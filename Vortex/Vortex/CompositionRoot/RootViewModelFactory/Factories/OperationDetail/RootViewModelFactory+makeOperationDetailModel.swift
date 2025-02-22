@@ -12,22 +12,25 @@ import ProductSelectComponent
 extension RootViewModelFactory {
     
     typealias LoadOperationDetailCompletion = (Result<OperationDetailDomain.ExtendedDetails, Error>) -> Void
-    typealias LoadOperationDetail = (OperationDetailDomain.EnhancedPayload, @escaping LoadOperationDetailCompletion) -> Void
+    typealias LoadOperationDetail = (OperationDetailDomain.BasicDetails, @escaping LoadOperationDetailCompletion) -> Void
     
     @inlinable
     func makeOperationDetailModel(
-        initialState: OperationDetailDomain.State,
+        basicDetails: OperationDetailDomain.BasicDetails,
         load: @escaping LoadOperationDetail
     ) -> OperationDetailDomain.Model {
         
         let reducer = OperationDetailDomain.Reducer()
         let effectHandler = OperationDetailDomain.EffectHandler { completion in
             
-            load(initialState.payload, completion)
+            load(basicDetails, completion)
         }
         
         return .init(
-            initialState: initialState,
+            initialState: .init(
+                basicDetails: basicDetails,
+                extendedDetails: .pending
+            ),
             reduce: { state, event in
                 
                 var state = state
@@ -39,31 +42,5 @@ extension RootViewModelFactory {
             handleEffect: effectHandler.handleEffect,
             scheduler: schedulers.main
         )
-    }
-}
-
-// MARK: - Adapters
-
-private extension OperationDetailDomain.State {
-    
-    var payload: OperationDetailDomain.EnhancedPayload {
-        
-        return .init(
-            formattedAmount: basicDetails.formattedAmount,
-            paymentOperationDetailID: basicDetails.paymentOperationDetailID,
-            product: basicDetails.product,
-            status: basicDetails.status
-        )
-    }
-}
-
-extension OperationDetailDomain {
-    
-    struct EnhancedPayload: Equatable {
-        
-        let formattedAmount: String?
-        let paymentOperationDetailID: Int
-        let product: ProductSelect.Product
-        let status: OperationDetailDomain.Status
     }
 }

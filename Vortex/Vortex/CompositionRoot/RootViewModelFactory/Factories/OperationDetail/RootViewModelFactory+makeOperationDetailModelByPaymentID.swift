@@ -15,17 +15,14 @@ extension RootViewModelFactory {
     ) -> OperationDetailDomain.Model {
         
         return makeOperationDetailModel(
-            initialState: .init(
-                basicDetails: basicDetails,
-                extendedDetails: .pending
-            ),
+            basicDetails: basicDetails,
             load: getOperationDetailByPaymentID
         )
     }
     
     @inlinable
     func getOperationDetailByPaymentID(
-        payload: OperationDetailDomain.EnhancedPayload,
+        basicDetails: OperationDetailDomain.BasicDetails,
         completion: @escaping (Result<OperationDetailDomain.ExtendedDetails, Error>) -> Void
     ) {
         let load = onBackground(
@@ -33,13 +30,9 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapGetOperationDetailByPaymentIDResponse
         )
         
-        load(.init(payload.paymentOperationDetailID)) {
+        load(.init(basicDetails.paymentOperationDetailID)) {
             
-            completion($0.map { $0.details(
-                formattedAmount: payload.formattedAmount,
-                product: payload.product,
-                status: payload.status
-            )})
+            completion($0.map { $0.details(basicDetails: basicDetails) })
         }
     }
 }
@@ -49,14 +42,12 @@ extension RootViewModelFactory {
 private extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse {
     
     func details(
-        formattedAmount: String?,
-        product: OperationDetailDomain.Product,
-        status: OperationDetailDomain.Status
+        basicDetails: OperationDetailDomain.BasicDetails
     ) -> OperationDetailDomain.ExtendedDetails {
         
         return .init(
-            product: product,
-            status: status,
+            product: basicDetails.product,
+            status: basicDetails.status,
             comment: comment,
             dateForDetail: dateForDetail,
             dateN: dateN,
