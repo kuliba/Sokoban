@@ -64,9 +64,7 @@ extension RootViewModelFactory {
                 completion(.failure(failure))
                 
             case let .success(basicDetails):
-                let model = makeOperationDetailModelByPaymentID(
-                    basicDetails: basicDetails
-                )
+                let model = makeOperationDetailModelByPaymentID(basicDetails)
                 model.event(.load)
                 
                 completion(.success(model))
@@ -96,20 +94,12 @@ extension RootViewModelFactory {
                 completion(.failure(failure))
 
             case let .success(response):
-                guard let status = response.status
-                else { return completion(.failure(.connectivityFailure)) }
+                guard let basicDetails = response.basicDetails(
+                    digest: digest,
+                    formattedAmount: formatAmount(value: response.amount)
+                ) else { return completion(.failure(.connectivityFailure)) }
                 
-                completion(.success(.init(
-                    product: digest.product,
-                    status: status,
-                    formattedAmount: formatAmount(value: response.amount),
-                    formattedDate: nil, // TODO: extract from new version of response - Lera
-                    merchantName: response.merchantName,
-                    message: response.message,
-                    paymentOperationDetailID: response.paymentOperationDetailID,
-                    purpose: response.purpose,
-                    uin: digest.uin
-                )))
+                completion(.success(basicDetails))
             }
         }
     }
@@ -142,9 +132,10 @@ extension RootViewModelFactory {
                 completion(.failure(.server("server error")))
                 
             case "99999999999999999999":
-                let model = makeOperationDetailModelByPaymentID(
-                    basicDetails: .stub(digest: digest, status: status)
-                )
+                let model = makeOperationDetailModelByPaymentID(.stub(
+                    digest: digest, 
+                    status: status
+                ))
                 model.event(.load)
                 
                 completion(.success(model))
@@ -251,6 +242,30 @@ private extension String {
     static let termURLPlace = "принять условия обслуживания"
 }
 
+private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
+    
+    func basicDetails(
+        digest: OperationDetailDomain.PaymentDigest,
+        formattedAmount: String?
+    ) -> OperationDetailDomain.BasicDetails? {
+        
+        guard let status else { return nil }
+        
+        return .init(
+            product: digest.product,
+            status: status,
+            formattedAmount: formattedAmount,
+            formattedDate: nil, // TODO: extract from new version of response - Lera
+            merchantName: merchantName,
+            message: message,
+            paymentOperationDetailID: paymentOperationDetailID,
+            purpose: purpose,
+            uin: digest.uin
+        )
+    }
+}
+
+// TODO: - extract
 import CombineSchedulers
 
 extension C2GPaymentViewModel
@@ -279,6 +294,8 @@ where State == C2GPaymentState<C2GPaymentDomain.Context>,
         )
     }
 }
+
+// MARK: - Stub
 
 private extension OperationDetailDomain.BasicDetails {
     

@@ -11,7 +11,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeOperationDetailModelByPaymentID(
-        basicDetails: OperationDetailDomain.BasicDetails
+        _ basicDetails: OperationDetailDomain.BasicDetails
     ) -> OperationDetailDomain.Model {
         
         return makeOperationDetailModel(
