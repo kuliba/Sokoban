@@ -18,7 +18,7 @@ public struct Form<Confirmation> {
     public var otp: String?
     public var orderAccountResponse: OrderAccountResponse?
     
-    public var amount: Double?
+    public var amount: Decimal?
     public var sourceAccountId: Int?
     public var sourceCardId: Int?
 
@@ -29,7 +29,7 @@ public struct Form<Confirmation> {
         topUp: TopUp,
         otp: String? = nil,
         orderAccountResponse: OrderAccountResponse? = nil,
-        amount: Double? = nil,
+        amount: Decimal? = nil,
         sourceAccountId: Int? = nil,
         sourceCardId: Int? = nil
     ) {

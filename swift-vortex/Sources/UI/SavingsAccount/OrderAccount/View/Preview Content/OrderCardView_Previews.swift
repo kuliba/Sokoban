@@ -62,6 +62,8 @@ struct OrderCardView_Previews: PreviewProvider {
                         .foregroundStyle(.white)
                         .font(.title3)
                 }
+        } productSelectView: {
+            Text("productSelectView")
         }
     }
 }
@@ -149,7 +151,7 @@ where Confirmation == PreviewConfirmation {
 private extension Constants {
     
     static let preview: Self = .init(
-        currencyCode: 810,
+        currency: .init(code: 810, symbol: "rub"),
         designMd5hash: "",
         header: .init(title: "title", subtitle: "subtitle"),
         hint: "hint",

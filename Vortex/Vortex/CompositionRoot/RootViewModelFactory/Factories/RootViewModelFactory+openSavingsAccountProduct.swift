@@ -13,6 +13,7 @@ import SavingsAccount
 import OTPInputComponent
 import RemoteServices
 import LoadableState
+import PaymentComponents
 
 extension RootViewModelFactory {
     
@@ -21,7 +22,14 @@ extension RootViewModelFactory {
         notify: @escaping (OpenSavingsAccountDomain.OrderAccountResponse) -> Void
     ) -> OpenSavingsAccount {
         
-        let content: OpenSavingsAccountDomain.Content = makeContent()
+        let products = model.productSelectProducts
+
+        let initialState: OpenSavingsAccountDomain.State = .init(
+            loadableForm: .loaded(nil),
+            productSelect: .init(selected: products().first)
+        )
+
+        let content: OpenSavingsAccountDomain.Content = makeContent(initialState, products)
         content.event(.load)
         
         let cancellable = content.$state
@@ -42,13 +50,22 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeContent(
-        initialState: OpenSavingsAccountDomain.State = .init(loadableForm: .loaded(nil))
+        _ initialState: OpenSavingsAccountDomain.State,
+        _ products: @escaping ProductSelectReducer.GetProducts
     ) -> OpenSavingsAccountDomain.Content {
         
-        let reducer = OpenSavingsAccountDomain.Reducer { confirmation in
-            
-            { confirmation.otp.event(.otpField(.failure(.serverError($0)))) }
-        }
+        let productSelectReducer = ProductSelectReducer(
+            getProducts: products
+        )
+        
+        let reducer = OpenSavingsAccountDomain.Reducer(
+            otpWitness:  { confirmation in
+                
+                { confirmation.otp.event(.otpField(.failure(.serverError($0)))) }
+            },
+            productSelectReduce: productSelectReducer.reduce(_:_:)
+        )
+        
         let effectHandler = OpenSavingsAccountDomain.EffectHandler(
             load: load,
             loadConfirmation: loadConfirmation,
@@ -345,7 +362,7 @@ private extension SavingsAccountProduct {
         
         .init(
             constants: .init(
-                currencyCode: item.currency.code,
+                currency: .init(code: item.currency.code, symbol: item.currency.symbol),
                 designMd5hash: item.design,
                 header: .init(title: item.title, subtitle: item.description),
                 hint: item.hint,

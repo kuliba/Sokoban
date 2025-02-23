@@ -7,6 +7,7 @@
 
 import Foundation
 import LoadableState
+import PaymentComponents
 
 public enum ProductEvent<Confirmation> {
     
@@ -19,6 +20,8 @@ public enum ProductEvent<Confirmation> {
     case orderAccountResult(OrderAccountResult)
     case otp(String)
     case setConsent(Bool)
-    
+    case productSelect(ProductSelectEvent)
+    case amount(Decimal?)
+
     public typealias OrderAccountResult = Result<OrderAccountResponse, LoadFailure>
 }

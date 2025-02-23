@@ -9,8 +9,9 @@ import LoadableState
 import SwiftUI
 import UIPrimitives
 
-public struct OrderAccountView<Confirmation, ConfirmationView>: View
-where ConfirmationView: View{
+public struct OrderAccountView<Confirmation, ConfirmationView, ProductSelectView>: View
+where ConfirmationView: View,
+      ProductSelectView: View {
     
     let state: State
     let event: (Event) -> Void
@@ -18,7 +19,8 @@ where ConfirmationView: View{
     let factory: ImageViewFactory
     // TODO: move to factory, rename factory
     let confirmationView: (Confirmation) -> ConfirmationView
-    
+    let productSelectView: () -> ProductSelectView
+
     private let coordinateSpace: String
     
     public init(
@@ -27,6 +29,7 @@ where ConfirmationView: View{
         config: Config,
         factory: ImageViewFactory,
         @ViewBuilder confirmationView: @escaping (Confirmation) -> ConfirmationView,
+        @ViewBuilder productSelectView: @escaping () -> ProductSelectView,
         coordinateSpace: String = "orderScroll"
     ) {
         self.state = state
@@ -34,6 +37,7 @@ where ConfirmationView: View{
         self.config = config
         self.factory = factory
         self.confirmationView = confirmationView
+        self.productSelectView = productSelectView
         self.coordinateSpace = coordinateSpace
     }
     
@@ -134,6 +138,7 @@ private extension OrderAccountView {
             productView(product(form))
             income(income: state.form?.constants.income ?? "", false)
             topUpView(topUp(form))
+            productSelector(form)
         }
         .disabled(state.hasConfirmation)
     }
@@ -222,7 +227,16 @@ private extension OrderAccountView {
         )
         .rounded(config.roundedConfig)
     }
-
+    
+    @ViewBuilder
+    func productSelector(
+        _ form: Form<Confirmation>
+    ) -> ProductSelectView? {
+        
+        if form.topUp.isOn {
+            productSelectView()
+        }
+    }
 }
 
 private extension Product {

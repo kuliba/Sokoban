@@ -117,8 +117,8 @@ public struct OrderSavingsAccountConfig {
         
         public struct Colors {
             
-            let active: Color
-            let inactive: Color
+            public let active: Color
+            public let inactive: Color
             
             public init(
                 active: Color,
