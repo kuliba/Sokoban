@@ -96,21 +96,12 @@ extension RootViewModelFactory {
             case let .success(response):
                 guard let basicDetails = response.payload(
                     digest: digest,
-                    formattedAmount: formatAmount(value: response.amount)
+                    formattedAmount: formatAmount(value: response.amount, currencyCode: "RUB")
                 ) else { return completion(.failure(.connectivityFailure)) }
                 
                 completion(.success(basicDetails))
             }
         }
-    }
-    
-    private func formatAmount(
-        value: Decimal?
-    ) -> String? {
-        
-        guard let value = value?.doubleValue else { return nil }
-        
-        return model.amountFormatted(amount: value, currencyCode: "RUB", style: .normal)
     }
     
     // TODO: remove stub
