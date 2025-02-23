@@ -353,7 +353,7 @@ private extension SavingsAccountProduct {
                 links: .init(conditions: item.conditionsLink, tariff: item.tariffLink),
                 openValue: openValue,
                 orderServiceOption: orderServiceOption),
-            messages: .default())
+            topUp: .default())
     }
     
     var orderServiceOption: String {
@@ -378,32 +378,11 @@ private extension SavingsAccountProduct {
     }
 }
 
-private extension SavingsAccount.Messages {
+private extension SavingsAccount.TopUp {
     
     static func `default`() -> Self {
 
-        return .init(
-            description: description(
-                "Пополнение доступно без комиссии\nс рублевого счета или карты"
-            ),
-            icon: "ic24MessageSquare",
-            subtitle: "Пополнить сейчас",
-            title: "Хотите пополнить счет?",
-            isOn: false
-        )
-    }
-}
-
-private extension SavingsAccount.Messages {
-
-    static func description(
-        _ description: String
-    ) -> AttributedString {
-        
-        var attributedString = AttributedString(description)
-        attributedString.foregroundColor = .textPlaceholder
-        attributedString.font = .textBodySR12160()
-        return attributedString
+        return .init(isOn: false)
     }
 }
 

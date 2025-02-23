@@ -14,7 +14,7 @@ public struct Form<Confirmation> {
     
     public var confirmation: Loadable<Confirmation>
     public var consent = true
-    public var messages: Messages
+    public var topUp: TopUp
     public var otp: String?
     public var orderAccountResponse: OrderAccountResponse?
     
@@ -26,7 +26,7 @@ public struct Form<Confirmation> {
         constants: Constants,
         confirmation: Loadable<Confirmation> = .loaded(nil),
         consent: Bool = true,
-        messages: Messages,
+        topUp: TopUp,
         otp: String? = nil,
         orderAccountResponse: OrderAccountResponse? = nil,
         amount: Double? = nil,
@@ -36,7 +36,7 @@ public struct Form<Confirmation> {
         self.constants = constants
         self.confirmation = confirmation
         self.consent = consent
-        self.messages = messages
+        self.topUp = topUp
         self.otp = otp
         self.orderAccountResponse = orderAccountResponse
         self.amount = amount

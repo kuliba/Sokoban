@@ -131,7 +131,7 @@ where Confirmation == PreviewConfirmation {
         constants: Constants = .preview,
         confirmation: Loadable<PreviewConfirmation>,
         consent: Bool = true,
-        messages: Messages = .preview(),
+        messages: TopUp = .preview(),
         otp: String? = nil,
         orderAccountResponse: OrderAccountResponse? = nil
     ) -> Self {
@@ -139,7 +139,7 @@ where Confirmation == PreviewConfirmation {
         return .init(
             constants: constants,
             confirmation: confirmation,
-            messages: messages,
+            topUp: messages,
             otp: otp,
             orderAccountResponse: orderAccountResponse
         )
@@ -189,21 +189,13 @@ where Success == PreviewConfirmation,
     static let success: Self = .success(.init())
 }
 
-private extension Messages {
+private extension TopUp {
     
     static func preview(
-        description: AttributedString = "description",
-        icon: String = "icon",
-        subtitle: String = "subtitle",
-        title: String = "title",
         isOn: Bool = false
     ) -> Self {
         
         return .init(
-            description: description,
-            icon: icon,
-            subtitle: subtitle,
-            title: title,
             isOn: isOn
         )
     }

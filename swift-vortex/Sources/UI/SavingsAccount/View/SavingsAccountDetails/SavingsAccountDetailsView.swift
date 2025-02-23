@@ -199,15 +199,6 @@ struct SavingsAccountDetailsView: View {
     }
 }
 
-private extension String {
-    
-    func string(
-        _ needShimmering: Bool
-    ) -> String {
-        needShimmering ? "" : self
-    }
-}
-
 extension SavingsAccountDetailsView {
     
     typealias AmountToString = (Decimal, String) -> String

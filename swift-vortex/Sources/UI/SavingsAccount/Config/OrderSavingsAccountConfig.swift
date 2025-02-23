@@ -147,10 +147,10 @@ public struct OrderSavingsAccountConfig {
     public struct TopUp {
         
         let amount: AmountInfo
-        let description: TextWithConfig
+        let description: TitleConfig
         let image: Image
-        let subtitle: TextWithConfig
-        let title: TextWithConfig
+        let subtitle: TitleConfig
+        let title: TitleConfig
         let toggle: ToggleConfig
         
         public struct AmountInfo {
@@ -172,10 +172,10 @@ public struct OrderSavingsAccountConfig {
         
         public init(
             amount: AmountInfo,
-            description: TextWithConfig,
+            description: TitleConfig,
             image: Image,
-            subtitle: TextWithConfig,
-            title: TextWithConfig,
+            subtitle: TitleConfig,
+            title: TitleConfig,
             toggle: ToggleConfig
         ) {
             self.amount = amount

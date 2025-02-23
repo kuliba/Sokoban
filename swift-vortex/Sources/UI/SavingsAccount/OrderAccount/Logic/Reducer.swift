@@ -55,7 +55,7 @@ public extension Reducer {
             
         case let .setMessages(isOn):
             if state.loadableForm.state != nil {
-                state.loadableForm.state?.messages.isOn = isOn
+                state.loadableForm.state?.topUp.isOn = isOn
             }
             
         case let .orderAccountResult(orderAccountResult):
