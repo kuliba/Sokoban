@@ -12,7 +12,7 @@ import RemoteServices
 extension RootViewModelFactory {
     
     @inlinable
-    func makeOperationDetailModel(
+    func makeOperationDetail(
         digest: OperationDetailDomain.StatementDigest
     ) -> OperationDetailDomain.Model {
         

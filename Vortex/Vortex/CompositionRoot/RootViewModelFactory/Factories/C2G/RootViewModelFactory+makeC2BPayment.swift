@@ -64,7 +64,7 @@ extension RootViewModelFactory {
                 completion(.failure(failure))
                 
             case let .success(payload):
-                let model = makeOperationDetailModelByPaymentID(payload)
+                let model = makeOperationDetailByPaymentID(payload)
                 model.event(.load)
                 
                 completion(.success(.init(fields: .init(payload), details: model)))
@@ -136,7 +136,7 @@ extension RootViewModelFactory {
                     digest: digest,
                     status: status
                 )
-                let model = makeOperationDetailModelByPaymentID(basicDetails)
+                let model = makeOperationDetailByPaymentID(basicDetails)
                 model.event(.load)
                 
                 completion(.success(.init(fields: .init(basicDetails), details: model)))
