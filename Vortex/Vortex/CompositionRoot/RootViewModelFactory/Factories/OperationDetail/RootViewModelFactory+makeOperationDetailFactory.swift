@@ -32,7 +32,7 @@ extension RootViewModelFactory {
             
             model.event(.load)
             
-            return .v3(.c2gPayment)
+            return .v3(.init(model: model))
             
         default:
             return .legacy(.init(
