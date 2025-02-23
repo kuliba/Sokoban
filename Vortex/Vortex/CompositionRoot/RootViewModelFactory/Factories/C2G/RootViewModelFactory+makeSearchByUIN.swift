@@ -36,13 +36,7 @@ extension RootViewModelFactory {
                 
                 guard let self else { return }
                 
-                switch $0 {
-                case let .failure(failure):
-                    completion(.failure(failure))
-                    
-                case let .success(payload):
-                    completion(.payment(makeC2BPayment(payload: payload)))
-                }
+                completion($0.map(makeC2BPayment))
             }
         }
     }
