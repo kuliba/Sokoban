@@ -52,8 +52,6 @@ extension OperationDetailDomain {
         let uin: String
     }
     
-    typealias PaymentDigest = C2GCore.C2GPaymentDigest // TODO: decouple or leave as is
-    
     struct StatementDigest: Equatable {
         
         let documentID: String // optional Int in statement but needed as String to call `getOperationDetail` API
@@ -81,12 +79,6 @@ extension OperationDetailDomain {
         let product: Product
     }
 
-//    struct CoreDetails: Equatable {
-//        
-//        let product: Product
-//        let status: Status
-//    }
-    
     struct ExtendedDetails: Equatable {
         
         let product: Product
@@ -118,6 +110,7 @@ extension OperationDetailDomain {
     }
 }
 
+// TODO: move to call site
 extension ProductStatementData {
     
     var digest: OperationDetailDomain.StatementDigest? {

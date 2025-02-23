@@ -23,8 +23,8 @@ extension RootViewModelFactory {
         ) else { return nil }
         
         switch statementData.paymentDetailType {
-        case "C2G_PAYMENT": // extract to String private static let
-            return .v3("C2G_PAYMENT")
+        case .c2gPayment:
+            return .v3(.c2gPayment)
             
         default:
             return .legacy(.init(
@@ -87,4 +87,9 @@ extension ProductStatementsStorage {
             .sorted { ($0.tranDate ?? $0.date) > ($1.tranDate ?? $1.date) }
             .first
     }
+}
+
+private extension String {
+    
+    static let c2gPayment: Self = "C2G_PAYMENT"
 }

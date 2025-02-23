@@ -231,7 +231,7 @@ private extension String {
 private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
     
     func payload(
-        digest: OperationDetailDomain.PaymentDigest,
+        digest: C2GPaymentDigest,
         formattedAmount: String?
     ) -> OperationDetailDomain.ModelPayload? {
         
