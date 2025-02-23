@@ -10,60 +10,60 @@ import Foundation
 extension RootViewModelFactory {
     
     @inlinable
-    func formatAmount(
-        value: Decimal?,
+    func format(
+        amount: Decimal?,
         currencyCode: String?,
         style: Model.AmountFormatStyle = .normal
     ) -> String? {
         
-        return formatAmount(
-            value: value?.doubleValue,
+        return format(
+            amount: amount?.doubleValue,
             currencyCode: currencyCode,
             style: style
         )
     }
     
     @inlinable
-    func formatAmount(
-        value: Double?,
+    func format(
+        amount: Double?,
         currencyCode: String?,
         style: Model.AmountFormatStyle = .normal
     ) -> String? {
         
-        guard let value else { return nil }
+        guard let amount else { return nil }
         
         return model.amountFormatted(
-            amount: value,
+            amount: amount,
             currencyCode: currencyCode,
             style: style
         )
     }
     
     @inlinable
-    func formatAmount(
-        value: Decimal?,
+    func format(
+        amount: Decimal?,
         currencyCodeNumeric: Int,
         style: Model.AmountFormatStyle = .normal
     ) -> String? {
         
-        return formatAmount(
-            value: value?.doubleValue,
+        return format(
+            amount: amount?.doubleValue,
             currencyCodeNumeric: currencyCodeNumeric,
             style: style
         )
     }
     
     @inlinable
-    func formatAmount(
-        value: Double?,
+    func format(
+        amount: Double?,
         currencyCodeNumeric: Int,
         style: Model.AmountFormatStyle = .normal
     ) -> String? {
         
-        guard let value else { return nil }
+        guard let amount else { return nil }
         
         return model.amountFormatted(
-            amount: value,
+            amount: amount,
             currencyCodeNumeric: currencyCodeNumeric,
             style: .normal
         )

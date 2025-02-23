@@ -53,8 +53,8 @@ extension RootViewModelFactory {
         _ statement: ProductStatementData
     ) -> OperationDetailDomain.Model? {
         
-        let formattedAmount = formatAmount(
-            value: statement.amount,
+        let formattedAmount = format(
+            amount: statement.amount,
             currencyCodeNumeric: statement.currencyCodeNumeric
         )
         let dateString = DateFormatter.operation.string(from: statement.tranDate ?? statement.date) // TODO: - improve: such formatting should be injected (copy from OperationDetailInfoViewModel.swift:100)
