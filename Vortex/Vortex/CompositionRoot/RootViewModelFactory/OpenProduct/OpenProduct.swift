@@ -12,7 +12,4 @@ enum OpenProduct {
     case unknown // TODO: replace with other types
     
     typealias OpenCard = Node<OpenCardDomain.Binder>
-    
-    typealias OpenSavingsAccount = Node<OpenSavingsAccountDomain.Binder>
-
 }

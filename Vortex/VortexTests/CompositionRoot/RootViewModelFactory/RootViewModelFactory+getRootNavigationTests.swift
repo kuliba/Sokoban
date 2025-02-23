@@ -259,6 +259,9 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         case .orderCardResponse:
             return .orderCardResponse
             
+        case .orderSavingsAccountResponse:
+            return .orderSavingsAccountResponse
+            
         case let .outside(outside):
             switch outside {
             case let .productProfile(profile):
@@ -291,6 +294,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         case outside(EquatableRootViewOutside)
         case openProduct(OpenProduct)
         case orderCardResponse
+        case orderSavingsAccountResponse
         case scanQR
         case standardPayment
         case templates

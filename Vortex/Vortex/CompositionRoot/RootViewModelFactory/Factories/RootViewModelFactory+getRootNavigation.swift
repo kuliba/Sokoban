@@ -39,14 +39,13 @@ extension RootViewModelFactory {
             case .card:
                 completion(.openProduct(openProduct(
                     type: type,
-                    notify: { notify(.select(.orderCardResponse($0))) }
+                    notify: notify
                 )))
                 
             case .savingsAccount:
                 completion(.openProduct(openProduct(
                     type: type,
-                    notify: { notify(.select(.orderSavingsAccountResponse($0))) },
-                    dismiss: { notify(.dismiss) }
+                    notify: notify
                 )))
                 
             default:

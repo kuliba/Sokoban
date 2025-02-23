@@ -19,7 +19,7 @@ extension RootViewModelFactory {
     @inlinable
     func openSavingsAccountProduct(
         notify: @escaping (OpenSavingsAccountDomain.OrderAccountResponse) -> Void
-    ) -> OpenProduct.OpenSavingsAccount {
+    ) -> OpenSavingsAccount {
         
         let content: OpenSavingsAccountDomain.Content = makeContent()
         content.event(.load)
@@ -113,9 +113,9 @@ extension RootViewModelFactory {
 
         service("") { [weak self] in
             
-            if case .informer = $0.loadFailure?.type {
+            if let self, case .informer = $0.loadFailure?.type {
                 
-                self?.schedulers.background.delay(for: .seconds(2), dismissInformer)
+                schedulers.background.delay(for: settings.informerDelay, dismissInformer)
             }
             
             completion($0.loadFormResult)
@@ -153,7 +153,7 @@ extension RootViewModelFactory {
             
             if case .informer = $0.loadFailure?.type {
                 
-                schedulers.background.delay(for: .seconds(2)) {
+                schedulers.background.delay(for: settings.informerDelay) {
                     
                     notify(.dismissInformer)
                 }

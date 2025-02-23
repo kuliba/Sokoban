@@ -16,11 +16,12 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeSavingsNodes(
-        _ dismiss: @escaping () -> Void
+        _ dismiss: @escaping () -> Void,
+        _ notify: @escaping (OpenSavingsAccountDomain.OrderAccountResponse) -> Void
     ) -> SavingsAccountNodes {
         
         let binder: SavingsAccountDomain.Binder = makeSavingsAccount()
-        let openBinder = openSavingsAccountProduct(notify: {_ in })
+        let openBinder = openSavingsAccountProduct(notify: notify)
         
         let flowCancellable = binder.flow.$state
             .compactMap {

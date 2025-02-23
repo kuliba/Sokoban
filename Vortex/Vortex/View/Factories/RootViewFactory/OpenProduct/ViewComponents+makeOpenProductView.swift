@@ -23,11 +23,10 @@ extension ViewComponents {
                     dismiss: dismiss
                 )
           
-        case let .savingsAccount(openSavingsAccount):
-            makeOpenSavingsAccountView(openSavingsAccount.openSavingsAccountNode.model, dismiss: dismiss)
+        case let .savingsAccount(nodes):
 
-           /* makeSavingsAccountView(openSavingsAccount)
-                .navigationBarHidden(true)*/
+            makeSavingsAccountBinderView(binder: nodes.savingsAccountNode.model, openAccountBinder: nodes.openSavingsAccountNode.model, dismiss: dismiss)
+                .navigationBarHidden(true)
 
         case .unknown:
             Text("Unknown product")
