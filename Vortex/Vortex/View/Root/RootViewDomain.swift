@@ -19,6 +19,8 @@ enum RootViewSelect: Equatable {
     
     case openProduct(OpenProductType)
     case orderCardResponse(OpenCardDomain.OrderCardResponse)
+    case orderSavingsAccountResponse(OpenSavingsAccountDomain.OrderAccountResponse)
+
     case outside(RootViewOutside)
     case scanQR
     case searchByUIN
@@ -43,6 +45,8 @@ enum RootViewNavigation {
     case failure(Failure)
     case openProduct(OpenProduct)
     case orderCardResponse(OpenCardDomain.OrderCardResponse)
+    case orderSavingsAccountResponse(OpenSavingsAccountDomain.OrderAccountResponse)
+
     case outside(RootViewOutside)
     case scanQR(Node<QRScannerDomain.Binder>)
     case searchByUIN(SearchByUIN)

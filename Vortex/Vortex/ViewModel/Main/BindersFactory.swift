@@ -18,7 +18,7 @@ typealias MakeSavingsAccountNodes = (@escaping () -> Void) -> SavingsAccountNode
 
 struct SavingsAccountNodes {
     
-    let openSavingsAccountNode: Node<SavingsAccountDomain.OpenAccountBinder>
+    let openSavingsAccountNode: Node<OpenSavingsAccountDomain.Binder>
     let savingsAccountNode: Node<SavingsAccountDomain.Binder>
 }
 

@@ -16,15 +16,18 @@ extension RootViewFactoryComposer {
     
     func makeSavingsAccountBinderView(
         binder: SavingsAccountDomain.Binder,
-        openAccountBinder: SavingsAccountDomain.OpenAccountBinder
-    ) -> SavingsAccountBinderView? {
+        openAccountBinder: OpenSavingsAccountDomain.Binder
+    ) -> SavingsAccountBinderView<Text>? {
         
         return .init(
             binder: binder,
             openAccountBinder: openAccountBinder,
             config: .iVortex,
             factory: makeFactory(),
-            openAccountFactory: makeOpenSavingsAccountLandingViewFactory()
+            makeOpenBinder: {_ in
+            
+                    Text("makeOpenBinder")
+            }//makeOpenSavingsAccountView(openAccountBinder, dismiss: {})
         )
     }
     

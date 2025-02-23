@@ -20,7 +20,7 @@ extension RootViewModelFactory {
     ) -> SavingsAccountNodes {
         
         let binder: SavingsAccountDomain.Binder = makeSavingsAccount()
-        let openBinder: SavingsAccountDomain.OpenAccountBinder = makeOpenSavingsAccount()
+        let openBinder = openSavingsAccountProduct(notify: {_ in })
         
         let flowCancellable = binder.flow.$state
             .compactMap {
@@ -41,29 +41,9 @@ extension RootViewModelFactory {
                 }
             }
             .sink { binder.flow.event(.navigation(.loaded)) }
-        
-        let flowOpenCancellable = openBinder.flow.$state
-            .compactMap {
-                switch $0.navigation {
-                case .main: return ()
-                    
-                default: return nil
-                }
-            }
-            .sink { dismiss() }
-        
-        let contentOpenCancellable = openBinder.content.$state
-            .compactMap {
-                switch $0.status {
-                case .loaded: return ()
-                    
-                default: return nil
-                }
-            }
-            .sink { openBinder.flow.event(.navigation(.loaded)) }
-
+                
         return .init(
-            openSavingsAccountNode: .init(model: openBinder, cancellables: [flowOpenCancellable, contentOpenCancellable]),
+            openSavingsAccountNode: openBinder,
             savingsAccountNode: .init(model: binder, cancellables: [flowCancellable, contentCancellable])
         )
     }

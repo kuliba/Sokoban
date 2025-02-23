@@ -2883,6 +2883,7 @@
 		8372A8AA2D6851C900CD1CFB /* OpenSavingsAccountDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8372A8A92D6851C900CD1CFB /* OpenSavingsAccountDomain.swift */; };
 		8372A8AC2D6855A400CD1CFB /* ViewComponents+makeOrderSavingsAccountCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8372A8AB2D6855A400CD1CFB /* ViewComponents+makeOrderSavingsAccountCompleteView.swift */; };
 		8372A8AE2D6856E200CD1CFB /* OrderSavingsAccountCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8372A8AD2D6856E200CD1CFB /* OrderSavingsAccountCompleteView.swift */; };
+		8372A8B02D685F5F00CD1CFB /* RootViewModelFactory+openSavingsAccountProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8372A8AF2D685F5F00CD1CFB /* RootViewModelFactory+openSavingsAccountProduct.swift */; };
 		8372A8B22D688B1D00CD1CFB /* LoadableState in Frameworks */ = {isa = PBXBuildFile; productRef = 8372A8B12D688B1D00CD1CFB /* LoadableState */; };
 		8372A8B42D6892EC00CD1CFB /* RequestFactory+createMakeOpenSavingsAccountRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8372A8B32D6892EC00CD1CFB /* RequestFactory+createMakeOpenSavingsAccountRequest.swift */; };
 		8372A8B62D68970000CD1CFB /* RequestFactory+createMakeOpenSavingsAccountRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8372A8B52D68970000CD1CFB /* RequestFactory+createMakeOpenSavingsAccountRequestTests.swift */; };
@@ -6609,6 +6610,7 @@
 		8372A8A92D6851C900CD1CFB /* OpenSavingsAccountDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSavingsAccountDomain.swift; sourceTree = "<group>"; };
 		8372A8AB2D6855A400CD1CFB /* ViewComponents+makeOrderSavingsAccountCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeOrderSavingsAccountCompleteView.swift"; sourceTree = "<group>"; };
 		8372A8AD2D6856E200CD1CFB /* OrderSavingsAccountCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSavingsAccountCompleteView.swift; sourceTree = "<group>"; };
+		8372A8AF2D685F5F00CD1CFB /* RootViewModelFactory+openSavingsAccountProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+openSavingsAccountProduct.swift"; sourceTree = "<group>"; };
 		8372A8B32D6892EC00CD1CFB /* RequestFactory+createMakeOpenSavingsAccountRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createMakeOpenSavingsAccountRequest.swift"; sourceTree = "<group>"; };
 		8372A8B52D68970000CD1CFB /* RequestFactory+createMakeOpenSavingsAccountRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createMakeOpenSavingsAccountRequestTests.swift"; sourceTree = "<group>"; };
 		8375C01D2C0851D900E4498E /* PaymentsTransfersViewModelGetSectionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewModelGetSectionsTests.swift; sourceTree = "<group>"; };
@@ -12001,6 +12003,7 @@
 				2A73BD142CFA281300075DC8 /* RootViewModelFactory+makeUserAccountNavigationStateManager.swift */,
 				2A234FC32D47AB3E00EE97BF /* RootViewModelFactory+makeSplashScreenViewModel.swift */,
 				2A3C2CF32D4BC1C5003FEEFE /* RootViewModelFactory+makeMeToMeNode.swift */,
+				8372A8AF2D685F5F00CD1CFB /* RootViewModelFactory+openSavingsAccountProduct.swift */,
 			);
 			path = Factories;
 			sourceTree = "<group>";
@@ -23243,6 +23246,7 @@
 				ED2D8A03286DB6D30000B391 /* imageGalleryAgentMock.swift in Sources */,
 				EDB14383265FDA410028EF5A /* SceneDelegate.swift in Sources */,
 				77577BAD29929F1B00D6BD66 /* MockEncryptionAgent.swift in Sources */,
+				8372A8B02D685F5F00CD1CFB /* RootViewModelFactory+openSavingsAccountProduct.swift in Sources */,
 				2AECBC532BEBAE4D000B0C0E /* PaymentsTransfersFlowReducerFactory.swift in Sources */,
 				2AF177532AC4B4DE00D100DD /* KeyExchangeCryptographer+live.swift in Sources */,
 				EDB1658F266A1942007E6030 /* PaymentsModel.swift in Sources */,

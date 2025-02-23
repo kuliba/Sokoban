@@ -502,6 +502,9 @@ extension RootViewModelFactory {
                 
                 case .openProduct, .searchByUIN, .standardPayment, .userAccount:
                     return .milliseconds(600)
+                    
+                case .orderSavingsAccountResponse:
+                    return .milliseconds(100)
                 }
             }
         )

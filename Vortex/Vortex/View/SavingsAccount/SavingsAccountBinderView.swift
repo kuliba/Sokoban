@@ -9,28 +9,17 @@ import RxViewModel
 import SwiftUI
 import UIPrimitives
 
-struct SavingsAccountBinderView: View {
+struct SavingsAccountBinderView<OpenSavingsAccountView>: View
+where OpenSavingsAccountView: View
+{
         
-    private let binder: SavingsAccountDomain.Binder
-    private let openAccountBinder: SavingsAccountDomain.OpenAccountBinder
-
-    private let config: Config
-    private let factory: Factory
-    private let openAccountFactory: OpenAccountFactory
+    let binder: SavingsAccountDomain.Binder
+    let openAccountBinder: OpenSavingsAccountDomain.Binder
     
-    init(
-        binder: SavingsAccountDomain.Binder,
-        openAccountBinder: SavingsAccountDomain.OpenAccountBinder,
-        config: Config,
-        factory: Factory,
-        openAccountFactory: OpenAccountFactory
-    ) {
-        self.binder = binder
-        self.openAccountBinder = openAccountBinder
-        self.config = config
-        self.factory = factory
-        self.openAccountFactory = openAccountFactory
-    }
+    let config: Config
+
+    let factory: Factory
+    let makeOpenBinder: (OpenSavingsAccountDomain.Binder) -> OpenSavingsAccountView
     
     var body: some View {
         
@@ -121,7 +110,8 @@ struct SavingsAccountBinderView: View {
         
         switch destination {
         case .openSavingsAccount:
-            OpenSavingsAccountBinderView(binder: openAccountBinder, config: .prod, factory: openAccountFactory)
+            
+            makeOpenBinder(openAccountBinder)
         }
     }
 }

@@ -29,7 +29,10 @@ extension RootViewModelFactory {
         switch select {
         case let .orderCardResponse(orderCardResponse):
             completion(.orderCardResponse(orderCardResponse))
-            
+        
+        case let .orderSavingsAccountResponse(orderAccountResponse):
+            completion(.orderSavingsAccountResponse(orderAccountResponse))
+
         case let .openProduct(type):
             
             switch type {
@@ -42,7 +45,7 @@ extension RootViewModelFactory {
             case .savingsAccount:
                 completion(.openProduct(openProduct(
                     type: type,
-                    notify: { _ in notify(.select(.openProduct(.savingsAccount))) },
+                    notify: { notify(.select(.orderSavingsAccountResponse($0))) },
                     dismiss: { notify(.dismiss) }
                 )))
                 
