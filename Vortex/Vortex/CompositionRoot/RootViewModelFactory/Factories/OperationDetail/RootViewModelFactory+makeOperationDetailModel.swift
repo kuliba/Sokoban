@@ -12,7 +12,7 @@ import ProductSelectComponent
 extension RootViewModelFactory {
     
     typealias LoadOperationDetailCompletion = (Result<OperationDetailDomain.ExtendedDetails, Error>) -> Void
-    typealias LoadOperationDetail = (OperationDetailDomain.BasicDetails, @escaping LoadOperationDetailCompletion) -> Void
+    typealias LoadOperationDetail = (@escaping LoadOperationDetailCompletion) -> Void
     
     @inlinable
     func makeOperationDetailModel(
@@ -21,10 +21,7 @@ extension RootViewModelFactory {
     ) -> OperationDetailDomain.Model {
         
         let reducer = OperationDetailDomain.Reducer()
-        let effectHandler = OperationDetailDomain.EffectHandler { completion in
-            
-            load(basicDetails, completion)
-        }
+        let effectHandler = OperationDetailDomain.EffectHandler(load: load)
         
         return .init(
             initialState: .init(

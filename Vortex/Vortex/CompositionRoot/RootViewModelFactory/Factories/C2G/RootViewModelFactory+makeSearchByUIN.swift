@@ -65,27 +65,24 @@ extension RootViewModelFactory {
         
         let service = onBackground(
             makeRequest: Vortex.RequestFactory.createGetUINDataRequest,
-            mapResponse: RemoteServices.ResponseMapper.mapGetUINDataResponse
+            mapResponse: RemoteServices.ResponseMapper.mapGetUINDataResponse,
+            connectivityFailureMessage: .connectivity
         )
         
         service(uin.value) {
             
-            switch $0 {
-            case let .failure(failure):
-                completion(.failure(
-                    failure.backendFailure(connectivityMessage: .connectivity)
-                ))
+            let result = $0.map {
                 
-            case let .success(response):
-                completion(.success(.init(
+                return C2GPaymentDomain.ContentPayload(
                     selectedProduct: selectedProduct,
                     products: products,
-                    termsCheck: response.termsCheck,
-                    uin: response.uin,
-                    url: response.url
-                )))
+                    termsCheck: $0.termsCheck,
+                    uin: $0.uin,
+                    url: $0.url
+                )
             }
             
+            completion(result)
             _ = service
         }
     }
@@ -122,16 +119,6 @@ extension RootViewModelFactory {
     }
     
     typealias GetUINDataResult = Result<C2GPaymentDomain.ContentPayload, BackendFailure>
-}
-
-extension Error {
-    
-    func backendFailure(
-        connectivityMessage: String
-    ) -> BackendFailure {
-        
-        return (self as? BackendFailure) ?? .connectivity(connectivityMessage)
-    }
 }
 
 private extension RootViewModelFactory.GetUINDataResult {

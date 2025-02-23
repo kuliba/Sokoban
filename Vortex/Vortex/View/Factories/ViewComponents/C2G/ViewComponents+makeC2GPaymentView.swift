@@ -69,7 +69,7 @@ extension ViewComponents {
     func c2gPaymentFlowView(
         flow: C2GPaymentDomain.Flow,
         dismiss: @escaping () -> Void,
-        successView: @escaping (C2GPaymentDomain.Navigation.Cover<C2GPaymentDomain.C2GPaymentComplete>) -> some View
+        successView: @escaping (C2GPaymentDomain.Navigation.Cover<C2GPaymentDomain.Complete>) -> some View
     ) -> some View {
         
         RxWrapperView(model: flow) { state, _ in
@@ -100,7 +100,7 @@ struct C2GPaymentFlowView<SuccessView: View>: View {
 extension C2GPaymentFlowView {
     
     typealias State = C2GPaymentDomain.Navigation
-    typealias PaymentSuccess = C2GPaymentDomain.C2GPaymentComplete
+    typealias PaymentSuccess = C2GPaymentDomain.Complete
     typealias Cover = C2GPaymentDomain.Navigation.Cover<PaymentSuccess>
 }
 
@@ -123,7 +123,7 @@ extension C2GPaymentDomain.Navigation {
         return backendFailure
     }
     
-    var cover: Cover<C2GPaymentDomain.C2GPaymentComplete>? {
+    var cover: Cover<C2GPaymentDomain.Complete>? {
         
         guard case let .success(content) = self else { return nil }
         
