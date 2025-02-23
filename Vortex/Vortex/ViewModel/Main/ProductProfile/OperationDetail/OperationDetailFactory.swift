@@ -20,6 +20,7 @@ struct OperationDetailFactory {
     typealias MakeOperationDetailViewModel = (ProductData.ID, ProductStatementData.ID) -> OperationDetail?
 }
 
+// TODO: move top OperationDetailsDomain
 struct StatementDetails {
     
     let model: OperationDetailDomain.Model
