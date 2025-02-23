@@ -92,7 +92,7 @@ extension RootViewModelFactory {
             switch $0 {
             case let .failure(failure):
                 completion(.failure(failure))
-
+                
             case let .success(response):
                 guard let basicDetails = response.payload(
                     digest: digest,
@@ -223,49 +223,9 @@ private extension C2GPaymentDigest {
     }
 }
 
-private extension C2GPaymentState
-where Context == C2GPaymentDomain.Context {
-    
-    init(payload: C2GPaymentDomain.ContentPayload) {
-        
-        self.init(
-            context: .init(term: .terms(url: payload.url)),
-            productSelect: .init(selected: payload.selectedProduct),
-            termsCheck: payload.termsCheck,
-            uin: payload.uin
-        )
-    }
-}
-
-private extension AttributedString {
-    
-    static func terms(url: URL?) -> Self {
-        
-        var attributedString = AttributedString.turnSBPOnMessage
-        attributedString.foregroundColor = .textPlaceholder
-        attributedString.font = .textBodyMR14200()
-        
-        if let url, let terms = attributedString.range(of: String.termURLPlace) {
-            
-            attributedString[terms].link = url
-            attributedString[terms].underlineStyle = .single
-            attributedString[terms].foregroundColor = .textSecondary
-        }
-        
-        return attributedString
-    }
-}
-
-private extension AttributedString {
-    
-    static let turnSBPOnMessage: Self = .init("Включить переводы через СБП,\n\(String.termURLPlace)")
-}
-
 private extension String {
     
     static let connectivity = "Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения"
-    
-    static let termURLPlace = "принять условия обслуживания"
 }
 
 private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
@@ -287,36 +247,6 @@ private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
             paymentOperationDetailID: paymentOperationDetailID,
             purpose: purpose,
             uin: digest.uin
-        )
-    }
-}
-
-// TODO: - extract
-import CombineSchedulers
-
-extension C2GPaymentViewModel
-where State == C2GPaymentState<C2GPaymentDomain.Context>,
-      Event == C2GPaymentEvent,
-      Effect == C2GPaymentEffect {
-    
-    convenience init(
-        payload: C2GPaymentDomain.ContentPayload,
-        scheduler: AnySchedulerOf<DispatchQueue>
-    ) {
-        let initialState = C2GPaymentState(payload: payload)
-        
-        let productSelectReducer = ProductSelectReducer(
-            getProducts: { payload.products }
-        )
-        let reducer = C2GPaymentDomain.ContentReducer(
-            productSelectReduce: productSelectReducer.reduce
-        )
-        
-        self.init(
-            initialState: initialState,
-            reduce: reducer.reduce,
-            handleEffect: { _,_ in },
-            scheduler: scheduler
         )
     }
 }
