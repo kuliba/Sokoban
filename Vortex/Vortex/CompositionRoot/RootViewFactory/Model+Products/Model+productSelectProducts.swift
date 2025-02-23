@@ -15,11 +15,6 @@ extension Model {
             .compactMap(productSelectProduct)
     }
     
-    func sbpLinkedProduct() -> ProductSelect.Product? {
-        
-        nil // TODO: FIXME
-    }
-    
     func c2gProductSelectProducts() -> [ProductSelect.Product] {
         
         return c2gPaymentEligibleProducts()
