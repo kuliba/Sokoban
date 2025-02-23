@@ -5,13 +5,11 @@
 //  Created by Igor Malyarov on 23.02.2025.
 //
 
-import SwiftUI
-
 public struct StatementDetailContent: Equatable {
     
     public let formattedAmount: String?
     public let formattedDate: String?
-    public let merchantLogo: Image?
+    public let merchantLogo: String?
     public let merchantName: String?
     public let purpose: String?
     public let status: Status
@@ -19,7 +17,7 @@ public struct StatementDetailContent: Equatable {
     public init(
         formattedAmount: String?,
         formattedDate: String?,
-        merchantLogo: Image?,
+        merchantLogo: String?,
         merchantName: String?,
         purpose: String?,
         status: Status
