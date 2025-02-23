@@ -12,7 +12,7 @@ public struct StatementDetailContent: Equatable {
     public let merchantLogo: String?
     public let merchantName: String?
     public let purpose: String?
-    public let status: Status
+    public let status: Status?
     
     public init(
         formattedAmount: String?,
@@ -20,7 +20,7 @@ public struct StatementDetailContent: Equatable {
         merchantLogo: String?,
         merchantName: String?,
         purpose: String?,
-        status: Status
+        status: Status?
     ) {
         self.formattedAmount = formattedAmount
         self.formattedDate = formattedDate

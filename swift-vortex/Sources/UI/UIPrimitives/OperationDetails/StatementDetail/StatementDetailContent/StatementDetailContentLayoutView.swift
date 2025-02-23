@@ -31,9 +31,10 @@ public struct StatementDetailContentLayoutView<LogoView: View>: View {
             logoView()
                 .frame(config.logoSize)
             
-            content.status.title.text(
-                withConfig: config.config(for: content.status)
-            )
+            content.status.map {
+                
+                $0.title.text(withConfig: config.config(for: $0))
+            }
             
             content.merchantName?.text(withConfig: config.merchantName, alignment: .center)
             
