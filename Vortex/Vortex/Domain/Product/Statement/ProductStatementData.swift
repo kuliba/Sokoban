@@ -73,7 +73,7 @@ struct ProductStatementData: Identifiable, Equatable, Hashable {
     let dateN: String?
     let paymentTerm: String?
     let legalAct: String?
-    let supplierBillId: String?
+    let supplierBillID: String?
     let realPayerFIO: String?
     let realPayerINN: String?
     let realPayerKPP: String?
@@ -160,7 +160,7 @@ extension ProductStatementData: Codable {
         self.dateN = try container.decodeIfPresent(String.self, forKey: .dateN)
         self.paymentTerm = try container.decodeIfPresent(String.self, forKey: .paymentTerm)
         self.legalAct = try container.decodeIfPresent(String.self, forKey: .legalAct)
-        self.supplierBillId = try container.decodeIfPresent(String.self, forKey: .supplierBillId)
+        self.supplierBillID = try container.decodeIfPresent(String.self, forKey: .supplierBillId)
         self.realPayerFIO = try container.decodeIfPresent(String.self, forKey: .realPayerFIO)
         self.realPayerINN = try container.decodeIfPresent(String.self, forKey: .realPayerINN)
         self.realPayerKPP = try container.decodeIfPresent(String.self, forKey: .realPayerKPP)
@@ -212,7 +212,7 @@ extension ProductStatementData: Codable {
         try container.encodeIfPresent(dateN, forKey: .dateN)
         try container.encodeIfPresent(paymentTerm, forKey: .paymentTerm)
         try container.encodeIfPresent(legalAct, forKey: .legalAct)
-        try container.encodeIfPresent(supplierBillId, forKey: .supplierBillId)
+        try container.encodeIfPresent(supplierBillID, forKey: .supplierBillId)
         try container.encodeIfPresent(realPayerFIO, forKey: .realPayerFIO)
         try container.encodeIfPresent(realPayerINN, forKey: .realPayerINN)
         try container.encodeIfPresent(realPayerKPP, forKey: .realPayerKPP)

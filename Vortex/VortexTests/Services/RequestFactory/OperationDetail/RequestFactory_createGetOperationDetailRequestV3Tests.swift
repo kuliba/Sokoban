@@ -30,19 +30,20 @@ final class RequestFactory_createGetOperationDetailRequestV3Tests: XCTestCase {
     
     func test_createRequest_shouldSetRequestBody() throws {
         
-        let request = try createRequest(detailID: 4321)
+        let documentID = anyMessage()
+        let request = try createRequest(detailID: documentID)
         let decodedRequest = try JSONDecoder().decode(
             DetailID.self,
             from: XCTUnwrap(request.httpBody)
         )
         
-        XCTAssertNoDiff(decodedRequest.paymentOperationDetailId, 4321)
+        XCTAssertNoDiff(decodedRequest.documentId, documentID)
     }
     
     // MARK: - Helpers
     
     private func createRequest(
-        detailID: Int = .random(in: 1...1_000)
+        detailID: String = anyMessage()
     ) throws -> URLRequest {
         
         try Vortex.RequestFactory.createGetOperationDetailRequestV3(detailID: detailID)
@@ -50,6 +51,6 @@ final class RequestFactory_createGetOperationDetailRequestV3Tests: XCTestCase {
     
     private struct DetailID: Decodable {
         
-        let paymentOperationDetailId: Int
+        let documentId: String
     }
 }

@@ -41,7 +41,7 @@ extension Vortex.RequestFactory {
     }
     
     static func createGetOperationDetailRequestV3(
-        detailID: Int
+        detailID: String
     ) throws -> URLRequest {
         
         let base = Config.serverAgentEnvironment.baseURL

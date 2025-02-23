@@ -335,7 +335,7 @@ class ProductStatementDataTests: XCTestCase {
             dateN: nil,
             paymentTerm: nil,
             legalAct: nil,
-            supplierBillId: nil,
+            supplierBillID: nil,
             realPayerFIO: nil,
             realPayerINN: nil,
             realPayerKPP: nil,

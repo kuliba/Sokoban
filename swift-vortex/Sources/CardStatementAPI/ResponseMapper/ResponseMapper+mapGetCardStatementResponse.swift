@@ -6,32 +6,34 @@
 //
 
 import Foundation
+import RemoteServices
 
 public extension ResponseMapper {
     
     static func mapGetCardStatementResponse(
         _ data: Data,
         _ response: HTTPURLResponse
-    ) -> Swift.Result<ProductStatementWithExtendedInfo, MappingError> {
+    ) -> Swift.Result<[ProductStatementData], CardStatementAPI.MappingError> {
         
-        map(data, response, mapOrThrow: map)
+        map(data, response, dateDecodingStrategy: .formatted(.iso8601), mapOrThrow: map)
+            .mapError {
+                
+                switch $0 {
+                case .invalid:
+                    return .mappingFailure(.defaultErrorMessage)
+                    
+                case let .server(statusCode: _, errorMessage: errorMessage):
+                    return .not200Status(errorMessage)
+                }
+            }
     }
     
     private static func map(
-        _ data: _Data
-    ) throws -> ProductStatementWithExtendedInfo {
+        _ data: [_DTO.ProductStatementData]
+    ) throws -> [ProductStatementData] {
         
-        .init(
-            summary: .init(data: data.summary),
-            aggregated: data.aggregated.map({ $0.map({ .init(data: $0) }) }),
-            operationList: data.operationList.map({ .init(data: $0 )})
-        )
+        data.map { .init(data: $0 ) }
     }
-}
-
-private extension ResponseMapper {
-    
-    typealias _Data = _DTO
 }
 
 private extension ResponseMapper {
@@ -214,7 +216,7 @@ private struct GetCardStatementForPeriodResponse: Decodable {
     
     let statusCode: Int
     let errorMessage: String?
-    let data: ResponseMapper._Data?
+    let data: ResponseMapper._DTO?
 }
 
 private extension ProductStatementWithExtendedInfo.ProductStatementAggregated {

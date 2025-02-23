@@ -147,6 +147,15 @@ struct MakeC2GPaymentCompleteButtonsView_Previews: PreviewProvider {
 extension OperationDetailDomain.BasicDetails {
     
     static let preview: Self = .init(
+        formattedAmount: "2 000 ₽",
+        formattedDate: "06.05.2021 15:38:12",
+        product: .preview
+    )
+}
+
+extension OperationDetailDomain.ModelPayload {
+    
+    static let preview: Self = .init(
         product: .preview,
         status: .completed,
         formattedAmount: "2 000 ₽",
