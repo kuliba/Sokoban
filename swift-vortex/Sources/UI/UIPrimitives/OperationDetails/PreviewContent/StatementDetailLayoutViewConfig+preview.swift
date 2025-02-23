@@ -1,16 +1,15 @@
 //
-//  StatementDetailLayoutViewConfig+iVortex.swift
-//  Vortex
+//  StatementDetailLayoutViewConfig+preview.swift
+//
 //
 //  Created by Igor Malyarov on 23.02.2025.
 //
 
-import SwiftUI
-import UIPrimitives
+import Foundation
 
 extension StatementDetailLayoutViewConfig {
     
-    static let iVortex: Self = .init(
+    static let preview: Self = .init(
         insets: .init(top: 40, leading: 0, bottom: 32, trailing: 0),
         spacing: 32
     )

@@ -646,8 +646,6 @@
 		2A3479882D6B050C009CCC33 /* ViewComponents+makeStatementDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3479872D6B050C009CCC33 /* ViewComponents+makeStatementDetailView.swift */; };
 		2A34798A2D6B09CB009CCC33 /* StatementDetailLayoutViewConfig+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3479892D6B09CB009CCC33 /* StatementDetailLayoutViewConfig+iVortex.swift */; };
 		2A34798C2D6B15B8009CCC33 /* StatementDetailContentLayoutViewConfig+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A34798B2D6B15B8009CCC33 /* StatementDetailContentLayoutViewConfig+iVortex.swift */; };
-		2A34798F2D6B1616009CCC33 /* StatementDetailLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A34798E2D6B1616009CCC33 /* StatementDetailLayoutView.swift */; };
-		2A3479912D6B1666009CCC33 /* StatementDetailContentLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3479902D6B1666009CCC33 /* StatementDetailContentLayoutView.swift */; };
 		2A3599A92ADA7F5000820369 /* KeyChainStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3599A82ADA7F5000820369 /* KeyChainStoreTests.swift */; };
 		2A3599AD2ADA80A700820369 /* KeyChainStoreTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3599AB2ADA80A700820369 /* KeyChainStoreTestHelpers.swift */; };
 		2A3599AE2ADA80A700820369 /* KeyChainStoreTestTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3599AC2ADA80A700820369 /* KeyChainStoreTestTypes.swift */; };
@@ -4411,8 +4409,6 @@
 		2A3479872D6B050C009CCC33 /* ViewComponents+makeStatementDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeStatementDetailView.swift"; sourceTree = "<group>"; };
 		2A3479892D6B09CB009CCC33 /* StatementDetailLayoutViewConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StatementDetailLayoutViewConfig+iVortex.swift"; sourceTree = "<group>"; };
 		2A34798B2D6B15B8009CCC33 /* StatementDetailContentLayoutViewConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StatementDetailContentLayoutViewConfig+iVortex.swift"; sourceTree = "<group>"; };
-		2A34798E2D6B1616009CCC33 /* StatementDetailLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatementDetailLayoutView.swift; sourceTree = "<group>"; };
-		2A3479902D6B1666009CCC33 /* StatementDetailContentLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatementDetailContentLayoutView.swift; sourceTree = "<group>"; };
 		2A3599A82ADA7F5000820369 /* KeyChainStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChainStoreTests.swift; sourceTree = "<group>"; };
 		2A3599AB2ADA80A700820369 /* KeyChainStoreTestHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyChainStoreTestHelpers.swift; sourceTree = "<group>"; };
 		2A3599AC2ADA80A700820369 /* KeyChainStoreTestTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyChainStoreTestTypes.swift; sourceTree = "<group>"; };
@@ -9738,8 +9734,6 @@
 			isa = PBXGroup;
 			children = (
 				2A3479872D6B050C009CCC33 /* ViewComponents+makeStatementDetailView.swift */,
-				2A34798E2D6B1616009CCC33 /* StatementDetailLayoutView.swift */,
-				2A3479902D6B1666009CCC33 /* StatementDetailContentLayoutView.swift */,
 			);
 			path = StatementDetail;
 			sourceTree = "<group>";
@@ -22432,7 +22426,6 @@
 				2AD15D172C19D2C2003329C7 /* PDFDocumentWrapperView.swift in Sources */,
 				0B2B29232808CB2E001C6380 /* DocumentCollectionViewCell.swift in Sources */,
 				2AF177552AC4B53500D100DD /* SecKeySwaddleCryptographer+live.swift in Sources */,
-				2A3479912D6B1666009CCC33 /* StatementDetailContentLayoutView.swift in Sources */,
 				2A1E76BA2AEE9D2400B33AF7 /* LoggingCVVPINJSONMakerDecorator.swift in Sources */,
 				2A1F085F2A790DAA00C5B11B /* Model+authorizedHTTPClient.swift in Sources */,
 				777460E9291E5AB700D3FF46 /* ContactsBankPrefferedItemViewComponent.swift in Sources */,
@@ -22553,7 +22546,6 @@
 				2AAB56F92C7D9933002D96BC /* TemplatesListFlowEffectHandlerMicroServicesComposer.swift in Sources */,
 				77D0387429891A7F00FBE5AB /* PaymentsSubscriberViewComponent.swift in Sources */,
 				EDDFE3C12757D8F800F57C71 /* SelectDepositPeriodViewCell.swift in Sources */,
-				2A34798F2D6B1616009CCC33 /* StatementDetailLayoutView.swift in Sources */,
 				2AC2F0902CC44E97006FCFBC /* RootViewModelFactory+composeLoaders.swift in Sources */,
 				EDDFE39F2756A99E00F57C71 /* GCDHelper.swift in Sources */,
 				2A81425F2A0B9222005CF83F /* DefaultCancellableSearchBarView.swift in Sources */,

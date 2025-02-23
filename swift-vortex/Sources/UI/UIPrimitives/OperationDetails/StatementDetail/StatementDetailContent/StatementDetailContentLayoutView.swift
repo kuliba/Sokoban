@@ -8,27 +8,20 @@
 import SharedConfigs
 import SwiftUI
 
-struct StatementDetailContent: Equatable {
+public struct StatementDetailContentLayoutView: View {
     
-    let formattedAmount: String?
-    let formattedDate: String?
-    let merchantLogo: Image?
-    let merchantName: String?
-    let purpose: String?
-    let status: Status
+    private let content: Content
+    private let config: Config
     
-    enum Status {
-        
-        case completed, inflight, rejected
+    public init(
+        content: Content,
+        config: Config
+    ) {
+        self.content = content
+        self.config = config
     }
-}
-
-struct StatementDetailContentLayoutView: View {
     
-    let content: Content
-    let config: Config
-    
-    var body: some View {
+    public var body: some View {
         
         VStack(spacing: config.spacing) {
             
@@ -51,32 +44,10 @@ struct StatementDetailContentLayoutView: View {
     }
 }
 
-extension StatementDetailContentLayoutView {
+public extension StatementDetailContentLayoutView {
     
     typealias Content = StatementDetailContent
     typealias Config = StatementDetailContentLayoutViewConfig
-}
-
-struct StatementDetailContentLayoutViewConfig: Equatable {
-    
-    let formattedAmount: TextConfig
-    let formattedDate: TextConfig
-    let logoWidth: CGFloat
-    let merchantName: TextConfig
-    let purpose: TextConfig
-    let purposeHeight: CGFloat
-    let spacing: CGFloat
-    let status: Status
-    
-    struct Status: Equatable {
-        
-        let font: Font
-        let completed: Color
-        let inflight: Color
-        let rejected: Color
-    }
-    
-    var logoSize: CGSize { .init(width: logoWidth, height: logoWidth) }
 }
 
 // MARK: - implementation
@@ -98,6 +69,11 @@ private extension StatementDetailContentLayoutView {
             }
         }
     }
+}
+
+private extension StatementDetailContentLayoutViewConfig {
+    
+    var logoSize: CGSize { .init(width: logoWidth, height: logoWidth) }
 }
 
 private extension StatementDetailContent.Status {
@@ -161,7 +137,7 @@ struct StatementDetailContentLayoutView_Previews: PreviewProvider {
         
         StatementDetailContentLayoutView(
             content: .preview(status),
-            config: .iVortex
+            config: .preview
         )
         .previewDisplayName(status.title)
     }
