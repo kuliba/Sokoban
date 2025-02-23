@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 21.02.2025.
 //
 
+import Foundation
+
 extension RootViewModelFactory {
     
     func makeOperationDetailFactory() -> OperationDetailFactory {
@@ -12,6 +14,7 @@ extension RootViewModelFactory {
         return .init(makeOperationDetailViewModel: makeOperationDetailViewModel)
     }
     
+    @inlinable
     func makeOperationDetailViewModel(
         productID: ProductData.ID,
         productStatementID: ProductStatementData.ID
@@ -24,6 +27,11 @@ extension RootViewModelFactory {
         
         switch statementData.paymentDetailType {
         case .c2gPayment:
+            guard let model = makeOperationDetail(productData, statementData)
+            else { return nil }
+            
+            model.event(.load)
+            
             return .v3(.c2gPayment)
             
         default:
@@ -37,6 +45,61 @@ extension RootViewModelFactory {
                 model: model
             ))
         }
+    }
+    
+    @inlinable
+    func makeOperationDetail(
+        _ product: ProductData,
+        _ statement: ProductStatementData
+    ) -> OperationDetailDomain.Model? {
+        
+        let formattedAmount = formatAmount(
+            value: statement.amount,
+            currencyCodeNumeric: statement.currencyCodeNumeric
+        )
+        let dateString = DateFormatter.operation.string(from: statement.tranDate ?? statement.date) // TODO: - improve: such formatting should be injected (copy from OperationDetailInfoViewModel.swift:100)
+        
+        guard let product = productSelectProduct(for: product),
+              let digest = statement.digest(
+                formattedAmount: formattedAmount,
+                formattedDate: dateString,
+                product: product
+              )
+        else { return nil }
+        
+        return makeOperationDetail(digest: digest)
+    }
+}
+
+// MARK: - Adapters
+
+extension ProductStatementData {
+    
+    func digest(
+        formattedAmount: String?,
+        formattedDate: String?,
+        product: OperationDetailDomain.Product
+    ) -> OperationDetailDomain.StatementDigest? {
+        
+        guard let documentId else { return nil }
+        
+        return .init(
+            documentID: "\(documentId)",
+            product: product,
+            formattedAmount: formattedAmount,
+            formattedDate: formattedDate,
+            dateN: dateN,
+            discount: discount,
+            discountExpiry: discountExpiry,
+            legalAct: legalAct,
+            paymentTerm: paymentTerm,
+            realPayerFIO: realPayerFIO,
+            realPayerINN: realPayerINN,
+            realPayerKPP: realPayerKPP,
+            supplierBillID: supplierBillID,
+            transAmm: transAmm,
+            upno: upno
+        )
     }
 }
 
