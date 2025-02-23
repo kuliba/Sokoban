@@ -20,24 +20,29 @@ extension RootViewModelFactory {
         productStatementID: ProductStatementData.ID
     ) -> OperationDetailFactory.OperationDetail? {
         
-        guard let (statementData, productData) = model.nonFinanceStatementsWithProductData(
+        guard let (statement, product) = model.nonFinanceStatementsWithProductData(
             for: productID,
             and: productStatementID
         ) else { return nil }
         
-        switch statementData.paymentDetailType {
+        switch statement.paymentDetailType {
         case .c2gPayment:
-            guard let model = makeOperationDetail(productData, statementData)
+            guard let model = makeOperationDetail(product, statement)
             else { return nil }
             
             model.event(.load)
             
-            return .v3(.init(model: model))
+            let content = StatementDetails.Content(
+                logo: statement.md5hash,
+                name: statement.fastPayment?.foreignName
+            )
+            
+            return .v3(.init(content: content, model: model))
             
         default:
             return .legacy(.init(
-                productStatement: statementData,
-                product: productData,
+                productStatement: statement,
+                product: product,
                 updateFastAll: { [weak self] in
                     
                     self?.model.action.send(ModelAction.Products.Update.Fast.All())
