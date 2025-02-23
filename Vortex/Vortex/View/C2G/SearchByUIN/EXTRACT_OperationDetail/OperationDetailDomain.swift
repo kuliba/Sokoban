@@ -52,11 +52,14 @@ extension OperationDetailDomain {
         let uin: String
     }
     
-    typealias PaymentDigest = C2GCore.C2GPaymentDigest // TODO: decouple or leave as is
-    
     struct StatementDigest: Equatable {
         
         let documentID: String // optional Int in statement but needed as String to call `getOperationDetail` API
+        let product: OperationDetailDomain.Product
+        
+        // from product statement ++
+        let formattedAmount: String? // formatted amount
+        let formattedDate: String? // tranDate, необходимо выполнить форматирование в формат ДД.ММ.ГГГ ЧЧ:ММ:СС
         
         // from product statement v3: getAccountStatementForPeriod_V3 | getCardStatementForPeriod_V3
         let dateN: String?           // Дата начисления - "dateN"
@@ -81,12 +84,6 @@ extension OperationDetailDomain {
         let product: Product
     }
 
-//    struct CoreDetails: Equatable {
-//        
-//        let product: Product
-//        let status: Status
-//    }
-    
     struct ExtendedDetails: Equatable {
         
         let product: Product
@@ -115,28 +112,5 @@ extension OperationDetailDomain {
     enum Status {
         
         case completed, inflight, rejected
-    }
-}
-
-extension ProductStatementData {
-    
-    var digest: OperationDetailDomain.StatementDigest? {
-        
-        guard let documentId else { return nil }
-        
-        return .init(
-            documentID: "\(documentId)",
-            dateN: dateN,
-            discount: discount,
-            discountExpiry: discountExpiry,
-            legalAct: legalAct,
-            paymentTerm: paymentTerm,
-            realPayerFIO: realPayerFIO,
-            realPayerINN: realPayerINN,
-            realPayerKPP: realPayerKPP,
-            supplierBillID: supplierBillID,
-            transAmm: transAmm,
-            upno: upno
-        )
     }
 }

@@ -168,7 +168,7 @@ final class ResponseMapper_mapGetOperationDetailResponseTests_swift: XCTestCase 
     private func makeResponse(
         account: String? = nil,
         accountTitle: String? = nil,
-        amount: Int? = nil,
+        amount: Decimal? = nil,
         billDate: String? = nil,
         billNumber: String? = nil,
         cityName: String? = nil,

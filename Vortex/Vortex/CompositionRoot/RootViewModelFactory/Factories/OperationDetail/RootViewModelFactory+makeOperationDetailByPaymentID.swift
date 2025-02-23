@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makeOperationDetailModelByPaymentID.swift
+//  RootViewModelFactory+makeOperationDetailByPaymentID.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 19.02.2025.
@@ -10,7 +10,7 @@ import RemoteServices
 extension RootViewModelFactory {
     
     @inlinable
-    func makeOperationDetailModelByPaymentID(
+    func makeOperationDetailByPaymentID(
         _ payload: OperationDetailDomain.ModelPayload
     ) -> OperationDetailDomain.Model {
         

@@ -303,9 +303,7 @@ struct ProductProfileView: View {
                 viewFactory.components.makeOperationDetailView(operationDetail, productProfileViewFactory.makeRepeatButtonView, { viewModel.payment(operationID: operationDetail.operationId, productStatement: operationDetail.productStatement) })
                 
             case let .v3(v3):
-                Text(String(describing: v3))
-                    .padding(.vertical, 40)
-                    .edgesIgnoringSafeArea(.bottom)
+                viewFactory.components.makeStatementDetailView(v3)
             }
             
         case let .optionsPannel(viewModel):

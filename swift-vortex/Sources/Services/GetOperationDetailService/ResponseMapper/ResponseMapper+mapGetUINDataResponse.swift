@@ -32,7 +32,7 @@ private extension ResponseMapper {
         
         let account: String?
         let accountTitle: String?
-        let amount: Int?
+        let amount: Decimal?
         let billDate: String?
         let billNumber: String?
         let cityName: String?
