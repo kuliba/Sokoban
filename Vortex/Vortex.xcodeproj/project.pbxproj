@@ -644,6 +644,7 @@
 		2A3479842D6AF69C009CCC33 /* RootViewModelFactory+formatAmount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3479832D6AF69C009CCC33 /* RootViewModelFactory+formatAmount.swift */; };
 		2A3479862D6AFEF4009CCC33 /* RootViewModelFactory+productSelectProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3479852D6AFEF4009CCC33 /* RootViewModelFactory+productSelectProduct.swift */; };
 		2A3479882D6B050C009CCC33 /* ViewComponents+makeStatementDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3479872D6B050C009CCC33 /* ViewComponents+makeStatementDetailView.swift */; };
+		2A34798A2D6B09CB009CCC33 /* StatementDetailLayoutViewConfig+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3479892D6B09CB009CCC33 /* StatementDetailLayoutViewConfig+iVortex.swift */; };
 		2A3599A92ADA7F5000820369 /* KeyChainStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3599A82ADA7F5000820369 /* KeyChainStoreTests.swift */; };
 		2A3599AD2ADA80A700820369 /* KeyChainStoreTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3599AB2ADA80A700820369 /* KeyChainStoreTestHelpers.swift */; };
 		2A3599AE2ADA80A700820369 /* KeyChainStoreTestTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3599AC2ADA80A700820369 /* KeyChainStoreTestTypes.swift */; };
@@ -4405,6 +4406,7 @@
 		2A3479832D6AF69C009CCC33 /* RootViewModelFactory+formatAmount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+formatAmount.swift"; sourceTree = "<group>"; };
 		2A3479852D6AFEF4009CCC33 /* RootViewModelFactory+productSelectProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+productSelectProduct.swift"; sourceTree = "<group>"; };
 		2A3479872D6B050C009CCC33 /* ViewComponents+makeStatementDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeStatementDetailView.swift"; sourceTree = "<group>"; };
+		2A3479892D6B09CB009CCC33 /* StatementDetailLayoutViewConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StatementDetailLayoutViewConfig+iVortex.swift"; sourceTree = "<group>"; };
 		2A3599A82ADA7F5000820369 /* KeyChainStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChainStoreTests.swift; sourceTree = "<group>"; };
 		2A3599AB2ADA80A700820369 /* KeyChainStoreTestHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyChainStoreTestHelpers.swift; sourceTree = "<group>"; };
 		2A3599AC2ADA80A700820369 /* KeyChainStoreTestTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyChainStoreTestTypes.swift; sourceTree = "<group>"; };
@@ -9122,6 +9124,7 @@
 				830207422D37E45E0038EFA4 /* SavingsAccount */,
 				2AAEF8662D58D5EA000E81C6 /* OrderCardViewConfig+iVortex.swift */,
 				C14AAB8B2D5C824400AA0B41 /* PaymentSticker+iVortex.swift */,
+				2A3479892D6B09CB009CCC33 /* StatementDetailLayoutViewConfig+iVortex.swift */,
 			);
 			path = Configs;
 			sourceTree = "<group>";
@@ -21727,6 +21730,7 @@
 				2AAB56F52C7D8AAF002D96BC /* ProductIDEmitter.swift in Sources */,
 				83CDE9912AAF4C0A00212FAA /* LandingViewModel.swift in Sources */,
 				2A5457572A3B48F9007617C3 /* TransportPaymentsView.swift in Sources */,
+				2A34798A2D6B09CB009CCC33 /* StatementDetailLayoutViewConfig+iVortex.swift in Sources */,
 				774E318D27A05112005A067B /* LocalAgentEmptyMock.swift in Sources */,
 				2A1E76BC2AEE9D9600B33AF7 /* LoggingCVVPINCryptoDecorator.swift in Sources */,
 				6833E0CF273920CE004C070F /* MobilePayCoordinator.swift in Sources */,
