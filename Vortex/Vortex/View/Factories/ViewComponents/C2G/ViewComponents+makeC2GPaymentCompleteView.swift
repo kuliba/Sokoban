@@ -280,7 +280,7 @@ private extension C2GPaymentDomain.Complete {
     }
 }
 
-private extension OperationDetailDomain.Model {
+extension OperationDetailDomain.Model {
     
     static func preview(
         basicDetails: OperationDetailDomain.BasicDetails,

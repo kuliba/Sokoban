@@ -22,6 +22,38 @@ extension ViewComponents {
             
             EmptyView()
         }
-        .border(.red)
+    }
+}
+
+struct MakeStatementDetailView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        Group {
+            
+            view(.completed(.preview))
+                .previewDisplayName("completed")
+            
+            view(.failure(NSError(domain: "Load Failure", code: -1)))
+                .previewDisplayName("failure")
+            
+            view(.loading(nil))
+                .previewDisplayName("loading")
+            
+            view(.pending)
+                .previewDisplayName("pending")
+        }
+    }
+    
+    private static func view(
+        _ fullDetails: OperationDetailDomain.State.ExtendedDetailsState
+    ) -> some View {
+        
+        ViewComponents.preview.makeStatementDetailView(.init(
+            model: .preview(
+                basicDetails: .preview,
+                fullDetails: fullDetails
+            )
+        ))
     }
 }
