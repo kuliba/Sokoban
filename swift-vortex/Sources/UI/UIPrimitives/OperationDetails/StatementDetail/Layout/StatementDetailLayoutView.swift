@@ -27,8 +27,8 @@ public struct StatementDetailLayoutView<Buttons: View, Content: View>: View {
         
         VStack(spacing: config.spacing) {
             
-            buttons()
             content()
+            buttons()
         }
         .padding(config.insets)
     }
