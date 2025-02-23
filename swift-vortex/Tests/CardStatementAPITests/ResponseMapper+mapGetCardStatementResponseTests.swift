@@ -5,8 +5,9 @@
 //  Created by Andryusina Nataly on 18.01.2024.
 //
 
-import XCTest
 import CardStatementAPI
+import RemoteServices
+import XCTest
 
 final class ResponseMapper_mapGetCardStatementResponseTests: XCTestCase {
     
@@ -161,7 +162,18 @@ private extension ProductStatementData {
         opCode: 1,
         date: Date(timeIntervalSince1970: 978307200),
         tranDate: nil,
-        MCC: 0
+        MCC: 0,
+        discount: nil,
+        transAmm: nil,
+        discountExpiry: nil,
+        dateN: nil,
+        paymentTerm: nil,
+        legalAct: nil,
+        supplierBillId: nil,
+        realPayerFIO: nil,
+        realPayerINN: nil,
+        realPayerKPP: nil,
+        upno: nil
     )
 }
 

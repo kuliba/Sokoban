@@ -328,7 +328,18 @@ class ProductStatementDataTests: XCTestCase {
             svgImage: svgImage,
             terminalCode: terminalCode,
             tranDate: tranDate,
-            type: type
+            type: type,
+            discount: nil,
+            transAmm: nil,
+            discountExpiry: nil,
+            dateN: nil,
+            paymentTerm: nil,
+            legalAct: nil,
+            supplierBillID: nil,
+            realPayerFIO: nil,
+            realPayerINN: nil,
+            realPayerKPP: nil,
+            upno: nil
         )
     }
     

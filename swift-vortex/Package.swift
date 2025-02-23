@@ -2216,6 +2216,7 @@ private extension Target {
     static let cardStatementAPI = target(
         name: .cardStatementAPI,
         dependencies: [
+            .remoteServices,
             .tagged,
         ],
         path: "Sources/\(String.cardStatementAPI)"

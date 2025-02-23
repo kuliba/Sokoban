@@ -39,7 +39,7 @@ final class RequestFactory_createGetOperationDetailRequestTests: XCTestCase {
         let request = try createRequest(detailID: detailID)
         
         let body = try request.decodedBody(as: Body.self)
-        XCTAssertNoDiff(body.paymentOperationDetailId, detailID)
+        XCTAssertNoDiff(body.documentId, detailID)
     }
     
     func test_createRequest_shouldSetHTTPBodyJSON() throws {
@@ -48,35 +48,35 @@ final class RequestFactory_createGetOperationDetailRequestTests: XCTestCase {
         let request = try createRequest(detailID: detailID)
         
         try assertBody(of: request, hasJSON: """
-        { "paymentOperationDetailId": \(detailID) }
+        { "documentId": "\(detailID)" }
         """
         )
     }
     
     // MARK: - Helpers
     
-    private typealias DetailID = Int
+    private typealias DetailID = String
     
     private func createRequest(
         _ url: URL = anyURL(),
-        detailID: DetailID? = nil
+        detailID: DetailID = anyMessage()
     ) throws -> URLRequest {
         
         try RequestFactory.createGetOperationDetailRequest(
             url: url,
-            detailID: detailID ?? makeDetailID()
+            detailID: detailID
         )
     }
     
     private func makeDetailID(
-        _ id: Int = .random(in: 1...100)
+        _ detailID: DetailID = anyMessage()
     ) -> DetailID {
         
-        return id
+        return detailID
     }
     
     private struct Body: Decodable {
         
-        let paymentOperationDetailId: Int
+        let documentId: String
     }
 }
