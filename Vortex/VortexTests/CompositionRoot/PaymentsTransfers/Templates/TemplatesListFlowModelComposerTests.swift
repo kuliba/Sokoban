@@ -193,12 +193,12 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        switch flowModel.state.status {
+        switch flowModel.state.navigation {
         case .destination(.payment(.legacy)):
             break
             
         default:
-            XCTFail("Expected to have legacy destination but got \(String(describing: flowModel.state.status)) instead.", file: file, line: line)
+            XCTFail("Expected to have legacy destination but got \(String(describing: flowModel.state.navigation)) instead.", file: file, line: line)
         }
     }
     
@@ -207,12 +207,12 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        switch flowModel.state.status {
+        switch flowModel.state.navigation {
         case .destination(.payment(.v1)):
             break
             
         default:
-            XCTFail("Expected to have legacy destination but got \(String(describing: flowModel.state.status)) instead.", file: file, line: line)
+            XCTFail("Expected to have legacy destination but got \(String(describing: flowModel.state.navigation)) instead.", file: file, line: line)
         }
     }
 }
@@ -248,9 +248,10 @@ where Content == TemplatesListViewModel {
 
 private extension TemplatesListFlowState {
     
-    var alert: Status.ServiceFailure? {
+    var alert: Navigation.ServiceFailure? {
         
-        guard case let .alert(alert) = status else { return nil }
+        guard case let .alert(alert) = navigation
+        else { return nil }
         
         return alert
     }
