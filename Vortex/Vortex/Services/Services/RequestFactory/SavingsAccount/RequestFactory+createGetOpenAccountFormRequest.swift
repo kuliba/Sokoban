@@ -9,9 +9,7 @@ import Foundation
 
 extension RequestFactory {
         
-    static func createGetOpenAccountFormRequest(
-        _ name: String
-    ) throws -> URLRequest {
+    static func createGetOpenAccountFormRequest() throws -> URLRequest {
         
         let endpoint = Services.Endpoint.getOpenAccountFormRequest
         let url = try! endpoint.url(

@@ -280,10 +280,6 @@ struct MainView<NavigationOperationView: View>: View {
  
         case .orderCard:
             viewFactory.components.makeOrderCardView()
-            
-        case let .savingsAccount(nodes):
-            viewFactory.components.makeSavingsAccountView(nodes)
-                .navigationBarHidden(true)
         }
     }
 

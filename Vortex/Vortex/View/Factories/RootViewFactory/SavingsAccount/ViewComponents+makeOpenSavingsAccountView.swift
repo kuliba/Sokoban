@@ -10,6 +10,7 @@ import PaymentComponents
 import RxViewModel
 import SavingsAccount
 import SwiftUI
+import UIPrimitives
 
 extension ViewComponents {
     
@@ -24,7 +25,7 @@ extension ViewComponents {
             ZStack(alignment: .top) {
                 
                 state.informer.map(InformerInternalView.init)
-                    .padding(.top, 16    )
+                    .padding(.top, 16)
                     .zIndex(1)
                 
                 makeOpenSavingsAccountContentView(binder.content)
@@ -45,19 +46,26 @@ extension ViewComponents {
         
         RxWrapperView(model: content) { state, event in
             
-            SavingsAccount.OrderAccountView(
-                state: state,
-                event: event,
-                config: .prod,
-                factory: .init(
-                    makeIconView: makeIconView,
-                    makeBannerImageView: makeGeneralIconView
-                ),
-                confirmationView: {
-                    
-                    confirmationView($0, state, event)
-                }
-            )
+            RefreshableScrollView(
+                action: { event(.load) },
+                showsIndicators: false,
+                coordinateSpaceName: "openSavingsAccountScroll"
+            ) {
+                
+                SavingsAccount.OrderAccountView(
+                    state: state,
+                    event: event,
+                    config: .prod,
+                    factory: .init(
+                        makeIconView: makeIconView,
+                        makeBannerImageView: makeGeneralIconView
+                    ),
+                    confirmationView: {
+                        
+                        confirmationView($0, state, event)
+                    }
+                )
+            }
             .safeAreaInset(edge: .bottom) {
                 
                 continueButton(state: state) { event(.continue) }
