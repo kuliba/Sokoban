@@ -1090,27 +1090,20 @@ private extension ProductProfileViewModel {
     
     func bind(history: ProductProfileHistoryView.ViewModel?) {
         
-        guard let history = history else { return }
+        guard let history else { return }
         
         history.action
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] action in
+            .compactMap { $0 as? ProductProfileHistoryViewModelAction.DidTapped.Detail }
+            .map(\.statementId)
+            .receive(on: scheduler)
+            .sink { [weak self] in
                 
                 guard let self = self else { return }
                 
-                switch action {
-                case let payload as ProductProfileHistoryViewModelAction.DidTapped.Detail:
-                    
-                    guard let operationDetail = operationDetailFactory.makeOperationDetailViewModel(
-                        product.activeProductId,
-                        payload.statementId
-                    ) else { return }
-                    
-                    self.bottomSheet = .init(type: .operationDetail(operationDetail))
-                    
-                default:
-                    break
-                }
+                guard let operationDetail = operationDetailFactory.makeOperationDetailViewModel(product.activeProductId, $0)
+                else { return }
+                
+                self.bottomSheet = .init(type: .operationDetail(operationDetail))
             }
             .store(in: &bindings)
     }
