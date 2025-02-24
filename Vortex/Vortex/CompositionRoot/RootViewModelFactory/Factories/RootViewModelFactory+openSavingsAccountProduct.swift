@@ -124,6 +124,7 @@ extension RootViewModelFactory {
             }
             
             completion($0.loadFormResult)
+            _ = service
         }
     }
     
