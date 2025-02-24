@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 20.02.2025.
 //
 
+import SwiftUI
 import UIPrimitives
 
 // MARK: - Transaction Details
@@ -14,9 +15,31 @@ extension OperationDetailDomain.State.Details: TransactionDetailsProviding {
     var transactionDetails: [DetailsCell] {
         
         return [
-            .field(.init(image: .ic16Tv, title: "Sample title", value: "Sample value"))
+            transAmmField.asField,
+            discountField.asField,
+            discountExpiryField.asField,
+            formattedAmountField.asField,
+            dateForDetailField.asField,
+            statusField.asField,
+            .product(product.cellProduct),
+            payeeFullNameField.asField,
+            supplierBillIDField.asField,
+            commentField.asField,
+            realPayerFIOField.asField,
+            realPayerINNField.asField,
+            realPayerKPPField.asField,
+            dateNField.asField,
+            paymentTermField.asField,
+            legalActField.asField,
+            upnoField.asField,
+            transferNumberField.asField,
         ].compactMap { $0 }
     }
+}
+
+private extension Optional where Wrapped == DetailsCell.Field {
+    
+    var asField: DetailsCell? { map(DetailsCell.field) }
 }
 
 // MARK: - Payment Requisites
@@ -45,11 +68,19 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         ].compactMap { $0 }
     }
     
+    // TODO: extract titles to static strings in fileprivate scape
+    
+    private var statusField: DetailsCell.Field? {
+        
+        .init(image: status.image, isLarge: true, title: .status, value: status.title)
+        
+    }
+    
     private var dateForDetailField: DetailsCell.Field? {
         
         dateForDetail.map {
             
-            .init(image: .ic24Calendar, title: "Дата и время операции (МСК)", value: $0)
+            .init(image: .ic24Calendar, title: .dateForDetail, value: $0)
         }
     }
     
@@ -57,7 +88,7 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         realPayerFIO.map {
             
-            .init(image: .ic24User, title: "Информация о плательщике", value: $0)
+            .init(image: .ic24User, title: .realPayerFIO, value: $0)
         }
     }
     
@@ -65,111 +96,153 @@ extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
         
         payeeFullName.map {
             
-            .init(image: .ic24Bank, title: "Информация о плательщике", value: $0)
+            .init(image: .ic24Bank, title: .payeeFullName, value: $0)
         }
     }
     
     private var supplierBillIDField: DetailsCell.Field? {
         
         supplierBillID.map {
-         
-            .init(image: .ic24File, title: "Номер документа (УИН)", value: $0)
+            
+            .init(image: .ic24File, title: .supplierBillID, value: $0)
         }
     }
     
     private var commentField: DetailsCell.Field? {
         
         comment.map {
-         
-            .init(image: .ic24Tax, title: "Номер документа (УИН)", value: $0)
+            
+            .init(image: .ic24Tax, title: .comment, value: $0)
         }
     }
     
     private var realPayerINNField: DetailsCell.Field? {
         
         realPayerINN.map {
-         
-            .init(image: .ic24FileHash, title: "Номер документа (УИН)", value: $0)
+            
+            .init(image: .ic24FileHash, title: .realPayerINN, value: $0)
         }
     }
     
     private var realPayerKPPField: DetailsCell.Field? {
         
         realPayerKPP.map {
-         
-            .init(image: .ic24Hash, title: "Номер документа (УИН)", value: $0)
+            
+            .init(image: .ic24Hash, title: .realPayerKPP, value: $0)
         }
     }
     
     private var dateNField: DetailsCell.Field? {
         
         dateN.map {
-         
-            .init(image: .ic24Calendar, title: "Номер документа (УИН)", value: $0)
+            
+            .init(image: .ic24Calendar, title: .dateNField, value: $0)
         }
     }
     
     private var paymentTermField: DetailsCell.Field? {
         
         paymentTerm.map {
-         
-            .init(image: .ic24CalendarPayment, title: "Номер документа (УИН)", value: $0)
+            
+            .init(image: .ic24CalendarPayment, title: .paymentTerm, value: $0)
         }
     }
     
     private var legalActField: DetailsCell.Field? {
         
         legalAct.map {
-         
-            .init(image: .ic24FileText, title: "Номер документа (УИН)", value: $0)
+            
+            .init(image: .ic24FileText, title: .legalAct, value: $0)
         }
     }
     
     private var transAmmField: DetailsCell.Field? {
         
         transAmm.map {
-         
-            .init(image: .ic24Cash, title: "Номер документа (УИН)", value: $0)
+            
+            .init(image: .ic24Cash, title: .transAmm, value: $0)
         }
     }
     
     private var discountField: DetailsCell.Field? {
         
         discount.map {
-         
-            .init(image: .ic24Percent, title: "Номер документа (УИН)", value: $0)
+            
+            .init(image: .ic24Percent, title: .discount, value: $0)
         }
     }
     
     private var discountExpiryField: DetailsCell.Field? {
         
         discountExpiry.map {
-         
-            .init(image: .ic24Clock, title: "Номер документа (УИН)", value: $0)
+            
+            .init(image: .ic24Clock, title: .discountExpiry, value: $0)
         }
     }
     
     private var formattedAmountField: DetailsCell.Field? {
         
         formattedAmount.map {
-         
-            .init(image: .ic24Coins, title: "Номер документа (УИН)", value: $0)
+            
+            .init(image: .ic24Coins, title: .formattedAmount, value: $0)
         }
     }
     
     private var upnoField: DetailsCell.Field? {
         
         upno.map {
-         
-            .init(image: .ic24FileHash, title: "Номер документа (УИН)", value: $0)
+            
+            .init(image: .ic24FileHash, title: .upno, value: $0)
         }
     }
     
     private var transferNumberField: DetailsCell.Field? {
         
         transferNumber.map {
-         
-            .init(image: .ic24Hash, title: "Номер документа (УИН)", value: $0)
+            
+            .init(image: .ic24Hash, title: .transferNumber, value: $0)
+        }
+    }
+}
+
+private extension String {
+    
+    static let comment = "Назначение платежа"
+    static let dateForDetail = "Дата и время операции (МСК)"
+    static let dateNField = "Дата начисления"
+    static let discount = "Скидка"
+    static let discountExpiry = "Срок действия скидки"
+    static let formattedAmount = "Сумма платежа"
+    static let legalAct = "Информация о НПА"
+    static let payeeFullName = "Получатель"
+    static let paymentTerm = "Срок оплаты"
+    static let realPayerFIO = "Информация о плательщике"
+    static let realPayerINN = "ИНН плательщика"
+    static let realPayerKPP = "КПП плательщика"
+    static let status = "Статус операции"
+    static let supplierBillID = "Номер документа (УИН)"
+    static let transAmm = "Сумма начисления"
+    static let transferNumber = "Идентификатор операции СБП"
+    static let upno = "УПНО"
+}
+
+private extension OperationDetailDomain.State.Status {
+    
+    var image: Image {
+        
+        switch self {
+        case .completed: return .init("OkOperators")
+        case .inflight:  return .ic16Waiting
+        case .rejected:  return .ic16Denied
+        }
+    }
+    
+    var title: String {
+        
+        switch self {
+        case .completed: return "Успешно"
+        case .inflight:  return "В обработке"
+        case .rejected:  return "Отказ"
         }
     }
 }
@@ -189,7 +262,7 @@ extension OperationDetailDomain.State.EnhancedResponse: TransactionDetailsProvid
     
     private var productCell: DetailsCell {
         
-        .product(.init(title: "Счет списания"))
+        .product(product.cellProduct)
     }
     
     private var formattedAmountField: DetailsCell.Field? {
@@ -206,5 +279,13 @@ extension OperationDetailDomain.State.EnhancedResponse: TransactionDetailsProvid
             
             .init(image: .ic24Calendar, title: "Дата и время операции (МСК)", value: $0)
         }
+    }
+}
+
+extension OperationDetailDomain.State.Product {
+    
+    var cellProduct: DetailsCell.Product {
+        
+        return .init(title: header, icon: look.icon.image, name: title, formattedBalance: amountFormatted, description: number)
     }
 }

@@ -50,10 +50,7 @@ final class C2GPaymentStateDigestTests: C2GPaymentTests {
             uin: uin
         )
         
-        XCTAssertNoDiff(state.digest, .init(
-            productID: .init(id: id, type: .account),
-            uin: uin
-        ))
+        XCTAssertNoDiff(state.digest, .init(product: product, uin: uin))
     }
     
     func test_shouldDeliverCardDigest() {
@@ -70,9 +67,6 @@ final class C2GPaymentStateDigestTests: C2GPaymentTests {
             uin: uin
         )
         
-        XCTAssertNoDiff(state.digest, .init(
-            productID: .init(id: id, type: .card),
-            uin: uin
-        ))
+        XCTAssertNoDiff(state.digest, .init(product: product, uin: uin))
     }
 }

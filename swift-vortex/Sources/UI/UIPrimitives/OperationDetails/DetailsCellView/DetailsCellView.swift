@@ -23,8 +23,11 @@ public struct DetailsCellView: View {
     public var body: some View {
         
         switch cell {
-        case let .field(field):     fieldView(field)
-        case let .product(product): productView(product)
+        case let .field(field):
+            fieldView(field)
+            
+        case let .product(product):
+            ProductView(product: product, config: config.product)
         }
     }
 }
@@ -38,17 +41,19 @@ private extension DetailsCellView {
         HStack(alignment: .top, spacing: config.hSpacing) {
             
             imageView(field)
-                .frame(config.imageSize)
-                .padding(.top, config.imageTopPadding)
+                .frame(field.isLarge ? .init(width: 32, height: 32) : config.imageSize)
+                .frame(width: 32, height: 32)
+                .padding(config.imagePadding)
             
             VStack(alignment: .leading, spacing: config.vSpacing) {
                 
                 field.title.text(withConfig: config.title)
                 field.value.text(withConfig: config.value)
+                    .frame(minHeight: 24)
             }
+            .padding(.vertical, config.labelVPadding)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding(config.insets)
     }
     
     func imageView(
@@ -63,16 +68,11 @@ private extension DetailsCellView {
                 
                 image
                     .resizable()
-                    .renderingMode(.original)
+                    .renderingMode(field.isLarge ? .original : .template)
+                    .aspectRatio(contentMode: .fit)
+                    .foregroundColor(config.imageForegroundColor)
             }
         }
-    }
-    
-    func productView(
-        _ product: DetailsCell.Product
-    ) -> some View {
-        
-        Text("TBD: productView")
     }
 }
 
@@ -84,9 +84,19 @@ struct DetailsCellView_Previews: PreviewProvider {
         
         VStack(spacing: 16) {
             
+            detailsCellView(.fieldEmptyImagePreview)
+                .border(.red.opacity(0.3))
+            
             detailsCellView(.fieldPreview)
+                .border(.red.opacity(0.3))
+            
+            detailsCellView(.fieldLargePreview)
+                .border(.red.opacity(0.3))
+            
             detailsCellView(.productPreview)
+                .border(.red.opacity(0.3))
         }
+        .padding(.horizontal)
     }
     
     private static func detailsCellView(
@@ -99,13 +109,24 @@ struct DetailsCellView_Previews: PreviewProvider {
 
 extension DetailsCell {
     
+    static let fieldEmptyImagePreview: Self = .field(.init(
+        image: nil,
+        title: "Field Title",
+        value: "Field with missing image"
+    ))
+    
     static let fieldPreview: Self = .field(.init(
         image: .init(systemName: "scribble"),
         title: "Field Title",
-        value: "Field Value"
+        value: "Field with normal image"
     ))
     
-    static let productPreview: Self = .product(.init(
-        title: "Product Title"
+    static let fieldLargePreview: Self = .field(.init(
+        image: .init(systemName: "scribble"),
+        isLarge: true,
+        title: "Field Title",
+        value: "Field with large image"
     ))
+    
+    static let productPreview: Self = .product(.preview)
 }

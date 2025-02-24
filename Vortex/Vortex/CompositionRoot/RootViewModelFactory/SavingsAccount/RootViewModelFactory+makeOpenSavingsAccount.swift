@@ -39,18 +39,20 @@ extension RootViewModelFactory {
         )
 
         let reducer = SavingsAccountDomain.OpenAccountContentReducer()
-        let effectHandler = SavingsAccountDomain.OpenAccountContentEffectHandler { dismissInformer, completion in
-            
-            getOpenAccount("") { [weak self] in
+        let effectHandler = SavingsAccountDomain.OpenAccountContentEffectHandler(
+            load: { dismissInformer, completion in
                 
-                if let self, case .informer = $0.failure?.kind {
+                getOpenAccount("") { [weak self] in
                     
-                    self.schedulers.background.delay(for: self.settings.informerDelay, dismissInformer)
-                }
+                    if let self, case .informer = $0.failure?.kind {
+                        
+                        self.schedulers.background.delay(for: self.settings.informerDelay, dismissInformer)
+                    }
 
-                completion($0)
+                    completion($0)
+                }
             }
-        }
+        )
         
         return .init(
             initialState: .init(status: status, navTitle: .init(title: "", subtitle: "")),

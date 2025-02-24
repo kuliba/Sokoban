@@ -25,9 +25,13 @@ protocol PaymentRequisitesProviding<PaymentRequisites> {
 extension PaymentRequisitesProviding
 where PaymentRequisites == [DetailsCell.Field] {
     
-    var shareItems: [String] {
+    var shareItems: [String] { [shareItem] }
+    
+    private var shareItem: String {
         
-        paymentRequisites.map { "\($0.title): \($0.value)" }
+        paymentRequisites
+            .map { "\($0.title): \($0.value)" }
+            .joined(separator: "\n")
     }
 }
 
@@ -155,6 +159,17 @@ extension [DetailsCell] {
             title: "Назначение платежа",
             value: "Транспортный налог")
         ),
-        .product(.init(title: "Product"))
+        .product(.preview)
     ]
+}
+
+extension DetailsCell.Product {
+    
+    static let preview: Self = .init(
+        title: "Product Title",
+        icon: .init(systemName: "creditcard"),
+        name: "product name",
+        formattedBalance: "$ 1 000.00",
+        description: "- 3456"
+    )
 }
