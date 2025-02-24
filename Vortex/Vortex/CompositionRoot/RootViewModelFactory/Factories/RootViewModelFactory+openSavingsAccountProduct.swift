@@ -30,7 +30,6 @@ extension RootViewModelFactory {
         
         let binder = composeBinder(
             content: content,
-            delayProvider: delayProvider,
             getNavigation: getNavigation,
             witnesses: witnesses()
         )
@@ -64,17 +63,6 @@ extension RootViewModelFactory {
     }
     
     // MARK: - Flow
-    
-    @inlinable
-    func delayProvider(
-        navigation: OpenSavingsAccountDomain.Navigation
-    ) -> Delay {
-        
-        switch navigation {
-        case .failure:
-            return .zero
-        }
-    }
     
     @inlinable
     func getNavigation(
@@ -111,7 +99,7 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapGetOpenAccountFormResponse
         )
 
-        service("") { [weak self] in
+        service(()) { [weak self] in
             
             if let self, case .informer = $0.loadFailure?.type {
                 
@@ -119,7 +107,6 @@ extension RootViewModelFactory {
             }
             
             completion($0.loadFormResult)
-            _ = service
         }
     }
     
