@@ -11,6 +11,7 @@ let package = Package(
     products: [
         .fastPaymentsSettings,
         .loadableModel,
+        .loadableState,
         .loadableResourceComponent,
         .operatorsListComponents,
         .paymentSticker,
@@ -135,6 +136,7 @@ let package = Package(
         .fastPaymentsSettingsTests,
         .loadableModel,
         .loadableModelTests,
+        .loadableState,
         .loadableResourceComponent,
         .loadableResourceComponentTests,
         .paymentSticker,
@@ -397,6 +399,13 @@ private extension Product {
         ]
     )
     
+    static let loadableState = library(
+        name: .loadableState,
+        targets: [
+            .loadableState,
+        ]
+    )
+
     static let paymentSticker = library(
         name: .paymentSticker,
         targets: [
@@ -1241,6 +1250,12 @@ private extension Target {
         ]
     )
     
+    static let loadableState = target(
+        name: .loadableState,
+        dependencies: [
+        ]
+    )
+    
     static let paymentSticker = target(
         name: .paymentSticker,
         dependencies: [
@@ -1519,6 +1534,7 @@ private extension Target {
         dependencies: [
             .inputComponent,
             .linkableText,
+            .collateralLoanLandingGetShowcaseUI,
             .optionalSelectorComponent,
             .otpInputComponent,
             .paymentComponents,
@@ -3005,6 +3021,7 @@ private extension Target {
             // internal packages
             .dropDownTextListComponent,
             .linkableText,
+            .loadableState,
             .paymentComponents,
             .sharedConfigs,
             .toggleComponent,
@@ -3609,6 +3626,10 @@ private extension Target.Dependency {
         name: .loadableResourceComponent
     )
     
+    static let loadableState = byName(
+        name: .loadableState
+    )
+
     static let operatorsListComponents = byName(
         name: .operatorsListComponents
     )
@@ -4138,6 +4159,8 @@ private extension String {
     
     static let loadableResourceComponent = "LoadableResourceComponent"
     static let loadableResourceComponentTests = "LoadableResourceComponentTests"
+    
+    static let loadableState = "LoadableState"
     
     static let paymentSticker = "PaymentSticker"
     static let paymentStickerTests = "PaymentStickerTests"

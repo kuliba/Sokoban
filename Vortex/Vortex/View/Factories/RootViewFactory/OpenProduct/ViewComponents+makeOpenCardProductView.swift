@@ -124,7 +124,7 @@ extension ViewComponents {
         TimedOTPInputWrapperView(
             viewModel: viewModel,
             config: .iVortex,
-            iconView: { makeIconView(.md5Hash("sms")) },
+            iconView: { makeIconView(.md5Hash("sms")).foregroundColor(.textPlaceholder) },
             warningView: {
                 
                 OTPWarningView(text: viewModel.state.warning, config: .iVortex)
