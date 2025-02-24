@@ -87,15 +87,16 @@ extension RootViewModelFactory {
             
             let format = self?.format(amount:currency:)
             
-            let result = $0.map { 
+            let result = $0.map {
                 
                 return C2GPaymentDomain.ContentPayload(
                     discount: $0.discount,
                     discountExpiry: $0.discountExpiry,
                     formattedAmount: format?($0.transAmm, "RUB"),
                     merchantName: $0.merchantName,
-                    selectedProduct: selectedProduct,
                     products: products,
+                    purpose: $0.purpose,
+                    selectedProduct: selectedProduct,
                     termsCheck: $0.termsCheck,
                     uin: $0.uin,
                     url: $0.url
@@ -118,7 +119,7 @@ extension RootViewModelFactory {
         
         return (products, selected)
     }
-
+    
     // TODO: remove easter egg stub
     @inlinable
     func easterEggsGetUINData(
@@ -141,8 +142,9 @@ extension RootViewModelFactory {
                     discountExpiry: "soon",
                     formattedAmount: "$ 1 000",
                     merchantName: "УФК Владимирской области",
-                    selectedProduct: product,
                     products: [],
+                    purpose: "Транспортный налог",
+                    selectedProduct: product,
                     termsCheck: nil,
                     uin: "99999999999999999999",
                     url: nil

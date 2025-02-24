@@ -48,7 +48,9 @@ where Context == C2GPaymentDomain.Context {
                 discountExpiry: payload.discountExpiry,
                 formattedAmount: payload.formattedAmount,
                 merchantName: payload.merchantName,
-                term: .terms(url: payload.url)
+                purpose: payload.purpose,
+                term: .terms(url: payload.url),
+                uin: payload.uin
             ),
             productSelect: .init(selected: payload.selectedProduct),
             termsCheck: payload.termsCheck,

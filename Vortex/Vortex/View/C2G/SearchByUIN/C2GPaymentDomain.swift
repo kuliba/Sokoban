@@ -31,7 +31,9 @@ extension C2GPaymentDomain {
         let discountExpiry: String?
         let formattedAmount: String? // transAmm
         let merchantName: String?
+        let purpose: String?
         let term: AttributedString
+        let uin: String
     }
     
     struct ContentPayload: Equatable {
@@ -40,8 +42,9 @@ extension C2GPaymentDomain {
         let discountExpiry: String?
         let formattedAmount: String?
         let merchantName: String?
-        let selectedProduct: ProductSelect.Product
         let products: [ProductSelect.Product]
+        let purpose: String?
+        let selectedProduct: ProductSelect.Product
         let termsCheck: Bool?
         let uin: String
         let url: URL?

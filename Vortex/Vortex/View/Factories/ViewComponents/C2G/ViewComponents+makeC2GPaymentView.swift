@@ -42,14 +42,29 @@ extension ViewComponents {
                     
                     state.context.merchantNameField.map(infoView)
                         .paddedRoundedBackground(edgeInsets: .default2)
-
+                    
+                    VStack(spacing: 13) {
+                        
+                        infoView(state.context.uinField)
+                        
+                        state.context.purposeField.map { purposeField in
+                            
+                            VStack(spacing: 13) {
+                             
+                                Divider()
+                                infoView(purposeField)
+                            }
+                        }
+                    }
+                    .paddedRoundedBackground(edgeInsets: .default2)
+                    
                     makeProductSelectView(
                         state: state.productSelect,
                         event: { event(.productSelect($0)) }
                     )
                     
                     amountView(state.context)
-                                        
+                    
                     state.termsCheck.map {
                         
                         makeCheckBoxView(
@@ -208,6 +223,19 @@ extension C2GPaymentDomain.Context {
         }
     }
     
+    var uinField: Field {
+        
+        return .init(icon: .ic24File, title: .uin, value: uin)
+    }
+    
+    var purposeField: Field? {
+        
+        return purpose.map {
+            
+            return .init(icon: .ic24Tax, title: .purpose, value: $0)
+        }
+    }
+    
     var formattedAmountField: Field? {
         
         return formattedAmount.map {
@@ -235,8 +263,10 @@ extension C2GPaymentDomain.Context {
 
 private extension String {
     
-    static let merchantName: Self = "Получатель"
-    static let formattedAmount: Self = "Сумма к оплате"
     static let discount: Self = "Скидка"
     static let discountExpiry: Self = "Срок действия скидки"
+    static let formattedAmount: Self = "Сумма к оплате"
+    static let merchantName: Self = "Получатель"
+    static let purpose: Self = "Назначение платежа"
+    static let uin: Self = "Номер документа (УИН)"
 }
