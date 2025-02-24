@@ -36,11 +36,6 @@ extension SearchByUINDomain {
         let value: String
     }
     
-    enum Navigation {
-        
-        case failure(BackendFailure)
-        case payment(C2GPayment)
-        
-        typealias C2GPayment = C2GPaymentDomain.Binder
-    }
+    typealias Navigation = Result<C2GPayment, BackendFailure>
+    typealias C2GPayment = C2GPaymentDomain.Binder
 }

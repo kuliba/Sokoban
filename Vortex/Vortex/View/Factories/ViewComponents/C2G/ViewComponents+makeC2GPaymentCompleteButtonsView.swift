@@ -30,13 +30,13 @@ extension ViewComponents {
         
         HStack(spacing: 8) {
             
-            switch state.details {
+            switch state.extendedDetails {
             case let .completed(details):
-                makeC2GPaymentCompleteDetailsButton(details: details)
-                makeC2GPaymentCompleteRequisitesButton(details: details)
+                makeC2GPaymentCompleteDetailsButton(details)
+                makeC2GPaymentCompleteRequisitesButton(details)
                 
             case .failure:
-                makeC2GPaymentCompleteShortDetailsButton(response: state.response)
+                makeC2GPaymentCompleteBasicDetailsButton(state.basicDetails)
                 
             case .loading:
                 circleButtonPlaceholder()
@@ -50,37 +50,37 @@ extension ViewComponents {
     
     @inlinable
     func makeC2GPaymentCompleteDetailsButton(
-        details: OperationDetailDomain.State.Details
+        _ fullDetails: OperationDetailDomain.ExtendedDetails
     ) -> some View {
         
         WithFullScreenCoverView {
             circleButton(image: .ic24Info, title: "Детали", action: $0)
         } sheet: {
-            c2gTransactionDetails(details: details, dismiss: $0)
+            c2gTransactionDetails(details: fullDetails, dismiss: $0)
         }
     }
     
     @inlinable
-    func makeC2GPaymentCompleteShortDetailsButton(
-        response: OperationDetailDomain.State.EnhancedResponse
+    func makeC2GPaymentCompleteBasicDetailsButton(
+        _ basicDetails: OperationDetailDomain.BasicDetails
     ) -> some View {
         
         WithFullScreenCoverView {
             circleButton(image: .ic24Info, title: "Детали", action: $0)
         } sheet: {
-            c2gTransactionDetails(details: response, dismiss: $0)
+            c2gTransactionDetails(details: basicDetails, dismiss: $0)
         }
     }
     
     @inlinable
     func makeC2GPaymentCompleteRequisitesButton(
-        details: OperationDetailDomain.State.Details
+        _ fullDetails: OperationDetailDomain.ExtendedDetails
     ) -> some View {
         
         WithFullScreenCoverView {
             circleButton(image: .ic24Share, title: "Реквизиты", action: $0)
         } sheet: {
-            c2gPaymentRequisites(details: details, dismiss: $0)
+            c2gPaymentRequisites(details: fullDetails, dismiss: $0)
         }
     }
     
@@ -111,9 +111,9 @@ extension ViewComponents {
 
 private extension OperationDetailDomain.State {
     
-    var _details: OperationDetailDomain.State.Details? {
+    var _details: OperationDetailDomain.ExtendedDetails? {
         
-        guard case let .completed(details) = details else { return nil }
+        guard case let .completed(details) = extendedDetails else { return nil }
         
         return details
     }
@@ -122,8 +122,6 @@ private extension OperationDetailDomain.State {
 // MARK: - Previews
 
 struct MakeC2GPaymentCompleteButtonsView_Previews: PreviewProvider {
-    
-    typealias Details = StateMachines.LoadState<OperationDetailDomain.State.Details, Error>
     
     static var previews: some View {
         
@@ -137,26 +135,35 @@ struct MakeC2GPaymentCompleteButtonsView_Previews: PreviewProvider {
     }
     
     private static func view(
-        _ details: Details
+        _ fullDetails: OperationDetailDomain.State.ExtendedDetailsState
     ) -> some View {
         
         ViewComponents.preview.makeC2GPaymentCompleteButtonsView(
-            state: .init(details: details, response: .preview)
+            state: .init(basicDetails: .preview, extendedDetails: fullDetails)
         )
     }
 }
 
-extension OperationDetailDomain.State.EnhancedResponse {
+extension OperationDetailDomain.BasicDetails {
     
     static let preview: Self = .init(
+        formattedAmount: "2 000 ₽",
+        formattedDate: "06.05.2021 15:38:12",
+        product: .preview
+    )
+}
+
+extension OperationDetailDomain.ModelPayload {
+    
+    static let preview: Self = .init(
+        product: .preview,
+        status: .completed,
         formattedAmount: "2 000 ₽",
         formattedDate: "06.05.2021 15:38:12",
         merchantName: "2 000 ₽",
         message: nil,
         paymentOperationDetailID: 1,
-        product: .preview,
         purpose: "Единый налоговый платеж",
-        status: .completed,
         uin: UUID().uuidString
     )
 }

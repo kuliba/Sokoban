@@ -324,6 +324,7 @@ extension RootViewModelFactory {
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder,
             makeOpenNewProductButtons: { _ in [] },
+            operationDetailFactory: makeOperationDetailFactory(),
             makeOrderCardViewModel: makeOrderCardViewModel,
             makePaymentsTransfers: { paymentsTransfersSwitcher }
         )
@@ -650,6 +651,7 @@ extension ProductProfileViewModel {
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
+        operationDetailFactory: OperationDetailFactory,
         makeOrderCardViewModel: @escaping MakeOrderCardViewModel,
         makePaymentsTransfers: @escaping PaymentsTransfersFactory.MakePaymentsTransfers
     ) -> MakeProductProfileViewModel {
@@ -677,6 +679,7 @@ extension ProductProfileViewModel {
                 makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
                 makeServicePaymentBinder: makeServicePaymentBinder,
                 makeOpenNewProductButtons: makeOpenNewProductButtons,
+                operationDetailFactory: operationDetailFactory,
                 makeOrderCardViewModel: makeOrderCardViewModel,
                 makePaymentsTransfers: makePaymentsTransfers
             )
@@ -700,22 +703,6 @@ extension ProductProfileViewModel {
                 makeTemplates: makeTemplates,
                 makeUtilitiesViewModel: makeUtilitiesViewModel,
                 makePaymentsTransfers: makePaymentsTransfers
-            )
-            
-            let makeOperationDetailViewModel: OperationDetailFactory.MakeOperationDetailViewModel = { productStatementData, productData, model in
-                
-                return .init(
-                    productStatement: productStatementData,
-                    product: productData,
-                    updateFastAll: {
-                        model.action.send(ModelAction.Products.Update.Fast.All())
-                    },
-                    model: model
-                )
-            }
-            
-            let operationDetailFactory = OperationDetailFactory(
-                makeOperationDetailViewModel: makeOperationDetailViewModel
             )
             
             let makeProductProfileViewModelFactory: ProductProfileViewModelFactory = .init(

@@ -112,6 +112,7 @@ extension Services {
             case getJsonAbroad
             case getNotAuthorizedZoneClientInformData
             case getOpenAccountForm
+            case getOperationDetail
             case getOperationDetailByPaymentId
             case getOperatorsListByParam
             case getPaymentTemplateList
@@ -343,8 +344,8 @@ extension Services.Endpoint {
     
     static let getCardStatementForPeriod: Self = .init(
         pathPrefix: .rest,
-        version: .v5,
-        serviceName: .getCardStatementForPeriod
+        version: nil,
+        serviceName: .getCardStatementForPeriod_V3
     )
     
     static let getClientConsentMe2MePull: Self = .init(
@@ -357,6 +358,12 @@ extension Services.Endpoint {
         pathPrefix: .dict,
         version: nil,
         serviceName: .getSvgImageList
+    )
+    
+    static let getOperationDetailV3: Self = .init(
+        pathPrefix: .rest,
+        version: .v3,
+        serviceName: .getOperationDetail
     )
     
     static let getOperationDetailByPaymentID: Self = .init(

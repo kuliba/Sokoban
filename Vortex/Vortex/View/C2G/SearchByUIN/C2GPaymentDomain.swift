@@ -11,8 +11,6 @@ import Foundation
 import PaymentComponents
 import RxViewModel
 
-typealias C2GPaymentViewModel<Context> = RxViewModel<C2GPaymentState<Context>, C2GPaymentEvent, C2GPaymentEffect>
-
 /// A namespace.
 enum C2GPaymentDomain {}
 
@@ -24,7 +22,7 @@ extension C2GPaymentDomain {
     
     // MARK: - Content
     
-    typealias Content = C2GPaymentViewModel<Context>
+    typealias Content = RxViewModel<C2GPaymentState<Context>, C2GPaymentEvent, C2GPaymentEffect>
     typealias ContentReducer = C2GPaymentReducer<Context>
     
     struct Context: Equatable {
@@ -54,6 +52,24 @@ extension C2GPaymentDomain {
         typealias Digest = C2GCore.C2GPaymentDigest
     }
     
-    typealias Navigation = Result<C2GPaymentComplete, BackendFailure>
-    typealias C2GPaymentComplete = OperationDetailDomain.Model
+    typealias Navigation = Result<Complete, BackendFailure>
+    
+    struct Complete {
+        
+        let fields: Fields
+        let details: OperationDetailDomain.Model
+        
+        struct Fields: Equatable {
+            
+            let formattedAmount: String?
+            let merchantName: String?
+            let purpose: String?
+            let status: Status
+            
+            enum Status {
+                
+                case completed, inflight, rejected
+            }
+        }
+    }
 }

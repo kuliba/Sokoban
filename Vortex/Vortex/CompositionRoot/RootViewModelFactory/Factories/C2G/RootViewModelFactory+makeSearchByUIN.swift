@@ -32,28 +32,42 @@ extension RootViewModelFactory {
     ) {
         switch select {
         case let .uin(uin):
-            getUINData(uin) { [weak self] in
+            getFastContractAccountID { [weak self] in
                 
-                guard let self else { return }
-                
-                switch $0 {
-                case let .failure(failure):
-                    completion(.failure(failure))
+                self?.getUINData(
+                    fastAccountID: $0,
+                    uin: uin
+                ) { [weak self] in
                     
-                case let .success(payload):
-                    completion(.payment(makeC2BPayment(payload: payload)))
+                    guard let self else { return }
+                    
+                    completion($0.map(makeC2BPayment))
                 }
             }
         }
     }
     
     @inlinable
+    func getFastContractAccountID(
+        completion: @escaping (Int?) -> Void
+    ) {
+        let map = RemoteServices.ResponseMapper.mapFastPaymentContractFindListResponse
+        let mapAccountID = { map($0, $1).map(\.?.contract.accountID) }
+        let service = nanoServiceComposer.compose(
+            createRequest: Vortex.RequestFactory.createFastPaymentContractFindListRequest,
+            mapResponse: mapAccountID
+        )
+        
+        service(()) { completion(try? $0.get()); _ = service }
+    }
+    
+    @inlinable
     func getUINData(
-        _ uin: SearchByUINDomain.UIN,
+        fastAccountID: Int?,
+        uin: SearchByUINDomain.UIN,
         completion: @escaping (GetUINDataResult) -> Void
     ) {
-        let products = model.c2gProductSelectProducts()
-        let selectedProduct = model.sbpLinkedProduct() ?? products.first
+        let (products, selectedProduct) = getC2GProducts(fastAccountID: fastAccountID)
         
         guard let selectedProduct
         else { return completion(.missingC2GPaymentEligibleProducts) }
@@ -65,31 +79,40 @@ extension RootViewModelFactory {
         
         let service = onBackground(
             makeRequest: Vortex.RequestFactory.createGetUINDataRequest,
-            mapResponse: RemoteServices.ResponseMapper.mapGetUINDataResponse
+            mapResponse: RemoteServices.ResponseMapper.mapGetUINDataResponse,
+            connectivityFailureMessage: .connectivity
         )
         
         service(uin.value) {
             
-            switch $0 {
-            case let .failure(failure):
-                completion(.failure(
-                    failure.backendFailure(connectivityMessage: .connectivity)
-                ))
+            let result = $0.map {
                 
-            case let .success(response):
-                completion(.success(.init(
+                return C2GPaymentDomain.ContentPayload(
                     selectedProduct: selectedProduct,
                     products: products,
-                    termsCheck: response.termsCheck,
-                    uin: response.uin,
-                    url: response.url
-                )))
+                    termsCheck: $0.termsCheck,
+                    uin: $0.uin,
+                    url: $0.url
+                )
             }
             
+            completion(result)
             _ = service
         }
     }
     
+    @inlinable
+    func getC2GProducts(
+        fastAccountID: Int?
+    ) -> (products: [ProductSelect.Product], selected: ProductSelect.Product?) {
+        
+        let products = model.c2gProductSelectProducts()
+        let fastProduct = fastAccountID.map { id in products.first { $0.id.rawValue == id }}
+        let selected = fastProduct ?? products.first
+        
+        return (products, selected)
+    }
+
     // TODO: remove easter egg stub
     @inlinable
     func easterEggsGetUINData(
@@ -122,16 +145,6 @@ extension RootViewModelFactory {
     }
     
     typealias GetUINDataResult = Result<C2GPaymentDomain.ContentPayload, BackendFailure>
-}
-
-extension Error {
-    
-    func backendFailure(
-        connectivityMessage: String
-    ) -> BackendFailure {
-        
-        return (self as? BackendFailure) ?? .connectivity(connectivityMessage)
-    }
 }
 
 private extension RootViewModelFactory.GetUINDataResult {

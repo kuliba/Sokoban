@@ -690,6 +690,13 @@
         "identifier" : "StateMachinesTests",
         "name" : "StateMachinesTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "GetOperationDetailServiceTests",
+        "name" : "GetOperationDetailServiceTests"
+      }
     }
   ],
   "version" : 1

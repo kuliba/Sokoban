@@ -211,14 +211,14 @@ extension SearchByUINDomain.Navigation {
     
     var destination: Destination? {
         
-        guard case let .payment(c2gPayment) = self else { return nil }
+        guard case let .success(c2gPayment) = self else { return nil }
         
         return .c2gPayment(c2gPayment)
     }
     
     enum Destination {
         
-        case c2gPayment(C2GPayment)
+        case c2gPayment(SearchByUINDomain.C2GPayment)
     }
 }
 

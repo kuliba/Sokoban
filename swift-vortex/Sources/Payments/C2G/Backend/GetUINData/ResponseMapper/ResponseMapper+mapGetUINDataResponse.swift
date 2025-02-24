@@ -37,10 +37,8 @@ private extension ResponseMapper {
         let dateN: String?
         let legalAct: String?
         let paymentTerm: String?
-        let discountFixedValue: Decimal?
         let discountExpiry: String?
-        let discountSizeValue: Decimal?
-        let multiplierSizeValue: Decimal?
+        let discount: String?
         let payerName: String?
         let payerINN: String?
         let payerKPP: String?
@@ -65,10 +63,8 @@ private extension ResponseMapper._DTO {
                 dateN: dateN,
                 legalAct: legalAct,
                 paymentTerm: paymentTerm,
-                discountFixedValue: discountFixedValue,
                 discountExpiry: discountExpiry,
-                discountSizeValue: discountSizeValue,
-                multiplierSizeValue: multiplierSizeValue,
+                discount: discount,
                 payerName: payerName,
                 payerINN: payerINN,
                 payerKPP: payerKPP,
@@ -80,4 +76,3 @@ private extension ResponseMapper._DTO {
     
     struct MissingMandatoryFields: Error {}
 }
-

@@ -702,6 +702,13 @@
         "identifier" : "StateMachinesTests",
         "name" : "StateMachinesTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "GetOperationDetailServiceTests",
+        "name" : "GetOperationDetailServiceTests"
+      }
     }
   ],
   "version" : 1

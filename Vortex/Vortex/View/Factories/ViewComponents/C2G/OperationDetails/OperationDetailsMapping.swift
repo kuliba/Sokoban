@@ -10,7 +10,7 @@ import UIPrimitives
 
 // MARK: - Transaction Details
 
-extension OperationDetailDomain.State.Details: TransactionDetailsProviding {
+extension OperationDetailDomain.ExtendedDetails: TransactionDetailsProviding {
     
     var transactionDetails: [DetailsCell] {
         
@@ -44,7 +44,7 @@ private extension Optional where Wrapped == DetailsCell.Field {
 
 // MARK: - Payment Requisites
 
-extension OperationDetailDomain.State.Details: PaymentRequisitesProviding {
+extension OperationDetailDomain.ExtendedDetails: PaymentRequisitesProviding {
     
     var paymentRequisites: [DetailsCell.Field] {
         
@@ -226,7 +226,7 @@ private extension String {
     static let upno = "УПНО"
 }
 
-private extension OperationDetailDomain.State.Status {
+private extension OperationDetailDomain.Status {
     
     var image: Image {
         
@@ -249,7 +249,7 @@ private extension OperationDetailDomain.State.Status {
 
 // MARK: - Short Transaction Details
 
-extension OperationDetailDomain.State.EnhancedResponse: TransactionDetailsProviding {
+extension OperationDetailDomain.BasicDetails: TransactionDetailsProviding {
     
     var transactionDetails: [DetailsCell] {
         
@@ -282,7 +282,7 @@ extension OperationDetailDomain.State.EnhancedResponse: TransactionDetailsProvid
     }
 }
 
-extension OperationDetailDomain.State.Product {
+extension OperationDetailDomain.Product {
     
     var cellProduct: DetailsCell.Product {
         
