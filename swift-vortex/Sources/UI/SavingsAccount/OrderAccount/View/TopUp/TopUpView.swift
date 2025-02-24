@@ -24,25 +24,33 @@ struct TopUpView: View {
             
             VStack(alignment: .leading, spacing: 6) {
                 
-                HStack {
-                    
-                    VStack(alignment: .leading, spacing: 6) {
-                        
-                        config.title.text.string(isLoading).text(withConfig: config.title.config)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        config.subtitle.text.string(isLoading).text(withConfig: config.subtitle.config)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    
-                    toggleView()
-                        .disabled(isLoading)
-                }
-                
+                messageWithToggle()
                 config.description.text.string(isLoading).text(withConfig: config.description.config)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
+    }
+    
+    private func messageWithToggle() -> some View {
+        
+        HStack {
+            
+            message()
+            toggleView()
+                .disabled(isLoading)
+        }
+    }
+    
+    private func message() -> some View {
+        
+        VStack(alignment: .leading, spacing: 6) {
+            
+            config.title.text.string(isLoading).text(withConfig: config.title.config)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            config.subtitle.text.string(isLoading).text(withConfig: config.subtitle.config)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 

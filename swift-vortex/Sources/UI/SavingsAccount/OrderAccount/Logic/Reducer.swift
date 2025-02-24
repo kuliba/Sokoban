@@ -75,12 +75,7 @@ public extension Reducer {
                 state.form?.consent = consent
             }
         case let .productSelect(productSelectEvent):
-            if state.productSelect.selected != nil {
-                state.productSelect = productSelectReduce(state.productSelect, productSelectEvent)
-            } else {
-                state.productSelect = productSelectReduce(state.productSelect, productSelectEvent)
-
-            }
+            state.productSelect = productSelectReduce(state.productSelect, productSelectEvent)
         
         case let .amount(amount):
             state.form?.amount = amount

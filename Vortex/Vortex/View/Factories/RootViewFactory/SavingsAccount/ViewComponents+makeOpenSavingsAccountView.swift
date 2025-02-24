@@ -132,53 +132,14 @@ extension ViewComponents {
         state: OpenSavingsAccountDomain.State,
         event: @escaping (OpenSavingsAccountDomain.Event) -> Void
     ) -> some View {
-    
-        if state.form?.topUp.isOn == true { // need fix
-            
-            let viewModel = viewModel(
-                currencySymbol: state.form?.constants.currency.symbol,
-                bottomAmount: .init(
-                    button: .init(
-                        title: "Продолжить",
-                        isEnabled: state.isValid
-                    ),
-                    status: nil
-                ),
-                event: event
-            )
-            
-            BottomAmountStateWrapperView(
-                viewModel: viewModel.model,
-                config: .iVortex,
-                infoView: makeAmountInfoView
-            )
-        } else {
-            
-            StatefulButtonView(
-                isActive: state.isValid,
-                event: { event(.continue) },
-                config: .iVortex(title: state.continueButtonTitle)
-            )
-            .padding(.horizontal)
-        }
-    }
-    
-    private func viewModel(
-        currencySymbol: String?,
-        bottomAmount: BottomAmount,
-        event: @escaping (OpenSavingsAccountDomain.Event) -> Void
-    ) -> Node<BottomAmountViewModel> {
         
-        let viewModel = BottomAmountViewModel(currencySymbol: currencySymbol ?? "", initialState: bottomAmount)
-        
-        let cancellable = viewModel.$state
-            .map(\.value)
-            .removeDuplicates()
-            .sink { newAmount in
-                
-               // event(.amount(newAmount))
-            }
-        return .init(model: viewModel, cancellable: cancellable)
+        // TODO: add amount
+        StatefulButtonView(
+            isActive: state.isValid,
+            event: { event(.continue) },
+            config: .iVortex(title: state.continueButtonTitle)
+        )
+        .padding(.horizontal)
     }
 }
 
