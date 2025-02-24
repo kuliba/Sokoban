@@ -25,13 +25,14 @@ extension AdditionalProductViewModel: Identifiable {
         
         switch promoType {
         case .savingsAccount: return .savingsAccount
-        case .sticker:   return .sticker
+        case .sticker:        return .sticker
+        case .collateralLoan: return .collateralLoan
         }
     }
     
     public enum ID: Hashable {
         
-        case savingsAccount, sticker
+        case savingsAccount, sticker, collateralLoan
     }
 }
 
