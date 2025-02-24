@@ -16,7 +16,7 @@ public extension RequestFactory {
         url: URL
     ) throws -> URLRequest {
         
-//        let url = try url.appendingSerial(serial)
+        let url = try url.appendingSerial(serial)
         return createEmptyRequest(.get, with: url)
     }
 }
