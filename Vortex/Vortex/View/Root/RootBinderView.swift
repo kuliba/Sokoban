@@ -161,7 +161,13 @@ private extension RootBinderView {
                 
                 binder.flow.event(.dismiss)
             }
-            
+          
+        case let .orderSavingsAccountResponse(response):
+            rootViewFactory.components.makeOrderSavingsAccountCompleteView(response) {
+                
+                binder.flow.event(.dismiss)
+            }
+
         case let .scanQR(qrScanner):
             qrScannerView(qrScanner)
             
@@ -271,7 +277,7 @@ extension RootViewNavigation {
         case let .openProduct(openProduct):
             return .openProduct(openProduct)
             
-        case .orderCardResponse:
+        case .orderCardResponse, .orderSavingsAccountResponse:
             return nil
             
         case let .outside(outside):
@@ -322,6 +328,9 @@ extension RootViewNavigation {
         case let .orderCardResponse(orderCardResponse):
             return .orderCardResponse(orderCardResponse)
             
+        case let .orderSavingsAccountResponse(response):
+            return .orderSavingsAccountResponse(response)
+            
         case let .scanQR(node):
             return .scanQR(node.model)
             
@@ -337,6 +346,7 @@ extension RootViewNavigation {
     enum FullScreenCover {
         
         case orderCardResponse(OpenCardDomain.OrderCardResponse)
+        case orderSavingsAccountResponse(OpenSavingsAccountDomain.OrderAccountResponse)
         case scanQR(QRScannerDomain.Binder)
         case templates(TemplatesNode)
     }
@@ -401,7 +411,10 @@ extension RootViewNavigation.FullScreenCover: Identifiable {
         switch self {
         case .orderCardResponse:
             return .orderCardResponse
-            
+         
+        case .orderSavingsAccountResponse:
+            return .orderSavingsAccountResponse
+
         case let .scanQR(qrRScanner):
             return .scanQR(.init(qrRScanner))
             
@@ -413,6 +426,7 @@ extension RootViewNavigation.FullScreenCover: Identifiable {
     enum ID: Hashable {
         
         case orderCardResponse
+        case orderSavingsAccountResponse
         case scanQR(ObjectIdentifier)
         case templates(ObjectIdentifier)
     }

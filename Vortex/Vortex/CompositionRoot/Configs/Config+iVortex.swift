@@ -8,6 +8,8 @@
 import PaymentComponents
 import SberQR
 import ManageSubscriptionsUI
+import OrderCardLandingUI
+import HeaderLandingComponent
 
 extension SberQR.Config {
     
@@ -252,5 +254,31 @@ extension ManageSubscriptionsUI.ProductViewConfig {
         nameFont: .textH4M16240(),
         nameColor: .mainColorsBlack,
         descriptionFont: .textBodyMR14180()
+    )
+}
+
+extension HeaderLandingComponent.HeaderViewConfig {
+
+    static let iVortex: Self = .init(
+        title: .init(
+            textFont: .marketingH0B40X480(),
+            textColor: .mainColorsBlack
+        ),
+        optionPlaceholder: .textSecondary,
+        option: .init(
+            textFont: .textBodyMR14180(),
+            textColor: .textSecondary
+        ),
+        layout: .init(
+            itemOption: .init(
+                circleRadius: 5,
+                horizontalSpacing: 5,
+                optionWidth: 150
+            ),
+            textViewLeadingPadding: 16,
+            textViewOptionsVerticalSpacing: 26,
+            textViewTrailingPadding: 15,
+            textViewVerticalSpacing: 20
+        )
     )
 }

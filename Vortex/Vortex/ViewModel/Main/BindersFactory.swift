@@ -12,14 +12,13 @@ import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 
 typealias MakeCollateralLoanShowcaseBinder = () -> GetShowcaseDomain.Binder
 typealias MakeCollateralLoanLandingBinder = (String) -> GetCollateralLandingDomain.Binder
-typealias MakeSavingsAccountBinder = () -> SavingsAccountDomain.Binder
-typealias MakeCreateDraftCollateralLoanApplicationBinder = (CreateDraftCollateralLoanApplication)
-    -> CreateDraftCollateralLoanApplicationDomain.Binder
-typealias MakeSavingsAccountNodes = (@escaping () -> Void) -> SavingsAccountNodes
+typealias MakeCreateDraftCollateralLoanApplicationBinder
+    = (CreateDraftCollateralLoanApplication) -> CreateDraftCollateralLoanApplicationDomain.Binder
+typealias OpenSavingsAccount = Node<OpenSavingsAccountDomain.Binder>
 
 struct SavingsAccountNodes {
     
-    let openSavingsAccountNode: Node<SavingsAccountDomain.OpenAccountBinder>
+    let openSavingsAccountNode: Node<OpenSavingsAccountDomain.Binder>
     let savingsAccountNode: Node<SavingsAccountDomain.Binder>
 }
 
@@ -36,7 +35,6 @@ struct BindersFactory {
     let makeCollateralLoanShowcaseBinder: MakeCollateralLoanShowcaseBinder
     let makeCollateralLoanLandingBinder: MakeCollateralLoanLandingBinder
     let makeCreateDraftCollateralLoanApplicationBinder: MakeCreateDraftCollateralLoanApplicationBinder
-    let makeSavingsAccountNodes: MakeSavingsAccountNodes
 }
 
 extension BindersFactory {
@@ -45,8 +43,7 @@ extension BindersFactory {
         bannersBinder: .preview,
         makeCollateralLoanShowcaseBinder: { .preview },
         makeCollateralLoanLandingBinder: { _ in .preview },
-        makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview },
-        makeSavingsAccountNodes: { _ in .preview }
+        makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview }
     )
 }
 
