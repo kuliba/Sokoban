@@ -43,6 +43,7 @@ enum SettingType: Equatable {
         case sticker
         case savingsAccount
         case profileOnboarding
+        case collateralLoan
     }
 }
 

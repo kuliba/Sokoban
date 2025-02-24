@@ -17,7 +17,7 @@ extension RequestFactory {
     ) throws -> URLRequest {
         
         let parameters: [(String, String)] = [
-            ("serial", serial ?? "")
+//            ("serial", serial ?? "")
         ]
 
         let endpoint = Services.Endpoint.getBannersMyProductListV2

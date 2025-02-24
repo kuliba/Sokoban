@@ -19,6 +19,7 @@ extension RootViewModelFactory {
             switch viewModel.promoProduct {
             case .sticker:          return true
             case .savingsAccount:   return featureFlags.savingsAccountFlag.isActive
+            case .collateralLoan:   return true
             }
         }()
         
