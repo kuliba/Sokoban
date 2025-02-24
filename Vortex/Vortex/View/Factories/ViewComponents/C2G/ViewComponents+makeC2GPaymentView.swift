@@ -94,6 +94,7 @@ extension ViewComponents {
                     
                     state.digest.map(pay)
                 }
+                .background(.white)
             }
         }
         .padding()
