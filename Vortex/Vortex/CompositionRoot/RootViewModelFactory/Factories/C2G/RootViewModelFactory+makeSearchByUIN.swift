@@ -32,28 +32,42 @@ extension RootViewModelFactory {
     ) {
         switch select {
         case let .uin(uin):
-            getUINData(uin) { [weak self] in
+            getFastContractAccountID { [weak self] in
                 
-                guard let self else { return }
-                
-                switch $0 {
-                case let .failure(failure):
-                    completion(.failure(failure))
+                self?.getUINData(
+                    fastAccountID: $0,
+                    uin: uin
+                ) { [weak self] in
                     
-                case let .success(payload):
-                    completion(.payment(makeC2BPayment(payload: payload)))
+                    guard let self else { return }
+                    
+                    completion($0.map(makeC2BPayment))
                 }
             }
         }
     }
     
     @inlinable
+    func getFastContractAccountID(
+        completion: @escaping (Int?) -> Void
+    ) {
+        let map = RemoteServices.ResponseMapper.mapFastPaymentContractFindListResponse
+        let mapAccountID = { map($0, $1).map(\.?.contract.accountID) }
+        let service = nanoServiceComposer.compose(
+            createRequest: Vortex.RequestFactory.createFastPaymentContractFindListRequest,
+            mapResponse: mapAccountID
+        )
+        
+        service(()) { completion(try? $0.get()); _ = service }
+    }
+    
+    @inlinable
     func getUINData(
-        _ uin: SearchByUINDomain.UIN,
+        fastAccountID: Int?,
+        uin: SearchByUINDomain.UIN,
         completion: @escaping (GetUINDataResult) -> Void
     ) {
-        let products = model.c2gProductSelectProducts()
-        let selectedProduct = model.sbpLinkedProduct() ?? products.first
+        let (products, selectedProduct) = getC2GProducts(fastAccountID: fastAccountID)
         
         guard let selectedProduct
         else { return completion(.missingC2GPaymentEligibleProducts) }
@@ -87,6 +101,18 @@ extension RootViewModelFactory {
         }
     }
     
+    @inlinable
+    func getC2GProducts(
+        fastAccountID: Int?
+    ) -> (products: [ProductSelect.Product], selected: ProductSelect.Product?) {
+        
+        let products = model.c2gProductSelectProducts()
+        let fastProduct = fastAccountID.map { id in products.first { $0.id.rawValue == id }}
+        let selected = fastProduct ?? products.first
+        
+        return (products, selected)
+    }
+
     // TODO: remove easter egg stub
     @inlinable
     func easterEggsGetUINData(

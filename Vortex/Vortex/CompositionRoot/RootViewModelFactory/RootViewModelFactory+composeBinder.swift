@@ -5,7 +5,9 @@
 //  Created by Igor Malyarov on 04.01.2025.
 //
 
+import CombineSchedulers
 import FlowCore
+import Foundation
 
 extension RootViewModelFactory {
     
@@ -29,10 +31,12 @@ extension RootViewModelFactory {
         initialState: FlowDomain<Select, Navigation>.State = .init(),
         delayProvider: @escaping (Navigation) -> Delay = { _ in .zero },
         getNavigation: @escaping FlowDomain<Select, Navigation>.GetNavigation,
-        witnesses: ContentWitnesses<Content, FlowEvent<Select, Never>>
+        witnesses: ContentWitnesses<Content, FlowEvent<Select, Never>>,
+        scheduler: AnySchedulerOf<DispatchQueue>? = nil
     ) -> Binder<Content, FlowDomain<Select, Navigation>.Flow> {
         
-        let decoratedGetNavigation = schedulers.interactive.decorateGetNavigation(delayProvider: delayProvider)(getNavigation)
+        let scheduler = scheduler ?? schedulers.background
+        let decoratedGetNavigation = scheduler.decorateGetNavigation(delayProvider: delayProvider)(getNavigation)
         
         let flow = composeFlow(
             initialState: initialState,
@@ -63,7 +67,8 @@ extension RootViewModelFactory {
         initialState: FlowDomain<Select, Navigation>.State = .init(),
         delayProvider: @escaping (Navigation) -> Delay = { _ in .zero },
         getNavigation: @escaping FlowDomain<Select, Navigation>.GetNavigation,
-        selectWitnesses witnesses: ContentWitnesses<Content, Select>
+        selectWitnesses witnesses: ContentWitnesses<Content, Select>,
+        scheduler: AnySchedulerOf<DispatchQueue>? = nil
     ) -> Binder<Content, FlowDomain<Select, Navigation>.Flow> {
         
         return composeBinder(
@@ -71,7 +76,8 @@ extension RootViewModelFactory {
             initialState: initialState,
             delayProvider: delayProvider,
             getNavigation: getNavigation,
-            witnesses: witnesses.wrappingAsFlowEvent()
+            witnesses: witnesses.wrappingAsFlowEvent(),
+            scheduler: scheduler
         )
     }
 }

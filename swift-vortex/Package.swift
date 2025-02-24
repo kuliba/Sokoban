@@ -1744,7 +1744,8 @@ private extension Target {
         dependencies: [
             .vortexTools,
         ],
-        path: "Sources/Infra/\(String.stateMachines)"
+        path: "Sources/Infra/\(String.stateMachines)",
+        exclude: ["README.md"]
     )
     static let stateMachinesTests = testTarget(
         name: .stateMachinesTests,
@@ -2907,7 +2908,8 @@ private extension Target {
             // internal modules
             .rxViewModel,
         ],
-        path: "Sources/UI/\(String.flowCore)"
+        path: "Sources/UI/\(String.flowCore)",
+        exclude: ["README.md"]
     )
     static let flowCoreTests = testTarget(
         name: .flowCoreTests,
@@ -3257,7 +3259,8 @@ private extension Target {
     static let headerLandingComponent = target(
         name: .headerLandingComponent,
         dependencies: [
-            .sharedConfigs
+            .sharedConfigs,
+            .uiPrimitives,
         ],
         path: "Sources/UI/Components/\(String.headerLandingComponent)"
     )
