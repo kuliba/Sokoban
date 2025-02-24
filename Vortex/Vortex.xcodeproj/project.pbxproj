@@ -3179,6 +3179,7 @@
 		C11F5A582CAED62C00E40CD2 /* RequestFactory+createPrepareDeleteDefaultBankRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11F5A572CAED62C00E40CD2 /* RequestFactory+createPrepareDeleteDefaultBankRequest.swift */; };
 		C121877A2D1C025200565224 /* GoogleService-InfoVortexMbsDebug.plist in Resources */ = {isa = PBXBuildFile; fileRef = C12187792D1C025200565224 /* GoogleService-InfoVortexMbsDebug.plist */; };
 		C123110C2C4E0960002871A8 /* CalendarWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C123110B2C4E0960002871A8 /* CalendarWrapperView.swift */; };
+		C124C7E72D6C45CB00124721 /* ListLandingComponent in Frameworks */ = {isa = PBXBuildFile; productRef = C124C7E62D6C45CB00124721 /* ListLandingComponent */; };
 		C12ACF282B0228C0006C6B2E /* ResponseMapper+GetImageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12ACF272B0228C0006C6B2E /* ResponseMapper+GetImageList.swift */; };
 		C12B11B32ABAB78C003AECEC /* PaymentsSuccessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12B11B22ABAB78C003AECEC /* PaymentsSuccessTests.swift */; };
 		C12C18CD2924AC7E00A9C4F1 /* InfoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12C18CC2924AC7E00A9C4F1 /* InfoViewComponent.swift */; };
@@ -7767,6 +7768,7 @@
 				C198F83E2D63759A005D8DE0 /* OrderCardLandingUI in Frameworks */,
 				ED147D4F26BC1237002F66C8 /* FirebaseCrashlytics in Frameworks */,
 				83F775CB2CA2CE0700A05F69 /* MarketShowcase in Frameworks */,
+				C124C7E72D6C45CB00124721 /* ListLandingComponent in Frameworks */,
 				2A669EAC2AE50674009A2F12 /* CVVPIN_Services in Frameworks */,
 				2A392BD82B934B3800029790 /* PrePaymentPicker in Frameworks */,
 				83CA1C932A600DFC00672AA5 /* PinCodeUI in Frameworks */,
@@ -20048,6 +20050,7 @@
 				2A2A46D22D61AB44009896F2 /* C2G */,
 				C198F83D2D63759A005D8DE0 /* OrderCardLandingUI */,
 				2AD073712D65B55200922062 /* StateMachines */,
+				C124C7E62D6C45CB00124721 /* ListLandingComponent */,
 				8372A8B12D688B1D00CD1CFB /* LoadableState */,
 				2A5AFD9D2D69080600BD15EC /* GetOperationDetailService */,
 			);
@@ -30317,6 +30320,10 @@
 		C10E0F232D5772ED008185D6 /* OrderCard */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = OrderCard;
+		};
+		C124C7E62D6C45CB00124721 /* ListLandingComponent */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ListLandingComponent;
 		};
 		C14F85522AF537B000749534 /* PaymentSticker */ = {
 			isa = XCSwiftPackageProductDependency;

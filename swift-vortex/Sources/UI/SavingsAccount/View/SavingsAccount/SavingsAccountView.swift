@@ -60,25 +60,20 @@ public struct SavingsAccountView: View {
     }
         
     private func list(
-        items: Items
+        items: ListItems
     ) -> some View {
         
-        VStack(alignment: .leading, spacing: config.spacing) {
-            
-            items.title.map {
-                $0.text(withConfig: config.list.title)
-                    .accessibilityIdentifier("ItemsTitle")
-            }
-            
-            ForEach(items.list, content: itemView)
-                .accessibilityIdentifier("Items")
-        }
+        List(
+            items: items,
+            config: config.list,
+            factory: factory
+        )
         .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal, vertical: config.paddings.list.vertical))
         .modifier(BackgroundAndCornerRadiusModifier(background: config.list.background, cornerRadius: config.cornerRadius))
     }
     
     private func itemView (
-        item: Items.Item
+        item: ListItems.Item
     ) -> some View {
         
         HStack(spacing: config.spacing) {
@@ -117,9 +112,8 @@ public struct SavingsAccountView: View {
 public extension SavingsAccountView {
     
     typealias Config = SavingsAccountConfig
-    typealias Factory = ImageViewFactory
+    typealias Factory = ListImageViewFactory
     
-    typealias Items = SavingsAccountState.Items
     typealias Question = SavingsAccountState.Question
 }
 

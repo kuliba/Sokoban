@@ -8,13 +8,23 @@
 import Foundation
 import SwiftUI
 
-struct List: View {
+public struct List: View {
     
-    let items: Items
-    let config: Config
-    let factory: ImageViewFactory
+    private let items: Items
+    private let config: Config
+    private let factory: ImageViewFactory
     
-    var body: some View {
+    public init(
+        items: Items,
+        config: Config,
+        factory: ImageViewFactory
+    ) {
+        self.items = items
+        self.config = config
+        self.factory = factory
+    }
+    
+    public var body: some View {
         
         VStack(alignment: .leading, spacing: config.spacing) {
             
@@ -36,6 +46,7 @@ struct List: View {
             
             factory.makeIconView(item.md5hash)
                 .aspectRatio(contentMode: .fit)
+                .frame(width: 40, height: 40, alignment: .center)
                 .accessibilityIdentifier("ItemIcon")
             
             VStack(alignment: .leading, spacing: 0) {

@@ -9,12 +9,12 @@ import Foundation
 import SwiftUI
 import SharedConfigs
 
-struct Config {
+public struct Config {
     
-    let background: Color
-    let item: TitleWithSubtitle
-    let title: TextConfig
-    let spacing: CGFloat
+    public let background: Color
+    public let item: TitleWithSubtitle
+    public let title: TextConfig
+    public let spacing: CGFloat
     
     public init(
         background: Color,
@@ -29,8 +29,9 @@ struct Config {
     }
     
     public struct TitleWithSubtitle {
-        let title: TextConfig
-        let subtitle: TextConfig
+        
+        public let title: TextConfig
+        public let subtitle: TextConfig
         
         public init(
             title: TextConfig,

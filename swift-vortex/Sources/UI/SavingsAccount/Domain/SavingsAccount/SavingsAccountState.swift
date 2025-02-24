@@ -10,8 +10,8 @@ import DropDownTextListComponent
 
 public struct SavingsAccountState: Equatable {
     
-    let advantages: Items
-    let basicConditions: Items
+    let advantages: ListItems
+    let basicConditions: ListItems
     let imageLink: String
     let questions: Questions
     let subtitle: String?
@@ -19,8 +19,8 @@ public struct SavingsAccountState: Equatable {
     public var needShowHeader: Bool = false
     
     public init(
-        advantages: Items,
-        basicConditions: Items,
+        advantages: ListItems,
+        basicConditions: ListItems,
         imageLink: String,
         questions: Questions,
         subtitle: String?,
@@ -55,32 +55,6 @@ public struct SavingsAccountState: Equatable {
             self.id = id
             self.answer = answer
             self.question = question
-        }
-    }
-    
-    public struct Items: Equatable {
-        
-        let title: String?
-        let list: [Item]
-        
-        public init(title: String?, list: [Item]) {
-            self.title = title
-            self.list = list
-        }
-        
-        public struct Item: Equatable, Identifiable {
-            
-            public let id: UUID
-            let md5hash: String
-            let title: String
-            let subtitle: String?
-            
-            public init(id: UUID = .init(), md5hash: String, title: String, subtitle: String?) {
-                self.id = id
-                self.md5hash = md5hash
-                self.title = title
-                self.subtitle = subtitle
-            }
         }
     }
 }

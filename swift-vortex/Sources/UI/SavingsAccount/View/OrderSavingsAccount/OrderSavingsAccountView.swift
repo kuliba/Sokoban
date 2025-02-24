@@ -452,7 +452,7 @@ public extension OrderSavingsAccountView {
     
     typealias Event = OrderSavingsAccountEvent
     typealias Config = OrderSavingsAccountConfig
-    typealias Factory = ImageViewFactory
+    typealias Factory = ListImageViewFactory
     typealias AmountToString = (Decimal, String) -> String
 }
 
@@ -542,76 +542,5 @@ struct LandingUIView_Previews: PreviewProvider {
             OrderSavingsAccountView.placeholder
         }
         .previewDisplayName("Placeholder")
-        
-        NavigationView {
-            OrderSavingsAccountWrapperView.init(
-                viewModel: .init(
-                    initialState: .preview,
-                    reduce: OrderSavingsAccountReducer().reduce(_:_:),
-                    handleEffect: {_,_ in }),
-                config: .preview,
-                imageViewFactory: .default)
-        }
-        .previewDisplayName("Value")
     }
 }
-
-// TODO: move to main target
-
-import RxViewModel
-
-struct OrderSavingsAccountWrapperView: View {
-    
-    @ObservedObject private var viewModel: ViewModel
-    
-    private let config: Config
-    private let imageViewFactory: ImageViewFactory
-    
-    init(
-        viewModel: ViewModel,
-        config: Config,
-        imageViewFactory: ImageViewFactory
-    ) {
-        self.viewModel = viewModel
-        self.config = config
-        self.imageViewFactory = imageViewFactory
-    }
-    
-    public var body: some View {
-        
-        RxWrapperView(
-            model: viewModel,
-            makeContentView: {
-                OrderSavingsAccountView(
-                    amountToString: {
-                        let formatter = NumberFormatter.preview()
-                        return (formatter.string(for: $0) ?? "") + " " + $1
-                    },
-                    state: $0,
-                    event: $1,
-                    config: config,
-                    factory: imageViewFactory,
-                    viewFactory: .init(
-                        amountInfo: VStack {
-                            HStack {
-                                "Без комиссии".text(withConfig: .init(textFont: .system(size: 14), textColor: .gray))
-                                
-                                Image(systemName: "info.circle")
-                                    .foregroundColor(.gray)
-                            }
-                        },
-                        makeOTPView: { Text("Otp") },
-                        makeProductPickerView: { Text("Products") })
-                )
-            }
-        )
-    }
-}
-
-extension OrderSavingsAccountWrapperView {
-    
-    typealias ViewModel = OrderSavingsAccountViewModel
-    typealias Config = OrderSavingsAccountConfig
-}
-
-typealias OrderSavingsAccountViewModel = RxViewModel<OrderSavingsAccountState, OrderSavingsAccountEvent, OrderSavingsAccountEffect>

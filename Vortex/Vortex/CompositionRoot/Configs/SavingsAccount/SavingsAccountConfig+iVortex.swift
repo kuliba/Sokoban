@@ -28,9 +28,18 @@ extension SavingsAccountConfig {
         list: .init(
             background: .mainColorsGrayLightest,
             item: .init(
-                title: .init(textFont: .textH4M16240(), textColor: .textSecondary),
-                subtitle: .init(textFont: .textBodyMR14180(), textColor: .textPlaceholder)),
-            title: .init(textFont: .textH3M18240(), textColor: .textSecondary)),
+                title: .init(
+                    textFont: .textH4M16240(),
+                    textColor: .textSecondary
+                ),
+                subtitle: .init(
+                    textFont: .textBodyMR14180(),
+                    textColor: .textPlaceholder
+                )
+            ),
+            title: .init(textFont: .textH3M18240(), textColor: .textSecondary),
+            spacing: 18
+        ),
         offsetForDisplayHeader: 100,
         paddings: .init(
             negativeBottomPadding: 60,

@@ -200,7 +200,7 @@ extension RootViewFactoryComposer {
     }
     
     func makeImageViewFactory(
-    ) -> SavingsAccount.ImageViewFactory {
+    ) -> ListImageViewFactory {
         
         .init(
             makeIconView: makeIconView,
