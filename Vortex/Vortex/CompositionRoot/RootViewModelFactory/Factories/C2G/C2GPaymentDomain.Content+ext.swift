@@ -44,10 +44,12 @@ where Context == C2GPaymentDomain.Context {
     ) {
         self.init(
             context: .init(
+                dateN: payload.dateN,
                 discount: payload.discount,
                 discountExpiry: payload.discountExpiry,
                 formattedAmount: payload.formattedAmount,
                 merchantName: payload.merchantName,
+                paymentTerm: payload.paymentTerm,
                 purpose: payload.purpose,
                 term: .terms(url: payload.url),
                 uin: payload.uin

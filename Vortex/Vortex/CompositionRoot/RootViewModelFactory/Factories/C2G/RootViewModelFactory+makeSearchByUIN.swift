@@ -90,10 +90,12 @@ extension RootViewModelFactory {
             let result = $0.map {
                 
                 return C2GPaymentDomain.ContentPayload(
+                    dateN: $0.dateN,
                     discount: $0.discount,
                     discountExpiry: $0.discountExpiry,
                     formattedAmount: format?($0.transAmm, "RUB"),
                     merchantName: $0.merchantName,
+                    paymentTerm: $0.paymentTerm,
                     products: products,
                     purpose: $0.purpose,
                     selectedProduct: selectedProduct,
@@ -138,10 +140,12 @@ extension RootViewModelFactory {
                 
             case "99999999999999999999":
                 completion(.success(.init(
+                    dateN: "06.05.2021",
                     discount: "$ 00.01",
                     discountExpiry: "soon",
                     formattedAmount: "$ 1 000",
                     merchantName: "УФК Владимирской области",
+                    paymentTerm: "06.05.2021",
                     products: [],
                     purpose: "Транспортный налог",
                     selectedProduct: product,

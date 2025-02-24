@@ -58,6 +58,16 @@ extension ViewComponents {
                     }
                     .paddedRoundedBackground(edgeInsets: .default2)
                     
+                    VStack(spacing: 13) {
+                        
+                        state.context.dateNField.map(infoView)
+                        
+                        Divider() // TODO: only if both fields not nil
+                        
+                        state.context.purposeField.map(infoView)
+                    }
+                    .paddedRoundedBackground(edgeInsets: .default2)
+                    
                     makeProductSelectView(
                         state: state.productSelect,
                         event: { event(.productSelect($0)) }
@@ -215,6 +225,22 @@ extension C2GPaymentDomain.Context {
 
 extension C2GPaymentDomain.Context {
     
+    var dateNField: Field? {
+        
+        return dateN.map {
+            
+            return .init(icon: .ic24Calendar, title: .dateN, value: $0)
+        }
+    }
+    
+    var paymentTermField: Field? {
+        
+        return paymentTerm.map {
+            
+            return .init(icon: .ic24Calendar, title: .paymentTerm, value: $0)
+        }
+    }
+    
     var merchantNameField: Field? {
         
         return merchantName.map {
@@ -263,10 +289,12 @@ extension C2GPaymentDomain.Context {
 
 private extension String {
     
+    static let dateN: Self = "Дата начисления"
     static let discount: Self = "Скидка"
     static let discountExpiry: Self = "Срок действия скидки"
     static let formattedAmount: Self = "Сумма к оплате"
     static let merchantName: Self = "Получатель"
+    static let paymentTerm: Self = "Срок оплаты"
     static let purpose: Self = "Назначение платежа"
     static let uin: Self = "Номер документа (УИН)"
 }
