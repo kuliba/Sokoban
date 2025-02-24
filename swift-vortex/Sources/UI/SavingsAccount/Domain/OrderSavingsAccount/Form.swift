@@ -24,7 +24,7 @@ public struct Form<Confirmation> {
 
     public init(
         constants: Constants,
-        confirmation: Loadable<Confirmation>,
+        confirmation: Loadable<Confirmation> = .loaded(nil),
         consent: Bool = true,
         messages: Messages,
         otp: String? = nil,
