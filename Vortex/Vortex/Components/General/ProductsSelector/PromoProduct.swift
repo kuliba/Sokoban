@@ -8,25 +8,16 @@
 import Foundation
 
 enum PromoProduct: String {
-
     case sticker
     case savingsAccount
-    case collateralLoan
 }
 
 extension PromoProduct {
     
     var interfaceType: SettingType.Interface {
         switch self {
-        case .sticker:                  return .sticker
-        case .savingsAccount:           return .savingsAccount
-        case .collateralLoan:           return .collateralLoan
+        case .sticker:          return .sticker
+        case .savingsAccount:   return .savingsAccount
         }
     }
-}
-
-enum CollateralLoanType: String {
-    
-    case car
-    case realEstate
 }

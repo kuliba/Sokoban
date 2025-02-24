@@ -125,9 +125,6 @@ class MainViewModel: ObservableObject, Resetable {
             
         case .savingsAccount:
             openSavingsAccount()
-            
-        case .collateralLoan:
-            handleCollateralLoan(type: nil)
         }
     }
     
@@ -702,11 +699,6 @@ private extension MainViewModel {
         
         var promo: [PromoItem] = []
         
-        if let loanBannerList = banners.loanBannerList {
-            
-            promo.append(contentsOf: loanBannerList.map { .init(item: $0, productType: .loan, promoProduct: .collateralLoan) })
-        }
-
         if let sticker = banners.cardBannerList?.first {
             promo.append(.init(item: sticker, productType: .card, promoProduct: .sticker))
         }
@@ -1923,15 +1915,7 @@ extension MainViewModel {
             
         case .savingsAccount:
             openSavingsAccount()
-            
-        case .collateralLoan:
-            handleCollateralLoan(type: .none)
         }
-    }
-    
-    func handleCollateralLoan(type: CollateralLoanType?) {
-        // TODO: realize
-        print("Tap to collateral loan banner")
     }
     
     func handleLandingAction(_ abroadType: AbroadType) {
