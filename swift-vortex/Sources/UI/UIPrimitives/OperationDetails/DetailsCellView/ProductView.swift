@@ -30,6 +30,7 @@ struct ProductView: View {
                 Spacer()
                 
                 product.formattedBalance.text(withConfig: config.balance)
+                    .padding(.trailing, config.balanceTrailingPadding)
             }
             
             product.description.text(withConfig: config.description)
