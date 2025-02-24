@@ -8,17 +8,20 @@
 import SharedConfigs
 import SwiftUI
 
-public struct StatementDetailContentLayoutView: View {
+public struct StatementDetailContentLayoutView<LogoView: View>: View {
     
     private let content: Content
     private let config: Config
+    private let makeLogoView: (String) -> LogoView
     
     public init(
         content: Content,
-        config: Config
+        config: Config,
+        makeLogoView: @escaping (String) -> LogoView
     ) {
         self.content = content
         self.config = config
+        self.makeLogoView = makeLogoView
     }
     
     public var body: some View {
@@ -28,9 +31,10 @@ public struct StatementDetailContentLayoutView: View {
             logoView()
                 .frame(config.logoSize)
             
-            content.status.title.text(
-                withConfig: config.config(for: content.status)
-            )
+            content.status.map {
+                
+                $0.title.text(withConfig: config.config(for: $0))
+            }
             
             content.merchantName?.text(withConfig: config.merchantName, alignment: .center)
             
@@ -60,13 +64,7 @@ private extension StatementDetailContentLayoutView {
             
             Color.clear
             
-            content.merchantLogo.map { image in
-                
-                image
-                    .renderingMode(.original)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-            }
+            content.merchantLogo.map(makeLogoView)
         }
     }
 }
@@ -138,7 +136,12 @@ struct StatementDetailContentLayoutView_Previews: PreviewProvider {
         StatementDetailContentLayoutView(
             content: .preview(status),
             config: .preview
-        )
+        ) {
+            Image(systemName: $0)
+                .renderingMode(.original)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+        }
         .previewDisplayName(status.title)
     }
 }
@@ -152,7 +155,7 @@ private extension StatementDetailContent {
         return .init(
             formattedAmount: "$ 1 000",
             formattedDate: "25 августа 2021, 19:54",
-            merchantLogo: .init(systemName: "archivebox.circle"),
+            merchantLogo: "archivebox.circle",
             merchantName: "УФК Владимирской области",
             purpose: "Транспортный налог",
             status: status

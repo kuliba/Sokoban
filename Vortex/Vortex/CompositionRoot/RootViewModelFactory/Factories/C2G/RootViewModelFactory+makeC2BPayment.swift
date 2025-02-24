@@ -96,7 +96,7 @@ extension RootViewModelFactory {
             case let .success(response):
                 guard let basicDetails = response.payload(
                     digest: digest,
-                    formattedAmount: formatAmount(value: response.amount, currencyCode: "RUB")
+                    formattedAmount: format(amount: response.amount, currencyCode: "RUB")
                 ) else { return completion(.failure(.connectivityFailure)) }
                 
                 completion(.success(basicDetails))

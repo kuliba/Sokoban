@@ -46,9 +46,7 @@ extension RootViewModelFactory {
     @inlinable
     func format(amount: Decimal?, currency: String?) -> String? {
         
-        guard let amount = amount?.doubleValue else { return nil }
-        
-        return model.amountFormatted(amount: amount, currencyCode: currency, style: .normal)
+        format(amount: amount, currencyCode: currency, style: .normal)
     }
 }
 
