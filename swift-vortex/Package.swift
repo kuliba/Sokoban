@@ -1534,6 +1534,7 @@ private extension Target {
         dependencies: [
             .inputComponent,
             .linkableText,
+            .collateralLoanLandingGetShowcaseUI,
             .optionalSelectorComponent,
             .otpInputComponent,
             .paymentComponents,
@@ -1621,7 +1622,11 @@ private extension Target {
 
     static let orderCardLandingUI = target(
         name: .orderCardLandingUI,
-        dependencies: [],
+        dependencies: [
+            .sharedConfigs,
+            .dropDownTextListComponent,
+            .headerLandingComponent
+        ],
         path: "Sources/Landing/\(String.orderCardLandingUI)"
     )
     
@@ -3260,7 +3265,7 @@ private extension Target {
         name: .headerLandingComponent,
         dependencies: [
             .sharedConfigs,
-            .uiPrimitives,
+            .uiPrimitives
         ],
         path: "Sources/UI/Components/\(String.headerLandingComponent)"
     )
