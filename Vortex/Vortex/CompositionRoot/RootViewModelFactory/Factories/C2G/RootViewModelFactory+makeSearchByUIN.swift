@@ -93,6 +93,7 @@ extension RootViewModelFactory {
                     discount: $0.discount,
                     discountExpiry: $0.discountExpiry,
                     formattedAmount: format?($0.transAmm, "RUB"),
+                    merchantName: $0.merchantName,
                     selectedProduct: selectedProduct,
                     products: products,
                     termsCheck: $0.termsCheck,
@@ -136,9 +137,10 @@ extension RootViewModelFactory {
                 
             case "99999999999999999999":
                 completion(.success(.init(
-                    discount: nil,//"$ 00.01",
-                    discountExpiry: nil,//"soon",
+                    discount: "$ 00.01",
+                    discountExpiry: "soon",
                     formattedAmount: "$ 1 000",
+                    merchantName: "УФК Владимирской области",
                     selectedProduct: product,
                     products: [],
                     termsCheck: nil,

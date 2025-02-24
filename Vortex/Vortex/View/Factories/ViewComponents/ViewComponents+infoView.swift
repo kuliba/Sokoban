@@ -30,6 +30,27 @@ extension ViewComponents {
     }
     
     @inlinable
+    func infoView(
+        id: String = UUID().uuidString,
+        icon: Image?,
+        title: String,
+        value: String,
+        config: InfoConfig = .iVortex
+    ) -> some View {
+        
+        infoView(
+            info: .init(
+                id: .other(id),
+                title: title,
+                value: value,
+                style: .expanded
+            ),
+            config: config,
+            icon: { icon }
+        )
+    }
+    
+    @inlinable
     func infoViewNoIcon(
         info: Info,
         config: InfoConfig = .iVortex
@@ -45,7 +66,7 @@ extension ViewComponents {
     func infoView<Icon: View>(
         info: Info,
         config: InfoConfig = .iVortex,
-        icon: @escaping () -> Icon
+        @ViewBuilder icon: @escaping () -> Icon
     ) -> some View {
         
         PaymentComponents.InfoView(

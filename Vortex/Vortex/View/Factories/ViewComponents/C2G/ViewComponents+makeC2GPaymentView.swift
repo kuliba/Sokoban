@@ -40,6 +40,9 @@ extension ViewComponents {
                 // TODO: extract sub-components
                 VStack(spacing: 16) {
                     
+                    state.context.merchantNameField.map(infoView)
+                        .paddedRoundedBackground(edgeInsets: .default2)
+
                     makeProductSelectView(
                         state: state.productSelect,
                         event: { event(.productSelect($0)) }
@@ -88,6 +91,14 @@ extension ViewComponents {
     ) -> some View {
         
         infoViewCompressed(id: field.id, title: field.title, value: field.value)
+    }
+    
+    @inlinable
+    func infoView(
+        _ field: C2GPaymentDomain.Context.Field
+    ) -> some View {
+        
+        infoView(id: field.id, icon: field.icon, title: field.title, value: field.value)
     }
     
     @inlinable
@@ -169,15 +180,18 @@ extension C2GPaymentDomain.Context {
     struct Field: Equatable {
         
         let id: String
+        let icon: Image?
         let title: String
         let value: String
         
         init(
             id: String = UUID().uuidString,
+            icon: Image? = nil,
             title: String,
             value: String
         ) {
             self.id = id
+            self.icon = icon
             self.title = title
             self.value = value
         }
@@ -185,6 +199,14 @@ extension C2GPaymentDomain.Context {
 }
 
 extension C2GPaymentDomain.Context {
+    
+    var merchantNameField: Field? {
+        
+        return merchantName.map {
+            
+            return .init(icon: .ic24Bank, title: .merchantName, value: $0)
+        }
+    }
     
     var formattedAmountField: Field? {
         
@@ -213,6 +235,7 @@ extension C2GPaymentDomain.Context {
 
 private extension String {
     
+    static let merchantName: Self = "Получатель"
     static let formattedAmount: Self = "Сумма к оплате"
     static let discount: Self = "Скидка"
     static let discountExpiry: Self = "Срок действия скидки"
