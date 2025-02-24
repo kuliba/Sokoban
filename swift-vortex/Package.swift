@@ -3004,6 +3004,7 @@ private extension Target {
         dependencies: [
             // internal packages
             .dropDownTextListComponent,
+            .listLandingComponent,
             .linkableText,
             .paymentComponents,
             .sharedConfigs,

@@ -12,8 +12,8 @@ import UIPrimitives
 
 public struct ImageViewFactory {
 
-    let makeIconView: MakeIconView
-    let makeBannerImageView: MakeBannerImageView
+    public let makeIconView: MakeIconView
+    public let makeBannerImageView: MakeBannerImageView
     
     public init(
         makeIconView: @escaping MakeIconView,
@@ -28,58 +28,4 @@ public extension ImageViewFactory {
         
     typealias MakeIconView = (String) -> UIPrimitives.AsyncImage
     typealias MakeBannerImageView = (String) -> UIPrimitives.AsyncImage
-}
-
-extension ImageViewFactory {
-    
-    static let `default`: Self = .init(
-        makeIconView: {
-            switch $0 {
-    case "1":
-        return  .init(
-            image: .bolt,
-            publisher: Just(.bolt).eraseToAnyPublisher()
-        )
-        
-    case "2":
-        return  .init(
-            image: .shield,
-            publisher: Just(.shield).eraseToAnyPublisher()
-        )
-        
-    default:
-        return .init(
-            image: .flag,
-            publisher: Just(.flag).eraseToAnyPublisher()
-        )
-    }},
-        
-        makeBannerImageView: {
-            switch $0 {
-    case "1":
-        return  .init(
-            image: .shield,
-            publisher: Just(.shield).eraseToAnyPublisher()
-        )
-        
-    case "2":
-        return  .init(
-            image: .bolt,
-            publisher: Just(.bolt).eraseToAnyPublisher()
-        )
-        
-    default:
-        return .init(
-            image: .percent,
-            publisher: Just(.percent).eraseToAnyPublisher()
-        )
-    }})
-}
-
-extension Image {
-    
-    static let bolt: Self = .init(systemName: "bolt")
-    static let percent: Self = .init(systemName: "percent")
-    static let shield: Self = .init(systemName: "shield")
-    static let flag: Self = .init(systemName: "flag")
 }

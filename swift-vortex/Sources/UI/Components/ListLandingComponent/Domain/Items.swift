@@ -9,8 +9,8 @@ import Foundation
 
 public struct Items: Equatable {
     
-    let title: String?
-    let list: [Item]
+    public let title: String?
+    public let list: [Item]
     
     public init(title: String?, list: [Item]) {
         self.title = title
@@ -20,9 +20,9 @@ public struct Items: Equatable {
     public struct Item: Equatable, Identifiable {
         
         public let id: UUID
-        let md5hash: String
-        let title: String
-        let subtitle: String?
+        public let md5hash: String
+        public let title: String
+        public let subtitle: String?
         
         public init(
             id: UUID = .init(),
