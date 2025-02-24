@@ -334,16 +334,8 @@ struct ProductProfileView: View {
                     transaction.disablesAnimations = false
                 }
             
-        case let .printForm(viewModel):
-            PrintFormView(viewModel: viewModel)
-            
         case let .placesMap(viewModel):
             PlacesView(viewModel: viewModel)
-            
-        case let .info(viewModel):
-            OperationDetailInfoView(
-                viewModel: viewModel
-            )
         }
     }
         
