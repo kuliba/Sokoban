@@ -7,16 +7,20 @@
 
 import Foundation
 import LoadableState
+import PaymentComponents
 
 public final class Reducer<Confirmation> {
     
     private let otpWitness: OTPWitness
+    private let productSelectReduce: ProductSelectReduce
     public typealias OTPWitness = (Confirmation) -> (String) -> Void
-    
+
     public init(
-        otpWitness: @escaping OTPWitness
+        otpWitness: @escaping OTPWitness,
+        productSelectReduce: @escaping ProductSelectReduce
     ) {
         self.otpWitness = otpWitness
+        self.productSelectReduce = productSelectReduce
     }
 }
 
@@ -32,10 +36,10 @@ public extension Reducer {
         
         switch event {
         case .continue:
-            reduceContinue(state, effect)
+            reduceContinue(&state, &effect)
             
         case .dismissInformer:
-            reduceDismissInformer(state, effect)
+            reduceDismissInformer(&state, &effect)
             
         case .load:
             switch state.loadableForm {
@@ -55,11 +59,11 @@ public extension Reducer {
             
         case let .setMessages(isOn):
             if state.loadableForm.state != nil {
-                state.loadableForm.state?.messages.isOn = isOn
+                state.loadableForm.state?.topUp.isOn = isOn
             }
             
         case let .orderAccountResult(orderAccountResult):
-            reduceOrderAccount(state, effect, with: orderAccountResult)
+            reduceOrderAccount(&state, &effect, with: orderAccountResult)
             
         case let .otp(otp):
             if !state.loadableForm.isLoading && state.hasConfirmation {
@@ -70,6 +74,11 @@ public extension Reducer {
             if !state.loadableForm.isLoading && state.hasConfirmation {
                 state.form?.consent = consent
             }
+        case let .productSelect(productSelectEvent):
+            state.productSelect = productSelectReduce(state.productSelect, productSelectEvent)
+        
+        case let .amount(amount):
+            state.form?.amount = amount
         }
         
         return (state, effect)
@@ -79,12 +88,9 @@ public extension Reducer {
 private extension Reducer {
     
     func reduceContinue(
-        _ state: State,
-        _ effect: Effect?
+        _ state: inout State,
+        _ effect: inout Effect?
     ) {
-        var state = state
-        var effect: Effect?
-
         guard let form = state.loadableForm.state else { return }
         
         switch form.confirmation {
@@ -108,13 +114,9 @@ private extension Reducer {
     }
     
     func reduceDismissInformer(
-        _ state: State,
-        _ effect: Effect?
+        _ state: inout State,
+        _ effect: inout Effect?
     ) {
-        
-        var state = state
-        var effect: Effect?
-
         // reset form informer
         if case let .loaded(.failure(failure)) = state.loadableForm,
            case .informer = failure.type {
@@ -131,20 +133,16 @@ private extension Reducer {
     }
     
     func reduceOrderAccount(
-        _ state: State,
-        _ effect: Effect?,
+        _ state: inout State,
+        _ effect: inout Effect?,
         with orderAccountResult: ProductEvent.OrderAccountResult
     ) {
-        
-        var state = state
-        var effect: Effect?
-
         switch (state.loadableForm, orderAccountResult) {
         case (.loaded, _):
-            break // cannot receive orderCardResult in loaded state
+            break // cannot receive orderAccountResult in loaded state
             
         case (.loading(nil), _):
-            break // cannot receive orderCardResult in empty loading state
+            break // cannot receive orderAccountResult in empty loading state
             
         case let (.loading(.some(form)), .failure(loadFailure)):
             let notifyOTP = form.confirmation.state.map(otpWitness)
@@ -163,6 +161,8 @@ public extension Reducer {
     typealias State = ProductState<Confirmation>
     typealias Event = ProductEvent<Confirmation>
     typealias Effect = ProductEffect
+    
+    typealias ProductSelectReduce = (ProductSelect, ProductSelectEvent) -> ProductSelect
 }
 
 private extension Form {

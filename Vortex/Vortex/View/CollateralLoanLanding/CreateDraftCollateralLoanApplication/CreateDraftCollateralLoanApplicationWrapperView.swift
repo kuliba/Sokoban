@@ -118,36 +118,35 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         cover: CreateDraftCollateralLoanApplicationDomain.Navigation.Cover
     ) -> some View {
         
-        switch cover {
-        case let .success(saveConsentsResult):
-            PaymentCompleteView(
-                state: makePaymentCompleteState(from: saveConsentsResult),
-                goToMain: goToMain,
-                repeat: {},
-                factory: makePaymentCompleteViewFactory(),
-                config: .collateralLoanLanding
-            )
-            
-        case .failure:
-            PaymentCompleteView(
-                state: .rejected,
-                goToMain: goToMain,
-                repeat: {},
-                factory: makePaymentCompleteViewFactory(),
-                config: .collateralLoanLanding
-            )
-        }
+        PaymentCompleteView(
+            state: makePaymentCompleteState(from: cover),
+            goToMain: goToMain,
+            repeat: {},
+            factory: makePaymentCompleteViewFactory(),
+            config: .collateralLoanLanding
+        )
     }
     
     private func makePaymentCompleteState(
-        from saveConsentsResult: CollateralLandingApplicationSaveConsentsResult
+        from cover: CreateDraftCollateralLoanApplicationDomain.Navigation.Cover
     ) -> PaymentCompleteState {
         
-        .init(
-            formattedAmount: saveConsentsResult.formattedAmount(),
-            merchantIcon: nil,
-            result: .success(makeReport(from: saveConsentsResult))
-        )
+        switch cover {
+        case let .success(sucess):
+            return .init(
+                formattedAmount: sucess.formattedAmount(),
+                merchantIcon: nil,
+                result: .success(makeReport(from: sucess))
+            )
+            
+        case .failure:
+            return .init(
+                formattedAmount: "",
+                merchantIcon: nil,
+                result: .failure(.init(hasExpired: false))
+            )
+        }
+        
     }
     
     private func makeReport(

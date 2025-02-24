@@ -484,7 +484,7 @@ private extension OrderSavingsAccountState {
     }
 }
 
-private extension String {
+extension String {
     
     func string(
         _ needShimmering: Bool

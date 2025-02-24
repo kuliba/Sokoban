@@ -75,8 +75,7 @@ private extension HeaderViewConfig {
         option: .init(textFont: .body, textColor: .red),
         layout: .init(
             itemOption: .init(
-                circleHeight: 5,
-                circleWidth: 5,
+                circleRadius: 5,
                 horizontalSpacing: 5,
                 optionWidth: 150
             ),

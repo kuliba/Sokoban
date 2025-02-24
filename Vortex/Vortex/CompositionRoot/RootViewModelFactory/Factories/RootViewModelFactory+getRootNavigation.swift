@@ -29,21 +29,23 @@ extension RootViewModelFactory {
         switch select {
         case let .orderCardResponse(orderCardResponse):
             completion(.orderCardResponse(orderCardResponse))
-            
+        
+        case let .orderSavingsAccountResponse(orderAccountResponse):
+            completion(.orderSavingsAccountResponse(orderAccountResponse))
+
         case let .openProduct(type):
             
             switch type {
             case .card:
                 completion(.openProduct(openProduct(
                     type: type,
-                    notify: { notify(.select(.orderCardResponse($0))) }
+                    notify: notify
                 )))
                 
             case .savingsAccount:
                 completion(.openProduct(openProduct(
                     type: type,
-                    notify: { _ in notify(.select(.openProduct(.savingsAccount))) },
-                    dismiss: { notify(.dismiss) }
+                    notify: notify
                 )))
                 
             default:

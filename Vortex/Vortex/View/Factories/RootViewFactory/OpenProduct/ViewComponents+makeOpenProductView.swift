@@ -23,8 +23,9 @@ extension ViewComponents {
                     dismiss: dismiss
                 )
           
-        case let .savingsAccount(openSavingsAccount):
-            makeSavingsAccountView(openSavingsAccount)
+        case let .savingsAccount(nodes):
+
+            makeSavingsAccountBinderView(binder: nodes.savingsAccountNode.model, openAccountBinder: nodes.openSavingsAccountNode.model, dismiss: dismiss)
                 .navigationBarHidden(true)
 
         case .unknown:

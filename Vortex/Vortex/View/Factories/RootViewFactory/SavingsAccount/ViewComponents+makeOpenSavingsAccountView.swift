@@ -10,6 +10,9 @@ import PaymentComponents
 import RxViewModel
 import SavingsAccount
 import SwiftUI
+import UIPrimitives
+import PaymentCompletionUI
+import TextFieldComponent
 
 extension ViewComponents {
     
@@ -24,12 +27,11 @@ extension ViewComponents {
             ZStack(alignment: .top) {
                 
                 state.informer.map(InformerInternalView.init)
-                    .padding(.top, 16    )
+                    .padding(.top, 16)
                     .zIndex(1)
                 
-                makeOpenSavingsAccountContentView(binder.content)
+                makeOpenSavingsAccountContentView(binder.content, .prod, dismiss)
                     .frame(maxHeight: .infinity, alignment: .top)
-                    .padding(.horizontal)
                     .alert(
                         item: state.stringAlert,
                         content: { $0.error(dismiss: dismiss) }
@@ -40,27 +42,48 @@ extension ViewComponents {
     
     @inlinable
     func makeOpenSavingsAccountContentView(
-        _ content: OpenSavingsAccountDomain.Content
+        _ content: OpenSavingsAccountDomain.Content,
+        _ config: OrderSavingsAccountConfig,
+        _ dismiss: @escaping () -> Void
     ) -> some View {
         
         RxWrapperView(model: content) { state, event in
             
-            SavingsAccount.OrderAccountView(
-                state: state,
-                event: event,
-                config: .prod,
-                factory: .init(
-                    makeIconView: makeIconView,
-                    makeBannerImageView: makeGeneralIconView
-                ),
-                confirmationView: {
-                    
-                    confirmationView($0, state, event)
-                }
+            RefreshableScrollView(
+                action: { event(.load) },
+                showsIndicators: false,
+                coordinateSpaceName: "openSavingsAccountScroll"
+            ) {
+                
+                SavingsAccount.OrderAccountView(
+                    state: state,
+                    event: event,
+                    config: config,
+                    factory: .init(
+                        makeIconView: makeIconView,
+                        makeBannerImageView: makeGeneralIconView
+                    ),
+                    confirmationView: {
+                        
+                        confirmationView($0, state, event)
+                    }, 
+                    productSelectView: {
+                        
+                        makeProductSelectView(
+                            state: state.productSelect,
+                            event: { event(.productSelect($0)) })
+                    }
+                )
+                .padding(.horizontal)
+            }
+            .navigationBarWithBack(
+                title: .title,
+                subtitle: .subtitle,
+                dismiss: dismiss
             )
             .safeAreaInset(edge: .bottom) {
-                
-                continueButton(state: state) { event(.continue) }
+               
+                footer(state: state, event: event)
             }
             .opacity(state.isLoading ? 0.7 : 1)
             .disabled(state.isLoading)
@@ -104,16 +127,19 @@ extension ViewComponents {
         }
     }
     
-    private func continueButton(
+    @ViewBuilder
+    private func footer(
         state: OpenSavingsAccountDomain.State,
-        action: @escaping () -> Void
+        event: @escaping (OpenSavingsAccountDomain.Event) -> Void
     ) -> some View {
-    
+        
+        // TODO: add amount
         StatefulButtonView(
             isActive: state.isValid,
-            event: action,
+            event: { event(.continue) },
             config: .iVortex(title: state.continueButtonTitle)
         )
+        .padding(.horizontal)
     }
 }
 
@@ -215,4 +241,10 @@ private extension InformerInternalView {
             color: informer.color
         )
     }
+}
+
+private extension String {
+    
+    static let title: Self = "Оформление"
+    static let subtitle: Self = "накопительного счета"
 }

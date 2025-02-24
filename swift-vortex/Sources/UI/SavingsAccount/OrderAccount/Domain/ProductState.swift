@@ -6,15 +6,19 @@
 //
 
 import LoadableState
+import PaymentComponents
 
 public struct ProductState<Confirmation> {
     
     public var loadableForm: Loadable<Form<Confirmation>>
-    
+    public var productSelect: ProductSelect
+
     public init(
-        loadableForm: Loadable<Form<Confirmation>>
+        loadableForm: Loadable<Form<Confirmation>>,
+        productSelect: ProductSelect = .init(selected: nil)
     ) {
         self.loadableForm = loadableForm
+        self.productSelect = productSelect
     }
 }
 
@@ -54,9 +58,9 @@ public extension ProductState {
         else { return nil }
         
         return .init(
-            amount: form.amount,
+            amount: Double(form.amount?.description ?? "0"),
             cryptoVersion: "1.0",
-            currencyCode: form.constants.currencyCode, 
+            currencyCode: form.constants.currency.code, 
             sourceAccountId: form.sourceAccountId,
             sourceCardId: form.sourceCardId,
             verificationCode: otp

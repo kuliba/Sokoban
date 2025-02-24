@@ -186,7 +186,6 @@ extension RootViewFactoryComposer {
             makeQRFailedWrapperView: makeQRFailedWrapperView,
             makeQRSearchOperatorView: makeQRSearchOperatorView,
             makeQRView: makeQRView,
-            makeSavingsAccountView: makeSavingsAccountView,
             makeTemplatesListFlowView: makeTemplatesListFlowView,
             makeTransportPaymentsView: makeTransportPaymentsView,
             makeOrderCardView: makeOrderCardView,
@@ -779,19 +778,7 @@ private extension RootViewFactoryComposer {
             viewFactory: .init(makeQRFailedView: makeQRFailedView)
         )
     }
-    
-    func makeSavingsAccountView(
-        nodes: SavingsAccountNodes
-    ) -> SavingsAccountBinderView? {
-                            
-        guard savingsAccountFlag.isActive else { return nil }
-            
-        return makeSavingsAccountBinderView(
-            binder: nodes.savingsAccountNode.model,
-            openAccountBinder: nodes.openSavingsAccountNode.model
-        )
-    }
-    
+        
     func makePaymentsSuccessView(
         viewModel: PaymentsSuccessViewModel
     ) -> PaymentsSuccessView {
