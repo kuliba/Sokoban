@@ -1,5 +1,5 @@
 //
-//  CreateDraftCollateralLoanApplicationData.swift
+//  CreateDraftCollateralLoanApplication.swift
 //
 //
 //  Created by Valentin Ozerov on 30.12.2024.

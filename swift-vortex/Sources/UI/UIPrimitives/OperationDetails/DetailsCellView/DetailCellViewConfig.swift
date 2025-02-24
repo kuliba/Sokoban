@@ -10,29 +10,67 @@ import SharedConfigs
 
 public struct DetailCellViewConfig: Equatable {
     
-    public let insets: EdgeInsets
+    public let labelVPadding: CGFloat
+    public let imageForegroundColor: Color
     public let imageSize: CGSize
-    public let imageTopPadding: CGFloat
+    public let imagePadding: EdgeInsets
     public let hSpacing: CGFloat
     public let vSpacing: CGFloat
     public let title: TextConfig
     public let value: TextConfig
+    public let product: ProductConfig
     
     public init(
-        insets: EdgeInsets,
+        labelVPadding: CGFloat,
+        imageForegroundColor: Color,
         imageSize: CGSize,
-        imageTopPadding: CGFloat,
+        imagePadding: EdgeInsets,
         hSpacing: CGFloat,
         vSpacing: CGFloat,
         title: TextConfig,
-        value: TextConfig
+        value: TextConfig,
+        product: ProductConfig
     ) {
-        self.insets = insets
+        self.labelVPadding = labelVPadding
+        self.imageForegroundColor = imageForegroundColor
         self.imageSize = imageSize
-        self.imageTopPadding = imageTopPadding
+        self.imagePadding = imagePadding
         self.hSpacing = hSpacing
         self.vSpacing = vSpacing
         self.title = title
         self.value = value
+        self.product = product
+    }
+    
+    public struct ProductConfig: Equatable {
+        
+        public let balance: TextConfig
+        public let balanceTrailingPadding: CGFloat
+        public let description: TextConfig
+        public let hSpacing: CGFloat
+        public let iconSize: CGSize
+        public let name: TextConfig
+        public let title: TextConfig
+        public let vStackVPadding: CGFloat
+        
+        public init(
+            balance: TextConfig,
+            balanceTrailingPadding: CGFloat,
+            description: TextConfig,
+            hSpacing: CGFloat,
+            iconSize: CGSize,
+            name: TextConfig,
+            title: TextConfig,
+            vStackVPadding: CGFloat
+        ) {
+            self.balance = balance
+            self.balanceTrailingPadding = balanceTrailingPadding
+            self.description = description
+            self.hSpacing = hSpacing
+            self.iconSize = iconSize
+            self.name = name
+            self.title = title
+            self.vStackVPadding = vStackVPadding
+        }
     }
 }

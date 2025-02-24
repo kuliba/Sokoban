@@ -32,10 +32,9 @@ extension CreateDraftCollateralLoanApplicationDomain {
                     { dispatch(.otpEvent($0)) },
                     { dispatch(.applicationCreated($0)) }
                 )
-                    
                 
             case let .saveConsents(payload):
-                saveConsents(payload) { 
+                saveConsents(payload) {
                     dispatch(.showSaveConsentsResult($0))
                 }
                 

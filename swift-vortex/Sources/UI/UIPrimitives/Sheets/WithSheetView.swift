@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-// TODO: - extract to UIPrimitives
-
 /// A view that presents content with an attached sheet. The content view receives an action to trigger the sheet presentation, and the sheet view receives an action to dismiss itself.
 public struct WithSheetView<Content: View, Sheet: View>: View {
     

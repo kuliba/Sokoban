@@ -95,3 +95,4 @@ struct CreateDraftCollateralLoanApplicationConsentsView_Previews<Confirmation, I
         .previewDisplayName("Read only mode")
     }
 }
+

@@ -360,7 +360,7 @@ struct RootView_Previews: PreviewProvider {
         
         RootView(
             viewModel: .init(
-                fastPaymentsFactory: .legacy, 
+                fastPaymentsFactory: .legacy,
                 stickerViewFactory: .preview,
                 navigationStateManager: .preview,
                 productNavigationStateManager: .preview,
@@ -371,7 +371,7 @@ struct RootView_Previews: PreviewProvider {
                 showLoginAction: { _ in
                     
                         .init(viewModel: .init(authLoginViewModel: .preview))
-                }, 
+                },
                 landingServices: .empty()
             ),
             rootViewFactory: .preview

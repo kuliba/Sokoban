@@ -67,8 +67,8 @@ extension RootViewModelFactory {
         application: CreateDraftCollateralLoanApplication
     ) -> Domain.Content {
         
-        let reducer = Domain.Reducer<Confirmation, InformerPayload>(application: application)
-        let effectHandler = Domain.EffectHandler<Confirmation, InformerPayload>(
+        let reducer = Domain.ContentReducer(application: application)
+        let effectHandler = Domain.ContentEffectHandler(
             createDraftApplication: createDraftApplication(payload:otpEvent:completion:),
             getVerificationCode: getVerificationCode(completion:),
             saveConsents: saveConsents
@@ -85,7 +85,7 @@ extension RootViewModelFactory {
     private func makeTimedOTPInputViewModel(
         timerDuration: Int,
         otpLength: Int,
-        otpEvent: @escaping (Domain.Event<Confirmation, InformerPayload>.OTPEvent) -> Void
+        otpEvent: @escaping (Domain.OTPEvent) -> Void
     ) -> TimedOTPInputViewModel {
                 
         let countdownReducer = CountdownReducer(duration: timerDuration)
@@ -139,8 +139,8 @@ extension RootViewModelFactory {
     
     private func createDraftApplication(
         payload: CollateralLandingApplicationCreateDraftPayload,
-        otpEvent: @escaping (Domain.Event<Confirmation, InformerPayload>.OTPEvent) -> Void,
-        completion: @escaping (Domain.CreateDraftApplicationCreatedResult<Confirmation, InformerPayload>) -> Void
+        otpEvent: @escaping (Domain.OTPEvent) -> Void,
+        completion: @escaping (Domain.RequestResult) -> Void
     ) {
         let createDraftApplication = nanoServiceComposer.compose(
             createRequest: RequestFactory.createCreateDraftCollateralLoanApplicationRequest(with:),

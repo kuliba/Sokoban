@@ -18,15 +18,23 @@ extension CreateDraftCollateralLoanApplicationDomain {
     // MARK: - Content
     
     typealias Content = RxViewModel<State<Confirmation, InformerData>, Event<Confirmation, InformerData>, Effect>
-    typealias ContentError = CollateralLoanLandingCreateDraftCollateralLoanApplicationUI.BackendFailure<InformerData>
-
+    typealias ContentError = CollateralLoanLandingCreateDraftCollateralLoanApplicationUI.BackendFailure<InformerPayload>
+    typealias ContentReducer = Reducer<Confirmation, InformerData>
+    typealias ContentEffectHandler = EffectHandler<Confirmation, InformerPayload>
+    typealias ContentEvent = Event<Confirmation, InformerPayload>
+    typealias ContentState = State<Confirmation, InformerPayload>
+    typealias OTPEvent = ContentEvent.OTPEvent
+    
     // MARK: - Flow
     
     typealias FlowDomain = Vortex.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
     typealias Notify = FlowDomain.Notify
     
+    typealias RequestResult = CreateDraftApplicationCreatedResult<Confirmation, InformerPayload>
+    
     typealias Confirmation = TimedOTPInputViewModel
+    typealias InformerPayload = InformerData
     
     enum Select: Equatable {
         
@@ -35,13 +43,13 @@ extension CreateDraftCollateralLoanApplicationDomain {
     
     enum Navigation {
 
-        case failure(CollateralLoanLandingCreateDraftCollateralLoanApplicationUI.BackendFailure<InformerData>)
+        case failure(Failure)
         case saveConsents(CollateralLandingApplicationSaveConsentsResult)
         
-//        enum FlowFailure {
-//            
-//            case timeout(InformerData)
-//            case error(String)
-//        }
+        enum Failure {
+            
+            case timeout(InformerData)
+            case error(String)
+        }
     }
 }
