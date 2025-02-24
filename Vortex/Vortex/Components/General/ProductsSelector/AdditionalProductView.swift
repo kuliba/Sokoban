@@ -24,15 +24,17 @@ extension AdditionalProductViewModel: Identifiable {
     public var id: ID {
         
         switch promoType {
-        case .savingsAccount: return .savingsAccount
-        case .sticker:        return .sticker
-        case .collateralLoan: return .collateralLoan
+        case .savingsAccount:           return .savingsAccount
+        case .sticker:                  return .sticker
+        case .collateralLoan:           return .collateralLoan
+        case .collateralLoanCar:        return .collateralLoanCar
+        case .collateralLoanRealEstate: return .collateralLoanRealEstate
         }
     }
     
     public enum ID: Hashable {
         
-        case savingsAccount, sticker, collateralLoan
+        case savingsAccount, sticker, collateralLoan, collateralLoanCar, collateralLoanRealEstate
     }
 }
 

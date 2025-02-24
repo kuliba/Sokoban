@@ -15,6 +15,7 @@ import RemoteServices
 import SberQR
 import SplashScreen
 import SwiftUI
+import CollateralLoanLandingGetCollateralLandingUI
 
 typealias MakeActivateSliderView = (ProductData.ID, ActivateSliderViewModel, SliderConfig) -> ActivateSliderStateWrapperView
 typealias MakeAnywayPaymentFactory = (@escaping (AnywayPaymentEvent) -> Void) -> AnywayPaymentFactory<IconDomain.IconView>
@@ -26,6 +27,7 @@ typealias MakeAnywayFlowView = (AnywayFlowModel) -> AnywayFlowView<PaymentComple
 typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTransfersView
 typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView
 typealias MakeCollateralLoanShowcaseWrapperView = (GetShowcaseDomain.Binder, @escaping () -> Void) -> CollateralLoanShowcaseWrapperView
+typealias MakeCollateralLoanWrapperView = (GetCollateralLandingDomain.Binder, @escaping () -> Void) -> CollateralLoanLandingWrapperView
 typealias MakeSplashScreenView = (SplashScreenState, @escaping (SplashScreenEvent) -> Void) -> SplashScreenView
 typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
 typealias MakeTemplateButtonWrapperView = (OperationDetailData) -> TemplateButtonStateWrapperView
@@ -65,6 +67,7 @@ struct RootViewFactory {
     let makeTemplateButtonWrapperView: MakeTemplateButtonWrapperView
     let makeUpdatingUserAccountButtonLabel: MakeUpdatingUserAccountButtonLabel
     let makeCollateralLoanShowcaseWrapperView: MakeCollateralLoanShowcaseWrapperView
+    let makeCollateralLoanWrapperView: MakeCollateralLoanWrapperView
     
     typealias MakeUpdatingUserAccountButtonLabel = () -> UpdatingUserAccountButtonLabel
 }
@@ -120,7 +123,8 @@ extension RootViewFactory {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeUserAccountView: makeUserAccountView, 
             components: components,
-            makeCollateralLoanShowcaseWrapperView: makeCollateralLoanShowcaseWrapperView
+            makeCollateralLoanShowcaseWrapperView: makeCollateralLoanShowcaseWrapperView,
+            makeCollateralLoanWrapperView: makeCollateralLoanWrapperView
         )
     }
 }

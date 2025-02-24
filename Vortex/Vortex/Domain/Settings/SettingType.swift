@@ -44,6 +44,8 @@ enum SettingType: Equatable {
         case savingsAccount
         case profileOnboarding
         case collateralLoan
+        case collateralLoanCar
+        case collateralLoanRealEstate
     }
 }
 

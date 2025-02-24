@@ -112,14 +112,14 @@ class MainViewModel: ObservableObject, Resetable {
                 promoItem,
                 .init(
                     hide: { [weak self] in self?.hide(promoItem.promoProduct)},
-                    show: { [weak self] in self?.handlePromoTap(promoItem.promoProduct)})
+                    show: { [weak self] in self?.handlePromoTap(promoItem)})
             )
         }
     }
 
-    private func handlePromoTap(_ promoProduct: PromoProduct) {
+    private func handlePromoTap(_ promoItem: PromoItem) {
        
-        switch promoProduct {
+        switch promoItem.promoProduct {
         case .sticker:
             handlePromoAction(.sticker)
             
@@ -127,7 +127,36 @@ class MainViewModel: ObservableObject, Resetable {
             openSavingsAccount()
             
         case .collateralLoan:
-            handleCollateralLoan(type: nil)
+            handlePromoItemAction(promoItem: promoItem) {
+                
+                openCollateralLoanLanding(type: .showcase)
+            }
+            
+        case .collateralLoanCar:
+            handlePromoItemAction(promoItem: promoItem) {
+                
+                openCollateralLoanLanding(type: .car)
+            }
+
+        case .collateralLoanRealEstate:
+            handlePromoItemAction(promoItem: promoItem) {
+                
+                openCollateralLoanLanding(type: .realEstate)
+            }
+        }
+    }
+    
+    private func handlePromoItemAction(
+        promoItem: PromoItem,
+        action: () -> Void
+    ) {
+
+        if promoItem.action != nil {
+            
+            action()
+        } else if let url = URL(string: promoItem.link) {
+
+            Self.openLinkURL(url)
         }
     }
     
@@ -549,7 +578,7 @@ private extension MainViewModel {
                                 openCard()
                                 
                             case .loan:
-                                openCollateralLoanLanding()
+                                openCollateralLoanLanding(type: .showcase)
                                 
                             case .sticker:
                                 handleLandingAction(.sticker)
@@ -704,7 +733,11 @@ private extension MainViewModel {
         
         if let loanBannerList = banners.loanBannerList {
             
-            promo.append(contentsOf: loanBannerList.map { .init(item: $0, productType: .loan, promoProduct: .collateralLoan) })
+            promo.append(contentsOf: loanBannerList.map { .init(
+                item: $0,
+                productType: .card,
+                promoProduct: PromoProduct.collateralLoanTypeMap(from: $0.productName))
+            })
         }
 
         if let sticker = banners.cardBannerList?.first {
@@ -1028,10 +1061,18 @@ private extension MainViewModel {
         }
     }
     
-    func openCollateralLoanLanding() {
+    func openCollateralLoanLanding(type: CollateralLoanType) {
         
-        let binder = bindersFactory.makeCollateralLoanShowcaseBinder()
-        route.destination = .collateralLoanLanding(binder)
+        switch type {
+        case .showcase:
+            let binder = bindersFactory.makeCollateralLoanShowcaseBinder()
+            route.destination = .collateralLoanLanding(binder)
+            
+        case .car, .realEstate:
+            guard let id = type.id else { return }
+            let binder = bindersFactory.makeCollateralLoanLandingBinder(id)
+            route.destination = .collateralLoanLandingProduct(binder)
+        }
     }
     
     private func openDeposit() {
@@ -1790,6 +1831,7 @@ extension MainViewModel {
         case paymentProviderPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
         case providerServicePicker(Node<AnywayServicePickerFlowModel>)
         case collateralLoanLanding(GetShowcaseDomain.Binder)
+        case collateralLoanLandingProduct(GetCollateralLandingDomain.Binder)
         case orderCard
         
         var id: Case {
@@ -1841,6 +1883,8 @@ extension MainViewModel {
                 return .providerServicePicker
             case .collateralLoanLanding:
                 return .collateralLoanLanding
+            case .collateralLoanLandingProduct:
+                return .collateralLoanLandingProduct
             case .orderCard:
                 return .orderCard
             }
@@ -1849,6 +1893,7 @@ extension MainViewModel {
         enum Case {
             
             case collateralLoanLanding
+            case collateralLoanLandingProduct
             case country
             case currencyWallet
             case failedView
@@ -1925,13 +1970,14 @@ extension MainViewModel {
             openSavingsAccount()
             
         case .collateralLoan:
-            handleCollateralLoan(type: .none)
+            openCollateralLoanLanding(type: .showcase)
+            
+        case .collateralLoanCar:
+            openCollateralLoanLanding(type: .car)
+
+        case .collateralLoanRealEstate:
+            openCollateralLoanLanding(type: .realEstate)
         }
-    }
-    
-    func handleCollateralLoan(type: CollateralLoanType?) {
-        // TODO: realize
-        print("Tap to collateral loan banner")
     }
     
     func handleLandingAction(_ abroadType: AbroadType) {

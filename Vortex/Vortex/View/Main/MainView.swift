@@ -277,6 +277,13 @@ struct MainView<NavigationOperationView: View>: View {
                     dismiss: viewModel.resetDestination
                 )
                 .edgesIgnoringSafeArea(.bottom)
+
+        case let .collateralLoanLandingProduct(binder):
+            viewFactory.makeCollateralLoanWrapperView(binder, viewModel.resetDestination)
+                .navigationBarWithBack(
+                    title: "",
+                    dismiss: viewModel.resetDestination
+                )
  
         case .orderCard:
             viewFactory.components.makeOrderCardView()
@@ -589,9 +596,20 @@ extension MainViewFactory {
                 )
             },
             components: .preview,
-            makeCollateralLoanShowcaseWrapperView: { _,_ in .preview }
+            makeCollateralLoanShowcaseWrapperView: { _,_ in .preview },
+            makeCollateralLoanWrapperView: { _,_ in .preivew }
         )
     }
+}
+
+extension CollateralLoanLandingWrapperView {
+    
+    static let preivew = Self(
+        binder: .preview,
+        factory: .preview,
+        viewModelFactory: .preview,
+        goToMain: {}
+    )
 }
 
 extension ProductProfileViewModel  {

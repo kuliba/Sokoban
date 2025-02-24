@@ -25,6 +25,7 @@ import SplashScreen
 import SwiftUI
 import UIKit
 import UIPrimitives
+import CollateralLoanLandingGetCollateralLandingUI
 
 final class RootViewFactoryComposer {
     
@@ -153,7 +154,8 @@ extension RootViewFactoryComposer {
             paymentsViewFactory: makePaymentsViewFactory(),
             makeTemplateButtonWrapperView: makeTemplateButtonWrapperView,
             makeUpdatingUserAccountButtonLabel: makeUpdatingUserAccountButtonLabel, 
-            makeCollateralLoanShowcaseWrapperView: makeCollateralLoanShowcaseWrapperView
+            makeCollateralLoanShowcaseWrapperView: makeCollateralLoanShowcaseWrapperView,
+            makeCollateralLoanWrapperView: makeCollateralLoanWrapperView
         )
     }
     
@@ -234,7 +236,8 @@ private extension RootViewFactoryComposer {
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                 makeUserAccountView: makeUserAccountView,
                 components: makeViewComponents(rootEvent: rootEvent),
-                makeCollateralLoanShowcaseWrapperView: makeCollateralLoanShowcaseWrapperView
+                makeCollateralLoanShowcaseWrapperView: makeCollateralLoanShowcaseWrapperView,
+                makeCollateralLoanWrapperView: makeCollateralLoanWrapperView
             ),
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,
@@ -842,7 +845,8 @@ private extension RootViewFactoryComposer {
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView(viewModel:),
             makeUserAccountView: makeUserAccountView(viewModel:),
             components: makeViewComponents(rootEvent: rootEvent),
-            makeCollateralLoanShowcaseWrapperView: makeCollateralLoanShowcaseWrapperView
+            makeCollateralLoanShowcaseWrapperView: makeCollateralLoanShowcaseWrapperView,
+            makeCollateralLoanWrapperView: makeCollateralLoanWrapperView
         )
     }
     
@@ -1045,6 +1049,30 @@ private extension RootViewFactoryComposer {
             completion(try? $0.get())
             _ = getConsents
         }
+    }
+    
+    func makeCollateralLoanWrapperView(
+        binder: GetCollateralLandingDomain.Binder,
+        goToMain: @escaping () -> Void
+    ) -> CollateralLoanLandingWrapperView {
+
+        let factory = GetCollateralLandingFactory(
+            makeImageViewWithMD5Hash: { self.makeIconView(.md5Hash(.init($0))) },
+            makeImageViewWithURL: { self.makeGeneralIconView(.image($0.addingPercentEncoding())) },
+            getPDFDocument: getPDFDocument
+        )
+        
+        let viewModelFactory = CollateralLoanLandingViewModelFactory(
+            model: model,
+            makeImageViewWithMD5Hash: { self.makeIconView(.md5Hash(.init($0))) }
+        )
+
+        return .init(
+            binder: binder,
+            factory: factory,
+            viewModelFactory: viewModelFactory,
+            goToMain: goToMain
+        )
     }
     
     func makeCollateralLoanShowcaseWrapperView(
