@@ -11,14 +11,12 @@ extension StatementDetailContentLayoutViewConfig {
     
     static let iVortex: Self = .init(
         formattedAmount: .init(
-            // TODO: need design fix - Nika
-            textFont: .largeTitle,
-            textColor: .orange
+            textFont: .textH1Sb24322(),
+            textColor: .textSecondary
         ),
         formattedDate: .init(
-            // TODO: need design fix - Nika
-            textFont: .body,
-            textColor: .orange
+            textFont: .textBodySR12160(),
+            textColor: .textPlaceholder
         ),
         logoWidth: 64,
         merchantName: .init(
@@ -32,11 +30,10 @@ extension StatementDetailContentLayoutViewConfig {
         purposeHeight: 40,
         spacing: 24,
         status: .init(
-            // TODO: need design fix - Nika
-            font: .title,
-            completed: .orange,
-            inflight: .orange,
-            rejected: .orange
+            font: .textH4M16240(),
+            completed: .systemColorActive,
+            inflight: .systemColorWarning,
+            rejected: .textRed
         )
     )
 }
