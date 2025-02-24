@@ -7,16 +7,20 @@
 
 import Foundation
 import LoadableState
+import PaymentComponents
 
 public final class Reducer<Confirmation> {
     
     private let otpWitness: OTPWitness
+    private let productSelectReduce: ProductSelectReduce
     public typealias OTPWitness = (Confirmation) -> (String) -> Void
-    
+
     public init(
-        otpWitness: @escaping OTPWitness
+        otpWitness: @escaping OTPWitness,
+        productSelectReduce: @escaping ProductSelectReduce
     ) {
         self.otpWitness = otpWitness
+        self.productSelectReduce = productSelectReduce
     }
 }
 
@@ -55,7 +59,7 @@ public extension Reducer {
             
         case let .setMessages(isOn):
             if state.loadableForm.state != nil {
-                state.loadableForm.state?.messages.isOn = isOn
+                state.loadableForm.state?.topUp.isOn = isOn
             }
             
         case let .orderAccountResult(orderAccountResult):
@@ -70,6 +74,11 @@ public extension Reducer {
             if !state.loadableForm.isLoading && state.hasConfirmation {
                 state.form?.consent = consent
             }
+        case let .productSelect(productSelectEvent):
+            state.productSelect = productSelectReduce(state.productSelect, productSelectEvent)
+        
+        case let .amount(amount):
+            state.form?.amount = amount
         }
         
         return (state, effect)
@@ -152,6 +161,8 @@ public extension Reducer {
     typealias State = ProductState<Confirmation>
     typealias Event = ProductEvent<Confirmation>
     typealias Effect = ProductEffect
+    
+    typealias ProductSelectReduce = (ProductSelect, ProductSelectEvent) -> ProductSelect
 }
 
 private extension Form {

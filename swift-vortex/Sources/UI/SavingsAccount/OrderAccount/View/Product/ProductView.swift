@@ -171,15 +171,6 @@ where IconView: View {
     }
 }
 
-private extension String {
-    
-    func string(
-        _ needShimmering: Bool
-    ) -> String {
-        needShimmering ? "" : self
-    }
-}
-
 private extension OrderSavingsAccountConfig {
     
     var frame: CGSize {

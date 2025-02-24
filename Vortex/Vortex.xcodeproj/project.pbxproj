@@ -2752,7 +2752,6 @@
 		8307B3B42CD67A1C00484132 /* SavingsAccountFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8307B3B32CD67A1C00484132 /* SavingsAccountFlag.swift */; };
 		830AF2D52AB2E0FC00C2F29C /* AbroadType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830AF2D42AB2E0FC00C2F29C /* AbroadType.swift */; };
 		830AF2D72AB3236000C2F29C /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830AF2D62AB3236000C2F29C /* Factory.swift */; };
-		830BD9662D4FC12A005A8BD3 /* OrderSavingsAccountConfig+prod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830BD9652D4FC12A005A8BD3 /* OrderSavingsAccountConfig+prod.swift */; };
 		830C91BB2AAF9051005EC90C /* CodableLanding in Frameworks */ = {isa = PBXBuildFile; productRef = 830C91BA2AAF9051005EC90C /* CodableLanding */; };
 		830D974D2BBC4F0F00899832 /* UserAllCardsModel+clover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830D974C2BBC4F0F00899832 /* UserAllCardsModel+clover.swift */; };
 		830D974F2BBC5E8800899832 /* CardType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830D974E2BBC5E8800899832 /* CardType.swift */; };
@@ -6477,7 +6476,6 @@
 		8307B3B32CD67A1C00484132 /* SavingsAccountFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavingsAccountFlag.swift; sourceTree = "<group>"; };
 		830AF2D42AB2E0FC00C2F29C /* AbroadType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbroadType.swift; sourceTree = "<group>"; };
 		830AF2D62AB3236000C2F29C /* Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Factory.swift; sourceTree = "<group>"; };
-		830BD9652D4FC12A005A8BD3 /* OrderSavingsAccountConfig+prod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OrderSavingsAccountConfig+prod.swift"; sourceTree = "<group>"; };
 		830D974C2BBC4F0F00899832 /* UserAllCardsModel+clover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserAllCardsModel+clover.swift"; sourceTree = "<group>"; };
 		830D974E2BBC5E8800899832 /* CardType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardType.swift; sourceTree = "<group>"; };
 		830DC3782BCFE1370095AB39 /* Model+allProductTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+allProductTests.swift"; sourceTree = "<group>"; };
@@ -16190,7 +16188,6 @@
 			children = (
 				83DE8C6F2D548F4C00682617 /* OrderSavingsAccountConfig+prod.swift */,
 				8302073C2D37E06A0038EFA4 /* SavingsAccountConfig+iVortex.swift */,
-				830BD9652D4FC12A005A8BD3 /* OrderSavingsAccountConfig+prod.swift */,
 				8302073E2D37E1270038EFA4 /* SavingsAccountDomain+Titles.swift */,
 			);
 			path = SavingsAccount;
@@ -21490,7 +21487,6 @@
 				2A61D0632BECB59E00802C95 /* UtilityPaymentTypes.swift in Sources */,
 				774706B0277DD59700B524F1 /* AntifraudViewModel.swift in Sources */,
 				50783E4F28DF44BD005205F7 /* ProductSelectorViewComponent.swift in Sources */,
-				830BD9662D4FC12A005A8BD3 /* OrderSavingsAccountConfig+prod.swift in Sources */,
 				681E073D273D3FCF00551FAD /* ProductViewControllerRequest.swift in Sources */,
 				509E265D292E3F7A00362642 /* ButtonAuthViewComponent.swift in Sources */,
 				2AB197A82B24A4B300F0F87B /* Services+makeSberQRServices.swift in Sources */,

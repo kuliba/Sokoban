@@ -9,8 +9,9 @@ import LoadableState
 import SwiftUI
 import UIPrimitives
 
-public struct OrderAccountView<Confirmation, ConfirmationView>: View
-where ConfirmationView: View{
+public struct OrderAccountView<Confirmation, ConfirmationView, ProductSelectView>: View
+where ConfirmationView: View,
+      ProductSelectView: View {
     
     let state: State
     let event: (Event) -> Void
@@ -18,7 +19,8 @@ where ConfirmationView: View{
     let factory: ImageViewFactory
     // TODO: move to factory, rename factory
     let confirmationView: (Confirmation) -> ConfirmationView
-    
+    let productSelectView: () -> ProductSelectView
+
     private let coordinateSpace: String
     
     public init(
@@ -27,6 +29,7 @@ where ConfirmationView: View{
         config: Config,
         factory: ImageViewFactory,
         @ViewBuilder confirmationView: @escaping (Confirmation) -> ConfirmationView,
+        @ViewBuilder productSelectView: @escaping () -> ProductSelectView,
         coordinateSpace: String = "orderScroll"
     ) {
         self.state = state
@@ -34,6 +37,7 @@ where ConfirmationView: View{
         self.config = config
         self.factory = factory
         self.confirmationView = confirmationView
+        self.productSelectView = productSelectView
         self.coordinateSpace = coordinateSpace
     }
     
@@ -64,14 +68,20 @@ public extension OrderAccountView {
 private extension OrderAccountView {
     
     func loadingProductView() -> some View {
-        
-        ProductView(
-            data: .sample,
-            config: config,
-            makeIconView: { _ in EmptyView() }, 
-            isLoading: true
-        )
-        .rounded(config.roundedConfig)
+      
+        VStack(spacing: config.padding) {
+            
+            ProductView(
+                data: .sample,
+                config: config,
+                makeIconView: { _ in EmptyView() },
+                isLoading: true
+            )
+            .rounded(config.roundedConfig)
+            
+            income(income: "", true)
+            topUpView(.init(isOn: true))
+        }
     }
     
     @ViewBuilder
@@ -126,6 +136,9 @@ private extension OrderAccountView {
         VStack(spacing: config.padding) {
             
             productView(product(form))
+            income(income: state.form?.constants.income ?? "", false)
+            topUpView(topUp(form))
+            productSelector(form)
         }
         .disabled(state.hasConfirmation)
     }
@@ -155,6 +168,75 @@ private extension OrderAccountView {
             openValue: form.constants.openValue,
             orderServiceOption: form.constants.orderServiceOption)
     }
+    
+    func income(
+        income: String,
+        _ isLoading: Bool = false
+    ) -> some View {
+        
+        HStack(spacing: config.padding) {
+            if isLoading {
+                Circle()
+                    .fill(config.shimmering)
+                    .frame(config.income.imageSize)
+                    .shimmering()
+            } else {
+                config.income.image
+                    .renderingMode(.template)
+                    .foregroundColor(.gray)
+                    .frame(config.income.imageSize)
+            }
+            incomeInfo(income: income, isLoading: isLoading)
+        }
+        .rounded(config.roundedConfig)
+    }
+    
+    private func incomeInfo(
+        income: String,
+        isLoading: Bool = false
+    ) -> some View {
+        
+        VStack(alignment: .leading) {
+            
+            config.income.title.text.string(isLoading).text(withConfig: config.income.title.config)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .modifier(ShimmeringModifier(isLoading, config.shimmering))
+            income.text(withConfig: config.income.subtitle)
+                .modifier(ShimmeringModifier(isLoading, config.shimmering))
+        }
+    }
+    
+    func topUp(
+        _ form: Form<Confirmation>
+    ) -> TopUp {
+        
+        .init(
+            isOn: form.topUp.isOn
+        )
+    }
+
+    func topUpView(
+        _ topUp: TopUp
+    ) -> some View {
+        
+        TopUpView(
+            state: topUp,
+            event: { event(.setMessages($0)) },
+            config: config.topUpConfig, 
+            isLoading: false
+        )
+        .rounded(config.roundedConfig)
+    }
+    
+    @ViewBuilder
+    func productSelector(
+        _ form: Form<Confirmation>
+    ) -> ProductSelectView? {
+        
+        if form.topUp.isOn {
+            productSelectView()
+        }
+    }
 }
 
 private extension Product {
@@ -167,5 +249,19 @@ private extension OrderSavingsAccountConfig {
     var roundedConfig: RoundedConfig {
         
         RoundedConfig(padding: padding, cornerRadius: cornerRadius, background: background)
+    }
+}
+
+private extension OrderSavingsAccountConfig {
+    
+    var topUpConfig: TopUpViewConfig {
+        .init(
+            description: topUp.description,
+            icon: topUp.image,
+            iconSize: CGSize(width: 24, height: 24),
+            spacing: padding,
+            subtitle: topUp.subtitle,
+            title: topUp.title,
+            toggle: topUp.toggle)
     }
 }
