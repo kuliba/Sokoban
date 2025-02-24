@@ -52,6 +52,18 @@ public struct InfoView<Icon: View>: View {
     }
 }
 
+public extension InfoView where Icon == EmptyView {
+    
+    init(
+        info: Info,
+        config: InfoConfig
+    ) {
+        self.info = info
+        self.config = config
+        self.icon = EmptyView.init
+    }
+}
+
 private extension Info {
     
     var size: CGSize {
@@ -72,9 +84,17 @@ private extension Info {
     
     VStack(spacing: 32) {
         
-        InfoView(info: .amount, config: .preview) { Text("Icon") }
-        InfoView(info: .brandName, config: .preview) { Text("Icon") }
-        InfoView(info: .recipientBank, config: .preview) { Text("Icon") }
+        Group {
+            
+            InfoView(info: .amountCompressed, config: .preview)
+            InfoView(info: .amountCompressed, config: .preview) { EmptyView() }
+            InfoView(info: .amountCompressed, config: .preview) { Text("Icon") }
+            
+            InfoView(info: .amount, config: .preview) { Text("Icon") }
+            InfoView(info: .brandName, config: .preview) { Text("Icon") }
+            InfoView(info: .recipientBank, config: .preview) { Text("Icon") }
+        }
+        .border(.red.opacity(0.2))
     }
     .previewLayout(.sizeThatFits)
 }

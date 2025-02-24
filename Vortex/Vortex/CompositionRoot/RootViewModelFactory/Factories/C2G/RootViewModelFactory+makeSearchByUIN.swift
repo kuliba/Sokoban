@@ -83,13 +83,23 @@ extension RootViewModelFactory {
             connectivityFailureMessage: .connectivity
         )
         
-        service(uin.value) {
+        service(uin.value) { [weak self] in
+            
+            let format = self?.format(amount:currency:)
             
             let result = $0.map {
                 
                 return C2GPaymentDomain.ContentPayload(
-                    selectedProduct: selectedProduct,
+                    dateN: $0.dateN,
+                    discount: $0.discount,
+                    discountExpiry: $0.discountExpiry,
+                    formattedAmount: format?($0.transAmm, "RUB"),
+                    legalAct: $0.legalAct,
+                    merchantName: $0.merchantName,
+                    paymentTerm: $0.paymentTerm,
                     products: products,
+                    purpose: $0.purpose,
+                    selectedProduct: selectedProduct,
                     termsCheck: $0.termsCheck,
                     uin: $0.uin,
                     url: $0.url
@@ -112,7 +122,7 @@ extension RootViewModelFactory {
         
         return (products, selected)
     }
-
+    
     // TODO: remove easter egg stub
     @inlinable
     func easterEggsGetUINData(
@@ -131,8 +141,16 @@ extension RootViewModelFactory {
                 
             case "99999999999999999999":
                 completion(.success(.init(
-                    selectedProduct: product,
+                    dateN: "06.05.2021",
+                    discount: "$ 00.01",
+                    discountExpiry: "soon",
+                    formattedAmount: "$ 1 000",
+                    legalAct: "Часть 1 статьи 12.16 КоАП, а так же информация, которая приходит и поместится на максимум 255 символов и более...Часть 1 статьи 12.16 КоАП, а так же информация, которая приходит и поместится на максимум 255 символов и более...Часть 1 статьи 12.16 КоАП, а так",
+                    merchantName: "УФК Владимирской области",
+                    paymentTerm: "06.05.2021",
                     products: [],
+                    purpose: "Транспортный налог",
+                    selectedProduct: product,
                     termsCheck: nil,
                     uin: "99999999999999999999",
                     url: nil

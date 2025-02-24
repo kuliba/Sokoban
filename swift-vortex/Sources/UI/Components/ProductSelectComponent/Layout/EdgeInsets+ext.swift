@@ -16,6 +16,13 @@ public extension EdgeInsets {
         trailing: 12
     )
     
+    static let default2: Self = .init(
+        top: 13,
+        leading: 16,
+        bottom: 13,
+        trailing: 16
+    )
+    
     static let card: Self = .init(
         top: 12,
         leading: 8,

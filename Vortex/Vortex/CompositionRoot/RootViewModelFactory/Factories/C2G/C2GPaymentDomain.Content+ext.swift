@@ -39,10 +39,22 @@ extension C2GPaymentDomain.Content {
 private extension C2GPaymentState
 where Context == C2GPaymentDomain.Context {
     
-    init(payload: C2GPaymentDomain.ContentPayload) {
-        
+    init(
+        payload: C2GPaymentDomain.ContentPayload
+    ) {
         self.init(
-            context: .init(term: .terms(url: payload.url)),
+            context: .init(
+                dateN: payload.dateN,
+                discount: payload.discount,
+                discountExpiry: payload.discountExpiry,
+                formattedAmount: payload.formattedAmount,
+                legalAct: payload.legalAct,
+                merchantName: payload.merchantName,
+                paymentTerm: payload.paymentTerm,
+                purpose: payload.purpose,
+                term: .terms(url: payload.url),
+                uin: payload.uin
+            ),
             productSelect: .init(selected: payload.selectedProduct),
             termsCheck: payload.termsCheck,
             uin: payload.uin

@@ -27,13 +27,30 @@ extension C2GPaymentDomain {
     
     struct Context: Equatable {
         
+        let dateN: String?
+        let discount: String?
+        let discountExpiry: String?
+        let formattedAmount: String? // transAmm
+        let legalAct: String?
+        let merchantName: String?
+        let paymentTerm: String?
+        let purpose: String?
         let term: AttributedString
+        let uin: String
     }
     
     struct ContentPayload: Equatable {
         
-        let selectedProduct: ProductSelect.Product
+        let dateN: String?
+        let discount: String?
+        let discountExpiry: String?
+        let formattedAmount: String?
+        let legalAct: String?
+        let merchantName: String?
+        let paymentTerm: String?
         let products: [ProductSelect.Product]
+        let purpose: String?
+        let selectedProduct: ProductSelect.Product
         let termsCheck: Bool?
         let uin: String
         let url: URL?
