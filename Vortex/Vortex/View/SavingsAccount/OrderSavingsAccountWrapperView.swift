@@ -15,7 +15,7 @@ struct OrderSavingsAccountWrapperView: View {
 
     let amountToString: OrderSavingsAccountView.AmountToString
     let config: Config
-    let imageFactory: SavingsAccount.ImageViewFactory
+    let imageFactory: ListImageViewFactory
     let viewFactory: SavingsAccountDomain.OpenAccountViewFactory
     
     var body: some View {

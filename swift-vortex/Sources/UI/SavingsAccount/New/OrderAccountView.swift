@@ -15,7 +15,7 @@ where ConfirmationView: View{
     let state: State
     let event: (Event) -> Void
     let config: Config
-    let factory: ImageViewFactory
+    let factory: ListImageViewFactory
     // TODO: move to factory, rename factory
     let confirmationView: (Confirmation) -> ConfirmationView
     
@@ -25,7 +25,7 @@ where ConfirmationView: View{
         state: State,
         event: @escaping (Event) -> Void,
         config: Config,
-        factory: ImageViewFactory,
+        factory: ListImageViewFactory,
         @ViewBuilder confirmationView: @escaping (Confirmation) -> ConfirmationView,
         coordinateSpace: String = "orderScroll"
     ) {

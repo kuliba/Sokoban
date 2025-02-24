@@ -176,14 +176,14 @@ extension SavingsAccountState {
     }
 }
 
-private extension SavingsAccountState.Items.Item {
+private extension ListItems.Item {
     
     init(_ data: SavingsAccountDomain.LandingItem.Advantage) {
         self.init(md5hash: data.iconMd5hash, title: data.title, subtitle: data.subtitle)
     }
 }
 
-private extension SavingsAccountState.Items.Item {
+private extension ListItems.Item {
     
     init(_ data: SavingsAccountDomain.LandingItem.BasicCondition) {
         self.init(md5hash: data.iconMd5hash, title: data.title, subtitle: nil)
@@ -199,14 +199,14 @@ private extension SavingsAccountState.Question {
 
 private extension Array where Element == SavingsAccountDomain.LandingItem.Advantage {
     
-    var advantages: [SavingsAccountState.Items.Item]? {
+    var advantages: [ListItems.Item]? {
         map { .init($0) }
     }
 }
 
 private extension Array where Element == SavingsAccountDomain.LandingItem.BasicCondition {
     
-    var basicConditions: [SavingsAccountState.Items.Item]? {
+    var basicConditions: [ListItems.Item]? {
         map { .init($0) }
     }
 }
