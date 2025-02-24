@@ -34,7 +34,7 @@ extension SavingsAccountConfig {
                 textFont: .title3,
                 textColor: .green
             ),
-            spacing: 5
+            spacing: 18
         ),
         offsetForDisplayHeader: 100,
         paddings: .init(

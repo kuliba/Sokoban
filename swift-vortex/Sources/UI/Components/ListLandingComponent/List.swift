@@ -46,6 +46,7 @@ public struct List: View {
             
             factory.makeIconView(item.md5hash)
                 .aspectRatio(contentMode: .fit)
+                .frame(width: 40, height: 40, alignment: .center)
                 .accessibilityIdentifier("ItemIcon")
             
             VStack(alignment: .leading, spacing: 0) {
