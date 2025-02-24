@@ -10,6 +10,13 @@ import SwiftUI
 
 public extension Info {
     
+    static let amountCompressed: Self = .init(
+        id: .amount,
+        title: "Сумма",
+        value: "220 ₽",
+        style: .compressed
+    )
+    
     static let amount: Self = .init(
         id: .amount,
         title: "Сумма",
