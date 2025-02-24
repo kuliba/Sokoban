@@ -1782,7 +1782,6 @@ extension MainViewModel {
         case paymentProviderPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
         case providerServicePicker(Node<AnywayServicePickerFlowModel>)
         case collateralLoanLanding(GetShowcaseDomain.Binder)
-        case savingsAccount(SavingsAccountNodes)
         case orderCard
         
         var id: Case {
@@ -1834,8 +1833,6 @@ extension MainViewModel {
                 return .providerServicePicker
             case .collateralLoanLanding:
                 return .collateralLoanLanding
-            case .savingsAccount:
-                return .savingsAccount
             case .orderCard:
                 return .orderCard
             }
@@ -1904,7 +1901,7 @@ extension MainViewModel {
     
     func openSavingsAccount() {
         
-        route.destination = .savingsAccount(bindersFactory.makeSavingsAccountNodes(resetDestination))
+        action.send(RootEvent.select(.openProduct(.savingsAccount)))
     }
 }
 

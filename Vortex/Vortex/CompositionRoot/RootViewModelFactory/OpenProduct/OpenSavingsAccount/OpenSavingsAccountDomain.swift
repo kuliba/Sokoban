@@ -71,6 +71,6 @@ enum OpenSavingsAccountDomain {
     typealias LoadFailure = LoadableState.LoadFailure
     
     typealias OrderAccountPayload = SavingsAccount.ProductEffect.OrderAccountPayload
-    typealias OrderAccountesult = Event.OrderAccountResult
+    typealias OrderAccountResult = Event.OrderAccountResult
     typealias OrderAccountResponse = SavingsAccount.OrderAccountResponse
 }

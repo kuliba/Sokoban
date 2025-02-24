@@ -10,20 +10,17 @@ extension RootViewModelFactory {
     @inlinable
     func openProduct(
         type: OpenProductType,
-        notify: @escaping (OpenCardDomain.OrderCardResponse) -> Void,
-        dismiss: @escaping () -> Void = {}
+        notify: @escaping RootViewDomain.Notify
     ) -> OpenProduct {
         
         switch type {
         case .account:        return .unknown
-        case .card:           
-            return .card(openCardProduct(notify: notify))
+        case .card:           return .card(openCardProduct(notify: { notify(.select(.orderCardResponse($0))) }))
         case .deposit:        return .unknown
         case .insurance:      return .unknown
         case .loan:           return .unknown
         case .mortgage:       return .unknown
-        case .savingsAccount: 
-            return .savingsAccount(makeSavingsNodes(dismiss))
+        case .savingsAccount: return .savingsAccount(makeSavingsNodes({ notify(.dismiss) }, { notify(.select(.orderSavingsAccountResponse($0))) }))
         case .sticker:        return .unknown
         }
     }

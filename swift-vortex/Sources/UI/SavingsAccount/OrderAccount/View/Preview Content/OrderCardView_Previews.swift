@@ -62,6 +62,8 @@ struct OrderCardView_Previews: PreviewProvider {
                         .foregroundStyle(.white)
                         .font(.title3)
                 }
+        } productSelectView: {
+            Text("productSelectView")
         }
     }
 }
@@ -131,7 +133,7 @@ where Confirmation == PreviewConfirmation {
         constants: Constants = .preview,
         confirmation: Loadable<PreviewConfirmation>,
         consent: Bool = true,
-        messages: Messages = .preview(),
+        messages: TopUp = .preview(),
         otp: String? = nil,
         orderAccountResponse: OrderAccountResponse? = nil
     ) -> Self {
@@ -139,7 +141,7 @@ where Confirmation == PreviewConfirmation {
         return .init(
             constants: constants,
             confirmation: confirmation,
-            messages: messages,
+            topUp: messages,
             otp: otp,
             orderAccountResponse: orderAccountResponse
         )
@@ -149,7 +151,7 @@ where Confirmation == PreviewConfirmation {
 private extension Constants {
     
     static let preview: Self = .init(
-        currencyCode: 810,
+        currency: .init(code: 810, symbol: "rub"),
         designMd5hash: "",
         header: .init(title: "title", subtitle: "subtitle"),
         hint: "hint",
@@ -189,21 +191,13 @@ where Success == PreviewConfirmation,
     static let success: Self = .success(.init())
 }
 
-private extension Messages {
+private extension TopUp {
     
     static func preview(
-        description: AttributedString = "description",
-        icon: String = "icon",
-        subtitle: String = "subtitle",
-        title: String = "title",
         isOn: Bool = false
     ) -> Self {
         
         return .init(
-            description: description,
-            icon: icon,
-            subtitle: subtitle,
-            title: title,
             isOn: isOn
         )
     }
