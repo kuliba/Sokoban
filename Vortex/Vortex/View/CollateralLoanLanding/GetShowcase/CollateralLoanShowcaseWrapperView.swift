@@ -59,7 +59,7 @@ struct CollateralLoanShowcaseWrapperView: View {
         CollateralLoanLandingGetShowcaseView(
             data: showcase,
             event: handleExternalEvent(_:),
-            factory: factory.makeGetShowcaseViewFactory()
+            factory: factory
         )
     }
     
@@ -83,9 +83,14 @@ struct CollateralLoanShowcaseWrapperView: View {
         
         switch navigation {
         case let .landing(_, landing):
+            // TODO: Remove to factory
             CollateralLoanLandingWrapperView(
                 binder: landing,
-                factory: factory,
+                factory: .init(
+                    makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
+                    makeImageViewWithURL: factory.makeImageViewWithURL,
+                    getPDFDocument: factory.getPDFDocument
+                ),
                 viewModelFactory: viewModelFactory,
                 goToMain: goToMain
             )
@@ -95,7 +100,7 @@ struct CollateralLoanShowcaseWrapperView: View {
     
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
     typealias SaveConsentsResult = Domain.SaveConsentsResult
-    typealias Factory = GetCollateralLandingFactory
+    typealias Factory = CollateralLoanLandingGetShowcaseViewFactory
     typealias ViewModelFactory = CollateralLoanLandingViewModelFactory
 }
 

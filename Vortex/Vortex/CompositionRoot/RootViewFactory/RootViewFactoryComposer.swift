@@ -7,7 +7,6 @@
 
 import ActivateSlider
 import AnywayPaymentDomain
-import CollateralLoanLandingGetCollateralLandingUI
 import CollateralLoanLandingGetConsentsBackend
 import CollateralLoanLandingGetShowcaseUI
 import Combine
@@ -1053,7 +1052,7 @@ private extension RootViewFactoryComposer {
         goToMain: @escaping () -> Void
     ) -> CollateralLoanShowcaseWrapperView {
         
-        let factory = GetCollateralLandingFactory(
+        let factory = CollateralLoanLandingGetShowcaseViewFactory(
             makeImageViewWithMD5Hash: { self.makeIconView(.md5Hash(.init($0))) },
             makeImageViewWithURL: { self.makeGeneralIconView(.image($0.addingPercentEncoding())) },
             getPDFDocument: getPDFDocument

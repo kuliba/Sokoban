@@ -11,7 +11,7 @@ public struct BackendFailure<InformerPayload>: Error, Identifiable {
     
     public var id: UUID
 
-    public let kind: Kind
+    let kind: Kind
     
     public init(
         id: UUID = UUID(),

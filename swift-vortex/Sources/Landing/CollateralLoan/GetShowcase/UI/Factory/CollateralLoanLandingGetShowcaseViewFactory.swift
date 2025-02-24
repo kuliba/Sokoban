@@ -45,7 +45,7 @@ public extension CollateralLoanLandingGetShowcaseViewFactory {
 
 // MARK: Preview helpers
 
-public extension CollateralLoanLandingGetShowcaseViewFactory {
+extension CollateralLoanLandingGetShowcaseViewFactory {
     
     static let preview = Self(
         makeImageViewWithMD5Hash: { _ in .preview },
