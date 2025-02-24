@@ -502,6 +502,9 @@ extension RootViewModelFactory {
                 
                 case .openProduct, .searchByUIN, .standardPayment, .userAccount:
                     return .milliseconds(600)
+                    
+                case .orderSavingsAccountResponse:
+                    return .milliseconds(100)
                 }
             }
         )
@@ -530,26 +533,6 @@ extension FeatureFlags {
 }
 
 extension SavingsAccountDomain.ContentState {
-    
-    var select: SavingsAccountDomain.Select? {
-        
-        switch status {
-        case .initiate, .inflight, .loaded:
-            return nil
-            
-        case let .failure(failure, _):
-            switch failure{
-            case let .alert(message):
-                return .failure(.error(message))
-                
-            case let .informer(info):
-                return .failure(.timeout(info))
-            }
-        }
-    }
-}
-
-extension SavingsAccountDomain.OpenAccountContentState {
     
     var select: SavingsAccountDomain.Select? {
         
@@ -910,8 +893,7 @@ private extension RootViewModelFactory {
                 bannersBinder: bannersBinder,
                 makeCollateralLoanShowcaseBinder: makeCollateralLoanLandingShowcaseBinder,
                 makeCollateralLoanLandingBinder: makeCollateralLoanLandingBinder,
-                makeCreateDraftCollateralLoanApplicationBinder: makeCreateDraftCollateralLoanApplicationBinder,
-                makeSavingsAccountNodes: makeSavingsNodes(_:)
+                makeCreateDraftCollateralLoanApplicationBinder: makeCreateDraftCollateralLoanApplicationBinder
             ),
             viewModelsFactory: mainViewModelsFactory,
             makeOpenNewProductButtons: makeOpenNewProductButtons,

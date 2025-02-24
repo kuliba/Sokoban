@@ -5,16 +5,18 @@
 //  Created by Igor Malyarov on 16.02.2025.
 //
 
+import ProductSelectComponent
+
 public struct C2GPaymentDigest: Equatable {
     
-    public let productID: ProductID
+    public let product: ProductSelect.Product
     public let uin: String
     
     public init(
-        productID: ProductID,
+        product: ProductSelect.Product,
         uin: String
     ) {
-        self.productID = productID
+        self.product = product
         self.uin = uin
     }
     

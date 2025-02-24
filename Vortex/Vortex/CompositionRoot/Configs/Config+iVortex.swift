@@ -271,8 +271,7 @@ extension HeaderLandingComponent.HeaderViewConfig {
         ),
         layout: .init(
             itemOption: .init(
-                circleHeight: 5,
-                circleWidth: 5,
+                circleRadius: 5,
                 horizontalSpacing: 5,
                 optionWidth: 150
             ),

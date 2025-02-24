@@ -63,7 +63,7 @@ private extension HeaderView {
             
             Circle()
                 .foregroundStyle(config.optionPlaceholder)
-                .frame(width: config.layout.itemOption.circleWidth, height: config.layout.itemOption.circleHeight, alignment: .center)
+                .frame(width: config.layout.itemOption.circleRadius, height: config.layout.itemOption.circleRadius, alignment: .center)
             
             Text(option)
                 .frame(maxWidth:
@@ -103,8 +103,7 @@ private extension HeaderViewConfig {
         ),
         layout: .init(
             itemOption: .init(
-                circleHeight: 5,
-                circleWidth: 5,
+                circleRadius: 5,
                 horizontalSpacing: 5,
                 optionWidth: 150
             ),

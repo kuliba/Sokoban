@@ -51,19 +51,16 @@ public struct HeaderViewConfig {
         
         public struct ItemOption {
             
-            public let circleHeight: CGFloat
-            public let circleWidth: CGFloat
+            public let circleRadius: CGFloat
             public let horizontalSpacing: CGFloat
             public let optionWidth: CGFloat
             
             public init(
-                circleHeight: CGFloat,
-                circleWidth: CGFloat,
+                circleRadius: CGFloat,
                 horizontalSpacing: CGFloat,
                 optionWidth: CGFloat
             ) {
-                self.circleHeight = circleHeight
-                self.circleWidth = circleWidth
+                self.circleRadius = circleRadius
                 self.horizontalSpacing = horizontalSpacing
                 self.optionWidth = optionWidth
             }

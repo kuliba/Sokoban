@@ -7,6 +7,7 @@
 
 import StateMachines
 import RxViewModel
+import ProductSelectComponent
 
 enum OperationDetailDomain {}
 
@@ -26,23 +27,52 @@ extension OperationDetailDomain {
         let response: EnhancedResponse
         
         typealias DetailsState = StateMachines.LoadState<Details, Error>
-        typealias Details = Int // TODO: replace with operation details
+        
+        struct Details: Equatable {
+            
+            // kinda duplication - same fields are present in `response: EnhancedResponse`, but loaded details are used reports
+            let product: Product
+            let status: Status
+            
+            let dateForDetail: String?   // Дата и время операции (МСК) - dateForDetail
+            let realPayerFIO: String?    // Информация о плательщике - "realPayerFIO"
+            let payeeFullName: String?   // Получатель - payeeFullName
+            let supplierBillID: String?  // Номер документа (УИН) - "supplierBillID"
+            let comment: String?         // Назначение платежа - "comment"
+            let realPayerINN: String?    // ИНН плательщика - “realPayerINN”
+            let realPayerKPP: String?    // КПП плательщика - “realPayerKPP"
+            let dateN: String?           // Дата начисления - "dateN"
+            let paymentTerm: String?     // Срок оплаты - "paymentTerm"
+            let legalAct: String?        // Информация о НПА - "legalAct"
+            let transAmm: String?        // Сумма начисления - "transAmm"
+            let discount: String?        // Скидка - "discountFixedValue"/ "discountSizeValue"/ "multiplierSizeValue"
+            // !!! map to enum - has different formatting -
+            /* Скидки:          "discountFixedValue": 500 - Сумма скидки от полной суммы начисления, всегда в рублях         "discountSizeValue": 10- Процент скидки от суммы начисления         "multiplierSizeValue": 0,5 -Коэффициент, понижающий размер начисления 
+             */
+            let discountExpiry: String?  // Срок действия скидки - "discountExpiry"
+            let formattedAmount: String? // Сумма платежа - payerAmount+ payerCurrency
+            let upno: String?            // УПНО - "UPNO"
+            let transferNumber: String?  // Идентификатор операции СБП - "transferNumber"
+        }
         
         struct EnhancedResponse: Equatable {
             
             let formattedAmount: String?
+            let formattedDate: String?
             let merchantName: String?
             let message: String?
             let paymentOperationDetailID: Int
-            let product: ProductData // too much
+            let product: Product
             let purpose: String?
             let status: Status
             let uin: String
+        }
+        
+        typealias Product = ProductSelect.Product // TODO: decouple or leave as is
+        
+        enum Status {
             
-            enum Status {
-                
-                case completed, inflight, rejected
-            }
+            case completed, inflight, rejected
         }
     }
 }

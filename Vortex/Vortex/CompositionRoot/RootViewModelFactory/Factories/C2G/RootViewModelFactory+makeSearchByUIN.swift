@@ -7,6 +7,7 @@
 
 import C2GBackend
 import Foundation
+import ProductSelectComponent
 import RemoteServices
 
 extension RootViewModelFactory {
@@ -18,19 +19,9 @@ extension RootViewModelFactory {
         
         composeBinder(
             content: makeUINInputViewModel(value: uin ?? ""),
-            initialState: .init(),
-            delayProvider: delayProvider,
             getNavigation: getNavigation,
             selectWitnesses: .empty
         )
-    }
-    
-    @inlinable
-    func delayProvider(
-        navigation: SearchByUINDomain.Navigation
-    ) -> Delay {
-        
-        return .zero
     }
     
     @inlinable
@@ -67,8 +58,10 @@ extension RootViewModelFactory {
         guard let selectedProduct
         else { return completion(.missingC2GPaymentEligibleProducts) }
         
-        guard !uin.hasEasterEgg
-        else { return getUINDataEasterEggs(uin, completion: completion) }
+        guard !uin.hasEasterEgg else {
+            
+            return easterEggsGetUINData(uin, selectedProduct, completion)
+        }
         
         let service = onBackground(
             makeRequest: Vortex.RequestFactory.createGetUINDataRequest,
@@ -78,11 +71,10 @@ extension RootViewModelFactory {
         service(uin.value) {
             
             switch $0 {
-            case let .failure(failure as BackendFailure):
-                completion(.failure(failure))
-                
-            case .failure:
-                completion(.failure(.c2gConnectivity))
+            case let .failure(failure):
+                completion(.failure(
+                    failure.backendFailure(connectivityMessage: .connectivity)
+                ))
                 
             case let .success(response):
                 completion(.success(.init(
@@ -100,9 +92,10 @@ extension RootViewModelFactory {
     
     // TODO: remove easter egg stub
     @inlinable
-    func getUINDataEasterEggs(
+    func easterEggsGetUINData(
         _ uin: SearchByUINDomain.UIN,
-        completion: @escaping (GetUINDataResult) -> Void
+        _ product: ProductSelect.Product,
+        _ completion: @escaping (GetUINDataResult) -> Void
     ) {
         schedulers.background.delay(for: .seconds(2)) {
             
@@ -113,6 +106,15 @@ extension RootViewModelFactory {
             case "12345678901234567890":
                 completion(.failure(.server("Server Failure")))
                 
+            case "99999999999999999999":
+                completion(.success(.init(
+                    selectedProduct: product,
+                    products: [],
+                    termsCheck: nil,
+                    uin: "99999999999999999999",
+                    url: nil
+                )))
+                
             default:
                 completion(.failure(.server("Server Failure")))
             }
@@ -122,16 +124,33 @@ extension RootViewModelFactory {
     typealias GetUINDataResult = Result<C2GPaymentDomain.ContentPayload, BackendFailure>
 }
 
-private extension RootViewModelFactory.GetUINDataResult {
+extension Error {
+    
+    func backendFailure(
+        connectivityMessage: String
+    ) -> BackendFailure {
+        
+        return (self as? BackendFailure) ?? .connectivity(connectivityMessage)
+    }
+}
 
+private extension RootViewModelFactory.GetUINDataResult {
+    
     static let missingC2GPaymentEligibleProducts: Self = .failure(.missingC2GPaymentEligibleProducts)
 }
 
 private extension BackendFailure {
     
-    static let c2gConnectivity: Self = .connectivity("Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения")
+    static let c2gConnectivity: Self = .connectivity(.connectivity)
+    
+    static let missingC2GPaymentEligibleProducts: Self = .connectivity(.missingC2GPaymentEligibleProducts)
+}
 
-    static let missingC2GPaymentEligibleProducts: Self = .connectivity("У вас нет подходящих для платежа продуктов.")
+private extension String {
+    
+    static let connectivity: Self = "Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения"
+    
+    static let missingC2GPaymentEligibleProducts: Self = "У вас нет подходящих для платежа продуктов."
 }
 
 // TODO: remove with easter egg stub
@@ -139,6 +158,6 @@ private extension SearchByUINDomain.UIN {
     
     var hasEasterEgg: Bool {
         
-        ["01234567890123456789", "12345678901234567890"].contains(value)
+        ["01234567890123456789", "12345678901234567890", "99999999999999999999"].contains(value)
     }
 }
