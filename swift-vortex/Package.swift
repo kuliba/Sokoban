@@ -1524,6 +1524,7 @@ private extension Target {
         dependencies: [
             .inputComponent,
             .linkableText,
+            .collateralLoanLandingGetShowcaseUI,
             .optionalSelectorComponent,
             .otpInputComponent,
             .paymentComponents,
