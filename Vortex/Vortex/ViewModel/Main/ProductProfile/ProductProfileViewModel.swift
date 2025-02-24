@@ -1107,7 +1107,6 @@ private extension ProductProfileViewModel {
                     ) else { return }
                     
                     self.bottomSheet = .init(type: .operationDetail(operationDetail))
-                    self.bind(operationDetail)
                     
                 default:
                     break
@@ -1132,48 +1131,6 @@ private extension ProductProfileViewModel {
                     
                     bind(meToMeViewModel)
                     bottomSheet = .init(type: .meToMe(meToMeViewModel))
-                    
-                default:
-                    break
-                }
-                
-            }.store(in: &bindings)
-    }
-    
-    func bind(_ operationDetail: OperationDetailFactory.OperationDetail) {
-        
-        switch operationDetail {
-        case let .legacy(operationDetailViewModel):
-            bind(operationDetailViewModel)
-            
-        case .v3:
-            break
-        }
-    }
-    
-    func bind(_ operationDetailViewModel: OperationDetailViewModel) {
-        
-        operationDetailViewModel.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case let payload as OperationDetailViewModelAction.ShowInfo:
-                    self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
-                        
-                        self.bottomSheet = .init(type: .info(payload.viewModel))
-                    }
-                    
-                case let payload as OperationDetailViewModelAction.ShowDocument:
-                    self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
-                        
-                        self.bottomSheet = .init(type: .printForm(payload.viewModel))
-                    }
-                    
-                case _ as OperationDetailViewModelAction.CloseSheet:
-                    bottomSheet = nil
                     
                 default:
                     break
@@ -2553,9 +2510,7 @@ extension ProductProfileViewModel {
             case optionsPanelNew([PanelButtonDetails])
             case meToMe(PaymentsMeToMeViewModel)
             case meToMeLegacy(MeToMeViewModel)
-            case printForm(PrintFormView.ViewModel)
             case placesMap(PlacesViewModel)
-            case info(OperationDetailInfoViewModel)
             
             typealias OperationDetail = OperationDetailFactory.OperationDetail
         }
