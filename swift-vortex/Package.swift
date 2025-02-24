@@ -105,6 +105,7 @@ let package = Package(
         .uiKitHelpers,
         .uiPrimitives,
         .userAccountNavigationComponent,
+        .listLandingComponent,
         // UI Components
         .bottomSheetComponent,
         .carouselComponent,
@@ -331,6 +332,7 @@ let package = Package(
         .uiPrimitivesTests,
         .userAccountNavigationComponent,
         .userAccountNavigationComponentTests,
+        .listLandingComponent,
         // UI Components
         .amountComponent,
         .amountComponentTests,
@@ -750,6 +752,14 @@ private extension Product {
         targets: [
             .userAccountNavigationComponent,
             .manageSubscriptionsUI
+        ]
+    )
+
+    static let listLandingComponent = library(
+        name: .listLandingComponent,
+        targets: [
+            .orderCardLandingUI,
+            .savingsAccount,
         ]
     )
 
@@ -3174,6 +3184,12 @@ private extension Target {
         path: "Tests/UI/\(String.userAccountNavigationComponentTests)"
     )
     
+    static let listLandingComponent = target(
+        name: .listLandingComponent,
+        dependencies: [],
+        path: "Sources/UI/Components/\(String.listLandingComponent)"
+    )
+
     // MARK: - UI Components
     
     static let amountComponent = target(
@@ -3820,6 +3836,10 @@ private extension Target.Dependency {
         name: .userAccountNavigationComponent
     )
 
+    static let listLandingComponent = byName(
+        name: .listLandingComponent
+    )
+    
     static let orderCard = byName(
         name: .orderCard
     )
@@ -4298,6 +4318,7 @@ private extension String {
     static let userAccountNavigationComponent = "UserAccountNavigationComponent"
     static let userAccountNavigationComponentTests = "UserAccountNavigationComponentTests"
 
+    static let listLandingComponent = "ListLandingComponent"
     // MARK: - UI Components
     
     static let amountComponent = "AmountComponent"
