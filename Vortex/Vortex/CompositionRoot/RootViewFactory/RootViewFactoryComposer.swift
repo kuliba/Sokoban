@@ -179,7 +179,7 @@ extension RootViewFactoryComposer {
             makeOperationDetailView: makeOperationDetailView,
             makePaymentsMeToMeView: makePaymentsMeToMeView,
             makePaymentsServicesOperatorsView: makePaymentsServicesOperatorsView,
-            makePaymentsSuccessView: makePaymentsSuccessView, 
+            makePaymentsSuccessView: makePaymentsSuccessView,
             makeCategoryView: makeCategoryView(savingsAccountFlag: savingsAccountFlag.isActive),
             makeProductProfileView: {
                 

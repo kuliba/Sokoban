@@ -66,9 +66,9 @@ extension RootViewModelFactory {
         completion: @escaping (GetCollateralLandingDomain.Navigation) -> Void
     ) {
         switch select {
-        case let .createDraftCollateralLoanApplication(payload):
+        case let .createDraft(payload):
             let binder = makeCreateDraftCollateralLoanApplicationBinder(payload: payload)
-            completion(.createDraftCollateralLoanApplication(binder))
+            completion(.createDraft(binder))
 
         case let .showCaseList(id):
             completion(.showBottomSheet(id))
@@ -80,7 +80,7 @@ extension RootViewModelFactory {
     ) -> Delay {
         
         switch navigation {
-        case .createDraftCollateralLoanApplication:
+        case .createDraft:
             return .milliseconds(100)
         case .showBottomSheet:
             return .milliseconds(100)

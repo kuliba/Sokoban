@@ -1,6 +1,6 @@
 //
 //  CreateDraftCollateralLoanApplicationDomain+Reducer.swift
-//  
+//
 //
 //  Created by Valentin Ozerov on 16.01.2025.
 //
@@ -57,10 +57,13 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 state.city = citySelectReduce(state.city, cityEvent)
                 
             case .continue:
+                state.isLoading = true
                 state.stage = .confirm
                 effect = .createDraftApplication(state.createDraftApplicationPayload)
                 
             case let .applicationCreated(result):
+                state.isLoading = false
+
                 guard
                     state.confirmation == nil,
                     state.applicationID == nil

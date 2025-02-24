@@ -1,6 +1,6 @@
 //
 //  CreateDraftCollateralLoanApplicationPeriodView.swift
-//  
+//
 //
 //  Created by Valentin Ozerov on 27.01.2025.
 //

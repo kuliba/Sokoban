@@ -66,7 +66,7 @@ struct GetCollateralLandingDocumentsView: View {
             .padding(.top, config.list.layouts.topPadding)
             .padding(.bottom, config.list.layouts.bottomPadding)
         }
-    }    
+    }
 }
 
 extension GetCollateralLandingDocumentsView {
