@@ -40,31 +40,34 @@ extension ViewComponents {
                 // TODO: extract sub-components
                 VStack(spacing: 16) {
                     
-                    state.context.merchantNameField.map(infoView)
-                        .paddedRoundedBackground(edgeInsets: .default2)
-                    
-                    VStack(spacing: 13) {
+                    Group {
                         
-                        infoView(state.context.uinField)
+                        state.context.merchantNameField.map(infoView)
                         
-                        state.context.purposeField.map { purposeField in
+                        VStack(spacing: 13) {
                             
-                            VStack(spacing: 13) {
-                             
-                                Divider()
-                                infoView(purposeField)
+                            infoView(state.context.uinField)
+                            
+                            state.context.purposeField.map { purposeField in
+                                
+                                VStack(spacing: 13) {
+                                    
+                                    Divider()
+                                    infoView(purposeField)
+                                }
                             }
                         }
-                    }
-                    .paddedRoundedBackground(edgeInsets: .default2)
-                    
-                    VStack(spacing: 13) {
                         
-                        state.context.dateNField.map(infoView)
+                        VStack(spacing: 13) {
+                            
+                            state.context.dateNField.map(infoView)
+                            
+                            Divider() // TODO: only if both fields not nil
+                            
+                            state.context.purposeField.map(infoView)
+                        }
                         
-                        Divider() // TODO: only if both fields not nil
-                        
-                        state.context.purposeField.map(infoView)
+                        state.context.legalActField.map(infoView)
                     }
                     .paddedRoundedBackground(edgeInsets: .default2)
                     
@@ -241,6 +244,14 @@ extension C2GPaymentDomain.Context {
         }
     }
     
+    var legalActField: Field? {
+        
+        return legalAct.map {
+            
+            return .init(icon: .ic24FileText, title: .legalAct, value: $0)
+        }
+    }
+    
     var merchantNameField: Field? {
         
         return merchantName.map {
@@ -293,6 +304,7 @@ private extension String {
     static let discount: Self = "Скидка"
     static let discountExpiry: Self = "Срок действия скидки"
     static let formattedAmount: Self = "Сумма к оплате"
+    static let legalAct: Self = "Информация о НПА"
     static let merchantName: Self = "Получатель"
     static let paymentTerm: Self = "Срок оплаты"
     static let purpose: Self = "Назначение платежа"

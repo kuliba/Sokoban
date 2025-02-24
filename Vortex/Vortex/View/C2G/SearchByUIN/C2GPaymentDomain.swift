@@ -31,6 +31,7 @@ extension C2GPaymentDomain {
         let discount: String?
         let discountExpiry: String?
         let formattedAmount: String? // transAmm
+        let legalAct: String?
         let merchantName: String?
         let paymentTerm: String?
         let purpose: String?
@@ -44,6 +45,7 @@ extension C2GPaymentDomain {
         let discount: String?
         let discountExpiry: String?
         let formattedAmount: String?
+        let legalAct: String?
         let merchantName: String?
         let paymentTerm: String?
         let products: [ProductSelect.Product]

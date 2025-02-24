@@ -48,6 +48,7 @@ where Context == C2GPaymentDomain.Context {
                 discount: payload.discount,
                 discountExpiry: payload.discountExpiry,
                 formattedAmount: payload.formattedAmount,
+                legalAct: payload.legalAct,
                 merchantName: payload.merchantName,
                 paymentTerm: payload.paymentTerm,
                 purpose: payload.purpose,
