@@ -11,6 +11,25 @@ import SwiftUI
 extension ViewComponents {
     
     @inlinable
+    func infoViewCompressed(
+        id: String = UUID().uuidString,
+        title: String,
+        value: String,
+        config: InfoConfig = .iVortex
+    ) -> some View {
+        
+        infoViewNoIcon(
+            info: .init(
+                id: .other(id),
+                title: title,
+                value: value,
+                style: .compressed
+            ),
+            config: config
+        )
+    }
+    
+    @inlinable
     func infoViewNoIcon(
         info: Info,
         config: InfoConfig = .iVortex

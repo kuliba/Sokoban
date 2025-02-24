@@ -83,11 +83,16 @@ extension RootViewModelFactory {
             connectivityFailureMessage: .connectivity
         )
         
-        service(uin.value) {
+        service(uin.value) { [weak self] in
             
-            let result = $0.map {
+            let format = self?.format(amount:currency:)
+            
+            let result = $0.map { 
                 
                 return C2GPaymentDomain.ContentPayload(
+                    discount: $0.discount,
+                    discountExpiry: $0.discountExpiry,
+                    formattedAmount: format?($0.transAmm, "RUB"),
                     selectedProduct: selectedProduct,
                     products: products,
                     termsCheck: $0.termsCheck,
@@ -131,6 +136,9 @@ extension RootViewModelFactory {
                 
             case "99999999999999999999":
                 completion(.success(.init(
+                    discount: nil,//"$ 00.01",
+                    discountExpiry: nil,//"soon",
+                    formattedAmount: "$ 1 000",
                     selectedProduct: product,
                     products: [],
                     termsCheck: nil,
