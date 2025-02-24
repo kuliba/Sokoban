@@ -3219,7 +3219,10 @@ private extension Target {
     
     static let listLandingComponent = target(
         name: .listLandingComponent,
-        dependencies: [],
+        dependencies: [
+            .sharedConfigs,
+            .uiPrimitives
+        ],
         path: "Sources/UI/Components/\(String.listLandingComponent)"
     )
 
