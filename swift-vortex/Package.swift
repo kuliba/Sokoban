@@ -1612,7 +1612,11 @@ private extension Target {
 
     static let orderCardLandingUI = target(
         name: .orderCardLandingUI,
-        dependencies: [],
+        dependencies: [
+            .sharedConfigs,
+            .dropDownTextListComponent,
+            .headerLandingComponent
+        ],
         path: "Sources/Landing/\(String.orderCardLandingUI)"
     )
     
@@ -3227,7 +3231,8 @@ private extension Target {
     static let headerLandingComponent = target(
         name: .headerLandingComponent,
         dependencies: [
-            .sharedConfigs
+            .sharedConfigs,
+            .uiPrimitives
         ],
         path: "Sources/UI/Components/\(String.headerLandingComponent)"
     )

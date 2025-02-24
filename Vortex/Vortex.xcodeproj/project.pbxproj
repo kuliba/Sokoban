@@ -3266,6 +3266,7 @@
 		C19738E92AF3A42F00101B1B /* StickerDictionaryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19738E82AF3A42F00101B1B /* StickerDictionaryResponse.swift */; };
 		C197FD622CE178180005A93E /* Service+modifyC2B.swift in Sources */ = {isa = PBXBuildFile; fileRef = C197FD612CE178180005A93E /* Service+modifyC2B.swift */; };
 		C197FD662CE17D460005A93E /* ModifyC2BSubscriptionService in Frameworks */ = {isa = PBXBuildFile; productRef = C197FD652CE17D460005A93E /* ModifyC2BSubscriptionService */; };
+		C198F83E2D63759A005D8DE0 /* OrderCardLandingUI in Frameworks */ = {isa = PBXBuildFile; productRef = C198F83D2D63759A005D8DE0 /* OrderCardLandingUI */; };
 		C199807A2B7EB8F500D85C09 /* OperatorsListComponents in Frameworks */ = {isa = PBXBuildFile; productRef = C19980792B7EB8F500D85C09 /* OperatorsListComponents */; };
 		C19C234F2D562E210026FD0B /* GetCardOrderFormService in Frameworks */ = {isa = PBXBuildFile; productRef = C19C234E2D562E210026FD0B /* GetCardOrderFormService */; };
 		C19C36672B04B57E0052D7F0 /* OperationWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19C36662B04B57E0052D7F0 /* OperationWrapperView.swift */; };
@@ -7748,6 +7749,7 @@
 				2A9EA5D92D26AC0700DEC45C /* FlowCore in Frameworks */,
 				8330E12F2CEF405B00694AD0 /* SavingsServices in Frameworks */,
 				83E513392AA73CFC00F8183B /* LandingMapping in Frameworks */,
+				C198F83E2D63759A005D8DE0 /* OrderCardLandingUI in Frameworks */,
 				ED147D4F26BC1237002F66C8 /* FirebaseCrashlytics in Frameworks */,
 				83F775CB2CA2CE0700A05F69 /* MarketShowcase in Frameworks */,
 				2A669EAC2AE50674009A2F12 /* CVVPIN_Services in Frameworks */,
@@ -19990,6 +19992,7 @@
 				C10E0F232D5772ED008185D6 /* OrderCard */,
 				EC0C39F82D634F1100AC79C4 /* GetSplashScreenServices */,
 				2A2A46D22D61AB44009896F2 /* C2G */,
+				C198F83D2D63759A005D8DE0 /* OrderCardLandingUI */,
 				2AD073712D65B55200922062 /* StateMachines */,
 				8372A8B12D688B1D00CD1CFB /* LoadableState */,
 			);
@@ -30273,6 +30276,10 @@
 		C197FD652CE17D460005A93E /* ModifyC2BSubscriptionService */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ModifyC2BSubscriptionService;
+		};
+		C198F83D2D63759A005D8DE0 /* OrderCardLandingUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OrderCardLandingUI;
 		};
 		C19980792B7EB8F500D85C09 /* OperatorsListComponents */ = {
 			isa = XCSwiftPackageProductDependency;
