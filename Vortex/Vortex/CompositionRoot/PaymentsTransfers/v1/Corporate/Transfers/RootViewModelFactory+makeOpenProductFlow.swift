@@ -39,6 +39,7 @@ extension RootViewModelFactory {
         case .openAccount: return .milliseconds(100)
         case .openCard:    return .milliseconds(600)
         case .openDeposit: return .milliseconds(600)
+        case .openLoan:    return .milliseconds(100)
         case .openProduct: return .milliseconds(100)
         case .openURL:     return .milliseconds(100)
         case .openSticker: return .milliseconds(600)

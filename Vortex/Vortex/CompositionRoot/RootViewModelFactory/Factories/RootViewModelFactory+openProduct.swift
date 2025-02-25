@@ -18,7 +18,7 @@ extension RootViewModelFactory {
         case .card:           return .card(openCardProduct(notify: { notify(.select(.orderCardResponse($0))) }))
         case .deposit:        return .unknown
         case .insurance:      return .unknown
-        case .loan:           return .unknown
+        case .loan:           return .loan
         case .mortgage:       return .unknown
         case .savingsAccount: return .savingsAccount(makeSavingsNodes({ notify(.dismiss) }, { notify(.select(.orderSavingsAccountResponse($0))) }))
         case .sticker:        return .unknown

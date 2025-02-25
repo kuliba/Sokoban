@@ -365,6 +365,9 @@ extension RootViewNavigation.Destination: Identifiable {
             case let .card(openCard):
                 return .openProduct(.card(.init(openCard.model)))
                 
+            case .loan:
+                return .openProduct(.loan)
+                
             case let .savingsAccount(openSavingsAccount):
                 return .openProduct(.savingsAccount)
                 
@@ -398,6 +401,7 @@ extension RootViewNavigation.Destination: Identifiable {
         enum OpenProductID: Hashable {
             
             case card(ObjectIdentifier)
+            case loan
             case savingsAccount
             case unknown
         }

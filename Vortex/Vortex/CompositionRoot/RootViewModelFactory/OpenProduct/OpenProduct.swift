@@ -8,6 +8,7 @@
 enum OpenProduct {
     
     case card(OpenCard)
+    case loan
     case savingsAccount(SavingsAccountNodes)
     case unknown // TODO: replace with other types
     

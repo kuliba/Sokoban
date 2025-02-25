@@ -22,7 +22,10 @@ extension ViewComponents {
                     title: "Заказать карту",
                     dismiss: dismiss
                 )
-          
+
+        case .loan:
+            Text("###########")
+            
         case let .savingsAccount(nodes):
 
             makeSavingsAccountBinderView(binder: nodes.savingsAccountNode.model, openAccountBinder: nodes.openSavingsAccountNode.model, dismiss: dismiss)
