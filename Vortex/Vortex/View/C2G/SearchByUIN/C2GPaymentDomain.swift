@@ -11,8 +11,6 @@ import Foundation
 import PaymentComponents
 import RxViewModel
 
-typealias C2GPaymentViewModel<Context> = RxViewModel<C2GPaymentState<Context>, C2GPaymentEvent, C2GPaymentEffect>
-
 /// A namespace.
 enum C2GPaymentDomain {}
 
@@ -24,18 +22,35 @@ extension C2GPaymentDomain {
     
     // MARK: - Content
     
-    typealias Content = C2GPaymentViewModel<Context>
+    typealias Content = RxViewModel<C2GPaymentState<Context>, C2GPaymentEvent, C2GPaymentEffect>
     typealias ContentReducer = C2GPaymentReducer<Context>
     
     struct Context: Equatable {
         
+        let dateN: String?
+        let discount: String?
+        let discountExpiry: String?
+        let formattedAmount: String? // transAmm
+        let legalAct: String?
+        let merchantName: String?
+        let paymentTerm: String?
+        let purpose: String?
         let term: AttributedString
+        let uin: String
     }
     
     struct ContentPayload: Equatable {
         
-        let selectedProduct: ProductSelect.Product
+        let dateN: String?
+        let discount: String?
+        let discountExpiry: String?
+        let formattedAmount: String?
+        let legalAct: String?
+        let merchantName: String?
+        let paymentTerm: String?
         let products: [ProductSelect.Product]
+        let purpose: String?
+        let selectedProduct: ProductSelect.Product
         let termsCheck: Bool?
         let uin: String
         let url: URL?
@@ -54,6 +69,25 @@ extension C2GPaymentDomain {
         typealias Digest = C2GCore.C2GPaymentDigest
     }
     
-    typealias Navigation = Result<C2GPaymentComplete, BackendFailure>
-    typealias C2GPaymentComplete = OperationDetailDomain.Model
+    typealias Navigation = Result<Complete, BackendFailure>
+    
+    struct Complete {
+        
+        let context: Context
+        let details: OperationDetailDomain.Model
+        let document: DocumentButtonDomain.Model
+        
+        struct Context: Equatable {
+            
+            let formattedAmount: String?
+            let merchantName: String?
+            let purpose: String?
+            let status: Status
+            
+            enum Status {
+                
+                case completed, inflight, rejected
+            }
+        }
+    }
 }

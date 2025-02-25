@@ -47,7 +47,7 @@ struct CreateDraftCollateralLoanApplicationOTPView_Previews<Confirmation, Inform
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationOTPView<Confirmation, InformerPayload>(
-            state: .init(application: .preview),
+            state: .init(application: .preview, formatCurrency: { _ in "" }),
             event: {
                 print($0)
             },

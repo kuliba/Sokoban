@@ -271,7 +271,11 @@ struct MainView<NavigationOperationView: View>: View {
             servicePicker(flowModel: node.model)
             
         case let .collateralLoanLanding(binder):
-            viewFactory.makeCollateralLoanShowcaseWrapperView(binder, viewModel.resetDestination)
+            viewFactory.makeCollateralLoanShowcaseWrapperView(
+                binder,
+                viewModel.getPDFDocument,
+                viewModel.resetDestination
+            )
                 .navigationBarWithBack(
                     title: "Кредиты",
                     dismiss: viewModel.resetDestination
@@ -596,7 +600,7 @@ extension MainViewFactory {
                 )
             },
             components: .preview,
-            makeCollateralLoanShowcaseWrapperView: { _,_ in .preview },
+            makeCollateralLoanShowcaseWrapperView: { _,_,_ in .preview },
             makeCollateralLoanWrapperView: { _,_ in .preivew }
         )
     }
@@ -635,6 +639,7 @@ extension ProductProfileViewModel  {
         makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
         makeServicePaymentBinder: ServicePaymentBinder.preview,
         makeOpenNewProductButtons: { _ in [] },
+        operationDetailFactory: .preview,
         makeOrderCardViewModel: { /*TODO:  implement preview*/ },
         makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() }
     )
@@ -661,7 +666,8 @@ extension MainViewModel {
         sections: [],
         bindersFactory: .preview,
         viewModelsFactory: .preview,
-        makeOpenNewProductButtons: { _ in [] }
+        makeOpenNewProductButtons: { _ in [] },
+        getPDFDocument: { _,_ in }
     )
 }
 
@@ -680,7 +686,8 @@ private extension GetCollateralLandingDomain.Content {
     
     static let preview = GetCollateralLandingDomain.Content(
         initialState: .init(
-            landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"
+            landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
+            formatCurrency: { _ in "" }
         ),
         reduce: {
             state,_ in (state, nil)

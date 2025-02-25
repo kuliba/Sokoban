@@ -73,7 +73,8 @@ struct CreateDraftCollateralLoanApplicationConsentsView_Previews<Confirmation, I
         CreateDraftCollateralLoanApplicationConsentsView<Confirmation, InformerPayload>(
             state: .init(
                 application: .preview,
-                stage: .correctParameters
+                stage: .correctParameters,
+                formatCurrency: { _ in "" }
             ),
             event: { print($0) },
             externalEvent: { print($0) },
@@ -85,7 +86,8 @@ struct CreateDraftCollateralLoanApplicationConsentsView_Previews<Confirmation, I
         CreateDraftCollateralLoanApplicationConsentsView<Confirmation, InformerPayload>(
             state: .init(
                 application: .preview,
-                stage: .confirm
+                stage: .confirm,
+                formatCurrency: { _ in "" }
             ),
             event: { print($0) },
             externalEvent: { print($0) },

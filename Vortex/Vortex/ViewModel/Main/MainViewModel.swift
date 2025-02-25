@@ -53,6 +53,7 @@ class MainViewModel: ObservableObject, Resetable {
     let bindersFactory: BindersFactory
     let viewModelsFactory: MainViewModelsFactory
     let makeOpenNewProductButtons: OpenNewProductsViewModel.MakeNewProductButtons
+    let getPDFDocument: CollateralLoanLandingGetShowcaseViewFactory.GetPDFDocument
     
     let bannersBox: any BannersBoxInterface<BannerList>
     
@@ -73,6 +74,7 @@ class MainViewModel: ObservableObject, Resetable {
         bindersFactory: BindersFactory,
         viewModelsFactory: MainViewModelsFactory,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
+        getPDFDocument: @escaping CollateralLoanLandingGetShowcaseViewFactory.GetPDFDocument,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.model = model
@@ -89,6 +91,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.bindersFactory = bindersFactory
         self.viewModelsFactory = viewModelsFactory
         self.makeOpenNewProductButtons = makeOpenNewProductButtons
+        self.getPDFDocument = getPDFDocument
         self.scheduler = scheduler
         self.navButtonsRight = createNavButtonsRight()
         

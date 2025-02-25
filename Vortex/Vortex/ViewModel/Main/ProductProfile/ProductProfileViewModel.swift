@@ -1090,43 +1090,22 @@ private extension ProductProfileViewModel {
     
     func bind(history: ProductProfileHistoryView.ViewModel?) {
         
-        guard let history = history else { return }
+        guard let history else { return }
         
         history.action
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] action in
+            .compactMap { $0 as? ProductProfileHistoryViewModelAction.DidTapped.Detail }
+            .map(\.statementId)
+            .receive(on: scheduler)
+            .sink { [weak self] in
                 
                 guard let self = self else { return }
                 
-                switch action {
-                case let payload as ProductProfileHistoryViewModelAction.DidTapped.Detail:
-                    
-                    guard let storage = self.model.statements.value[self.product.activeProductId],
-                          let latestStatementData = storage.statements
-                        .filter({ $0.operationId == payload.statementId })
-                        .sorted(by: { ($0.tranDate ?? $0.date) > ($1.tranDate ?? $1.date) })
-                        .first,
-                          latestStatementData.paymentDetailType != .notFinance,
-                          let productData = self.model.products.value.values
-                        .flatMap({ $0 })
-                        .first(where: { $0.id == self.product.activeProductId }) 
-                    else { return }
-                    
-                    let operationDetailViewModel = operationDetailFactory.makeOperationDetailViewModel(
-                        latestStatementData,
-                        productData,
-                        self.model
-                    )
-                    self.bottomSheet = .init(type: .operationDetail(operationDetailViewModel))
-                    
-                    if #unavailable(iOS 14.5) {
-                        self.bind(operationDetailViewModel)
-                    }
-                    
-                default:
-                    break
-                }
-            }.store(in: &bindings)
+                guard let operationDetail = operationDetailFactory.makeOperationDetailViewModel(product.activeProductId, $0)
+                else { return }
+                
+                self.bottomSheet = .init(type: .operationDetail(operationDetail))
+            }
+            .store(in: &bindings)
     }
     
     func bind(detail: ProductProfileDetailView.ViewModel?) {
@@ -1145,37 +1124,6 @@ private extension ProductProfileViewModel {
                     
                     bind(meToMeViewModel)
                     bottomSheet = .init(type: .meToMe(meToMeViewModel))
-                    
-                default:
-                    break
-                }
-                
-            }.store(in: &bindings)
-    }
-    
-    func bind(_ operationDetailViewModel: OperationDetailViewModel) {
-        
-        operationDetailViewModel.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case let payload as OperationDetailViewModelAction.ShowInfo:
-                    self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
-                        
-                        self.bottomSheet = .init(type: .info(payload.viewModel))
-                    }
-                    
-                case let payload as OperationDetailViewModelAction.ShowDocument:
-                    self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
-                        
-                        self.bottomSheet = .init(type: .printForm(payload.viewModel))
-                    }
-                    
-                case _ as OperationDetailViewModelAction.CloseSheet:
-                    bottomSheet = nil
                     
                 default:
                     break
@@ -1774,7 +1722,31 @@ private extension ProductProfileViewModel {
     }
 }
 
-//MARK: - Reducers
+// MARK: - Reducers
+
+extension Model {
+    
+    func latestStatementWithProductData(
+        for productID: ProductData.ID,
+        and statementID: ProductStatementData.ID
+    ) -> (ProductStatementData, ProductData)? {
+        
+        guard let storage = statements.value[productID],
+              let latestStatementData = storage.statements
+            .filter({ $0.operationId == statementID })
+            .sorted(by: { ($0.tranDate ?? $0.date) > ($1.tranDate ?? $1.date) })
+            .first,
+              latestStatementData.paymentDetailType != .notFinance,
+              let productData = products.value.values
+            .flatMap({ $0 })
+            .first(where: { $0.id == productID })
+        else { return nil }
+        
+        return (latestStatementData, productData)
+    }
+}
+
+// MARK: - Reducers
 
 private extension ProductProfileViewModel {
     
@@ -2526,14 +2498,14 @@ extension ProductProfileViewModel {
         
         enum Kind {
             
-            case operationDetail(OperationDetailViewModel)
+            case operationDetail(OperationDetail)
             case optionsPannel(ProductProfileOptionsPannelView.ViewModel)
             case optionsPanelNew([PanelButtonDetails])
             case meToMe(PaymentsMeToMeViewModel)
             case meToMeLegacy(MeToMeViewModel)
-            case printForm(PrintFormView.ViewModel)
             case placesMap(PlacesViewModel)
-            case info(OperationDetailInfoViewModel)
+            
+            typealias OperationDetail = OperationDetailFactory.OperationDetail
         }
     }
     

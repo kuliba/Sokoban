@@ -49,7 +49,7 @@ struct GetCollateralLandingFooterView_Previews: PreviewProvider {
         GetCollateralLandingFooterView(
             product: .carStub,
             config: .default,
-            state: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"),
+            state: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE", formatCurrency: { _ in "" }),
             externalEvent: { print($0) }
         )
     }

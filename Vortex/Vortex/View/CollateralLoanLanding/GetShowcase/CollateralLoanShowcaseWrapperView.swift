@@ -158,7 +158,8 @@ extension CollateralLoanLandingGetShowcaseViewFactory {
     static let preview = Self(
         makeImageViewWithMD5Hash: { _ in .preview },
         makeImageViewWithURL: {_ in .preview },
-        getPDFDocument: { _,_ in }
+        getPDFDocument: { _,_ in },
+        formatCurrency: { _ in "" }
     )
 }
 

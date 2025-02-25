@@ -23,7 +23,15 @@ struct CollateralLoanLandingViewModelFactory {
         OperationDetailInfoViewModel(
             model: model,
             logo: nil,
-            cells: payload.makeCells(makeImageViewWithMD5Hash),
+            cells: payload.makeCells(
+                config: .default,
+                makeImageViewWithMD5Hash: makeImageViewWithMD5Hash,
+                formatCurrency: { model.amountFormatted(
+                    amount: Double($0),
+                    currencyCode: "RUB",
+                    style: .normal
+                )}
+            ),
             dismissAction: dismiss
         )
     }
@@ -37,52 +45,60 @@ extension CollateralLoanLandingViewModelFactory {
     )
 }
 
-extension CollateralLandingApplicationSaveConsentsResult {
+private extension CollateralLandingApplicationSaveConsentsResult {
     
     func makeCells(
-        _ makeImageViewWithMD5Hash: @escaping (String) -> UIPrimitives.AsyncImage
+        config: CreateDraftCollateralLoanApplicationConfig.Result,
+        makeImageViewWithMD5Hash: @escaping (String) -> UIPrimitives.AsyncImage,
+        formatCurrency: @escaping (UInt) -> String?
     ) -> [OperationDetailInfoViewModel.AsyncPropertyCellViewModel] {
 
         var out: [OperationDetailInfoViewModel.AsyncPropertyCellViewModel] =
         [
             .init(
                 asyncImage: makeImageViewWithMD5Hash(icons.productName),
-                title: "Наименование кредита",
+                title: config.titles.productName,
                 value: name
             ),
             .init(
-                iconType: .ic24Calendar,
-                title: "Срок кредита",
+                iconType: config.icons.period,
+                title: config.titles.period,
                 value: term
             ),
             .init(
-                iconType: .ic24Percent,
-                title: "Процентная ставка",
+                iconType: config.icons.percent,
+                title: config.titles.percent,
                 value: String(format: "%.1f", interestRate) + "%"
-            ),
-            .init(
-                iconType: .ic24Coins,
-                title: "Сумма кредита",
-                value: amount.formattedCurrency()
-            ),
+            )
         ]
+        
+        if let amount = formatCurrency(amount) {
+            
+            out.append(
+                .init(
+                    iconType: config.icons.amount,
+                    title: config.titles.amount,
+                    value: amount
+                )
+            )
+        }
         
         if let description {
             
-            var iconType = Image.ic24MoreHorizontal
+            var iconType = config.icons.more
             
             if ["CAR", "OTHER_MOVABLE_PROPERTY"].contains(collateralType) {
                 
-                iconType = .ic24Car
+                iconType = config.icons.car
             } else if ["APARTMENT", "HOUSE", "LAND_PLOT", "COMMERCIAL_PROPERTY"].contains(collateralType) {
                 
-                iconType = .ic24Home
+                iconType = config.icons.home
             }
             
             out.append(
                 .init(
                     iconType: iconType,
-                    title: "Тип залога",
+                    title: config.titles.collateralType,
                     value: description
                 )
             )
@@ -90,8 +106,8 @@ extension CollateralLandingApplicationSaveConsentsResult {
         
         out.append(
             .init(
-                iconType: .ic24Egrn,
-                title: "Город получения кредита",
+                iconType: config.icons.home,
+                title: config.titles.city,
                 value: cityName
             )
         )
@@ -100,21 +116,35 @@ extension CollateralLandingApplicationSaveConsentsResult {
     }
 }
 
-extension UInt {
+extension CreateDraftCollateralLoanApplicationConfig.Result {
     
-    func formattedCurrency(_ currencySymbol: String = "₽") -> String {
-        
-        let currencyFormatter = NumberFormatter()
-        currencyFormatter.numberStyle = .currency
-        currencyFormatter.currencySymbol = currencySymbol
-        currencyFormatter.usesGroupingSeparator = true
-        currencyFormatter.locale = Locale(identifier: "ru_RU")
-        currencyFormatter.maximumFractionDigits = 0
+    static let `default` = Self(
+        titles: .default,
+        icons: .default
+    )
+}
 
-        if let value = currencyFormatter.string(from: NSNumber(value: self)) {
-            return value
-        }
-        
-        return String(self)
-    }
+extension CreateDraftCollateralLoanApplicationConfig.Result.Titles {
+    
+    static let `default` = Self(
+        productName: "Наименование кредита",
+        period: "Срок кредита",
+        percent: "Процентная ставка",
+        amount: "Сумма кредита",
+        collateralType: "Тип залога",
+        city: "Город получения кредита"
+    )
+}
+
+extension CreateDraftCollateralLoanApplicationConfig.Result.Icons {
+    
+    static let `default` = Self(
+        period: .ic24Calendar,
+        percent: .ic24Percent,
+        amount: .ic24Coins,
+        more: .ic24MoreHorizontal,
+        car: .ic24Car,
+        home: .ic24Home,
+        city: .ic24Egrn
+    )
 }

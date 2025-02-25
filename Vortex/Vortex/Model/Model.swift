@@ -14,7 +14,7 @@ import ServerAgent
 import SymmetricEncryption
 import UserModel
 import GetProductListByTypeService
-import GetProductListByTypeV6Service
+import GetProductListByTypeV7Service
 import VortexTools
 import SwiftUI
 
@@ -141,8 +141,7 @@ class Model {
     let updateInfo: CurrentValueSubject<UpdateInfo, Never>
 
     var getProducts: GetProductListByType
-    
-    var getProductsV6: Services.GetProductListByTypeV6?
+    var getProductsV7: Services.GetProductListByTypeV7?
 
     // services
     internal let sessionAgent: SessionAgentProtocol
@@ -249,7 +248,7 @@ class Model {
         self.clientInformStatus = .init(isShowNotAuthorized: false, isShowAuthorized: false)
         self.productTemplates = .init([])
         self.getProducts = { _, _ in }
-        self.getProductsV6 = nil
+        self.getProductsV7 = nil
         self.getBannerCatalogListV2 = nil
 
         self.updateInfo = .init(.init())

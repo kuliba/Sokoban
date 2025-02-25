@@ -17,7 +17,7 @@ extension RootViewModelFactory {
     ) -> QRViewModelFactory {
         
         return .init(
-            makePaymentsSuccessViewModel: makePaymentsSuccessViewModel(),
+            makePaymentsSuccessViewModel: makePaymentsSuccessViewModel,
             makeSberQRConfirmPaymentViewModel: makeSberQRConfirmPaymentViewModel,
             makeQRScannerModel: { [weak self] in
                 

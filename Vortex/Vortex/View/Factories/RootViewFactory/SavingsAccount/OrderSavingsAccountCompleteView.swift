@@ -44,7 +44,7 @@ private extension OrderSavingsAccountCompleteView {
         PaymentCompletionStatusView(
             state: .init(formattedAmount: "", merchantIcon: nil, status: state),
             makeIconView: makeIconView,
-            config: .orderCard
+            config: .orderSavingsAccount
         )
     }
     
