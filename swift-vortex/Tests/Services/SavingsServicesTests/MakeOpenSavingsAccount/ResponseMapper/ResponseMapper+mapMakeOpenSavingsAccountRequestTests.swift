@@ -214,6 +214,7 @@ private extension String {
     "needOTP": true,
     "amount": 10.0,
     "creditAmount": 11.0,
+    "accountNumber": "11111",
     "fee": 17,
     "currencyAmount": "11",
     "currencyPayer": "14",
@@ -235,7 +236,7 @@ private extension MakeOpenSavingsAccountResponse {
         paymentInfo: .valid,
         paymentOperationDetailID: 10)
     
-    static let empty: Self = .init(documentInfo: .init(documentStatus: nil, needMake: false, needOTP: false, scenario: nil), paymentInfo: .init(amount: nil, creditAmount: nil, currencyAmount: nil, currencyPayee: nil, currencyPayer: nil, currencyRate: nil, debitAmount: nil, fee: nil, payeeName: nil), paymentOperationDetailID: nil)
+    static let empty: Self = .init(documentInfo: .init(documentStatus: nil, needMake: false, needOTP: false, scenario: nil), paymentInfo: .init(amount: nil, accountNumber: nil, creditAmount: nil, currencyAmount: nil, currencyPayee: nil, currencyPayer: nil, currencyRate: nil, debitAmount: nil, fee: nil, payeeName: nil), paymentOperationDetailID: nil)
 }
 
 private extension MakeOpenSavingsAccountResponse.DocumentInfo {
@@ -250,7 +251,8 @@ private extension MakeOpenSavingsAccountResponse.DocumentInfo {
 private extension MakeOpenSavingsAccountResponse.PaymentInfo {
     
     static let valid: Self = .init(
-        amount: 10,
+        amount: 10, 
+        accountNumber: "11111",
         creditAmount: 11,
         currencyAmount: "11",
         currencyPayee: "13",
