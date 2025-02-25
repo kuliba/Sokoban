@@ -767,6 +767,7 @@ private extension MainViewModel {
                     self?.handleLandingAction(.sticker)
                 }
             },
+            openCollateralLoanLanding: openCollateralLoanLanding,
             makeMyProductsViewFactory: .init(
                 makeInformerDataUpdateFailure: { [weak self] in
                     
