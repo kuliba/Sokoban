@@ -19,7 +19,10 @@ extension ViewComponents {
         
         StatementDetailLayoutView(config: .iVortex) {
             
-            makeC2GPaymentCompleteButtonsView(details.details)
+            makeC2GPaymentCompleteButtonsView(
+                details: details.details,
+                document: details.document
+            )
             
         } content: {
             

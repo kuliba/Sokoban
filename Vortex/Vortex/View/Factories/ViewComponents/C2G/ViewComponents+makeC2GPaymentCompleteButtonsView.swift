@@ -14,10 +14,11 @@ extension ViewComponents {
     
     @inlinable
     func makeC2GPaymentCompleteButtonsView(
-        _ model: OperationDetailDomain.Model
+        details: OperationDetailDomain.Model,
+        document: DocumentButtonDomain.Model
     ) -> some View {
         
-        RxWrapperView(model: model) { state, _ in
+        RxWrapperView(model: details) { state, _ in
             
             makeC2GPaymentCompleteButtonsView(state: state)
         }

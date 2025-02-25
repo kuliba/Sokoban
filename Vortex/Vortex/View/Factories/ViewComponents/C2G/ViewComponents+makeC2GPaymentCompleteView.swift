@@ -23,7 +23,13 @@ extension ViewComponents {
         makePaymentCompletionLayoutView(
             state: cover.completion,
             statusConfig: .c2g,
-            buttons: { makeC2GPaymentCompleteButtonsView(cover.content.details) },
+            buttons: {
+                
+                makeC2GPaymentCompleteButtonsView(
+                    details: cover.content.details,
+                    document: cover.content.document
+                )
+            },
             details: { makeC2GPaymentDetailsView(cover: cover, config: config) }
         ) {
             makeSPBFooter(isActive: true, event: goToMain, title: "На главный")
@@ -253,7 +259,7 @@ extension DocumentButtonDomain.Model {
     
     static let preview: DocumentButtonDomain.Model = .init(
         initialState: .pending,
-        reduce: { state,_ in (state, nil) }, 
+        reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }
     )
 }
