@@ -9,12 +9,12 @@ import RemoteServices
 
 public struct OrderCardLandingResponse: Equatable {
     
-    let id: String
-    let theme: String
-    let product: Product
-    let conditions: Condition
-    let security: Security
-    let frequentlyAskedQuestions: Question
+    public let id: String
+    public let theme: String
+    public let product: Product
+    public let conditions: Condition
+    public let security: Security
+    public let frequentlyAskedQuestions: Question
     
     public init(
         id: String,
@@ -34,8 +34,8 @@ public struct OrderCardLandingResponse: Equatable {
     
     public struct Question: Equatable {
         
-        let title: String
-        let list: [Item]
+        public let title: String
+        public let list: [Item]
         
         public init(
             title: String,
@@ -48,8 +48,8 @@ public struct OrderCardLandingResponse: Equatable {
     
     public struct Security: Equatable {
         
-        let title: String
-        let list: [Item]
+        public let title: String
+        public let list: [Item]
         
         public init(
             title: String,
@@ -62,8 +62,8 @@ public struct OrderCardLandingResponse: Equatable {
     
     public struct Condition: Equatable {
         
-        let title: String
-        let list: [Item]
+        public let title: String
+        public let list: [Item]
         
         public init(
             title: String,
@@ -76,10 +76,10 @@ public struct OrderCardLandingResponse: Equatable {
     
     public struct Product: Equatable {
         
-        let title: String
-        let image: String
-        let features: [String]
-        let discount: Discount
+        public let title: String
+        public let image: String
+        public let features: [String]
+        public let discount: Discount
         
         public init(
             title: String,
@@ -95,8 +95,8 @@ public struct OrderCardLandingResponse: Equatable {
         
         public struct Discount: Equatable {
             
-            let title: String
-            let list: [Item]
+            public let title: String
+            public let list: [Item]
             
             public init(
                 title: String,
@@ -110,9 +110,9 @@ public struct OrderCardLandingResponse: Equatable {
     
     public struct Item: Equatable {
         
-        let title: String
-        let subtitle: String?
-        let md5hash: String
+        public let title: String
+        public let subtitle: String?
+        public let md5hash: String
         
         public init(
             title: String,
