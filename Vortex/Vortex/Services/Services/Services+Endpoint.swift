@@ -76,6 +76,7 @@ extension Services {
             case v4
             case v5
             case v6
+            case v7
         }
         
         enum ServiceName: String {
@@ -417,6 +418,12 @@ extension Services.Endpoint {
     static let getProductListByTypeV6: Self = .init(
         pathPrefix: .rest,
         version: .v6,
+        serviceName: .getProductListByType
+    )
+    
+    static let getProductListByTypeV7: Self = .init(
+        pathPrefix: .rest,
+        version: .v7,
         serviceName: .getProductListByType
     )
 

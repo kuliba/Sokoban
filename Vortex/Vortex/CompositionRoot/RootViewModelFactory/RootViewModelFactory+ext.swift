@@ -72,11 +72,7 @@ extension RootViewModelFactory {
         
         let cachelessHTTPClient = model.cachelessAuthorizedHTTPClient()
         
-        if featureFlags.getProductListByTypeV6Flag.isActive {
-            model.getProductsV6 = Services.getProductListByTypeV6(cachelessHTTPClient, logger: logger)
-        } else {
-            model.getProducts = Services.getProductListByType(cachelessHTTPClient, logger: logger)
-        }
+        model.getProductsV7 = Services.getProductListByTypeV7(cachelessHTTPClient, logger: logger)
         
         model.getBannerCatalogListV2 = Services.getBannerCatalogListV2(httpClient, logger: logger)
         
