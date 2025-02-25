@@ -22,8 +22,10 @@ struct OrderCardLanding {
 
 extension ViewComponents {
     
+    @inlinable
     func makeOrderCardLandingView(
         landing: OrderCardLanding,
+        continue: @escaping () -> Void,
         dismiss: @escaping () -> Void
     ) -> some View {
         
@@ -31,28 +33,57 @@ extension ViewComponents {
             title: { $0 > 0 ? "title" : "" },
             dismiss: dismiss
         ) {
-            HeaderView(model: landing.header)
-            
-            ListLandingComponent.List(
-                items: landing.conditions,
-                config: .iVortex,
-                factory: .init(
-                    makeIconView: makeIconView,
-                    makeBannerImageView: makeGeneralIconView
-                )
-            )
-            
-            ListLandingComponent.List(
-                items: landing.security,
-                config: .iVortex,
-                factory: .init(
-                    makeIconView: makeIconView,
-                    makeBannerImageView: makeGeneralIconView
-                )
-            )
-            
-            DropDownList(viewModel: landing.dropDownList)
+            makeOrderCardLandingContentView(landing: landing)
         }
+        .safeAreaInset(edge: .bottom) {
+            
+            heroButton(action: `continue`)
+        }
+    }
+    
+    @inlinable
+    @ViewBuilder
+    func makeOrderCardLandingContentView(
+        landing: OrderCardLanding
+    ) -> some View {
+        
+        HeaderView(model: landing.header)
+        
+        ListLandingComponent.List(
+            items: landing.conditions,
+            config: .iVortex,
+            factory: .init(
+                makeIconView: makeIconView,
+                makeBannerImageView: makeGeneralIconView
+            )
+        )
+        
+        ListLandingComponent.List(
+            items: landing.security,
+            config: .iVortex,
+            factory: .init(
+                makeIconView: makeIconView,
+                makeBannerImageView: makeGeneralIconView
+            )
+        )
+        
+        DropDownList(viewModel: landing.dropDownList)
+    }
+    
+    @inlinable
+    func heroButton(
+        title: String = "Продолжить",
+        style: ButtonSimpleView.ViewModel.ButtonStyle = .red,
+        action: @escaping () -> Void
+    ) -> some View {
+        
+        ButtonSimpleView(
+            viewModel: .init(
+                title: title,
+                style: .red,
+                action: action
+            )
+        )
     }
 }
 
