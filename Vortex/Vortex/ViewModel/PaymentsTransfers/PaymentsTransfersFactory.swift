@@ -95,6 +95,7 @@ extension PaymentsTransfersFactory {
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview,
             makeOpenNewProductButtons: { _ in [] },
+            operationDetailFactory: .preview,
             makeOrderCardViewModel: { /*TODO:  implement preview*/ },
             makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() }
         )

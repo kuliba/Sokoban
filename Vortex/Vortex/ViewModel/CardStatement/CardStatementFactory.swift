@@ -37,16 +37,14 @@ extension Services {
         )
         let data = try await getCardStatementForPeriod(httpClient: httpClient).process(payload).get()
         
-        return data.operationList.map({ .init(data: $0) })
+        return data.map { .init(data: $0) }
     }
     
     private func getCardStatementForPeriod(
         httpClient: HTTPClient
     ) -> Services.GetCardStatementService {
         
-        Services.getCardStatementForPeriod(
-            httpClient: httpClient
-        )
+        Services.getCardStatementForPeriod(httpClient: httpClient)
     }
 }
 
@@ -55,7 +53,6 @@ extension CardStatementAPI.ProductStatementData.OperationType {
     var value: OperationType {
         
         switch self {
-            
         case .credit:
             return .credit
         case .creditPlan:
@@ -81,10 +78,8 @@ extension CardStatementAPI.ProductStatementData.OperationEnvironment {
     var value: OperationEnvironment {
         
         switch self {
-        case .inside:
-            return .inside
-        case .outside:
-            return .outside
+        case .inside: return .inside
+        case .outside: return .outside
         }
     }
 }
@@ -97,6 +92,7 @@ extension ProductStatementData {
     ) {
         let fastPayment: ProductStatementData.FastPayment? = data.fastPayment.map { .init(data: $0) }
         let svgImage: SVGImageData? = data.svgImage.map { .init(description: $0) }
+        
         self = .init(
             mcc: data.MCC,
             accountId: data.accountID,
@@ -124,12 +120,25 @@ extension ProductStatementData {
             svgImage: svgImage,
             terminalCode: data.terminalCode,
             tranDate: data.tranDate,
-            type: data.type.value
+            type: data.type.value,
+            // V3
+            discount: data.discount,
+            transAmm: data.transAmm,
+            discountExpiry: data.discountExpiry,
+            dateN: data.dateN,
+            paymentTerm: data.paymentTerm,
+            legalAct: data.legalAct,
+            supplierBillID: data.supplierBillId,
+            realPayerFIO: data.realPayerFIO,
+            realPayerINN: data.realPayerINN,
+            realPayerKPP: data.realPayerKPP,
+            upno: data.upno
         )
     }
 }
 
 extension ProductStatementData.FastPayment {
+    
     init(
         data: CardStatementAPI.ProductStatementData.FastPayment
     ) {
@@ -143,12 +152,15 @@ extension ProductStatementData.FastPayment {
             opkcid: data.opkcid,
             operTypeFP: data.operTypeFP,
             tradeName: data.tradeName,
-            guid: data.guid)
+            guid: data.guid
+        )
     }
 }
 
 extension Decimal {
+    
     var doubleValue: Double {
+        
         return NSDecimalNumber(decimal:self).doubleValue
     }
 }

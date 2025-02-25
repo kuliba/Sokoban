@@ -355,7 +355,7 @@ final class Model_PaymentsTransferMobileConnectionTests: XCTestCase {
         } catch {
             typealias GetPhoneInfo = ServerCommands.DaDataController.GetPhoneInfo
             
-            let errorMessage = GetPhoneInfo.EnhancedResponse.error.errorMessage
+            let errorMessage = GetPhoneInfo.Response.error.errorMessage
             let serverError = ServerAgentError.serverStatus(
                 .error(102),
                 errorMessage: errorMessage
@@ -655,7 +655,7 @@ private extension Model {
     
     func execute<Command: ServerCommand>(
         command: Command
-    ) async throws -> Command.EnhancedResponse.Payload {
+    ) async throws -> Command.Response.Payload {
         
         try await serverAgent.executeCommand(command: command)
     }
