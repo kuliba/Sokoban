@@ -865,10 +865,7 @@ struct ProductCarouselView: View {
         _ type: ProductType
     ) -> [AdditionalProductViewModel]? {
         
-        if let products = viewModel.promoProducts {
-            print(products)
-        }
-        return viewModel.promoProducts?.filter { $0.productType == type }
+        viewModel.promoProducts?.filter { $0.productType == type }
     }
 }
 
