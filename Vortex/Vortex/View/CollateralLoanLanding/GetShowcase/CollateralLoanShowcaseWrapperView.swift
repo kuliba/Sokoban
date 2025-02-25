@@ -90,7 +90,8 @@ struct CollateralLoanShowcaseWrapperView: View {
                 factory: .init(
                     makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
                     makeImageViewWithURL: factory.makeImageViewWithURL,
-                    getPDFDocument: factory.getPDFDocument
+                    getPDFDocument: factory.getPDFDocument,
+                    formatCurrency: factory.formatCurrency
                 ),
                 goToMain: goToMain
             )
@@ -156,7 +157,8 @@ extension CollateralLoanLandingGetShowcaseViewFactory {
     static let preview = Self(
         makeImageViewWithMD5Hash: { _ in .preview },
         makeImageViewWithURL: {_ in .preview },
-        getPDFDocument: { _,_ in }
+        getPDFDocument: { _,_ in },
+        formatCurrency: { _ in "" }
     )
 }
 

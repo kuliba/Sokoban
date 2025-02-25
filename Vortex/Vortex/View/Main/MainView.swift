@@ -271,7 +271,11 @@ struct MainView<NavigationOperationView: View>: View {
             servicePicker(flowModel: node.model)
             
         case let .collateralLoanLanding(binder):
-            viewFactory.makeCollateralLoanShowcaseWrapperView(binder, viewModel.resetDestination)
+            viewFactory.makeCollateralLoanShowcaseWrapperView(
+                binder,
+                viewModel.getPDFDocument,
+                viewModel.resetDestination
+            )
                 .navigationBarWithBack(
                     title: "Кредиты",
                     dismiss: viewModel.resetDestination
@@ -589,7 +593,7 @@ extension MainViewFactory {
                 )
             },
             components: .preview,
-            makeCollateralLoanShowcaseWrapperView: { _,_ in .preview }
+            makeCollateralLoanShowcaseWrapperView: { _,_,_  in .preview }
         )
     }
 }
@@ -643,7 +647,8 @@ extension MainViewModel {
         sections: [],
         bindersFactory: .preview,
         viewModelsFactory: .preview,
-        makeOpenNewProductButtons: { _ in [] }
+        makeOpenNewProductButtons: { _ in [] },
+        getPDFDocument: { _,_ in }
     )
 }
 

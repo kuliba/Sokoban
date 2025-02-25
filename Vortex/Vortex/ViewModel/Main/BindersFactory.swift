@@ -97,7 +97,8 @@ private extension CreateDraftCollateralLoanApplicationDomain.Content {
         .init(
             initialState: .init(
                 application: .preview,
-                stage: .correctParameters
+                stage: .correctParameters, 
+                formatCurrency: { _ in "" }
             ),
             reduce: { state,_ in (state, nil) },
             handleEffect: { _,_ in }

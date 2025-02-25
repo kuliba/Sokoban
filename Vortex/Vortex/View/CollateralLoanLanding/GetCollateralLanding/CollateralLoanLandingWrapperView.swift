@@ -85,7 +85,8 @@ struct CollateralLoanLandingWrapperView: View {
             factory: .init(
                 makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
                 makeImageViewWithURL: factory.makeImageViewWithURL,
-                getPDFDocument: factory.getPDFDocument
+                getPDFDocument: factory.getPDFDocument,
+                formatCurrency: factory.formatCurrency
             )
         )
     }
@@ -104,7 +105,8 @@ struct CollateralLoanLandingWrapperView: View {
                 factory: .init(
                     makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
                     makeImageViewWithURL: factory.makeImageViewWithURL,
-                    getPDFDocument: factory.getPDFDocument
+                    getPDFDocument: factory.getPDFDocument,
+                    formatCurrency: factory.formatCurrency
                 ),
                 goToMain: goToMain
             )

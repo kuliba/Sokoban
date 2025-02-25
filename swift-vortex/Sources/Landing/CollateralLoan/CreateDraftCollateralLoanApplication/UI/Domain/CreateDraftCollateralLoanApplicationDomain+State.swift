@@ -32,6 +32,9 @@ extension CreateDraftCollateralLoanApplicationDomain {
         public var confirmation: Confirmation?
         public var stage: Stage
         
+        // MARK: Helpers
+        private let formatCurrency: FormatCurrency
+        
         public init(
             application: Application,
             isLoading: Bool = false,
@@ -40,17 +43,19 @@ extension CreateDraftCollateralLoanApplicationDomain {
             isButtonDisabled: Bool = false,
             confirmation: Confirmation? = nil,
             otpValidated: Bool = false,
-            stage: Stage = .correctParameters
+            stage: Stage = .correctParameters,
+            formatCurrency: @escaping FormatCurrency
         ) {
             self.application = application
             self.isLoading = isLoading
             self.applicationID = applicationID
             self.period = application.makePeriodSelectorState()
             self.city = application.makeCitySelectorState()
-            self.amount = .init(textField: .noFocus(application.formattedAmount))
+            self.amount = .init(textField: .noFocus(formatCurrency(application.amount) ?? ""))
             self.otp = otp
             self.confirmation = confirmation
             self.stage = stage
+            self.formatCurrency = formatCurrency
             self.checkedConsents = application.consents.map(\.name)
         }
         
@@ -109,6 +114,21 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
     public var selectedCity: String {
         
         city.selected?.title ?? ""
+    }
+    
+    public var formattedAmount: String? {
+        
+        formatCurrency(application.amount)
+    }
+
+    public var hintText: String {
+        
+        guard
+            let minAmount = formatCurrency(application.minAmount),
+            let maxAmount = formatCurrency(application.maxAmount)
+        else { return "" }
+        
+        return "Мин. - \(minAmount), Макс. - \(maxAmount)"
     }
 }
 
@@ -212,4 +232,5 @@ public extension CreateDraftCollateralLoanApplication {
 public extension CreateDraftCollateralLoanApplicationDomain.State {
     
     typealias Application = CreateDraftCollateralLoanApplication
+    typealias FormatCurrency = (UInt) -> String?
 }

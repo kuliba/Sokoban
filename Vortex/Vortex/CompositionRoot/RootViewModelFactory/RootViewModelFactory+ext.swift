@@ -897,6 +897,7 @@ private extension RootViewModelFactory {
             ),
             viewModelsFactory: mainViewModelsFactory,
             makeOpenNewProductButtons: makeOpenNewProductButtons,
+            getPDFDocument: getPDFDocument,
             scheduler: schedulers.main
         )
         

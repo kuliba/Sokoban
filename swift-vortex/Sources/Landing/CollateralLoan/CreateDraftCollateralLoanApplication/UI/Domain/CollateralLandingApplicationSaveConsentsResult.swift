@@ -55,11 +55,6 @@ public struct CollateralLandingApplicationSaveConsentsResult: Equatable {
 
 public extension CollateralLandingApplicationSaveConsentsResult {
     
-    var formattedAmount: String {
-        
-        amount.formattedCurrency()
-    }
-    
     var payload: RemoteServices.RequestFactory.GetConsentsPayload {
         
         .init(

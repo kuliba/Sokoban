@@ -77,7 +77,7 @@ struct CreateDraftCollateralLoanApplicationButtonView_Previews<Confirmation, Inf
         VStack {
             
             CreateDraftCollateralLoanApplicationButtonView<Confirmation, InformerPayload>(
-                state: .init(application: .preview),
+                state: .init(application: .preview, formatCurrency: { _ in "" }),
                 event: { print($0) },
                 config: .default,
                 factory: .preview

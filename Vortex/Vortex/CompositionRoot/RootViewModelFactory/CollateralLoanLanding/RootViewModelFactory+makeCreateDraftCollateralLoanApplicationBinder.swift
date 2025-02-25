@@ -67,15 +67,37 @@ extension RootViewModelFactory {
         application: CreateDraftCollateralLoanApplication
     ) -> Domain.Content {
         
-        let reducer = Domain.ContentReducer(application: application)
+        var hintText: String {
+            
+            guard
+                let minAmount = model.amountFormatted(
+                    amount: Double(application.minAmount),
+                    currencyCode: "RUB",
+                    style: .normal
+                ),
+                let maxAmount = model.amountFormatted(
+                    amount: Double(application.maxAmount),
+                    currencyCode: "RUB",
+                    style: .normal
+                )
+            else {
+                return ""
+            }
+
+            return "Мин. - \(minAmount), Макс. - \(maxAmount)"
+        }
+
+        let reducer = Domain.ContentReducer(application: application, hintText: hintText)
         let effectHandler = Domain.ContentEffectHandler(
-            createDraftApplication: createDraftApplication(payload:otpEvent:completion:),
+            createDraft: createDraft(payload:otpEvent:completion:),
             getVerificationCode: getVerificationCode(completion:),
             saveConsents: saveConsents
         )
 
         return .init(
-            initialState: .init(application: application),
+            initialState: .init(application: application, formatCurrency: { [weak self] in
+                self?.model.amountFormatted(amount: Double($0), currencyCode: "RUB", style: .normal) ?? ""
+            }),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:dispatch:),
             scheduler: schedulers.main
@@ -137,7 +159,7 @@ extension RootViewModelFactory {
         )
     }
     
-    private func createDraftApplication(
+    private func createDraft(
         payload: CollateralLandingApplicationCreateDraftPayload,
         otpEvent: @escaping (Domain.OTPEvent) -> Void,
         completion: @escaping (Domain.RequestResult) -> Void
@@ -217,6 +239,24 @@ extension RootViewModelFactory {
 
             completion($0.map { $0.response(verificationCode: payload.verificationCode) })
             _ = saveConsents
+        }
+    }
+
+    func getPDFDocument(
+        payload: RemoteServices.RequestFactory.GetConsentsPayload,
+        completion: @escaping (PDFDocument?) -> Void
+    ) {
+        
+        let getConsents = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetConsentsRequest(with:),
+            mapResponse: RemoteServices.ResponseMapper.mapGetConsentsResponse(_:_:),
+            mapError: Domain.ContentError.init(error:)
+        )
+        
+        getConsents(payload) { [getConsents] in
+            
+            completion(try? $0.get())
+            _ = getConsents
         }
     }
 

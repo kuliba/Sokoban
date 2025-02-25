@@ -49,7 +49,7 @@ struct CreateDraftCollateralLoanApplicationPercentView_Previews<Confirmation, In
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationPercentView<Confirmation, InformerPayload>(
-            state: .init(application: .preview, stage: .correctParameters),
+            state: .init(application: .preview, stage: .correctParameters, formatCurrency: { _ in "" }),
             event: { print($0) },
             config: .default,
             factory: .preview
@@ -57,7 +57,7 @@ struct CreateDraftCollateralLoanApplicationPercentView_Previews<Confirmation, In
         .previewDisplayName("Edit only mode")
 
         CreateDraftCollateralLoanApplicationPercentView<Confirmation, InformerPayload>(
-            state: .init(application: .preview, stage: .confirm),
+            state: .init(application: .preview, stage: .confirm, formatCurrency: { _ in "" }),
             event: { print($0) },
             config: .default,
             factory: .preview
