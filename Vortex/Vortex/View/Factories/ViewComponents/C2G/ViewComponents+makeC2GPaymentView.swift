@@ -62,9 +62,12 @@ extension ViewComponents {
                             
                             state.context.dateNField.map(infoView)
                             
-                            Divider() // TODO: only if both fields not nil
+                            if state.context.dateNField != nil && state.context.paymentTermField != nil {
+                             
+                                Divider()
+                            }
                             
-                            state.context.purposeField.map(infoView)
+                            state.context.paymentTermField.map(infoView)
                         }
                         
                         state.context.legalActField.map(infoView)
@@ -87,17 +90,19 @@ extension ViewComponents {
                         )
                     }
                 }
+                .padding(.bottom, 20)
             }
+            .padding(.horizontal)
             .safeAreaInset(edge: .bottom) {
                 
                 makeSPBFooter(isActive: state.digest != nil) {
                     
                     state.digest.map(pay)
                 }
+                .padding(.horizontal)
                 .background(.white)
             }
         }
-        .padding()
     }
     
     @inlinable
@@ -127,7 +132,12 @@ extension ViewComponents {
         _ field: C2GPaymentDomain.Context.Field
     ) -> some View {
         
-        infoView(id: field.id, icon: field.icon, title: field.title, value: field.value)
+        infoView(
+            id: field.id,
+            icon: field.icon.map { $0.foregroundColor(.iconGray) },
+            title: field.title,
+            value: field.value
+        )
     }
     
     @inlinable
@@ -241,7 +251,7 @@ extension C2GPaymentDomain.Context {
         
         return paymentTerm.map {
             
-            return .init(icon: .ic24Calendar, title: .paymentTerm, value: $0)
+            return .init(icon: .ic24CalendarPayment, title: .paymentTerm, value: $0)
         }
     }
     

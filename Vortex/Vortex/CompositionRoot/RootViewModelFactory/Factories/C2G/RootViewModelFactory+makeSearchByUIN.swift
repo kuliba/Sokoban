@@ -140,21 +140,7 @@ extension RootViewModelFactory {
                 completion(.failure(.server("Server Failure")))
                 
             case "99999999999999999999":
-                completion(.success(.init(
-                    dateN: "06.05.2021",
-                    discount: "$ 00.01",
-                    discountExpiry: "soon",
-                    formattedAmount: "$ 1 000",
-                    legalAct: "Часть 1 статьи 12.16 КоАП, а так же информация, которая приходит и поместится на максимум 255 символов и более...Часть 1 статьи 12.16 КоАП, а так же информация, которая приходит и поместится на максимум 255 символов и более...Часть 1 статьи 12.16 КоАП, а так",
-                    merchantName: "УФК Владимирской области",
-                    paymentTerm: "06.05.2021",
-                    products: [],
-                    purpose: "Транспортный налог",
-                    selectedProduct: product,
-                    termsCheck: nil,
-                    uin: "99999999999999999999",
-                    url: nil
-                )))
+                completion(.success(.stub(product: product)))
                 
             default:
                 completion(.failure(.server("Server Failure")))
@@ -190,5 +176,29 @@ private extension SearchByUINDomain.UIN {
     var hasEasterEgg: Bool {
         
         ["01234567890123456789", "12345678901234567890", "99999999999999999999"].contains(value)
+    }
+}
+
+private extension C2GPaymentDomain.ContentPayload {
+    
+    static func stub(
+        product: ProductSelect.Product
+    ) -> Self {
+        
+        return .init(
+            dateN: "06.05.2021",
+            discount: "$ 00.01",
+            discountExpiry: "soon",
+            formattedAmount: "$ 1 000",
+            legalAct: "Часть 1 статьи 12.16 КоАП, а так же информация, которая приходит и поместится на максимум 255 символов и более...Часть 1 статьи 12.16 КоАП, а так же информация, которая приходит и поместится на максимум 255 символов и более...Часть 1 статьи 12.16 КоАП, а так",
+            merchantName: "УФК Владимирской области",
+            paymentTerm: "16.05.2021",
+            products: [],
+            purpose: "Транспортный налог",
+            selectedProduct: product,
+            termsCheck: false,
+            uin: "99999999999999999999",
+            url: nil
+        )
     }
 }
