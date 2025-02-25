@@ -3191,6 +3191,7 @@
 		C127C5202D6CA96C00683F85 /* HeaderLandingComponent in Frameworks */ = {isa = PBXBuildFile; productRef = C127C51F2D6CA96C00683F85 /* HeaderLandingComponent */; };
 		C127C5232D6CB3F300683F85 /* ViewComponents+makeOpenCardLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C127C5222D6CB3F300683F85 /* ViewComponents+makeOpenCardLanding.swift */; };
 		C127C5252D6D94A800683F85 /* OrderCardLandingConfig+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C127C5242D6D94A800683F85 /* OrderCardLandingConfig+iVortex.swift */; };
+		C127C5282D6E305200683F85 /* OrderCardLandingDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = C127C5272D6E305200683F85 /* OrderCardLandingDomain.swift */; };
 		C12ACF282B0228C0006C6B2E /* ResponseMapper+GetImageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12ACF272B0228C0006C6B2E /* ResponseMapper+GetImageList.swift */; };
 		C12B11B32ABAB78C003AECEC /* PaymentsSuccessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12B11B22ABAB78C003AECEC /* PaymentsSuccessTests.swift */; };
 		C12C18CD2924AC7E00A9C4F1 /* InfoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12C18CC2924AC7E00A9C4F1 /* InfoViewComponent.swift */; };
@@ -6917,6 +6918,7 @@
 		C123110B2C4E0960002871A8 /* CalendarWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarWrapperView.swift; sourceTree = "<group>"; };
 		C127C5222D6CB3F300683F85 /* ViewComponents+makeOpenCardLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeOpenCardLanding.swift"; sourceTree = "<group>"; };
 		C127C5242D6D94A800683F85 /* OrderCardLandingConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OrderCardLandingConfig+iVortex.swift"; sourceTree = "<group>"; };
+		C127C5272D6E305200683F85 /* OrderCardLandingDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCardLandingDomain.swift; sourceTree = "<group>"; };
 		C12ACF272B0228C0006C6B2E /* ResponseMapper+GetImageList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+GetImageList.swift"; sourceTree = "<group>"; };
 		C12B11B22ABAB78C003AECEC /* PaymentsSuccessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSuccessTests.swift; sourceTree = "<group>"; };
 		C12C18CC2924AC7E00A9C4F1 /* InfoViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewComponent.swift; sourceTree = "<group>"; };
@@ -11417,6 +11419,7 @@
 		2A72ACC12CC6CB8B00B8BF5B /* RootViewModelFactory */ = {
 			isa = PBXGroup;
 			children = (
+				C127C5262D6E303500683F85 /* OrderCardLanding */,
 				A781DF9B2D4BC4B400C8AE13 /* CollateralLoanLanding */,
 				847321082D11B5C00009C721 /* DelayingRemoteNanoServiceFactory.swift */,
 				836801522CC553B700DB8197 /* RootViewModelFactory.swift */,
@@ -17316,6 +17319,14 @@
 				C127C5222D6CB3F300683F85 /* ViewComponents+makeOpenCardLanding.swift */,
 			);
 			path = OpenCardLanding;
+			sourceTree = "<group>";
+		};
+		C127C5262D6E303500683F85 /* OrderCardLanding */ = {
+			isa = PBXGroup;
+			children = (
+				C127C5272D6E305200683F85 /* OrderCardLandingDomain.swift */,
+			);
+			path = OrderCardLanding;
 			sourceTree = "<group>";
 		};
 		C130E3722A8FBDF0002F99BC /* PaymentsTests */ = {
@@ -23726,6 +23737,7 @@
 				0C276596290738700007D31D /* MyProductsOnboardingSettings.swift in Sources */,
 				ECCA5B4C2CFDFC250034A64A /* LoggingRemoteNanoServiceComposer.swift in Sources */,
 				EDB02AE22816E9C6005F64B5 /* AccountCellDefaultViewModel.swift in Sources */,
+				C127C5282D6E305200683F85 /* OrderCardLandingDomain.swift in Sources */,
 				F63D43A404CF8AA69942CCFF /* InternetTVSuccessViewController.swift in Sources */,
 				2A1F08702A7A31C000C5B11B /* PublicTransportKeyDomain.swift in Sources */,
 				830D974D2BBC4F0F00899832 /* UserAllCardsModel+clover.swift in Sources */,
