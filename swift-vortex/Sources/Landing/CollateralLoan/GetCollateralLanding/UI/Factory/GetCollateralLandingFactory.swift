@@ -42,7 +42,8 @@ public extension GetCollateralLandingFactory {
         .init(
             makeImageViewWithMD5Hash: makeImageViewWithMD5Hash,
             makeImageViewWithURL: makeImageViewWithURL,
-            getPDFDocument: getPDFDocument
+            getPDFDocument: getPDFDocument,
+            formatCurrency: formatCurrency
         )
     }
 }
