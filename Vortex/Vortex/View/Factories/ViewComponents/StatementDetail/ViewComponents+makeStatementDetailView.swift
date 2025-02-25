@@ -19,7 +19,10 @@ extension ViewComponents {
         
         StatementDetailLayoutView(config: .iVortex) {
             
-            makeC2GPaymentCompleteButtonsView(details.model)
+            makeC2GPaymentCompleteButtonsView(
+                details: details.details,
+                document: details.document
+            )
             
         } content: {
             
@@ -32,7 +35,7 @@ extension ViewComponents {
         details: StatementDetails
     ) -> some View {
         
-        RxWrapperView(model: details.model) { state, _ in
+        RxWrapperView(model: details.details) { state, _ in
             
             switch state.extendedDetails {
             case let .completed(extendedDetails):
@@ -134,10 +137,11 @@ struct MakeStatementDetailView_Previews: PreviewProvider {
         
         ViewComponents.preview.makeStatementDetailView(.init(
             content: .init(logo: nil, name: "merchant"),
-            model: .preview(
+            details: .preview(
                 basicDetails: .preview,
                 fullDetails: fullDetails
-            )
+            ),
+            document: .preview
         ))
     }
 }
