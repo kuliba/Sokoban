@@ -358,7 +358,10 @@ private extension SavingsAccountProduct {
                 links: .init(conditions: item.conditionsLink, tariff: item.tariffLink),
                 openValue: openValue,
                 orderServiceOption: orderServiceOption),
-            topUp: .default())
+            confirmation: .loaded(nil),
+            topUp: .default(),
+            amount: .init(title: "", value: 0, button: .init(title: "Продолжить", isEnabled: true))
+        )
     }
     
     var orderServiceOption: String {

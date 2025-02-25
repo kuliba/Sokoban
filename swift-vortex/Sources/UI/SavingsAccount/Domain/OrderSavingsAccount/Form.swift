@@ -5,6 +5,7 @@
 //  Created by Andryusina Nataly on 27.11.2024.
 //
 
+import AmountComponent
 import LoadableState
 import SwiftUI
 
@@ -18,18 +19,18 @@ public struct Form<Confirmation> {
     public var otp: String?
     public var orderAccountResponse: OrderAccountResponse?
     
-    public var amount: Decimal?
+    public var amount: Amount
     public var sourceAccountId: Int?
     public var sourceCardId: Int?
 
     public init(
         constants: Constants,
-        confirmation: Loadable<Confirmation> = .loaded(nil),
+        confirmation: Loadable<Confirmation>,
         consent: Bool = true,
         topUp: TopUp,
         otp: String? = nil,
         orderAccountResponse: OrderAccountResponse? = nil,
-        amount: Decimal? = nil,
+        amount: Amount,
         sourceAccountId: Int? = nil,
         sourceCardId: Int? = nil
     ) {
@@ -43,4 +44,6 @@ public struct Form<Confirmation> {
         self.sourceAccountId = sourceAccountId
         self.sourceCardId = sourceCardId
     }
+    
+    public var amountValue: Decimal? { topUp.isOn ? amount.value : nil }
 }

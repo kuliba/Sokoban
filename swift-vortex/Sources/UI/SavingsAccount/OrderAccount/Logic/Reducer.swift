@@ -60,6 +60,7 @@ public extension Reducer {
         case let .setMessages(isOn):
             if state.loadableForm.state != nil {
                 state.loadableForm.state?.topUp.isOn = isOn
+                state.loadableForm.state?.topUp.isShowFooter = isOn
             }
             
         case let .orderAccountResult(orderAccountResult):
@@ -76,9 +77,28 @@ public extension Reducer {
             }
         case let .productSelect(productSelectEvent):
             state.productSelect = productSelectReduce(state.productSelect, productSelectEvent)
+            // TODO: add validation
         
-        case let .amount(amount):
-            state.form?.amount = amount
+        case let .amount(amountEvent):
+            switch amountEvent {
+            case let .edit(decimal):
+                guard let form = state.form,
+                      form.topUp.isOn,
+                      let balance = state.productSelect.selected?.balance,
+                      balance >= decimal
+                else { break }
+                // TODO: implanemt
+                let isValid = true // check balance!!!
+                
+                state.form?.amount = .init(title: form.amount.title, value: decimal, button: .init(title: form.amount.button.title, isEnabled: isValid))
+                
+            case .pay:
+                let isValid = true // check balance!!! + validate
+
+                guard isValid else { break }
+                state.form?.topUp.isShowFooter = false
+                reduceContinue(&state, &effect)
+            }
         }
         
         return (state, effect)
@@ -101,7 +121,6 @@ private extension Reducer {
         case .loaded(.success):
             if let payload = state.payload {
                 
-                state.loadableForm = .loading(form)
                 effect = .orderAccount(payload)
             }
             

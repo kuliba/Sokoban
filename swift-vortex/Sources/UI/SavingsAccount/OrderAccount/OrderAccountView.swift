@@ -138,11 +138,42 @@ private extension OrderAccountView {
             productView(product(form))
             income(income: state.form?.constants.income ?? "", false)
             topUpView(topUp(form))
-            productSelector(form)
+            if state.form?.topUp.isShowFooter == true {
+                productSelector(form)
+            } else if state.form?.topUp.isOn == true, state.form?.topUp.isShowFooter == false {
+                topUpInfo()
+            }
         }
         .disabled(state.hasConfirmation)
     }
     
+    private func topUpInfo() -> some View {
+        
+        VStack(alignment: .leading, spacing: config.padding / 2 ) {
+            
+            HStack {
+                config.topUp.amount.amount.text.text(withConfig: config.topUp.amount.amount.config)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                "\(amount) \(currencyCode)".text(withConfig: config.topUp.amount.value)
+            }
+            HStack {
+                config.topUp.amount.fee.text.text(withConfig: config.topUp.amount.fee.config)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                "0 \(currencyCode)".text(withConfig: config.topUp.amount.value)
+            }
+        }
+        .modifier(ViewWithBackgroundCornerRadiusAndPaddingModifier(config.background, config.cornerRadius, config.padding))
+    }
+
+    var currencyCode: String {
+        state.form?.constants.currency.symbol ?? ""
+    }
+    
+    var amount: String {
+        if let amount = state.form?.amountValue { return "\(amount)"}
+        return ""
+    }
+
     func productView(
         _ product: Product
     ) -> some View {
