@@ -6,9 +6,10 @@
 //
 
 import Foundation
-import LandingUIComponent
-import LandingMapping
 import GetInfoRepeatPaymentService
+import LandingMapping
+import LandingUIComponent
+import SavingsAccount
 
 struct ProductProfileServices {
     
@@ -33,7 +34,7 @@ struct ProductProfileServices {
     typealias CloseAction = () -> Void
     typealias RepeatPayment = (GetInfoRepeatPaymentDomain.PaymentPayload, @escaping CloseAction, @escaping (PaymentsDomain.Navigation?) -> Void) -> Void
 
-    typealias GetSavingsAccountInfo = (ProductData, @escaping (GetSavingsAccountInfoServices.SAInfo?) -> Void) -> Void
+    typealias GetSavingsAccountInfo = (ProductData, @escaping (SavingsAccountDetailsState?) -> Void) -> Void
 }
 
 // MARK: - Preview Content

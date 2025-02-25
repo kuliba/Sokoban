@@ -7,13 +7,15 @@
 
 import Foundation
 import RemoteServices
+import SavingsAccount
+import SavingsServices
 
 extension RootViewModelFactory {
     
     @inlinable
     func getSavingsAccountInfo(
         product: ProductData,
-        completion: @escaping (GetSavingsAccountInfoServices.SAInfo?) -> Void
+        completion: @escaping (SavingsAccountDetailsState?) -> Void
     ) {
         guard let account = product.asAccount,
               account.isSavingAccount == true,
@@ -28,8 +30,28 @@ extension RootViewModelFactory {
         
         service(.init(accountID: accountID)) {
             
-            completion(try? $0.get())
+            completion(try? $0.map {
+                
+                return .init(status: .result($0.details))
+                
+            }.get())
             _ = service
         }
+    }
+}
+
+// MARK: - Adapters
+
+private extension GetSavingsAccountInfoResponse {
+    
+    var details: SavingsAccountDetails {
+        
+        return .init(
+            currentInterest: NSDecimalNumber(floatLiteral: interestAmount ?? 0).decimalValue,
+            minBalance: NSDecimalNumber(floatLiteral: minRest ?? 0).decimalValue,
+            paidInterest: NSDecimalNumber(floatLiteral: interestPaid ?? 0).decimalValue,
+            progress: 3,
+            currencyCode: "₽"
+        )
     }
 }

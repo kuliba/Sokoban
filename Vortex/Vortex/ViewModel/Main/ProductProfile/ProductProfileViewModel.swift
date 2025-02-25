@@ -6,21 +6,22 @@
 //
 
 import ActivateSlider
+import CalendarUI
 import CardUI
 import Combine
-import VortexTools
 import Foundation
+import GetInfoRepeatPaymentService
+import LandingUIComponent
+import ManageSubscriptionsUI
 import OperatorsListComponents
 import PDFKit
 import PinCodeUI
+import RxViewModel
+import SavingsAccount
 import SwiftUI
 import Tagged
-import RxViewModel
-import LandingUIComponent
 import UIPrimitives
-import ManageSubscriptionsUI
-import CalendarUI
-import GetInfoRepeatPaymentService
+import VortexTools
 
 class ProductProfileViewModel: ObservableObject {
     
@@ -39,7 +40,7 @@ class ProductProfileViewModel: ObservableObject {
     @Published var payment: PaymentsViewModel?
     @Published var operationDetail: OperationDetailViewModel?
     @Published var accentColor: Color
-    @Published var accountInfo: GetSavingsAccountInfoServices.SAInfo?
+    @Published var accountInfo: SavingsAccountDetailsState?
     
     @Published var historyState: HistoryState?
     @Published var filterState: FilterState
