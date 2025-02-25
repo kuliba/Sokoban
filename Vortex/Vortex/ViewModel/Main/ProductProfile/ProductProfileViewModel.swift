@@ -28,7 +28,7 @@ class ProductProfileViewModel: ObservableObject {
     typealias ResultShowCVV = Swift.Result<CardInfo.CVV, Error>
     typealias CompletionShowCVV = (ResultShowCVV) -> Void
     typealias ShowCVV = (CardDomain.CardId, @escaping CompletionShowCVV) -> Void
-
+    
     let action: PassthroughSubject<Action, Never> = .init()
     
     let navigationBar: NavigationBarView.ViewModel
@@ -43,7 +43,7 @@ class ProductProfileViewModel: ObservableObject {
     
     @Published var historyState: HistoryState?
     @Published var filterState: FilterState
-
+    
     let filterHistoryRequest: (Date, Date, String?, [String]) -> Void
     
     @Published var bottomSheet: BottomSheet?
@@ -79,13 +79,13 @@ class ProductProfileViewModel: ObservableObject {
     private let productProfileViewModelFactory: ProductProfileViewModelFactory
     
     private let productNavigationStateManager: ProductProfileFlowManager
-
+    
     private var bindings = Set<AnyCancellable>()
     
     private var productData: ProductData? {
         model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId })
     }
-        
+    
     private let depositResponseSubject = CurrentValueSubject<Bool, Never>(false)
     private let bottomSheetSubject = PassthroughSubject<BottomSheet?, Never>()
     private let alertSubject = PassthroughSubject<Alert.ViewModel?, Never>()
@@ -93,7 +93,7 @@ class ProductProfileViewModel: ObservableObject {
     private let filterSubject = PassthroughSubject<FilterState, Never>()
     private let paymentSubject = PassthroughSubject<PaymentsViewModel?, Never>()
     private let scheduler: AnySchedulerOfDispatchQueue
-
+    
     init(
         navigationBar: NavigationBarView.ViewModel,
         product: ProductProfileCardView.ViewModel,
@@ -150,30 +150,30 @@ class ProductProfileViewModel: ObservableObject {
         
         // TODO: add removeDuplicates
         self.bottomSheetSubject
-            //.removeDuplicates()
+        //.removeDuplicates()
             .receive(on: scheduler)
             .assign(to: &$bottomSheet)
         
         self.alertSubject
-            //.removeDuplicates()
+        //.removeDuplicates()
             .receive(on: scheduler)
             .assign(to: &$alert)
         
         self.historySubject
-            //.removeDuplicates()
+        //.removeDuplicates()
             .receive(on: scheduler)
             .assign(to: &$historyState)
-
+        
         self.filterSubject
-            //.removeDuplicates()
+        //.removeDuplicates()
             .receive(on: scheduler)
             .assign(to: &$filterState)
         
         self.paymentSubject
-            //.removeDuplicates()
+        //.removeDuplicates()
             .receive(on: scheduler)
             .assign(to: &$payment)
-
+        
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel initialized")
     }
     
@@ -254,13 +254,13 @@ class ProductProfileViewModel: ObservableObject {
                     completion: completion)
             },
             event: { [weak self] event in
-                    
+                
                 guard let self else { return }
                 
                 switch event {
                 case let .delayAlert(kind):
                     self.event(.alert(.delayAlert(kind)))
-                 
+                    
                 case let .delayAlertViewModel(alertViewModel):
                     self.event(.alert(.delayAlertViewModel(alertViewModel)))
                     
@@ -288,8 +288,12 @@ class ProductProfileViewModel: ObservableObject {
         
         bind()
         
-        if let account = product.asAccount {
-            makeSavingsAccountInfo(with: account)
+        productProfileServices.getSavingsAccountInfo(product) { [weak self] accountInfo in
+            
+            DispatchQueue.main.async {
+                
+                self?.accountInfo = accountInfo
+            }
         }
     }
 }
@@ -1949,23 +1953,6 @@ private extension ProductProfileViewModel {
         return product.backgroundColor
     }
     
-    func makeSavingsAccountInfo(with account: ProductAccountData) {
-        
-        if account.isSavingAccount == true, let accountNumber = account.accountNumber {
-            
-            let accountID = (accountNumber as NSString).integerValue
-            productProfileServices.createGetSavingsAccountInfo.createGetSavingsAccountInfo(.init(accountID: accountID)) { [weak self] response in
-                
-                switch response {
-                case let .success(info):
-                    self?.accountInfo = info
-                    
-                default:
-                    break
-                }
-            }
-        }
-    }
     func makeDetailViewModel(with product: ProductData) -> ProductProfileDetailView.ViewModel? {
         
         switch product {

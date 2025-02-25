@@ -10,16 +10,17 @@ import RemoteServices
 import SavingsServices
 
 extension RequestFactory {
-
+    
     static func createGetSavingsAccountInfoRequest(
         payload: GetSavingsAccountInfoPayload
     ) throws -> URLRequest {
         
-        let endpoint = Services.Endpoint.getSavingsAccountInfoRequest
+        let endpoint = Services.Endpoint.getSavingAccountInfo
         let url = try! endpoint.url(withBase: Config.serverAgentEnvironment.baseURL)
-
+        
         return try RemoteServices.RequestFactory.createGetSavingsAccountInfoRequest(
             payload: payload,
-            url: url)
+            url: url
+        )
     }
 }

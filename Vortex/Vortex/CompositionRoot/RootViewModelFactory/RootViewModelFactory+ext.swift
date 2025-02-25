@@ -151,11 +151,6 @@ extension RootViewModelFactory {
             log: infoNetworkLog
         )
         
-        let getSAInfoServices = Services.makeGetSavingsAccountInfoServices(
-            httpClient: httpClient,
-            log: infoNetworkLog
-        )
-
         let productProfileServices = ProductProfileServices(
             createBlockCardService: blockCardServices,
             createUnblockCardService: unblockCardServices,
@@ -163,7 +158,7 @@ extension RootViewModelFactory {
             createCreateGetSVCardLimits: getSVCardLimitsServices,
             createChangeSVCardLimit: changeSVCardLimitServices,
             createSVCardLanding: landingService, 
-            createGetSavingsAccountInfo: getSAInfoServices,
+            getSavingsAccountInfo: getSavingsAccountInfo,
             repeatPayment: repeatPayment,
             makeSVCardLandingViewModel: makeSVCardLandig,
             makeInformer: { [weak model] in
