@@ -32,7 +32,6 @@ public extension RequestFactory {
     }
 }
 
-
 private extension GetSavingsAccountInfoPayload {
     
     func httpBody() throws -> Data {
