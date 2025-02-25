@@ -23,8 +23,7 @@ struct OrderCardLanding {
 extension ViewComponents {
     
     func makeOrderCardLandingView(
-        landing: OrderCardLanding,
-        imageFactory: ListImageViewFactory
+        landing: OrderCardLanding
     ) -> some View {
         
         OffsetObservingScrollView(
@@ -41,38 +40,22 @@ extension ViewComponents {
                 ListLandingComponent.List(
                     items: landing.conditions,
                     config: .iVortex,
-                    factory: imageFactory
+                    factory: .init(
+                        makeIconView: makeIconView,
+                        makeBannerImageView: makeGeneralIconView
+                    )
                 )
                 
                 ListLandingComponent.List(
                     items: landing.security,
                     config: .iVortex,
-                    factory: imageFactory
+                    factory: .init(
+                        makeIconView: makeIconView,
+                        makeBannerImageView: makeGeneralIconView
+                    )
                 )
                 
                 DropDownList(viewModel: landing.dropDownList)
             }
     }
-}
-
-extension ListLandingComponent.Config {
-    
-    static let iVortex: Self = .init(
-        background: .mainColorsGrayLightest,
-        item: .init(
-            title: .init(
-                textFont: .textH4M16240(),
-                textColor: .secondary
-            ),
-            subtitle: .init(
-                textFont: .textBodyMR14180(),
-                textColor: .textPlaceholder
-            )
-        ),
-        title: .init(
-            textFont: .textH3Sb18240(),
-            textColor: .mainColorsBlack
-        ),
-        spacing: 18
-    )
 }
