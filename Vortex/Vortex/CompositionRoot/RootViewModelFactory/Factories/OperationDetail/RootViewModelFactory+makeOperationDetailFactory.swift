@@ -27,17 +27,17 @@ extension RootViewModelFactory {
         
         switch statement.paymentDetailType {
         case .c2gPayment:
-            guard let model = makeOperationDetail(product, statement)
+            guard let details = makeOperationDetail(product, statement)
             else { return nil }
             
-            model.event(.load)
+            details.event(.load)
             
             let content = StatementDetails.Content(
                 logo: statement.md5hash,
                 name: statement.fastPayment?.foreignName
             )
             
-            return .v3(.init(content: content, model: model))
+            return .v3(.init(content: content, details: details))
             
         default:
             return .legacy(.init(
