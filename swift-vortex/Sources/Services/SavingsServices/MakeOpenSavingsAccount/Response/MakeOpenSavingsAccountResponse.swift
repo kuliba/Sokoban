@@ -46,6 +46,7 @@ public struct MakeOpenSavingsAccountResponse: Equatable {
     public struct PaymentInfo: Equatable {
         
         public let amount: Decimal?
+        public let accountNumber: String?
         public let creditAmount: Decimal?
         public let currencyAmount: String?
         public let currencyPayee: String?
@@ -57,6 +58,7 @@ public struct MakeOpenSavingsAccountResponse: Equatable {
         
         public init(
             amount: Decimal?,
+            accountNumber: String?,
             creditAmount: Decimal?,
             currencyAmount: String?,
             currencyPayee: String?,
@@ -66,6 +68,7 @@ public struct MakeOpenSavingsAccountResponse: Equatable {
             fee: Decimal?, payeeName: String?
         ) {
             self.amount = amount
+            self.accountNumber = accountNumber
             self.creditAmount = creditAmount
             self.currencyAmount = currencyAmount
             self.currencyPayee = currencyPayee

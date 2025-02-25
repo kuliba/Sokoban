@@ -26,8 +26,7 @@ extension OpenSavingsAccountCompleteDomain {
      //   let details: OperationDetailDomain.Model
         let document: DocumentButtonDomain.Model
         
-        typealias Context = Void
-        /*struct Context: Equatable {
+        struct Context: Equatable {
             
             let formattedAmount: String?
             let merchantName: String?
@@ -38,7 +37,7 @@ extension OpenSavingsAccountCompleteDomain {
                 
                 case completed, inflight, rejected
             }
-        }*/
+        }
     }
 }
 extension RootViewModelFactory {
@@ -455,16 +454,16 @@ private extension RemoteServices.ResponseMapper.MappingResult<MakeOpenSavingsAcc
                 return .failure(.invalidCodeAlert)
                 
             default:
-                return .success(false)
+                return .failure(.tryLaterAlert)
             }
             
         case let .success(response):
             switch response.documentInfo.documentStatus {
             case .complete, .inProgress:
-                return .success(true)
+                return .success(.init(accountId: response.paymentInfo.accountNumber, paymentOperationDetailId: response.paymentOperationDetailID, status: response.documentInfo.documentStatus?.status ?? .inflight))
                 
             default:
-                return .success(false)
+                return .success(.init(accountId: response.paymentInfo.accountNumber, paymentOperationDetailId: response.paymentOperationDetailID, status: response.documentInfo.documentStatus?.status ?? .inflight))
             }
         }
     }
@@ -481,4 +480,19 @@ private extension String {
     
     static let _invalidCode = "Введен некорректный код. Попробуйте еще раз."
     static let _tryLater = "Что-то пошло не так.\nПопробуйте позже."
+}
+
+extension MakeOpenSavingsAccountResponse.DocumentStatus {
+    
+    var status: OrderAccountResponse.Status {
+        
+        switch self {
+        case .complete:
+            return .completed
+        case .inProgress:
+            return .inflight
+        case .rejected:
+            return .rejected
+        }
+    }
 }

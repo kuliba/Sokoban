@@ -84,6 +84,7 @@ extension ViewComponents {
                 action: action
             )
         )
+        .frame(height: 56)
     }
 }
 

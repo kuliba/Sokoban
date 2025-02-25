@@ -182,7 +182,7 @@ private extension OrderAccountView {
             data: product,
             config: config,
             makeIconView: factory.makeIconView, 
-            isLoading: state.loadableForm.isLoading
+            isLoading: false
         )
         .rounded(config.roundedConfig)
     }

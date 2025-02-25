@@ -120,7 +120,7 @@ private extension Reducer {
             
         case .loaded(.success):
             if let payload = state.payload {
-                
+                state.loadableForm = .loading(form)
                 effect = .orderAccount(payload)
             }
             
@@ -156,10 +156,16 @@ private extension Reducer {
         _ effect: inout Effect?,
         with orderAccountResult: ProductEvent.OrderAccountResult
     ) {
-        guard let form = state.form else { return }
 
-        switch orderAccountResult {
-        case let .failure(loadFailure): // TODO otpFailure & orderFailure
+        switch (state.loadableForm, orderAccountResult) {
+            
+        case (.loaded, _):
+            break // cannot receive orderAccountResult in loaded state
+            
+        case (.loading(nil), _):
+            break // cannot receive orderAccountResult in empty loading state
+            
+        case let (.loading(.some(form)), .failure(loadFailure)): // TODO otpFailure & orderFailure
             
 //            switch loadFailure {
 //            case .otpFailure:
@@ -172,12 +178,13 @@ private extension Reducer {
 //                state.form?.orderAccountResponse = false
 //
 //            }
-            if let notifyOTP = form.confirmation.state.map(otpWitness) {
-                notifyOTP(loadFailure.message)
-            }
+            let notifyOTP = form.confirmation.state.map(otpWitness)
+            notifyOTP?(loadFailure.message)
+            state.loadableForm = .loaded(.success(form))
             
-        case let .success(orderAccountResponse):
-            state.form?.orderAccountResponse = true
+        case(var.loading(.some(form)), let .success(orderAccountResponse)):
+            form.orderAccountResponse = .init(accountId: orderAccountResponse.accountId, paymentOperationDetailId: orderAccountResponse.paymentOperationDetailId, status: orderAccountResponse.status)
+            state.loadableForm = .loaded(.success(form))
         }
     }
 }

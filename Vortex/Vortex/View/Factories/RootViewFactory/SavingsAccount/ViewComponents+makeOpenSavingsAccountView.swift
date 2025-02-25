@@ -74,6 +74,7 @@ extension ViewComponents {
                             event: { event(.productSelect($0)) })
                     }
                 )
+                .loaderOverlay(isLoading: state.isLoading)
                 .padding(.horizontal)
             }
             .navigationBarWithBack(

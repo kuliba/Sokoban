@@ -24,10 +24,10 @@ public extension RequestFactory {
 
 public struct GetPrintFormPayload {
     
-    public let accountId: Int
+    public let accountId: String
     public let detailId: Int?
     
-    public init(accountId: Int, detailId: Int?) {
+    public init(accountId: String, detailId: Int?) {
         self.accountId = accountId
         self.detailId = detailId
     }
