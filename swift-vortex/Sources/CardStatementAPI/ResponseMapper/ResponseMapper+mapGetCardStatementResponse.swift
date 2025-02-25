@@ -6,32 +6,34 @@
 //
 
 import Foundation
+import RemoteServices
 
 public extension ResponseMapper {
     
     static func mapGetCardStatementResponse(
         _ data: Data,
         _ response: HTTPURLResponse
-    ) -> Swift.Result<ProductStatementWithExtendedInfo, MappingError> {
+    ) -> Swift.Result<[ProductStatementData], CardStatementAPI.MappingError> {
         
-        map(data, response, mapOrThrow: map)
+        map(data, response, dateDecodingStrategy: .formatted(.iso8601), mapOrThrow: map)
+            .mapError {
+                
+                switch $0 {
+                case .invalid:
+                    return .mappingFailure(.defaultErrorMessage)
+                    
+                case let .server(statusCode: _, errorMessage: errorMessage):
+                    return .not200Status(errorMessage)
+                }
+            }
     }
     
     private static func map(
-        _ data: _Data
-    ) throws -> ProductStatementWithExtendedInfo {
+        _ data: [_DTO.ProductStatementData]
+    ) throws -> [ProductStatementData] {
         
-        .init(
-            summary: .init(data: data.summary),
-            aggregated: data.aggregated.map({ $0.map({ .init(data: $0) }) }),
-            operationList: data.operationList.map({ .init(data: $0 )})
-        )
+        data.map { .init(data: $0 ) }
     }
-}
-
-private extension ResponseMapper {
-    
-    typealias _Data = _DTO
 }
 
 private extension ResponseMapper {
@@ -92,6 +94,20 @@ private extension ResponseMapper {
             let date: Date
             let tranDate: Date?
             let MCC: Int?
+            
+            // V3
+            let discount: String?
+            let transAmm: String?
+            let discountExpiry: String?
+            let dateN: String?
+            let paymentTerm: String?
+            let legalAct: String?
+            let supplierBillId: String?
+            let realPayerFIO: String?
+            let realPayerINN: String?
+            let realPayerKPP: String?
+            let upno: String?
+
         }
     }
 }
@@ -200,12 +216,13 @@ private struct GetCardStatementForPeriodResponse: Decodable {
     
     let statusCode: Int
     let errorMessage: String?
-    let data: ResponseMapper._Data?
+    let data: ResponseMapper._DTO?
 }
 
 private extension ProductStatementWithExtendedInfo.ProductStatementAggregated {
 
     init(data: ResponseMapper._DTO.ProductStatementAggregated?) {
+        
         self.init(
             groupByName: data?.groupByName,
             baseColor: data?.baseColor,
@@ -232,7 +249,6 @@ private extension ProductStatementData {
     init(
         data: ResponseMapper._DTO.ProductStatementData
     ) {
-        
         let fastPayment: ProductStatementData.FastPayment? = data.fastPayment.map {
             .init(data: $0)
         }
@@ -264,7 +280,20 @@ private extension ProductStatementData {
             opCode: data.opCode,
             date: data.date,
             tranDate: data.tranDate,
-            MCC: data.MCC)
+            MCC: data.MCC,
+            // V3
+            discount: data.discount,
+            transAmm: data.transAmm,
+            discountExpiry: data.discountExpiry,
+            dateN: data.dateN,
+            paymentTerm: data.paymentTerm,
+            legalAct: data.legalAct,
+            supplierBillId: data.supplierBillId,
+            realPayerFIO: data.realPayerFIO,
+            realPayerINN: data.realPayerINN,
+            realPayerKPP: data.realPayerKPP,
+            upno: data.upno
+        )
     }
 }
 

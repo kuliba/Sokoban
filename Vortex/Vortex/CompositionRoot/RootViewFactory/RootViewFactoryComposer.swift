@@ -204,7 +204,7 @@ extension RootViewFactoryComposer {
     }
     
     func makeImageViewFactory(
-    ) -> SavingsAccount.ImageViewFactory {
+    ) -> ListImageViewFactory {
         
         .init(
             makeIconView: makeIconView,
@@ -1029,34 +1029,18 @@ private extension RootViewFactoryComposer {
             }
         }
     }
-    
-    private func getPDFDocument(
-        payload: RemoteServices.RequestFactory.GetConsentsPayload,
-        completion: @escaping (PDFDocument?) -> Void
-    ) {
         
-        let getConsents = RemoteService(
-            createRequest: RequestFactory.createGetConsentsRequest(with:),
-            performRequest: httpClient.performRequest(_:completion:),
-            mapResponse: RemoteServices.ResponseMapper.mapGetConsentsResponse(_:_:)
-        )
-        
-        getConsents(payload) { [getConsents] in
-            
-            completion(try? $0.get())
-            _ = getConsents
-        }
-    }
-    
     func makeCollateralLoanShowcaseWrapperView(
         binder: GetShowcaseDomain.Binder,
+        getPDFDocument: @escaping CollateralLoanLandingGetShowcaseViewFactory.GetPDFDocument,
         goToMain: @escaping () -> Void
     ) -> CollateralLoanShowcaseWrapperView {
         
         let factory = GetCollateralLandingFactory(
             makeImageViewWithMD5Hash: { self.makeIconView(.md5Hash(.init($0))) },
             makeImageViewWithURL: { self.makeGeneralIconView(.image($0.addingPercentEncoding())) },
-            getPDFDocument: getPDFDocument
+            getPDFDocument: getPDFDocument,
+            formatCurrency: { self.model.amountFormatted(amount: Double($0), currencyCode: "RUB", style: .normal) }
         )
         
         let viewModelFactory = CollateralLoanLandingViewModelFactory(

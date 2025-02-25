@@ -110,7 +110,7 @@ final class ResponseMapper_mapGetUINDataResponseTests_swift: XCTestCase {
                 dateN: "2024-08-26",
                 legalAct: "Часть 1 статьи 12.16 КоАП",
                 discountExpiry: "2024-12-25",
-                discountSizeValue: 50,
+                discount: "50 %",
                 uin: "18810192085432512980"
             ))
         )
@@ -130,7 +130,7 @@ final class ResponseMapper_mapGetUINDataResponseTests_swift: XCTestCase {
                 dateN: "2024-08-26",
                 legalAct: "Часть 1 статьи 12.16 КоАП",
                 discountExpiry: "2024-12-25",
-                discountSizeValue: 50,
+                discount: "50 %",
                 uin: "18810192085432512980"
             ))
         )
@@ -149,7 +149,7 @@ final class ResponseMapper_mapGetUINDataResponseTests_swift: XCTestCase {
                 dateN: "2024-12-03",
                 legalAct: "12.09.2 - Превышение скорости движения ТС от 20 до 40 км/ч",
                 discountExpiry: "2024-12-27",
-                discountSizeValue: 50,
+                discount: "50 %",
                 uin: "18810111111111212144"
             ))
         )
@@ -203,7 +203,7 @@ final class ResponseMapper_mapGetUINDataResponseTests_swift: XCTestCase {
                 dateN: "2024-12-03",
                 legalAct: "12.09.2 - Превышение скорости движения ТС от 20 до 40 км/ч",
                 discountExpiry: "2024-12-27",
-                discountSizeValue: 50,
+                discount: "50 %",
                 payerINN: "126380940125",
                 uin: "18810111111111212047"
             ))
@@ -242,10 +242,8 @@ final class ResponseMapper_mapGetUINDataResponseTests_swift: XCTestCase {
         dateN: String? = nil,
         legalAct: String? = nil,
         paymentTerm: String? = nil,
-        discountFixedValue: Decimal? = nil,
         discountExpiry: String? = nil,
-        discountSizeValue: Decimal? = nil,
-        multiplierSizeValue: Decimal? = nil,
+        discount: String? = nil,
         payerName: String? = nil,
         payerINN: String? = nil,
         payerKPP: String? = nil,
@@ -261,10 +259,8 @@ final class ResponseMapper_mapGetUINDataResponseTests_swift: XCTestCase {
             dateN: dateN,
             legalAct: legalAct,
             paymentTerm: paymentTerm,
-            discountFixedValue: discountFixedValue,
             discountExpiry: discountExpiry,
-            discountSizeValue: discountSizeValue,
-            multiplierSizeValue: multiplierSizeValue,
+            discount: discount,
             payerName: payerName,
             payerINN: payerINN,
             payerKPP: payerKPP,
@@ -353,7 +349,7 @@ private extension String {
     "dateN": "2024-08-26",
     "legalAct": "Часть 1 статьи 12.16 КоАП",
     "discountExpiry": "2024-12-25",
-    "discountSizeValue": 50,
+    "discount": "50 %",
     "url": "https://www.vortex.com/dkbo/dkbo.pdf",
     "UIN": "18810192085432512980"
   }
@@ -372,7 +368,7 @@ private extension String {
     "dateN": "2024-08-26",
     "legalAct": "Часть 1 статьи 12.16 КоАП",
     "discountExpiry": "2024-12-25",
-    "discountSizeValue": 50,
+    "discount": "50 %",
     "url": "https://www.vortex.com/dkbo/dkbo.pdf",
     "UIN": "18810192085432512980"
   }
@@ -391,7 +387,7 @@ private extension String {
     "dateN": "2024-12-03",
     "legalAct": "12.09.2 - Превышение скорости движения ТС от 20 до 40 км/ч",
     "discountExpiry": "2024-12-27",
-    "discountSizeValue": 50,
+    "discount": "50 %",
     "url": "https://www.vortex.com/dkbo/dkbo.pdf",
     "UIN": "18810111111111212144"
   }
@@ -444,7 +440,7 @@ private extension String {
     "dateN": "2024-12-03",
     "legalAct": "12.09.2 - Превышение скорости движения ТС от 20 до 40 км/ч",
     "discountExpiry": "2024-12-27",
-    "discountSizeValue": 50,
+    "discount": "50 %",
     "payerINN": "126380940125",
     "url": "https://www.vortex.com/dkbo/dkbo.pdf",
     "UIN": "18810111111111212047"

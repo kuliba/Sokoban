@@ -220,7 +220,7 @@ extension Model {
                             return
                         }
                         
-                        continuation.resume(returning: data.operationList)
+                        continuation.resume(returning: data)
 
                     default:
                         continuation.resume(with: .failure(ModelProductsError.statusError(status: response.statusCode, message: response.errorMessage)))

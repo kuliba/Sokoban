@@ -9,16 +9,16 @@ extension CreateDraftCollateralLoanApplicationDomain {
     
     public final class EffectHandler<Confirmation, InformerPayload> {
 
-        private let createDraftApplication: CreateDraftApplication
+        private let createDraft: CreateDraft
         private let getVerificationCode: GetVerificationCode
         private let saveConsents: SaveConsents
 
         public init(
-            createDraftApplication: @escaping CreateDraftApplication,
+            createDraft: @escaping CreateDraft,
             getVerificationCode: @escaping GetVerificationCode,
             saveConsents: @escaping SaveConsents
         ) {
-            self.createDraftApplication = createDraftApplication
+            self.createDraft = createDraft
             self.getVerificationCode = getVerificationCode
             self.saveConsents = saveConsents
         }
@@ -27,7 +27,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
             
             switch effect {
             case let .createDraftApplication(payload):
-                createDraftApplication(
+                createDraft(
                     payload,
                     { dispatch(.otpEvent($0)) },
                     { dispatch(.applicationCreated($0)) }
@@ -48,20 +48,21 @@ extension CreateDraftCollateralLoanApplicationDomain {
 public extension CreateDraftCollateralLoanApplicationDomain.EffectHandler {
     
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    typealias Event = Domain.Event
-    typealias Dispatch = (Event<Confirmation, InformerPayload>) -> Void
-    typealias CreateDraftApplicationPayload = CollateralLandingApplicationCreateDraftPayload
-    typealias SaveConsentsPayload = CollateralLandingApplicationSaveConsentsPayload
-    typealias GetVerificationCode = (@escaping GetVerificationCodeCompletion) -> Void
+    typealias Event = Domain.Event<Confirmation, InformerPayload>
+    typealias OTPEvent = Event.OTPEvent
+    typealias Dispatch = (Event) -> Void
+    typealias OTPDispatch = (OTPEvent) -> Void
+
+    typealias Payload = CollateralLandingApplicationCreateDraftPayload
+    typealias CreateDraftCompletion = (CreateDraftResult) -> Void
+    typealias CreateDraftResult = Domain.CreateDraftApplicationCreatedResult<Confirmation, InformerPayload>
+    typealias CreateDraft = (Payload, @escaping OTPDispatch, @escaping CreateDraftCompletion) -> Void
+
     typealias GetVerificationCodeCompletion = (GetVerificationCodeResult) -> Void
     typealias GetVerificationCodeResult = Result<Int, BackendFailure<InformerPayload>>
+    typealias GetVerificationCode = (@escaping GetVerificationCodeCompletion) -> Void
+
     typealias SaveConsentsCompletion = (Domain.SaveConsentsResult<InformerPayload>) -> Void
+    typealias SaveConsentsPayload = CollateralLandingApplicationSaveConsentsPayload
     typealias SaveConsents = (SaveConsentsPayload, @escaping SaveConsentsCompletion) -> Void
-    typealias CreateDraftApplicationCompletion
-        = (Domain.CreateDraftApplicationCreatedResult<Confirmation, InformerPayload>) -> Void
-    typealias CreateDraftApplication = (
-        CreateDraftApplicationPayload,
-        @escaping (Event<Confirmation, InformerPayload>.OTPEvent) -> Void,
-        @escaping CreateDraftApplicationCompletion
-    ) -> Void
 }

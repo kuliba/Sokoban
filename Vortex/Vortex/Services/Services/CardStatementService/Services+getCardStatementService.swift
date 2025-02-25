@@ -5,14 +5,15 @@
 //  Created by Andryusina Nataly on 17.01.2024.
 //
 
+import CardStatementAPI
 import Foundation
 import GenericRemoteService
-import CardStatementAPI
+import RemoteServices
 
 extension Services {
     
     typealias GetCardStatementPayload = CardStatementAPI.CardStatementForPeriodPayload
-    typealias GetCardStatementResult = Swift.Result<CardStatementAPI.ProductStatementWithExtendedInfo, CardStatementAPI.MappingError>
+    typealias GetCardStatementResult = Swift.Result<[CardStatementAPI.ProductStatementData], CardStatementAPI.MappingError>
     typealias GetCardStatementService = RemoteServiceOf<GetCardStatementPayload, GetCardStatementResult>
     
     static func getCardStatementForPeriod(
@@ -22,7 +23,7 @@ extension Services {
         return .init(
             createRequest: RequestFactory.getCardStatementForPeriod,
             performRequest: httpClient.performRequest,
-            mapResponse: CardStatementAPI.ResponseMapper.mapGetCardStatementResponse
+            mapResponse: RemoteServices.ResponseMapper.mapGetCardStatementResponse
         )
     }
 }

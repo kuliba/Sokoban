@@ -19,10 +19,8 @@ extension ResponseMapper {
         public let dateN: String?
         public let legalAct: String?
         public let paymentTerm: String?
-        public let discountFixedValue: Decimal?
         public let discountExpiry: String?
-        public let discountSizeValue: Decimal?
-        public let multiplierSizeValue: Decimal?
+        public let discount: String?
         public let payerName: String?
         public let payerINN: String?
         public let payerKPP: String?
@@ -37,10 +35,8 @@ extension ResponseMapper {
             dateN: String?,
             legalAct: String?,
             paymentTerm: String?,
-            discountFixedValue: Decimal?,
             discountExpiry: String?,
-            discountSizeValue: Decimal?,
-            multiplierSizeValue: Decimal?,
+            discount: String?,
             payerName: String?,
             payerINN: String?,
             payerKPP: String?,
@@ -54,10 +50,8 @@ extension ResponseMapper {
             self.dateN = dateN
             self.legalAct = legalAct
             self.paymentTerm = paymentTerm
-            self.discountFixedValue = discountFixedValue
             self.discountExpiry = discountExpiry
-            self.discountSizeValue = discountSizeValue
-            self.multiplierSizeValue = multiplierSizeValue
+            self.discount = discount
             self.payerName = payerName
             self.payerINN = payerINN
             self.payerKPP = payerKPP

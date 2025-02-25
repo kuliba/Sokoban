@@ -25,30 +25,79 @@ public struct InfoView<Icon: View>: View {
     
     public var body: some View {
         
-        HStack(spacing: 12) {
-            
-            icon()
-                .frame(info.size)
-                .frame(width: 32, height: 32)
-            
-            switch info.style {
-            case .expanded:
+        switch info.style {
+        case .expanded:
+            HStack(alignment: .customAlignment, spacing: 12) {
+                
+                iconView()
+                    .alignmentGuide(.customAlignment, computeValue: { d in d[VerticalAlignment.bottom] })
+                
                 VStack(alignment: .leading, spacing: 4) {
                     
-                    info.title.text(withConfig: config.title)
-                    info.value.text(withConfig: config.value)
+                    titleView()
+                    valueView()
+                        .alignmentGuide(.customAlignment, computeValue: { d in d[VerticalAlignment.firstTextBaseline] })
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            
+        case .compressed:
+            HStack(spacing: 12) {
                 
-            case .compressed:
+                iconView()
+         
                 HStack {
                     
-                    info.title.text(withConfig: config.title)
+                    titleView()
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    info.value.text(withConfig: config.value)
+                    valueView()
                 }
             }
         }
+    }
+}
+
+public extension InfoView where Icon == EmptyView {
+    
+    init(
+        info: Info,
+        config: InfoConfig
+    ) {
+        self.info = info
+        self.config = config
+        self.icon = EmptyView.init
+    }
+}
+
+extension VerticalAlignment {
+    
+    private enum CustomAlignment : AlignmentID {
+    
+        static func defaultValue(in d: ViewDimensions) -> CGFloat {
+            
+            return d[.top]
+        }
+    }
+    static let customAlignment = VerticalAlignment(CustomAlignment.self)
+}
+
+private extension InfoView {
+    
+    func iconView() -> some View {
+        
+        icon()
+            .frame(info.size)
+            .frame(width: 32, height: 32)
+    }
+    
+    func titleView() -> some View {
+        
+        info.title.text(withConfig: config.title)
+    }
+    
+    func valueView() -> some View {
+        
+        info.value.text(withConfig: config.value)
     }
 }
 
@@ -72,9 +121,25 @@ private extension Info {
     
     VStack(spacing: 32) {
         
-        InfoView(info: .amount, config: .preview) { Text("Icon") }
-        InfoView(info: .brandName, config: .preview) { Text("Icon") }
-        InfoView(info: .recipientBank, config: .preview) { Text("Icon") }
+        Group {
+            
+            InfoView(info: .amountCompressed, config: .preview)
+            InfoView(info: .amountCompressed, config: .preview) { EmptyView() }
+            InfoView(info: .amountCompressed, config: .preview) { Color.orange }
+            
+            InfoView(info: .amount, config: .preview) { Color.orange }
+            InfoView(info: .brandName, config: .preview) { Color.orange }
+            InfoView(info: .recipientBank, config: .preview) { Color.orange }
+            
+            InfoView(info: .init(id: .amount, title: "Some Title", value: .long, style: .expanded), config: .preview) { Color.orange }
+            InfoView(info: .init(id: .other("other"), title: "Some Title", value: .long, style: .expanded), config: .preview) { Color.orange }
+        }
+        .border(.red.opacity(0.2))
     }
     .previewLayout(.sizeThatFits)
+}
+
+private extension String {
+    
+    static let long = "Pretty long text that does not fit into one string and has to continue on the second and event to the third line"
 }

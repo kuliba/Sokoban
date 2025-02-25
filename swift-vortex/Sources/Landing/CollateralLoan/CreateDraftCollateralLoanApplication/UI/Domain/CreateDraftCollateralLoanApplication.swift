@@ -103,31 +103,9 @@ extension CreateDraftCollateralLoanApplication {
         String(format: "%.1f", percent) + "%"
     }
     
-    var formattedAmount: String {
-        
-        amount.formattedCurrency()
-    }
-    
     var selectedPeriodTitle: String {
         
         periods.first { $0.months == selectedMonths }?.title ?? ""
-    }
-    
-    public var hintText: String {
-        
-        let minAmount = minAmount.formattedCurrency()
-        let maxAmount = maxAmount.formattedCurrency()
-        
-        return "Мин. - \(minAmount), Макс. - \(maxAmount)"
-    }
-    
-    // MARK: Helpers
-    
-    var rubSymbol: String {
-        
-        let code = "RUB"
-        let locale = NSLocale(localeIdentifier: code)
-        return locale.displayName(forKey: NSLocale.Key.currencySymbol, value: code) ?? "₽"
     }
 }
 
@@ -212,23 +190,4 @@ extension CreateDraftCollateralLoanApplication.Consent: Equatable {}
 extension CreateDraftCollateralLoanApplication: Identifiable {
     
     public var id: String { name }
-}
-
-extension UInt {
-    
-    func formattedCurrency(_ currencySymbol: String = "₽") -> String {
-        
-        let currencyFormatter = NumberFormatter()
-        currencyFormatter.numberStyle = .currency
-        currencyFormatter.currencySymbol = currencySymbol
-        currencyFormatter.usesGroupingSeparator = true
-        currencyFormatter.locale = Locale(identifier: "ru_RU")
-        currencyFormatter.maximumFractionDigits = 0
-
-        if let value = currencyFormatter.string(from: NSNumber(value: self)) {
-            return value
-        }
-        
-        return String(self)
-    }
 }

@@ -241,7 +241,7 @@ struct CreateDraftCollateralLoanApplicationView_Previews<Confirmation, InformerP
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationView<Confirmation, InformerPayload>(
-            state: .init(application: .preview),
+            state: .init(application: .preview, formatCurrency: { _ in "" }),
             event: {
                 print($0)
             },

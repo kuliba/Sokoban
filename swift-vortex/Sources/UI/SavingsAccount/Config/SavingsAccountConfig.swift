@@ -18,13 +18,26 @@ public struct SavingsAccountConfig {
     public let continueButton: ContinueButton
     let divider: Color
     let icon: Icon
-    let list: List
+    let list: ListConfig
     let offsetForDisplayHeader: CGFloat
     let paddings: Paddings
     let spacing: CGFloat
     let questionHeight: CGFloat
     
-    public init(backImage: Image, bannerHeight: CGFloat, chevronDownImage: Image, cornerRadius: CGFloat, continueButton: ContinueButton, divider: Color, icon: Icon, list: List, offsetForDisplayHeader: CGFloat, paddings: Paddings, spacing: CGFloat, questionHeight: CGFloat) {
+    public init(
+        backImage: Image,
+        bannerHeight: CGFloat,
+        chevronDownImage: Image,
+        cornerRadius: CGFloat,
+        continueButton: ContinueButton,
+        divider: Color,
+        icon: Icon,
+        list: ListConfig,
+        offsetForDisplayHeader: CGFloat,
+        paddings: Paddings,
+        spacing: CGFloat,
+        questionHeight: CGFloat
+    ) {
         self.backImage = backImage
         self.bannerHeight = bannerHeight
         self.chevronDownImage = chevronDownImage

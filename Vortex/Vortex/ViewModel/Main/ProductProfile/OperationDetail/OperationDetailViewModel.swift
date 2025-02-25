@@ -28,7 +28,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
     var printFormType: PrintFormType?
     var productStatement: ProductStatementData
     
-    var templateAction: () -> Void = {}
+    private var templateAction: () -> Void = {}
     
     let model: Model
     private var bindings = Set<AnyCancellable>()
@@ -89,7 +89,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] _ in
                 
-                templateAction()
+                templateAction() // ??? how does is work? - it is never defined
                 
             }.store(in: &bindings)
     }

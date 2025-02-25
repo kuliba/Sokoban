@@ -44,7 +44,7 @@ struct CreateDraftCollateralLoanApplicationAmountView<Confirmation, InformerPayl
             info: .init(
                 id: .other(State.FieldID.amount.id),
                 title: config.elements.amount.title,
-                value: state.application.formattedAmount,
+                value: state.formattedAmount ?? "",
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),
@@ -71,7 +71,7 @@ struct CreateDraftCollateralLoanApplicationAmountView_Previews<Confirmation, Inf
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationAmountView<Confirmation, InformerPayload>(
-            state: .init(application: .preview),
+            state: .init(application: .preview, formatCurrency: { _ in "" }),
             event: { print($0) },
             config: .default,
             factory: .preview

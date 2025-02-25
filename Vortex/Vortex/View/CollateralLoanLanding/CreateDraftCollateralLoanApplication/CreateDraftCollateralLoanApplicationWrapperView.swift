@@ -144,7 +144,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         switch cover {
         case let .success(sucess):
             return .init(
-                formattedAmount: sucess.formattedAmount,
+                formattedAmount: factory.formatCurrency(sucess.amount) ?? "",
                 merchantIcon: nil,
                 result: .success(makeReport(from: sucess))
             )
@@ -260,8 +260,7 @@ extension CreateDraftCollateralLoanApplicationDomain.Navigation {
                 
                 return .failure(failure.localizedDescription)
             }
-            
-        case .saveConsents(_):
+        case .saveConsents:
             return nil
         }
     }

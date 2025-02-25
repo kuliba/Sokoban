@@ -13,6 +13,7 @@ import SavingsAccount
 import OTPInputComponent
 import RemoteServices
 import LoadableState
+import PaymentComponents
 
 extension RootViewModelFactory {
     
@@ -21,7 +22,14 @@ extension RootViewModelFactory {
         notify: @escaping (OpenSavingsAccountDomain.OrderAccountResponse) -> Void
     ) -> OpenSavingsAccount {
         
-        let content: OpenSavingsAccountDomain.Content = makeContent()
+        let products = model.productSelectProducts
+
+        let initialState: OpenSavingsAccountDomain.State = .init(
+            loadableForm: .loaded(nil),
+            productSelect: .init(selected: products().first)
+        )
+
+        let content: OpenSavingsAccountDomain.Content = makeContent(initialState, products)
         content.event(.load)
         
         let cancellable = content.$state
@@ -41,13 +49,22 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeContent(
-        initialState: OpenSavingsAccountDomain.State = .init(loadableForm: .loaded(nil))
+        _ initialState: OpenSavingsAccountDomain.State,
+        _ products: @escaping ProductSelectReducer.GetProducts
     ) -> OpenSavingsAccountDomain.Content {
         
-        let reducer = OpenSavingsAccountDomain.Reducer { confirmation in
-            
-            { confirmation.otp.event(.otpField(.failure(.serverError($0)))) }
-        }
+        let productSelectReducer = ProductSelectReducer(
+            getProducts: products
+        )
+        
+        let reducer = OpenSavingsAccountDomain.Reducer(
+            otpWitness:  { confirmation in
+                
+                { confirmation.otp.event(.otpField(.failure(.serverError($0)))) }
+            },
+            productSelectReduce: productSelectReducer.reduce(_:_:)
+        )
+        
         let effectHandler = OpenSavingsAccountDomain.EffectHandler(
             load: load,
             loadConfirmation: loadConfirmation,
@@ -107,6 +124,7 @@ extension RootViewModelFactory {
             }
             
             completion($0.loadFormResult)
+            _ = service
         }
     }
     
@@ -332,7 +350,7 @@ private extension SavingsAccountProduct {
         
         .init(
             constants: .init(
-                currencyCode: item.currency.code,
+                currency: .init(code: item.currency.code, symbol: item.currency.symbol),
                 designMd5hash: item.design,
                 header: .init(title: item.title, subtitle: item.description),
                 hint: item.hint,
@@ -340,7 +358,7 @@ private extension SavingsAccountProduct {
                 links: .init(conditions: item.conditionsLink, tariff: item.tariffLink),
                 openValue: openValue,
                 orderServiceOption: orderServiceOption),
-            messages: .default())
+            topUp: .default())
     }
     
     var orderServiceOption: String {
@@ -365,32 +383,11 @@ private extension SavingsAccountProduct {
     }
 }
 
-private extension SavingsAccount.Messages {
+private extension SavingsAccount.TopUp {
     
     static func `default`() -> Self {
 
-        return .init(
-            description: description(
-                "Пополнение доступно без комиссии\nс рублевого счета или карты"
-            ),
-            icon: "ic24MessageSquare",
-            subtitle: "Пополнить сейчас",
-            title: "Хотите пополнить счет?",
-            isOn: false
-        )
-    }
-}
-
-private extension SavingsAccount.Messages {
-
-    static func description(
-        _ description: String
-    ) -> AttributedString {
-        
-        var attributedString = AttributedString(description)
-        attributedString.foregroundColor = .textPlaceholder
-        attributedString.font = .textBodySR12160()
-        return attributedString
+        return .init(isOn: false)
     }
 }
 
