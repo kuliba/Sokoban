@@ -6,14 +6,26 @@
 //
 import SwiftUI
 
-struct SavingsAccountDetailsView: View {
+public struct SavingsAccountDetailsView: View {
     
-    let amountToString: AmountToString
-    let state: SavingsAccountDetailsState
-    let event: (Event) -> Void
-    let config: Config
+    private let amountToString: AmountToString
+    private let state: SavingsAccountDetailsState
+    private let event: (Event) -> Void
+    private let config: Config
     
-    var body: some View {
+    public init(
+        amountToString: @escaping AmountToString,
+        state: SavingsAccountDetailsState,
+        event: @escaping (Event) -> Void,
+        config: Config
+    ) {
+        self.amountToString = amountToString
+        self.state = state
+        self.event = event
+        self.config = config
+    }
+    
+    public var body: some View {
         
         VStack {
             header(config.texts.header, needShimmering)
@@ -199,7 +211,7 @@ struct SavingsAccountDetailsView: View {
     }
 }
 
-extension SavingsAccountDetailsView {
+public extension SavingsAccountDetailsView {
     
     typealias AmountToString = (Decimal, String) -> String
     typealias Event = SavingsAccountDetailsEvent
