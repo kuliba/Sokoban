@@ -159,11 +159,22 @@ private extension Reducer {
         guard let form = state.form else { return }
 
         switch orderAccountResult {
-        case let .failure(loadFailure):
+        case let .failure(loadFailure): // TODO otpFailure & orderFailure
+            
+//            switch loadFailure {
+//            case .otpFailure:
+//                
+//                if let notifyOTP = form.confirmation.state.map(otpWitness) {
+//                    notifyOTP(loadFailure.message)
+//                }
+//                
+//            case .orderFailure:
+//                state.form?.orderAccountResponse = false
+//
+//            }
             if let notifyOTP = form.confirmation.state.map(otpWitness) {
                 notifyOTP(loadFailure.message)
             }
-            state.form?.orderAccountResponse = false
             
         case let .success(orderAccountResponse):
             state.form?.orderAccountResponse = true
