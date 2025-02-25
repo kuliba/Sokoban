@@ -15,6 +15,32 @@ import RemoteServices
 import LoadableState
 import PaymentComponents
 
+
+enum OpenSavingsAccountCompleteDomain {}
+
+extension OpenSavingsAccountCompleteDomain {
+    
+    struct Complete {
+        
+        let context: Context
+     //   let details: OperationDetailDomain.Model
+        let document: DocumentButtonDomain.Model
+        
+        typealias Context = Void
+        /*struct Context: Equatable {
+            
+            let formattedAmount: String?
+            let merchantName: String?
+            let purpose: String?
+            let status: Status
+            
+            enum Status {
+                
+                case completed, inflight, rejected
+            }
+        }*/
+    }
+}
 extension RootViewModelFactory {
     
     @inlinable

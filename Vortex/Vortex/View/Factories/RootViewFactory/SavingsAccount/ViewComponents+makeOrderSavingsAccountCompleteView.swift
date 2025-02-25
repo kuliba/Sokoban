@@ -11,7 +11,7 @@ extension ViewComponents {
     
     @inlinable
     func makeOrderSavingsAccountCompleteView(
-        _ orderAccountResponse: OpenSavingsAccountDomain.OrderAccountResponse,
+        _ complete: OpenSavingsAccountCompleteDomain.Complete,
         action: @escaping () -> Void
     ) -> some View {
         

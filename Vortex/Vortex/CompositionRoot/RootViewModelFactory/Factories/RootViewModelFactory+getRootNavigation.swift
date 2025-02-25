@@ -30,8 +30,28 @@ extension RootViewModelFactory {
         case let .orderCardResponse(orderCardResponse):
             completion(.orderCardResponse(orderCardResponse))
         
-        case let .orderSavingsAccountResponse(orderAccountResponse):
-            completion(.orderSavingsAccountResponse(orderAccountResponse))
+        case let .savingsAccount(orderAccountResponse):
+            
+//            let details = makeOperationDetailByPaymentID(OperationDetailDomain.ModelPayload)
+//            details.event(.load)
+            
+//            let documentService = nanoServiceComposer.compose(
+//                createRequest: Re,
+//                mapResponse: <#T##RemoteDomain<Payload, Response, any Error, any Error>.MapResponse##RemoteDomain<Payload, Response, any Error, any Error>.MapResponse##(Data, HTTPURLResponse) -> Result<Response, any Error>#>)
+            let document = makeDocumentButton { [weak self] completion in
+                
+                self?.schedulers.background.delay(for: .seconds(2)) {
+                    
+                    completion(.success(.sample))
+                }
+            }
+            document.event(.load)
+            
+            completion(.savingsAccount(.init(
+                context: (),
+            //    details: details,
+                document: document
+            )))
 
         case let .openProduct(type):
             
