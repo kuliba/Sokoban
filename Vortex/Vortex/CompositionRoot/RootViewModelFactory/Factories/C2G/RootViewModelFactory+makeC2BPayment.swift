@@ -67,7 +67,7 @@ extension RootViewModelFactory {
                 let model = makeOperationDetailByPaymentID(payload)
                 model.event(.load)
                 
-                completion(.success(.init(fields: .init(payload), details: model)))
+                completion(.success(.init(context: .init(payload), details: model)))
             }
         }
     }
@@ -130,7 +130,7 @@ extension RootViewModelFactory {
                 let model = makeOperationDetailByPaymentID(basicDetails)
                 model.event(.load)
                 
-                completion(.success(.init(fields: .init(basicDetails), details: model)))
+                completion(.success(.init(context: .init(basicDetails), details: model)))
                 
             default:
                 completion(.failure(.server("server error")))
@@ -162,7 +162,7 @@ private extension String {
 
 // MARK: - Adapters
 
-private extension C2GPaymentDomain.Complete.Fields {
+private extension C2GPaymentDomain.Complete.Context {
     
     init(_ payload: OperationDetailDomain.ModelPayload) {
         
@@ -177,7 +177,7 @@ private extension C2GPaymentDomain.Complete.Fields {
 
 private extension OperationDetailDomain.Status {
     
-    var status: C2GPaymentDomain.Complete.Fields.Status {
+    var status: C2GPaymentDomain.Complete.Context.Status {
         
         switch self {
         case .completed: return .completed

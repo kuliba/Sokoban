@@ -73,10 +73,10 @@ extension C2GPaymentDomain {
     
     struct Complete {
         
-        let fields: Fields
+        let context: Context
         let details: OperationDetailDomain.Model
         
-        struct Fields: Equatable {
+        struct Context: Equatable {
             
             let formattedAmount: String?
             let merchantName: String?

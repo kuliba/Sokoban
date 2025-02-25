@@ -38,10 +38,10 @@ extension ViewComponents {
         
         VStack(spacing: config.spacing) {
             
-            let fields = cover.content.fields
+            let context = cover.content.context
             
-            fields.merchantName?.text(withConfig: config.merchantName)
-            fields.purpose?.text(withConfig: config.purpose)
+            context.merchantName?.text(withConfig: config.merchantName)
+            context.purpose?.text(withConfig: config.purpose)
         }
     }
 }
@@ -60,7 +60,7 @@ private extension C2GCompleteCover {
     var completion: PaymentCompletion {
         
         return .init(
-            formattedAmount: content.fields.formattedAmount,
+            formattedAmount: content.context.formattedAmount,
             merchantIcon: nil,
             status: status
         )
@@ -68,7 +68,7 @@ private extension C2GCompleteCover {
     
     var status: PaymentCompletion.Status {
         
-        switch content.fields.status {
+        switch content.context.status {
         case .completed: return .completed
         case .inflight:  return .inflight
         case .rejected:  return .rejected
@@ -167,7 +167,7 @@ private extension C2GCompleteCover {
         return .init(
             id: .init(),
             content: .init(
-                fields: .completedFull,
+                context: .completedFull,
                 details: .preview(
                     basicDetails: .completedFull,
                     fullDetails: .failure(NSError(domain: "Load failure", code: -1))
@@ -181,7 +181,7 @@ private extension C2GCompleteCover {
         return .init(
             id: .init(),
             content: .init(
-                fields: .completedFull,
+                context: .completedFull,
                 details: .preview(
                     basicDetails: .completedFull,
                     fullDetails: .loading(nil)
@@ -195,7 +195,7 @@ private extension C2GCompleteCover {
         return .init(
             id: .init(),
             content: .init(
-                fields: .completedFull,
+                context: .completedFull,
                 details: .preview(
                     basicDetails: .completedFull,
                     fullDetails: .pending
@@ -229,13 +229,13 @@ private extension C2GCompleteCover {
     static var rejectedMinimal:              Self { preview(.rejectedMinimal) }
     
     private static func preview(
-        _ fields: C2GPaymentDomain.Complete.Fields
+        _ fields: C2GPaymentDomain.Complete.Context
     ) -> Self {
         
         return .init(
             id: .init(),
             content: .init(
-                fields: fields,
+                context: fields,
                 details: .preview(
                     basicDetails: fields.basicDetails,
                     fullDetails: .completed(.preview)
@@ -272,11 +272,11 @@ extension OperationDetailDomain.ExtendedDetails {
 private extension C2GPaymentDomain.Complete {
     
     static func preview(
-        fields: Fields,
+        fields: Context,
         details: OperationDetailDomain.Model
     ) -> Self {
         
-        return .init(fields: fields, details: details)
+        return .init(context: fields, details: details)
     }
 }
 
@@ -300,32 +300,32 @@ extension OperationDetailDomain.Model {
 
 private extension OperationDetailDomain.BasicDetails {
     
-    static let completedFull: Self = C2GPaymentDomain.Complete.Fields.completedFull.basicDetails
-    static let completedNoAmount: Self = C2GPaymentDomain.Complete.Fields.completedNoAmount.basicDetails
-    static let completedNoMerchant: Self = C2GPaymentDomain.Complete.Fields.completedNoMerchant.basicDetails
-    static let completedNoMessage: Self = C2GPaymentDomain.Complete.Fields.completedNoMessage.basicDetails
-    static let completedNoPurpose: Self = C2GPaymentDomain.Complete.Fields.completedNoPurpose.basicDetails
-    static let completedNoMerchantNoMessage: Self = C2GPaymentDomain.Complete.Fields.completedNoMerchantNoMessage.basicDetails
-    static let completedMinimal: Self = C2GPaymentDomain.Complete.Fields.completedMinimal.basicDetails
+    static let completedFull: Self = C2GPaymentDomain.Complete.Context.completedFull.basicDetails
+    static let completedNoAmount: Self = C2GPaymentDomain.Complete.Context.completedNoAmount.basicDetails
+    static let completedNoMerchant: Self = C2GPaymentDomain.Complete.Context.completedNoMerchant.basicDetails
+    static let completedNoMessage: Self = C2GPaymentDomain.Complete.Context.completedNoMessage.basicDetails
+    static let completedNoPurpose: Self = C2GPaymentDomain.Complete.Context.completedNoPurpose.basicDetails
+    static let completedNoMerchantNoMessage: Self = C2GPaymentDomain.Complete.Context.completedNoMerchantNoMessage.basicDetails
+    static let completedMinimal: Self = C2GPaymentDomain.Complete.Context.completedMinimal.basicDetails
     
-    static let inflightFull: Self = C2GPaymentDomain.Complete.Fields.inflightFull.basicDetails
-    static let inflightNoAmount: Self = C2GPaymentDomain.Complete.Fields.inflightNoAmount.basicDetails
-    static let inflightNoMerchant: Self = C2GPaymentDomain.Complete.Fields.inflightNoMerchant.basicDetails
-    static let inflightNoMessage: Self = C2GPaymentDomain.Complete.Fields.inflightNoMessage.basicDetails
-    static let inflightNoPurpose: Self = C2GPaymentDomain.Complete.Fields.inflightNoPurpose.basicDetails
-    static let inflightNoMerchantNoMessage: Self = C2GPaymentDomain.Complete.Fields.inflightNoMerchantNoMessage.basicDetails
-    static let inflightMinimal: Self = C2GPaymentDomain.Complete.Fields.inflightMinimal.basicDetails
+    static let inflightFull: Self = C2GPaymentDomain.Complete.Context.inflightFull.basicDetails
+    static let inflightNoAmount: Self = C2GPaymentDomain.Complete.Context.inflightNoAmount.basicDetails
+    static let inflightNoMerchant: Self = C2GPaymentDomain.Complete.Context.inflightNoMerchant.basicDetails
+    static let inflightNoMessage: Self = C2GPaymentDomain.Complete.Context.inflightNoMessage.basicDetails
+    static let inflightNoPurpose: Self = C2GPaymentDomain.Complete.Context.inflightNoPurpose.basicDetails
+    static let inflightNoMerchantNoMessage: Self = C2GPaymentDomain.Complete.Context.inflightNoMerchantNoMessage.basicDetails
+    static let inflightMinimal: Self = C2GPaymentDomain.Complete.Context.inflightMinimal.basicDetails
     
-    static let rejectedFull: Self = C2GPaymentDomain.Complete.Fields.rejectedFull.basicDetails
-    static let rejectedNoAmount: Self = C2GPaymentDomain.Complete.Fields.rejectedNoAmount.basicDetails
-    static let rejectedNoMerchant: Self = C2GPaymentDomain.Complete.Fields.rejectedNoMerchant.basicDetails
-    static let rejectedNoMessage: Self = C2GPaymentDomain.Complete.Fields.rejectedNoMessage.basicDetails
-    static let rejectedNoPurpose: Self = C2GPaymentDomain.Complete.Fields.rejectedNoPurpose.basicDetails
-    static let rejectedNoMerchantNoMessage: Self = C2GPaymentDomain.Complete.Fields.rejectedNoMerchantNoMessage.basicDetails
-    static let rejectedMinimal: Self = C2GPaymentDomain.Complete.Fields.rejectedMinimal.basicDetails
+    static let rejectedFull: Self = C2GPaymentDomain.Complete.Context.rejectedFull.basicDetails
+    static let rejectedNoAmount: Self = C2GPaymentDomain.Complete.Context.rejectedNoAmount.basicDetails
+    static let rejectedNoMerchant: Self = C2GPaymentDomain.Complete.Context.rejectedNoMerchant.basicDetails
+    static let rejectedNoMessage: Self = C2GPaymentDomain.Complete.Context.rejectedNoMessage.basicDetails
+    static let rejectedNoPurpose: Self = C2GPaymentDomain.Complete.Context.rejectedNoPurpose.basicDetails
+    static let rejectedNoMerchantNoMessage: Self = C2GPaymentDomain.Complete.Context.rejectedNoMerchantNoMessage.basicDetails
+    static let rejectedMinimal: Self = C2GPaymentDomain.Complete.Context.rejectedMinimal.basicDetails
 }
 
-private extension C2GPaymentDomain.Complete.Fields {
+private extension C2GPaymentDomain.Complete.Context {
     
     var basicDetails: OperationDetailDomain.BasicDetails {
         
@@ -333,7 +333,7 @@ private extension C2GPaymentDomain.Complete.Fields {
     }
 }
 
-private extension C2GPaymentDomain.Complete.Fields {
+private extension C2GPaymentDomain.Complete.Context {
     
     // ✅ COMPLETED STATUS
     static let completedFull: Self = .init(
