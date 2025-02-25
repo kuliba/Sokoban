@@ -45,6 +45,20 @@ extension PaymentCompletionConfig {
             fraudExpired: .fraudExpired()
         )
     )
+    
+    static let orderSavingsAccount: Self = .init(
+        statuses: .init(
+            completed: .completed(),
+            inflight: .inflight(
+                title: "Операция в обработке"
+            ),
+            rejected: .rejected(
+                title: "Не удалось открыть счет"
+            ),
+            fraudCancelled: .fraudCancelled(),
+            fraudExpired: .fraudExpired()
+        )
+    )
 }
 
 extension PaymentCompletionConfig.Statuses.Status {
