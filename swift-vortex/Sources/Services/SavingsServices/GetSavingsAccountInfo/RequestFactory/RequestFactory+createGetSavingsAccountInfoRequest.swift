@@ -11,9 +11,9 @@ import RemoteServices
 
 public struct GetSavingsAccountInfoPayload {
     
-    public let accountID: Int
+    public let accountID: String
     
-    public init(accountID: Int) {
+    public init(accountID: String) {
         self.accountID = accountID
     }
 }
@@ -36,8 +36,8 @@ private extension GetSavingsAccountInfoPayload {
     
     func httpBody() throws -> Data {
         
-        let parameters: [String: Int] = ["accountNumber": accountID]
+        let parameters: [String: String] = ["accountNumber": accountID]
         
-        return try JSONSerialization.data(withJSONObject: parameters as [String: Int])
+        return try JSONSerialization.data(withJSONObject: parameters as [String: String])
     }
 }

@@ -26,9 +26,8 @@ extension RootViewModelFactory {
             makeRequest: RequestFactory.createGetSavingsAccountInfoRequest,
             mapResponse: RemoteServices.ResponseMapper.mapGetSavingsAccountInfoResponse
         )
-        let accountID = (accountNumber as NSString).integerValue
         
-        service(.init(accountID: accountID)) {
+        service(.init(accountID: accountNumber)) {
             
             completion(try? $0.map {
                 
