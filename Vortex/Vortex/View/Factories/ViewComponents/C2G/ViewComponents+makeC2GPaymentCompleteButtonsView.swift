@@ -18,18 +18,26 @@ extension ViewComponents {
         document: DocumentButtonDomain.Model
     ) -> some View {
         
-        RxWrapperView(model: details) { state, _ in
+        HStack(alignment: .top, spacing: 8) {
             
-            makeC2GPaymentCompleteButtonsView(state: state)
+            RxWrapperView(model: document) { state, _ in
+                
+                makeDocumentButtonView(state: state)
+            }
+            
+            RxWrapperView(model: details) { state, _ in
+                
+                makeC2GPaymentCompleteDetailsAndRequisitesButtonsView(state: state)
+            }
         }
     }
     
     @inlinable
-    func makeC2GPaymentCompleteButtonsView(
+    func makeC2GPaymentCompleteDetailsAndRequisitesButtonsView(
         state: OperationDetailDomain.State
     ) -> some View {
         
-        HStack(spacing: 8) {
+        HStack(alignment: .top, spacing: 8) {
             
             switch state.extendedDetails {
             case let .completed(details):
@@ -122,7 +130,7 @@ private extension OperationDetailDomain.State {
 
 // MARK: - Previews
 
-struct MakeC2GPaymentCompleteButtonsView_Previews: PreviewProvider {
+struct MakeC2GPaymentCompleteDetailsAndRequisitesButtonsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
@@ -139,7 +147,7 @@ struct MakeC2GPaymentCompleteButtonsView_Previews: PreviewProvider {
         _ fullDetails: OperationDetailDomain.State.ExtendedDetailsState
     ) -> some View {
         
-        ViewComponents.preview.makeC2GPaymentCompleteButtonsView(
+        ViewComponents.preview.makeC2GPaymentCompleteDetailsAndRequisitesButtonsView(
             state: .init(basicDetails: .preview, extendedDetails: fullDetails)
         )
     }
