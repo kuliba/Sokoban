@@ -156,21 +156,17 @@ private extension Reducer {
         _ effect: inout Effect?,
         with orderAccountResult: ProductEvent.OrderAccountResult
     ) {
-        switch (state.loadableForm, orderAccountResult) {
-        case (.loaded, _):
-            break // cannot receive orderAccountResult in loaded state
+        guard let form = state.form else { return }
+
+        switch orderAccountResult {
+        case let .failure(loadFailure):
+            if let notifyOTP = form.confirmation.state.map(otpWitness) {
+                notifyOTP(loadFailure.message)
+            }
+            state.form?.orderAccountResponse = false
             
-        case (.loading(nil), _):
-            break // cannot receive orderAccountResult in empty loading state
-            
-        case let (.loading(.some(form)), .failure(loadFailure)):
-            let notifyOTP = form.confirmation.state.map(otpWitness)
-            notifyOTP?(loadFailure.message)
-            state.loadableForm = .loaded(.success(form))
-            
-        case (var.loading(.some(form)), let .success(orderAccountResponse)):
-            form.orderAccountResponse = orderAccountResponse
-            state.loadableForm = .loaded(.success(form))
+        case let .success(orderAccountResponse):
+            state.form?.orderAccountResponse = true
         }
     }
 }

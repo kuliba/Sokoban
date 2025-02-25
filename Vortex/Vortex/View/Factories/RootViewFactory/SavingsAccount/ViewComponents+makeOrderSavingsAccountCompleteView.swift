@@ -15,10 +15,12 @@ extension ViewComponents {
         action: @escaping () -> Void
     ) -> some View {
         
-        OrderSavingsAccountCompleteView(
-            state: orderAccountResponse ? .inflight : .rejected,
-            action: action,
-            makeIconView: makeIconView(md5Hash:)
-        )
+//        OrderSavingsAccountCompleteView(
+//            state: orderAccountResponse ? .inflight : .rejected,
+//            action: action,
+//            makeIconView: makeIconView(md5Hash:)
+//        )
+        
+        Button("goToMain", action: goToMain)
     }
 }
