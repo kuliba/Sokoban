@@ -38,6 +38,7 @@ extension RootViewModelFactory {
             )
             
             let document = makeC2GDocumentButton()
+            document.event(.load)
             
             return .v3(.init(
                 content: content, 
