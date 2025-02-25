@@ -249,7 +249,7 @@ private extension C2GCompleteCover {
     }
 }
 
-private extension DocumentButtonDomain.Model {
+extension DocumentButtonDomain.Model {
     
     static let preview: DocumentButtonDomain.Model = .init(
         initialState: .pending,

@@ -137,7 +137,8 @@ struct MakeStatementDetailView_Previews: PreviewProvider {
             details: .preview(
                 basicDetails: .preview,
                 fullDetails: fullDetails
-            )
+            ),
+            document: .preview
         ))
     }
 }

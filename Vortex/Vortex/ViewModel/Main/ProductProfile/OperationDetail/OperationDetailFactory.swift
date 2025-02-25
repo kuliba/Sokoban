@@ -25,6 +25,7 @@ struct StatementDetails {
     
     let content: Content
     let details: OperationDetailDomain.Model
+    let document: DocumentButtonDomain.Model
     
     struct Content: Equatable {
         
