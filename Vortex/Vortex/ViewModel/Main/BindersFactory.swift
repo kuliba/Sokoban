@@ -61,7 +61,7 @@ private extension GetCollateralLandingDomain.Binder {
 private extension GetCollateralLandingDomain.Content {
     
     static let preview = GetCollateralLandingDomain.Content(
-        initialState: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"),
+        initialState: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE", formatCurrency: { _ in "" }),
         reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }
     )

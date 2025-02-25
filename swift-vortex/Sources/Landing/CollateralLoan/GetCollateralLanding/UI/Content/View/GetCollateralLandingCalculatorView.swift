@@ -336,7 +336,7 @@ struct GetCollateralLandingCalculatorView: View {
     
     private func desiredAmountValueText(config: Config.Calculator) -> some View {
         
-        formatText(state.formattedDesiredAmount, with: config.desiredAmount.fontValue)
+        formatText(state.formattedDesiredAmount ?? "", with: config.desiredAmount.fontValue)
     }
     
     private func desiredAmountMaxText(config: Config.Calculator) -> some View {
@@ -374,7 +374,7 @@ struct CollateralLoanLandingGetCollateralLandingCalculatorView_Previews: Preview
     static var previews: some View {
         
         GetCollateralLandingCalculatorView(
-            state: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"),
+            state: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE", formatCurrency: { _ in "" }),
             product: .carStub,
             config: .default,
             domainEvent: { print($0) },

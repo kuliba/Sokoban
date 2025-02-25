@@ -10,7 +10,7 @@ import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 
 extension GetCollateralLandingDomain {
     
-    public struct State: Equatable {
+    public struct State {
         
         public let landingID: String
         public var bottomSheet: BottomSheet?
@@ -22,18 +22,22 @@ extension GetCollateralLandingDomain {
         var selectedMonthPeriod: UInt
         var desiredAmount: UInt
 
+        let formatCurrency: FormatCurrency
+        
         public init(
             landingID: String,
             bottomSheet: BottomSheet? = nil,
             selectedCollateralType: String = "", // Calculator default value
             selectedMonthPeriod: UInt = 12, // Calculator default value
-            desiredAmount: UInt = 3_000_000 // Calculator default value
+            desiredAmount: UInt = 3_000_000, // Calculator default value
+            formatCurrency: @escaping FormatCurrency
         ) {
             self.landingID = landingID
             self.bottomSheet = bottomSheet
             self.selectedMonthPeriod = selectedMonthPeriod
             self.selectedCollateralType = selectedCollateralType
             self.desiredAmount = desiredAmount
+            self.formatCurrency = formatCurrency
         }
     }
 }
@@ -62,9 +66,9 @@ extension GetCollateralLandingDomain.State {
         String(format: "%.1f", selectedPercentDouble) + "%"
     }
     
-    var formattedDesiredAmount: String {
+    var formattedDesiredAmount: String? {
       
-        desiredAmount.formattedCurrency()
+        formatCurrency(desiredAmount)
     }
     
     func annuity(sumCredit: UInt, percent: Double, months: UInt) -> Double {
@@ -189,23 +193,5 @@ public extension GetCollateralLandingDomain.State {
     typealias Product = GetCollateralLandingProduct
     typealias Period = GetCollateralLandingProduct.Calc.Rate
     typealias Collateral = GetCollateralLandingProduct.Calc.Collateral
-}
-
-extension UInt {
-    
-    func formattedCurrency(_ currencySymbol: String = "₽") -> String {
-        
-        let currencyFormatter = NumberFormatter()
-        currencyFormatter.numberStyle = .currency
-        currencyFormatter.currencySymbol = currencySymbol
-        currencyFormatter.usesGroupingSeparator = true
-        currencyFormatter.locale = Locale(identifier: "ru_RU")
-        currencyFormatter.maximumFractionDigits = 0
-
-        if let value = currencyFormatter.string(from: NSNumber(value: self)) {
-            return value
-        }
-        
-        return String(self)
-    }
+    typealias FormatCurrency = (UInt) -> String?
 }

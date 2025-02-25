@@ -35,7 +35,7 @@ extension RootViewModelFactory {
         )
                     
         return .init(
-            initialState: .init(landingID: landingID),
+            initialState: .init(landingID: landingID, formatCurrency: { self.model.amountFormatted(amount: Double($0), currencyCode: "RUB", style: .normal) }),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:dispatch:),
             scheduler: schedulers.main
