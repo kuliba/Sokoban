@@ -7,13 +7,14 @@
 
 import ActivateSlider
 import CalendarUI
+import Combine
 import InfoComponent
 import PinCodeUI
 import RxViewModel
+import SavingsAccount
 import SberQR
 import SwiftUI
 import VortexTools
-import Combine
 
 struct ProductProfileView: View {
     
@@ -591,6 +592,31 @@ private extension ProductProfileView {
                 
                 ProductProfileButtonsView(viewModel: viewModel.buttons)
                     .padding(.horizontal, 20)
+                
+                viewModel.accountInfo.map { accountInfo in
+                    
+                    SavingsAccountDetailsView(
+                        amountToString: {
+                            
+                            viewModel.model.amountFormatted(
+                                amount: $0.doubleValue,
+                                currencyCode: $1,
+                                style: .normal
+                            ) ?? ""
+                        },
+                        state: accountInfo,
+                        event: {
+                            
+                            switch $0 {
+                            case .expanded:
+                                viewModel.accountInfo?.isExpanded.toggle()
+                            }
+                        },
+                        config: .iVortex
+                    )
+                    .padding(.horizontal)
+                    .animation(.easeInOut, value: accountInfo.isExpanded)
+                }
                 
                 productProfileDetailView()
                 
