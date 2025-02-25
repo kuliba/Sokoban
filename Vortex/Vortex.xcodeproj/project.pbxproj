@@ -3181,6 +3181,7 @@
 		C121877A2D1C025200565224 /* GoogleService-InfoVortexMbsDebug.plist in Resources */ = {isa = PBXBuildFile; fileRef = C12187792D1C025200565224 /* GoogleService-InfoVortexMbsDebug.plist */; };
 		C123110C2C4E0960002871A8 /* CalendarWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C123110B2C4E0960002871A8 /* CalendarWrapperView.swift */; };
 		C124C7E72D6C45CB00124721 /* ListLandingComponent in Frameworks */ = {isa = PBXBuildFile; productRef = C124C7E62D6C45CB00124721 /* ListLandingComponent */; };
+		C127C5202D6CA96C00683F85 /* HeaderLandingComponent in Frameworks */ = {isa = PBXBuildFile; productRef = C127C51F2D6CA96C00683F85 /* HeaderLandingComponent */; };
 		C12ACF282B0228C0006C6B2E /* ResponseMapper+GetImageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12ACF272B0228C0006C6B2E /* ResponseMapper+GetImageList.swift */; };
 		C12B11B32ABAB78C003AECEC /* PaymentsSuccessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12B11B22ABAB78C003AECEC /* PaymentsSuccessTests.swift */; };
 		C12C18CD2924AC7E00A9C4F1 /* InfoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12C18CC2924AC7E00A9C4F1 /* InfoViewComponent.swift */; };
@@ -3275,7 +3276,6 @@
 		C19738E92AF3A42F00101B1B /* StickerDictionaryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19738E82AF3A42F00101B1B /* StickerDictionaryResponse.swift */; };
 		C197FD622CE178180005A93E /* Service+modifyC2B.swift in Sources */ = {isa = PBXBuildFile; fileRef = C197FD612CE178180005A93E /* Service+modifyC2B.swift */; };
 		C197FD662CE17D460005A93E /* ModifyC2BSubscriptionService in Frameworks */ = {isa = PBXBuildFile; productRef = C197FD652CE17D460005A93E /* ModifyC2BSubscriptionService */; };
-		C198F83E2D63759A005D8DE0 /* OrderCardLandingUI in Frameworks */ = {isa = PBXBuildFile; productRef = C198F83D2D63759A005D8DE0 /* OrderCardLandingUI */; };
 		C199807A2B7EB8F500D85C09 /* OperatorsListComponents in Frameworks */ = {isa = PBXBuildFile; productRef = C19980792B7EB8F500D85C09 /* OperatorsListComponents */; };
 		C19C234F2D562E210026FD0B /* GetCardOrderFormService in Frameworks */ = {isa = PBXBuildFile; productRef = C19C234E2D562E210026FD0B /* GetCardOrderFormService */; };
 		C19C36672B04B57E0052D7F0 /* OperationWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19C36662B04B57E0052D7F0 /* OperationWrapperView.swift */; };
@@ -6987,7 +6987,6 @@
 		C19738E62AF3970100101B1B /* _StickerDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _StickerDictionary.swift; sourceTree = "<group>"; };
 		C19738E82AF3A42F00101B1B /* StickerDictionaryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerDictionaryResponse.swift; sourceTree = "<group>"; };
 		C197FD612CE178180005A93E /* Service+modifyC2B.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Service+modifyC2B.swift"; sourceTree = "<group>"; };
-		C198F83F2D645C4D005D8DE0 /* OrderCardLandingUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = OrderCardLandingUI.xctestplan; sourceTree = "<group>"; };
 		C19C36662B04B57E0052D7F0 /* OperationWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationWrapperView.swift; sourceTree = "<group>"; };
 		C1A2CCE228DB7348009436D6 /* DepositCloseNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositCloseNotification.swift; sourceTree = "<group>"; };
 		C1A4D37B2A67CDFC001DD9E4 /* ManageSubscriptionUIPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ManageSubscriptionUIPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -7705,6 +7704,7 @@
 				77B243DC2A2F658500CDCEC6 /* UserModel in Frameworks */,
 				2A5762FB2AD805BA0026EBFE /* URLRequestFactory in Frameworks */,
 				0BA2524926C5DB5600AD087A /* RealmSwift in Frameworks */,
+				C127C5202D6CA96C00683F85 /* HeaderLandingComponent in Frameworks */,
 				A73E43102CF8B6EF0060A548 /* CollateralLoanLandingGetCollateralLandingBackend in Frameworks */,
 				C10423972A72B96900D0AC63 /* ManageSubscriptionsUI in Frameworks */,
 				A78AC1DB2CEC652500154B88 /* CollateralLoanLandingGetConsentsBackend in Frameworks */,
@@ -7767,7 +7767,6 @@
 				2A9EA5D92D26AC0700DEC45C /* FlowCore in Frameworks */,
 				8330E12F2CEF405B00694AD0 /* SavingsServices in Frameworks */,
 				83E513392AA73CFC00F8183B /* LandingMapping in Frameworks */,
-				C198F83E2D63759A005D8DE0 /* OrderCardLandingUI in Frameworks */,
 				ED147D4F26BC1237002F66C8 /* FirebaseCrashlytics in Frameworks */,
 				83F775CB2CA2CE0700A05F69 /* MarketShowcase in Frameworks */,
 				C124C7E72D6C45CB00124721 /* ListLandingComponent in Frameworks */,
@@ -10644,7 +10643,6 @@
 			children = (
 				2A5AFD982D68CCB200BD15EC /* GetOperationDetailService.xctestplan */,
 				2AD073702D65A83700922062 /* StateMachines.xctestplan */,
-				C198F83F2D645C4D005D8DE0 /* OrderCardLandingUI.xctestplan */,
 				2A50E6C72D5631E500C00949 /* GetCardOrderFormService.xctestplan */,
 				C10B0F982D51047E00508689 /* OrderCardLandingBackend.xctestplan */,
 				2A5D6F542D5DA6990011C09E /* C2G.xctestplan */,
@@ -20051,11 +20049,11 @@
 				C10E0F232D5772ED008185D6 /* OrderCard */,
 				EC0C39F82D634F1100AC79C4 /* GetSplashScreenServices */,
 				2A2A46D22D61AB44009896F2 /* C2G */,
-				C198F83D2D63759A005D8DE0 /* OrderCardLandingUI */,
 				2AD073712D65B55200922062 /* StateMachines */,
 				C124C7E62D6C45CB00124721 /* ListLandingComponent */,
 				8372A8B12D688B1D00CD1CFB /* LoadableState */,
 				2A5AFD9D2D69080600BD15EC /* GetOperationDetailService */,
+				C127C51F2D6CA96C00683F85 /* HeaderLandingComponent */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* Vortex.app */;
@@ -27207,7 +27205,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/Vortex.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 19;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
@@ -27895,7 +27893,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/VortexRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -28960,7 +28958,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/Vortex.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 19;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
@@ -28997,7 +28995,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/VortexRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -30329,6 +30327,10 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = ListLandingComponent;
 		};
+		C127C51F2D6CA96C00683F85 /* HeaderLandingComponent */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HeaderLandingComponent;
+		};
 		C14F85522AF537B000749534 /* PaymentSticker */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PaymentSticker;
@@ -30352,10 +30354,6 @@
 		C197FD652CE17D460005A93E /* ModifyC2BSubscriptionService */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ModifyC2BSubscriptionService;
-		};
-		C198F83D2D63759A005D8DE0 /* OrderCardLandingUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = OrderCardLandingUI;
 		};
 		C19980792B7EB8F500D85C09 /* OperatorsListComponents */ = {
 			isa = XCSwiftPackageProductDependency;

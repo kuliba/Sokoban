@@ -692,13 +692,6 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-vortex",
-        "identifier" : "OrderCardLandingUITests",
-        "name" : "OrderCardLandingUITests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-vortex",
         "identifier" : "StateMachinesTests",
         "name" : "StateMachinesTests"
       }
