@@ -398,6 +398,7 @@
 		2A0BAB472D6D72CB006ED2CA /* StateMachineDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0BAB462D6D72CB006ED2CA /* StateMachineDomain.swift */; };
 		2A0BAB492D6D733F006ED2CA /* RootViewModelFactory+makeDocumentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0BAB482D6D733F006ED2CA /* RootViewModelFactory+makeDocumentButton.swift */; };
 		2A0BAB4C2D6D757A006ED2CA /* RxViewModel+makeStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0BAB4B2D6D757A006ED2CA /* RxViewModel+makeStateMachine.swift */; };
+		2A0BAB4E2D6D8409006ED2CA /* ViewComponents+makeDocumentButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0BAB4D2D6D8409006ED2CA /* ViewComponents+makeDocumentButtonView.swift */; };
 		2A0D9B7B2B0E1A7800F1DFD1 /* RequestFactory+createGetPrintFormRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0D9B7A2B0E1A7800F1DFD1 /* RequestFactory+createGetPrintFormRequestTests.swift */; };
 		2A0D9B7D2B0E20CD00F1DFD1 /* RequestFactory+createGetPrintFormRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0D9B7C2B0E20CD00F1DFD1 /* RequestFactory+createGetPrintFormRequest.swift */; };
 		2A0D9B7F2B0E225300F1DFD1 /* ResponseMapper+mapGetPrintFormResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A0D9B7E2B0E225300F1DFD1 /* ResponseMapper+mapGetPrintFormResponseTests.swift */; };
@@ -4155,6 +4156,7 @@
 		2A0BAB462D6D72CB006ED2CA /* StateMachineDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateMachineDomain.swift; sourceTree = "<group>"; };
 		2A0BAB482D6D733F006ED2CA /* RootViewModelFactory+makeDocumentButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeDocumentButton.swift"; sourceTree = "<group>"; };
 		2A0BAB4B2D6D757A006ED2CA /* RxViewModel+makeStateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RxViewModel+makeStateMachine.swift"; sourceTree = "<group>"; };
+		2A0BAB4D2D6D8409006ED2CA /* ViewComponents+makeDocumentButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeDocumentButtonView.swift"; sourceTree = "<group>"; };
 		2A0D9B7A2B0E1A7800F1DFD1 /* RequestFactory+createGetPrintFormRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetPrintFormRequestTests.swift"; sourceTree = "<group>"; };
 		2A0D9B7C2B0E20CD00F1DFD1 /* RequestFactory+createGetPrintFormRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetPrintFormRequest.swift"; sourceTree = "<group>"; };
 		2A0D9B7E2B0E225300F1DFD1 /* ResponseMapper+mapGetPrintFormResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+mapGetPrintFormResponseTests.swift"; sourceTree = "<group>"; };
@@ -9322,6 +9324,7 @@
 				2A25A3052D60644900C5D28F /* ViewComponents+navBar.swift */,
 				2AD767562CF9A19D00BFDA70 /* ViewComponents+makeCategoryPickerSectionView.swift */,
 				2A0BAB412D6C83F9006ED2CA /* ViewComponents+infoView.swift */,
+				2A0BAB4D2D6D8409006ED2CA /* ViewComponents+makeDocumentButtonView.swift */,
 				2ABC57592D65E6B2001E94BC /* StaticViewFactory */,
 				2A5D98A52D5E12650065C4E3 /* C2G */,
 				2AD39F002D64528F002A1652 /* ViewComponents+makePaymentCompletionLayoutView.swift */,
@@ -21830,6 +21833,7 @@
 				0BB24AA326EFEFCF00DDA4F6 /* GetProductListByFilterSaved.swift in Sources */,
 				EDB02AE82816F07B005F64B5 /* AccountCellButtonViewComponent.swift in Sources */,
 				2A234FC22D47A9AD00EE97BF /* SplashScreenViewModel.swift in Sources */,
+				2A0BAB4E2D6D8409006ED2CA /* ViewComponents+makeDocumentButtonView.swift in Sources */,
 				83172A1C2D423D5800722619 /* MainViewModelsFactory.swift in Sources */,
 				C1CCFC3829816B8F0059212C /* ToolbarViewModel.swift in Sources */,
 				7763A690279DAFD10064B037 /* EncryptionProtocols.swift in Sources */,

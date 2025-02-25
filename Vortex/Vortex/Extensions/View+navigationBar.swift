@@ -109,6 +109,26 @@ extension View {
         title: String,
         subtitle: String? = nil,
         dismiss: @escaping () -> Void,
+        backgroundColor: Color = .clear
+    ) -> some View {
+        
+        navigationBar(
+            with: .init(
+                title: title,
+                subtitle: subtitle,
+                leftItems: [
+                    closeButton(action: dismiss)
+                ],
+                rightItems: []
+            ),
+            backgroundColor: backgroundColor
+        )
+    }
+    
+    func navigationBarWithClose(
+        title: String,
+        subtitle: String? = nil,
+        dismiss: @escaping () -> Void,
         rightButton: NavigationBarView.ViewModel.ButtonItemViewModel,
         backgroundColor: Color = .clear
     ) -> some View {
