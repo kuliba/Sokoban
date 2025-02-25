@@ -50,6 +50,7 @@ private extension GetSavingsAccountInfoResponse {
             minBalance: NSDecimalNumber(floatLiteral: minRest ?? 0).decimalValue,
             paidInterest: NSDecimalNumber(floatLiteral: interestPaid ?? 0).decimalValue,
             progress: 3,
+            dateNext: dateNext,
             currencyCode: "₽"
         )
     }

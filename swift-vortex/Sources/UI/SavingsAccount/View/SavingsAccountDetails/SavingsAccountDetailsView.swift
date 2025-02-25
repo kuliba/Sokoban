@@ -6,6 +6,19 @@
 //
 import SwiftUI
 
+private extension SavingsAccountDetailsState {
+    
+    var period: String? {
+        
+        data?.dateNext.map { "Отчетный период с 01 по \($0.suffix(2))" }
+    }
+    
+    var paydate: String? {
+        
+        data?.dateNext.map { "Дата выплаты % - \($0.suffix(2))" }
+    }
+}
+
 public struct SavingsAccountDetailsView: View {
     
     private let amountToString: AmountToString
@@ -30,12 +43,15 @@ public struct SavingsAccountDetailsView: View {
         VStack {
             header(config.texts.header, needShimmering)
                 .padding(.bottom, config.padding)
-            config.texts.period
-                .string(needShimmering)
-                .text(withConfig: config.period)
-                .modifier(HeightWithMaxWidthModifier(height: config.heights.period))
-                .modifier(ShimmeringModifier(needShimmering, config.colors.shimmering))
-                .padding(.bottom, config.padding / 2)
+            
+            state.period.map {
+                
+                $0.text(withConfig: config.period)
+                    .modifier(HeightWithMaxWidthModifier(height: config.heights.period))
+                    .modifier(ShimmeringModifier(needShimmering, config.colors.shimmering))
+                    .padding(.bottom, config.padding / 2)
+            }
+            
             interest(needShimmering)
             
             lineProgressView(needShimmering)
@@ -52,6 +68,7 @@ public struct SavingsAccountDetailsView: View {
     private func interest() -> some View {
         
         VStack(spacing: config.padding) {
+            
             titleWithSubtitle(
                 title: .init(text: config.texts.currentInterest, config: config.interestTitle),
                 subtitle: .init(text: currentInterest, config: config.interestSubtitle))
@@ -107,11 +124,14 @@ public struct SavingsAccountDetailsView: View {
     ) -> some View {
         
         HStack {
-            config.texts.interestDate
-                .string(needShimmering)
-                .text(withConfig: config.interestDate)
-                .modifier(HeightWithMaxWidthModifier(height: config.heights.interest))
-                .modifier(ShimmeringModifier(needShimmering, config.colors.shimmering))
+            
+            state.paydate.map {
+                
+                $0.string(needShimmering)
+                    .text(withConfig: config.interestDate)
+                    .modifier(HeightWithMaxWidthModifier(height: config.heights.interest))
+                    .modifier(ShimmeringModifier(needShimmering, config.colors.shimmering))
+            }
             
             if (!needShimmering) {
                 config.info

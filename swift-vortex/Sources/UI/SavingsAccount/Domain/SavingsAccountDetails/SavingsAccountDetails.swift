@@ -13,6 +13,7 @@ public struct SavingsAccountDetails: Equatable {
     public let minBalance: Decimal
     public let paidInterest: Decimal
     public let progress: CGFloat
+    public let dateNext: String?
 
     public let currencyCode: String
     
@@ -21,12 +22,14 @@ public struct SavingsAccountDetails: Equatable {
         minBalance: Decimal,
         paidInterest: Decimal,
         progress: CGFloat,
+        dateNext: String?,
         currencyCode: String
     ) {
         self.currentInterest = currentInterest
         self.minBalance = minBalance
         self.paidInterest = paidInterest
         self.progress = progress
+        self.dateNext = dateNext
         self.currencyCode = currencyCode
     }
 }
