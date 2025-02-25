@@ -23,39 +23,60 @@ struct OrderCardLanding {
 extension ViewComponents {
     
     func makeOrderCardLandingView(
-        landing: OrderCardLanding
+        landing: OrderCardLanding,
+        dismiss: @escaping () -> Void
     ) -> some View {
+        
+        DismissibleScrollView(
+            title: { $0 > 0 ? "title" : "" },
+            dismiss: dismiss
+        ) {
+            HeaderView(model: landing.header)
+            
+            ListLandingComponent.List(
+                items: landing.conditions,
+                config: .iVortex,
+                factory: .init(
+                    makeIconView: makeIconView,
+                    makeBannerImageView: makeGeneralIconView
+                )
+            )
+            
+            ListLandingComponent.List(
+                items: landing.security,
+                config: .iVortex,
+                factory: .init(
+                    makeIconView: makeIconView,
+                    makeBannerImageView: makeGeneralIconView
+                )
+            )
+            
+            DropDownList(viewModel: landing.dropDownList)
+        }
+    }
+}
+
+//TODO: add swipe to refresh
+struct DismissibleScrollView<Content: View>: View {
+    
+    @State private var offset: CGPoint = .zero
+    
+    let title: (Double) -> String
+    let dismiss: () -> Void
+    @ViewBuilder let content: () -> Content
+    
+    var body: some View {
         
         OffsetObservingScrollView(
             axes: .vertical,
             showsIndicators: false,
-            offset: .init(
-                get: { .zero },
-                set: { _ in  }
-            ),
-            coordinateSpaceName: "orderCardScroll") {
-                
-                HeaderView(model: landing.header)
-                
-                ListLandingComponent.List(
-                    items: landing.conditions,
-                    config: .iVortex,
-                    factory: .init(
-                        makeIconView: makeIconView,
-                        makeBannerImageView: makeGeneralIconView
-                    )
-                )
-                
-                ListLandingComponent.List(
-                    items: landing.security,
-                    config: .iVortex,
-                    factory: .init(
-                        makeIconView: makeIconView,
-                        makeBannerImageView: makeGeneralIconView
-                    )
-                )
-                
-                DropDownList(viewModel: landing.dropDownList)
-            }
+            offset: $offset,
+            coordinateSpaceName: "orderCardScroll",
+            content: content
+        )
+        .navigationBarWithBack(
+            title: title(offset.y),
+            dismiss: dismiss
+        )
     }
 }
