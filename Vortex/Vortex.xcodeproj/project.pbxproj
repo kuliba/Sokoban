@@ -2913,6 +2913,8 @@
 		838DCBE82D65E054009BE9DF /* RequestFactory+createPrepareOpenSavingsAccountRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838DCBE72D65E054009BE9DF /* RequestFactory+createPrepareOpenSavingsAccountRequest.swift */; };
 		838DCBEA2D65F637009BE9DF /* RequestFactory+createChangeSVCardLimitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838DCBE92D65F637009BE9DF /* RequestFactory+createChangeSVCardLimitTests.swift */; };
 		838DCBED2D65F73E009BE9DF /* RequestFactory_createPrepareOpenSavingsAccountRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838DCBEC2D65F73E009BE9DF /* RequestFactory_createPrepareOpenSavingsAccountRequestTests.swift */; };
+		838DEC762D6D794600C94B8B /* Services+getProductListByTypeV7.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838DEC752D6D794600C94B8B /* Services+getProductListByTypeV7.swift */; };
+		838DEC782D6D817800C94B8B /* RequestFactory+createGetProductListByTypeV7Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838DEC772D6D817800C94B8B /* RequestFactory+createGetProductListByTypeV7Request.swift */; };
 		838F00912D40EEC00032EE92 /* PromoProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838F00902D40EEC00032EE92 /* PromoProduct.swift */; };
 		839109262C381C8B007F5257 /* Services+makeGetSVCardLimitsServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839109252C381C8B007F5257 /* Services+makeGetSVCardLimitsServices.swift */; };
 		839109282C381D86007F5257 /* GetSVCardLimitsServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839109272C381D86007F5257 /* GetSVCardLimitsServices.swift */; };
@@ -6645,6 +6647,8 @@
 		838DCBE72D65E054009BE9DF /* RequestFactory+createPrepareOpenSavingsAccountRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createPrepareOpenSavingsAccountRequest.swift"; sourceTree = "<group>"; };
 		838DCBE92D65F637009BE9DF /* RequestFactory+createChangeSVCardLimitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createChangeSVCardLimitTests.swift"; sourceTree = "<group>"; };
 		838DCBEC2D65F73E009BE9DF /* RequestFactory_createPrepareOpenSavingsAccountRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestFactory_createPrepareOpenSavingsAccountRequestTests.swift; sourceTree = "<group>"; };
+		838DEC752D6D794600C94B8B /* Services+getProductListByTypeV7.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getProductListByTypeV7.swift"; sourceTree = "<group>"; };
+		838DEC772D6D817800C94B8B /* RequestFactory+createGetProductListByTypeV7Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetProductListByTypeV7Request.swift"; sourceTree = "<group>"; };
 		838F00902D40EEC00032EE92 /* PromoProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromoProduct.swift; sourceTree = "<group>"; };
 		839109252C381C8B007F5257 /* Services+makeGetSVCardLimitsServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeGetSVCardLimitsServices.swift"; sourceTree = "<group>"; };
 		839109272C381D86007F5257 /* GetSVCardLimitsServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetSVCardLimitsServices.swift; sourceTree = "<group>"; };
@@ -9029,6 +9033,7 @@
 				C18B57A52D35D8D900EE3DC4 /* OrderCardLanding */,
 				83CC9D2A2C85CC8F00ABA4C7 /* GetBannerCatalogListServiceV2 */,
 				839914792C6DE79800E9D275 /* GetProductListByTypeV6Service */,
+				838DEC742D6D78EF00C94B8B /* GetProductListByTypeV7Service */,
 				8343FE2B2BB2A07600D0C128 /* GetProductListByTypeService */,
 				C15CB8E22B7EF23400718B49 /* OperatorsList */,
 				8353CD532B57AE42005F7D1A /* CardStatementService */,
@@ -10559,6 +10564,7 @@
 				8328ABF82C3C018000AD05E0 /* RequestFactory+createChangeSVCardLimitRequest.swift */,
 				C1F15F382C58E69100D7DDE4 /* RequestFactory+getInfoForRepeatPayment.swift */,
 				8399147E2C6DE8BD00E9D275 /* RequestFactory+createGetProductListByTypeV6Request.swift */,
+				838DEC772D6D817800C94B8B /* RequestFactory+createGetProductListByTypeV7Request.swift */,
 				83CC9D2D2C85D02700ABA4C7 /* RequestFactory+createGetBannerCatalogListV2Request.swift */,
 				833104A12D63474D00177E2B /* RequestFactory+createGetBannersMyProductListV2Request.swift */,
 				ECF246A72CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift */,
@@ -16558,6 +16564,14 @@
 				8372A8B52D68970000CD1CFB /* RequestFactory+createMakeOpenSavingsAccountRequestTests.swift */,
 			);
 			path = SavingsAccount;
+			sourceTree = "<group>";
+		};
+		838DEC742D6D78EF00C94B8B /* GetProductListByTypeV7Service */ = {
+			isa = PBXGroup;
+			children = (
+				838DEC752D6D794600C94B8B /* Services+getProductListByTypeV7.swift */,
+			);
+			path = GetProductListByTypeV7Service;
 			sourceTree = "<group>";
 		};
 		839331932C8EEC5500D15379 /* v2 */ = {
@@ -23064,6 +23078,7 @@
 				2A840C012C373C1500BA6887 /* TemplatesFlowState.swift in Sources */,
 				2A6481F72A1BC623005CC17A /* TextFieldFactory.swift in Sources */,
 				2AC0C63D2C25A8E300DFF4AF /* BottomAmountConfig+iVortex.swift in Sources */,
+				838DEC782D6D817800C94B8B /* RequestFactory+createGetProductListByTypeV7Request.swift in Sources */,
 				0BA14E14270DD0BF0098E422 /* BackgroundTimerController.swift in Sources */,
 				C16157272C2A89A4000EFC3A /* Reducer+makeProductProfileFlowReducer.swift in Sources */,
 				0C5D7D9E298320C100BC0CCF /* NetworkMonitorAgentProtocol.swift in Sources */,
@@ -23137,6 +23152,7 @@
 				77517FEE27A99383005CFB77 /* ExchangeRateData.swift in Sources */,
 				833D3E3C2C2EDE31006626F2 /* ControlButtonEvent.swift in Sources */,
 				EDDFE3BD2757D88C00F57C71 /* SelectDepositPeriodViewController.swift in Sources */,
+				838DEC762D6D794600C94B8B /* Services+getProductListByTypeV7.swift in Sources */,
 				2A7EB61B2D21910D00839E3E /* RootViewModelFactory+processProvider.swift in Sources */,
 				2A58FABF2AD7355700BD1967 /* SessionID.swift in Sources */,
 				688B9BB426E03B3000407A75 /* TotalMoneyView.swift in Sources */,

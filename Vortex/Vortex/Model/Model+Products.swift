@@ -11,7 +11,7 @@ import CloudKit
 import VortexTools
 import Foundation
 import ServerAgent
-import GetProductListByTypeV6Service
+import GetProductListByTypeV7Service
 
 //MARK: - Actions
 
@@ -554,8 +554,8 @@ extension Model {
         _ command: ServerCommands.ProductController.GetProductListByType,
         productType: ProductType
     ) {
-        if let getProductsV6 {
-            getProducts_V6(getProductsV6, command, productType)
+        if let getProductsV7 {
+            getProducts_V7(getProductsV7, command, productType)
             
         } else {
             getProductsV5(command, productType)
@@ -619,12 +619,12 @@ extension Model {
         }
     }
     
-    func getProducts_V6(
-        _ getProductsV6: Services.GetProductListByTypeV6,
+    func getProducts_V7(
+        _ getProductsV7: Services.GetProductListByTypeV7,
         _ command: ServerCommands.ProductController.GetProductListByType,
         _ productType: ProductType
     ) {
-        getProductsV6(productType) { response in
+        getProductsV7(productType) { response in
             self.handleGetProductListByTypeResponse(productType, command, response)
         }
     }
