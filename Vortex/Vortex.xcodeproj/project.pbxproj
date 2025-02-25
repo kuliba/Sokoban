@@ -2971,6 +2971,9 @@
 		83BD07192C75F6340074F444 /* DisableForCorCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BD07182C75F6340074F444 /* DisableForCorCards.swift */; };
 		83BD071B2C75F72D0074F444 /* DisableCorCardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BD071A2C75F72D0074F444 /* DisableCorCardsView.swift */; };
 		83C139D32A5C63D20091BA0D /* LatestPaymentsViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C139D22A5C63D20091BA0D /* LatestPaymentsViewComponentTests.swift */; };
+		83C4FC9B2D6DA4B60038A7E8 /* GetSavingsAccountInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C4FC9A2D6DA4B60038A7E8 /* GetSavingsAccountInfo.swift */; };
+		83C4FC9D2D6DA6BD0038A7E8 /* Services+makeGetSavingsAccountInfoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C4FC9C2D6DA6BD0038A7E8 /* Services+makeGetSavingsAccountInfoServices.swift */; };
+		83C4FC9F2D6DA70D0038A7E8 /* RequestFactory+createGetSavingsAccountInfoRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C4FC9E2D6DA70D0038A7E8 /* RequestFactory+createGetSavingsAccountInfoRequest.swift */; };
 		83C6A1E92CFF43540076BC25 /* SavingsAccount in Frameworks */ = {isa = PBXBuildFile; productRef = 83C6A1E82CFF43540076BC25 /* SavingsAccount */; };
 		83C6F1162B9601BE00EA892A /* ProductProfileComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 83C6F1152B9601BE00EA892A /* ProductProfileComponents */; };
 		83C8F4432A443A10008203E3 /* ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C8F4422A443A10008203E3 /* ItemView.swift */; };
@@ -6708,6 +6711,9 @@
 		83BD07182C75F6340074F444 /* DisableForCorCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisableForCorCards.swift; sourceTree = "<group>"; };
 		83BD071A2C75F72D0074F444 /* DisableCorCardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisableCorCardsView.swift; sourceTree = "<group>"; };
 		83C139D22A5C63D20091BA0D /* LatestPaymentsViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestPaymentsViewComponentTests.swift; sourceTree = "<group>"; };
+		83C4FC9A2D6DA4B60038A7E8 /* GetSavingsAccountInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetSavingsAccountInfo.swift; sourceTree = "<group>"; };
+		83C4FC9C2D6DA6BD0038A7E8 /* Services+makeGetSavingsAccountInfoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+makeGetSavingsAccountInfoServices.swift"; sourceTree = "<group>"; };
+		83C4FC9E2D6DA70D0038A7E8 /* RequestFactory+createGetSavingsAccountInfoRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetSavingsAccountInfoRequest.swift"; sourceTree = "<group>"; };
 		83C6A1EA2CFF47670076BC25 /* SavingsAccount.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SavingsAccount.xctestplan; sourceTree = "<group>"; };
 		83C8F4422A443A10008203E3 /* ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemView.swift; sourceTree = "<group>"; };
 		83C8F4442A444777008203E3 /* ItemsViewOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsViewOld.swift; sourceTree = "<group>"; };
@@ -16309,6 +16315,7 @@
 				83DBC7B52C37E0C900DEF441 /* UserVisibilityProductsSettingsServices.swift */,
 				839109272C381D86007F5257 /* GetSVCardLimitsServices.swift */,
 				8328ABF62C3BFF7C00AD05E0 /* ChangeSVCardLimitServices.swift */,
+				83C4FC9A2D6DA4B60038A7E8 /* GetSavingsAccountInfo.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -16453,6 +16460,7 @@
 				8342393F2D4D55100074D331 /* RequestFactory+createGetOpenAccountFormRequest.swift */,
 				838DCBE72D65E054009BE9DF /* RequestFactory+createPrepareOpenSavingsAccountRequest.swift */,
 				8372A8B32D6892EC00CD1CFB /* RequestFactory+createMakeOpenSavingsAccountRequest.swift */,
+				83C4FC9E2D6DA70D0038A7E8 /* RequestFactory+createGetSavingsAccountInfoRequest.swift */,
 			);
 			path = SavingsAccount;
 			sourceTree = "<group>";
@@ -16684,6 +16692,7 @@
 				839109252C381C8B007F5257 /* Services+makeGetSVCardLimitsServices.swift */,
 				8328ABF42C3BFF4900AD05E0 /* Services+makeChangeSVCardLimitServices.swift */,
 				8317CA4A2C3D677C0076DC7A /* Services+makeSVCardLandingServices.swift */,
+				83C4FC9C2D6DA6BD0038A7E8 /* Services+makeGetSavingsAccountInfoServices.swift */,
 			);
 			path = ProductProfile;
 			sourceTree = "<group>";
@@ -21728,6 +21737,7 @@
 				A52A8FA0274800D600288FBD /* InternetTVRegionSearchController.swift in Sources */,
 				2A366E702D00910A006D1FB8 /* RootViewModelFactory+processSelection.swift in Sources */,
 				0B11A7782919875500C9BDD0 /* Model+QR.swift in Sources */,
+				83C4FC9F2D6DA70D0038A7E8 /* RequestFactory+createGetSavingsAccountInfoRequest.swift in Sources */,
 				2A248F492C679ADE00082814 /* RootViewModelFactory+makeTemplatesComposer.swift in Sources */,
 				2A2F08262D57A78200EEB654 /* OrderCardCompleteView.swift in Sources */,
 				EDB145402666AFD70028EF5A /* Constants.swift in Sources */,
@@ -22414,6 +22424,7 @@
 				7763A692279DB1CB0064B037 /* CSRFAgentProtocol.swift in Sources */,
 				ED353B6C26FB5E8300F17F00 /* GetUserSettingDecodableModel.swift in Sources */,
 				0B931B1626DCD5F100CA8017 /* Parameters.swift in Sources */,
+				83C4FC9D2D6DA6BD0038A7E8 /* Services+makeGetSavingsAccountInfoServices.swift in Sources */,
 				2AB8BA612D1753EA00DA11D2 /* RootViewModelFactory+getInfoRepeatPaymentNavigation.swift in Sources */,
 				2A36249B2C5F412000174C50 /* AnywayServicePickerFlowEffect.swift in Sources */,
 				2A2EE9062CF07F190019FC31 /* RootViewModelFactory+composeLoadablePickerModel.swift in Sources */,
@@ -22485,6 +22496,7 @@
 				A5C7A1AE275BEF58003BEF6D /* RequisiteDO.swift in Sources */,
 				77DA206428453ADB00D7E005 /* MeToMeView+Legacy.swift in Sources */,
 				2A5D2FBD2BF33D6F00BC3092 /* UtilityPrepaymentFlowMicroServices.swift in Sources */,
+				83C4FC9B2D6DA4B60038A7E8 /* GetSavingsAccountInfo.swift in Sources */,
 				ED664BB7274530320050D1E0 /* AccountStatementPDFController.swift in Sources */,
 				C17094322D5A285B001E3094 /* StatefulButtonConfig+iVortex.swift in Sources */,
 				C13D8F6B2C9B16E800A79263 /* HistoryEffectHandler.swift in Sources */,

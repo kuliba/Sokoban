@@ -36,7 +36,7 @@ private extension GetSavingsAccountInfoPayload {
     
     func httpBody() throws -> Data {
         
-        let parameters: [String: Int] = ["accountId": accountID]
+        let parameters: [String: Int] = ["accountNumber": accountID]
         
         return try JSONSerialization.data(withJSONObject: parameters as [String: Int])
     }

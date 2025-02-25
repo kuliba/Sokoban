@@ -18,6 +18,7 @@ struct ProductProfileServices {
     let createCreateGetSVCardLimits: GetSVCardLimitsServices
     let createChangeSVCardLimit: ChangeSVCardLimitServices
     let createSVCardLanding: SVCardLandingServices
+    let createGetSavingsAccountInfo: GetSavingsAccountInfoServices
     let repeatPayment: RepeatPayment
     
     let makeSVCardLandingViewModel: (Landing, ListHorizontalRectangleLimitsViewModel?, UILanding.Component.Config, @escaping (LandingEvent) -> Void
@@ -45,6 +46,7 @@ extension ProductProfileServices {
         createCreateGetSVCardLimits: .preview(),
         createChangeSVCardLimit: .preview(),
         createSVCardLanding: .preview(),
+        createGetSavingsAccountInfo: .preview(),
         repeatPayment: { _,_,_ in },
         makeSVCardLandingViewModel: { _,_,_,_ in nil },
         makeInformer: { _ in }

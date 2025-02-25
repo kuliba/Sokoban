@@ -39,6 +39,7 @@ class ProductProfileViewModel: ObservableObject {
     @Published var payment: PaymentsViewModel?
     @Published var operationDetail: OperationDetailViewModel?
     @Published var accentColor: Color
+    @Published var accountInfo: GetSavingsAccountInfoServices.SAInfo?
     
     @Published var historyState: HistoryState?
     @Published var filterState: FilterState
@@ -286,6 +287,10 @@ class ProductProfileViewModel: ObservableObject {
         bind(buttons: buttons)
         
         bind()
+        
+        if let account = product.asAccount {
+            makeSavingsAccountInfo(with: account)
+        }
     }
 }
 
@@ -1944,6 +1949,23 @@ private extension ProductProfileViewModel {
         return product.backgroundColor
     }
     
+    func makeSavingsAccountInfo(with account: ProductAccountData) {
+        
+        if account.isSavingAccount == true, let accountNumber = account.accountNumber {
+            
+            let accountID = (accountNumber as NSString).integerValue
+            productProfileServices.createGetSavingsAccountInfo.createGetSavingsAccountInfo(.init(accountID: accountID)) { [weak self] response in
+                
+                switch response {
+                case let .success(info):
+                    self?.accountInfo = info
+                    
+                default:
+                    break
+                }
+            }
+        }
+    }
     func makeDetailViewModel(with product: ProductData) -> ProductProfileDetailView.ViewModel? {
         
         switch product {
@@ -1956,6 +1978,7 @@ private extension ProductProfileViewModel {
             }
             
             return .init(productLoan: productLoan, loanData: loanData, model: model)
+            
             
         default:
             return nil

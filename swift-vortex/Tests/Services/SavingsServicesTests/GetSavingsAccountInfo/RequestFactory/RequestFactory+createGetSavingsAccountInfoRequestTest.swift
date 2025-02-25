@@ -60,14 +60,14 @@ final class RequestFactory_createGetSavingsAccountInfoRequestTests: XCTestCase {
 
 private struct _DTO: Decodable, Equatable {
     
-    let accountId: Int
+    let accountNumber: Int
 }
 
 private extension _DTO {
     
     init(_ payload: GetSavingsAccountInfoPayload) {
         
-        self.init(accountId: payload.accountID)
+        self.init(accountNumber: payload.accountID)
     }
 }
 
