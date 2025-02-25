@@ -171,7 +171,8 @@ private extension C2GCompleteCover {
                 details: .preview(
                     basicDetails: .completedFull,
                     fullDetails: .failure(NSError(domain: "Load failure", code: -1))
-                )
+                ),
+                document: .preview
             )
         )
     }
@@ -185,7 +186,8 @@ private extension C2GCompleteCover {
                 details: .preview(
                     basicDetails: .completedFull,
                     fullDetails: .loading(nil)
-                )
+                ),
+                document: .preview
             )
         )
     }
@@ -199,7 +201,8 @@ private extension C2GCompleteCover {
                 details: .preview(
                     basicDetails: .completedFull,
                     fullDetails: .pending
-                )
+                ),
+                document: .preview
             )
         )
     }
@@ -239,10 +242,20 @@ private extension C2GCompleteCover {
                 details: .preview(
                     basicDetails: fields.basicDetails,
                     fullDetails: .completed(.preview)
-                )
+                ),
+                document: .preview
             )
         )
     }
+}
+
+private extension DocumentButtonDomain.Model {
+    
+    static let preview: DocumentButtonDomain.Model = .init(
+        initialState: .pending,
+        reduce: { state,_ in (state, nil) }, 
+        handleEffect: { _,_ in }
+    )
 }
 
 extension OperationDetailDomain.ExtendedDetails {
@@ -273,10 +286,11 @@ private extension C2GPaymentDomain.Complete {
     
     static func preview(
         fields: Context,
-        details: OperationDetailDomain.Model
+        details: OperationDetailDomain.Model,
+        document: DocumentButtonDomain.Model = .preview
     ) -> Self {
         
-        return .init(context: fields, details: details)
+        return .init(context: fields, details: details, document: document)
     }
 }
 

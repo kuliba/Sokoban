@@ -75,6 +75,7 @@ extension C2GPaymentDomain {
         
         let context: Context
         let details: OperationDetailDomain.Model
+        let document: DocumentButtonDomain.Model
         
         struct Context: Equatable {
             

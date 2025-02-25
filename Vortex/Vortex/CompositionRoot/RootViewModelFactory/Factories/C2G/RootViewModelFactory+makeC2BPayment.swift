@@ -64,10 +64,17 @@ extension RootViewModelFactory {
                 completion(.failure(failure))
                 
             case let .success(payload):
-                let model = makeOperationDetailByPaymentID(payload)
-                model.event(.load)
+                let details = makeOperationDetailByPaymentID(payload)
+                details.event(.load)
                 
-                completion(.success(.init(context: .init(payload), details: model)))
+                let document = makeC2GDocumentButton()
+                document.event(.load)
+                
+                completion(.success(.init(
+                    context: .init(payload), 
+                    details: details,
+                    document: document
+                )))
             }
         }
     }
@@ -104,6 +111,20 @@ extension RootViewModelFactory {
         }
     }
     
+    @inlinable
+    func makeC2GDocumentButton(
+    ) -> DocumentButtonDomain.Model {
+        
+        return makeDocumentButton { [weak self] completion in
+            
+            // TODO: replace stub with real service when API is ready
+            self?.schedulers.background.delay(for: .seconds(2)) {
+                
+                completion(.failure(NSError(domain: "Load print form error", code: -1)))
+            }
+        }
+    }
+    
     // TODO: remove stub
     @inlinable
     func easterEggsCreateC2GPayment(
@@ -127,10 +148,17 @@ extension RootViewModelFactory {
                     digest: digest,
                     status: status
                 )
-                let model = makeOperationDetailByPaymentID(basicDetails)
-                model.event(.load)
+                let details = makeOperationDetailByPaymentID(basicDetails)
+                details.event(.load)
                 
-                completion(.success(.init(context: .init(basicDetails), details: model)))
+                let document = makeC2GDocumentButton()
+                document.event(.load)
+                
+                completion(.success(.init(
+                    context: .init(basicDetails), 
+                    details: details,
+                    document: document
+                )))
                 
             default:
                 completion(.failure(.server("server error")))
