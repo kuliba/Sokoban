@@ -30,6 +30,7 @@ extension ViewComponents {
             .navigationBar(with: navBarModelWithQR(
                 title: "Поиск по УИН",
                 subtitle: "Поиск начислений по УИН",
+                subtitleForeground: .textPlaceholder,
                 dismiss: dismiss,
                 scanQR: scanQR
             ))
