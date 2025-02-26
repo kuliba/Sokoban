@@ -77,18 +77,25 @@ public extension Reducer {
             }
         case let .productSelect(productSelectEvent):
             state.productSelect = productSelectReduce(state.productSelect, productSelectEvent)
-            // TODO: add validation
-        
+            
+            guard let form = state.form,
+                  let balance = state.productSelect.selected?.balance,
+                  let amountValue = form.amountValue
+            else { break }
+            
+            let isValid: Bool = (form.consent && amountValue > 0 && balance >= amountValue )
+
+            state.form?.amount = .init(title: form.amount.title, value: amountValue, button: .init(title: form.amount.button.title, isEnabled: isValid))
+
         case let .amount(amountEvent):
             switch amountEvent {
             case let .edit(decimal):
                 guard let form = state.form,
                       form.topUp.isOn,
-                      let balance = state.productSelect.selected?.balance,
-                      balance >= decimal
+                      let balance = state.productSelect.selected?.balance
                 else { break }
-                // TODO: implanemt
-                let isValid = true // check balance!!!
+
+                let isValid: Bool = (form.consent &&  decimal > 0 && balance >= decimal)
                 
                 state.form?.amount = .init(title: form.amount.title, value: decimal, button: .init(title: form.amount.button.title, isEnabled: isValid))
                 

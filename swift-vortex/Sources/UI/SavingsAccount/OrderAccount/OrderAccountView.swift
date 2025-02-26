@@ -136,12 +136,16 @@ private extension OrderAccountView {
         VStack(spacing: config.padding) {
             
             productView(product(form))
-            income(income: state.form?.constants.income ?? "", false)
+            income(income: form.constants.income, false)
             topUpView(topUp(form))
-            if state.form?.topUp.isShowFooter == true {
-                productSelector(form)
-            } else if state.form?.topUp.isOn == true, state.form?.topUp.isShowFooter == false {
-                topUpInfo()
+            
+            if form.topUp.isOn {
+                productSelectView()
+                    .disabled(!form.topUp.isShowFooter)
+                
+                if !form.topUp.isShowFooter {
+                    topUpInfo()
+                }
             }
         }
         .disabled(state.hasConfirmation)
@@ -257,16 +261,6 @@ private extension OrderAccountView {
             isLoading: false
         )
         .rounded(config.roundedConfig)
-    }
-    
-    @ViewBuilder
-    func productSelector(
-        _ form: Form<Confirmation>
-    ) -> ProductSelectView? {
-        
-        if form.topUp.isOn {
-            productSelectView()
-        }
     }
 }
 

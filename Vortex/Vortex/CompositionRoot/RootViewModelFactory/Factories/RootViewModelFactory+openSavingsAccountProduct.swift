@@ -55,7 +55,6 @@ extension RootViewModelFactory {
         )
 
         let content: OpenSavingsAccountDomain.Content = makeContent(initialState, products)
-        content.event(.load)
         
         let cancellable = content.$state
             .compactMap(\.form?.orderAccountResponse)
@@ -385,7 +384,7 @@ private extension SavingsAccountProduct {
                 orderServiceOption: orderServiceOption),
             confirmation: .loaded(nil),
             topUp: .default(),
-            amount: .init(title: "", value: 0, button: .init(title: "Продолжить", isEnabled: true))
+            amount: .init(title: "", value: 0, button: .init(title: "Продолжить", isEnabled: false))
         )
     }
     
