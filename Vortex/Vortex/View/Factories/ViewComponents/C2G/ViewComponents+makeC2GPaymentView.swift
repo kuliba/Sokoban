@@ -42,7 +42,7 @@ extension ViewComponents {
                     
                     Group {
                         
-                        state.context.merchantNameField.map(infoView)
+                        groupView(state.context.payerNameField, state.context.merchantNameField)
                         
                         VStack(spacing: 13) {
                             
@@ -58,20 +58,10 @@ extension ViewComponents {
                             }
                         }
                         
-                        if state.context.hasEitherDateNOrPaymentTerm {
-                            
-                            VStack(spacing: 13) {
-                                
-                                state.context.dateNField.map(infoView)
-                                
-                                if state.context.hasBothDateNAndPaymentTerm {
-                                    
-                                    Divider()
-                                }
-                                
-                                state.context.paymentTermField.map(infoView)
-                            }
-                        }
+                        state.context.payerINNField.map(infoView)
+                        state.context.payerKPPField.map(infoView)
+                        
+                        groupView(state.context.dateNField, state.context.paymentTermField)
                         
                         state.context.legalActField.map(infoView)
                     }
@@ -104,6 +94,27 @@ extension ViewComponents {
                 }
                 .padding(.horizontal)
                 .background(.white)
+            }
+        }
+    }
+    
+    @inlinable
+    @ViewBuilder
+    func groupView(
+        _ first: C2GPaymentDomain.Context.Field?,
+        _ second: C2GPaymentDomain.Context.Field?
+    ) -> some View {
+        
+        let isEmpty = [first, second].compactMap({ $0 }).isEmpty
+        let hasBoth = [first, second].compactMap({ $0 }).count == 2
+        
+        if !isEmpty {
+            
+            VStack(spacing: 13) {
+                
+                first.map(infoView)
+                if hasBoth { Divider() }
+                second.map(infoView)
             }
         }
     }
@@ -242,14 +253,48 @@ extension C2GPaymentDomain.Context {
 
 extension C2GPaymentDomain.Context {
     
+    var hasBothPayerNameAndMerchantName: Bool {
+        
+        payerNameField != nil && merchantNameField != nil
+    }
+    
+    var hasEitherPayerNameOrMerchantName: Bool {
+        
+        payerNameField != nil || merchantNameField != nil
+    }
+    
     var hasBothDateNAndPaymentTerm: Bool {
         
         dateNField != nil && paymentTermField != nil
     }
     
-    var hasEitherDateNOrPaymentTerm: Bool { 
+    var hasEitherDateNOrPaymentTerm: Bool {
         
         dateNField != nil || paymentTermField != nil
+    }
+    
+    var payerINNField: Field? {
+        
+        return payerINN.map {
+            
+            return .init(icon: .ic24FileHash, title: .payerINN, value: $0)
+        }
+    }
+    
+    var payerNameField: Field? {
+        
+        return payerName.map {
+            
+            return .init(icon: .ic24FileHash, title: .payerName, value: $0)
+        }
+    }
+    
+    var payerKPPField: Field? {
+        
+        return payerKPP.map {
+            
+            return .init(icon: .ic24Hash, title: .payerKPP, value: $0)
+        }
     }
     
     var dateNField: Field? {
@@ -330,6 +375,9 @@ private extension String {
     static let formattedAmount: Self = "Сумма к оплате"
     static let legalAct: Self = "Информация о НПА"
     static let merchantName: Self = "Получатель"
+    static let payerINN: Self = "ИНН плательщика"
+    static let payerKPP: Self = "КПП плательщика"
+    static let payerName: Self = "Информация о плательщике"
     static let paymentTerm: Self = "Срок оплаты"
     static let purpose: Self = "Назначение платежа"
     static let uin: Self = "Номер документа (УИН)"
