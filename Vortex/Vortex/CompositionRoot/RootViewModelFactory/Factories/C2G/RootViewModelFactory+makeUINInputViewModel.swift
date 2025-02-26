@@ -22,12 +22,15 @@ extension RootViewModelFactory {
             placeholderText: placeholderText
         )
         
-        let initialState = TextInputState(textField: .noFocus(value))
-        
         let textInputValidator = TextInputValidator(
             hintText: hintText,
             warningText: warningText,
             validate: { 20...25 ~= $0.count }
+        )
+        
+        let initialState = TextInputState(
+            textField: .noFocus(value),
+            message: textInputValidator.validate(.noFocus(value))
         )
         
         let reducer = TextInputReducer(
