@@ -10,12 +10,29 @@ private extension SavingsAccountDetailsState {
     
     var period: String? {
         
-        data?.dateNext.map { "Отчетный период с 01 по \($0.suffix(2))" }
+        return data?.dateNext.map { "Отчетный период с \($0.suffix(2)) \(Date.nameOfMonth) по \(Date().lastDayOfMonth) \(Date.nameOfMonth)" }
     }
     
     var paydate: String? {
         
-        data?.dateNext.map { "Дата выплаты % - \($0.suffix(2))" }
+        data?.dateNext.map { "Дата выплаты % - \($0.suffix(2)) \(Date.nameOfMonth)" }
+    }
+    
+    var days: String {
+       "\(Date.now.daysToEndMonth) дней"
+    }
+}
+
+extension Date {
+    
+    var lastDayOfMonth: Int { Calendar.current.range(of: .day, in: .month, for: self)!.count }
+    var day: Int { Calendar.current.component(.day, from:  self) }
+    var month: Int { Calendar.current.component(.month, from:  self) }
+
+    var daysToEndMonth: Int { lastDayOfMonth - day }
+    
+    static var nameOfMonth: String {
+        return Date().formatted(Date.FormatStyle().month(.abbreviated))
     }
 }
 
@@ -136,7 +153,7 @@ public struct SavingsAccountDetailsView: View {
             if (!needShimmering) {
                 config.info
                     .foregroundColor(config.colors.chevron)
-                config.texts.days
+                state.days
                     .text(withConfig: config.days)
             }
         }

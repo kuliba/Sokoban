@@ -10,10 +10,13 @@ import Foundation
 public struct TopUp: Equatable {
     
     public var isOn: Bool
-    
+    public var isShowFooter: Bool
+
     public init(
-        isOn: Bool
+        isOn: Bool,
+        isShowFooter: Bool = true
     ) {
         self.isOn = isOn
+        self.isShowFooter = isShowFooter
     }
 }

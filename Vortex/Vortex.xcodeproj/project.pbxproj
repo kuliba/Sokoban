@@ -2783,6 +2783,7 @@
 		831A35002D5CBC910041A884 /* PaymentsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831A34FF2D5CBC910041A884 /* PaymentsViewModelTests.swift */; };
 		831AB0E429CB22670091B6FD /* Model+PaymentsServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831AB0E329CB22670091B6FD /* Model+PaymentsServices.swift */; };
 		831B40412A715E6300548EEE /* ConfirmCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831B40402A715E6300548EEE /* ConfirmCodeView.swift */; };
+		831CC3752D6E0E6500127334 /* RequestFactory+createGetPrintFormForSavingsAccountRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831CC3742D6E0E6500127334 /* RequestFactory+createGetPrintFormForSavingsAccountRequest.swift */; };
 		831CCF3F2BEA400200DE7D64 /* UnblockCardServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831CCF3E2BEA400200DE7D64 /* UnblockCardServices.swift */; };
 		831EB3D42CCE382400896BD4 /* StickerViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831EB3D32CCE382400896BD4 /* StickerViewFactory.swift */; };
 		832296B22BF78ECB009ACAED /* ProductDataProductStatusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832296B12BF78ECB009ACAED /* ProductDataProductStatusTests.swift */; };
@@ -6534,6 +6535,7 @@
 		831A34FF2D5CBC910041A884 /* PaymentsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsViewModelTests.swift; sourceTree = "<group>"; };
 		831AB0E329CB22670091B6FD /* Model+PaymentsServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsServices.swift"; sourceTree = "<group>"; };
 		831B40402A715E6300548EEE /* ConfirmCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmCodeView.swift; sourceTree = "<group>"; };
+		831CC3742D6E0E6500127334 /* RequestFactory+createGetPrintFormForSavingsAccountRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetPrintFormForSavingsAccountRequest.swift"; sourceTree = "<group>"; };
 		831CCF3E2BEA400200DE7D64 /* UnblockCardServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnblockCardServices.swift; sourceTree = "<group>"; };
 		831EB3D32CCE382400896BD4 /* StickerViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerViewFactory.swift; sourceTree = "<group>"; };
 		832296B12BF78ECB009ACAED /* ProductDataProductStatusTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDataProductStatusTests.swift; sourceTree = "<group>"; };
@@ -16473,6 +16475,7 @@
 				8342393F2D4D55100074D331 /* RequestFactory+createGetOpenAccountFormRequest.swift */,
 				838DCBE72D65E054009BE9DF /* RequestFactory+createPrepareOpenSavingsAccountRequest.swift */,
 				8372A8B32D6892EC00CD1CFB /* RequestFactory+createMakeOpenSavingsAccountRequest.swift */,
+				831CC3742D6E0E6500127334 /* RequestFactory+createGetPrintFormForSavingsAccountRequest.swift */,
 				83C4FC9E2D6DA70D0038A7E8 /* RequestFactory+createGetSavingsAccountInfoRequest.swift */,
 			);
 			path = SavingsAccount;
@@ -21760,6 +21763,7 @@
 				A52A8FA0274800D600288FBD /* InternetTVRegionSearchController.swift in Sources */,
 				2A366E702D00910A006D1FB8 /* RootViewModelFactory+processSelection.swift in Sources */,
 				0B11A7782919875500C9BDD0 /* Model+QR.swift in Sources */,
+				831CC3752D6E0E6500127334 /* RequestFactory+createGetPrintFormForSavingsAccountRequest.swift in Sources */,
 				83C4FC9F2D6DA70D0038A7E8 /* RequestFactory+createGetSavingsAccountInfoRequest.swift in Sources */,
 				2A248F492C679ADE00082814 /* RootViewModelFactory+makeTemplatesComposer.swift in Sources */,
 				2A2F08262D57A78200EEB654 /* OrderCardCompleteView.swift in Sources */,

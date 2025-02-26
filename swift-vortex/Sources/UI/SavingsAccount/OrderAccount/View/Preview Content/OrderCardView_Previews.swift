@@ -143,7 +143,8 @@ where Confirmation == PreviewConfirmation {
             confirmation: confirmation,
             topUp: messages,
             otp: otp,
-            orderAccountResponse: orderAccountResponse
+            orderAccountResponse: orderAccountResponse, 
+            amount: .preview
         )
     }
 }

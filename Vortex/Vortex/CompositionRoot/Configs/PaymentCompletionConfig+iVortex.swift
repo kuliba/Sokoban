@@ -48,7 +48,7 @@ extension PaymentCompletionConfig {
     
     static let orderSavingsAccount: Self = .init(
         statuses: .init(
-            completed: .completed(),
+            completed: .completed(title: "Накопительный счет открыт"),
             inflight: .inflight(
                 title: "Операция в обработке"
             ),

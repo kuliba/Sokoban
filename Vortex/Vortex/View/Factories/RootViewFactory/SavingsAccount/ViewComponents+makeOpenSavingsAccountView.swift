@@ -74,6 +74,7 @@ extension ViewComponents {
                             event: { event(.productSelect($0)) })
                     }
                 )
+                .loaderOverlay(isLoading: state.isLoading)
                 .padding(.horizontal)
             }
             .navigationBarWithBack(
@@ -133,13 +134,26 @@ extension ViewComponents {
         event: @escaping (OpenSavingsAccountDomain.Event) -> Void
     ) -> some View {
         
-        // TODO: add amount
-        StatefulButtonView(
-            isActive: state.isValid,
-            event: { event(.continue) },
-            config: .iVortex(title: state.continueButtonTitle)
-        )
-        .padding(.horizontal)
+        if let form = state.form,
+           form.topUp.isOn,
+           form.topUp.isShowFooter
+        {
+            AmountView(
+                amount: form.amount,
+                event: { event(.amount($0)) },
+                currencySymbol: form.constants.currency.symbol,
+                config: .iVortex,
+                infoView: makeAmountInfoView
+            )
+        } else {
+            // TODO: add amount
+            StatefulButtonView(
+                isActive: state.isValid,
+                event: { event(.continue) },
+                config: .iVortex(title: state.continueButtonTitle)
+            )
+            .padding(.horizontal)
+        }
     }
 }
 

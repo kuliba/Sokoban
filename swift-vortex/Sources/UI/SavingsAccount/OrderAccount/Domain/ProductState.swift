@@ -57,14 +57,30 @@ public extension ProductState {
               let otp = form.otp
         else { return nil }
         
-        return .init(
-            amount: Double(form.amount?.description ?? "0"),
-            cryptoVersion: "1.0",
-            currencyCode: form.constants.currency.code, 
-            sourceAccountId: form.sourceAccountId,
-            sourceCardId: form.sourceCardId,
-            verificationCode: otp
-        )
+        if form.amountValue ?? 0 > 0, let product = productSelect.selected {
+            
+            let sourceAccountID: Int? = (product.type == .account) ? product.id.rawValue : nil
+            let sourceCardID: Int? = (product.type == .card) ? product.id.rawValue : nil
+
+            return .init(
+                amount: Double(form.amountValue?.description ?? "0"),
+                cryptoVersion: "1.0",
+                currencyCode: form.constants.currency.code,
+                sourceAccountId: sourceAccountID,
+                sourceCardId: sourceCardID,
+                verificationCode: otp
+            )
+        } else {
+            
+            return .init(
+                amount: nil,
+                cryptoVersion: "1.0",
+                currencyCode: nil,
+                sourceAccountId: nil,
+                sourceCardId: nil,
+                verificationCode: otp
+            )
+        }
     }
 }
 

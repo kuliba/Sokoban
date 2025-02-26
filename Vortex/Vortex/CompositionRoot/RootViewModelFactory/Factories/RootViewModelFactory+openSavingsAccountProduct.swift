@@ -15,6 +15,31 @@ import RemoteServices
 import LoadableState
 import PaymentComponents
 
+
+enum OpenSavingsAccountCompleteDomain {}
+
+extension OpenSavingsAccountCompleteDomain {
+    
+    struct Complete {
+        
+        let context: Context
+        let details: OperationDetailDomain.Model
+        let document: DocumentButtonDomain.Model
+        
+        struct Context: Equatable {
+            
+            let formattedAmount: String?
+            let merchantName: String?
+            let purpose: String?
+            let status: Status
+            
+            enum Status {
+                
+                case completed, inflight, rejected
+            }
+        }
+    }
+}
 extension RootViewModelFactory {
     
     @inlinable
@@ -358,7 +383,10 @@ private extension SavingsAccountProduct {
                 links: .init(conditions: item.conditionsLink, tariff: item.tariffLink),
                 openValue: openValue,
                 orderServiceOption: orderServiceOption),
-            topUp: .default())
+            confirmation: .loaded(nil),
+            topUp: .default(),
+            amount: .init(title: "", value: 0, button: .init(title: "Продолжить", isEnabled: true))
+        )
     }
     
     var orderServiceOption: String {
@@ -426,21 +454,33 @@ private extension RemoteServices.ResponseMapper.MappingResult<MakeOpenSavingsAcc
                 return .failure(.invalidCodeAlert)
                 
             default:
-                return .success(false)
+                return .failure(.tryLaterAlert)
             }
             
         case let .success(response):
             switch response.documentInfo.documentStatus {
             case .complete, .inProgress:
-                return .success(true)
+                return .success(.init(response))
                 
             default:
-                return .success(false)
+                return .success(.init(response))
             }
         }
     }
 }
 
+private extension OrderAccountResponse {
+    
+    init(_ data: MakeOpenSavingsAccountResponse) {
+        
+        self.init(
+            accountId: data.paymentInfo.accountId,
+            accountNumber: data.paymentInfo.accountNumber,
+            paymentOperationDetailId: data.paymentOperationDetailID,
+            status: data.documentInfo.documentStatus?.status ?? .inflight
+        )
+    }
+}
 private extension OpenSavingsAccountDomain.LoadFailure {
     
     static let invalidCodeAlert: Self = .init(message: ._invalidCode, type: .alert)
@@ -452,4 +492,19 @@ private extension String {
     
     static let _invalidCode = "Введен некорректный код. Попробуйте еще раз."
     static let _tryLater = "Что-то пошло не так.\nПопробуйте позже."
+}
+
+extension MakeOpenSavingsAccountResponse.DocumentStatus {
+    
+    var status: OrderAccountResponse.Status {
+        
+        switch self {
+        case .complete:
+            return .completed
+        case .inProgress:
+            return .inflight
+        case .rejected:
+            return .rejected
+        }
+    }
 }
