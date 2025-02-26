@@ -42,20 +42,7 @@ extension ViewComponents {
                     
                     Group {
                         
-                        if state.context.hasEitherPayerNameOrMerchantName {
-                            
-                            VStack(spacing: 13) {
-                                
-                                state.context.payerNameField.map(infoView)
-                                
-                                if state.context.hasBothPayerNameAndMerchantName {
-                                    
-                                    Divider()
-                                }
-                                
-                                state.context.merchantNameField.map(infoView)
-                            }
-                        }
+                        groupView(state.context.payerNameField, state.context.merchantNameField)
                         
                         VStack(spacing: 13) {
                             
@@ -74,20 +61,7 @@ extension ViewComponents {
                         state.context.payerINNField.map(infoView)
                         state.context.payerKPPField.map(infoView)
                         
-                        if state.context.hasEitherDateNOrPaymentTerm {
-                            
-                            VStack(spacing: 13) {
-                                
-                                state.context.dateNField.map(infoView)
-                                
-                                if state.context.hasBothDateNAndPaymentTerm {
-                                    
-                                    Divider()
-                                }
-                                
-                                state.context.paymentTermField.map(infoView)
-                            }
-                        }
+                        groupView(state.context.dateNField, state.context.paymentTermField)
                         
                         state.context.legalActField.map(infoView)
                     }
@@ -120,6 +94,27 @@ extension ViewComponents {
                 }
                 .padding(.horizontal)
                 .background(.white)
+            }
+        }
+    }
+    
+    @inlinable
+    @ViewBuilder
+    func groupView(
+        _ first: C2GPaymentDomain.Context.Field?,
+        _ second: C2GPaymentDomain.Context.Field?
+    ) -> some View {
+        
+        let isEmpty = [first, second].compactMap({ $0 }).isEmpty
+        let hasBoth = [first, second].compactMap({ $0 }).count == 2
+        
+        if !isEmpty {
+            
+            VStack(spacing: 13) {
+                
+                first.map(infoView)
+                if hasBoth { Divider() }
+                second.map(infoView)
             }
         }
     }
