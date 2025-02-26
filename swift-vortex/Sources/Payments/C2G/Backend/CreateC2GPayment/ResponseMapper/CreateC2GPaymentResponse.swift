@@ -13,6 +13,7 @@ extension ResponseMapper {
     public struct CreateC2GPaymentResponse: Equatable {
         
         public let amount: Decimal?
+        public let dateForDetail: String
         public let documentStatus: String
         public let merchantName: String?
         public let message: String?
@@ -21,6 +22,7 @@ extension ResponseMapper {
         
         public init(
             amount: Decimal?,
+            dateForDetail: String,
             documentStatus: String,
             merchantName: String?,
             message: String?,
@@ -28,6 +30,7 @@ extension ResponseMapper {
             purpose: String?
         ) {
             self.amount = amount
+            self.dateForDetail = dateForDetail
             self.documentStatus = documentStatus
             self.merchantName = merchantName
             self.message = message
