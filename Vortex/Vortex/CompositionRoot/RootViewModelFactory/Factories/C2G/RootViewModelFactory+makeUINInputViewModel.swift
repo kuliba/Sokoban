@@ -12,7 +12,7 @@ import InputComponent
 extension RootViewModelFactory {
     
     func makeUINInputViewModel(
-        value: String,
+        value: String?,
         placeholderText: String = "УИН",
         hintText: String? = nil,
         warningText: String = "От 20 до 25 знаков"
@@ -30,8 +30,8 @@ extension RootViewModelFactory {
         )
         
         let initialState = TextInputState(
-            textField: .noFocus(value),
-            message: textInputValidator.validate(.noFocus(value))
+            textField: .noFocus(value ?? ""),
+            message: value == nil ? nil : textInputValidator.validate(.noFocus(value ?? ""))
         )
         
         let reducer = TextInputReducer(
@@ -49,6 +49,8 @@ extension RootViewModelFactory {
         )
     }
 }
+
+// MARK: - Helpers
 
 private extension TextFieldModel.Reducer {
     

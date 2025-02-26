@@ -18,7 +18,7 @@ extension RootViewModelFactory {
     ) -> SearchByUINDomain.Binder {
         
         composeBinder(
-            content: makeUINInputViewModel(value: uin ?? ""),
+            content: makeUINInputViewModel(value: uin),
             getNavigation: getNavigation,
             selectWitnesses: .empty
         )
