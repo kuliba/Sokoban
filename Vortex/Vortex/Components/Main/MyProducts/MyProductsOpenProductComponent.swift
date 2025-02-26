@@ -65,7 +65,7 @@ struct MyProductsOpenProductView: View {
             
             LazyVGrid(columns: [GridItem(spacing: 12), GridItem()], spacing: 20) {
                 
-                ForEach(viewModel.newProducts.items) { item in
+                ForEach(viewModel.newProducts.items, id: \.type) { item in
                     
                     NewProductButton(viewModel: item)
                         .frame(height: 124)

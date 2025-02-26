@@ -124,6 +124,7 @@ extension Services {
             case getProductDynamicParamsList
             case getProductListByType
             case getSavingLanding
+            case getSavingAccountInfo
             case getSberQRData
             case getScenarioQRData
             case getServiceCategoryList
@@ -287,6 +288,12 @@ extension Services.Endpoint {
         pathPrefix: .rest,
         version: .none,
         serviceName: .makeOpenSavingsAccount
+    )
+
+    static let getSavingAccountInfo: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .getSavingAccountInfo
     )
 
     static let createC2GPayment: Self = .init(
