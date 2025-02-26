@@ -46,9 +46,7 @@ extension ViewComponents {
             
             makeSearchByUINContentView(state, event) {
                 
-                binder.flow.event(.select(.uin(.init(
-                    value: state.uinInputState.value
-                ))))
+                binder.flow.event(.select(.uin(state.uinInputState.value)))
             }
         }
     }

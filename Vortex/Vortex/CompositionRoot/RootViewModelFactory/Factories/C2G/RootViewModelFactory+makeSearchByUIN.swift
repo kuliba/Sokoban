@@ -64,7 +64,7 @@ extension RootViewModelFactory {
     @inlinable
     func getUINData(
         fastAccountID: Int?,
-        uin: SearchByUINDomain.UIN,
+        uin: SearchByUINDomain.Select.UIN,
         completion: @escaping (GetUINDataResult) -> Void
     ) {
         let (products, selectedProduct) = getC2GProducts(fastAccountID: fastAccountID)
@@ -83,7 +83,7 @@ extension RootViewModelFactory {
             connectivityFailureMessage: .connectivity
         )
         
-        service(uin.value) { [weak self] in
+        service(uin) { [weak self] in
             
             let format = self?.format(amount:currency:)
             
@@ -129,13 +129,13 @@ extension RootViewModelFactory {
     // TODO: remove easter egg stub
     @inlinable
     func easterEggsGetUINData(
-        _ uin: SearchByUINDomain.UIN,
+        _ uin: SearchByUINDomain.Select.UIN,
         _ product: ProductSelect.Product,
         _ completion: @escaping (GetUINDataResult) -> Void
     ) {
         schedulers.background.delay(for: .seconds(2)) {
             
-            switch uin.value {
+            switch uin {
             case "01234567890123456789":
                 completion(.failure(.c2gConnectivity))
                 
@@ -174,11 +174,11 @@ private extension String {
 }
 
 // TODO: remove with easter egg stub
-private extension SearchByUINDomain.UIN {
+private extension SearchByUINDomain.Select.UIN {
     
     var hasEasterEgg: Bool {
         
-        ["01234567890123456789", "12345678901234567890", "99999999999999999999"].contains(value)
+        ["01234567890123456789", "12345678901234567890", "99999999999999999999"].contains(self)
     }
 }
 
