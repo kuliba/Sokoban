@@ -175,6 +175,7 @@ extension ProductCarouselView {
                         let updatedGroups = model.update(
                             groups: groups,
                             products: products,
+                            promoTypes: visiblePromoProductsType(promoProducts: promoProducts),
                             productsUpdating: productsUpdating,
                             productGroupDimensions: style.productGroupDimensions
                         )
@@ -192,6 +193,7 @@ extension ProductCarouselView {
                             
                             self.selector = Self.makeSelector(
                                 productTypes: productTypes,
+                                promoProducts: visiblePromoProductsType(promoProducts: promoProducts),
                                 style: self.style.optionsSelectorStyle
                             )
                             self.selector?.select(selectedOptionID)
@@ -341,8 +343,18 @@ extension ProductCarouselView {
         func updatePromo(_ promo: [AdditionalProductViewModel]?) {
             
             promoProducts = promo
+            selector = Self.makeSelector(
+                productTypes: Array(products.value.keys),
+                promoProducts: visiblePromoProductsType(promoProducts: promoProducts),
+                style: style.optionsSelectorStyle
+            )
         }
         
+        func visiblePromoProductsType(promoProducts: [AdditionalProductViewModel]?) -> [ProductType]? {
+            
+            return promoProducts?.filter { shouldShowPromo($0.promoType)}.uniqueValues(by: \.productType).map(\.productType)
+        }
+
         func visiblePromoProducts(productType: ProductType) -> Int {
             
             return promoProducts?.filter { $0.productType == productType && shouldShowPromo($0.promoType)}.count ?? 0
@@ -425,15 +437,24 @@ private extension Model {
     func update(
         groups: [ProductGroupView.ViewModel],
         products: [ProductType : [ProductViewModel]],
+        promoTypes: [ProductType]?,
         productsUpdating: [ProductType],
         productGroupDimensions: ProductGroupView.ViewModel.Dimensions
     ) -> [ProductGroupView.ViewModel] {
         
         ProductType.allCases.compactMap { productType in
             
-            guard let productsForType = products[productType] else {
+            let productsForType: [ProductViewModel]? = {
+                if let items = products[productType] {
+                    return items
+                }
+                if let promoTypes, promoTypes.contains(productType) {
+                    return []
+                }
                 return nil
-            }
+            }()
+            
+            guard let productsForType else { return nil }
             
             let isGroupUpdating = productsUpdating.contains(productType)
             let group = groups.first(where: { $0.productType == productType}) ?? .init(
@@ -668,14 +689,17 @@ extension ProductCarouselView.ViewModel {
     
     static func makeSelector(
         productTypes: [ProductType],
+        promoProducts: [ProductType]?,
         style: OptionSelectorView.ViewModel.Style
     ) -> OptionSelectorView.ViewModel? {
         
-        guard let firstType = productTypes.first,
-              productTypes.count > 1
+        let allTypes = (productTypes + (promoProducts?.filter { !productTypes.contains($0) } ?? [])).sorted(by: \.order)
+        
+        guard let firstType = allTypes.first,
+              allTypes.count > 1
         else { return nil }
         
-        let options = productTypes.map {
+        let options = allTypes.map {
             Option(id: $0.rawValue, name: $0.pluralName)
         }
         
@@ -771,7 +795,10 @@ struct ProductCarouselView: View {
                             PlaceholdersView(style: viewModel.style)
                             
                         case let .groups(groups):
-                            ForEach(groups, content: makeGroup)
+                            ForEach(ProductType.allCases, id: \.rawValue, content: { productType in
+                                makeGroup(groups.first {$0.productType == productType}, productType)
+                            })
+                           // ForEach(groups, content: makeGroup)
                         }
                         
                         newProductButton().map {
@@ -790,21 +817,26 @@ struct ProductCarouselView: View {
         }
     }
     
+    @ViewBuilder
     private func makeGroup(
-        _ groupViewModel: ProductGroupView.ViewModel
+        _ groupViewModel: ProductGroupView.ViewModel?,
+        _ productType: ProductType
     ) -> some View {
         
         HStack(spacing: 8) {
-            if isFirst(groupViewModel.productType) {
-                
-                promoViews(productType: groupViewModel.productType)
-                ProductGroupView(viewModel: groupViewModel)
-                    .accessibilityIdentifier("productScrollView")
+            
+            if let groupViewModel {
+                if isFirst(groupViewModel.productType) {
+                    promoViews(productType: groupViewModel.productType)
+                    ProductGroupView(viewModel: groupViewModel)
+                        .accessibilityIdentifier("productScrollView")
+                } else {
+                    ProductGroupView(viewModel: groupViewModel)
+                        .accessibilityIdentifier("productScrollView")
+                    promoViews(productType: groupViewModel.productType)
+                }
             } else {
-                
-                ProductGroupView(viewModel: groupViewModel)
-                    .accessibilityIdentifier("productScrollView")
-                promoViews(productType: groupViewModel.productType)
+                promoViews(productType: productType)
             }
         }
     }
