@@ -10,14 +10,25 @@ import ListLandingComponent
 import HeaderLandingComponent
 import SwiftUI
 import UIPrimitives
-import SavingsAccount
 
-struct OrderCardLanding {
+public struct OrderCardLanding {
     
-    let header: HeaderViewModel
+    let header: Header
     let conditions: ListLandingComponent.Items
     let security: ListLandingComponent.Items
-    let dropDownList: DropDownListViewModel
+    let dropDownList: DropDownTextList
+    
+    public init(
+        header: Header,
+        conditions: ListLandingComponent.Items,
+        security: ListLandingComponent.Items,
+        dropDownList: DropDownTextList
+    ) {
+        self.header = header
+        self.conditions = conditions
+        self.security = security
+        self.dropDownList = dropDownList
+    }
 }
 
 extension ViewComponents {
@@ -47,29 +58,42 @@ extension ViewComponents {
         landing: OrderCardLanding
     ) -> some View {
        
-        LazyVStack(spacing: 16) {
+        ScrollView {
             
-            HeaderView(model: landing.header)
-            
-            ListLandingComponent.List(
-                items: landing.conditions,
-                config: .iVortex,
-                factory: .init(
-                    makeIconView: makeIconView,
-                    makeBannerImageView: makeGeneralIconView
+            LazyVStack(spacing: 16) {
+                
+                HeaderView(
+                    header: landing.header,
+                    config: .iVortex,
+                    imageFactory: .init(makeIconView: makeIconView)
                 )
-            )
-            
-            ListLandingComponent.List(
-                items: landing.security,
-                config: .iVortex,
-                factory: .init(
-                    makeIconView: makeIconView,
-                    makeBannerImageView: makeGeneralIconView
+                
+                ListLandingComponent.List(
+                    items: landing.conditions,
+                    config: .iVortex,
+                    factory: .init(
+                        makeIconView: makeIconView,
+                        makeBannerImageView: makeGeneralIconView
+                    )
                 )
-            )
-            
-            DropDownList(viewModel: landing.dropDownList)
+                
+                ListLandingComponent.List(
+                    items: landing.security,
+                    config: .iVortex,
+                    factory: .init(
+                        makeIconView: makeIconView,
+                        makeBannerImageView: makeGeneralIconView
+                    )
+                )
+                
+                DropDownTextListView(
+                    config: .default,
+                    list: landing.dropDownList
+                )
+            }
+            .padding(.leading, 15)
+            .padding(.trailing, 16)
+            .padding(.bottom, 25)
         }
     }
     

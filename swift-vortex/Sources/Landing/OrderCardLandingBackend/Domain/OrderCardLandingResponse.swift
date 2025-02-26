@@ -9,7 +9,6 @@ import RemoteServices
 
 public struct OrderCardLandingResponse: Equatable {
     
-    public let id: String
     public let theme: String
     public let product: Product
     public let conditions: Condition
@@ -17,14 +16,12 @@ public struct OrderCardLandingResponse: Equatable {
     public let frequentlyAskedQuestions: Question
     
     public init(
-        id: String,
         theme: String,
         product: OrderCardLandingResponse.Product,
         conditions: OrderCardLandingResponse.Condition,
         security: OrderCardLandingResponse.Security,
         frequentlyAskedQuestions: OrderCardLandingResponse.Question
     ) {
-        self.id = id
         self.theme = theme
         self.product = product
         self.conditions = conditions

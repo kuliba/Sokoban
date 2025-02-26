@@ -14,7 +14,7 @@ extension RequestFactory {
     static func createGetDigitalCardLandingRequest(
     ) throws -> URLRequest {
         
-        let endpoint = Services.Endpoint.getDigitalCardLanding
+        let endpoint = Services.Endpoint.getCardLanding
         let url = try! endpoint.url(
             withBase: Config.serverAgentEnvironment.baseURL
         )

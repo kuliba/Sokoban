@@ -25,8 +25,19 @@ extension RootViewModelFactory {
     func makeOrderCardLandinContent(
     ) -> OrderCardLandingDomain.Content {
         
-        //TODO: replace stub to real data
-        return .stub
+        var orderCard: OrderCardLandingDomain.Content? = nil
+        
+        createOrderCardLanding { result in
+        
+            switch result {
+            case let .success(landing):
+                orderCard = landing
+            case let .failure(error):
+                break
+            }
+        }
+        
+        return orderCard ?? .stub
     }
     
     @inlinable
@@ -82,8 +93,46 @@ extension RootViewModelFactory {
                 completion(.failure(failure))
                 
             case let .success(response):
-                //TODO: replace stub to real data
-                completion(.success(.stub))
+                completion(
+                    .success(
+                        .init(
+                            header: .init(
+                                title: response.product.title,
+                                options: response.product.features,
+                                md5Hash: response.product.image
+                            ),
+                            conditions: .init(
+                                title: response.conditions.title,
+                                list: response.conditions.list.compactMap({
+                                    .init(
+                                        md5hash: $0.md5hash,
+                                        title: $0.title,
+                                        subtitle: $0.subtitle
+                                    )
+                                })
+                            ),
+                            security: .init(
+                                title: response.security.title,
+                                list: response.security.list.compactMap({
+                                    .init(
+                                        md5hash: $0.md5hash,
+                                        title: $0.title,
+                                        subtitle: $0.subtitle
+                                    )
+                                })
+                            ),
+                            dropDownList: .init(
+                                title: response.frequentlyAskedQuestions.title,
+                                items: response.security.list.compactMap({
+                                    .init(
+                                        title: $0.title,
+                                        subTitle: $0.subtitle ?? ""
+                                    )
+                                })
+                            )
+                        )
+                    )
+                )
             }
         }
     }
@@ -105,7 +154,7 @@ private extension OrderCardLandingDomain.Content {
                 "5% на категории сезона",
                 "от 0,5% до 1% кешбэк на остальные покупки**"
             ],
-            backgroundImage: .cardPlaceholder
+            md5Hash: "b6fa019f307d6a72951ab7268708aa15"
         ),
         conditions: .init(
             title: "Выгодные условия",
@@ -162,15 +211,15 @@ private extension OrderCardLandingDomain.Content {
             items: [
                 .init(
                     title: "Как повторно подключить подписку?",
-                    description: "тест"
+                    subTitle: "тест"
                 ),
                 .init(
                     title: "Как начисляются проценты?",
-                    description: "тесттесттесттесттесттесттесттест"
+                    subTitle: "тесттесттесттесттесттесттесттест"
                 ),
                 .init(
                     title: "Какие условия бесплатного обслуживания?",
-                    description: ""
+                    subTitle: ""
                 )
             ]
         )
