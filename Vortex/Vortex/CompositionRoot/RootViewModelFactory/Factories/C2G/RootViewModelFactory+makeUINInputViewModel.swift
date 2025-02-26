@@ -19,7 +19,8 @@ extension RootViewModelFactory {
     ) -> RxInputViewModel {
         
         let textFieldReducer = TransformingReducer(
-            placeholderText: placeholderText
+            placeholderText: placeholderText,
+            transformer: FilteringTransformer.digits
         )
         
         let textInputValidator = TextInputValidator(
