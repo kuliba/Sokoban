@@ -13,7 +13,7 @@ extension RootViewModelFactory {
     
     func makeUINInputViewModel(
         value: String?,
-        placeholderText: String = "УИН",
+        placeholderText: String = "Введите значение",
         hintText: String? = nil,
         warningText: String = "От 20 до 25 знаков"
     ) -> RxInputViewModel {
@@ -30,7 +30,7 @@ extension RootViewModelFactory {
         )
         
         let initialState = TextInputState(
-            textField: .noFocus(value ?? ""),
+            textField: value.map { .noFocus($0) } ?? .placeholder(placeholderText),
             message: value == nil ? nil : textInputValidator.validate(.noFocus(value ?? ""))
         )
         
