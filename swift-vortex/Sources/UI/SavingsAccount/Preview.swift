@@ -197,7 +197,8 @@ extension SavingsAccountDetails {
         currentInterest: 22400,
         minBalance: 8000,
         paidInterest: 11134056.77,
-        progress: 0.8,
+        progress: 0.8, 
+        dateNext: nil,
         currencyCode: "₽"
     )
 }

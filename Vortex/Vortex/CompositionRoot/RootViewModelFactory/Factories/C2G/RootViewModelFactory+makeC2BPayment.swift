@@ -195,6 +195,7 @@ private extension C2GPaymentDomain.Complete.Context {
     init(_ payload: OperationDetailDomain.ModelPayload) {
         
         self.init(
+            dateForDetail: payload.dateForDetail,
             formattedAmount: payload.formattedAmount,
             merchantName: payload.merchantName,
             purpose: payload.purpose,
@@ -259,8 +260,8 @@ private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
         return .init(
             product: digest.product,
             status: status,
+            dateForDetail: dateForDetail,
             formattedAmount: formattedAmount,
-            formattedDate: nil, // TODO: extract from new version of response - Lera
             merchantName: merchantName,
             message: message,
             paymentOperationDetailID: paymentOperationDetailID,
@@ -281,9 +282,9 @@ private extension OperationDetailDomain.ModelPayload {
         
         return .init(
             product: digest.product,
-            status: status,
+            status: status, 
+            dateForDetail: "19 февраля 2025, 12:44",
             formattedAmount: "100 ₽",
-            formattedDate: "06.05.2021 15:38:12",
             merchantName: "merchantName",
             message: "message",
             paymentOperationDetailID: 122004,

@@ -33,6 +33,9 @@ extension C2GPaymentDomain {
         let formattedAmount: String? // transAmm
         let legalAct: String?
         let merchantName: String?
+        let payerINN: String?
+        let payerKPP: String?
+        let payerName: String?
         let paymentTerm: String?
         let purpose: String?
         let term: AttributedString
@@ -47,6 +50,9 @@ extension C2GPaymentDomain {
         let formattedAmount: String?
         let legalAct: String?
         let merchantName: String?
+        let payerINN: String?
+        let payerKPP: String?
+        let payerName: String?
         let paymentTerm: String?
         let products: [ProductSelect.Product]
         let purpose: String?
@@ -79,6 +85,7 @@ extension C2GPaymentDomain {
         
         struct Context: Equatable {
             
+            let dateForDetail: String
             let formattedAmount: String?
             let merchantName: String?
             let purpose: String?
