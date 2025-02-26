@@ -63,15 +63,6 @@ struct OrderCardLandingView: View {
                 "5% на категории сезона",
                 "от 0,5% до 1% кешбэк на остальные покупки**"
             ],
-            horizontList: .init(
-                title: "Скидки и переводы",
-                items: [
-                    .init(title: "СПБ", image: nil),
-                    .init(title: "За рубеж", image: nil),
-                    .init(title: "ЖКХ", image: nil),
-                    .init(title: "Налоги", image: nil)
-                ]
-            ),
             backgroundImage: Image("orderCardLanding")
         ),
         conditions: .init(

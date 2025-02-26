@@ -30,7 +30,7 @@ extension ViewComponents {
     ) -> some View {
         
         DismissibleScrollView(
-            title: { $0 > 0 ? "title" : "" },
+            title: { $0 > 0 ? landing.header.title : "" },
             dismiss: dismiss
         ) {
             makeOrderCardLandingContentView(landing: landing)
@@ -46,28 +46,31 @@ extension ViewComponents {
     func makeOrderCardLandingContentView(
         landing: OrderCardLanding
     ) -> some View {
-        
-        HeaderView(model: landing.header)
-        
-        ListLandingComponent.List(
-            items: landing.conditions,
-            config: .iVortex,
-            factory: .init(
-                makeIconView: makeIconView,
-                makeBannerImageView: makeGeneralIconView
+       
+        LazyVStack(spacing: 16) {
+            
+            HeaderView(model: landing.header)
+            
+            ListLandingComponent.List(
+                items: landing.conditions,
+                config: .iVortex,
+                factory: .init(
+                    makeIconView: makeIconView,
+                    makeBannerImageView: makeGeneralIconView
+                )
             )
-        )
-        
-        ListLandingComponent.List(
-            items: landing.security,
-            config: .iVortex,
-            factory: .init(
-                makeIconView: makeIconView,
-                makeBannerImageView: makeGeneralIconView
+            
+            ListLandingComponent.List(
+                items: landing.security,
+                config: .iVortex,
+                factory: .init(
+                    makeIconView: makeIconView,
+                    makeBannerImageView: makeGeneralIconView
+                )
             )
-        )
-        
-        DropDownList(viewModel: landing.dropDownList)
+            
+            DropDownList(viewModel: landing.dropDownList)
+        }
     }
     
     @inlinable
@@ -84,6 +87,8 @@ extension ViewComponents {
                 action: action
             )
         )
+        .frame(height: 48)
+        .padding()
     }
 }
 

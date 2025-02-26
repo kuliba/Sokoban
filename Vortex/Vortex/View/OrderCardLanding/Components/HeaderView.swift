@@ -43,11 +43,6 @@ struct HeaderView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Spacer()
-                
-                OrderCardHorizontalList(model: model.horizontList)
-                    .background(.mainColorsGrayLightest)
-                    .cornerRadius(12)
-                    .offset(y: 76)
             }
             .padding(.leading, 16)
             .padding(.trailing, 15)
@@ -59,7 +54,6 @@ struct HeaderViewModel {
     
     let title: String
     let options: [String]
-    let horizontList: OrderCardHorizontalListViewModel
     let backgroundImage: Image
 }
 
@@ -78,15 +72,6 @@ struct HeaderViewModel {
                         "5% на категории сезона",
                         "от 0,5% до 1% кешбэк на остальные покупки**"
                     ],
-                    horizontList: .init(
-                        title: "Скидки и переводы",
-                        items: [
-                            .init(title: "СПБ", image: nil),
-                            .init(title: "За рубеж", image: nil),
-                            .init(title: "ЖКХ", image: nil),
-                            .init(title: "Налоги", image: nil)
-                        ]
-                    ),
                     backgroundImage: Image("orderCardLanding")
                 )
             )
