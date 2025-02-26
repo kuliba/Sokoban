@@ -228,13 +228,13 @@ extension SearchByUINDomain.Navigation.Destination: Identifiable {
         
         switch self {
         case let .c2gPayment(c2gPayment):
-            return .c2gPayment
+            return .c2gPayment(.init(c2gPayment))
         }
     }
     
-    enum ID: Hashable { // TODO: improve with ObjectIdentifier
+    enum ID: Hashable {
         
-        case c2gPayment
+        case c2gPayment(ObjectIdentifier)
     }
 }
 
