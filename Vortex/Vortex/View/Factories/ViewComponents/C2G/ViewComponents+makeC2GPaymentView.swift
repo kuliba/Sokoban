@@ -42,8 +42,20 @@ extension ViewComponents {
                     
                     Group {
                         
-                        state.context.payerNameField.map(infoView)
-                        state.context.merchantNameField.map(infoView)
+                        if state.context.hasEitherPayerNameOrMerchantName {
+                            
+                            VStack(spacing: 13) {
+                                
+                                state.context.payerNameField.map(infoView)
+                                
+                                if state.context.hasBothPayerNameAndMerchantName {
+                                    
+                                    Divider()
+                                }
+                                
+                                state.context.merchantNameField.map(infoView)
+                            }
+                        }
                         
                         VStack(spacing: 13) {
                             
@@ -245,6 +257,16 @@ extension C2GPaymentDomain.Context {
 }
 
 extension C2GPaymentDomain.Context {
+    
+    var hasBothPayerNameAndMerchantName: Bool {
+        
+        payerNameField != nil && merchantNameField != nil
+    }
+    
+    var hasEitherPayerNameOrMerchantName: Bool {
+        
+        payerNameField != nil || merchantNameField != nil
+    }
     
     var hasBothDateNAndPaymentTerm: Bool {
         
