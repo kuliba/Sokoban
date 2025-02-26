@@ -58,6 +58,9 @@ extension ViewComponents {
                             }
                         }
                         
+                        state.context.payerINNField.map(infoView)
+                        state.context.payerKPPField.map(infoView)
+                        
                         if state.context.hasEitherDateNOrPaymentTerm {
                             
                             VStack(spacing: 13) {
@@ -247,9 +250,25 @@ extension C2GPaymentDomain.Context {
         dateNField != nil && paymentTermField != nil
     }
     
-    var hasEitherDateNOrPaymentTerm: Bool { 
+    var hasEitherDateNOrPaymentTerm: Bool {
         
         dateNField != nil || paymentTermField != nil
+    }
+    
+    var payerINNField: Field? {
+        
+        return payerINN.map {
+            
+            return .init(icon: .ic24FileHash, title: .payerINN, value: $0)
+        }
+    }
+    
+    var payerKPPField: Field? {
+        
+        return payerKPP.map {
+            
+            return .init(icon: .ic24Hash, title: .payerKPP, value: $0)
+        }
     }
     
     var dateNField: Field? {
@@ -330,6 +349,8 @@ private extension String {
     static let formattedAmount: Self = "Сумма к оплате"
     static let legalAct: Self = "Информация о НПА"
     static let merchantName: Self = "Получатель"
+    static let payerINN: Self = "ИНН плательщика"
+    static let payerKPP: Self = "КПП плательщика"
     static let paymentTerm: Self = "Срок оплаты"
     static let purpose: Self = "Назначение платежа"
     static let uin: Self = "Номер документа (УИН)"

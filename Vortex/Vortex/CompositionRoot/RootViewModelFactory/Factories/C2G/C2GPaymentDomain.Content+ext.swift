@@ -50,6 +50,8 @@ where Context == C2GPaymentDomain.Context {
                 formattedAmount: payload.formattedAmount,
                 legalAct: payload.legalAct,
                 merchantName: payload.merchantName,
+                payerINN: payload.payerINN,
+                payerKPP: payload.payerKPP,
                 paymentTerm: payload.paymentTerm,
                 purpose: payload.purpose,
                 term: .terms(url: payload.url),
