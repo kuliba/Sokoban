@@ -15,7 +15,7 @@ extension RootViewModelFactory {
         
         switch type {
         case .account:        return .unknown
-        case .card:           return .card(openCardProduct(notify: { notify(.select(.orderCardResponse($0))) }))
+        case .card:           return .card(.form(openCardProduct(notify: { notify(.select(.orderCardResponse($0))) })))
         case .deposit:        return .unknown
         case .insurance:      return .unknown
         case .loan:           return .unknown

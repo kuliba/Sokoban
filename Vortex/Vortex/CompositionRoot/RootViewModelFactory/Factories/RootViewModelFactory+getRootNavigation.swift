@@ -80,11 +80,18 @@ extension RootViewModelFactory {
         case let .openProduct(type):
             
             switch type {
-            case .card:
-                completion(.openProduct(openProduct(
-                    type: type,
-                    notify: notify
-                )))
+            case let .card(kind):
+                
+                switch kind {
+                case .form:
+                    break
+                    
+                case .landing:
+                    completion(.openProduct(openProduct(
+                        type: type,
+                        notify: notify
+                    )))
+                }
                 
             case .savingsAccount:
                 completion(.openProduct(openProduct(
@@ -139,23 +146,6 @@ extension RootViewModelFactory {
             
         case .userAccount:
             makeUserAccount()
-            
-        case .orderCardLanding:
-            makeOrderCard()
-        }
-        
-        func makeOrderCard() {
-        
-            let landing = makeOrderCardLanding()
-            
-            completion(
-                .orderCardLanding(
-                    .init(
-                        model: landing,
-                        cancellable: .init({})
-                    )
-                )
-            )
         }
         
         func makeScanQR() {

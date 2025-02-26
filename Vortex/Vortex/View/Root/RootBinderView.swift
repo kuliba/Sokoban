@@ -314,9 +314,6 @@ extension RootViewNavigation {
             
         case let .userAccount(userAccount):
             return .userAccount(userAccount)
-            
-        case let .orderCardLanding(orderCardLanding):
-            return .orderCardLanding(orderCardLanding.model.content)
         }
     }
     
@@ -353,7 +350,7 @@ extension RootViewNavigation {
             return .scanQR(node.model)
             
             // cases listed for explicit exhaustivity
-        case .standardPayment, .searchByUIN, .userAccount, .orderCardLanding:
+        case .standardPayment, .searchByUIN, .userAccount:
             return nil
             
         case let .templates(node):
@@ -381,7 +378,14 @@ extension RootViewNavigation.Destination: Identifiable {
         case let .openProduct(openProduct):
             switch openProduct {
             case let .card(openCard):
-                return .openProduct(.card(.init(openCard.model)))
+                
+                switch openCard {
+                case let .form(form):
+                    return .openProduct(.card(.init(form.model)))
+
+                case let .landing(landing):
+                    return .orderCardLanding
+                }
                 
             case .savingsAccount:
                 return .openProduct(.savingsAccount)
