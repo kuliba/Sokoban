@@ -37,6 +37,7 @@ extension ViewComponents {
                         content: { $0.error(dismiss: dismiss) }
                     )
             }
+            .onDisappear { binder.flow.event(.dismiss)}
         }
     }
     
@@ -74,6 +75,7 @@ extension ViewComponents {
                             event: { event(.productSelect($0)) })
                     }
                 )
+                .onFirstAppear { content.event(.load) }
                 .padding(.horizontal)
             }
             .navigationBarWithBack(
