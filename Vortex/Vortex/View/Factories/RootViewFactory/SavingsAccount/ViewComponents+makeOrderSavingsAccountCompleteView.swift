@@ -25,20 +25,40 @@ extension ViewComponents {
             HStack {
                 RxWrapperView(model: complete.document) { state, _ in
                     
-                    makeDocumentButtonView(state: state)
-                    
+                    makeDocumentButtonViewWithShareButton(state: state)
                 }
                 
                 RxWrapperView(model: complete.details) { state, _ in
                     
                     makeDetailsButton(state: state)
-                    
                 }
             }
         } details: {
             EmptyView()
         } footer: {
-            heroButton(action: goToMain)
+            heroButton(title: "На главный", action: goToMain)
+        }
+    }
+    
+    @inlinable
+    @ViewBuilder
+    func makeDocumentButtonViewWithShareButton(
+        state: DocumentButtonDomain.State
+    ) -> some View {
+        
+        switch state {
+        case let .completed(document):
+            WithSheetView {
+                circleButton(image: .ic24File, title: "Документ", action: $0)
+            } sheet: {
+                PrintFormView(viewModel: .init(pdfDocument: document, dismissAction: $0))
+            }
+            
+        case .failure, .pending:
+            EmptyView()
+            
+        case .loading:
+            circleButtonPlaceholder()
         }
     }
     

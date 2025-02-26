@@ -74,7 +74,6 @@ extension ViewComponents {
                             event: { event(.productSelect($0)) })
                     }
                 )
-                .loaderOverlay(isLoading: state.isLoading)
                 .padding(.horizontal)
             }
             .navigationBarWithBack(
@@ -88,6 +87,7 @@ extension ViewComponents {
             }
             .opacity(state.isLoading ? 0.7 : 1)
             .disabled(state.isLoading)
+            .loaderOverlay(isLoading: state.isLoading)
         }
     }
     
