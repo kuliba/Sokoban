@@ -183,7 +183,7 @@ private extension Reducer {
             state.loadableForm = .loaded(.success(form))
             
         case(var.loading(.some(form)), let .success(orderAccountResponse)):
-            form.orderAccountResponse = .init(accountId: orderAccountResponse.accountId, paymentOperationDetailId: orderAccountResponse.paymentOperationDetailId, status: orderAccountResponse.status)
+            form.orderAccountResponse = .init(accountId: orderAccountResponse.accountId, accountNumber: orderAccountResponse.accountNumber, paymentOperationDetailId: orderAccountResponse.paymentOperationDetailId, status: orderAccountResponse.status)
             state.loadableForm = .loaded(.success(form))
         }
     }

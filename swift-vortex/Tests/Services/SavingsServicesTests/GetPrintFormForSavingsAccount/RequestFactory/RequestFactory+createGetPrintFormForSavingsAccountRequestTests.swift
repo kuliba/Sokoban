@@ -57,7 +57,7 @@ final class RequestFactory_createGetPrintFormForSavingsAccountRequestTests: XCTe
     
     func test_createRequest_shouldSetHTTPBody_JSON() throws {
         
-        let accountID = anyMessage()
+        let accountID = anyInt()
         let detailID = anyInt()
 
         let payload = anyPayload(accountId: accountID, detailId: detailID)
@@ -75,7 +75,7 @@ final class RequestFactory_createGetPrintFormForSavingsAccountRequestTests: XCTe
     // MARK: - Helpers
     
     private func createRequest(
-        payload: GetPrintFormPayload = .init(accountId: "1", detailId: nil),
+        payload: GetPrintFormPayload = .init(accountId: 1, detailId: nil),
         url: URL = anyURL()
     ) throws -> URLRequest {
         
@@ -88,7 +88,7 @@ final class RequestFactory_createGetPrintFormForSavingsAccountRequestTests: XCTe
     }
     
     private func anyPayload(
-        accountId: String = anyMessage(),
+        accountId: Int = 1,
         detailId: Int? = nil
     ) -> GetPrintFormPayload {
         
@@ -97,7 +97,7 @@ final class RequestFactory_createGetPrintFormForSavingsAccountRequestTests: XCTe
 
     private struct Body: Decodable {
         
-        let accountId: String
+        let accountId: Int
         let paymentOperationDetailId: Int?
 
         var payload: GetPrintFormPayload {

@@ -7,7 +7,8 @@
 
 public struct OrderAccountResponse: Equatable {
     
-    public let accountId: String?
+    public let accountId: Int?
+    public let accountNumber: String?
     public let paymentOperationDetailId: Int?
     public let status: Status
     
@@ -16,8 +17,10 @@ public struct OrderAccountResponse: Equatable {
         case completed, inflight, rejected
     }
     
-    public init(accountId: String?, paymentOperationDetailId: Int?, status: Status) {
+    public init(accountId: Int?, accountNumber: String?, paymentOperationDetailId: Int?, status: Status) {
+        
         self.accountId = accountId
+        self.accountNumber = accountNumber
         self.paymentOperationDetailId = paymentOperationDetailId
         self.status = status
     }

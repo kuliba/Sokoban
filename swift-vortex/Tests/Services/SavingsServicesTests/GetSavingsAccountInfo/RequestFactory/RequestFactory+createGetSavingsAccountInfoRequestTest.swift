@@ -36,7 +36,7 @@ final class RequestFactory_createGetSavingsAccountInfoRequestTests: XCTestCase {
     func test_createRequest_shouldSetHTTPBody() throws {
         
         let payload = makePayload(
-            accountID: anyMessage()
+            accountNumber: anyMessage()
         )
         let request = try createRequest(payload: payload)
         let body = try request.decodedBody(as: _DTO.self)
@@ -48,7 +48,7 @@ final class RequestFactory_createGetSavingsAccountInfoRequestTests: XCTestCase {
     
     private func createRequest(
         url: URL = anyURL(),
-        payload: GetSavingsAccountInfoPayload = makePayload(accountID: "1")
+        payload: GetSavingsAccountInfoPayload = makePayload(accountNumber: "1")
     ) throws -> URLRequest {
         
         try RequestFactory.createGetSavingsAccountInfoRequest(
@@ -67,13 +67,13 @@ private extension _DTO {
     
     init(_ payload: GetSavingsAccountInfoPayload) {
         
-        self.init(accountNumber: payload.accountID)
+        self.init(accountNumber: payload.accountNumber)
     }
 }
 
 private func makePayload(
-    accountID: String
+    accountNumber: String
 ) -> GetSavingsAccountInfoPayload {
     
-    .init(accountID: accountID)
+    .init(accountNumber: accountNumber)
 }

@@ -8,6 +8,7 @@
 import RxViewModel
 import SwiftUI
 import PaymentCompletionUI
+import UIPrimitives
 
 extension ViewComponents {
     
@@ -28,16 +29,39 @@ extension ViewComponents {
                     
                 }
                 
-//                RxWrapperView(model: complete.details) { state, _ in
-//                    
-//                    makeDetaView(state: state)
-//                    
-//                }
+                RxWrapperView(model: complete.details) { state, _ in
+                    
+                    makeDetailsButton(state: state)
+                    
+                }
             }
         } details: {
             EmptyView()
         } footer: {
             heroButton(action: goToMain)
+        }
+    }
+    
+    @ViewBuilder
+    func makeDetailsButton(
+        state: OperationDetailDomain.State
+    )  -> some View {
+        
+        switch state.extendedDetails {
+            
+        case let .completed(details):
+            
+            WithFullScreenCoverView {
+                circleButton(image: .ic24Info, title: "Детали", action: $0)
+            } sheet: {
+                c2gTransactionDetails(details: details, dismiss: $0)
+            }
+            
+        case .failure, .pending:
+            EmptyView()
+            
+        case .loading:
+            circleButtonPlaceholder()
         }
     }
 }

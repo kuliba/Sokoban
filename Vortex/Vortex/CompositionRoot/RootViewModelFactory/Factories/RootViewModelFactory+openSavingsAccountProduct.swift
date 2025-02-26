@@ -23,7 +23,7 @@ extension OpenSavingsAccountCompleteDomain {
     struct Complete {
         
         let context: Context
-     //   let details: OperationDetailDomain.Model
+        let details: OperationDetailDomain.Model
         let document: DocumentButtonDomain.Model
         
         struct Context: Equatable {
@@ -460,15 +460,27 @@ private extension RemoteServices.ResponseMapper.MappingResult<MakeOpenSavingsAcc
         case let .success(response):
             switch response.documentInfo.documentStatus {
             case .complete, .inProgress:
-                return .success(.init(accountId: response.paymentInfo.accountNumber, paymentOperationDetailId: response.paymentOperationDetailID, status: response.documentInfo.documentStatus?.status ?? .inflight))
+                return .success(.init(response))
                 
             default:
-                return .success(.init(accountId: response.paymentInfo.accountNumber, paymentOperationDetailId: response.paymentOperationDetailID, status: response.documentInfo.documentStatus?.status ?? .inflight))
+                return .success(.init(response))
             }
         }
     }
 }
 
+private extension OrderAccountResponse {
+    
+    init(_ data: MakeOpenSavingsAccountResponse) {
+        
+        self.init(
+            accountId: data.paymentInfo.accountId,
+            accountNumber: data.paymentInfo.accountNumber,
+            paymentOperationDetailId: data.paymentOperationDetailID,
+            status: data.documentInfo.documentStatus?.status ?? .inflight
+        )
+    }
+}
 private extension OpenSavingsAccountDomain.LoadFailure {
     
     static let invalidCodeAlert: Self = .init(message: ._invalidCode, type: .alert)

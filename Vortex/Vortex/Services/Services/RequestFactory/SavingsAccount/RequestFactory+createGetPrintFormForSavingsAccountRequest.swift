@@ -12,7 +12,7 @@ import RemoteServices
 extension RequestFactory {
         
     static func createGetPrintFormForSavingsAccountRequest(
-        accountID: String,
+        accountID: Int,
         detailID: Int?
     ) throws -> URLRequest {
                 

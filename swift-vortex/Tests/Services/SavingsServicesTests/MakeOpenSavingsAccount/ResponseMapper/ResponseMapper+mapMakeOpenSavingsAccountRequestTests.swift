@@ -236,7 +236,7 @@ private extension MakeOpenSavingsAccountResponse {
         paymentInfo: .valid,
         paymentOperationDetailID: 10)
     
-    static let empty: Self = .init(documentInfo: .init(documentStatus: nil, needMake: false, needOTP: false, scenario: nil), paymentInfo: .init(amount: nil, accountNumber: nil, creditAmount: nil, currencyAmount: nil, currencyPayee: nil, currencyPayer: nil, currencyRate: nil, debitAmount: nil, fee: nil, payeeName: nil), paymentOperationDetailID: nil)
+    static let empty: Self = .init(documentInfo: .init(documentStatus: nil, needMake: false, needOTP: false, scenario: nil), paymentInfo: .init(amount: nil, accountNumber: nil, accountId: nil, creditAmount: nil, currencyAmount: nil, currencyPayee: nil, currencyPayer: nil, currencyRate: nil, debitAmount: nil, fee: nil, payeeName: nil), paymentOperationDetailID: nil)
 }
 
 private extension MakeOpenSavingsAccountResponse.DocumentInfo {
@@ -252,7 +252,8 @@ private extension MakeOpenSavingsAccountResponse.PaymentInfo {
     
     static let valid: Self = .init(
         amount: 10, 
-        accountNumber: "11111",
+        accountNumber: "11111", 
+        accountId: nil,
         creditAmount: 11,
         currencyAmount: "11",
         currencyPayee: "13",

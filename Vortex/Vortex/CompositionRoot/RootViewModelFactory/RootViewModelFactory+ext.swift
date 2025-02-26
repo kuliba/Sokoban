@@ -41,7 +41,7 @@ extension RootViewModelFactory {
             c2gFlag: featureFlags.c2gFlag,
             getProductListByTypeV6Flag: .active,
             paymentsTransfersFlag: .active,
-            savingsAccountFlag: .active,
+            savingsAccountFlag: featureFlags.savingsAccountFlag,
             collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
             splashScreenFlag: featureFlags.splashScreenFlag,
             orderCardFlag: featureFlags.orderCardFlag

@@ -36,8 +36,27 @@ extension RootViewModelFactory {
         case let .savingsAccount(orderAccountResponse):
             
         
-//            let details = makeOperationDetailByPaymentID(.init(product: <#T##OperationDetailDomain.Product#>, status: <#T##OperationDetailDomain.Status#>, formattedAmount: <#T##String?#>, formattedDate: <#T##String?#>, merchantName: <#T##String?#>, message: <#T##String?#>, paymentOperationDetailID: <#T##Int#>, purpose: <#T##String?#>, uin: <#T##String#>))
-//            details.event(.load)
+            let detailsService = nanoServiceComposer.compose(
+                createRequest: RequestFactory.createGetOperationDetailByPaymentIDRequest,
+                mapResponse: RemoteServices.ResponseMapper.mapGetOperationDetailByPaymentIDResponse
+            )
+            
+            
+            let details = DocumentButtonDomain.Model.makeStateMachine(
+                load: { completion in
+                    
+                    if let paymentOperationDetailId = orderAccountResponse.paymentOperationDetailId {
+                        detailsService(.init(String(paymentOperationDetailId))) { response in
+                            
+                            completion(response)
+                            _ = detailsService
+                        }
+                    }
+                },
+                scheduler: schedulers.main
+            )
+            
+            details.event(.load)
             
             let documentService = nanoServiceComposer.compose(
                 createRequest: RequestFactory.createGetPrintFormForSavingsAccountRequest,
@@ -57,8 +76,8 @@ extension RootViewModelFactory {
             document.event(.load)
             
             completion(.savingsAccount(.init(
-                context: .init(formattedAmount: nil, merchantName: nil, purpose: nil, status: orderAccountResponse.status.status),
-           //     details: details,
+                context: .init(formattedAmount: nil, merchantName: nil, purpose: nil, status: orderAccountResponse.status.status), 
+                details: .preview(basicDetails: .preview),
                 document: document
             )))
 
