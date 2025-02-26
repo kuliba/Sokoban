@@ -95,6 +95,23 @@ extension RootViewModelFactory {
             
         case .userAccount:
             makeUserAccount()
+            
+        case .orderCardLanding:
+            makeOrderCard()
+        }
+        
+        func makeOrderCard() {
+        
+            let landing = makeOrderCardLanding()
+            
+            completion(
+                .orderCardLanding(
+                    .init(
+                        model: landing,
+                        cancellable: .init({})
+                    )
+                )
+            )
         }
         
         func makeScanQR() {

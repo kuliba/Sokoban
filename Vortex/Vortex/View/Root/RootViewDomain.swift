@@ -27,6 +27,7 @@ enum RootViewSelect: Equatable {
     case standardPayment(ServiceCategory.CategoryType)
     case templates
     case userAccount
+    case orderCardLanding
     
     enum RootViewOutside: Equatable {
         
@@ -53,6 +54,7 @@ enum RootViewNavigation {
     case standardPayment(Node<PaymentProviderPickerDomain.Binder>)
     case templates(TemplatesNode)
     case userAccount(UserAccountViewModel)
+    case orderCardLanding(Node<OrderCardLandingDomain.Binder>)
     
     enum Failure {
         

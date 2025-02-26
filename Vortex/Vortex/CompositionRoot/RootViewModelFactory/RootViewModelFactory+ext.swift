@@ -497,7 +497,7 @@ extension RootViewModelFactory {
                 case .scanQR, .templates:
                     return .zero//.milliseconds(100)
                 
-                case .openProduct, .searchByUIN, .standardPayment, .userAccount:
+                case .openProduct, .searchByUIN, .standardPayment, .userAccount, .orderCardLanding:
                     return .milliseconds(600)
                     
                 case .orderSavingsAccountResponse:

@@ -101,7 +101,21 @@ private extension RootBinderView {
             
         case let .userAccount(userAccount):
             userAccountView(userAccount)
+            
+        case let .orderCardLanding(landing):
+            orderCardLandingView(landing)
         }
+    }
+    
+    private func orderCardLandingView(
+        _ orderCardLanding: OrderCardLanding
+    ) -> some View {
+        
+        rootViewFactory.components.makeOrderCardLandingView(
+            landing: orderCardLanding,
+            continue: { },
+            dismiss: { }
+        )
     }
     
     private func productProfileView(
@@ -300,6 +314,9 @@ extension RootViewNavigation {
             
         case let .userAccount(userAccount):
             return .userAccount(userAccount)
+            
+        case let .orderCardLanding(orderCardLanding):
+            return .orderCardLanding(orderCardLanding.model.content)
         }
     }
     
@@ -311,6 +328,7 @@ extension RootViewNavigation {
         case searchByUIN(SearchByUIN)
         case standardPayment(PaymentProviderPickerDomain.Binder)
         case userAccount(UserAccountViewModel)
+        case orderCardLanding(OrderCardLanding)
         
         typealias SearchByUIN = SearchByUINDomain.Binder
         typealias TemplatesNode = RootViewNavigation.TemplatesNode
@@ -335,7 +353,7 @@ extension RootViewNavigation {
             return .scanQR(node.model)
             
             // cases listed for explicit exhaustivity
-        case .standardPayment, .searchByUIN, .userAccount:
+        case .standardPayment, .searchByUIN, .userAccount, .orderCardLanding:
             return nil
             
         case let .templates(node):
@@ -383,6 +401,9 @@ extension RootViewNavigation.Destination: Identifiable {
             
         case let .userAccount(userAccount):
             return .userAccount(.init(userAccount))
+            
+        case let .orderCardLanding(landing):
+            return .orderCardLanding
         }
     }
     
@@ -394,6 +415,7 @@ extension RootViewNavigation.Destination: Identifiable {
         case searchByUIN(ObjectIdentifier)
         case standardPayment(ObjectIdentifier)
         case userAccount(ObjectIdentifier)
+        case orderCardLanding
         
         enum OpenProductID: Hashable {
             
