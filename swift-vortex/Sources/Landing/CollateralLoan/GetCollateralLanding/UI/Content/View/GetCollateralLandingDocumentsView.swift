@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CollateralLoanLandingGetShowcaseUI
 
 struct GetCollateralLandingDocumentsView: View {
 
@@ -87,7 +88,7 @@ struct GetCollateralLandingDocumentsView_Previews: PreviewProvider {
         
         GetCollateralLandingDocumentsView(
             product: .carStub,
-            config: .default,
+            config: .preview,
             externalEvent: { print($0) },
             factory: .preview
         )

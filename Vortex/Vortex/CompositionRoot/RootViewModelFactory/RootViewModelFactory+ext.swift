@@ -28,6 +28,7 @@ import SerialComponents
 import SharedAPIInfra
 import SwiftUI
 import VortexTools
+import CollateralLoanLandingGetShowcaseUI
 
 extension RootViewModelFactory {
     
@@ -457,7 +458,8 @@ extension RootViewModelFactory {
                 )
             },
             marketShowcaseBinder: marketShowcaseBinder,
-            makePaymentsTransfers: { paymentsTransfersSwitcher }
+            makePaymentsTransfers: { paymentsTransfersSwitcher },
+            makeCollateralLoanLandingFactory: { _ in .preview } // TODO: Replace real factory maker
         )
         
         let marketBinder = MarketShowcaseToRootViewModelBinder(
@@ -789,6 +791,8 @@ private extension RootViewModelFactory {
     typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
     typealias OnRegister = () -> Void
     typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
+    typealias GetPDFDocument = CollateralLoanLandingFactory.GetPDFDocument
+    typealias MakeCollateralLoanLandingFactory = (@escaping GetPDFDocument) -> CollateralLoanLandingFactory
     
     func make(
         featureFlags: FeatureFlags,
@@ -814,7 +818,8 @@ private extension RootViewModelFactory {
         bannersBinder: BannersBinder,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
         marketShowcaseBinder: MarketShowcaseDomain.Binder,
-        makePaymentsTransfers: @escaping PaymentsTransfersFactory.MakePaymentsTransfers
+        makePaymentsTransfers: @escaping PaymentsTransfersFactory.MakePaymentsTransfers,
+        makeCollateralLoanLandingFactory: @escaping MakeCollateralLoanLandingFactory
     ) -> RootViewModel {
         
         let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
@@ -882,9 +887,7 @@ private extension RootViewModelFactory {
             viewModelsFactory: mainViewModelsFactory,
             makeOpenNewProductButtons: makeOpenNewProductButtons,
             getPDFDocument: getPDFDocument,
-            makeCollateralLoanLandingGetShowcaseViewFactory: makeCollateralLoanLandingGetShowcaseViewFactory,
-            makeGetCollateralLandingFactory: makeGetCollateralLandingFactory,
-            makeCollateralLoanLandingViewModelFactory: makeCollateralLoanLandingViewModelFactory,
+            makeCollateralLoanLandingFactory: makeCollateralLoanLandingFactory,
             scheduler: schedulers.main
         )
         

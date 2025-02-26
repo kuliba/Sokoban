@@ -11,19 +11,19 @@ import SharedConfigs
 
 extension GetCollateralLandingConfig {
     
-    struct Calculator {
+    public struct Calculator {
         
-        let root: Root
-        let header: Header
-        let salary: Salary
-        let period: Period
-        let percent: Percent
-        let desiredAmount: DesiredAmount
-        let monthlyPayment: MonthlyPayment
-        let info: Info
-        let deposit: Deposit
+        public let root: Root
+        public let header: Header
+        public let salary: Salary
+        public let period: Period
+        public let percent: Percent
+        public let desiredAmount: DesiredAmount
+        public let monthlyPayment: MonthlyPayment
+        public let info: Info
+        public let deposit: Deposit
 
-        init(
+        public init(
             root: Root,
             header: Header,
             salary: Salary,
@@ -45,30 +45,30 @@ extension GetCollateralLandingConfig {
             self.deposit = deposit
         }
         
-        struct Root {
+        public struct Root {
             
-            let layouts: Layouts
-            let fonts: Fonts
-            let colors: Colors
+            public let layouts: Layouts
+            public let fonts: Fonts
+            public let colors: Colors
 
-            init(layouts: Layouts, fonts: Fonts, colors: Colors) {
+            public init(layouts: Layouts, fonts: Fonts, colors: Colors) {
                 self.layouts = layouts
                 self.fonts = fonts
                 self.colors = colors
             }
             
-            struct Layouts {
+            public struct Layouts {
                 
-                let height: CGFloat
-                let contentLeadingPadding: CGFloat
-                let contentTrailingPadding: CGFloat
-                let middleSectionSpacing: CGFloat
-                let spacingBetweenTitleAndValue: CGFloat
-                let chevronSpacing: CGFloat
-                let bottomPanelCornerRadius: CGFloat
-                let chevronOffsetY: CGFloat
+                public let height: CGFloat
+                public let contentLeadingPadding: CGFloat
+                public let contentTrailingPadding: CGFloat
+                public let middleSectionSpacing: CGFloat
+                public let spacingBetweenTitleAndValue: CGFloat
+                public let chevronSpacing: CGFloat
+                public let bottomPanelCornerRadius: CGFloat
+                public let chevronOffsetY: CGFloat
                 
-                init(
+                public init(
                     height: CGFloat,
                     contentLeadingPadding: CGFloat,
                     contentTrailingPadding: CGFloat,
@@ -89,25 +89,25 @@ extension GetCollateralLandingConfig {
                 }
             }
             
-            struct Fonts {
+            public struct Fonts {
                 
-                let title: FontConfig
-                let value: FontConfig
+                public let title: FontConfig
+                public let value: FontConfig
                 
-                init(title: FontConfig, value: FontConfig) {
+                public init(title: FontConfig, value: FontConfig) {
                     self.title = title
                     self.value = value
                 }
             }
             
-            struct Colors {
+            public struct Colors {
                 
-                let background: Color
-                let divider: Color
-                let chevron: Color
-                let bottomPanelBackground: Color
+                public let background: Color
+                public let divider: Color
+                public let chevron: Color
+                public let bottomPanelBackground: Color
                 
-                init(
+                public init(
                     background: Color,
                     divider: Color,
                     chevron: Color,
@@ -121,14 +121,14 @@ extension GetCollateralLandingConfig {
             }
         }
         
-        struct Header {
+        public struct Header {
 
-            let text: String
-            let font: FontConfig
-            let topPadding: CGFloat
-            let bottomPadding: CGFloat
+            public let text: String
+            public let font: FontConfig
+            public let topPadding: CGFloat
+            public let bottomPadding: CGFloat
             
-            init(text: String, font: FontConfig, topPadding: CGFloat, bottomPadding: CGFloat) {
+            public init(text: String, font: FontConfig, topPadding: CGFloat, bottomPadding: CGFloat) {
                 
                 self.text = text
                 self.font = font
@@ -137,18 +137,18 @@ extension GetCollateralLandingConfig {
             }
         }
         
-        struct Salary {
+        public struct Salary {
             
-            let text: String
-            let font: FontConfig
-            let leadingPadding: CGFloat
-            let trailingPadding: CGFloat
-            let bottomPadding: CGFloat
-            let toggleTrailingPadding: CGFloat
-            let toggle: ToggleConfig
-            let slider: Slider
+            public let text: String
+            public let font: FontConfig
+            public let leadingPadding: CGFloat
+            public let trailingPadding: CGFloat
+            public let bottomPadding: CGFloat
+            public let toggleTrailingPadding: CGFloat
+            public let toggle: ToggleConfig
+            public let slider: Slider
             
-            init(
+            public init(
                 text: String,
                 font: FontConfig,
                 leadingPadding: CGFloat,
@@ -169,14 +169,14 @@ extension GetCollateralLandingConfig {
             }
         }
         
-        struct Slider {
+        public struct Slider {
             
-            let minTrackColor: Color
-            let maxTrackColor: Color
-            let thumbDiameter: CGFloat
-            let trackHeight: CGFloat
+            public let minTrackColor: Color
+            public let maxTrackColor: Color
+            public let thumbDiameter: CGFloat
+            public let trackHeight: CGFloat
             
-            init(
+            public init(
                 minTrackColor: Color,
                 maxTrackColor: Color,
                 thumbDiameter: CGFloat,
@@ -189,46 +189,49 @@ extension GetCollateralLandingConfig {
             }
         }
         
-        struct Period {
+        public struct Period {
             
-            let titleText: String
+            public let titleText: String
             
-            init(titleText: String) {
+            public init(titleText: String) {
                 
                 self.titleText = titleText
             }
         }
         
-        struct Percent {
+        public struct Percent {
             
-            let titleText: String
+            public let titleText: String
 
-            init(titleText: String) {
+            public init(titleText: String) {
                 
                 self.titleText = titleText
             }
         }
         
-        struct Deposit {
+        public struct Deposit {
             
-            let titleText: String
-            let titleTopPadding: CGFloat
+            public let titleText: String
+            public let titleTopPadding: CGFloat
 
-            init(titleText: String, titleTopPadding: CGFloat) {
+            public init(
+                titleText: String,
+                titleTopPadding: CGFloat
+            ) {
                 self.titleText = titleText
                 self.titleTopPadding = titleTopPadding
             }
         }
         
-        struct DesiredAmount {
+        public struct DesiredAmount {
             
-            let titleText: String
-            let maxText: String
-            let titleTopPadding: CGFloat
-            let sliderBottomPadding: CGFloat
-            let fontValue: FontConfig
+            public let titleText: String
+            public let maxText: String
+            public let titleTopPadding: CGFloat
+            public let sliderBottomPadding: CGFloat
+            public let fontValue: FontConfig
 
-            init(
+            public init(
                 titleText: String,
                 maxText: String,
                 titleTopPadding: CGFloat,
@@ -243,13 +246,13 @@ extension GetCollateralLandingConfig {
             }
         }
         
-        struct MonthlyPayment {
+        public struct MonthlyPayment {
             
-            let titleText: String
-            let titleTopPadding: CGFloat
-            let valueTopPadding: CGFloat
+            public let titleText: String
+            public let titleTopPadding: CGFloat
+            public let valueTopPadding: CGFloat
             
-            init(titleText: String, titleTopPadding: CGFloat, valueTopPadding: CGFloat) {
+            public init(titleText: String, titleTopPadding: CGFloat, valueTopPadding: CGFloat) {
                 
                 self.titleText = titleText
                 self.titleTopPadding = titleTopPadding
@@ -257,13 +260,13 @@ extension GetCollateralLandingConfig {
             }
         }
         
-        struct Info {
+        public struct Info {
             
-            let titleText: String
-            let titleTopPadding: CGFloat
-            let titleBottomPadding: CGFloat
+            public let titleText: String
+            public let titleTopPadding: CGFloat
+            public let titleBottomPadding: CGFloat
             
-            init(
+            public init(
                 titleText: String,
                 titleTopPadding: CGFloat,
                 titleBottomPadding: CGFloat
@@ -278,7 +281,7 @@ extension GetCollateralLandingConfig {
 
 extension GetCollateralLandingConfig.Calculator {
  
-    static let `default` = Self(
+    static let preview = Self(
         root: .init(
             layouts: .init(
                 height: 468,

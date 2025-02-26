@@ -5,10 +5,11 @@
 //  Created by Valentin Ozerov on 16.01.2025.
 //
 
-import SwiftUI
-import CollateralLoanLandingGetCollateralLandingUI
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
+import CollateralLoanLandingGetCollateralLandingUI
+import CollateralLoanLandingGetShowcaseUI
 import RxViewModel
+import SwiftUI
 import UIPrimitives
 
 struct CollateralLoanLandingWrapperView: View {
@@ -17,9 +18,10 @@ struct CollateralLoanLandingWrapperView: View {
 
     let binder: GetCollateralLandingDomain.Binder
     let factory: Factory
-    let viewModelFactory: ViewModelFactory
+    let config: GetCollateralLandingConfig
     let goToMain: () -> Void
-    
+//    let makeOperationDetailInfoViewModel: MakeOperationDetailInfoViewModel
+
     var body: some View {
         
         RxWrapperView(model: binder.flow) { state, event in
@@ -58,7 +60,7 @@ struct CollateralLoanLandingWrapperView: View {
                     .loader(isLoading: state.product == nil, color: .clear)
                 
             case let .some(product):
-                getCollateralLandingView(product, state, event)
+                getCollateralLandingView(product, state, event, config)
             }
         }
         .onFirstAppear { event(.load(state.landingID)) }
@@ -67,7 +69,8 @@ struct CollateralLoanLandingWrapperView: View {
     private func getCollateralLandingView(
         _ product: GetCollateralLandingProduct,
         _ state: GetCollateralLandingDomain.State,
-        _ event: @escaping (GetCollateralLandingDomain.Event) -> Void
+        _ event: @escaping (GetCollateralLandingDomain.Event) -> Void,
+        _ config: GetCollateralLandingConfig
     ) -> some View {
         
         GetCollateralLandingView(
@@ -88,6 +91,7 @@ struct CollateralLoanLandingWrapperView: View {
                     }
                 }
             },
+            config: config,
             factory: .init(
                 makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
                 makeImageViewWithURL: factory.makeImageViewWithURL,
@@ -114,8 +118,8 @@ struct CollateralLoanLandingWrapperView: View {
                     getPDFDocument: factory.getPDFDocument,
                     formatCurrency: factory.formatCurrency
                 ),
-                viewModelFactory: viewModelFactory,
                 goToMain: goToMain
+//                makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel
             )
             .navigationBarWithBack(title: "Оформление заявки", dismiss: dissmiss)
         }
@@ -143,8 +147,13 @@ struct CollateralLoanLandingWrapperView: View {
         GetCollateralLandingBottomSheetView(
             state: binder.content.state,
             event: handlePeriodsDomainEvent(_:),
-            config: factory.config.bottomSheet,
-            factory: factory,
+            config: config.bottomSheet,
+            factory: .init(
+                makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
+                makeImageViewWithURL: factory.makeImageViewWithURL,
+                getPDFDocument: factory.getPDFDocument,
+                formatCurrency: factory.formatCurrency
+            ),
             type: .periods
         )
     }
@@ -154,8 +163,13 @@ struct CollateralLoanLandingWrapperView: View {
         GetCollateralLandingBottomSheetView(
             state: binder.content.state,
             event: handlePeriodsDomainEvent(_:),
-            config: factory.config.bottomSheet,
-            factory: factory,
+            config: config.bottomSheet,
+            factory: .init(
+                makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
+                makeImageViewWithURL: factory.makeImageViewWithURL,
+                getPDFDocument: factory.getPDFDocument,
+                formatCurrency: factory.formatCurrency
+            ),
             type: .collaterals
         )
     }
@@ -178,10 +192,11 @@ struct CollateralLoanLandingWrapperView: View {
  
 extension CollateralLoanLandingWrapperView {
     
-    typealias Factory = GetCollateralLandingFactory
-    typealias ViewModelFactory = CollateralLoanLandingViewModelFactory
+    typealias Factory = CollateralLoanLandingFactory
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
     typealias SaveConsentsResult = Domain.SaveConsentsResult
+    typealias Payload = CollateralLandingApplicationSaveConsentsResult
+    typealias MakeOperationDetailInfoViewModel = (Payload, @escaping () -> Void) -> OperationDetailInfoViewModel
 
     public typealias makeImageViewWithMD5Hash = (String) -> UIPrimitives.AsyncImage
     public typealias makeImageViewWithURL = (String) -> UIPrimitives.AsyncImage

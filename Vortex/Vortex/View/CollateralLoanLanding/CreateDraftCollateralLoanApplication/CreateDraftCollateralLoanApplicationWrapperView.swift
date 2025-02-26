@@ -5,14 +5,15 @@
 //  Created by Valentin Ozerov on 16.01.2025.
 //
 
+import ButtonWithSheet
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 import CollateralLoanLandingGetConsentsBackend
+import CollateralLoanLandingGetShowcaseUI
 import InputComponent
 import OTPInputComponent
 import RemoteServices
 import RxViewModel
 import SwiftUI
-import ButtonWithSheet
 
 struct CreateDraftCollateralLoanApplicationWrapperView: View {
     
@@ -21,8 +22,8 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     let binder: Domain.Binder
     let config: Config
     let factory: Factory
-    let viewModelFactory: ViewModelFactory
     let goToMain: () -> Void
+//    let makeOperationDetailInfoViewModel: MakeOperationDetailInfoViewModel
     
     var body: some View {
         
@@ -75,7 +76,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
                 event: event,
                 externalEvent: handleExternalEvent(events:),
                 config: .default,
-                factory: factory.makeCreateDraftCollateralLoanApplicationFactory()
+                factory: factory
             )
             .if(state.stage == .confirm) {
                 
@@ -181,13 +182,10 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     
     func makeDetailButton(payload: CollateralLandingApplicationSaveConsentsResult) -> CollateralLoanLandingDetailsButton {
         
-            .init(
-                viewModel: viewModelFactory.makeOperationDetailInfoViewModel(
-                    payload: payload,
-                    dismiss: goToMain
-                ),
-                payload: payload
-            )
+        return .init(
+            viewModel: makeOperationDetailInfoViewModel,
+            payload: payload
+        )
     }
 
     private func makePaymentCompleteViewFactory() -> PaymentCompleteViewFactory {
@@ -232,7 +230,6 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
 extension CreateDraftCollateralLoanApplicationWrapperView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
-    typealias ViewModelFactory = CollateralLoanLandingViewModelFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
     typealias State = Domain.ContentState
@@ -240,6 +237,8 @@ extension CreateDraftCollateralLoanApplicationWrapperView {
     typealias SaveConsentsResult = Domain.SaveConsentsResult
     typealias MakeAnywayElementModelMapper = () -> AnywayElementModelMapper
     typealias Confirmation = CreateDraftCollateralLoanApplicationDomain.Confirmation
+    public typealias Payload = CollateralLandingApplicationSaveConsentsResult
+    public typealias MakeOperationDetailInfoViewModel = (Payload, @escaping () -> Void) -> OperationDetailInfoViewModel
 }
 
 // MARK: UI mapping

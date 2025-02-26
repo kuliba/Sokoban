@@ -22,6 +22,8 @@ class MainViewModel: ObservableObject, Resetable {
     
     typealias Templates = PaymentsTransfersFactory.Templates
     typealias TemplatesNode = PaymentsTransfersFactory.TemplatesNode
+    typealias GetPDFDocument = CollateralLoanLandingFactory.GetPDFDocument
+    typealias MakeCollateralLoanLandingFactory = (@escaping GetPDFDocument) -> CollateralLoanLandingFactory
 
     let action: PassthroughSubject<Action, Never> = .init()
     let routeSubject = PassthroughSubject<Route, Never>()
@@ -53,11 +55,8 @@ class MainViewModel: ObservableObject, Resetable {
     let bindersFactory: BindersFactory
     let viewModelsFactory: MainViewModelsFactory
     let makeOpenNewProductButtons: OpenNewProductsViewModel.MakeNewProductButtons
-    let getPDFDocument: CollateralLoanLandingGetShowcaseViewFactory.GetPDFDocument
-    
-    let makeGetCollateralLandingFactory: MakeGetCollateralLandingFactory
-    let makeCollateralLoanLandingViewModelFactory: MakeCollateralLoanLandingViewModelFactory
-    let makeCollateralLoanLandingGetShowcaseViewFactory: MakeCollateralLoanLandingGetShowcaseViewFactory
+    let getPDFDocument: GetPDFDocument
+    let makeCollateralLoanLandingFactory: MakeCollateralLoanLandingFactory
 
     let bannersBox: any BannersBoxInterface<BannerList>
     
@@ -78,10 +77,8 @@ class MainViewModel: ObservableObject, Resetable {
         bindersFactory: BindersFactory,
         viewModelsFactory: MainViewModelsFactory,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
-        getPDFDocument: @escaping CollateralLoanLandingGetShowcaseViewFactory.GetPDFDocument,
-        makeCollateralLoanLandingGetShowcaseViewFactory: @escaping MakeCollateralLoanLandingGetShowcaseViewFactory,
-        makeGetCollateralLandingFactory: @escaping MakeGetCollateralLandingFactory,
-        makeCollateralLoanLandingViewModelFactory: @escaping MakeCollateralLoanLandingViewModelFactory,
+        getPDFDocument: @escaping CollateralLoanLandingFactory.GetPDFDocument,
+        makeCollateralLoanLandingFactory: @escaping MakeCollateralLoanLandingFactory,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.model = model
@@ -99,16 +96,19 @@ class MainViewModel: ObservableObject, Resetable {
         self.viewModelsFactory = viewModelsFactory
         self.makeOpenNewProductButtons = makeOpenNewProductButtons
         self.getPDFDocument = getPDFDocument
-        self.makeCollateralLoanLandingGetShowcaseViewFactory = makeCollateralLoanLandingGetShowcaseViewFactory
-        self.makeGetCollateralLandingFactory = makeGetCollateralLandingFactory
-        self.makeCollateralLoanLandingViewModelFactory = makeCollateralLoanLandingViewModelFactory
         self.scheduler = scheduler
+        self.makeCollateralLoanLandingFactory = makeCollateralLoanLandingFactory
         self.navButtonsRight = createNavButtonsRight()
         
         bind()
         update(sections, with: model.settingsMainSections)
         bind(productsSections: sections)
         bind(sections)
+    }
+    
+    func makeCollateralLoanFactory() -> CollateralLoanLandingFactory {
+        
+        makeCollateralLoanLandingFactory(getPDFDocument)
     }
     
     private var disableAlertViewModel: Alert.ViewModel {

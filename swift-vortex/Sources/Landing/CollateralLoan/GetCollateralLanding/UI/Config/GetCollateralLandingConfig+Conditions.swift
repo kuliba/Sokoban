@@ -9,12 +9,12 @@ import SwiftUI
 
 extension GetCollateralLandingConfig {
     
-    struct Conditions {
+    public struct Conditions {
         
-        let header: Header
-        let list: List
+        public let header: Header
+        public let list: List
         
-        init(
+        public init(
             header: Header,
             list: List
         ) {
@@ -23,12 +23,12 @@ extension GetCollateralLandingConfig {
             self.list = list
         }
         
-        struct Header {
+        public struct Header {
             
-            let text: String
-            let headerFont: FontConfig
+            public let text: String
+            public let headerFont: FontConfig
 
-            init(
+            public init(
                 text: String,
                 headerFont: FontConfig
             ) {
@@ -38,28 +38,28 @@ extension GetCollateralLandingConfig {
             }
         }
         
-        struct List {
+        public struct List {
 
-            let layouts: Layouts
-            let fonts: Fonts
-            let colors: Colors
+            public let layouts: Layouts
+            public let fonts: Fonts
+            public let colors: Colors
             
-            init(layouts: Layouts, fonts: Fonts, colors: Colors) {
+            public init(layouts: Layouts, fonts: Fonts, colors: Colors) {
                 self.layouts = layouts
                 self.fonts = fonts
                 self.colors = colors
             }
             
-            struct Layouts {
+            public struct Layouts {
                 
-                let spacing: CGFloat
-                let horizontalPadding: CGFloat
-                let listTopPadding: CGFloat
-                let iconSize: CGSize
-                let iconTrailingPadding: CGFloat
-                let subTitleTopPadding: CGFloat
+                public let spacing: CGFloat
+                public let horizontalPadding: CGFloat
+                public let listTopPadding: CGFloat
+                public let iconSize: CGSize
+                public let iconTrailingPadding: CGFloat
+                public let subTitleTopPadding: CGFloat
                 
-                init(
+                public init(
                     spacing: CGFloat,
                     horizontalPadding: CGFloat,
                     listTopPadding: CGFloat,
@@ -76,24 +76,24 @@ extension GetCollateralLandingConfig {
                 }
             }
             
-            struct Fonts {
+            public struct Fonts {
                 
-                let title: FontConfig
-                let subTitle: FontConfig
+                public let title: FontConfig
+                public let subTitle: FontConfig
                 
-                init(title: FontConfig, subTitle: FontConfig) {
+                public init(title: FontConfig, subTitle: FontConfig) {
                     self.title = title
                     self.subTitle = subTitle
                 }
             }
             
-            struct Colors {
+            public struct Colors {
                 
-                let background: Color
-                let iconBackground: Color
+                public let background: Color
+                public let iconBackground: Color
                 
                 
-                init(background: Color, iconBackground: Color) {
+                public init(background: Color, iconBackground: Color) {
                     self.background = background
                     self.iconBackground = iconBackground
                 }
@@ -104,7 +104,7 @@ extension GetCollateralLandingConfig {
 
 extension GetCollateralLandingConfig.Conditions {
     
-    static let `default` = Self(
+    static let preview = Self(
         header: .init(
             text: "Выгодные условия",
             headerFont: .init(Font.system(size: 18).bold())

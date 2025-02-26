@@ -5,10 +5,10 @@
 //  Created by Valentin Ozerov on 30.12.2024.
 //
 
-import CollateralLoanLandingGetShowcaseUI
 import Combine
 import OTPInputComponent
 import PDFKit
+import RemoteServices
 import SwiftUI
 import UIPrimitives
 
@@ -47,11 +47,13 @@ public extension CreateDraftCollateralLoanApplicationFactory {
 
 public extension CreateDraftCollateralLoanApplicationFactory {
     
-    typealias ShowcaseFactory = CollateralLoanLandingGetShowcaseViewFactory
-    typealias MakeImageViewWithMD5Hash = ShowcaseFactory.MakeImageViewWithMD5Hash
-    typealias MakeImageViewWithURL = ShowcaseFactory.MakeImageViewWithURL
-    typealias GetPDFDocument = ShowcaseFactory.GetPDFDocument
+    typealias IconView = UIPrimitives.AsyncImage
+    typealias MakeImageViewWithMD5Hash = (String) -> IconView
+    typealias MakeImageViewWithURL = (String) -> IconView
+    typealias GetPDFDocumentCompletion = (PDFDocument?) -> Void
+    typealias GetPDFDocument = (PDFDocumentPayload, @escaping GetPDFDocumentCompletion) -> Void
     typealias FormatCurrency = (UInt) -> String?
+    typealias PDFDocumentPayload = RemoteServices.RequestFactory.GetConsentsPayload
 }
 
 // MARK: Preview helpers
@@ -77,14 +79,4 @@ extension UIPrimitives.AsyncImage {
 extension Image {
     
     static var iconPlaceholder: Image { Image(systemName: "info.circle") }
-}
-
-extension TimedOTPInputViewModel {
-    
-    static let preview = TimedOTPInputViewModel(
-        otpText: "44",
-        timerDuration: 60,
-        otpLength: 4,
-        resend: {}
-    )
 }

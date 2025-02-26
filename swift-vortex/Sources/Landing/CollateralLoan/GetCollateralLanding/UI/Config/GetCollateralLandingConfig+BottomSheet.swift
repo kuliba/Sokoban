@@ -12,68 +12,156 @@ extension GetCollateralLandingConfig {
     
     public struct BottomSheet {
         
-        let font: FontConfig
-        let layouts: Layouts
-        let radioButton: RadioButton
-        let icon: Icon
-        let divider: Divider
+        public let font: FontConfig
+        public let layouts: Layouts
+        public let radioButton: RadioButton
+        public let icon: Icon
+        public let divider: Divider
 
-        struct Layouts {
-
-            let spacing: CGFloat
-            let scrollThreshold: UInt
-            let sheetTopOffset: CGFloat
-            let sheetBottomOffset: CGFloat
-            let cellHeightCompensation: CGFloat
+        public init(
+            font: FontConfig,
+            layouts: Layouts,
+            radioButton: RadioButton,
+            icon: Icon,
+            divider: Divider
+        ) {
+            self.font = font
+            self.layouts = layouts
+            self.radioButton = radioButton
+            self.icon = icon
+            self.divider = divider
         }
         
-        struct RadioButton {
+        public struct Layouts {
+
+            public let spacing: CGFloat
+            public let scrollThreshold: UInt
+            public let sheetTopOffset: CGFloat
+            public let sheetBottomOffset: CGFloat
+            public let cellHeightCompensation: CGFloat
+            
+            public init(
+                spacing: CGFloat,
+                scrollThreshold: UInt,
+                sheetTopOffset: CGFloat,
+                sheetBottomOffset: CGFloat,
+                cellHeightCompensation: CGFloat
+            ) {
+                self.spacing = spacing
+                self.scrollThreshold = scrollThreshold
+                self.sheetTopOffset = sheetTopOffset
+                self.sheetBottomOffset = sheetBottomOffset
+                self.cellHeightCompensation = cellHeightCompensation
+            }
+        }
+        
+        public struct RadioButton {
                         
-            let layouts: Layouts
-            let paddings: Paddings
-            let colors: Colors
+            public let layouts: Layouts
+            public let paddings: Paddings
+            public let colors: Colors
 
-            struct Layouts {
-                
-                let size: CGSize
-                let cellHeigh: CGFloat
-                let lineWidth: CGFloat
-                let ringDiameter: CGFloat
-                let circleDiameter: CGFloat
+            public init(
+                layouts: Layouts,
+                paddings: Paddings,
+                colors: Colors
+            ) {
+                self.layouts = layouts
+                self.paddings = paddings
+                self.colors = colors
             }
             
-            struct Paddings {
+            public struct Layouts {
                 
-                let horizontal: CGFloat
-                let vertical: CGFloat
+                public let size: CGSize
+                public let cellHeigh: CGFloat
+                public let lineWidth: CGFloat
+                public let ringDiameter: CGFloat
+                public let circleDiameter: CGFloat
+                
+                public init(
+                    size: CGSize,
+                    cellHeigh: CGFloat,
+                    lineWidth: CGFloat,
+                    ringDiameter: CGFloat,
+                    circleDiameter: CGFloat
+                ) {
+                    self.size = size
+                    self.cellHeigh = cellHeigh
+                    self.lineWidth = lineWidth
+                    self.ringDiameter = ringDiameter
+                    self.circleDiameter = circleDiameter
+                }
             }
             
-            struct Colors {
+            public struct Paddings {
                 
-                let unselected: Color
-                let selected: Color
+                public let horizontal: CGFloat
+                public let vertical: CGFloat
+                
+                public init(
+                    horizontal: CGFloat,
+                    vertical: CGFloat
+                ) {
+                    self.horizontal = horizontal
+                    self.vertical = vertical
+                }
+            }
+            
+            public struct Colors {
+                
+                public let unselected: Color
+                public let selected: Color
+                
+                public init(
+                    unselected: Color,
+                    selected: Color
+                ) {
+                    self.unselected = unselected
+                    self.selected = selected
+                }
             }
         }
         
-        struct Icon {
+        public struct Icon {
             
-            let size: CGSize
-            let horizontalPadding: CGFloat
-            let verticalPadding: CGFloat
-            let cellHeigh: CGFloat
+            public let size: CGSize
+            public let horizontalPadding: CGFloat
+            public let verticalPadding: CGFloat
+            public let cellHeigh: CGFloat
+            
+            public init(
+                size: CGSize,
+                horizontalPadding: CGFloat,
+                verticalPadding: CGFloat,
+                cellHeigh: CGFloat
+            ) {
+                self.size = size
+                self.horizontalPadding = horizontalPadding
+                self.verticalPadding = verticalPadding
+                self.cellHeigh = cellHeigh
+            }
         }
         
-        struct Divider {
+        public struct Divider {
             
-            let leadingPadding: CGFloat
-            let trailingPadding: CGFloat
+            public let leadingPadding: CGFloat
+            public let trailingPadding: CGFloat
+            
+            public init(
+                leadingPadding: CGFloat,
+                trailingPadding: CGFloat
+            ) {
+                self.leadingPadding = leadingPadding
+                self.trailingPadding = trailingPadding
+            }
         }
     }
 }
 
 extension GetCollateralLandingConfig.BottomSheet {
     
-    static let `default` = Self(
+    static let preview = Self(
         font: .init(Font.system(size: 16)),
         layouts: .init(
             spacing: 8,

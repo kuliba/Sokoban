@@ -1,22 +1,19 @@
 //
-//  CollateralLoanLandingViewModelFactory.swift
+//  RootViewModelFactory+CollateralLoanLanding.swift
 //  Vortex
 //
-//  Created by Valentin Ozerov on 19.02.2025.
+//  Created by Valentin Ozerov on 26.02.2025.
 //
 
-import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
-import Combine
-import SwiftUI
 import UIPrimitives
 
-struct CollateralLoanLandingViewModelFactory {
-    
-    let model: Model
-    let makeImageViewWithMD5Hash: (String) -> UIPrimitives.AsyncImage
+import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
+
+extension RootViewModelFactory {
     
     func makeOperationDetailInfoViewModel(
         payload: CollateralLandingApplicationSaveConsentsResult,
+        makeImageViewWithMD5Hash: @escaping (String) -> UIPrimitives.AsyncImage,
         dismiss: @escaping () -> Void
     ) -> OperationDetailInfoViewModel {
         
@@ -26,33 +23,26 @@ struct CollateralLoanLandingViewModelFactory {
             cells: payload.makeCells(
                 config: .default,
                 makeImageViewWithMD5Hash: makeImageViewWithMD5Hash,
-                formatCurrency: { model.amountFormatted(
-                    amount: Double($0),
-                    currencyCode: "RUB",
-                    style: .normal
-                )}
+                formatCurrency: { [weak self] in
+                    self?.model.amountFormatted(
+                        amount: Double($0),
+                        currencyCode: "RUB",
+                        style: .normal
+                    )}
             ),
             dismissAction: dismiss
         )
     }
 }
 
-extension CollateralLoanLandingViewModelFactory {
-    
-    static let preview = Self(
-        model: .emptyMock,
-        makeImageViewWithMD5Hash: { _ in .preview }
-    )
-}
-
-private extension CollateralLandingApplicationSaveConsentsResult {
+extension CollateralLandingApplicationSaveConsentsResult {
     
     func makeCells(
         config: CreateDraftCollateralLoanApplicationConfig.Result,
         makeImageViewWithMD5Hash: @escaping (String) -> UIPrimitives.AsyncImage,
         formatCurrency: @escaping (UInt) -> String?
     ) -> [OperationDetailInfoViewModel.AsyncPropertyCellViewModel] {
-
+        
         var out: [OperationDetailInfoViewModel.AsyncPropertyCellViewModel] =
         [
             .init(
@@ -117,7 +107,7 @@ private extension CollateralLandingApplicationSaveConsentsResult {
 }
 
 extension CreateDraftCollateralLoanApplicationConfig.Result {
-    
+
     static let `default` = Self(
         titles: .default,
         icons: .default
@@ -125,7 +115,7 @@ extension CreateDraftCollateralLoanApplicationConfig.Result {
 }
 
 extension CreateDraftCollateralLoanApplicationConfig.Result.Titles {
-    
+
     static let `default` = Self(
         productName: "Наименование кредита",
         period: "Срок кредита",
@@ -137,7 +127,7 @@ extension CreateDraftCollateralLoanApplicationConfig.Result.Titles {
 }
 
 extension CreateDraftCollateralLoanApplicationConfig.Result.Icons {
-    
+
     static let `default` = Self(
         period: .ic24Calendar,
         percent: .ic24Percent,

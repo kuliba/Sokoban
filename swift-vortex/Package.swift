@@ -1535,7 +1535,6 @@ private extension Target {
             .collateralLoanLandingGetConsentsBackend,
             .inputComponent,
             .linkableText,
-            .collateralLoanLandingGetShowcaseUI,
             .optionalSelectorComponent,
             .otpInputComponent,
             .paymentComponents,

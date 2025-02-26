@@ -271,9 +271,11 @@ struct MainView<NavigationOperationView: View>: View {
             servicePicker(flowModel: node.model)
             
         case let .collateralLoanLanding(binder):
+            let factory = viewModel.makeCollateralLoanFactory()
+            
             viewFactory.components.makeCollateralLoanShowcaseWrapperView(
                 binder: binder,
-                getPDFDocument: viewModel.getPDFDocument,
+                factory: viewModel.makeCollateralLoanFactory(),
                 goToMain: viewModel.resetDestination
             )
                 .navigationBarWithBack(
@@ -285,7 +287,7 @@ struct MainView<NavigationOperationView: View>: View {
         case let .collateralLoanLandingProduct(binder):
             viewFactory.components.makeCollateralLoanWrapperView(
                 binder: binder,
-                getPDFDocument: viewModel.getPDFDocument,
+                factory: viewModel.makeCollateralLoanFactory(), 
                 goToMain: viewModel.resetDestination
             )
                 .navigationBarWithBack(
@@ -608,15 +610,16 @@ extension MainViewFactory {
     }
 }
 
-extension CollateralLoanLandingWrapperView {
-    
-    static let preivew = Self(
-        binder: .preview,
-        factory: .preview,
-        viewModelFactory: .preview,
-        goToMain: {}
-    )
-}
+//extension CollateralLoanLandingWrapperView {
+//    
+//    static let preivew = Self(
+//        binder: .preview,
+//        factory: .preview,
+//        config: .default,
+//        goToMain: {},
+//        makeOperationDetailInfoViewModel: { _,_  in .preview }
+//    )
+//}
 
 extension ProductProfileViewModel  {
     
@@ -669,10 +672,8 @@ extension MainViewModel {
         bindersFactory: .preview,
         viewModelsFactory: .preview,
         makeOpenNewProductButtons: { _ in [] },
-        getPDFDocument: { _,_ in },
-        makeCollateralLoanLandingGetShowcaseViewFactory: { _ in .preview },
-        makeGetCollateralLandingFactory: { _ in .preview },
-        makeCollateralLoanLandingViewModelFactory: { .preview }
+        getPDFDocument: { _,_ in }, 
+        makeCollateralLoanLandingFactory: { _ in .preview }
     )
 }
 

@@ -193,10 +193,7 @@ extension RootViewFactoryComposer {
             makeTransportPaymentsView: makeTransportPaymentsView,
             makeOrderCardView: makeOrderCardView,
             makeUpdatingUserAccountButtonLabel: makeUpdatingUserAccountButtonLabel,
-            makeInfoViews: .default,
-            makeGetCollateralLandingFactory: makeGetCollateralLandingFactory,
-            makeCollateralLoanLandingViewModelFactory: makeCollateralLoanLandingViewModelFactory,
-            makeCollateralLoanLandingGetShowcaseViewFactory: makeCollateralLoanLandingGetShowcaseViewFactory
+            makeInfoViews: .default
         )
     }
     
@@ -1030,29 +1027,9 @@ private extension RootViewFactoryComposer {
         }
     }
     
-    func makeGetCollateralLandingFactory(
-        getPDFDocument: @escaping CollateralLoanLandingGetShowcaseViewFactory.GetPDFDocument
-    ) -> GetCollateralLandingFactory {
-        
-        .init(
-            makeImageViewWithMD5Hash: { self.makeIconView(.md5Hash(.init($0))) },
-            makeImageViewWithURL: { self.makeGeneralIconView(.image($0.addingPercentEncoding())) },
-            getPDFDocument: getPDFDocument,
-            formatCurrency: { self.model.amountFormatted(amount: Double($0), currencyCode: "RUB", style: .normal) }
-        )
-    }
-    
-    func makeCollateralLoanLandingViewModelFactory() -> CollateralLoanLandingViewModelFactory {
-        
-        .init(
-            model: model,
-            makeImageViewWithMD5Hash: { self.makeIconView(.md5Hash(.init($0))) }
-        )
-    }
-    
-    func makeCollateralLoanLandingGetShowcaseViewFactory(
-        getPDFDocument: @escaping CollateralLoanLandingGetShowcaseViewFactory.GetPDFDocument
-    ) -> CollateralLoanLandingGetShowcaseViewFactory {
+    func makeCollateralLoanLandingFactory(
+        getPDFDocument: @escaping CollateralLoanLandingFactory.GetPDFDocument
+    ) -> CollateralLoanLandingFactory {
         
         .init(
             makeImageViewWithMD5Hash: { self.makeIconView(.md5Hash(.init($0))) },
