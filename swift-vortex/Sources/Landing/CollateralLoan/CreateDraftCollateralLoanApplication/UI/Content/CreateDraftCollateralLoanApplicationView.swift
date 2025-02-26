@@ -8,7 +8,12 @@
 import SwiftUI
 import OTPInputComponent
 
-public struct CreateDraftCollateralLoanApplicationView: View {
+public struct CreateDraftCollateralLoanApplicationView<Confirmation, InformerPayload>: View
+    where Confirmation: TimedOTPInputViewModel {
+    
+    @SwiftUI.State private var shimmeringEnabled = true
+    
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     let state: State
     let event: (Event) -> Void
@@ -31,71 +36,83 @@ public struct CreateDraftCollateralLoanApplicationView: View {
     }
     
     public var body: some View {
-        
-        content
+
+            ScrollView() {
+                
+                applicationForm()
+            }
+            .alert(
+                item: backendFailure,
+                content: alert(externalEvent: externalEvent)
+            )
+            .safeAreaInset(edge: .bottom, content: buttonView)
     }
     
     @ViewBuilder
-    private var content: some View {
+    private func applicationForm() -> some View {
         
-        VStack {
-            
-            ScrollView {
+        ScrollView {
 
-                headerView
-                amountView
-                periodView
-                percentView
-                cityView
+            VStack {
 
-                if state.stage == .confirm {
-
-                    state.confirmation.map { otpView(otpViewModel: $0.otpViewModel) }
-                    consentsView
+                Group {
+                    headerView()
+                    amountView()
+                    periodView()
+                    percentView()
+                    cityView()
                 }
+                .disabled(state.confirmation != nil)
+                
+                confirmationView()
             }
-            .frame(maxHeight: .infinity)
-            
-            buttonView
         }
     }
 }
 
 extension CreateDraftCollateralLoanApplicationView {
-    
-    var headerView: some View {
-        
-        CreateDraftCollateralLoanApplicationHeaderView(
-            state: state,
-            event: event,
-            config: config,
-            factory: factory
-        )
-    }
-    
-    var amountView: some View {
-        
-        CreateDraftCollateralLoanApplicationAmountView(
-            state: state,
-            event: event,
-            config: config,
-            factory: factory
-        )
-    }
 
-    var periodView: some View {
+    private func confirmationView() -> some View {
         
-        CreateDraftCollateralLoanApplicationPeriodView(
-            state: state,
-            event: event,
-            config: config,
-            factory: factory
-        )
+        Group {
+            
+            if shimmeringEnabled {
+                
+                if state.stage == .confirm {
+                        
+                    shimmeringView()
+                        .padding(config.layouts.paddings.contentStack)
+                }
+            } else {
+                
+                state.confirmation.map { confirmView(otpViewModel: $0) }
+            }
+        }
+        .onReceive(timer) { _ in shimmeringEnabled = state.confirmation == nil }
     }
     
-    var percentView: some View {
+    private func confirmView(otpViewModel: TimedOTPInputViewModel) -> some View {
+        
+        Group {
 
-        CreateDraftCollateralLoanApplicationPercentView(
+            otpView(otpViewModel: otpViewModel)
+            consentsView()
+        }
+    }
+    
+    private func headerView() -> some View {
+        
+        CreateDraftCollateralLoanApplicationHeaderView<Confirmation, InformerPayload>(
+            state: state,
+            event: event,
+            config: config,
+            factory: factory
+        )
+    }
+    
+    func amountView() -> some View {
+        
+        CreateDraftCollateralLoanApplicationAmountView<Confirmation, InformerPayload>(
             state: state,
             event: event,
             config: config,
@@ -103,9 +120,19 @@ extension CreateDraftCollateralLoanApplicationView {
         )
     }
 
-    var cityView: some View {
+    func periodView() -> some View {
+        
+        CreateDraftCollateralLoanApplicationPeriodView<Confirmation, InformerPayload>(
+            state: state,
+            event: event,
+            config: config,
+            factory: factory
+        )
+    }
+    
+    func percentView() -> some View {
 
-        CreateDraftCollateralLoanApplicationCityView(
+        CreateDraftCollateralLoanApplicationPercentView<Confirmation, InformerPayload>(
             state: state,
             event: event,
             config: config,
@@ -113,9 +140,19 @@ extension CreateDraftCollateralLoanApplicationView {
         )
     }
 
-    var buttonView: some View {
+    func cityView() -> some View {
 
-        CreateDraftCollateralLoanApplicationButtonView(
+        CreateDraftCollateralLoanApplicationCityView<Confirmation, InformerPayload>(
+            state: state,
+            event: event,
+            config: config,
+            factory: factory
+        )
+    }
+
+    func buttonView() -> some View {
+
+        CreateDraftCollateralLoanApplicationButtonView<Confirmation, InformerPayload>(
             state: state,
             event: event,
             config: config,
@@ -125,7 +162,7 @@ extension CreateDraftCollateralLoanApplicationView {
 
     func otpView(otpViewModel: TimedOTPInputViewModel) -> some View {
         
-        CreateDraftCollateralLoanApplicationOTPView(
+        CreateDraftCollateralLoanApplicationOTPView<Confirmation, InformerPayload>(
             state: state,
             event: event,
             config: config,
@@ -134,15 +171,61 @@ extension CreateDraftCollateralLoanApplicationView {
         )
     }
 
-    var consentsView: some View {
+    func consentsView() -> some View {
         
-        CreateDraftCollateralLoanApplicationConsentsView(
+        CreateDraftCollateralLoanApplicationConsentsView<Confirmation, InformerPayload>(
             state: state,
             event: event,
             externalEvent: { externalEvent($0) },
             config: config,
             factory: factory
         )
+    }
+    
+    private func shimmeringView() -> some View {
+        
+        RoundedRectangle(cornerRadius: config.layouts.cornerRadius)
+            .fill(
+                LinearGradient(
+                    gradient: config.shimmeringGradient,
+                    startPoint: .trailing,
+                    endPoint: .leading
+                )
+            )
+            .frame(height: config.layouts.shimmeringHeight)
+            .shimmering()
+    }
+    
+    func alert(
+        externalEvent: @escaping (Domain.ExternalEvent) -> Void
+    ) -> (AlertFailure) -> Alert {
+        
+        { alert in
+
+            return .init(
+                with: .init(
+                    title: "Ошибка",
+                    message: alert.message,
+                    primaryButton: .init(
+                        type: .default,
+                        title: "OK",
+                        event: .goToMain
+                    )
+                ),
+                event: externalEvent
+            )
+        }
+    }
+}
+
+extension CreateDraftCollateralLoanApplicationView {
+    
+    var backendFailure: AlertFailure? {
+        
+        guard case let .alert(message) = state.failure?.kind
+        else { return nil }
+        
+        return .init(message: message)
     }
 }
 
@@ -167,13 +250,14 @@ struct FrameWithCornerRadiusModifier: ViewModifier {
     }
 }
 
-extension CreateDraftCollateralLoanApplicationView {
+public extension CreateDraftCollateralLoanApplicationView {
     
-    public typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    public typealias State = Domain.State
-    public typealias Event = Domain.Event
-    public typealias Config = CreateDraftCollateralLoanApplicationConfig
-    public typealias Factory = CreateDraftCollateralLoanApplicationFactory
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias State = Domain.State<Confirmation, InformerPayload>
+    typealias Event = Domain.Event<Confirmation, InformerPayload>
+    typealias Config = CreateDraftCollateralLoanApplicationConfig
+    typealias Factory = CreateDraftCollateralLoanApplicationFactory
+    typealias Application = CreateDraftCollateralLoanApplication
 }
 
 extension CreateDraftCollateralLoanApplicationDomain {
@@ -181,21 +265,19 @@ extension CreateDraftCollateralLoanApplicationDomain {
     public enum ExternalEvent: Equatable {
         
         case showConsent(URL)
+        case goToMain
     }
 }
 
 // MARK: - Previews
 
-struct CreateDraftCollateralLoanApplicationView_Previews: PreviewProvider {
+struct CreateDraftCollateralLoanApplicationView_Previews<Confirmation, InformerPayload>: PreviewProvider
+    where Confirmation: TimedOTPInputViewModel{
     
     static var previews: some View {
         
-        CreateDraftCollateralLoanApplicationView(
-            state: .init(
-                data: .preview,
-                stage: .correctParameters,
-                confirmation: .preview
-            ),
+        CreateDraftCollateralLoanApplicationView<Confirmation, InformerPayload>(
+            state: .init(application: .preview, formatCurrency: { _ in "" }),
             event: {
                 print($0)
             },
@@ -204,20 +286,12 @@ struct CreateDraftCollateralLoanApplicationView_Previews: PreviewProvider {
             factory: .preview
         )
         .previewDisplayName("Экран подтверждения параметров кредита")
-
-        CreateDraftCollateralLoanApplicationView(
-            state: .init(
-                data: .preview,
-                stage: .confirm,
-                confirmation: .preview
-            ),
-            event: { print($0) },
-            externalEvent: { print($0) },
-            config: .default,
-            factory: .preview
-        )
-        .previewDisplayName("Экран отправки параметров кредита")
     }
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
+}
+
+extension Color {
+    
+    static let grayLightest: Self = .init(red: 0.96, green: 0.96, blue: 0.97)
 }

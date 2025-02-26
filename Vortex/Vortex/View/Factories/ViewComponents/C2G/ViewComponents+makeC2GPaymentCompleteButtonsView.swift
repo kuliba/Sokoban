@@ -167,8 +167,8 @@ extension OperationDetailDomain.ModelPayload {
     static let preview: Self = .init(
         product: .preview,
         status: .completed,
+        dateForDetail: "19 февраля 2025, 12:44",
         formattedAmount: "2 000 ₽",
-        formattedDate: "06.05.2021 15:38:12",
         merchantName: "2 000 ₽",
         message: nil,
         paymentOperationDetailID: 1,

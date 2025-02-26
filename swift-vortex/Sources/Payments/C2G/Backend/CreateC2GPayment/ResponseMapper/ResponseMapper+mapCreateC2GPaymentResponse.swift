@@ -36,6 +36,7 @@ private extension ResponseMapper {
         let amount: Decimal?
         let merchantName: String?
         let purpose: String?
+        let dateForDetail: String?
     }
 }
 
@@ -47,11 +48,13 @@ private extension ResponseMapper._DTO {
             
             guard let paymentOperationDetailId,
                   let documentStatus,
-                  !documentStatus.isEmpty
+                  !documentStatus.isEmpty,
+                  let dateForDetail
             else { throw MissingMandatoryFields() }
             
             return .init(
                 amount: amount,
+                dateForDetail: dateForDetail,
                 documentStatus: documentStatus,
                 merchantName: merchantName,
                 message: productOrderingResponseMessage,

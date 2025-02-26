@@ -45,7 +45,7 @@ extension RootViewModelFactory {
         // TODO: Fix error case
         //      return completion(.init(result: .failure(NSError(domain: "Showcase error", code: -1))))
         //      return completion(.init(result: .success(.init(serial: "", products: []))))
-        
+
         let load = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetShowcaseRequest,
             mapResponse: RemoteServices.ResponseMapper.mapCreateGetShowcaseResponse(_:_:)
@@ -127,8 +127,13 @@ private extension RemoteServices.ResponseMapper.GetShowcaseData.Product.Theme {
         switch self {
         case .gray:
             return .gray
+            
         case .white:
             return .white
+
+        case .black:
+            return .black
+            
         case .unknown:
             return .unknown
         }

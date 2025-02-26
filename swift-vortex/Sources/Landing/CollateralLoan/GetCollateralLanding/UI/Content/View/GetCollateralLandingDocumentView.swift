@@ -12,6 +12,7 @@ struct GetCollateralLandingDocumentView: View {
     
     let document: Document
     let config: Config.Documents.List
+    let externalEvent: (ExternalEvent) -> Void
     let factory: Factory
 
     var body: some View {
@@ -41,6 +42,7 @@ struct GetCollateralLandingDocumentView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .fixedSize(horizontal: false, vertical: true)
         }
+        .onTapGesture { externalEvent(.openDocument(document.link)) }
     }
 }
 
@@ -49,6 +51,7 @@ extension GetCollateralLandingDocumentView {
     typealias Config = GetCollateralLandingConfig
     typealias Document = GetCollateralLandingProduct.Document
     typealias Factory = GetCollateralLandingFactory
+    typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent
 }
 
 // MARK: - Previews
@@ -60,6 +63,7 @@ struct GetCollateralLandingDocumentView_Previews: PreviewProvider {
         GetCollateralLandingDocumentView(
             document: Product.carStub.documents.first!,
             config: Config.Documents.default.list,
+            externalEvent: { print($0) },
             factory: .preview
         )
         .padding(.top, 300)

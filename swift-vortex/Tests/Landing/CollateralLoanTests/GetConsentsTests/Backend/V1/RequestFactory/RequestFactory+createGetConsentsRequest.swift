@@ -48,7 +48,11 @@ final class RequestFactory_createGetConsentsRequestTests: XCTestCase {
         _ url: URL = anyURL()
     ) throws -> URLRequest {
         
-        let payload = Payload(applicationID: applicationID)
+        let payload = Payload(
+            cryptoVersion: anyMessage(),
+            applicationId: UInt(applicationID),
+            verificationCode: anyMessage()
+        )
 
         let request = try RequestFactory.createGetConsentsRequest(
             url: url,

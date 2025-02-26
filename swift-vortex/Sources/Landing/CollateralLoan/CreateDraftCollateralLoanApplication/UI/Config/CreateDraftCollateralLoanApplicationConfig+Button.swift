@@ -72,7 +72,7 @@ extension CreateDraftCollateralLoanApplicationConfig.Button {
             background: .red,
             disabled: .unselected
         ),
-        font: .init(Font.system(size: 24).bold()),
+        font: .init(Font.system(size: 16).bold()),
         layouts: .init(
             height: 56,
             cornerRadius: 12,

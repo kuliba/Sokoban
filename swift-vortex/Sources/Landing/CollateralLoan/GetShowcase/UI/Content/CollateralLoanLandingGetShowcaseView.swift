@@ -33,14 +33,17 @@ public struct CollateralLoanLandingGetShowcaseView: View {
         
         ScrollView(showsIndicators: false) {
             
-            ForEach(data.products, id: \.landingId) {
+            VStack(spacing: 0) {
                 
-                CollateralLoanLandingGetShowcaseProductView(
-                    product: $0,
-                    event: event,
-                    config: config,
-                    factory: factory
-                )
+                ForEach(data.products, id: \.landingId) {
+                    
+                    CollateralLoanLandingGetShowcaseProductView(
+                        product: $0,
+                        event: event,
+                        config: config,
+                        factory: factory
+                    )
+                }
             }
         }
     }
