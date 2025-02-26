@@ -237,30 +237,3 @@ extension SearchByUINDomain.Navigation.Destination: Identifiable {
         case c2gPayment(ObjectIdentifier)
     }
 }
-
-// MARK: - Previews
-
-struct MakeSearchByUINContentView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        
-        makeSearchByUINContentView(.init(textField: .placeholder("Enter value")))
-        makeSearchByUINContentView(.init(textField: .placeholder("Enter value"), message: .hint("hint")))
-        makeSearchByUINContentView(.init(textField: .placeholder("Enter value"), message: .warning("warning")))
-        
-        makeSearchByUINContentView(.init(textField: .noFocus("Value")))
-        makeSearchByUINContentView(.init(textField: .noFocus("Value"), message: .hint("hint")))
-        makeSearchByUINContentView(.init(textField: .noFocus("Value"), message: .warning("warning")))
-        
-        makeSearchByUINContentView(.init(textField: .editing(.init("a", cursorAt: 1))))
-        makeSearchByUINContentView(.init(textField: .editing(.init("a", cursorAt: 1)), message: .hint("hint")))
-        makeSearchByUINContentView(.init(textField: .editing(.init("a", cursorAt: 1)), message: .warning("warning")))
-    }
-    
-    static func makeSearchByUINContentView(
-        _ state: TextInputState
-    ) -> some View {
-        
-        ViewComponents.preview.makeSearchByUINContentView(state, { print($0) }, {})
-    }
-}
