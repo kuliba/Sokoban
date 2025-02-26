@@ -147,10 +147,9 @@ private extension NewProductButton.ViewModel {
     static func cardWanted(url: URL) -> NewProductButton.ViewModel {
         
         .init(
-            icon: .ic24NewCardColor,
-            title: "Хочу карту",
+            openProductType: .card,
             subTitle: "Бесплатно",
-            url: url
+            action: .url(url)
         )
     }
 }

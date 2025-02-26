@@ -357,6 +357,7 @@ private extension C2GPaymentDomain.Complete.Context {
     
     // ✅ COMPLETED STATUS
     static let completedFull: Self = .init(
+        dateForDetail: "19 февраля 2025, 12:44",
         formattedAmount: "100.50 ₽",
         merchantName: "Merchant A",
         purpose: "Purchase",
@@ -364,6 +365,7 @@ private extension C2GPaymentDomain.Complete.Context {
     )
     
     static let completedNoAmount: Self = .init(
+        dateForDetail: "19 февраля 2025, 12:44",
         formattedAmount: nil,
         merchantName: "Merchant B",
         purpose: "Subscription",
@@ -371,6 +373,7 @@ private extension C2GPaymentDomain.Complete.Context {
     )
     
     static let completedNoMerchant: Self = .init(
+        dateForDetail: "19 февраля 2025, 12:44",
         formattedAmount: "75.00 ₽",
         merchantName: nil,
         purpose: "Service Payment",
@@ -378,6 +381,7 @@ private extension C2GPaymentDomain.Complete.Context {
     )
     
     static let completedNoMessage: Self = .init(
+        dateForDetail: "19 февраля 2025, 12:44",
         formattedAmount: "50.00 ₽",
         merchantName: "Merchant C",
         purpose: "Gift",
@@ -385,6 +389,7 @@ private extension C2GPaymentDomain.Complete.Context {
     )
     
     static let completedNoPurpose: Self = .init(
+        dateForDetail: "19 февраля 2025, 12:44",
         formattedAmount: "125.00 ₽",
         merchantName: "Merchant D",
         purpose: nil,
@@ -392,6 +397,7 @@ private extension C2GPaymentDomain.Complete.Context {
     )
     
     static let completedNoMerchantNoMessage: Self = .init(
+        dateForDetail: "19 февраля 2025, 12:44",
         formattedAmount: "90.00 ₽",
         merchantName: nil,
         purpose: "Utilities",
@@ -399,6 +405,7 @@ private extension C2GPaymentDomain.Complete.Context {
     )
     
     static let completedMinimal: Self = .init(
+        dateForDetail: "19 февраля 2025, 12:44",
         formattedAmount: nil,
         merchantName: nil,
         purpose: nil,
@@ -407,6 +414,7 @@ private extension C2GPaymentDomain.Complete.Context {
     
     // ✅ INFLIGHT STATUS
     static let inflightFull: Self = .init(
+        dateForDetail: "19 февраля 2025, 12:44",
         formattedAmount: "200.00 ₽",
         merchantName: "Merchant E",
         purpose: "Transfer",
@@ -414,6 +422,7 @@ private extension C2GPaymentDomain.Complete.Context {
     )
     
     static let inflightNoAmount: Self = .init(
+        dateForDetail: "19 февраля 2025, 12:44",
         formattedAmount: nil,
         merchantName: "Merchant F",
         purpose: "Deposit",
@@ -421,6 +430,7 @@ private extension C2GPaymentDomain.Complete.Context {
     )
     
     static let inflightNoMerchant: Self = .init(
+        dateForDetail: "19 февраля 2025, 12:44",
         formattedAmount: "150.00 ₽",
         merchantName: nil,
         purpose: "Bill Payment",
@@ -428,6 +438,7 @@ private extension C2GPaymentDomain.Complete.Context {
     )
     
     static let inflightNoMessage: Self = .init(
+        dateForDetail: "19 февраля 2025, 12:44",
         formattedAmount: "175.00 ₽",
         merchantName: "Merchant G",
         purpose: "Subscription Renewal",
@@ -435,6 +446,7 @@ private extension C2GPaymentDomain.Complete.Context {
     )
     
     static let inflightNoPurpose: Self = .init(
+        dateForDetail: "19 февраля 2025, 12:44",
         formattedAmount: "120.00 ₽",
         merchantName: "Merchant H",
         purpose: nil,
@@ -442,6 +454,7 @@ private extension C2GPaymentDomain.Complete.Context {
     )
     
     static let inflightNoMerchantNoMessage: Self = .init(
+        dateForDetail: "19 февраля 2025, 12:44",
         formattedAmount: "130.00 ₽",
         merchantName: nil,
         purpose: "Loan Payment",
@@ -449,6 +462,7 @@ private extension C2GPaymentDomain.Complete.Context {
     )
     
     static let inflightMinimal: Self = .init(
+        dateForDetail: "19 февраля 2025, 12:44",
         formattedAmount: nil,
         merchantName: nil,
         purpose: nil,
@@ -457,6 +471,7 @@ private extension C2GPaymentDomain.Complete.Context {
     
     // ✅ REJECTED STATUS
     static let rejectedFull: Self = .init(
+        dateForDetail: "19 февраля 2025, 12:44",
         formattedAmount: "300.75 ₽",
         merchantName: "Merchant I",
         purpose: "Online Shopping",
@@ -464,6 +479,7 @@ private extension C2GPaymentDomain.Complete.Context {
     )
     
     static let rejectedNoAmount: Self = .init(
+        dateForDetail: "19 февраля 2025, 12:44",
         formattedAmount: nil,
         merchantName: "Merchant J",
         purpose: "Loan Payment",
@@ -471,6 +487,7 @@ private extension C2GPaymentDomain.Complete.Context {
     )
     
     static let rejectedNoMerchant: Self = .init(
+        dateForDetail: "19 февраля 2025, 12:44",
         formattedAmount: "125.00 ₽",
         merchantName: nil,
         purpose: "Charity Donation",
@@ -478,6 +495,7 @@ private extension C2GPaymentDomain.Complete.Context {
     )
     
     static let rejectedNoMessage: Self = .init(
+        dateForDetail: "19 февраля 2025, 12:44",
         formattedAmount: "140.00 ₽",
         merchantName: "Merchant K",
         purpose: "Food Order",
@@ -485,6 +503,7 @@ private extension C2GPaymentDomain.Complete.Context {
     )
     
     static let rejectedNoPurpose: Self = .init(
+        dateForDetail: "19 февраля 2025, 12:44",
         formattedAmount: "110.00 ₽",
         merchantName: "Merchant L",
         purpose: nil,
@@ -492,6 +511,7 @@ private extension C2GPaymentDomain.Complete.Context {
     )
     
     static let rejectedNoMerchantNoMessage: Self = .init(
+        dateForDetail: "19 февраля 2025, 12:44",
         formattedAmount: "135.00 ₽",
         merchantName: nil,
         purpose: "Membership Fee",
@@ -499,6 +519,7 @@ private extension C2GPaymentDomain.Complete.Context {
     )
     
     static let rejectedMinimal: Self = .init(
+        dateForDetail: "19 февраля 2025, 12:44",
         formattedAmount: nil,
         merchantName: nil,
         purpose: nil,

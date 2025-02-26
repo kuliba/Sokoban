@@ -105,6 +105,7 @@ final class ResponseMapper_mapCreateC2GPaymentResponseTests_swift: XCTestCase {
             .success(
                 makeResponse(
                     amount: 600.2,
+                    dateForDetail: "21 февраля 2025, 13:18",
                     documentStatus: "COMPLETE",
                     merchantName: "ГУОБДД МВД России",
                     paymentOperationDetailID: 119389,
@@ -123,6 +124,7 @@ final class ResponseMapper_mapCreateC2GPaymentResponseTests_swift: XCTestCase {
             .success(
                 makeResponse(
                     amount: 600.2,
+                    dateForDetail: "21 февраля 2025, 13:18",
                     documentStatus: "REJECTED",
                     merchantName: "ГУОБДД МВД России",
                     paymentOperationDetailID: 119389,
@@ -141,6 +143,7 @@ final class ResponseMapper_mapCreateC2GPaymentResponseTests_swift: XCTestCase {
             .success(
                 makeResponse(
                     amount: 600.2,
+                    dateForDetail: "21 февраля 2025, 13:18",
                     documentStatus: "IN_PROGRESS",
                     merchantName: "ГУОБДД МВД России",
                     paymentOperationDetailID: 119389,
@@ -176,6 +179,7 @@ final class ResponseMapper_mapCreateC2GPaymentResponseTests_swift: XCTestCase {
     
     private func makeResponse(
         amount: Decimal? = nil,
+        dateForDetail: String,
         documentStatus: String,
         merchantName: String? = nil,
         message: String? = nil,
@@ -185,6 +189,7 @@ final class ResponseMapper_mapCreateC2GPaymentResponseTests_swift: XCTestCase {
         
         return .init(
             amount: amount,
+            dateForDetail: dateForDetail,
             documentStatus: documentStatus,
             merchantName: merchantName,
             message: message,
@@ -265,7 +270,8 @@ private extension String {
     "documentStatus": "COMPLETE",
     "amount": 600.2,
     "merchantName": "ГУОБДД МВД России",
-    "purpose": "Штраф ГИБДД 600,2р ВУ"
+    "purpose": "Штраф ГИБДД 600,2р ВУ",
+    "dateForDetail": "21 февраля 2025, 13:18"
   }
 }
 """
@@ -279,7 +285,8 @@ private extension String {
     "documentStatus": "REJECTED",
     "amount": 600.2,
     "merchantName": "ГУОБДД МВД России",
-    "purpose": "Штраф ГИБДД 600,2р ВУ"
+    "purpose": "Штраф ГИБДД 600,2р ВУ",
+    "dateForDetail": "21 февраля 2025, 13:18"
   }
 }
 """
@@ -293,7 +300,8 @@ private extension String {
     "documentStatus": "IN_PROGRESS",
     "amount": 600.2,
     "merchantName": "ГУОБДД МВД России",
-    "purpose": "Штраф ГИБДД 600,2р ВУ"
+    "purpose": "Штраф ГИБДД 600,2р ВУ",
+    "dateForDetail": "21 февраля 2025, 13:18"
   }
 }
 """
