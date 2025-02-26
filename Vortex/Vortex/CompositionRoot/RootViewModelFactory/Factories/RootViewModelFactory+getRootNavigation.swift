@@ -35,16 +35,13 @@ extension RootViewModelFactory {
         
         case let .savingsAccount(orderAccountResponse):
             
-        
             let detailsService = nanoServiceComposer.compose(
                 createRequest: RequestFactory.createGetOperationDetailByPaymentIDRequest,
                 mapResponse: RemoteServices.ResponseMapper.mapGetOperationDetailByPaymentIDResponse
             )
             
-            
             let details = DocumentButtonDomain.Model.makeStateMachine(
                 load: { completion in
-                    
                     if let paymentOperationDetailId = orderAccountResponse.paymentOperationDetailId {
                         detailsService(.init(String(paymentOperationDetailId))) { response in
                             
@@ -64,7 +61,6 @@ extension RootViewModelFactory {
             )
 
             let document = makeDocumentButton { completion in
-                
                 if let accountID = orderAccountResponse.accountId {
                     documentService((accountID, orderAccountResponse.paymentOperationDetailId)) { response in
                         

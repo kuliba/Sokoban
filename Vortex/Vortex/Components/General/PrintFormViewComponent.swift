@@ -105,6 +105,7 @@ extension PrintFormView {
                     
                 })
             self.state = .document(pdfDocument, button)
+            bind()
         }
         
         private func handlePDFResult(_ pdfResult: ModelAction.Products.StatementPrintForm.Response.PDFResult) {
