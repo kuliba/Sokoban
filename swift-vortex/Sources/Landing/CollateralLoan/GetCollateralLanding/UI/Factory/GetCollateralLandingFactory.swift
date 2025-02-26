@@ -36,6 +36,19 @@ public struct GetCollateralLandingFactory {
 }
 
 public extension GetCollateralLandingFactory {
+    
+    func makeGetShowcaseViewFactory() -> CollateralLoanLandingGetShowcaseViewFactory {
+
+        .init(
+            makeImageViewWithMD5Hash: makeImageViewWithMD5Hash,
+            makeImageViewWithURL: makeImageViewWithURL,
+            getPDFDocument: getPDFDocument,
+            formatCurrency: formatCurrency
+        )
+    }
+}
+
+public extension GetCollateralLandingFactory {
         
     typealias ShowcaseFactory = CollateralLoanLandingGetShowcaseViewFactory
     typealias MakeImageViewWithMD5Hash = ShowcaseFactory.MakeImageViewWithMD5Hash

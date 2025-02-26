@@ -1,6 +1,6 @@
 //
 //  CollateralLoanLandingGetShowcaseThemeConfig+Black.swift
-//
+//  
 //
 //  Created by Valentin Ozerov on 11.02.2025.
 //

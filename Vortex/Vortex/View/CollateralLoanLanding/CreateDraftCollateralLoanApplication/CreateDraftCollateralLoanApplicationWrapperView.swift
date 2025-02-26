@@ -12,6 +12,7 @@ import OTPInputComponent
 import RemoteServices
 import RxViewModel
 import SwiftUI
+import ButtonWithSheet
 
 struct CreateDraftCollateralLoanApplicationWrapperView: View {
     
@@ -20,6 +21,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     let binder: Domain.Binder
     let config: Config
     let factory: Factory
+    let viewModelFactory: ViewModelFactory
     let goToMain: () -> Void
     
     var body: some View {
@@ -56,27 +58,30 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
             .frame(maxHeight: .infinity)
     }
 
+    @ViewBuilder
     private func content(
         state: State,
         event: @escaping (Event) -> Void
     ) -> some View {
 
-        CreateDraftCollateralLoanApplicationView(
-            state: state,
-            event: event,
-            externalEvent: handleExternalEvent(events:),
-            config: .default,
-            factory: .init(
-                makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
-                makeImageViewWithURL: factory.makeImageViewWithURL,
-                getPDFDocument: factory.getPDFDocument,
-                formatCurrency: factory.formatCurrency
+        if state.isLoading {
+            
+            Color.clear
+                .loader(isLoading: state.isLoading, color: .clear)
+        } else {
+            
+            CreateDraftCollateralLoanApplicationView(
+                state: state,
+                event: event,
+                externalEvent: handleExternalEvent(events:),
+                config: .default,
+                factory: factory
             )
-        )
-        .if(state.stage == .confirm) {
-        
-            $0.navigationBarBackButtonHidden(true)
-              .navigationBarItems(leading: buttonBack(event: event))
+            .if(state.stage == .confirm) {
+                
+                $0.navigationBarBackButtonHidden(true)
+                    .navigationBarItems(leading: buttonBack(event: event))
+            }
         }
     }
     
@@ -113,10 +118,10 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
             return .init(
                 title: Text("Ошибка"),
                 message: Text(failure),
-                dismissButton: .default(Text("ОK")) { goToMain() }
+                dismissButton: .cancel(Text("ОK"))
             )
         }
-    }
+    }  
     
     @ViewBuilder
     private func fullScreenCoverView(
@@ -174,6 +179,17 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         .init(getDocument: { getPDFDocument(payload, $0) })
     }
     
+    func makeDetailButton(payload: CollateralLandingApplicationSaveConsentsResult) -> CollateralLoanLandingDetailsButton {
+        
+            .init(
+                viewModel: viewModelFactory.makeOperationDetailInfoViewModel(
+                    payload: payload,
+                    dismiss: {}
+                ),
+                payload: payload
+            )
+    }
+
     private func makePaymentCompleteViewFactory() -> PaymentCompleteViewFactory {
         
         return .init(
@@ -216,6 +232,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
 extension CreateDraftCollateralLoanApplicationWrapperView {
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
+    typealias ViewModelFactory = CollateralLoanLandingViewModelFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
     typealias State = Domain.ContentState
@@ -230,15 +247,18 @@ extension CreateDraftCollateralLoanApplicationWrapperView {
 extension CreateDraftCollateralLoanApplicationDomain.Navigation {
 
     var alert: Alert? {
-        
-        switch self {
-        case let .failure(kind):
-            switch kind {
-            case let .timeout(informerPayload):
-                return .failure(informerPayload.message)
 
-            case let .error(message):
+        switch self {
+        case let .failure(failure):
+            if case let .alert(message) = failure.kind {
+
                 return .failure(message)
+            } else if case let .informer(informerPayload) = failure.kind {
+                
+                return .failure(informerPayload.message)
+            } else {
+                
+                return .failure(failure.localizedDescription)
             }
         case .saveConsents:
             return nil

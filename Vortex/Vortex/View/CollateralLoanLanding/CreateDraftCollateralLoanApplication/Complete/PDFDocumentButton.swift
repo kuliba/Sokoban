@@ -1,8 +1,8 @@
 //
-//  PDFDocumentButton.swift.swift
+//  PDFDocumentButton.swift
 //  Vortex
 //
-//  Created by Valentin Ozerov on 21.02.2025.
+//  Created by Valentin Ozerov on 12.02.2025.
 //
 
 import ButtonWithSheet

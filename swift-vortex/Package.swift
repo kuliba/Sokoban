@@ -1541,7 +1541,7 @@ private extension Target {
             .paymentComponents,
             .textFieldDomain,
             .textFieldUI,
-            .uiPrimitives
+            .uiPrimitives,
         ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/UI"
     )

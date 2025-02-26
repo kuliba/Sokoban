@@ -22,7 +22,9 @@ public struct CollateralLandingApplicationSaveConsentsResult: Equatable {
     public let cityName: String
     public let status: String
     public let responseMessage: String
+    public let description: String?
     public let verificationCode: String
+    public let icons: Icons
     
     public init(
         applicationID: UInt,
@@ -36,7 +38,9 @@ public struct CollateralLandingApplicationSaveConsentsResult: Equatable {
         cityName: String,
         status: String,
         responseMessage: String,
-        verificationCode: String
+        description: String?,
+        verificationCode: String,
+        icons: Icons
     ) {
         self.applicationID = applicationID
         self.name = name
@@ -49,7 +53,32 @@ public struct CollateralLandingApplicationSaveConsentsResult: Equatable {
         self.cityName = cityName
         self.status = status
         self.responseMessage = responseMessage
+        self.description = description
         self.verificationCode = verificationCode
+        self.icons = icons
+    }
+    
+    public struct Icons: Equatable {
+        
+        public let productName: String
+        public let amount: String
+        public let term: String
+        public let rate: String
+        public let city: String
+        
+        public init(
+            productName: String,
+            amount: String,
+            term: String,
+            rate: String,
+            city: String
+        ) {
+            self.productName = productName
+            self.amount = amount
+            self.term = term
+            self.rate = rate
+            self.city = city
+        }
     }
 }
 
@@ -82,6 +111,14 @@ public extension CollateralLandingApplicationSaveConsentsResult {
         cityName: "Москва",
         status: "submitted_for_review",
         responseMessage: "Специалист банка свяжется с Вами в ближайшее время.",
-        verificationCode: "123456"
+        description: "Яхта",
+        verificationCode: "123456",
+        icons: .init(
+            productName: "",
+            amount: "",
+            term: "",
+            rate: "",
+            city: ""
+        )
     )
 }

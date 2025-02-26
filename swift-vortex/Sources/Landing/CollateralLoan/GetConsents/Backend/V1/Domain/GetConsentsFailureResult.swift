@@ -2,7 +2,7 @@
 //  GetConsentsFailureResult.swift
 //
 //
-//  Created by Valentin Ozerov on 21.02.2025.
+//  Created by Valentin Ozerov on 11.02.2025.
 //
 
 public struct GetConsentsFailureResult: Equatable, Error {

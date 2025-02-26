@@ -20,48 +20,46 @@ struct CollateralLoanShowcaseWrapperView: View {
     
     let binder: GetShowcaseDomain.Binder
     let factory: Factory
+    let viewModelFactory: ViewModelFactory
     let goToMain: () -> Void
 
     var body: some View {
         
         RxWrapperView(model: binder.flow) { state, event in
             
-            RxWrapperView(
-                model: binder.content,
-                makeContentView: content(state:event:)
-            )
-            .navigationDestination(
-                destination: state.navigation,
-                content: destinationView
-            )
+            content()
+                .navigationDestination(
+                    destination: state.navigation,
+                    content: destinationView
+                )
         }
     }
     
-    private func content(
-        state: GetShowcaseDomain.State,
-        event: @escaping (GetShowcaseDomain.Event) -> Void
-    ) -> some View {
+    private func content() -> some View {
         
-        Group {
+        RxWrapperView(model: binder.content) { state, event in
             
-            switch state.showcase {
-            case .none:
-                Color.clear
-                    .loader(isLoading: state.showcase == nil, color: .clear)
+            Group {
                 
-            case let .some(showcase):
-                getShowcaseView(showcase)
+                switch state.showcase {
+                case .none:
+                    Color.clear
+                        .loader(isLoading: state.showcase == nil, color: .clear)
+                    
+                case let .some(showcase):
+                    getShowcaseView(showcase)
+                }
             }
+            .onFirstAppear { event(.load) }
         }
-        .onFirstAppear { event(.load) }
     }
-    
+        
     private func getShowcaseView(_ showcase: GetShowcaseDomain.ShowCase) -> some View {
         
         CollateralLoanLandingGetShowcaseView(
             data: showcase,
             event: handleExternalEvent(_:),
-            factory: factory
+            factory: factory.makeGetShowcaseViewFactory()
         )
     }
     
@@ -87,21 +85,18 @@ struct CollateralLoanShowcaseWrapperView: View {
         case let .landing(_, landing):
             CollateralLoanLandingWrapperView(
                 binder: landing,
-                factory: .init(
-                    makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
-                    makeImageViewWithURL: factory.makeImageViewWithURL,
-                    getPDFDocument: factory.getPDFDocument,
-                    formatCurrency: factory.formatCurrency
-                ),
+                factory: factory,
+                viewModelFactory: viewModelFactory,
                 goToMain: goToMain
             )
-            .onAppear { UINavigationBar.appearance().backgroundColor = UIColor(.clear) }
+            .navigationBarWithBack(title: "") { binder.flow.event(.dismiss) }
         }
     }
     
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
     typealias SaveConsentsResult = Domain.SaveConsentsResult
-    typealias Factory = CollateralLoanLandingGetShowcaseViewFactory
+    typealias Factory = GetCollateralLandingFactory
+    typealias ViewModelFactory = CollateralLoanLandingViewModelFactory
 }
 
 extension GetShowcaseDomain.Navigation: Identifiable {
@@ -119,6 +114,7 @@ extension CollateralLoanShowcaseWrapperView {
     static let preview = Self(
         binder: .preview,
         factory: .preview,
+        viewModelFactory: .preview,
         goToMain: {}
     )
 }

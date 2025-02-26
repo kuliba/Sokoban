@@ -118,7 +118,7 @@ extension RootViewFactory {
             makeGeneralIconView: makeGeneralIconView,
             makePaymentCompleteView: makePaymentCompleteView,
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeUserAccountView: makeUserAccountView,
+            makeUserAccountView: makeUserAccountView, 
             components: components,
             makeCollateralLoanShowcaseWrapperView: makeCollateralLoanShowcaseWrapperView
         )

@@ -218,7 +218,7 @@ extension RootViewModelFactory {
 
         save(payload.payload) { [saveConsents] in
 
-            completion($0.map { $0.response(verificationCode: payload.verificationCode) })
+            completion($0.map {$0.response(payload: payload)})
             _ = saveConsents
         }
     }
@@ -237,7 +237,7 @@ extension RootViewModelFactory {
 
         save(payload.payload) { [saveConsents] in
 
-            completion($0.map { $0.response(verificationCode: payload.verificationCode) })
+            completion($0.map { $0.response(payload: payload) })
             _ = saveConsents
         }
     }
@@ -274,7 +274,7 @@ extension RootViewModelFactory {
                 completion(.saveConsents(success))
 
             case let .failure(failure):
-                break
+                completion(.failure(failure))
             }
         }
     }
@@ -291,6 +291,9 @@ extension RootViewModelFactory {
             return .milliseconds(100)
         }
     }
+    
+    typealias Confirmation = CreateDraftCollateralLoanApplicationDomain.Confirmation
+    typealias InformerPayload = InformerData
 }
 
 // MARK: Adapters
@@ -325,7 +328,9 @@ extension CollateralLandingApplicationSaveConsentsPayload {
 
 extension RemoteServices.ResponseMapper.CollateralLoanLandingSaveConsentsResponse {
     
-    func response(verificationCode: String) -> CollateralLandingApplicationSaveConsentsResult {
+    func response(
+        payload: CollateralLandingApplicationSaveConsentsPayload
+    ) -> CollateralLandingApplicationSaveConsentsResult {
         
         .init(
             applicationID: applicationID,
@@ -339,7 +344,9 @@ extension RemoteServices.ResponseMapper.CollateralLoanLandingSaveConsentsRespons
             cityName: cityName,
             status: status,
             responseMessage: responseMessage,
-            verificationCode: verificationCode
+            description: description,
+            verificationCode: payload.verificationCode,
+            icons: payload.icons
         )
     }
 }
@@ -354,13 +361,18 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
         switch error {
         case let .performRequest(error):
             if error.isNotConnectedToInternetOrTimeout() {
+                
                 self = .init(kind: .informer(.init(message: "Проверьте подключение к сети", icon: .wifiOff)))
-            } else {
-                self = .init(kind: .alert("Попробуйте позже."))
-            }
-            
+            } else { self = .default }
+        case let .mapResponse(error):
+            if case .server(statusCode: _, errorMessage: let errorMessage) = error {
+                
+                self = .init(kind: .alert(errorMessage))
+            } else { self = .default }
         default:
-            self = .init(kind: .alert("Попробуйте позже."))
+            self = .default
         }
     }
+    
+    static let `default` = Self(kind: .alert("Попробуйте позже."))
 }

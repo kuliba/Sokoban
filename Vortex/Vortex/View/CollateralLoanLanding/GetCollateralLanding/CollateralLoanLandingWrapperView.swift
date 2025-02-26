@@ -17,28 +17,34 @@ struct CollateralLoanLandingWrapperView: View {
 
     let binder: GetCollateralLandingDomain.Binder
     let factory: Factory
+    let viewModelFactory: ViewModelFactory
     let goToMain: () -> Void
     
     var body: some View {
         
         RxWrapperView(model: binder.flow) { state, event in
             
-            RxWrapperView(
-                model: binder.content,
-                makeContentView: makeContentView(state:event:)
-            )
-            .navigationDestination(
-                destination: state.navigation?.destination,
-                content: { destinationView(destination: $0) { event(.dismiss) }}
-            )
-            .bottomSheet(
-                sheet: state.navigation?.bottomSheet,
-                dismiss: { binder.flow.event(.dismiss) },
-                content: bottomSheetView
-            )
+            content()
+                .navigationDestination(
+                    destination: state.navigation?.destination,
+                    content: { destinationView(destination: $0) { event(.dismiss) }}
+                )
+                .bottomSheet(
+                    sheet: state.navigation?.bottomSheet,
+                    dismiss: { binder.flow.event(.dismiss) },
+                    content: bottomSheetView
+                )
         }
     }
-
+    
+    private func content() -> some View {
+        
+        RxWrapperView(
+            model: binder.content,
+            makeContentView: makeContentView(state:event:)
+        )
+    }
+    
     private func makeContentView(
         state: GetCollateralLandingDomain.State,
         event: @escaping (GetCollateralLandingDomain.Event) -> Void
@@ -108,6 +114,7 @@ struct CollateralLoanLandingWrapperView: View {
                     getPDFDocument: factory.getPDFDocument,
                     formatCurrency: factory.formatCurrency
                 ),
+                viewModelFactory: viewModelFactory,
                 goToMain: goToMain
             )
             .navigationBarWithBack(title: "Оформление заявки", dismiss: dissmiss)
@@ -172,6 +179,7 @@ struct CollateralLoanLandingWrapperView: View {
 extension CollateralLoanLandingWrapperView {
     
     typealias Factory = GetCollateralLandingFactory
+    typealias ViewModelFactory = CollateralLoanLandingViewModelFactory
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
     typealias SaveConsentsResult = Domain.SaveConsentsResult
 

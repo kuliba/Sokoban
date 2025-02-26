@@ -43,13 +43,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
     
     enum Navigation {
 
-        case failure(Failure)
+        case failure(ContentError)
         case saveConsents(CollateralLandingApplicationSaveConsentsResult)
-        
-        enum Failure {
-            
-            case timeout(InformerData)
-            case error(String)
-        }
     }
 }

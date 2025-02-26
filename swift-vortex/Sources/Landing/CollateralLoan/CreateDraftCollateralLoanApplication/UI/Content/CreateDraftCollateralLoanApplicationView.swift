@@ -41,10 +41,6 @@ public struct CreateDraftCollateralLoanApplicationView<Confirmation, InformerPay
                 
                 applicationForm()
             }
-            .alert(
-                item: backendFailure,
-                content: alert(externalEvent: externalEvent)
-            )
             .safeAreaInset(edge: .bottom, content: buttonView)
     }
     
@@ -71,7 +67,7 @@ public struct CreateDraftCollateralLoanApplicationView<Confirmation, InformerPay
 }
 
 extension CreateDraftCollateralLoanApplicationView {
-
+    
     private func confirmationView() -> some View {
         
         Group {
@@ -79,7 +75,7 @@ extension CreateDraftCollateralLoanApplicationView {
             if shimmeringEnabled {
                 
                 if state.stage == .confirm {
-                        
+                    
                     shimmeringView()
                         .padding(config.layouts.paddings.contentStack)
                 }
@@ -94,7 +90,7 @@ extension CreateDraftCollateralLoanApplicationView {
     private func confirmView(otpViewModel: TimedOTPInputViewModel) -> some View {
         
         Group {
-
+            
             otpView(otpViewModel: otpViewModel)
             consentsView()
         }
@@ -119,7 +115,7 @@ extension CreateDraftCollateralLoanApplicationView {
             factory: factory
         )
     }
-
+    
     func periodView() -> some View {
         
         CreateDraftCollateralLoanApplicationPeriodView<Confirmation, InformerPayload>(
@@ -131,7 +127,7 @@ extension CreateDraftCollateralLoanApplicationView {
     }
     
     func percentView() -> some View {
-
+        
         CreateDraftCollateralLoanApplicationPercentView<Confirmation, InformerPayload>(
             state: state,
             event: event,
@@ -139,9 +135,9 @@ extension CreateDraftCollateralLoanApplicationView {
             factory: factory
         )
     }
-
+    
     func cityView() -> some View {
-
+        
         CreateDraftCollateralLoanApplicationCityView<Confirmation, InformerPayload>(
             state: state,
             event: event,
@@ -149,9 +145,9 @@ extension CreateDraftCollateralLoanApplicationView {
             factory: factory
         )
     }
-
+    
     func buttonView() -> some View {
-
+        
         CreateDraftCollateralLoanApplicationButtonView<Confirmation, InformerPayload>(
             state: state,
             event: event,
@@ -159,7 +155,7 @@ extension CreateDraftCollateralLoanApplicationView {
             factory: factory
         )
     }
-
+    
     func otpView(otpViewModel: TimedOTPInputViewModel) -> some View {
         
         CreateDraftCollateralLoanApplicationOTPView<Confirmation, InformerPayload>(
@@ -170,7 +166,7 @@ extension CreateDraftCollateralLoanApplicationView {
             otpViewModel: otpViewModel
         )
     }
-
+    
     func consentsView() -> some View {
         
         CreateDraftCollateralLoanApplicationConsentsView<Confirmation, InformerPayload>(
@@ -195,40 +191,8 @@ extension CreateDraftCollateralLoanApplicationView {
             .frame(height: config.layouts.shimmeringHeight)
             .shimmering()
     }
-    
-    func alert(
-        externalEvent: @escaping (Domain.ExternalEvent) -> Void
-    ) -> (AlertFailure) -> Alert {
-        
-        { alert in
-
-            return .init(
-                with: .init(
-                    title: "Ошибка",
-                    message: alert.message,
-                    primaryButton: .init(
-                        type: .default,
-                        title: "OK",
-                        event: .goToMain
-                    )
-                ),
-                event: externalEvent
-            )
-        }
-    }
 }
-
-extension CreateDraftCollateralLoanApplicationView {
     
-    var backendFailure: AlertFailure? {
-        
-        guard case let .alert(message) = state.failure?.kind
-        else { return nil }
-        
-        return .init(message: message)
-    }
-}
-
 struct FrameWithCornerRadiusModifier: ViewModifier {
     
     let config: CreateDraftCollateralLoanApplicationConfig

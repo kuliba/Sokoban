@@ -182,7 +182,8 @@ private extension String {
     ],
     "cityName": "Москва",
     "status": "submitted_for_review",
-    "responseMessage": "Специалист банка свяжется с Вами в ближайшее время."
+    "responseMessage": "Специалист банка свяжется с Вами в ближайшее время.",
+    "description": "Яхта"
     }
 }
 """
@@ -204,6 +205,7 @@ private extension ResponseMapper.CollateralLoanLandingSaveConsentsResponse {
         ],
         cityName: "Москва",
         status: "submitted_for_review",
-        responseMessage: "Специалист банка свяжется с Вами в ближайшее время."
+        responseMessage: "Специалист банка свяжется с Вами в ближайшее время.", 
+        description: "Яхта"
     )
 }

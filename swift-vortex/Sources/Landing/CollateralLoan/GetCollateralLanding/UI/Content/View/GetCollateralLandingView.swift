@@ -44,6 +44,7 @@ public struct GetCollateralLandingView: View {
                 .background(product.getCollateralLandingTheme.backgroundColor)
             }
             .ignoresSafeArea()
+            .safeAreaInset(edge: .bottom, content: { footerView(product: product) })
         }
     }
         
@@ -59,7 +60,7 @@ public struct GetCollateralLandingView: View {
         VStack {
             
             factory.makeImageViewWithURL(product.marketing.image)
-                .frame(height: factory.config.backgroundImageHeight)
+                .scaledToFit()
             
             Spacer()
         }
@@ -100,23 +101,26 @@ public struct GetCollateralLandingView: View {
 
                 DocumentsView(
                     product: product,
-                    config: factory.config,
+                    config: factory.config, 
                     externalEvent: externalEvent,
                     factory: factory
                 )
             }
-            
-            FooterView(
-                product: product,
-                config: factory.config.footer,
-                state: state,
-                externalEvent: externalEvent
-            )
         }
         .background(Color.clear)
         .frame(maxHeight: .infinity, alignment: .top)
         .padding(.bottom, factory.config.paddings.outerBottom)
         .ignoresSafeArea(edges: .all)
+    }
+    
+    private func footerView(product: Product) -> some View {
+        
+        FooterView(
+            product: product,
+            config: factory.config.footer,
+            state: state,
+            externalEvent: externalEvent
+        )
     }
 }
 

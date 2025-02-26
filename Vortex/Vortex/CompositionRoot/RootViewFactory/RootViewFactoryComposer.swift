@@ -7,6 +7,7 @@
 
 import ActivateSlider
 import AnywayPaymentDomain
+import CollateralLoanLandingGetCollateralLandingUI
 import CollateralLoanLandingGetConsentsBackend
 import CollateralLoanLandingGetShowcaseUI
 import Combine
@@ -152,7 +153,7 @@ extension RootViewFactoryComposer {
             components: makeViewComponents(rootEvent: rootEvent),
             paymentsViewFactory: makePaymentsViewFactory(),
             makeTemplateButtonWrapperView: makeTemplateButtonWrapperView,
-            makeUpdatingUserAccountButtonLabel: makeUpdatingUserAccountButtonLabel,
+            makeUpdatingUserAccountButtonLabel: makeUpdatingUserAccountButtonLabel, 
             makeCollateralLoanShowcaseWrapperView: makeCollateralLoanShowcaseWrapperView
         )
     }
@@ -1035,16 +1036,22 @@ private extension RootViewFactoryComposer {
         goToMain: @escaping () -> Void
     ) -> CollateralLoanShowcaseWrapperView {
         
-        let factory = CollateralLoanLandingGetShowcaseViewFactory(
+        let factory = GetCollateralLandingFactory(
             makeImageViewWithMD5Hash: { self.makeIconView(.md5Hash(.init($0))) },
             makeImageViewWithURL: { self.makeGeneralIconView(.image($0.addingPercentEncoding())) },
             getPDFDocument: getPDFDocument,
             formatCurrency: { self.model.amountFormatted(amount: Double($0), currencyCode: "RUB", style: .normal) }
         )
         
+        let viewModelFactory = CollateralLoanLandingViewModelFactory(
+            model: model,
+            makeImageViewWithMD5Hash: { self.makeIconView(.md5Hash(.init($0))) }
+        )
+        
         return .init(
             binder: binder,
             factory: factory,
+            viewModelFactory: viewModelFactory,
             goToMain: goToMain
         )
     }

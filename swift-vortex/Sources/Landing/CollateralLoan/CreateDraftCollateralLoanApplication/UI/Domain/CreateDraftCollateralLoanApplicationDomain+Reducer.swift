@@ -42,12 +42,12 @@ extension CreateDraftCollateralLoanApplicationDomain {
             switch event {
             case let .amount(amountEvent):
                 state.amount = amountReduce(state.amount, amountEvent)
-                if state.isAmountVaild {
+                if !state.isAmountVaild {
                     
                     state.amount.message = .hint(state.hintText)
                 } else {
                     
-                    state.amount.message = .warning("Некорректная сумма")
+                    state.amount.message = nil
                 }
                 
             case let .period(periodEvent):
@@ -85,7 +85,8 @@ extension CreateDraftCollateralLoanApplicationDomain {
                     effect = .saveConsents(
                         state.saveConsentsPayload(
                             applicationID: applicationID,
-                            verificationCode: state.otp
+                            verificationCode: state.otp,
+                            icons: state.application.icons
                         )
                     )
                 }
@@ -97,6 +98,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 }
                 
             case let .showSaveConsentsResult(result):
+                state.isLoading = false
                 switch result {
                 case let .success(success):
                     state.saveConsentsResult = success
