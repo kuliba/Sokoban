@@ -501,7 +501,6 @@ static let validJsonWithEmptyFrequentlyAskedQuestions = """
 private extension OrderCardLandingBackend.OrderCardLandingResponse {
     
     static let stub: Self = .init(
-        id: "CARD_NAME_PRODUCT",
         theme: "DEFAULT",
         product: .init(
             title: "Карта МИР «Все включено»",
@@ -551,7 +550,6 @@ private extension OrderCardLandingBackend.OrderCardLandingResponse {
     )
     
     static let stubWithEmptyConditions: Self = .init(
-        id: "CARD_NAME_PRODUCT",
         theme: "DEFAULT",
         product: .init(
             title: "Карта МИР «Все включено»",
@@ -595,7 +593,6 @@ private extension OrderCardLandingBackend.OrderCardLandingResponse {
     )
     
     static let stubWithEmptySecurity: Self = .init(
-        id: "CARD_NAME_PRODUCT",
         theme: "DEFAULT",
         product: .init(
             title: "Карта МИР «Все включено»",
@@ -641,7 +638,6 @@ private extension OrderCardLandingBackend.OrderCardLandingResponse {
     )
     
     static let stubWithEmptyQuestion: Self = .init(
-        id: "CARD_NAME_PRODUCT",
         theme: "DEFAULT",
         product: .init(
             title: "Карта МИР «Все включено»",
