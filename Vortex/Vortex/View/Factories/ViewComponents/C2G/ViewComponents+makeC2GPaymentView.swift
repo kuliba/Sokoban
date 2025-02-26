@@ -58,16 +58,19 @@ extension ViewComponents {
                             }
                         }
                         
-                        VStack(spacing: 13) {
+                        if state.context.hasEitherDateNOrPaymentTerm {
                             
-                            state.context.dateNField.map(infoView)
-                            
-                            if state.context.dateNField != nil && state.context.paymentTermField != nil {
-                             
-                                Divider()
+                            VStack(spacing: 13) {
+                                
+                                state.context.dateNField.map(infoView)
+                                
+                                if state.context.hasBothDateNAndPaymentTerm {
+                                    
+                                    Divider()
+                                }
+                                
+                                state.context.paymentTermField.map(infoView)
                             }
-                            
-                            state.context.paymentTermField.map(infoView)
                         }
                         
                         state.context.legalActField.map(infoView)
@@ -238,6 +241,16 @@ extension C2GPaymentDomain.Context {
 }
 
 extension C2GPaymentDomain.Context {
+    
+    var hasBothDateNAndPaymentTerm: Bool {
+        
+        dateNField != nil && paymentTermField != nil
+    }
+    
+    var hasEitherDateNOrPaymentTerm: Bool { 
+        
+        dateNField != nil || paymentTermField != nil
+    }
     
     var dateNField: Field? {
         
