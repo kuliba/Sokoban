@@ -35,6 +35,7 @@ extension C2GPaymentDomain {
         let merchantName: String?
         let payerINN: String?
         let payerKPP: String?
+        let payerName: String?
         let paymentTerm: String?
         let purpose: String?
         let term: AttributedString
@@ -51,6 +52,7 @@ extension C2GPaymentDomain {
         let merchantName: String?
         let payerINN: String?
         let payerKPP: String?
+        let payerName: String?
         let paymentTerm: String?
         let products: [ProductSelect.Product]
         let purpose: String?

@@ -42,6 +42,7 @@ extension ViewComponents {
                     
                     Group {
                         
+                        state.context.payerNameField.map(infoView)
                         state.context.merchantNameField.map(infoView)
                         
                         VStack(spacing: 13) {
@@ -263,6 +264,14 @@ extension C2GPaymentDomain.Context {
         }
     }
     
+    var payerNameField: Field? {
+        
+        return payerName.map {
+            
+            return .init(icon: .ic24FileHash, title: .payerName, value: $0)
+        }
+    }
+    
     var payerKPPField: Field? {
         
         return payerKPP.map {
@@ -351,6 +360,7 @@ private extension String {
     static let merchantName: Self = "Получатель"
     static let payerINN: Self = "ИНН плательщика"
     static let payerKPP: Self = "КПП плательщика"
+    static let payerName: Self = "Информация о плательщике"
     static let paymentTerm: Self = "Срок оплаты"
     static let purpose: Self = "Назначение платежа"
     static let uin: Self = "Номер документа (УИН)"
