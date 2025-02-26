@@ -44,30 +44,42 @@ extension ViewComponents {
         
         RxWrapperView(model: binder.content) { state, event in
             
-            VStack(spacing: 20) {
+            makeSearchByUINContentView(state, event) {
                 
-                TextInputView(
-                    state: state,
-                    event: event,
-                    config: .iVortex(keyboard: .number, title: "УИН"),
-                    iconView: {
-                        
-                        Image.ic24FileHash
-                            .foregroundColor(.iconGray)
-                    }
-                )
-                .keyboardType(.numberPad)
-                .paddedRoundedBackground()
-                
-                Spacer()
-                
-                makeSPBFooter(isActive: state.isContinueActive) {
-                    
-                    binder.flow.event(.select(.uin(.init(value: binder.content.value))))
-                }
+                binder.flow.event(.select(.uin(.init(
+                    value: state.uinInputState.value
+                ))))
             }
-            .padding([.horizontal, .top])
         }
+    }
+    
+    @inlinable
+    func makeSearchByUINContentView(
+        _ state: TextInputState,
+        _ event: @escaping (TextInputEvent) -> Void,
+        _ search: @escaping () -> Void
+    ) -> some View {
+        
+        VStack(spacing: 20) {
+            
+            TextInputView(
+                state: state,
+                event: event,
+                config: .iVortex(keyboard: .number, title: "УИН"),
+                iconView: {
+                    
+                    Image.ic24FileHash
+                        .foregroundColor(.iconGray)
+                }
+            )
+            .keyboardType(.numberPad)
+            .paddedRoundedBackground()
+            
+            Spacer()
+            
+            makeSPBFooter(isActive: state.isContinueActive, event: search)
+        }
+        .padding([.horizontal, .top])
     }
     
     @inlinable
@@ -129,11 +141,6 @@ extension ViewComponents {
     }
 }
 
-extension SearchByUINDomain.Content {
-    
-    var value: String { state.uinInputState.value }
-}
-
 private extension TextInputState {
     
     var isContinueActive: Bool  {
@@ -151,7 +158,7 @@ private extension TextInputState {
     }
 }
 
-struct UINInputState: Equatable {
+private struct UINInputState: Equatable {
     
     var isEditing = false
     var isValid = false
