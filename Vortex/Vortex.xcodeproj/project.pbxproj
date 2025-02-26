@@ -3222,11 +3222,6 @@
 		C14303FA2A85F0BB00FAD5AA /* Model+Success.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14303F92A85F0BB00FAD5AA /* Model+Success.swift */; };
 		C1434567295B76DD007AAD2E /* Payments+Limitation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1434566295B76DD007AAD2E /* Payments+Limitation.swift */; };
 		C14389F12C9C488100D2A8FB /* FilterEffectMicroServicesComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14389F02C9C488100D2A8FB /* FilterEffectMicroServicesComposer.swift */; };
-		C143D17D2CFEAB17009C4F3E /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C143D17C2CFEAB17009C4F3E /* HeaderView.swift */; };
-		C143D1A02D00918E009C4F3E /* OrderCardHorizontalListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C143D19F2D00918E009C4F3E /* OrderCardHorizontalListView.swift */; };
-		C143D1A22D0092E9009C4F3E /* OrderCardVerticalListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C143D1A12D0092E9009C4F3E /* OrderCardVerticalListView.swift */; };
-		C143D1A42D00944F009C4F3E /* DropDownListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C143D1A32D00944F009C4F3E /* DropDownListView.swift */; };
-		C143D1A62D0143FA009C4F3E /* OrderCardLandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C143D1A52D0143FA009C4F3E /* OrderCardLandingView.swift */; };
 		C14A847F299A2C3A002D5735 /* PaymentsSelectCountryViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14A847E299A2C3A002D5735 /* PaymentsSelectCountryViewComponent.swift */; };
 		C14AAB8C2D5C824400AA0B41 /* PaymentSticker+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14AAB8B2D5C824400AA0B41 /* PaymentSticker+iVortex.swift */; };
 		C14F6E252924175C00D46C37 /* CloseProductTransferData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14F6E242924175C00D46C37 /* CloseProductTransferData.swift */; };
@@ -6957,11 +6952,6 @@
 		C14303F92A85F0BB00FAD5AA /* Model+Success.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Success.swift"; sourceTree = "<group>"; };
 		C1434566295B76DD007AAD2E /* Payments+Limitation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Payments+Limitation.swift"; sourceTree = "<group>"; };
 		C14389F02C9C488100D2A8FB /* FilterEffectMicroServicesComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterEffectMicroServicesComposer.swift; sourceTree = "<group>"; };
-		C143D17C2CFEAB17009C4F3E /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
-		C143D19F2D00918E009C4F3E /* OrderCardHorizontalListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCardHorizontalListView.swift; sourceTree = "<group>"; };
-		C143D1A12D0092E9009C4F3E /* OrderCardVerticalListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCardVerticalListView.swift; sourceTree = "<group>"; };
-		C143D1A32D00944F009C4F3E /* DropDownListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownListView.swift; sourceTree = "<group>"; };
-		C143D1A52D0143FA009C4F3E /* OrderCardLandingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCardLandingView.swift; sourceTree = "<group>"; };
 		C14A847E299A2C3A002D5735 /* PaymentsSelectCountryViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSelectCountryViewComponent.swift; sourceTree = "<group>"; };
 		C14AAB8B2D5C824400AA0B41 /* PaymentSticker+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentSticker+iVortex.swift"; sourceTree = "<group>"; };
 		C14F6E242924175C00D46C37 /* CloseProductTransferData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseProductTransferData.swift; sourceTree = "<group>"; };
@@ -15635,7 +15625,6 @@
 				A72955C32D3112D60076A5F3 /* CollateralLoanLanding */,
 				7769F5BA27D3A2D900F80607 /* Main */,
 				83F775DA2CA47B4300A05F69 /* MarketShowcase */,
-				C143D17B2CFEAB03009C4F3E /* OrderCardLanding */,
 				0C6508CD28299B4D0058916A /* PaymentsTransfers */,
 				0B8BC03F2901EEF40022DDE4 /* QR */,
 				770DCE9427BBFA49004099C1 /* Root */,
@@ -17393,26 +17382,6 @@
 				C14389F02C9C488100D2A8FB /* FilterEffectMicroServicesComposer.swift */,
 			);
 			path = CalendarComposer;
-			sourceTree = "<group>";
-		};
-		C143D17B2CFEAB03009C4F3E /* OrderCardLanding */ = {
-			isa = PBXGroup;
-			children = (
-				C143D19E2D00916E009C4F3E /* Components */,
-				C143D1A52D0143FA009C4F3E /* OrderCardLandingView.swift */,
-			);
-			path = OrderCardLanding;
-			sourceTree = "<group>";
-		};
-		C143D19E2D00916E009C4F3E /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				C143D17C2CFEAB17009C4F3E /* HeaderView.swift */,
-				C143D19F2D00918E009C4F3E /* OrderCardHorizontalListView.swift */,
-				C143D1A12D0092E9009C4F3E /* OrderCardVerticalListView.swift */,
-				C143D1A32D00944F009C4F3E /* DropDownListView.swift */,
-			);
-			path = Components;
 			sourceTree = "<group>";
 		};
 		C152489C2B83A67F0043F412 /* MyProducts */ = {
@@ -21641,7 +21610,6 @@
 				2A1D7F5D2A0FF00C0066BC02 /* SearchFactory.swift in Sources */,
 				68EB187A27CEE85700745558 /* SegmentedBarViewComponent.swift in Sources */,
 				682092A627AC0673003DCAFD /* ServerCommands+Suggest.swift in Sources */,
-				C143D1A02D00918E009C4F3E /* OrderCardHorizontalListView.swift in Sources */,
 				A50869DA2767F394004C5E17 /* InternetTVSuccessView.swift in Sources */,
 				839331992C8F17DC00D15379 /* BannerPickerSectionBinder.swift in Sources */,
 				2AC067E62BED206D004CBC0B /* PaymentsTransfersFactoryComposer.swift in Sources */,
@@ -22049,7 +22017,6 @@
 				2AA404BB2D381F99002623BB /* RootViewModelFactory+makeCategoryPickerContent.swift in Sources */,
 				0B8C1C56273B4F9F00BA5CAC /* GKHInfoView.swift in Sources */,
 				2A945B3C2CE3731B00A68FB1 /* RootViewModel+selectEmitting.swift in Sources */,
-				C143D1A42D00944F009C4F3E /* DropDownListView.swift in Sources */,
 				7772979D27C7B6D10099EF91 /* AuthCardScannerViewModel.swift in Sources */,
 				2AECBC292BEBA96E000B0C0E /* PaymentsTransfersFlowEvent.swift in Sources */,
 				0C42457A2846C79E00899EB2 /* ContactsAgentMock.swift in Sources */,
@@ -22824,7 +22791,6 @@
 				7769F5C627D8B19300F80607 /* ProductDynamicParams.swift in Sources */,
 				8306C12F2B63A4A4007FDA89 /* RequestFactory+getProductDynamicParamsList.swift in Sources */,
 				2A939C692D6775880032B83D /* PaymentCompleteButtonsPlaceholderViewConfig+iVortex.swift in Sources */,
-				C143D1A22D0092E9009C4F3E /* OrderCardVerticalListView.swift in Sources */,
 				8328ABF72C3BFF7C00AD05E0 /* ChangeSVCardLimitServices.swift in Sources */,
 				2A556B4C2C7CEAE0002050C2 /* OperationPickerStateItemLabelConfig+iVortex.swift in Sources */,
 				774A8B422865FD1800B81140 /* MessagesHistoryView.swift in Sources */,
@@ -23559,7 +23525,6 @@
 				2A5AEF292B7A191B00E935B6 /* ButtonConfig+iVortex.swift in Sources */,
 				77EC58EC277237720054D75C /* Action.swift in Sources */,
 				0BBDFBE427BD05FD00A30D6D /* PaymentsOperationView.swift in Sources */,
-				C143D1A62D0143FA009C4F3E /* OrderCardLandingView.swift in Sources */,
 				2A556B4E2C7CEB08002050C2 /* LatestPlaceholderConfig+iVortex.swift in Sources */,
 				2A556B4E2C7CEB08002050C2 /* LatestPlaceholderConfig+iVortex.swift in Sources */,
 				77E1803B27AC17DD0006ACC9 /* ServerCommands+PushDevice.swift in Sources */,
@@ -23706,7 +23671,6 @@
 				0B01073827CD4D4B006462E6 /* ButtonSimpleViewComponent.swift in Sources */,
 				0BF3485D26931254005138A8 /* SuggestBankDecodableModel.swift in Sources */,
 				0BAD4D3B274417E700FDF9B6 /*  ExtensionPushHistoryNav.swift in Sources */,
-				C143D17D2CFEAB17009C4F3E /* HeaderView.swift in Sources */,
 				83F6565B2C3FF4570052B7E1 /* StickerEvents.swift in Sources */,
 				770E68B22902B04300586FC4 /* Model+PaymentsTransferAnyway.swift in Sources */,
 				A7E314122D39369B009811EB /* GetCollateralLandingDomain.swift in Sources */,
