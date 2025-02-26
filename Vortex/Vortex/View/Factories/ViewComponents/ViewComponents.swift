@@ -5,6 +5,8 @@
 //  Created by Andryusina Nataly on 08.11.2024.
 //
 
+import CollateralLoanLandingGetCollateralLandingUI
+import CollateralLoanLandingGetShowcaseUI
 import Combine
 import Foundation
 import LoadableResourceComponent
@@ -47,6 +49,10 @@ typealias MakeSbpPayView = (SbpPayViewModel) -> SbpPayView
 typealias MakeTemplatesListFlowView = (MainViewModel.TemplatesNode) -> TemplatesListFlowView< AnywayFlowView<PaymentCompleteView>>
 typealias MakeTransportPaymentsView = (TransportPaymentsViewModel) -> TransportPaymentsView<MosParkingView< MosParkingStateView<Text>>>
 typealias MakeOrderCardView = () -> EmptyView
+typealias GetPDFDocument = CollateralLoanLandingGetShowcaseViewFactory.GetPDFDocument
+typealias MakeGetCollateralLandingFactory = (@escaping GetPDFDocument) -> GetCollateralLandingFactory
+typealias MakeCollateralLoanLandingViewModelFactory = () -> CollateralLoanLandingViewModelFactory
+typealias MakeCollateralLoanLandingGetShowcaseViewFactory = (@escaping GetPDFDocument) -> CollateralLoanLandingGetShowcaseViewFactory
 
 struct ViewComponents {
     
@@ -81,6 +87,9 @@ struct ViewComponents {
     let makeOrderCardView: MakeOrderCardView
     let makeUpdatingUserAccountButtonLabel: () -> UpdatingUserAccountButtonLabel
     let makeInfoViews: MakeInfoViews
+    let makeGetCollateralLandingFactory: MakeGetCollateralLandingFactory
+    let makeCollateralLoanLandingViewModelFactory: MakeCollateralLoanLandingViewModelFactory
+    let makeCollateralLoanLandingGetShowcaseViewFactory: MakeCollateralLoanLandingGetShowcaseViewFactory
 }
 
 extension ViewComponents {
@@ -153,7 +162,10 @@ extension ViewComponents {
         makeTransportPaymentsView: { _ in fatalError() },
         makeOrderCardView: { EmptyView() },
         makeUpdatingUserAccountButtonLabel: { .init(label: .init(avatar: .checkImage, name: ""), publisher: Empty().eraseToAnyPublisher(), config: .prod) },
-        makeInfoViews: .default
+        makeInfoViews: .default,
+        makeGetCollateralLandingFactory: { _ in .preview },
+        makeCollateralLoanLandingViewModelFactory: { .preview },
+        makeCollateralLoanLandingGetShowcaseViewFactory: { _ in .preview }
     )
     
     private static let makeContactsView: MakeContactsView = { .init(viewModel: $0, viewFactory: .preview) }

@@ -30,12 +30,28 @@ public struct CreateDraftCollateralLoanApplicationFactory {
         self.getPDFDocument = getPDFDocument
         self.formatCurrency = formatCurrency
     }
+}
+
+public extension CreateDraftCollateralLoanApplicationFactory {
     
-    public typealias ShowcaseFactory = CollateralLoanLandingGetShowcaseViewFactory
-    public typealias MakeImageViewWithMD5Hash = ShowcaseFactory.MakeImageViewWithMD5Hash
-    public typealias MakeImageViewWithURL = ShowcaseFactory.MakeImageViewWithURL
-    public typealias GetPDFDocument = ShowcaseFactory.GetPDFDocument
-    public typealias FormatCurrency = (UInt) -> String?
+    func makeCreateDraftCollateralLoanApplicationFactory() -> CreateDraftCollateralLoanApplicationFactory {
+        
+        .init(
+            makeImageViewWithMD5Hash: makeImageViewWithMD5Hash,
+            makeImageViewWithURL: makeImageViewWithURL,
+            getPDFDocument: getPDFDocument,
+            formatCurrency: formatCurrency
+        )
+    }
+}
+
+public extension CreateDraftCollateralLoanApplicationFactory {
+    
+    typealias ShowcaseFactory = CollateralLoanLandingGetShowcaseViewFactory
+    typealias MakeImageViewWithMD5Hash = ShowcaseFactory.MakeImageViewWithMD5Hash
+    typealias MakeImageViewWithURL = ShowcaseFactory.MakeImageViewWithURL
+    typealias GetPDFDocument = ShowcaseFactory.GetPDFDocument
+    typealias FormatCurrency = (UInt) -> String?
 }
 
 // MARK: Preview helpers

@@ -55,6 +55,10 @@ class MainViewModel: ObservableObject, Resetable {
     let makeOpenNewProductButtons: OpenNewProductsViewModel.MakeNewProductButtons
     let getPDFDocument: CollateralLoanLandingGetShowcaseViewFactory.GetPDFDocument
     
+    let makeGetCollateralLandingFactory: MakeGetCollateralLandingFactory
+    let makeCollateralLoanLandingViewModelFactory: MakeCollateralLoanLandingViewModelFactory
+    let makeCollateralLoanLandingGetShowcaseViewFactory: MakeCollateralLoanLandingGetShowcaseViewFactory
+
     let bannersBox: any BannersBoxInterface<BannerList>
     
     private var bindings = Set<AnyCancellable>()
@@ -75,6 +79,9 @@ class MainViewModel: ObservableObject, Resetable {
         viewModelsFactory: MainViewModelsFactory,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
         getPDFDocument: @escaping CollateralLoanLandingGetShowcaseViewFactory.GetPDFDocument,
+        makeCollateralLoanLandingGetShowcaseViewFactory: @escaping MakeCollateralLoanLandingGetShowcaseViewFactory,
+        makeGetCollateralLandingFactory: @escaping MakeGetCollateralLandingFactory,
+        makeCollateralLoanLandingViewModelFactory: @escaping MakeCollateralLoanLandingViewModelFactory,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.model = model
@@ -92,6 +99,9 @@ class MainViewModel: ObservableObject, Resetable {
         self.viewModelsFactory = viewModelsFactory
         self.makeOpenNewProductButtons = makeOpenNewProductButtons
         self.getPDFDocument = getPDFDocument
+        self.makeCollateralLoanLandingGetShowcaseViewFactory = makeCollateralLoanLandingGetShowcaseViewFactory
+        self.makeGetCollateralLandingFactory = makeGetCollateralLandingFactory
+        self.makeCollateralLoanLandingViewModelFactory = makeCollateralLoanLandingViewModelFactory
         self.scheduler = scheduler
         self.navButtonsRight = createNavButtonsRight()
         
@@ -1072,8 +1082,8 @@ private extension MainViewModel {
             route.destination = .collateralLoanLanding(binder)
             
         case .car, .realEstate:
-            guard let id = type.id else { return }
-            let binder = bindersFactory.makeCollateralLoanLandingBinder(id)
+            guard !type.id.isEmpty else { return }
+            let binder = bindersFactory.makeCollateralLoanLandingBinder(type.id)
             route.destination = .collateralLoanLandingProduct(binder)
         }
     }

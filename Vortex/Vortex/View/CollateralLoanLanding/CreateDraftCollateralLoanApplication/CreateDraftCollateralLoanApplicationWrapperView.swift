@@ -75,11 +75,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
                 event: event,
                 externalEvent: handleExternalEvent(events:),
                 config: .default,
-                factory: .init(
-                    makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
-                    makeImageViewWithURL: factory.makeImageViewWithURL,
-                    getPDFDocument: factory.getPDFDocument
-                )
+                factory: factory.makeCreateDraftCollateralLoanApplicationFactory()
             )
             .if(state.stage == .confirm) {
                 

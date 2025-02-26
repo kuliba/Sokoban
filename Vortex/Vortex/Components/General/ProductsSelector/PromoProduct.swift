@@ -35,12 +35,12 @@ enum CollateralLoanType: String {
     case car = "Кредит под залог транспорта"
     case realEstate = "Кредит под залог недвижимости"
     
-    var id: String? {
+    var id: String {
         
         switch self {
             
         case .showcase:
-            return nil
+            return ""
             
         case .car:
             return "CAR_LANDING"
@@ -55,17 +55,16 @@ extension PromoProduct {
     
     static func collateralLoanTypeMap(from productName: String) -> Self {
         
-        let collateralLoanType = CollateralLoanType(rawValue: productName) ?? .showcase
-        
-        switch collateralLoanType {
-        case .showcase:
-            return .collateralLoan
+        switch CollateralLoanType(rawValue: productName) {
             
         case .car:
             return .collateralLoanCar
 
         case .realEstate:
             return .collateralLoanRealEstate
+
+        default:
+            return .collateralLoan
         }
     }
 }

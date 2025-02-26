@@ -881,6 +881,9 @@ private extension RootViewModelFactory {
             viewModelsFactory: mainViewModelsFactory,
             makeOpenNewProductButtons: makeOpenNewProductButtons,
             getPDFDocument: getPDFDocument,
+            makeCollateralLoanLandingGetShowcaseViewFactory: makeCollateralLoanLandingGetShowcaseViewFactory,
+            makeGetCollateralLandingFactory: makeGetCollateralLandingFactory,
+            makeCollateralLoanLandingViewModelFactory: makeCollateralLoanLandingViewModelFactory,
             scheduler: schedulers.main
         )
         

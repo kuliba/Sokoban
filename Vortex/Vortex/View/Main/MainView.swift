@@ -271,10 +271,10 @@ struct MainView<NavigationOperationView: View>: View {
             servicePicker(flowModel: node.model)
             
         case let .collateralLoanLanding(binder):
-            viewFactory.makeCollateralLoanShowcaseWrapperView(
-                binder,
-                viewModel.getPDFDocument,
-                viewModel.resetDestination
+            viewFactory.components.makeCollateralLoanShowcaseWrapperView(
+                binder: binder,
+                getPDFDocument: viewModel.getPDFDocument,
+                goToMain: viewModel.resetDestination
             )
                 .navigationBarWithBack(
                     title: "Кредиты",
@@ -283,7 +283,11 @@ struct MainView<NavigationOperationView: View>: View {
                 .edgesIgnoringSafeArea(.bottom)
 
         case let .collateralLoanLandingProduct(binder):
-            viewFactory.makeCollateralLoanWrapperView(binder, viewModel.resetDestination)
+            viewFactory.components.makeCollateralLoanWrapperView(
+                binder: binder,
+                getPDFDocument: viewModel.getPDFDocument,
+                goToMain: viewModel.resetDestination
+            )
                 .navigationBarWithBack(
                     title: "",
                     dismiss: viewModel.resetDestination
@@ -599,9 +603,7 @@ extension MainViewFactory {
                     viewFactory: .preview
                 )
             },
-            components: .preview,
-            makeCollateralLoanShowcaseWrapperView: { _,_,_ in .preview },
-            makeCollateralLoanWrapperView: { _,_ in .preivew }
+            components: .preview
         )
     }
 }
@@ -667,7 +669,10 @@ extension MainViewModel {
         bindersFactory: .preview,
         viewModelsFactory: .preview,
         makeOpenNewProductButtons: { _ in [] },
-        getPDFDocument: { _,_ in }
+        getPDFDocument: { _,_ in },
+        makeCollateralLoanLandingGetShowcaseViewFactory: { _ in .preview },
+        makeGetCollateralLandingFactory: { _ in .preview },
+        makeCollateralLoanLandingViewModelFactory: { .preview }
     )
 }
 
