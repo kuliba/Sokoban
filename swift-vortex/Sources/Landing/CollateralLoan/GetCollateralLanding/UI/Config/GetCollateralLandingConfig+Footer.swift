@@ -36,32 +36,16 @@ extension GetCollateralLandingConfig {
             
             let height: CGFloat
             let cornerRadius: CGFloat
-            let paddings: Paddings
+            let paddings: EdgeInsets
             
-            init(height: CGFloat, cornerRadius: CGFloat, paddings: Paddings) {
+            init(
+                height: CGFloat,
+                cornerRadius: CGFloat,
+                paddings: EdgeInsets
+            ) {
                 self.height = height
                 self.cornerRadius = cornerRadius
                 self.paddings = paddings
-            }
-            
-            struct Paddings {
-                    
-                let leading: CGFloat
-                let trailing: CGFloat
-                let top: CGFloat
-                let bottom: CGFloat
-                
-                init(
-                    leading: CGFloat,
-                    trailing: CGFloat,
-                    top: CGFloat,
-                    bottom: CGFloat
-                ) {
-                    self.leading = leading
-                    self.trailing = trailing
-                    self.top = top
-                    self.bottom = bottom
-                }
             }
         }
     }
@@ -71,18 +55,13 @@ extension GetCollateralLandingConfig.Footer {
     
     static let `default` = Self(
         text: "Оформить заявку",
-        font: .init(Font.system(size: 24).bold()),
+        font: .init(Font.system(size: 16).bold()),
         foreground: .white,
         background: .red,
         layouts: .init(
             height: 56,
             cornerRadius: 12,
-            paddings: .init(
-                leading: 16,
-                trailing: 15,
-                top: 16,
-                bottom: 25
-            )
+            paddings: .init(top: 16, leading: 16, bottom: 0, trailing: 15)
         )
     )
 }

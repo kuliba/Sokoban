@@ -12,6 +12,7 @@ import PaymentComponents
 public enum ProductEvent<Confirmation> {
     
     case `continue`
+    case amount(AmountEvent)
     case dismissInformer
     case load
     case loaded(LoadFormResult<Confirmation>)
@@ -21,7 +22,6 @@ public enum ProductEvent<Confirmation> {
     case otp(String)
     case setConsent(Bool)
     case productSelect(ProductSelectEvent)
-    case amount(Decimal?)
 
     public typealias OrderAccountResult = Result<OrderAccountResponse, LoadFailure>
 }

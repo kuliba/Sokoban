@@ -136,13 +136,48 @@ private extension OrderAccountView {
         VStack(spacing: config.padding) {
             
             productView(product(form))
-            income(income: state.form?.constants.income ?? "", false)
+            income(income: form.constants.income, false)
             topUpView(topUp(form))
-            productSelector(form)
+            
+            if form.topUp.isOn {
+                productSelectView()
+                    .disabled(!form.topUp.isShowFooter)
+                
+                if !form.topUp.isShowFooter {
+                    topUpInfo()
+                }
+            }
         }
         .disabled(state.hasConfirmation)
     }
     
+    private func topUpInfo() -> some View {
+        
+        VStack(alignment: .leading, spacing: config.padding / 2 ) {
+            
+            HStack {
+                config.topUp.amount.amount.text.text(withConfig: config.topUp.amount.amount.config)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                "\(amount) \(currencyCode)".text(withConfig: config.topUp.amount.value)
+            }
+            HStack {
+                config.topUp.amount.fee.text.text(withConfig: config.topUp.amount.fee.config)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                "0 \(currencyCode)".text(withConfig: config.topUp.amount.value)
+            }
+        }
+        .modifier(ViewWithBackgroundCornerRadiusAndPaddingModifier(config.background, config.cornerRadius, config.padding))
+    }
+
+    var currencyCode: String {
+        state.form?.constants.currency.symbol ?? ""
+    }
+    
+    var amount: String {
+        if let amount = state.form?.amountValue { return "\(amount)"}
+        return ""
+    }
+
     func productView(
         _ product: Product
     ) -> some View {
@@ -151,7 +186,7 @@ private extension OrderAccountView {
             data: product,
             config: config,
             makeIconView: factory.makeIconView, 
-            isLoading: state.loadableForm.isLoading
+            isLoading: false
         )
         .rounded(config.roundedConfig)
     }
@@ -226,16 +261,6 @@ private extension OrderAccountView {
             isLoading: false
         )
         .rounded(config.roundedConfig)
-    }
-    
-    @ViewBuilder
-    func productSelector(
-        _ form: Form<Confirmation>
-    ) -> ProductSelectView? {
-        
-        if form.topUp.isOn {
-            productSelectView()
-        }
     }
 }
 

@@ -57,8 +57,8 @@ final class RequestFactory_createGetPrintFormForSavingsAccountRequestTests: XCTe
     
     func test_createRequest_shouldSetHTTPBody_JSON() throws {
         
-        let accountID: Int = anyInt()
-        let detailID: Int = anyInt()
+        let accountID = anyInt()
+        let detailID = anyInt()
 
         let payload = anyPayload(accountId: accountID, detailId: detailID)
         let request = try createRequest(payload: payload)
@@ -88,7 +88,7 @@ final class RequestFactory_createGetPrintFormForSavingsAccountRequestTests: XCTe
     }
     
     private func anyPayload(
-        accountId: Int = .random(in: 0...Int.max),
+        accountId: Int = 1,
         detailId: Int? = nil
     ) -> GetPrintFormPayload {
         

@@ -172,7 +172,7 @@ private extension String {
     "applicationId": 9,
     "name": "Кредит под залог транспорта",
     "amount": 99998,
-    "termMonth": 365,
+    "term": "365",
     "collateralType": "CAR",
     "interestRate": 18,
     "collateralInfo": "Лада",
@@ -182,7 +182,8 @@ private extension String {
     ],
     "cityName": "Москва",
     "status": "submitted_for_review",
-    "responseMessage": "Специалист банка свяжется с Вами в ближайшее время."
+    "responseMessage": "Специалист банка свяжется с Вами в ближайшее время.",
+    "description": "Яхта"
     }
 }
 """
@@ -194,7 +195,7 @@ private extension ResponseMapper.CollateralLoanLandingSaveConsentsResponse {
         applicationID: 9,
         name: "Кредит под залог транспорта",
         amount: 99998,
-        termMonth: 365,
+        term: "365",
         collateralType: "CAR",
         interestRate: 18,
         collateralInfo: "Лада",
@@ -204,6 +205,7 @@ private extension ResponseMapper.CollateralLoanLandingSaveConsentsResponse {
         ],
         cityName: "Москва",
         status: "submitted_for_review",
-        responseMessage: "Специалист банка свяжется с Вами в ближайшее время."
+        responseMessage: "Специалист банка свяжется с Вами в ближайшее время.", 
+        description: "Яхта"
     )
 }

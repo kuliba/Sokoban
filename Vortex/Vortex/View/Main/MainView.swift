@@ -271,24 +271,17 @@ struct MainView<NavigationOperationView: View>: View {
             servicePicker(flowModel: node.model)
             
         case let .collateralLoanLanding(binder):
-            let factory = CollateralLoanLandingGetShowcaseViewFactory(
-                makeImageViewWithMD5Hash: { viewFactory.makeIconView(.md5Hash(.init($0))) },
-                makeImageViewWithURL: { viewFactory.makeGeneralIconView(.image($0.addingPercentEncoding())) }
-            )
-
-            CollateralLoanShowcaseWrapperView(
-                binder: binder,
-                factory: factory,
-                // TODO: Pop to root
-                goToMain: viewModel.resetDestination
+            viewFactory.makeCollateralLoanShowcaseWrapperView(
+                binder,
+                viewModel.getPDFDocument,
+                viewModel.resetDestination
             )
                 .navigationBarWithBack(
                     title: "Кредиты",
-                    // TODO: Pop to root
                     dismiss: viewModel.resetDestination
                 )
                 .edgesIgnoringSafeArea(.bottom)
-            
+ 
         case .orderCard:
             viewFactory.components.makeOrderCardView()
         }
@@ -555,7 +548,7 @@ struct MainView_Previews: PreviewProvider {
         MainView(
             viewModel: .sample,
             navigationOperationView: EmptyView.init,
-            viewFactory: .preview, 
+            viewFactory: .preview,
             paymentsTransfersViewFactory: .preview,
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
@@ -599,7 +592,8 @@ extension MainViewFactory {
                     viewFactory: .preview
                 )
             },
-            components: .preview
+            components: .preview,
+            makeCollateralLoanShowcaseWrapperView: { _,_,_  in .preview }
         )
     }
 }
@@ -654,7 +648,8 @@ extension MainViewModel {
         sections: [],
         bindersFactory: .preview,
         viewModelsFactory: .preview,
-        makeOpenNewProductButtons: { _ in [] }
+        makeOpenNewProductButtons: { _ in [] },
+        getPDFDocument: { _,_ in }
     )
 }
 
@@ -673,7 +668,8 @@ private extension GetCollateralLandingDomain.Content {
     
     static let preview = GetCollateralLandingDomain.Content(
         initialState: .init(
-            landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"
+            landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
+            formatCurrency: { _ in "" }
         ),
         reduce: {
             state,_ in (state, nil)
@@ -685,35 +681,6 @@ private extension GetCollateralLandingDomain.Content {
 private extension GetCollateralLandingDomain.Flow {
     
     static let preview = GetCollateralLandingDomain.Flow(
-        initialState: .init(),
-        reduce: { state,_ in (state, nil) },
-        handleEffect: { _,_ in }
-    )
-}
-
-// MARK: - GetShowcaseDomain.Binder preview
-
-private extension GetShowcaseDomain.Binder {
-    
-    static let preview = GetShowcaseDomain.Binder(
-        content: .preview,
-        flow: .preview,
-        bind: { _,_ in [] }
-    )
-}
-
-private extension GetShowcaseDomain.Flow {
-    
-    static let preview = GetShowcaseDomain.Flow(
-        initialState: .init(),
-        reduce: { state,_ in (state, nil) },
-        handleEffect: { _,_ in }
-    )
-}
-
-private extension GetShowcaseDomain.Content {
-    
-    static let preview: GetShowcaseDomain.Content = .init(
         initialState: .init(),
         reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }

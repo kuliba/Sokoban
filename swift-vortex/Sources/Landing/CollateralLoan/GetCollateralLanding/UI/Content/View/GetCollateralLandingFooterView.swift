@@ -26,10 +26,8 @@ struct GetCollateralLandingFooterView: View {
                 .cornerRadius(12)
                 .font(config.font.font)
         }
-        .padding(.leading, config.layouts.paddings.leading)
-        .padding(.trailing, config.layouts.paddings.trailing)
-        .padding(.top, config.layouts.paddings.top)
-        .padding(.bottom, config.layouts.paddings.bottom)
+        .padding(config.layouts.paddings)
+        .background(Color.white)
     }
 }
 
@@ -51,7 +49,7 @@ struct GetCollateralLandingFooterView_Previews: PreviewProvider {
         GetCollateralLandingFooterView(
             product: .carStub,
             config: .default,
-            state: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"),
+            state: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE", formatCurrency: { _ in "" }),
             externalEvent: { print($0) }
         )
     }

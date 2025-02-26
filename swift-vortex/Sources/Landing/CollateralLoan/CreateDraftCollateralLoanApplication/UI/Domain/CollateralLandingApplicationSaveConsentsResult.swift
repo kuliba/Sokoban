@@ -6,38 +6,46 @@
 //
 
 import Foundation
+import CollateralLoanLandingGetConsentsBackend
+import RemoteServices
 
 public struct CollateralLandingApplicationSaveConsentsResult: Equatable {
     
     public let applicationID: UInt
     public let name: String
     public let amount: UInt
-    public let termMonth: UInt
+    public let term: String
     public let collateralType: String
-    public let interestRate: UInt
+    public let interestRate: Double
     public let collateralInfo: String?
     public let documents: [String]
     public let cityName: String
     public let status: String
     public let responseMessage: String
+    public let description: String?
+    public let verificationCode: String
+    public let icons: Icons
     
     public init(
         applicationID: UInt,
         name: String,
         amount: UInt,
-        termMonth: UInt,
+        term: String,
         collateralType: String,
-        interestRate: UInt,
+        interestRate: Double,
         collateralInfo: String?,
         documents: [String],
         cityName: String,
         status: String,
-        responseMessage: String
+        responseMessage: String,
+        description: String?,
+        verificationCode: String,
+        icons: Icons
     ) {
         self.applicationID = applicationID
         self.name = name
         self.amount = amount
-        self.termMonth = termMonth
+        self.term = term
         self.collateralType = collateralType
         self.interestRate = interestRate
         self.collateralInfo = collateralInfo
@@ -45,24 +53,45 @@ public struct CollateralLandingApplicationSaveConsentsResult: Equatable {
         self.cityName = cityName
         self.status = status
         self.responseMessage = responseMessage
+        self.description = description
+        self.verificationCode = verificationCode
+        self.icons = icons
+    }
+    
+    public struct Icons: Equatable {
+        
+        public let productName: String
+        public let amount: String
+        public let term: String
+        public let rate: String
+        public let city: String
+        
+        public init(
+            productName: String,
+            amount: String,
+            term: String,
+            rate: String,
+            city: String
+        ) {
+            self.productName = productName
+            self.amount = amount
+            self.term = term
+            self.rate = rate
+            self.city = city
+        }
     }
 }
 
 public extension CollateralLandingApplicationSaveConsentsResult {
     
-    func formattedAmount() -> String {
+    var payload: RemoteServices.RequestFactory.GetConsentsPayload {
         
-        String(format: "%ld %@", locale: Locale.current, amount, rubSymbol)
+        .init(
+            cryptoVersion: "1.0", // Constant, can be skipped in request
+            applicationId: applicationID,
+            verificationCode: verificationCode
+        )
     }
-}
-
-// MARK: Helpers
-
-var rubSymbol: String {
-    
-    let code = "RUB"
-    let locale = NSLocale(localeIdentifier: code)
-    return locale.displayName(forKey: NSLocale.Key.currencySymbol, value: code) ?? "₽"
 }
 
 public extension CollateralLandingApplicationSaveConsentsResult {
@@ -71,7 +100,7 @@ public extension CollateralLandingApplicationSaveConsentsResult {
         applicationID: 9,
         name: "Кредит под залог транспорта",
         amount: 99998,
-        termMonth: 365,
+        term: "365",
         collateralType: "CAR",
         interestRate: 18,
         collateralInfo: "Лада Приора",
@@ -81,6 +110,15 @@ public extension CollateralLandingApplicationSaveConsentsResult {
         ],
         cityName: "Москва",
         status: "submitted_for_review",
-        responseMessage: "Специалист банка свяжется с Вами в ближайшее время."
+        responseMessage: "Специалист банка свяжется с Вами в ближайшее время.",
+        description: "Яхта",
+        verificationCode: "123456",
+        icons: .init(
+            productName: "",
+            amount: "",
+            term: "",
+            rate: "",
+            city: ""
+        )
     )
 }

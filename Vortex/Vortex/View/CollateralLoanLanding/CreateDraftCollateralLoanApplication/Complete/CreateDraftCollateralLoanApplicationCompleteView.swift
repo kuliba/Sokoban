@@ -1,8 +1,8 @@
 //
-//  CreateDraftCollateralLoanApplicationCompleteView.swift.swift
+//  CreateDraftCollateralLoanApplicationCompleteView.swift
 //  Vortex
 //
-//  Created by Valentin Ozerov on 21.02.2025.
+//  Created by Valentin Ozerov on 13.02.2025.
 //
 
 import Combine
@@ -18,6 +18,7 @@ struct CreateDraftCollateralLoanApplicationCompleteView: View {
     let action: () -> Void
     let makeIconView: MakeIconView
     let pdfDocumentButton: PDFDocumentButton
+    let detailsButton: CollateralLoanLandingDetailsButton
     
     var body: some View {
         
@@ -26,8 +27,9 @@ struct CreateDraftCollateralLoanApplicationCompleteView: View {
             statusView()
             Spacer()
             buttons()
-            heroButton()
         }
+        .safeAreaInset(edge: .bottom, content: heroButton)
+        .frame(maxHeight: .infinity)
         .padding(.bottom)
         .padding(.horizontal)
     }
@@ -54,10 +56,14 @@ private extension CreateDraftCollateralLoanApplicationCompleteView {
     func buttons() -> some View {
         
         HStack {
-            pdfDocumentButton
             
+            pdfDocumentButton
+            Color.clear.frame(width: 8)
+            detailsButton
         }
-        .padding(.bottom, 24)
+        .frame(height: 50)
+        .frame(maxWidth: .infinity)
+        .padding(.bottom, 50)
     }
     
     func heroButton() -> some View {
@@ -66,7 +72,6 @@ private extension CreateDraftCollateralLoanApplicationCompleteView {
     }
 }
 
-#if DEBUG
 struct CreateDraftCollateralLoanApplicationCompleteView_Previews: PreviewProvider {
     
     static var previews: some View {
@@ -92,9 +97,9 @@ struct CreateDraftCollateralLoanApplicationCompleteView_Previews: PreviewProvide
                         .delay(for: .seconds(1), scheduler: DispatchQueue.main)
                         .eraseToAnyPublisher()
                 )
-            },
-            pdfDocumentButton: .preview
+            }, 
+            pdfDocumentButton: .preview,
+            detailsButton: .preview
         )
     }
 }
-#endif

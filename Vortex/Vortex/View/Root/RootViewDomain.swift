@@ -19,7 +19,7 @@ enum RootViewSelect: Equatable {
     
     case openProduct(OpenProductType)
     case orderCardResponse(OpenCardDomain.OrderCardResponse)
-    case orderSavingsAccountResponse(OpenSavingsAccountDomain.OrderAccountResponse)
+    case savingsAccount(OpenSavingsAccountDomain.OrderAccountResponse)
 
     case outside(RootViewOutside)
     case scanQR
@@ -46,7 +46,7 @@ enum RootViewNavigation {
     case failure(Failure)
     case openProduct(OpenProduct)
     case orderCardResponse(OpenCardDomain.OrderCardResponse)
-    case orderSavingsAccountResponse(OpenSavingsAccountDomain.OrderAccountResponse)
+    case savingsAccount(OpenSavingsAccountCompleteDomain.Complete)
 
     case outside(RootViewOutside)
     case scanQR(Node<QRScannerDomain.Binder>)

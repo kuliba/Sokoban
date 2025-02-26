@@ -157,7 +157,8 @@ extension RootViewModelFactory {
             createUserVisibilityProductsSettingsService: userVisibilityProductsSettingsServices,
             createCreateGetSVCardLimits: getSVCardLimitsServices,
             createChangeSVCardLimit: changeSVCardLimitServices,
-            createSVCardLanding: landingService,
+            createSVCardLanding: landingService, 
+            getSavingsAccountInfo: getSavingsAccountInfo,
             repeatPayment: repeatPayment,
             makeSVCardLandingViewModel: makeSVCardLandig,
             makeInformer: { [weak model] in
@@ -500,7 +501,7 @@ extension RootViewModelFactory {
                 case .openProduct, .searchByUIN, .standardPayment, .userAccount, .orderCardLanding:
                     return .milliseconds(600)
                     
-                case .orderSavingsAccountResponse:
+                case .savingsAccount:
                     return .milliseconds(100)
                 }
             }
@@ -880,6 +881,7 @@ private extension RootViewModelFactory {
             ),
             viewModelsFactory: mainViewModelsFactory,
             makeOpenNewProductButtons: makeOpenNewProductButtons,
+            getPDFDocument: getPDFDocument,
             scheduler: schedulers.main
         )
         

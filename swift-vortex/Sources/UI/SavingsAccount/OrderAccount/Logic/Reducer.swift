@@ -60,6 +60,7 @@ public extension Reducer {
         case let .setMessages(isOn):
             if state.loadableForm.state != nil {
                 state.loadableForm.state?.topUp.isOn = isOn
+                state.loadableForm.state?.topUp.isShowFooter = isOn
             }
             
         case let .orderAccountResult(orderAccountResult):
@@ -76,9 +77,35 @@ public extension Reducer {
             }
         case let .productSelect(productSelectEvent):
             state.productSelect = productSelectReduce(state.productSelect, productSelectEvent)
-        
-        case let .amount(amount):
-            state.form?.amount = amount
+            
+            guard let form = state.form,
+                  let balance = state.productSelect.selected?.balance,
+                  let amountValue = form.amountValue
+            else { break }
+            
+            let isValid: Bool = (form.consent && amountValue > 0 && balance >= amountValue )
+
+            state.form?.amount = .init(title: form.amount.title, value: amountValue, button: .init(title: form.amount.button.title, isEnabled: isValid))
+
+        case let .amount(amountEvent):
+            switch amountEvent {
+            case let .edit(decimal):
+                guard let form = state.form,
+                      form.topUp.isOn,
+                      let balance = state.productSelect.selected?.balance
+                else { break }
+
+                let isValid: Bool = (form.consent &&  decimal > 0 && balance >= decimal)
+                
+                state.form?.amount = .init(title: form.amount.title, value: decimal, button: .init(title: form.amount.button.title, isEnabled: isValid))
+                
+            case .pay:
+                let isValid = true // check balance!!! + validate
+
+                guard isValid else { break }
+                state.form?.topUp.isShowFooter = false
+                reduceContinue(&state, &effect)
+            }
         }
         
         return (state, effect)
@@ -100,7 +127,6 @@ private extension Reducer {
             
         case .loaded(.success):
             if let payload = state.payload {
-                
                 state.loadableForm = .loading(form)
                 effect = .orderAccount(payload)
             }
@@ -137,20 +163,34 @@ private extension Reducer {
         _ effect: inout Effect?,
         with orderAccountResult: ProductEvent.OrderAccountResult
     ) {
+
         switch (state.loadableForm, orderAccountResult) {
+            
         case (.loaded, _):
             break // cannot receive orderAccountResult in loaded state
             
         case (.loading(nil), _):
             break // cannot receive orderAccountResult in empty loading state
             
-        case let (.loading(.some(form)), .failure(loadFailure)):
+        case let (.loading(.some(form)), .failure(loadFailure)): // TODO otpFailure & orderFailure
+            
+//            switch loadFailure {
+//            case .otpFailure:
+//                
+//                if let notifyOTP = form.confirmation.state.map(otpWitness) {
+//                    notifyOTP(loadFailure.message)
+//                }
+//                
+//            case .orderFailure:
+//                state.form?.orderAccountResponse = false
+//
+//            }
             let notifyOTP = form.confirmation.state.map(otpWitness)
             notifyOTP?(loadFailure.message)
             state.loadableForm = .loaded(.success(form))
             
-        case (var.loading(.some(form)), let .success(orderAccountResponse)):
-            form.orderAccountResponse = orderAccountResponse
+        case(var.loading(.some(form)), let .success(orderAccountResponse)):
+            form.orderAccountResponse = .init(accountId: orderAccountResponse.accountId, accountNumber: orderAccountResponse.accountNumber, paymentOperationDetailId: orderAccountResponse.paymentOperationDetailId, status: orderAccountResponse.status)
             state.loadableForm = .loaded(.success(form))
         }
     }

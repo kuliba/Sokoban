@@ -14,32 +14,34 @@ extension ResponseMapper {
         public let applicationID: UInt
         public let name: String
         public let amount: UInt
-        public let termMonth: UInt
+        public let term: String
         public let collateralType: String
-        public let interestRate: UInt
+        public let interestRate: Double
         public let collateralInfo: String?
         public let documents: [String]
         public let cityName: String
         public let status: String
         public let responseMessage: String
+        public let description: String?
         
         public init(
             applicationID: UInt,
             name: String,
             amount: UInt,
-            termMonth: UInt,
+            term: String,
             collateralType: String,
-            interestRate: UInt,
+            interestRate: Double,
             collateralInfo: String?,
             documents: [String],
             cityName: String,
             status: String,
-            responseMessage: String
+            responseMessage: String,
+            description: String?
         ) {
             self.applicationID = applicationID
             self.name = name
             self.amount = amount
-            self.termMonth = termMonth
+            self.term = term
             self.collateralType = collateralType
             self.interestRate = interestRate
             self.collateralInfo = collateralInfo
@@ -47,6 +49,7 @@ extension ResponseMapper {
             self.cityName = cityName
             self.status = status
             self.responseMessage = responseMessage
+            self.description = description
         }
     }
 }

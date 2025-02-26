@@ -8,34 +8,55 @@
 import AnywayPaymentBackend
 import AnywayPaymentCore
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
+import CollateralLoanLandingGetCollateralLandingUI
+import CollateralLoanLandingGetConsentsBackend
+import CollateralLoanLandingGetShowcaseUI
 import Combine
 import Foundation
 import GenericRemoteService
 import InputComponent
 import OTPInputComponent
+import PDFKit
 import RemoteServices
+
+extension CreateDraftCollateralLoanApplicationDomain.State {
+
+    var projection: Projection? {
+        
+        if let failure { return .failure(failure) }
+
+        if let saveConsentsResult { return .success(saveConsentsResult) }
+        
+        return nil
+    }
+    
+    typealias Projection = Result<
+        CollateralLandingApplicationSaveConsentsResult,
+        CollateralLoanLandingCreateDraftCollateralLoanApplicationUI.BackendFailure<InformerPayload>
+    >
+}
 
 extension RootViewModelFactory {
     
     private typealias Domain = CreateDraftCollateralLoanApplicationDomain
 
     func makeCreateDraftCollateralLoanApplicationBinder(
-        payload: CreateDraftCollateralLoanApplicationUIData
+        payload: CreateDraftCollateralLoanApplication
     ) -> CreateDraftCollateralLoanApplicationDomain.Binder {
 
-        let content = makeContent(data: payload)
+        let content = makeContent(application: payload)
 
         return composeBinder(
             content: content,
             delayProvider: delayProvider,
             getNavigation: getNavigation,
             witnesses: .init(
-                emitting: { content in content.$state
-                    .compactMap(\.saveConsentsResult)
+                emitting: { $0.$state
+                    .compactMap(\.projection)
                     .map { .select(.showSaveConsentsResult($0)) }
                     .eraseToAnyPublisher()
                 },
-                dismissing: { _ in {} }
+                dismissing: { _ in { content.event(.dismissFailure) } }
             )
         )
     }
@@ -43,28 +64,40 @@ extension RootViewModelFactory {
     // MARK: - Content
     
     private func makeContent(
-        data: CreateDraftCollateralLoanApplicationUIData
+        application: CreateDraftCollateralLoanApplication
     ) -> Domain.Content {
         
-        let reducer = Domain.Reducer<Domain.Confirmation>(data: data)
-        let effectHandler = Domain.EffectHandler(
-            createDraftApplication: createDraftApplication(payload:completion:),
-            getVerificationCode: getVerificationCode(completion:),
-            saveConsents: saveConsents,
-            confirm: { event in
-                
-                let model = self.makeTimedOTPInputViewModel(
-                    timerDuration: self.settings.otpDuration,
-                    otpLength: self.settings.otpLength,
-                    notify: event
+        var hintText: String {
+            
+            guard
+                let minAmount = model.amountFormatted(
+                    amount: Double(application.minAmount),
+                    currencyCode: "RUB",
+                    style: .normal
+                ),
+                let maxAmount = model.amountFormatted(
+                    amount: Double(application.maxAmount),
+                    currencyCode: "RUB",
+                    style: .normal
                 )
-                
-                event(.confirmed(.init(otpViewModel: model)))
+            else {
+                return ""
             }
+
+            return "Мин. - \(minAmount), Макс. - \(maxAmount)"
+        }
+
+        let reducer = Domain.ContentReducer(application: application, hintText: hintText)
+        let effectHandler = Domain.ContentEffectHandler(
+            createDraft: createDraft(payload:otpEvent:completion:),
+            getVerificationCode: getVerificationCode(completion:),
+            saveConsents: saveConsents
         )
 
         return .init(
-            initialState: .init(data: data),
+            initialState: .init(application: application, formatCurrency: { [weak self] in
+                self?.model.amountFormatted(amount: Double($0), currencyCode: "RUB", style: .normal) ?? ""
+            }),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:dispatch:),
             scheduler: schedulers.main
@@ -74,18 +107,18 @@ extension RootViewModelFactory {
     private func makeTimedOTPInputViewModel(
         timerDuration: Int,
         otpLength: Int,
-        notify: @escaping (Domain.Event) -> Void
+        otpEvent: @escaping (Domain.OTPEvent) -> Void
     ) -> TimedOTPInputViewModel {
                 
         let countdownReducer = CountdownReducer(duration: timerDuration)
         
-        let decorated: OTPInputReducer.CountdownReduce = { otpState, otpEvent in
+        let decorated: OTPInputReducer.CountdownReduce = { state, event in
             
-            if case (.completed, .start) = (otpState, otpEvent) {
-                notify(.getVerificationCode)
+            if case (.completed, .start) = (state, event) {
+                otpEvent(.getVerificationCode)
             }
             
-            return countdownReducer.reduce(otpState, otpEvent)
+            return countdownReducer.reduce(state, event)
         }
         
         let otpFieldReducer = OTPFieldReducer(length: otpLength)
@@ -96,9 +129,6 @@ extension RootViewModelFactory {
             case let .edit(text):
                 let text = text.filter(\.isWholeNumber).prefix(otpLength)
                 return otpFieldReducer.reduce(state, .edit(.init(text)))
-            case .otpValidated:
-                notify(.otpValidated)
-                return otpFieldReducer.reduce(state, event)
             default:
                 return otpFieldReducer.reduce(state, event)
             }
@@ -124,76 +154,109 @@ extension RootViewModelFactory {
             reduce: otpInputReducer.reduce(_:_:),
             handleEffect: otpInputEffectHandler.handleEffect(_:_:),
             timer: RealTimer(),
-            observe: { notify(.otp($0)) },
+            observe: { otpEvent(.otp($0)) },
             scheduler: .makeMain()
         )
     }
     
-    private func createDraftApplication(
+    private func createDraft(
         payload: CollateralLandingApplicationCreateDraftPayload,
-        completion: @escaping (Domain.CreateDraftApplicationResult) -> Void
+        otpEvent: @escaping (Domain.OTPEvent) -> Void,
+        completion: @escaping (Domain.RequestResult) -> Void
     ) {
         let createDraftApplication = nanoServiceComposer.compose(
             createRequest: RequestFactory.createCreateDraftCollateralLoanApplicationRequest(with:),
-            mapResponse: RemoteServices.ResponseMapper.mapCreateDraftCollateralLoanApplicationResponse(_:_:)
+            mapResponse: RemoteServices.ResponseMapper.mapCreateDraftCollateralLoanApplicationResponse(_:_:),
+            mapError: Domain.ContentError.init(error:)
         )
         
-        createDraftApplication(payload.payload) { [createDraftApplication] in
-  
-            completion($0.map { .init(applicationID: $0.applicationID) }
-                .mapError { .init(message: $0.localizedDescription) })
+        let confirmation = self.makeTimedOTPInputViewModel(
+            timerDuration: self.settings.otpDuration,
+            otpLength: self.settings.otpLength,
+            otpEvent: otpEvent
+        )
+        
+        createDraftApplication(payload.payload) { [createDraftApplication] result in
+            
+            completion(result.map {
+                .init(
+                    applicationResult: .success(.init(applicationID: $0.applicationID)),
+                    confirmation: confirmation
+                )
+            })
             _ = createDraftApplication
         }
     }
 
     private func getVerificationCode(
-        completion: @escaping (Domain.GetVerificationCodeResult) -> Void
+        completion: @escaping (Domain.GetVerificationCodeResult<InformerData>) -> Void
     ) {
         let getVerificationCode = nanoServiceComposer.compose(
-            createRequest: Vortex.RequestFactory.createGetVerificationCodeRequest,
-            mapResponse: AnywayPaymentBackend.ResponseMapper.mapGetVerificationCodeResponse
+            createRequest: Vortex.RequestFactory.createGetVerificationCodeOrderCardVerifyRequest,
+            mapResponse: AnywayPaymentBackend.ResponseMapper.mapGetVerificationCodeResponse,
+            mapError: Domain.ContentError.init(error:)
         )
                 
         getVerificationCode(()) { [getVerificationCode] in
             
-            completion($0.map(\.resendOTPCount).mapError { .init(message: $0.localizedDescription) })
+            completion($0.map(\.resendOTPCount))
             _ = getVerificationCode
         }
     }
 
     private func getConsents(
         payload: CollateralLandingApplicationSaveConsentsPayload,
-        completion: @escaping (Domain.SaveConsentsResult) -> Void
+        completion: @escaping (Domain.SaveConsentsResult<InformerData>) -> Void
     ) {
         let saveConsents = nanoServiceComposer.compose(
             createRequest: RequestFactory.createSaveConsentsRequest(with:),
-            mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:)
+            mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:),
+            mapError: Domain.ContentError.init(error:)
         )
         
         let save = schedulers.background.scheduled(saveConsents)
 
         save(payload.payload) { [saveConsents] in
 
-            completion($0.map(\.response).mapError{ .init(message: $0.localizedDescription) })
+            completion($0.map {$0.response(payload: payload)})
             _ = saveConsents
         }
     }
 
     private func saveConsents(
         payload: CollateralLandingApplicationSaveConsentsPayload,
-        completion: @escaping (Domain.SaveConsentsResult) -> Void
+        completion: @escaping (Domain.SaveConsentsResult<InformerData>) -> Void
     ) {
         let saveConsents = nanoServiceComposer.compose(
             createRequest: RequestFactory.createSaveConsentsRequest(with:),
-            mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:)
+            mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:),
+            mapError: Domain.ContentError.init(error:)
         )
         
         let save = schedulers.background.scheduled(saveConsents)
 
         save(payload.payload) { [saveConsents] in
 
-            completion($0.map(\.response).mapError{ .init(message: $0.localizedDescription) })
+            completion($0.map { $0.response(payload: payload) })
             _ = saveConsents
+        }
+    }
+
+    func getPDFDocument(
+        payload: RemoteServices.RequestFactory.GetConsentsPayload,
+        completion: @escaping (PDFDocument?) -> Void
+    ) {
+        
+        let getConsents = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetConsentsRequest(with:),
+            mapResponse: RemoteServices.ResponseMapper.mapGetConsentsResponse(_:_:),
+            mapError: Domain.ContentError.init(error:)
+        )
+        
+        getConsents(payload) { [getConsents] in
+            
+            completion(try? $0.get())
+            _ = getConsents
         }
     }
 
@@ -203,15 +266,15 @@ extension RootViewModelFactory {
         select: Domain.Select,
         notify: @escaping Domain.Notify,
         completion: @escaping (Domain.Navigation) -> Void
-    ) {
+    ){
         switch select {
-        case let .showSaveConsentsResult(saveConsentsResult):
-            switch saveConsentsResult {
-            case let .failure(failure):
-                completion(.failure(failure.message))
-                
+        case let .showSaveConsentsResult(result):
+            switch result {
             case let .success(success):
-                completion(.success(success))
+                completion(.saveConsents(success))
+
+            case let .failure(failure):
+                completion(.failure(failure))
             }
         }
     }
@@ -221,30 +284,16 @@ extension RootViewModelFactory {
     ) -> Delay {
   
         switch navigation {
-        case .failure(_):
+        case .failure:
             return .milliseconds(100)
             
-        case .success(_):
+        case .saveConsents:
             return .milliseconds(100)
         }
     }
-}
-
-private extension CreateDraftCollateralLoanApplicationDomain.LoadResultFailure {
     
-    init(
-        error: RemoteServiceErrorOf<RemoteServices.ResponseMapper.MappingError>
-    ) {
-        if case let .mapResponse(response) = error,
-           case let .server(_, errorMessage) = response
-        {
-
-            self = Self(message: errorMessage)
-        } else {
-
-            self = Self(message: error.localizedDescription)
-        }
-    }
+    typealias Confirmation = CreateDraftCollateralLoanApplicationDomain.Confirmation
+    typealias InformerPayload = InformerData
 }
 
 // MARK: Adapters
@@ -279,20 +328,51 @@ extension CollateralLandingApplicationSaveConsentsPayload {
 
 extension RemoteServices.ResponseMapper.CollateralLoanLandingSaveConsentsResponse {
     
-    var response: CollateralLandingApplicationSaveConsentsResult {
+    func response(
+        payload: CollateralLandingApplicationSaveConsentsPayload
+    ) -> CollateralLandingApplicationSaveConsentsResult {
         
         .init(
             applicationID: applicationID,
             name: name,
             amount: amount,
-            termMonth: termMonth,
+            term: term,
             collateralType: collateralType,
             interestRate: interestRate,
             collateralInfo: collateralInfo,
             documents: documents,
             cityName: cityName,
             status: status,
-            responseMessage: responseMessage
+            responseMessage: responseMessage,
+            description: description,
+            verificationCode: payload.verificationCode,
+            icons: payload.icons
         )
     }
+}
+
+private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
+    
+    typealias RemoteError = RemoteServiceError<Error, Error, RemoteServices.ResponseMapper.MappingError>
+    
+    init(
+        error: RemoteError
+    ) {
+        switch error {
+        case let .performRequest(error):
+            if error.isNotConnectedToInternetOrTimeout() {
+                
+                self = .init(kind: .informer(.init(message: "Проверьте подключение к сети", icon: .wifiOff)))
+            } else { self = .default }
+        case let .mapResponse(error):
+            if case .server(statusCode: _, errorMessage: let errorMessage) = error {
+                
+                self = .init(kind: .alert(errorMessage))
+            } else { self = .default }
+        default:
+            self = .default
+        }
+    }
+    
+    static let `default` = Self(kind: .alert("Попробуйте позже."))
 }

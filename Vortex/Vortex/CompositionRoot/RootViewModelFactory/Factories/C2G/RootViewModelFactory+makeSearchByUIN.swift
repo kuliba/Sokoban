@@ -18,7 +18,7 @@ extension RootViewModelFactory {
     ) -> SearchByUINDomain.Binder {
         
         composeBinder(
-            content: makeUINInputViewModel(value: uin ?? ""),
+            content: makeUINInputViewModel(value: uin),
             getNavigation: getNavigation,
             selectWitnesses: .empty
         )
@@ -96,6 +96,9 @@ extension RootViewModelFactory {
                     formattedAmount: format?($0.transAmm, "RUB"),
                     legalAct: $0.legalAct,
                     merchantName: $0.merchantName,
+                    payerINN: $0.payerINN,
+                    payerKPP: $0.payerKPP,
+                    payerName: $0.payerName,
                     paymentTerm: $0.paymentTerm,
                     products: products,
                     purpose: $0.purpose,
@@ -192,6 +195,9 @@ private extension C2GPaymentDomain.ContentPayload {
             formattedAmount: "$ 1 000",
             legalAct: "Часть 1 статьи 12.16 КоАП, а так же информация, которая приходит и поместится на максимум 255 символов и более...Часть 1 статьи 12.16 КоАП, а так же информация, которая приходит и поместится на максимум 255 символов и более...Часть 1 статьи 12.16 КоАП, а так",
             merchantName: "УФК Владимирской области",
+            payerINN: "INN 123456",
+            payerKPP: "KPP 654321",
+            payerName: "Тестов Тест Тестович",
             paymentTerm: "16.05.2021",
             products: [],
             purpose: "Транспортный налог",

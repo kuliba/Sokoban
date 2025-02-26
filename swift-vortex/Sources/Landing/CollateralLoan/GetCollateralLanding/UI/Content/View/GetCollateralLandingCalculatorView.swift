@@ -35,7 +35,6 @@ struct GetCollateralLandingCalculatorView: View {
         self.domainEvent = domainEvent
         self.externalEvent = externalEvent
         self.toggleIsOn = toggleIsOn
-        self.sliderCurrentValue = Double(state.desiredAmount)
     }
     
     var body: some View {
@@ -58,6 +57,7 @@ struct GetCollateralLandingCalculatorView: View {
                 calculatorBottomSectionView(config: config)
             }
         }
+        .onFirstAppear { sliderCurrentValue = Double(state.desiredAmount) }
         .frame(height: config.calculator.root.layouts.height)
         .padding(.leading, config.paddings.outerLeading)
         .padding(.trailing, config.paddings.outerTrailing)
@@ -235,6 +235,7 @@ struct GetCollateralLandingCalculatorView: View {
                 
                 desiredAmountValueText(config: config)
                     .padding(.leading, config.root.layouts.contentLeadingPadding)
+                    .fixedSize(horizontal: true, vertical: false)
                 
                 desiredAmountMaxText(config: config)
                     .padding(.trailing, config.root.layouts.contentTrailingPadding)
@@ -335,7 +336,7 @@ struct GetCollateralLandingCalculatorView: View {
     
     private func desiredAmountValueText(config: Config.Calculator) -> some View {
         
-        formatText(state.formattedDesiredAmount, with: config.desiredAmount.fontValue)
+        formatText(state.formattedDesiredAmount ?? "", with: config.desiredAmount.fontValue)
     }
     
     private func desiredAmountMaxText(config: Config.Calculator) -> some View {
@@ -373,7 +374,7 @@ struct CollateralLoanLandingGetCollateralLandingCalculatorView_Previews: Preview
     static var previews: some View {
         
         GetCollateralLandingCalculatorView(
-            state: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"),
+            state: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE", formatCurrency: { _ in "" }),
             product: .carStub,
             config: .default,
             domainEvent: { print($0) },

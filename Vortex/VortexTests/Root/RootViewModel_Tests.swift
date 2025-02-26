@@ -62,7 +62,8 @@ class RootViewModel_Tests: XCTestCase {
                         makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview }
                     ),
                     viewModelsFactory: .preview,
-                    makeOpenNewProductButtons: { _ in [] }
+                    makeOpenNewProductButtons: { _ in [] }, 
+                    getPDFDocument: { _,_ in }
                 ),
                 paymentsModel: paymentsModel,
                 chatViewModel: .init(),
@@ -165,7 +166,7 @@ private extension GetCollateralLandingDomain.Binder {
 private extension GetCollateralLandingDomain.Content {
     
     static let preview = GetCollateralLandingDomain.Content(
-        initialState: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"),
+        initialState: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE", formatCurrency: { _ in "" }),
         reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }
     )
@@ -234,7 +235,7 @@ private extension CreateDraftCollateralLoanApplicationDomain.Binder {
 private extension CreateDraftCollateralLoanApplicationDomain.Content {
     
     static let preview = CreateDraftCollateralLoanApplicationDomain.Content(
-        initialState: .init(data: .preview),
+        initialState: .init(application: .preview, formatCurrency: { _ in "" }),
         reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }
     )

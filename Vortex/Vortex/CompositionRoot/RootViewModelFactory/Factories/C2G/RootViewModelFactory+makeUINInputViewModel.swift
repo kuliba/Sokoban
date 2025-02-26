@@ -12,22 +12,26 @@ import InputComponent
 extension RootViewModelFactory {
     
     func makeUINInputViewModel(
-        value: String,
-        placeholderText: String = "УИН",
+        value: String?,
+        placeholderText: String = "Введите значение",
         hintText: String? = nil,
         warningText: String = "От 20 до 25 знаков"
     ) -> RxInputViewModel {
         
         let textFieldReducer = TransformingReducer(
-            placeholderText: placeholderText
+            placeholderText: placeholderText,
+            transformer: FilteringTransformer.digits
         )
-        
-        let initialState = TextInputState(textField: .noFocus(value))
         
         let textInputValidator = TextInputValidator(
             hintText: hintText,
             warningText: warningText,
             validate: { 20...25 ~= $0.count }
+        )
+        
+        let initialState = TextInputState(
+            textField: value.map { .noFocus($0) } ?? .placeholder(placeholderText),
+            message: value == nil ? nil : textInputValidator.validate(.noFocus(value ?? ""))
         )
         
         let reducer = TextInputReducer(
@@ -45,6 +49,8 @@ extension RootViewModelFactory {
         )
     }
 }
+
+// MARK: - Helpers
 
 private extension TextFieldModel.Reducer {
     

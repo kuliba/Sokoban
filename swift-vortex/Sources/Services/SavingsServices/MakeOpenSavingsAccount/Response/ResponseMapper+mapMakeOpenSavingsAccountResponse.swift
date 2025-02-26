@@ -47,6 +47,8 @@ private extension MakeOpenSavingsAccountResponse.PaymentInfo {
         
         self.init(
             amount: data.amount,
+            accountNumber: data.accountNumber, 
+            accountId: data.accountId,
             creditAmount: data.creditAmount,
             currencyAmount: data.currencyAmount,
             currencyPayee: data.currencyPayee,
@@ -88,6 +90,8 @@ private extension ResponseMapper {
     struct _Data: Decodable {
         
         let amount: Decimal?
+        let accountNumber: String?
+        let accountId: Int?
         let creditAmount: Decimal?
         let currencyAmount: String?
         let currencyPayee: String?

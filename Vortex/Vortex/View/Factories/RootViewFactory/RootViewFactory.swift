@@ -25,6 +25,7 @@ typealias MakePaymentCompleteView = (Completed, @escaping () -> Void) -> Payment
 typealias MakeAnywayFlowView = (AnywayFlowModel) -> AnywayFlowView<PaymentCompleteView>
 typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTransfersView
 typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView
+typealias MakeCollateralLoanShowcaseWrapperView = (GetShowcaseDomain.Binder, @escaping CollateralLoanLandingGetShowcaseViewFactory.GetPDFDocument, @escaping () -> Void) -> CollateralLoanShowcaseWrapperView
 typealias MakeSplashScreenView = (SplashScreenState, @escaping (SplashScreenEvent) -> Void) -> SplashScreenView
 typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
 typealias MakeTemplateButtonWrapperView = (OperationDetailData) -> TemplateButtonStateWrapperView
@@ -63,6 +64,7 @@ struct RootViewFactory {
     let paymentsViewFactory: PaymentsViewFactory
     let makeTemplateButtonWrapperView: MakeTemplateButtonWrapperView
     let makeUpdatingUserAccountButtonLabel: MakeUpdatingUserAccountButtonLabel
+    let makeCollateralLoanShowcaseWrapperView: MakeCollateralLoanShowcaseWrapperView
     
     typealias MakeUpdatingUserAccountButtonLabel = () -> UpdatingUserAccountButtonLabel
 }
@@ -117,7 +119,8 @@ extension RootViewFactory {
             makePaymentCompleteView: makePaymentCompleteView,
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeUserAccountView: makeUserAccountView, 
-            components: components
+            components: components,
+            makeCollateralLoanShowcaseWrapperView: makeCollateralLoanShowcaseWrapperView
         )
     }
 }

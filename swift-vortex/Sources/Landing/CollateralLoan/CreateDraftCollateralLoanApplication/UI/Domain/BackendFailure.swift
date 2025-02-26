@@ -1,8 +1,8 @@
 //
 //  BackendFailure.swift
-//  
 //
-//  Created by Valentin Ozerov on 21.02.2025.
+//
+//  Created by Valentin Ozerov on 14.02.2025.
 //
 
 import Foundation
@@ -11,7 +11,7 @@ public struct BackendFailure<InformerPayload>: Error, Identifiable {
     
     public var id: UUID
 
-    let kind: Kind
+    public let kind: Kind
     
     public init(
         id: UUID = UUID(),

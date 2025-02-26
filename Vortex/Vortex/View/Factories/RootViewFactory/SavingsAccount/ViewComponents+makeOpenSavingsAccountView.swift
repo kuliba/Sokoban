@@ -37,6 +37,7 @@ extension ViewComponents {
                         content: { $0.error(dismiss: dismiss) }
                     )
             }
+            .onDisappear { binder.flow.event(.dismiss)}
         }
     }
     
@@ -74,6 +75,7 @@ extension ViewComponents {
                             event: { event(.productSelect($0)) })
                     }
                 )
+                .onFirstAppear { content.event(.load) }
                 .padding(.horizontal)
             }
             .navigationBarWithBack(
@@ -87,6 +89,7 @@ extension ViewComponents {
             }
             .opacity(state.isLoading ? 0.7 : 1)
             .disabled(state.isLoading)
+            .loaderOverlay(isLoading: state.isLoading)
         }
     }
     
@@ -133,13 +136,26 @@ extension ViewComponents {
         event: @escaping (OpenSavingsAccountDomain.Event) -> Void
     ) -> some View {
         
-        // TODO: add amount
-        StatefulButtonView(
-            isActive: state.isValid,
-            event: { event(.continue) },
-            config: .iVortex(title: state.continueButtonTitle)
-        )
-        .padding(.horizontal)
+        if let form = state.form,
+           form.topUp.isOn,
+           form.topUp.isShowFooter
+        {
+            AmountView(
+                amount: form.amount,
+                event: { event(.amount($0)) },
+                currencySymbol: form.constants.currency.symbol,
+                config: .iVortex,
+                infoView: makeAmountInfoView
+            )
+        } else {
+            // TODO: add amount
+            StatefulButtonView(
+                isActive: state.isValid,
+                event: { event(.continue) },
+                config: .iVortex(title: state.continueButtonTitle)
+            )
+            .padding(.horizontal)
+        }
     }
 }
 

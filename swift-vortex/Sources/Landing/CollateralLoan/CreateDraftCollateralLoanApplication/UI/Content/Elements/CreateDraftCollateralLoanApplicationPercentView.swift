@@ -8,7 +8,8 @@
 import SwiftUI
 import PaymentComponents
 
-struct CreateDraftCollateralLoanApplicationPercentView: View {
+struct CreateDraftCollateralLoanApplicationPercentView<Confirmation, InformerPayload>: View
+    where Confirmation: TimedOTPInputViewModel {
     
     let state: State
     let event: (Event) -> Void
@@ -21,11 +22,11 @@ struct CreateDraftCollateralLoanApplicationPercentView: View {
             info: .init(
                 id: .other(State.FieldID.percent.id),
                 title: config.elements.percent.title,
-                value: state.data.formattedPercent,
+                value: state.application.formattedPercent,
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewWithMD5Hash(state.data.icons.rate) }
+            icon: { factory.makeImageViewWithMD5Hash(state.application.icons.rate) }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
@@ -36,46 +37,31 @@ extension CreateDraftCollateralLoanApplicationPercentView {
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    typealias State = Domain.State
-    typealias Event = Domain.Event
+    typealias State = Domain.State<Confirmation, InformerPayload>
+    typealias Event = Domain.Event<Confirmation, InformerPayload>
 }
 
 // MARK: - Previews
 
-struct CreateDraftCollateralLoanApplicationPercentView_Previews: PreviewProvider {
+struct CreateDraftCollateralLoanApplicationPercentView_Previews<Confirmation, InformerPayload>: PreviewProvider
+    where Confirmation: TimedOTPInputViewModel {
     
     static var previews: some View {
         
-        CreateDraftCollateralLoanApplicationPercentView(
-            state: .init(
-                data: .preview,
-                stage: .correctParameters,
-                confirmation: .preview
-            ),
-            event: {
-                print($0)
-            },
+        CreateDraftCollateralLoanApplicationPercentView<Confirmation, InformerPayload>(
+            state: .init(application: .preview, stage: .correctParameters, formatCurrency: { _ in "" }),
+            event: { print($0) },
             config: .default,
             factory: .preview
         )
         .previewDisplayName("Edit only mode")
 
-        CreateDraftCollateralLoanApplicationPercentView(
-            state: .init(
-                data: .preview,
-                stage: .confirm,
-                confirmation: .preview
-            ),
-            event: {
-                print($0)
-            },
+        CreateDraftCollateralLoanApplicationPercentView<Confirmation, InformerPayload>(
+            state: .init(application: .preview, stage: .confirm, formatCurrency: { _ in "" }),
+            event: { print($0) },
             config: .default,
             factory: .preview
         )
         .previewDisplayName("Read only only mode")
     }
-    
-    typealias Factory = CreateDraftCollateralLoanApplicationFactory
-    typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias Data = CreateDraftCollateralLoanApplicationUIData
 }
