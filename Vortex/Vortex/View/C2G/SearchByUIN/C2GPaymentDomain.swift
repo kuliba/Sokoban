@@ -85,6 +85,7 @@ extension C2GPaymentDomain {
         
         struct Context: Equatable {
             
+            let dateForDetail: String
             let formattedAmount: String?
             let merchantName: String?
             let purpose: String?

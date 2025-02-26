@@ -48,7 +48,7 @@ extension OperationDetailDomain.ModelPayload {
         
         return .init(
             formattedAmount: formattedAmount,
-            formattedDate: formattedDate,
+            formattedDate: dateForDetail,
             product: product
         )
     }
