@@ -7,16 +7,16 @@
 
 import SwiftUI
 
-enum OpenProductType: String, Equatable, CaseIterable, Hashable {
+enum OpenProductType: Equatable, CaseIterable, Hashable {
     
-    case account =          "ACCOUNT"
-    case card =             "CARD"
-    case deposit =          "DEPOSIT"
-    case insurance =        "INSURANCE"
-    case loan =             "LOAN"
-    case mortgage =         "MORTGAGE"
-    case savingsAccount =   "SAVINGSACCOUNT" // TODO: rename to "SAVINGS_ACCOUNT"?
-    case sticker =          "STICKER"
+    case account
+    case card
+    case deposit
+    case insurance
+    case loan
+    case mortgage
+    case savingsAccount
+    case sticker
 }
 
 // TODO: move to view

@@ -1105,5 +1105,5 @@ extension ProductCarouselView.ViewModel {
 
 extension NewProductButton.ViewModel {
     
-    static let sampleWantCard = NewProductButton.ViewModel(id: "CARD", icon: .ic24NewCardColor, title: "Хочу карту", subTitle: "Бесплатно", action: {})
+    static let sampleWantCard = NewProductButton.ViewModel(openProductType: .account, subTitle: "", action: .action({}))
 }
