@@ -36,6 +36,18 @@ final class ContentReducerTests: XCTestCase {
         assert(.load, on: .init(status: .loaded(anyMessage())), effect: .load)
     }
     
+    func test_reduce_delayLoad_stateLoaded_shouldNotChangeStated() {
+        
+        let landing = anyMessage()
+        
+        assertState(.delayLoad, on: .init(status: .loaded(landing)))
+    }
+    
+    func test_reduce_delayLoad_stateLoaded_shouldDeliverLoadEffect() {
+      
+        assert(.delayLoad, on: .init(status: .loaded(anyMessage())), effect: .delayLoad(.test))
+    }
+
     func test_reduce_loaded_stateInflight_shouldStatusToLoaded() {
         
         let landing = anyMessage()
@@ -147,7 +159,7 @@ final class ContentReducerTests: XCTestCase {
         let landing = anyMessage()
         let sut = makeSUT(refreshRange: 0..<10)
 
-        assert(sut: sut, .offset(8), on: .init(status: .loaded(landing)), effect: .load)
+        assert(sut: sut, .offset(8), on: .init(status: .loaded(landing)), effect: .delayLoad(.test))
     }
     
     func test_reduce_refreshOffsetNotContainOffset_shouldNotChangeState() {
@@ -177,11 +189,12 @@ final class ContentReducerTests: XCTestCase {
     private func makeSUT(
         refreshRange: Range<CGFloat> = -102..<0,
         showTitleRange: PartialRangeFrom<CGFloat> = 100...,
+        loadLifespan: DispatchTimeInterval = .test,
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT(refreshRange: refreshRange, showTitleRange: showTitleRange)
+        let sut = SUT(refreshRange: refreshRange, showTitleRange: showTitleRange, loadLifespan: loadLifespan)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -230,4 +243,9 @@ final class ContentReducerTests: XCTestCase {
             file: file, line: line
         )
     }
+}
+
+extension DispatchTimeInterval {
+    
+    static let test: Self = .microseconds(10)
 }

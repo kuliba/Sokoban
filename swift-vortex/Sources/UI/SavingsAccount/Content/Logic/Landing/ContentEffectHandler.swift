@@ -5,6 +5,8 @@
 //  Created by Andryusina Nataly on 03.12.2024.
 //
 
+import Foundation
+
 public final class ContentEffectHandler<Landing, InformerPayload> {
     
     private let load: Load
@@ -27,9 +29,7 @@ public extension ContentEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-            
         case .load:
-             
             load(landingType, { dispatch(.dismissInformer(self.oldLanding)) }) { [weak self] in
                 switch $0 {
                 case let .failure(backendFailure):
@@ -41,7 +41,12 @@ public extension ContentEffectHandler {
                     dispatch(.loaded(landing))
                 }
             }
-            
+         
+        case let .delayLoad(timeInterval):
+            DispatchQueue.main.asyncAfter(deadline: .now() + timeInterval) {
+                dispatch(.load)
+            }
+
         case .dismissInformer:
             dispatch(.dismissInformer(oldLanding))
         }

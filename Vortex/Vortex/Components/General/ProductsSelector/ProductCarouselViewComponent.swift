@@ -447,8 +447,7 @@ private extension Model {
             let productsForType: [ProductViewModel]? = {
                 if let items = products[productType] {
                     return items
-                }
-                if let promoTypes, promoTypes.contains(productType) {
+                } else if let promoTypes, promoTypes.contains(productType) {
                     return []
                 }
                 return nil
@@ -798,7 +797,6 @@ struct ProductCarouselView: View {
                             ForEach(ProductType.allCases, id: \.rawValue, content: { productType in
                                 makeGroup(groups.first {$0.productType == productType}, productType)
                             })
-                           // ForEach(groups, content: makeGroup)
                         }
                         
                         newProductButton().map {
@@ -823,20 +821,29 @@ struct ProductCarouselView: View {
         _ productType: ProductType
     ) -> some View {
         
+        if let groupViewModel {
+            makeGroupWithPromo(groupViewModel, productType)
+        } else {
+            promoViews(productType: productType)
+        }
+    }
+    
+    @ViewBuilder
+    private func makeGroupWithPromo(
+        _ groupViewModel: ProductGroupView.ViewModel,
+        _ productType: ProductType
+    ) -> some View {
+        
         HStack(spacing: 8) {
             
-            if let groupViewModel {
-                if isFirst(groupViewModel.productType) {
-                    promoViews(productType: groupViewModel.productType)
-                    ProductGroupView(viewModel: groupViewModel)
-                        .accessibilityIdentifier("productScrollView")
-                } else {
-                    ProductGroupView(viewModel: groupViewModel)
-                        .accessibilityIdentifier("productScrollView")
-                    promoViews(productType: groupViewModel.productType)
-                }
+            if isFirst(groupViewModel.productType) {
+                promoViews(productType: groupViewModel.productType)
+                ProductGroupView(viewModel: groupViewModel)
+                    .accessibilityIdentifier("productScrollView")
             } else {
-                promoViews(productType: productType)
+                ProductGroupView(viewModel: groupViewModel)
+                    .accessibilityIdentifier("productScrollView")
+                promoViews(productType: groupViewModel.productType)
             }
         }
     }
@@ -860,8 +867,10 @@ struct ProductCarouselView: View {
         productType: ProductType
     ) -> some View {
         
-        promoByType(productType).map {
-            ForEach($0, content: promoView)
+        HStack(spacing: 8) {
+            promoByType(productType).map {
+                ForEach($0, content: promoView)
+            }
         }
     }
 

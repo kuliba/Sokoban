@@ -11,13 +11,16 @@ public final class ContentReducer<Landing, InformerPayload> {
     
     let refreshRange: Range<CGFloat>
     let showTitleRange: PartialRangeFrom<CGFloat>
+    private let loadLifespan: DispatchTimeInterval
 
     public init(
         refreshRange: Range<CGFloat> = -100..<0,
-        showTitleRange: PartialRangeFrom<CGFloat> = 100...
+        showTitleRange: PartialRangeFrom<CGFloat> = 100...,
+        loadLifespan: DispatchTimeInterval = .seconds(2)
     ) {
         self.refreshRange = refreshRange
         self.showTitleRange = showTitleRange
+        self.loadLifespan = loadLifespan
     }
 }
 
@@ -32,6 +35,9 @@ public extension ContentReducer {
         var effect: Effect?
         
         switch event {
+        case .delayLoad:
+            effect = .delayLoad(loadLifespan)
+            
         case .load:
             if !state.status.isLoading {
                 let oldLanding = state.status.oldLanding
@@ -52,12 +58,12 @@ public extension ContentReducer {
                 let oldLanding = state.status.oldLanding
                 state.status = .failure(.informer(informer), oldLanding)
             }
-                        
+            
         case let .offset(offset):
             if refreshRange.contains(offset), !state.status.isLoading {
-                    let oldLanding = state.status.oldLanding
-                    state.status = .inflight(oldLanding)
-                    effect = .load
+                let oldLanding = state.status.oldLanding
+                state.status = .inflight(oldLanding)
+                effect = .delayLoad(loadLifespan)
             }
             
             if offset > showTitleRange.lowerBound {

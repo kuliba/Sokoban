@@ -12,6 +12,7 @@ public enum SavingsAccountContentEvent<Landing, InformerPayload> {
     case dismissInformer(Landing?)
     case failure(BackendFailure<InformerPayload>)
     case load
+    case delayLoad
     case loaded(Landing)
     case offset(CGFloat)
 }
