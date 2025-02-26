@@ -23,6 +23,7 @@ struct CollateralLoanLandingGetShowcaseProductBulletsView: View {
         }
         .padding(.leading, config.paddings.outer.leading)
         .padding(.trailing, config.paddings.outer.trailing)
+        .padding(.top, config.paddings.outer.vertical)
     }
     
     @ViewBuilder

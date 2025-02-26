@@ -1,5 +1,5 @@
 //
-//  CreateDraftCollateralLoanApplicationData.swift
+//  CreateDraftCollateralLoanApplication.swift
 //
 //
 //  Created by Valentin Ozerov on 30.12.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct CreateDraftCollateralLoanApplicationUIData {
+public struct CreateDraftCollateralLoanApplication {
     
     public let amount: UInt
     public let cities: [String]
@@ -96,42 +96,20 @@ public struct CreateDraftCollateralLoanApplicationUIData {
     }
 }
 
-extension CreateDraftCollateralLoanApplicationUIData {
+extension CreateDraftCollateralLoanApplication {
     
     var formattedPercent: String {
         
         String(format: "%.1f", percent) + "%"
     }
     
-    var formattedAmount: String {
-        
-        String(format: "%ld %@", locale: Locale.current, amount, rubSymbol)
-    }
-    
     var selectedPeriodTitle: String {
         
         periods.first { $0.months == selectedMonths }?.title ?? ""
     }
-    
-    public var hintText: String {
-        
-        let minAmount = String(format: "%ld %@", locale: Locale.current, minAmount, rubSymbol)
-        let maxAmount = String(format: "%ld %@", locale: Locale.current, maxAmount, rubSymbol)
-        
-        return "Мин. - \(minAmount), Макс. - \(maxAmount)"
-    }
-    
-    // MARK: Helpers
-    
-    var rubSymbol: String {
-        
-        let code = "RUB"
-        let locale = NSLocale(localeIdentifier: code)
-        return locale.displayName(forKey: NSLocale.Key.currencySymbol, value: code) ?? "₽"
-    }
 }
 
-extension CreateDraftCollateralLoanApplicationUIData {
+extension CreateDraftCollateralLoanApplication {
     
     public static let preview = Self(
         amount: 1_234_567,
@@ -205,11 +183,11 @@ extension CreateDraftCollateralLoanApplicationUIData {
     )
 }
 
-extension CreateDraftCollateralLoanApplicationUIData: Equatable {}
-extension CreateDraftCollateralLoanApplicationUIData.Icons: Equatable {}
-extension CreateDraftCollateralLoanApplicationUIData.Consent: Equatable {}
+extension CreateDraftCollateralLoanApplication: Equatable {}
+extension CreateDraftCollateralLoanApplication.Icons: Equatable {}
+extension CreateDraftCollateralLoanApplication.Consent: Equatable {}
 
-extension CreateDraftCollateralLoanApplicationUIData: Identifiable {
+extension CreateDraftCollateralLoanApplication: Identifiable {
     
     public var id: String { name }
 }

@@ -40,11 +40,17 @@ public struct CollateralLoanLandingGetShowcaseViewConfig {
         
         public let header: Font
         public let body: Font
+        public let button: Font
         
-        public init(header: Font, body: Font) {
+        public init(
+            header: Font,
+            body: Font,
+            button: Font
+        ) {
          
             self.header = header
             self.body = body
+            self.button = button
         }
     }
     
@@ -122,15 +128,28 @@ public struct CollateralLoanLandingGetShowcaseViewConfig {
 
         public let height: CGFloat
         public let topPadding: CGFloat
+        public let trailingPadding: CGFloat
         public let spacing: CGFloat
         public let buttonForegroundColor: Color
+        public let icon: Image
+        public let textConfig: TextConfig
 
-        public init(height: CGFloat, topPadding: CGFloat, spacing: CGFloat, buttonForegroundColor: Color) {
-
+        public init(
+            height: CGFloat,
+            topPadding: CGFloat,
+            trailingPadding: CGFloat,
+            spacing: CGFloat,
+            buttonForegroundColor: Color,
+            icon: Image,
+            textConfig: TextConfig
+        ) {
             self.height = height
             self.topPadding = topPadding
+            self.trailingPadding = trailingPadding
             self.spacing = spacing
             self.buttonForegroundColor = buttonForegroundColor
+            self.icon = icon
+            self.textConfig = textConfig
         }
     }
 }
@@ -141,7 +160,8 @@ extension CollateralLoanLandingGetShowcaseViewConfig {
 
         fonts: .init(
             header: Font.system(size: 32).bold(),
-            body: Font.system(size: 14)
+            body: Font.system(size: 14),
+            button: Font.system(size: 16).bold()
         ),
         paddings: .init(
             outer: .init(
@@ -158,8 +178,11 @@ extension CollateralLoanLandingGetShowcaseViewConfig {
         footerView: .init(
             height: 48,
             topPadding: 12,
+            trailingPadding: 20,
             spacing: 12,
-            buttonForegroundColor: .white
+            buttonForegroundColor: .white,
+            icon: Image("ic24Info"),
+            textConfig: .init(textFont: Font.system(size: 14), textColor: .primary)
         )
     )
 }

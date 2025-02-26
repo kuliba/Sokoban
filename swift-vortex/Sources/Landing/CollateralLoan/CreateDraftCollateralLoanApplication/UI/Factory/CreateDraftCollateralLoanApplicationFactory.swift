@@ -8,6 +8,7 @@
 import CollateralLoanLandingGetShowcaseUI
 import Combine
 import OTPInputComponent
+import PDFKit
 import SwiftUI
 import UIPrimitives
 
@@ -15,21 +16,26 @@ public struct CreateDraftCollateralLoanApplicationFactory {
     
     public let makeImageViewWithMD5Hash: MakeImageViewWithMD5Hash
     public let makeImageViewWithURL: MakeImageViewWithURL
+    public let getPDFDocument: GetPDFDocument
+    public let formatCurrency: FormatCurrency
     
     public init(
         makeImageViewWithMD5Hash: @escaping MakeImageViewWithMD5Hash,
-        makeImageViewWithURL: @escaping MakeImageViewWithURL
+        makeImageViewWithURL: @escaping MakeImageViewWithURL,
+        getPDFDocument: @escaping GetPDFDocument,
+        formatCurrency: @escaping FormatCurrency
     ) {
         self.makeImageViewWithMD5Hash = makeImageViewWithMD5Hash
         self.makeImageViewWithURL = makeImageViewWithURL
+        self.getPDFDocument = getPDFDocument
+        self.formatCurrency = formatCurrency
     }
     
     public typealias ShowcaseFactory = CollateralLoanLandingGetShowcaseViewFactory
     public typealias MakeImageViewWithMD5Hash = ShowcaseFactory.MakeImageViewWithMD5Hash
     public typealias MakeImageViewWithURL = ShowcaseFactory.MakeImageViewWithURL
-    public typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    public typealias Event = Domain.Event
-    public typealias EventDispatcher = (Event) -> Void
+    public typealias GetPDFDocument = ShowcaseFactory.GetPDFDocument
+    public typealias FormatCurrency = (UInt) -> String?
 }
 
 // MARK: Preview helpers
@@ -38,7 +44,9 @@ public extension CreateDraftCollateralLoanApplicationFactory {
     
     static let preview = Self(
         makeImageViewWithMD5Hash: { _ in .preview },
-        makeImageViewWithURL: { _ in .preview }
+        makeImageViewWithURL: { _ in .preview },
+        getPDFDocument: { _,_ in },
+        formatCurrency: { _ in "" }
     )
 }
 

@@ -101,6 +101,7 @@ public struct GetCollateralLandingView: View {
                 DocumentsView(
                     product: product,
                     config: factory.config,
+                    externalEvent: externalEvent,
                     factory: factory
                 )
             }
@@ -143,7 +144,8 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
         
         GetCollateralLandingView(
             state: .init(
-                landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"
+                landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
+                formatCurrency: { _ in "" }
             ),
             domainEvent: { print($0) },
             externalEvent: {
@@ -158,7 +160,8 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
         GetCollateralLandingView(
             state: .init(
                 landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
-                bottomSheet: periodBottomSheet
+                bottomSheet: periodBottomSheet,
+                formatCurrency: { _ in "" }
             ),
             domainEvent: { print($0) },
             externalEvent: {
@@ -173,7 +176,8 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
         GetCollateralLandingView(
             state: .init(
                 landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
-                bottomSheet: collateralBottomSheet
+                bottomSheet: collateralBottomSheet,
+                formatCurrency: { _ in "" }
             ),
             domainEvent: {
                 print($0)

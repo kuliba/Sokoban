@@ -6,38 +6,42 @@
 //
 
 import Foundation
+import CollateralLoanLandingGetConsentsBackend
+import RemoteServices
 
 public struct CollateralLandingApplicationSaveConsentsResult: Equatable {
     
     public let applicationID: UInt
     public let name: String
     public let amount: UInt
-    public let termMonth: UInt
+    public let term: String
     public let collateralType: String
-    public let interestRate: UInt
+    public let interestRate: Double
     public let collateralInfo: String?
     public let documents: [String]
     public let cityName: String
     public let status: String
     public let responseMessage: String
+    public let verificationCode: String
     
     public init(
         applicationID: UInt,
         name: String,
         amount: UInt,
-        termMonth: UInt,
+        term: String,
         collateralType: String,
-        interestRate: UInt,
+        interestRate: Double,
         collateralInfo: String?,
         documents: [String],
         cityName: String,
         status: String,
-        responseMessage: String
+        responseMessage: String,
+        verificationCode: String
     ) {
         self.applicationID = applicationID
         self.name = name
         self.amount = amount
-        self.termMonth = termMonth
+        self.term = term
         self.collateralType = collateralType
         self.interestRate = interestRate
         self.collateralInfo = collateralInfo
@@ -45,24 +49,20 @@ public struct CollateralLandingApplicationSaveConsentsResult: Equatable {
         self.cityName = cityName
         self.status = status
         self.responseMessage = responseMessage
+        self.verificationCode = verificationCode
     }
 }
 
 public extension CollateralLandingApplicationSaveConsentsResult {
     
-    func formattedAmount() -> String {
+    var payload: RemoteServices.RequestFactory.GetConsentsPayload {
         
-        String(format: "%ld %@", locale: Locale.current, amount, rubSymbol)
+        .init(
+            cryptoVersion: "1.0", // Constant, can be skipped in request
+            applicationId: applicationID,
+            verificationCode: verificationCode
+        )
     }
-}
-
-// MARK: Helpers
-
-var rubSymbol: String {
-    
-    let code = "RUB"
-    let locale = NSLocale(localeIdentifier: code)
-    return locale.displayName(forKey: NSLocale.Key.currencySymbol, value: code) ?? "₽"
 }
 
 public extension CollateralLandingApplicationSaveConsentsResult {
@@ -71,7 +71,7 @@ public extension CollateralLandingApplicationSaveConsentsResult {
         applicationID: 9,
         name: "Кредит под залог транспорта",
         amount: 99998,
-        termMonth: 365,
+        term: "365",
         collateralType: "CAR",
         interestRate: 18,
         collateralInfo: "Лада Приора",
@@ -81,6 +81,7 @@ public extension CollateralLandingApplicationSaveConsentsResult {
         ],
         cityName: "Москва",
         status: "submitted_for_review",
-        responseMessage: "Специалист банка свяжется с Вами в ближайшее время."
+        responseMessage: "Специалист банка свяжется с Вами в ближайшее время.",
+        verificationCode: "123456"
     )
 }

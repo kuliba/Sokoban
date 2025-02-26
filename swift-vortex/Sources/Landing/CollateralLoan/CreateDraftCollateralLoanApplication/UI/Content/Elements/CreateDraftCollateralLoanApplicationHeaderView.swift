@@ -8,7 +8,8 @@
 import SwiftUI
 import PaymentComponents
 
-struct CreateDraftCollateralLoanApplicationHeaderView: View {
+struct CreateDraftCollateralLoanApplicationHeaderView<Confirmation, InformerPayload>: View
+    where Confirmation: TimedOTPInputViewModel {
     
     let state: State
     let event: (Event) -> Void
@@ -21,11 +22,11 @@ struct CreateDraftCollateralLoanApplicationHeaderView: View {
             info: .init(
                 id: .other(State.FieldID.header.id),
                 title: config.elements.header.title,
-                value: state.data.name,
+                value: state.application.name,
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewWithMD5Hash(state.data.icons.productName) }
+            icon: { factory.makeImageViewWithMD5Hash(state.application.icons.productName) }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
@@ -36,30 +37,22 @@ extension CreateDraftCollateralLoanApplicationHeaderView {
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    typealias State = Domain.State
-    typealias Event = Domain.Event
+    typealias State = Domain.State<Confirmation, InformerPayload>
+    typealias Event = Domain.Event<Confirmation, InformerPayload>
 }
 
 // MARK: - Previews
 
-struct CreateDraftCollateralLoanApplicationHeaderView_Previews: PreviewProvider {
+struct CreateDraftCollateralLoanApplicationHeaderView_Previews<Confirmation, InformerPayload>: PreviewProvider
+    where Confirmation: TimedOTPInputViewModel {
     
     static var previews: some View {
         
-        CreateDraftCollateralLoanApplicationHeaderView(
-            state: .init(
-                data: .preview,
-                confirmation: .preview
-            ),
-            event: {
-                print($0)
-            },
+        CreateDraftCollateralLoanApplicationHeaderView<Confirmation, InformerPayload>(
+            state: .init(application: .preview, formatCurrency: { _ in "" }),
+            event: { print($0) },
             config: .default,
             factory: .preview
         )
     }
-    
-    typealias Factory = CreateDraftCollateralLoanApplicationFactory
-    typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias Data = CreateDraftCollateralLoanApplicationUIData
 }

@@ -6,8 +6,10 @@
 //
 
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
+import CollateralLoanLandingGetConsentsBackend
 import InputComponent
 import OTPInputComponent
+import RemoteServices
 import RxViewModel
 import SwiftUI
 
@@ -23,37 +25,35 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     var body: some View {
         
         RxWrapperView(model: binder.flow) { state, event in
-            
-            RxWrapperView(
-                model: binder.content,
-                makeContentView: makeContentView(state:event:)
-            )
-            .alert(
-                item: state.navigation?.alert,
-                content: makeAlert
-            )
-            .fullScreenCover(
-                cover: state.navigation?.cover,
-                content: fullScreenCoverView
-            )
+
+            content()
+                .alert(
+                    item: state.navigation?.alert,
+                    content: makeAlert
+                )
+                .fullScreenCover(
+                    cover: state.navigation?.cover,
+                    content: fullScreenCoverView
+                )
         }
     }
     
+    private func content() -> some View {
+
+        RxWrapperView(
+            model: binder.content,
+            makeContentView: makeContentView(state:event:)
+        )
+    }
+    
+    @ViewBuilder
     private func makeContentView(
         state: State,
         event: @escaping (Event) -> Void
     ) -> some View {
         
-        ZStack {
-            
-            if state.isLoading {
-                
-                SpinnerView(viewModel: .init())
-                    .zIndex(1.0)
-            }
-            content(state: state, event: event)
-        }
-        .frame(maxHeight: .infinity)
+        content(state: state, event: event)
+            .frame(maxHeight: .infinity)
     }
 
     private func content(
@@ -68,7 +68,9 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
             config: .default,
             factory: .init(
                 makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
-                makeImageViewWithURL: factory.makeImageViewWithURL
+                makeImageViewWithURL: factory.makeImageViewWithURL,
+                getPDFDocument: factory.getPDFDocument,
+                formatCurrency: factory.formatCurrency
             )
         )
         .if(state.stage == .confirm) {
@@ -80,7 +82,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     
     func buttonBack(event: @escaping (Event) -> Void) -> some View {
         
-        Button(action: { event(.tappedBack) }) {
+        Button(action: { event(.back) }) {
             
             HStack {
                 Image.ic16ChevronLeft
@@ -95,6 +97,9 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         switch events {
         case let .showConsent(url):
             openURL(url)
+            
+        case .goToMain:
+            goToMain()
         }
     }
     
@@ -134,7 +139,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         switch cover {
         case let .success(sucess):
             return .init(
-                formattedAmount: sucess.formattedAmount(),
+                formattedAmount: factory.formatCurrency(sucess.amount) ?? "",
                 merchantIcon: nil,
                 result: .success(makeReport(from: sucess))
             )
@@ -146,9 +151,8 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
                 result: .failure(.init(hasExpired: false))
             )
         }
-        
     }
-    
+
     private func makeReport(
         from saveConsentsResult: CollateralLandingApplicationSaveConsentsResult
     ) -> PaymentCompleteState.Report {
@@ -160,6 +164,14 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
             printFormType: "",
             status: .completed
         )
+    }
+
+    private func makePDFDocumentButton(
+        payload: RemoteServices.RequestFactory.GetConsentsPayload,
+        getPDFDocument: @escaping PDFDocumentButton.GetPDFDocument
+    ) -> PDFDocumentButton {
+        
+        .init(getDocument: { getPDFDocument(payload, $0) })
     }
     
     private func makePaymentCompleteViewFactory() -> PaymentCompleteViewFactory {
@@ -182,7 +194,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         documentID: DocumentID,
         printFormType: RequestFactory.PrintFormType
     ) -> TransactionDocumentButton {
-        .init(getDocument: { _ in }) // TODO: Load PDFDocument via getConsents request
+        .init(getDocument: { _ in })
     }
     
     // TODO: realize map
@@ -206,21 +218,29 @@ extension CreateDraftCollateralLoanApplicationWrapperView {
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
     typealias Config = CreateDraftCollateralLoanApplicationConfig
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    typealias State = Domain.State
-    typealias Event = Domain.Event
+    typealias State = Domain.ContentState
+    typealias Event = Domain.ContentEvent
     typealias SaveConsentsResult = Domain.SaveConsentsResult
     typealias MakeAnywayElementModelMapper = () -> AnywayElementModelMapper
+    typealias Confirmation = CreateDraftCollateralLoanApplicationDomain.Confirmation
 }
 
+// MARK: UI mapping
+
 extension CreateDraftCollateralLoanApplicationDomain.Navigation {
-    
+
     var alert: Alert? {
         
         switch self {
-        case let .failure(failure):
-            return .failure(failure)
-            
-        case .success:
+        case let .failure(kind):
+            switch kind {
+            case let .timeout(informerPayload):
+                return .failure(informerPayload.message)
+
+            case let .error(message):
+                return .failure(message)
+            }
+        case .saveConsents:
             return nil
         }
     }
@@ -236,8 +256,8 @@ extension CreateDraftCollateralLoanApplicationDomain.Navigation {
         case .failure:
             return .failure
             
-        case let .success(success):
-            return .success(success)
+        case let .saveConsents(result):
+            return .success(result)
         }
     }
     

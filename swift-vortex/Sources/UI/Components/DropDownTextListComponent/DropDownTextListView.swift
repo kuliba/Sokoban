@@ -38,7 +38,7 @@ public struct DropDownTextListView: View {
                         .accessibilityIdentifier("ListTitle")
                     
                     config.colors.divider
-                        .frame(height: 0.5)
+                        .frame(height: 0.6)
                 }
             }
             
@@ -75,12 +75,13 @@ public struct DropDownTextListView: View {
             
             if selectedItem == item {
 
-                subTitleView(item.subTitle)
+                subTitleView(for: item)
             }
         }
     }
     
     private func titleView(for item: Item) -> some View {
+        
         return HStack {
             
             item.title.text(withConfig: config.fonts.itemTitle)
@@ -96,10 +97,11 @@ public struct DropDownTextListView: View {
         .modifier(PaddingsModifier(horizontal: config.layouts.horizontalPadding))
     }
     
-    private func subTitleView(_ subTitle: String) -> some View {
+    private func subTitleView(for item: Item) -> some View {
         
-        subTitle.text(withConfig: config.fonts.itemSubtitle)
+        item.subTitle.text(withConfig: config.fonts.itemSubtitle)
             .multilineTextAlignment(.leading)
+            .fixedSize(horizontal: false, vertical: true)
             .modifier(PaddingsModifier(horizontal: config.layouts.horizontalPadding))
             .frame(maxWidth: .infinity, alignment: .leading)
             .accessibilityIdentifier("SubTitle")

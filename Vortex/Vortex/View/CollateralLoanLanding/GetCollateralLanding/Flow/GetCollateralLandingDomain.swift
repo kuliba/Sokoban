@@ -33,13 +33,15 @@ extension GetCollateralLandingDomain {
     typealias Notify = (NotifyEvent) -> Void
     
     enum Select: Equatable {
-        case createDraftCollateralLoanApplication(Payload)
+        case createDraft(Payload)
         case showCaseList(ExternalEvent.CaseType)
     }
     
     enum Navigation {
 
-        case createDraftCollateralLoanApplication(CreateDraftCollateralLoanApplicationDomain.Binder)
+        case createDraft(DraftDomain.Binder)
         case showBottomSheet(ExternalEvent.CaseType)
     }
+    
+    typealias DraftDomain = CreateDraftCollateralLoanApplicationDomain
 }
