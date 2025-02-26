@@ -9,8 +9,8 @@ import SwiftUI
 
 public struct SavingsAccountDetailsState: Equatable {
     
-    let status: Status
-    var isExpanded: Bool = false
+    public let status: Status
+    public var isExpanded: Bool = false
 
     public init(
         status: Status
