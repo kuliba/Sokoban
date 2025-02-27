@@ -19,6 +19,16 @@
 		<dict>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
+			<key>DefaultValue</key>
+			<false/>
+			<key>Title</key>
+			<string>Заказ кредитной карты (MVP)</string>
+			<key>Key</key>
+			<string>creditCardMVP</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
 			<string>Новый экран Платежи</string>
 			<key>Key</key>
