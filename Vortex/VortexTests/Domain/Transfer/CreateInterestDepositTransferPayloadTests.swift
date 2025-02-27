@@ -11,53 +11,39 @@ import XCTest
 final class CreateInterestDepositTransferPayloadTests: XCTestCase {
     
     let encoder = JSONEncoder.serverDate
-
+    
     func test_amountRoundedFinance_10_04() throws {
         
-        // given
-        let sut = makeSut(amount: 10.04)
-        let expectedResult = "{\"check\":false,\"amount\":10.04,\"depositId\":0}"
-        
-        // when
-        let sutEncoded = try encoder.encode(sut)
-        let result = String(data: sutEncoded, encoding: .utf8)
-        
-        // then
-        XCTAssertEqual(result, expectedResult)
+        try assert(withAmount: 10.04, [
+            "check": false,
+            "amount": 10.04,
+            "depositId": 0
+        ])
     }
     
     func test_amountRoundedFinance_181_8() throws {
         
-        // given
-        let sut = makeSut(amount: 181.8)
-        let expectedResult = "{\"check\":false,\"amount\":181.8,\"depositId\":0}"
-        
-        // when
-        let sutEncoded = try encoder.encode(sut)
-        let result = String(data: sutEncoded, encoding: .utf8)
-        
-        // then
-        XCTAssertEqual(result, expectedResult)
+        try assert(withAmount: 181.8, [
+            "check": false,
+            "amount": 181.8,
+            "depositId": 0
+        ])
     }
     
     func test_amountRoundedFinance_54_08() throws {
         
-        // given
-        let sut = makeSut(amount: 54.08)
-        let expectedResult = "{\"check\":false,\"amount\":54.08,\"depositId\":0}"
-        
-        // when
-        let sutEncoded = try encoder.encode(sut)
-        let result = String(data: sutEncoded, encoding: .utf8)
-        
-        // then
-        XCTAssertEqual(result, expectedResult)
+        try assert(withAmount: 54.08, [
+            "check": false,
+            "amount": 54.08,
+            "depositId": 0
+        ])
     }
-}
-
-private extension CreateInterestDepositTransferPayloadTests {
     
-    func makeSut(amount: Double?) -> ServerCommands.TransferController.CreateInterestDepositTransfer.Payload {
+    // MARK: - Helpers
+    
+    func makeSUT(
+        amount: Double?
+    ) -> ServerCommands.TransferController.CreateInterestDepositTransfer.Payload {
         
         .init(
             check: false,
@@ -66,5 +52,21 @@ private extension CreateInterestDepositTransferPayloadTests {
             payer: nil,
             comment: nil,
             depositId: 0)
+    }
+    
+    private func assert(
+        withAmount amount: Double?,
+        _ expectedResult: NSDictionary,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws {
+        
+        let sut = makeSUT(amount: amount)
+        
+        let sutEncoded = try encoder.encode(sut)
+        let json = try JSONSerialization.jsonObject(with: sutEncoded) as? [String: Any]
+        let result = try XCTUnwrap(json, "Expected valid JSON", file: file, line: line)
+        
+        XCTAssertNoDiff(result as NSDictionary, expectedResult, file: file, line: line)
     }
 }
