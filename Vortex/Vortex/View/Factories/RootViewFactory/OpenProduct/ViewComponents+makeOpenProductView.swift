@@ -24,14 +24,7 @@ extension ViewComponents {
                 )
             
         case let .creditCardMVP:
-            Text("TBD: creditCardMVP")
-                .frame(maxHeight: .infinity, alignment: .top)
-                .navigationBarWithBack(
-                    title: "Кредитная карта",
-                    subtitle: "Всё включено",
-                    subtitleForegroundColor: .textPlaceholder,
-                    dismiss: dismiss
-                )
+            makeCreditCardMVPView(continue: {}, dismiss: dismiss) // TOCO: call content on `continue`
           
         case let .savingsAccount(nodes):
 
