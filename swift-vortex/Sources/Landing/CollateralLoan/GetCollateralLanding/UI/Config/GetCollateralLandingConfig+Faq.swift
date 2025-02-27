@@ -11,7 +11,7 @@ import DropDownTextListComponent
 
 extension DropDownTextListConfig {
     
-    static let `default` = Self(
+    static let preview = Self(
         cornerRadius: 12,
         chevronDownImage: Image(systemName: "chevron.down"),
         layouts: .init(

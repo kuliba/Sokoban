@@ -10,13 +10,13 @@ import SwiftUI
 
 extension GetCollateralLandingConfig {
     
-    struct Header {
+    public struct Header {
         
-        let height: CGFloat
-        let labelTag: LabelTag
-        let params: Params
+        public let height: CGFloat
+        public let labelTag: LabelTag
+        public let params: Params
         
-        init(
+        public init(
             height: CGFloat,
             labelTag: LabelTag,
             params: Params
@@ -26,40 +26,62 @@ extension GetCollateralLandingConfig {
             self.params = params
         }
         
-        struct LabelTag {
+        public struct LabelTag {
 
-            let layouts: Layouts
-            let fonts: Fonts
+            public let layouts: Layouts
+            public let fonts: Fonts
 
-            init(layouts: Layouts, fonts: Fonts) {
+            public init(layouts: Layouts, fonts: Fonts) {
                 self.layouts = layouts
                 self.fonts = fonts
             }
             
-            struct Layouts {
+            public struct Layouts {
                 
-                let cornerSize: CGFloat
-                let topOuterPadding: CGFloat
-                let leadingOuterPadding: CGFloat
-                let horizontalInnerPadding: CGFloat
-                let verticalInnerPadding: CGFloat
-                let rotationDegrees: CGFloat
+                public let cornerSize: CGFloat
+                public let topOuterPadding: CGFloat
+                public let leadingOuterPadding: CGFloat
+                public let horizontalInnerPadding: CGFloat
+                public let verticalInnerPadding: CGFloat
+                public let rotationDegrees: CGFloat
+                
+                public init(
+                    cornerSize: CGFloat,
+                    topOuterPadding: CGFloat,
+                    leadingOuterPadding: CGFloat,
+                    horizontalInnerPadding: CGFloat,
+                    verticalInnerPadding: CGFloat,
+                    rotationDegrees: CGFloat
+                ) {
+                    self.cornerSize = cornerSize
+                    self.topOuterPadding = topOuterPadding
+                    self.leadingOuterPadding = leadingOuterPadding
+                    self.horizontalInnerPadding = horizontalInnerPadding
+                    self.verticalInnerPadding = verticalInnerPadding
+                    self.rotationDegrees = rotationDegrees
+                }
             }
             
-            struct Fonts {
+            public struct Fonts {
                 
-                let fontConfig: FontConfig
+                public let fontConfig: FontConfig
+                
+                public init(
+                    fontConfig: FontConfig
+                ) {
+                    self.fontConfig = fontConfig
+                }
             }
         }
         
-        struct Params {
+        public struct Params {
             
-            let fontConfig: FontConfig
-            let spacing: CGFloat
-            let leadingPadding: CGFloat
-            let topPadding: CGFloat
+            public let fontConfig: FontConfig
+            public let spacing: CGFloat
+            public let leadingPadding: CGFloat
+            public let topPadding: CGFloat
             
-            init(
+            public init(
                 fontConfig: FontConfig,
                 spacing: CGFloat,
                 leadingPadding: CGFloat,
@@ -76,7 +98,7 @@ extension GetCollateralLandingConfig {
 
 extension GetCollateralLandingConfig.Header {
     
-    static let `default` = Self(
+    static let preview = Self(
         height: 642,
         labelTag: .init(
             layouts: .init(

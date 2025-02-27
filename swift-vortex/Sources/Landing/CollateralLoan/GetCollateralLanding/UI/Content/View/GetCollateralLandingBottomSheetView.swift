@@ -228,7 +228,7 @@ struct GetCollateralLandingBottomSheetView_Previews: PreviewProvider {
                 formatCurrency: { _ in "" }
             ),
             event: { print($0) },
-            config: .default,
+            config: .preview,
             factory: .preview,
             type: .periods
         )
@@ -241,7 +241,7 @@ struct GetCollateralLandingBottomSheetView_Previews: PreviewProvider {
                 formatCurrency: { _ in "" }
             ),
             event: { print($0) },
-            config: .default,
+            config: .preview,
             factory: .preview,
             type: .collaterals
         )

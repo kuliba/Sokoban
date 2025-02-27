@@ -10,37 +10,64 @@ import DropDownTextListComponent
 
 public struct GetCollateralLandingConfig {
     
-    let fonts: Fonts
-    let backgroundImageHeight: CGFloat
-    let paddings: Paddings
-    let spacing: CGFloat
-    let cornerRadius: CGFloat
-    let header: Header
-    let conditions: Conditions
-    let calculator: Calculator
-    let faq: DropDownTextListConfig
-    let documents: Documents
-    let footer: Footer
-    
+    public let fonts: Fonts
+    public let backgroundImageHeight: CGFloat
+    public let paddings: Paddings
+    public let spacing: CGFloat
+    public let cornerRadius: CGFloat
+    public let header: Header
+    public let conditions: Conditions
+    public let calculator: Calculator
+    public let faq: DropDownTextListConfig
+    public let documents: Documents
+    public let footer: Footer
     public let bottomSheet: BottomSheet
         
-    struct Fonts {
+    public init(
+        fonts: Fonts,
+        backgroundImageHeight: CGFloat,
+        paddings: Paddings,
+        spacing: CGFloat,
+        cornerRadius: CGFloat,
+        header: Header,
+        conditions: Conditions,
+        calculator: Calculator,
+        faq: DropDownTextListConfig,
+        documents: Documents,
+        footer: Footer,
+        bottomSheet: BottomSheet
+    ) {
+        self.fonts = fonts
+        self.backgroundImageHeight = backgroundImageHeight
+        self.paddings = paddings
+        self.spacing = spacing
+        self.cornerRadius = cornerRadius
+        self.header = header
+        self.conditions = conditions
+        self.calculator = calculator
+        self.faq = faq
+        self.documents = documents
+        self.footer = footer
+        self.bottomSheet = bottomSheet
+    }
+    
+    public struct Fonts {
         
-        let body: FontConfig
+        public let body: FontConfig
         
-        init(body: FontConfig) {
+        public init(body: FontConfig) {
             self.body = body
         }
     }
     
-    struct Paddings {
+    public struct Paddings {
         
-        let outerLeading: CGFloat
-        let outerTrailing: CGFloat
-        let outerBottom: CGFloat
-        let outerTop: CGFloat
+        public let outerLeading: CGFloat
+        public let outerTrailing: CGFloat
+        public let outerBottom: CGFloat
+        public let outerTop: CGFloat
         
-        init(
+        public init(
             outerLeading: CGFloat,
             outerTrailing: CGFloat,
             outerBottom: CGFloat,
@@ -53,13 +80,13 @@ public struct GetCollateralLandingConfig {
         }
     }
         
-    struct FontConfig {
+    public struct FontConfig {
         
-        let font: Font
-        let foreground: Color
-        let background: Color
+        public let font: Font
+        public let foreground: Color
+        public let background: Color
         
-        init(
+        public init(
             _ font: Font,
             foreground: Color = .black,
             background: Color = .white
@@ -73,7 +100,7 @@ public struct GetCollateralLandingConfig {
 
 public extension GetCollateralLandingConfig {
 
-    static let `default` = Self(
+    static let preview = Self(
         fonts: .init(body: FontConfig(Font.system(size: 14))),
         backgroundImageHeight: 703,
         paddings: .init(
@@ -84,13 +111,13 @@ public extension GetCollateralLandingConfig {
         ),
         spacing: 16,
         cornerRadius: 12,
-        header: .default,
-        conditions: .default,
-        calculator: .default,
-        faq: .default,
-        documents: .default,
-        footer: .default,
-        bottomSheet: .default
+        header: .preview,
+        conditions: .preview,
+        calculator: .preview,
+        faq: .preview,
+        documents: .preview,
+        footer: .preview,
+        bottomSheet: .preview
     )
 }
 

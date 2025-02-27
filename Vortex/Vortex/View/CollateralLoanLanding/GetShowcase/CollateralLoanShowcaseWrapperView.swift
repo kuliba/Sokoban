@@ -85,6 +85,7 @@ struct CollateralLoanShowcaseWrapperView: View {
         case let .landing(_, landing):
             CollateralLoanLandingWrapperView(
                 binder: landing,
+                config: .default,
                 factory: factory,
                 viewModelFactory: viewModelFactory,
                 goToMain: goToMain
