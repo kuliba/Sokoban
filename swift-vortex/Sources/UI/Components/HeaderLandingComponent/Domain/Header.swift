@@ -9,9 +9,9 @@ import Foundation
 
 public struct Header {
     
-    let title: String
-    let options: [String]
-    let md5Hash: String?
+    public let title: String
+    public let options: [String]
+    public let md5Hash: String?
     
     public init(
         title: String,
