@@ -10,15 +10,15 @@ import SwiftUI
 
 extension GetCollateralLandingConfig {
     
-    struct Footer {
+    public struct Footer {
         
-        let text: String
-        let font: FontConfig
-        let foreground: Color
-        let background: Color
-        let layouts: Layouts
+        public let text: String
+        public let font: FontConfig
+        public let foreground: Color
+        public let background: Color
+        public let layouts: Layouts
         
-        init(
+        public init(
             text: String,
             font: FontConfig,
             foreground: Color,
@@ -32,13 +32,13 @@ extension GetCollateralLandingConfig {
             self.layouts = layouts
         }
         
-        struct Layouts {
+        public struct Layouts {
             
-            let height: CGFloat
-            let cornerRadius: CGFloat
-            let paddings: EdgeInsets
+            public let height: CGFloat
+            public let cornerRadius: CGFloat
+            public let paddings: EdgeInsets
             
-            init(
+            public init(
                 height: CGFloat,
                 cornerRadius: CGFloat,
                 paddings: EdgeInsets
@@ -53,7 +53,7 @@ extension GetCollateralLandingConfig {
 
 extension GetCollateralLandingConfig.Footer {
     
-    static let `default` = Self(
+    static let preview = Self(
         text: "Оформить заявку",
         font: .init(Font.system(size: 16).bold()),
         foreground: .white,

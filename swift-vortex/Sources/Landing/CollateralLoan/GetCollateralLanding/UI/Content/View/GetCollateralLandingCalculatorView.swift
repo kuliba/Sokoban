@@ -376,7 +376,7 @@ struct CollateralLoanLandingGetCollateralLandingCalculatorView_Previews: Preview
         GetCollateralLandingCalculatorView(
             state: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE", formatCurrency: { _ in "" }),
             product: .carStub,
-            config: .default,
+            config: .preview,
             domainEvent: { print($0) },
             externalEvent: { print($0) }
         )

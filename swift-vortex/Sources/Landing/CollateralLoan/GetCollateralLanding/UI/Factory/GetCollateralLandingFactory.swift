@@ -14,20 +14,17 @@ import UIPrimitives
 
 public struct GetCollateralLandingFactory {
 
-    public let config: GetCollateralLandingConfig
     public let makeImageViewWithMD5Hash: MakeImageViewWithMD5Hash
     public let makeImageViewWithURL: MakeImageViewWithURL
     public let getPDFDocument: GetPDFDocument
     public let formatCurrency: FormatCurrency
     
     public init(
-        config: GetCollateralLandingConfig = .default,
         makeImageViewWithMD5Hash: @escaping MakeImageViewWithMD5Hash,
         makeImageViewWithURL: @escaping MakeImageViewWithURL,
         getPDFDocument: @escaping GetPDFDocument,
         formatCurrency: @escaping FormatCurrency
     ) {
-        self.config = config
         self.makeImageViewWithMD5Hash = makeImageViewWithMD5Hash
         self.makeImageViewWithURL = makeImageViewWithURL
         self.getPDFDocument = getPDFDocument

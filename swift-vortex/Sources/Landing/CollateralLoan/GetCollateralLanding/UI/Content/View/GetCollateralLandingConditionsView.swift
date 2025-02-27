@@ -128,7 +128,7 @@ struct GetCollateralLandingConditionsView_Previews: PreviewProvider {
 
             GetCollateralLandingConditionsView(
                 product: .carStub,
-                config: .default,
+                config: .preview,
                 makeImageViewWithMD5Hash: Factory.preview.makeImageViewWithMD5Hash
             )
             .frame(height: 100)
