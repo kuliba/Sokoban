@@ -15847,6 +15847,7 @@
 		77EA0DB92779B04A00C6ED12 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				8383E8852D704E7A00128DE2 /* ScrollViewWithReportingOffset */,
 				ED15DAE32811639D00BF7E9F /* Account */,
 				5059D4482863B75900DA446D /* CurrencyWallet */,
 				503F073028252B7900E84A77 /* DepositCalculator */,
@@ -16591,6 +16592,14 @@
 				83DBC7AB2C36CE3E00DEF441 /* ControlPanelReducerTests.swift */,
 			);
 			path = ControlPanel;
+			sourceTree = "<group>";
+		};
+		8383E8852D704E7A00128DE2 /* ScrollViewWithReportingOffset */ = {
+			isa = PBXGroup;
+			children = (
+				2A75B5422D7046EC00BBDDDC /* SwiftUIView.swift */,
+			);
+			path = ScrollViewWithReportingOffset;
 			sourceTree = "<group>";
 		};
 		838C09102C8B52F100E894AC /* Recovered References */ = {
@@ -18559,7 +18568,6 @@
 			children = (
 				EDB14380265FDA410028EF5A /* AppDelegate.swift */,
 				EDB14382265FDA410028EF5A /* SceneDelegate.swift */,
-				2A75B5422D7046EC00BBDDDC /* SwiftUIView.swift */,
 				2A3EB71B29B1098C002A1309 /* Config.swift */,
 				2A72ACC52CC6DA4000B8BF5B /* RootComposer */,
 				2AF1774D2AC476B600D100DD /* CompositionRoot */,

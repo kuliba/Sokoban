@@ -10,7 +10,7 @@ import CombineSchedulers
 import SwiftUI
 import UIPrimitives
 
-final class _Model: ObservableObject {
+final class OffsetObservingScrollModel: ObservableObject {
     
     @Published var offset: CGPoint = .zero
     
@@ -30,9 +30,9 @@ final class _Model: ObservableObject {
     }
 }
 
-struct SwiftUIView: View {
+struct OffsetObservingScrollWithModelView: View {
     
-    @StateObject var model: _Model
+    @StateObject var model: OffsetObservingScrollModel
     
     init(refresh: @escaping () -> Void) {
         
@@ -58,7 +58,38 @@ struct SwiftUIView: View {
         .navigationTitle(model.hasTitle ? "title" : "")
     }
 }
-extension _Model {
+extension OffsetObservingScrollModel {
     
     var hasTitle: Bool { offset.y >= 100 }
 }
+/*
+ import Foundation
+ import CombineSchedulers
+ import Combine
+
+ final class Model: ObservableObject {
+     
+     @Published var offset: CGPoint
+     //var hasTitle: Bool { offset.y >= 100 } // TODO: inject 100
+     private let cancellable: AnyCancellable
+     
+     init(
+         offset: CGPoint = .zero,
+         interval: Delay,
+         scheduler: AnySchedulerOf<DispatchQueue>
+     ) {
+         self.offset = offset
+         self.cancellable = $offset
+             .debounce(for: interval, scheduler: scheduler)
+             .filter { $0.y < -100 } // TODO: inject -100
+             .sink(receiveValue: <#T##((Published<CGPoint>.Publisher.Output) -> Void)##((Published<CGPoint>.Publisher.Output) -> Void)##(Published<CGPoint>.Publisher.Output) -> Void#>)
+         
+     }
+ }
+
+ extension Model {
+     
+     typealias Delay = DispatchQueue.SchedulerTimeType.Stride
+ }
+
+ */

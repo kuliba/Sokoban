@@ -48,64 +48,64 @@ final class ContentReducerTests: XCTestCase {
         assert(.delayLoad, on: .init(status: .loaded(anyMessage())), effect: .delayLoad(.test))
     }
 
-    func test_reduce_loaded_stateInflight_shouldStatusToLoaded() {
+    func test_reduce_result_success_stateInflight_shouldStatusToLoaded() {
         
         let landing = anyMessage()
 
-        assertState(.loaded(landing), on: .init(status: .inflight(nil))) {
+        assertState(.result(.success(landing)), on: .init(status: .inflight(nil))) {
             
             $0.status = .loaded(landing)
         }
     }
     
-    func test_reduce_loaded_stateInflight_shouldDeliverNoEffect() {
+    func test_reduce_result_success_stateInflight_shouldDeliverNoEffect() {
         
-        assert(.loaded(""), on: .init(status: .inflight(nil)), effect: nil)
+        assert(.result(.success(anyMessage())), on: .init(status: .inflight(nil)), effect: nil)
     }
 
-    func test_reduce_loaded_stateLoaded_shouldStatusToNewLoaded() {
+    func test_reduce_result_success_stateLoaded_shouldStatusToNewLoaded() {
         
-        assertState(.loaded("new"), on: .init(status: .loaded("old"))) {
+        assertState(.result(.success("new")), on: .init(status: .loaded("old"))) {
             
             $0.status = .loaded("new")
         }
     }
     
-    func test_reduce_loaded_stateLoaded_shouldDeliverNoEffect() {
+    func test_reduce_result_success_stateLoaded_shouldDeliverNoEffect() {
         
-        assert(.loaded("old"), on: .init(status: .loaded("new")), effect: nil)
+        assert(.result(.success("old")), on: .init(status: .loaded("new")), effect: nil)
     }
     
-    func test_reduce_failureAlert_stateInflight_shouldStatusToFailure() {
+    func test_reduce_result_failureAlert_stateInflight_shouldStatusToFailure() {
         
         let alert = anyMessage()
         let landing = anyMessage()
         
-        assertState(.failure(.init(kind: .alert(alert))), on: .init(status: .inflight(landing))) {
+        assertState(.result(.failure(.init(kind: .alert(alert)))), on: .init(status: .inflight(landing))) {
             
             $0.status = .failure(.alert(alert), landing)
         }
     }
     
-    func test_reduce_failureAlert_stateInflight_shouldDeliverNoEffect() {
+    func test_reduce_result_failureAlert_stateInflight_shouldDeliverNoEffect() {
         
-        assert(.failure(.init(kind: .alert(anyMessage()))), on: .init(status: .inflight(nil)), effect: nil)
+        assert(.result(.failure(.init(kind: .alert(anyMessage())))), on: .init(status: .inflight(nil)), effect: nil)
     }
     
-    func test_reduce_failureInformer_stateInflight_shouldStatusToFailure() {
+    func test_reduce_result_failureInformer_stateInflight_shouldStatusToFailure() {
         
         let informer = anyMessage()
         let landing = anyMessage()
         
-        assertState(.failure(.init(kind: .informer(informer))), on: .init(status: .inflight(landing))) {
+        assertState(.result(.failure(.init(kind: .informer(informer)))), on: .init(status: .inflight(landing))) {
             
             $0.status = .failure(.informer(informer), landing)
         }
     }
     
-    func test_reduce_failureInformer_stateInflight_shouldDeliverNoEffect() {
+    func test_reduce_result_failureInformer_stateInflight_shouldDeliverNoEffect() {
         
-        assert(.failure(.init(kind: .alert(anyMessage()))), on: .init(status: .inflight(nil)), effect: nil)
+        assert(.result(.failure(.init(kind: .alert(anyMessage())))), on: .init(status: .inflight(nil)), effect: nil)
     }
     
     func test_reduce_offsetMoreThenShowTitleOffset_shouldNavTitleToValue() {

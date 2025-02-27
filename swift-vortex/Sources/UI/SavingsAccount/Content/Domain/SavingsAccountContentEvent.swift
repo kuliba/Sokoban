@@ -9,10 +9,10 @@ import Foundation
 
 public enum SavingsAccountContentEvent<Landing, InformerPayload> {
     
-    case delayLoad
+    case delayLoad // TODO: remove
     case dismissInformer
     case load
-    case offset(CGFloat)
+    case offset(CGFloat) // TODO: remove
     case result(Result<Landing, BackendFailure<InformerPayload>>)
 }
 
