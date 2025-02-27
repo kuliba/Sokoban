@@ -52,19 +52,20 @@ extension RootViewModelFactory {
         notify: @escaping CreditCardMVPDomain.Notify,
         completion: @escaping (CreditCardMVPDomain.Navigation) -> Void
     ) {
+        // TODO: add call to update banners (on success?)
         schedulers.background.delay(for: .seconds(2)) {
             
             switch select {
             case let .order(payload):
                 switch payload.otp {
                 case "000000":
-                    completion(.complete(()))
+                    completion(.complete(.init(status: .completed)))
                     
                 case "111111":
-                    completion(.complete(()))
+                    completion(.complete(.init(status: .rejected)))
                     
                 default:
-                    completion(.complete(()))
+                    completion(.complete(.init(status: .inflight))) // TODO: replace with otp failure
                 }
             }
         }

@@ -6,7 +6,9 @@
 //
 
 import FlowCore
+import Foundation
 import RxViewModel
+import PaymentCompletionUI
 
 /// A namespace.
 enum CreditCardMVPDomain {}
@@ -41,7 +43,19 @@ extension CreditCardMVPDomain {
         
         case complete(Complete)
         
-        typealias Complete = Void
+        struct Complete: Identifiable {
+            
+            let id: UUID
+            let status: PaymentCompletion.Status
+            
+            init(
+                id: UUID = .init(),
+                status: PaymentCompletion.Status
+            ) {
+                self.id = id
+                self.status = status
+            }
+        }
     }
 }
 

@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 27.02.2025.
 //
 
+import PaymentCompletionUI
 import RxViewModel
 import SwiftUI
 
@@ -17,6 +18,7 @@ extension ViewComponents {
     ) -> some View {
         
         makeCreditCardMVPContentView(binder)
+            .background(makeCreditCardMVPFlowView(binder.flow))
             .navigationBarWithBack(
                 title: "Кредитная карта",
                 subtitle: "Всё включено",
@@ -79,5 +81,46 @@ extension ViewComponents {
                 .padding(.bottom, 8)
         }
         .conditionalBottomPadding(12)
+    }
+    
+    @inlinable
+    func makeCreditCardMVPFlowView(
+        _ flow: CreditCardMVPDomain.Flow
+    ) -> some View {
+        
+        RxWrapperView(model: flow) { state, _ in
+            
+            Color.clear
+                .fullScreenCover(cover: state.navigation?.cover) { cover in
+                    
+                    makePaymentCompletionLayoutView(
+                        state: cover.state,
+                        statusConfig: .c2g // TODO: - replace c2g with creditCardMVP
+                    )
+                }
+        }
+    }
+}
+
+// MARK: - UI Mapping
+
+private extension CreditCardMVPDomain.Navigation {
+    
+    var cover: Complete? {
+        
+        switch self {
+        case let .complete(complete):
+            complete
+        }
+    }
+}
+
+// MARK: - Adapters
+
+private extension CreditCardMVPDomain.Navigation.Complete {
+    
+    var state: PaymentCompletion {
+        
+        return .init(formattedAmount: nil, merchantIcon: nil, status: status)
     }
 }
