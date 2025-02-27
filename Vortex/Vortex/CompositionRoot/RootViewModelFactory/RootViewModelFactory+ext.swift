@@ -790,8 +790,6 @@ private extension RootViewModelFactory {
     typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
     typealias OnRegister = () -> Void
     typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
-    typealias GetPDFDocument = CollateralLoanLandingFactory.GetPDFDocument
-    typealias MakeCollateralLoanLandingFactory = (@escaping GetPDFDocument) -> CollateralLoanLandingFactory
     
     func make(
         featureFlags: FeatureFlags,

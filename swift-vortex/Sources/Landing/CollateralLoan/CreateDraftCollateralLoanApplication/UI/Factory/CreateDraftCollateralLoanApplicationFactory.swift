@@ -11,6 +11,7 @@ import PDFKit
 import RemoteServices
 import SwiftUI
 import UIPrimitives
+import CollateralLoanLandingGetConsentsBackend
 
 public struct CreateDraftCollateralLoanApplicationFactory {
     
