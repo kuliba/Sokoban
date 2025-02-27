@@ -861,7 +861,8 @@ private extension RootViewModelFactory {
             qrViewModelFactory: qrViewModelFactory,
             makeTrailingToolbarItems: makeTrailingToolbarItems(
                 featureFlags.c2gFlag
-            )
+            ),
+            makeCreditCardMVP: { featureFlags.creditCardMVPFlag.isActive ? .creditCardMVPPreview : nil }
         )
                   
         let mainViewModel = MainViewModel(

@@ -352,12 +352,12 @@ extension ProductCarouselView {
         
         func visiblePromoProductsType(promoProducts: [AdditionalProductViewModel]?) -> [ProductType]? {
             
-            return promoProducts?.filter { shouldShowPromo($0.promoType)}.uniqueValues(by: \.productType).map(\.productType)
+            return promoProducts?.filter { shouldShowPromo($0.promoItem.promoProduct)}.uniqueValues(by: \.productType).map(\.productType)
         }
 
         func visiblePromoProducts(productType: ProductType) -> Int {
             
-            return promoProducts?.filter { $0.productType == productType && shouldShowPromo($0.promoType)}.count ?? 0
+            return promoProducts?.filter { $0.productType == productType && shouldShowPromo($0.promoItem.promoProduct)}.count ?? 0
         }
     }
 }
@@ -833,35 +833,29 @@ struct ProductCarouselView: View {
         _ groupViewModel: ProductGroupView.ViewModel,
         _ productType: ProductType
     ) -> some View {
-        
         HStack(spacing: 8) {
             
-            if isFirst(groupViewModel.productType) {
-                promoViews(productType: groupViewModel.productType)
-                ProductGroupView(viewModel: groupViewModel)
-                    .accessibilityIdentifier("productScrollView")
-            } else {
-                ProductGroupView(viewModel: groupViewModel)
-                    .accessibilityIdentifier("productScrollView")
-                promoViews(productType: groupViewModel.productType)
-            }
-        }
-    }
-    
-    private func isFirst(
-        _ productType: ProductType
-    ) -> Bool {
-        
-        switch productType {
-        case .card:     return false
-        case .account:  return true
-        case .deposit:  return false
-        case .loan:     return true
+            promoHighPriorityViews(productType: groupViewModel.productType)
+            ProductGroupView(viewModel: groupViewModel)
+                .accessibilityIdentifier("productScrollView")
+            promoViews(productType: groupViewModel.productType)
         }
     }
     
     // MARK: PromoActions
     
+    @ViewBuilder
+    private func promoHighPriorityViews(
+        productType: ProductType
+    ) -> some View {
+        
+        HStack(spacing: 8) {
+            promoByTypeHighPriority(productType).map {
+                ForEach($0, content: promoView)
+            }
+        }
+    }
+
     @ViewBuilder
     private func promoViews(
         productType: ProductType
@@ -879,7 +873,7 @@ struct ProductCarouselView: View {
         model: AdditionalProductViewModel
     ) -> some View {
         
-        if viewModel.shouldShowPromo(model.promoType) {
+        if viewModel.shouldShowPromo(model.promoItem.promoProduct) {
             
             viewFactory.makePromoView(model)
         }
@@ -902,11 +896,18 @@ struct ProductCarouselView: View {
         }
     }
     
+    private func promoByTypeHighPriority(
+        _ type: ProductType
+    ) -> [AdditionalProductViewModel]? {
+        
+        viewModel.promoProducts?.filter { $0.productType == type && $0.promoItem.viewPriority }
+    }
+    
     private func promoByType(
         _ type: ProductType
     ) -> [AdditionalProductViewModel]? {
         
-        viewModel.promoProducts?.filter { $0.productType == type }
+        viewModel.promoProducts?.filter { $0.productType == type && !$0.promoItem.viewPriority }
     }
 }
 
