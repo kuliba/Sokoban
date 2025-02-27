@@ -18,7 +18,7 @@ final class RootViewModelFactory_makeOpenNewProductButtonsTests: RootViewModelFa
         )
         
         XCTAssertNoDiff(sut.map(\.type), [
-            .card, .deposit, .account, .sticker, .loan,
+            .card(.landing), .deposit, .account, .sticker, .loan,
             .savingsAccount,
             .insurance, .mortgage
         ])
@@ -32,7 +32,7 @@ final class RootViewModelFactory_makeOpenNewProductButtonsTests: RootViewModelFa
         )
         
         XCTAssertNoDiff(sut.map(\.type), [
-            .card, .deposit, .account, .sticker, .loan,
+            .card(.landing), .deposit, .account, .sticker, .loan,
             .insurance, .mortgage
         ])
     }

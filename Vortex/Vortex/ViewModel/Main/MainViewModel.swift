@@ -848,7 +848,7 @@ private extension MainViewModel {
         case let payload:
             switch payload.type {
             case .cardOrder:
-                action.send(RootEvent.select(.openProduct(.card)))
+                action.send(RootEvent.select(.openProduct(.card(.landing))))
                 
             case .savingLanding:
                 action.send(RootEvent.select(.openProduct(.savingsAccount)))

@@ -158,11 +158,27 @@ struct NewProductButton_Previews: PreviewProvider {
 
 extension NewProductButton.ViewModel {
     
-    static let sample =  NewProductButton.ViewModel.init(openProductType: .card, subTitle: "62 дня без %", action: .action({}))
+    static let sample =  NewProductButton.ViewModel.init(
+        openProductType: .card(.landing),
+        subTitle: "62 дня без %",
+        action: .action({})
+    )
     
-    static let sampleAccount =  NewProductButton.ViewModel.init(openProductType: .account, subTitle: "Бесплатно", action: .action({}))
+    static let sampleAccount =  NewProductButton.ViewModel.init(
+        openProductType: .account,
+        subTitle: "Бесплатно",
+        action: .action({})
+    )
     
-    static let sampleEmptySubtitle =  NewProductButton.ViewModel.init(openProductType: .card, subTitle: "", action: .action({}))
+    static let sampleEmptySubtitle =  NewProductButton.ViewModel.init(
+        openProductType: .card(.landing),
+        subTitle: "",
+        action: .action({})
+    )
     
-    static let sampleLongSubtitle =  NewProductButton.ViewModel.init(openProductType: .card, subTitle: "13,08 % годовых", action: .action({}))
+    static let sampleLongSubtitle =  NewProductButton.ViewModel.init(
+        openProductType: .card(.landing),
+        subTitle: "13,08 % годовых",
+        action: .action({})
+    )
 }

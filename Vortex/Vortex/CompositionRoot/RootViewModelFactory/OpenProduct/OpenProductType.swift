@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-enum OpenProductType: Equatable, CaseIterable, Hashable {
+enum OpenProductType: Hashable {
     
     case account
-    case card
+    case card(Card)
     case creditCardMVP
     case deposit
     case insurance
@@ -18,6 +18,12 @@ enum OpenProductType: Equatable, CaseIterable, Hashable {
     case mortgage
     case savingsAccount
     case sticker
+    
+    enum Card: Hashable {
+        
+        case landing
+        case form
+    }
 }
 
 // TODO: move to view

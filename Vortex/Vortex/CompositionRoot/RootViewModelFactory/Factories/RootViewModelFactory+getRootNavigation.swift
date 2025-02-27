@@ -80,11 +80,18 @@ extension RootViewModelFactory {
         case let .openProduct(type):
             
             switch type {
-            case .card:
-                completion(.openProduct(openProduct(
-                    type: type,
-                    notify: notify
-                )))
+            case let .card(kind):
+                
+                switch kind {
+                case .form:
+                    break
+                    
+                case .landing:
+                    completion(.openProduct(openProduct(
+                        type: type,
+                        notify: notify
+                    )))
+                }
                 
             case .creditCardMVP:
                 completion(.openProduct(.creditCardMVP))
