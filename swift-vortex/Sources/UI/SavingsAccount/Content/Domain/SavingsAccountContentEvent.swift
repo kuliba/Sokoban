@@ -9,12 +9,11 @@ import Foundation
 
 public enum SavingsAccountContentEvent<Landing, InformerPayload> {
     
-    case dismissInformer(Landing?)
-    case failure(BackendFailure<InformerPayload>)
-    case load
     case delayLoad
-    case loaded(Landing)
+    case dismissInformer
+    case load
     case offset(CGFloat)
+    case result(Result<Landing, BackendFailure<InformerPayload>>)
 }
 
 extension SavingsAccountContentEvent: Equatable where Landing: Equatable, InformerPayload: Equatable {}

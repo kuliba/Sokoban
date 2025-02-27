@@ -9,7 +9,6 @@ import Foundation
 
 public enum SavingsAccountContentEffect: Equatable {
     
-    case dismissInformer
     case delayLoad(DispatchTimeInterval)
     case load
 }

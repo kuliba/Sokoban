@@ -53,7 +53,7 @@ extension RootViewModelFactory {
     func makeSavingsAccount() -> SavingsAccountDomain.Binder {
         
         let content = makeContent(
-            status: .initiate
+            status: .idle
         )
         
         return composeBinder(

@@ -45,20 +45,6 @@ public extension ContentReducer {
                 effect = .load
             }
             
-        case let .loaded(landing):
-            state.status = .loaded(landing)
-            
-        case let .failure(failure):
-            switch failure.kind {
-            case let .alert(message):
-                let oldLanding = state.status.oldLanding
-                state.status = .failure(.alert(message), oldLanding)
-                
-            case let .informer(informer):
-                let oldLanding = state.status.oldLanding
-                state.status = .failure(.informer(informer), oldLanding)
-            }
-            
         case let .offset(offset):
             if refreshRange.contains(offset), !state.status.isLoading {
                 let oldLanding = state.status.oldLanding
@@ -75,8 +61,26 @@ public extension ContentReducer {
                 state.navTitle = .empty
             }
             
-        case let .dismissInformer(oldLanding):
+        case .dismissInformer:
+            let oldLanding = state.status.oldLanding
             state.status = .loaded(oldLanding)
+            
+        case let .result(result):
+            switch result {
+            case let .failure(failure):
+                switch failure.kind {
+                case let .alert(message):
+                    let oldLanding = state.status.oldLanding
+                    state.status = .failure(.alert(message), oldLanding)
+                    
+                case let .informer(informer):
+                    let oldLanding = state.status.oldLanding
+                    state.status = .failure(.informer(informer), oldLanding)
+                }
+
+            case let .success(landing):
+                state.status = .loaded(landing)
+            }
         }
         
         return (state, effect)

@@ -32,7 +32,7 @@ where RefreshView: View,
     public var body: some View {
         
         switch state.status {
-        case .initiate:
+        case .idle:
             Color.clear
                 .frame(maxHeight: .infinity)
             
@@ -73,7 +73,7 @@ where RefreshView == Text,
       InformerPayload == String
 {
     static let preview = SavingsAccountContentView(
-        state: .init(status: .initiate, navTitle: .init(title: "", subtitle: "")),
+        state: .init(status: .idle, navTitle: .init(title: "", subtitle: "")),
         event: {_ in },
         config: .prod,
         factory: .init(
