@@ -63,9 +63,8 @@ final class CreateInterestDepositTransferPayloadTests: XCTestCase {
         
         let sut = makeSUT(amount: amount)
         
-        let sutEncoded = try encoder.encode(sut)
-        let json = try JSONSerialization.jsonObject(with: sutEncoded) as? [String: Any]
-        let result = try XCTUnwrap(json, "Expected valid JSON", file: file, line: line)
+        let encoded = try encoder.encode(sut)
+        let result = try encoded.jsonDict(file: file, line: line)
         
         XCTAssertNoDiff(result as NSDictionary, expectedResult, file: file, line: line)
     }
