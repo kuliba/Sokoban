@@ -9,15 +9,12 @@ import Foundation
 
 public struct SavingsAccountContentState<Landing, InformerPayload> {
     
-    public var status: SavingsAccountContentStatus<Landing, InformerPayload>
-    public var navTitle: SavingsAccountNavTitle
+    public var state: SavingsAccountContentStatus<Landing, InformerPayload>
     
     public init(
-        status: SavingsAccountContentStatus<Landing, InformerPayload>,
-        navTitle: SavingsAccountNavTitle = .empty // TODO: move to flow
+        state: SavingsAccountContentStatus<Landing, InformerPayload>
     ) {
-        self.status = status
-        self.navTitle = navTitle
+        self.state = state
     }
 }
 

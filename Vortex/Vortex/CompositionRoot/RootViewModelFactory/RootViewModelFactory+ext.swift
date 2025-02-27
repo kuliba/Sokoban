@@ -534,7 +534,7 @@ extension SavingsAccountDomain.ContentState {
     
     var select: SavingsAccountDomain.Select? {
         
-        switch status {
+        switch state {
         case .idle, .inflight, .loaded:
             return nil
             

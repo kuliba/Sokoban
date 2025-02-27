@@ -33,11 +33,6 @@ public extension ContentEffectHandler {
 
                 dispatch(.result($0))
             }
-         
-        case let .delayLoad(timeInterval):
-            DispatchQueue.main.asyncAfter(deadline: .now() + timeInterval) {
-                dispatch(.load)
-            }
         }
     }
 }

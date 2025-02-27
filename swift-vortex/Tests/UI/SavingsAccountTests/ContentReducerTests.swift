@@ -12,170 +12,88 @@ final class ContentReducerTests: XCTestCase {
     
     func test_reduce_load_stateInflight_shouldNotChangeStated() {
         
-        assertState(.load, on: .init(status: .inflight(nil)))
+        assertState(.load, on: .init(state: .inflight(nil)))
     }
     
     func test_reduce_load_stateInflight_shouldDeliverLoadEffect
     () {
         
-        assert(.load, on: .init(status: .inflight(nil)), effect: nil)
+        assert(.load, on: .init(state: .inflight(nil)), effect: nil)
     }
         
-    func test_reduce_load_stateLoaded_shouldStatusToInflight() {
+    func test_reduce_load_stateLoaded_shouldStateToInflight() {
         
         let landing = anyMessage()
         
-        assertState(.load, on: .init(status: .loaded(landing))) {
+        assertState(.load, on: .init(state: .loaded(landing))) {
             
-            $0.status = .inflight(landing)
+            $0.state = .inflight(landing)
         }
     }
     
     func test_reduce_load_stateLoaded_shouldDeliverLoadEffect() {
       
-        assert(.load, on: .init(status: .loaded(anyMessage())), effect: .load)
+        assert(.load, on: .init(state: .loaded(anyMessage())), effect: .load)
     }
     
-    func test_reduce_delayLoad_stateLoaded_shouldNotChangeStated() {
-        
-        let landing = anyMessage()
-        
-        assertState(.delayLoad, on: .init(status: .loaded(landing)))
-    }
-    
-    func test_reduce_delayLoad_stateLoaded_shouldDeliverLoadEffect() {
-      
-        assert(.delayLoad, on: .init(status: .loaded(anyMessage())), effect: .delayLoad(.test))
-    }
-
-    func test_reduce_result_success_stateInflight_shouldStatusToLoaded() {
+    func test_reduce_result_success_stateInflight_shouldStateToLoaded() {
         
         let landing = anyMessage()
 
-        assertState(.result(.success(landing)), on: .init(status: .inflight(nil))) {
+        assertState(.result(.success(landing)), on: .init(state: .inflight(nil))) {
             
-            $0.status = .loaded(landing)
+            $0.state = .loaded(landing)
         }
     }
     
     func test_reduce_result_success_stateInflight_shouldDeliverNoEffect() {
         
-        assert(.result(.success(anyMessage())), on: .init(status: .inflight(nil)), effect: nil)
+        assert(.result(.success(anyMessage())), on: .init(state: .inflight(nil)), effect: nil)
     }
 
-    func test_reduce_result_success_stateLoaded_shouldStatusToNewLoaded() {
+    func test_reduce_result_success_stateLoaded_shouldstateToNewLoaded() {
         
-        assertState(.result(.success("new")), on: .init(status: .loaded("old"))) {
+        assertState(.result(.success("new")), on: .init(state: .loaded("old"))) {
             
-            $0.status = .loaded("new")
+            $0.state = .loaded("new")
         }
     }
     
     func test_reduce_result_success_stateLoaded_shouldDeliverNoEffect() {
         
-        assert(.result(.success("old")), on: .init(status: .loaded("new")), effect: nil)
+        assert(.result(.success("old")), on: .init(state: .loaded("new")), effect: nil)
     }
     
-    func test_reduce_result_failureAlert_stateInflight_shouldStatusToFailure() {
+    func test_reduce_result_failureAlert_stateInflight_shouldstateToFailure() {
         
         let alert = anyMessage()
         let landing = anyMessage()
         
-        assertState(.result(.failure(.init(kind: .alert(alert)))), on: .init(status: .inflight(landing))) {
+        assertState(.result(.failure(.init(kind: .alert(alert)))), on: .init(state: .inflight(landing))) {
             
-            $0.status = .failure(.alert(alert), landing)
+            $0.state = .failure(.alert(alert), landing)
         }
     }
     
     func test_reduce_result_failureAlert_stateInflight_shouldDeliverNoEffect() {
         
-        assert(.result(.failure(.init(kind: .alert(anyMessage())))), on: .init(status: .inflight(nil)), effect: nil)
+        assert(.result(.failure(.init(kind: .alert(anyMessage())))), on: .init(state: .inflight(nil)), effect: nil)
     }
     
-    func test_reduce_result_failureInformer_stateInflight_shouldStatusToFailure() {
+    func test_reduce_result_failureInformer_stateInflight_shouldstateToFailure() {
         
         let informer = anyMessage()
         let landing = anyMessage()
         
-        assertState(.result(.failure(.init(kind: .informer(informer)))), on: .init(status: .inflight(landing))) {
+        assertState(.result(.failure(.init(kind: .informer(informer)))), on: .init(state: .inflight(landing))) {
             
-            $0.status = .failure(.informer(informer), landing)
+            $0.state = .failure(.informer(informer), landing)
         }
     }
     
     func test_reduce_result_failureInformer_stateInflight_shouldDeliverNoEffect() {
         
-        assert(.result(.failure(.init(kind: .alert(anyMessage())))), on: .init(status: .inflight(nil)), effect: nil)
-    }
-    
-    func test_reduce_offsetMoreThenShowTitleOffset_shouldNavTitleToValue() {
-        
-        let landing = anyMessage()
-        let sut = makeSUT(showTitleRange: 20...)
-        
-        assertState(sut: sut, .offset(25), on: .init(status: .loaded(landing))) {
-            
-            $0.navTitle = .savingsAccount
-        }
-    }
-    
-    func test_reduce_offsetMoreThenShowTitleOffset_shouldDeliverNoEffect() {
-        
-        let landing = anyMessage()
-        let sut = makeSUT(showTitleRange: 20...)
-
-        assert(sut: sut, .offset(25), on: .init(status: .loaded(landing)), effect: nil)
-    }
-    
-    func test_reduce_offsetLessThenShowTitleOffset_shouldNotChangeState() {
-        
-        let landing = anyMessage()
-        let sut = makeSUT(showTitleRange: 20...)
-        
-        assertState(sut: sut, .offset(18), on: .init(status: .loaded(landing)))
-    }
-    
-    func test_reduce_offsetLessThenShowTitleOffset_shouldDeliverNoEffect() {
-        
-        let landing = anyMessage()
-        let sut = makeSUT(showTitleRange: 20...)
-
-        assert(sut: sut, .offset(18), on: .init(status: .loaded(landing)), effect: nil)
-    }
-
-    func test_reduce_refreshOffsetContainOffset_shouldStatusToInflight() {
-        
-        let landing = anyMessage()
-        let sut = makeSUT(refreshRange: 0..<10)
-        
-        assertState(sut: sut, .offset(8), on: .init(status: .loaded(landing))) {
-            
-            $0.status = .inflight(landing)
-        }
-    }
-    
-    func test_reduce_refreshOffsetContainOffset_shouldDeliverLoadEffect() {
-        
-        let landing = anyMessage()
-        let sut = makeSUT(refreshRange: 0..<10)
-
-        assert(sut: sut, .offset(8), on: .init(status: .loaded(landing)), effect: .delayLoad(.test))
-    }
-    
-    func test_reduce_refreshOffsetNotContainOffset_shouldNotChangeState() {
-        
-        let landing = anyMessage()
-        let sut = makeSUT(refreshRange: 0..<10)
-        
-        assertState(sut: sut, .offset(18), on: .init(status: .loaded(landing)))
-    }
-    
-    func test_reduce_refreshOffsetNotContainOffset_shouldDeliverNoEffect() {
-        
-        let landing = anyMessage()
-        let sut = makeSUT(refreshRange: 0..<10)
-
-        assert(sut: sut, .offset(18), on: .init(status: .loaded(landing)), effect: nil)
+        assert(.result(.failure(.init(kind: .alert(anyMessage())))), on: .init(state: .inflight(nil)), effect: nil)
     }
 
     // MARK: - Helpers
@@ -187,14 +105,11 @@ final class ContentReducerTests: XCTestCase {
     private typealias UpdateStateToExpected = (_ state: inout State) -> Void
     
     private func makeSUT(
-        refreshRange: Range<CGFloat> = -102..<0,
-        showTitleRange: PartialRangeFrom<CGFloat> = 100...,
-        loadLifespan: DispatchTimeInterval = .test,
         file: StaticString = #file,
         line: UInt = #line
     ) -> SUT {
         
-        let sut = SUT(refreshRange: refreshRange, showTitleRange: showTitleRange, loadLifespan: loadLifespan)
+        let sut = SUT()
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
@@ -243,9 +158,4 @@ final class ContentReducerTests: XCTestCase {
             file: file, line: line
         )
     }
-}
-
-extension DispatchTimeInterval {
-    
-    static let test: Self = .microseconds(10)
 }

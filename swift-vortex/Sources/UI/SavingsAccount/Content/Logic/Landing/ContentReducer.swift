@@ -9,19 +9,7 @@ import Foundation
 
 public final class ContentReducer<Landing, InformerPayload> {
     
-    let refreshRange: Range<CGFloat>
-    let showTitleRange: PartialRangeFrom<CGFloat>
-    private let loadLifespan: DispatchTimeInterval
-
-    public init(
-        refreshRange: Range<CGFloat> = -100..<0,
-        showTitleRange: PartialRangeFrom<CGFloat> = 100...,
-        loadLifespan: DispatchTimeInterval = .seconds(2)
-    ) {
-        self.refreshRange = refreshRange
-        self.showTitleRange = showTitleRange
-        self.loadLifespan = loadLifespan
-    }
+    public init() {}
 }
 
 public extension ContentReducer {
@@ -35,51 +23,32 @@ public extension ContentReducer {
         var effect: Effect?
         
         switch event {
-        case .delayLoad:
-            effect = .delayLoad(loadLifespan)
-            
         case .load:
-            if !state.status.isLoading {
-                let oldLanding = state.status.oldLanding
-                state.status = .inflight(oldLanding)
+            if !state.state.isLoading {
+                let oldLanding = state.state.oldLanding
+                state.state = .inflight(oldLanding)
                 effect = .load
             }
-            
-        case let .offset(offset):
-            if refreshRange.contains(offset), !state.status.isLoading {
-                let oldLanding = state.status.oldLanding
-                state.status = .inflight(oldLanding)
-                effect = .delayLoad(loadLifespan)
-            }
-            
-            if offset > showTitleRange.lowerBound {
-                if state.navTitle == .empty {
-                    state.navTitle = .savingsAccount
-                }
-            }
-            else if state.navTitle == .savingsAccount {
-                state.navTitle = .empty
-            }
-            
+                        
         case .dismissInformer:
-            let oldLanding = state.status.oldLanding
-            state.status = .loaded(oldLanding)
+            let oldLanding = state.state.oldLanding
+            state.state = .loaded(oldLanding)
             
         case let .result(result):
             switch result {
             case let .failure(failure):
                 switch failure.kind {
                 case let .alert(message):
-                    let oldLanding = state.status.oldLanding
-                    state.status = .failure(.alert(message), oldLanding)
+                    let oldLanding = state.state.oldLanding
+                    state.state = .failure(.alert(message), oldLanding)
                     
                 case let .informer(informer):
-                    let oldLanding = state.status.oldLanding
-                    state.status = .failure(.informer(informer), oldLanding)
+                    let oldLanding = state.state.oldLanding
+                    state.state = .failure(.informer(informer), oldLanding)
                 }
 
             case let .success(landing):
-                state.status = .loaded(landing)
+                state.state = .loaded(landing)
             }
         }
         
