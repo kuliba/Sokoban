@@ -35,19 +35,6 @@ public struct GetCollateralLandingFactory {
 }
 
 public extension GetCollateralLandingFactory {
-    
-    func makeGetShowcaseViewFactory() -> CollateralLoanLandingFactory {
-
-        .init(
-            makeImageViewWithMD5Hash: makeImageViewWithMD5Hash,
-            makeImageViewWithURL: makeImageViewWithURL,
-            getPDFDocument: getPDFDocument,
-            formatCurrency: formatCurrency
-        )
-    }
-}
-
-public extension GetCollateralLandingFactory {
         
     typealias IconView = UIPrimitives.AsyncImage
     typealias MakeImageViewWithMD5Hash = (String) -> IconView
