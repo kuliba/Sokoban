@@ -118,17 +118,6 @@ extension GetShowcaseDomain.Navigation: Identifiable {
     }
 }
 
-//extension CollateralLoanShowcaseWrapperView {
-//    
-//    static let preview = Self(
-//        binder: .preview,
-//        factory: .preview,
-//        config: .preview,
-//        goToMain: {}, 
-//        makeOperationDetailInfoViewModel: { _,_ in .preview }
-//    )
-//}
-
 extension GetShowcaseDomain.Binder {
     
     static let preview = GetShowcaseDomain.Binder(

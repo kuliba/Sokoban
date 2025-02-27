@@ -48,16 +48,15 @@ public extension CollateralLoanLandingFactory {
 
 public extension CollateralLoanLandingFactory {
     
-//    static var preview: CollateralLoanLandingFactory {
-//      
-//        .init (
-//            makeImageViewWithMD5Hash: { _ in .preview },
-//            makeImageViewWithURL: { _ in .preview },
-//            getPDFDocument: { _,_ in },
-//            formatCurrency: { _ in "" },
-//            makeDetailsViewModel: { _,_ in }
-//        )
-//    }
+    static var preview: CollateralLoanLandingFactory {
+      
+        .init (
+            makeImageViewWithMD5Hash: { _ in .preview },
+            makeImageViewWithURL: { _ in .preview },
+            getPDFDocument: { _,_ in },
+            formatCurrency: { _ in "" }
+        )
+    }
 }
 
 extension UIPrimitives.AsyncImage {

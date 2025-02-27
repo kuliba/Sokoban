@@ -636,17 +636,6 @@ extension MainViewFactory {
     }
 }
 
-//extension CollateralLoanLandingWrapperView {
-//    
-//    static let preivew = Self(
-//        binder: .preview,
-//        factory: .preview,
-//        config: .default,
-//        goToMain: {},
-//        makeOperationDetailInfoViewModel: { _,_  in .preview }
-//    )
-//}
-
 extension ProductProfileViewModel  {
     
     static let makeProductProfileViewModel = ProductProfileViewModel.make(
