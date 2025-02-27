@@ -6,7 +6,11 @@
 //
 
 import Foundation
+import HeaderLandingComponent
+import ListLandingComponent
+import OrderCardLandingBackend
 import RemoteServices
+import DropDownTextListComponent
 
 extension RootViewModelFactory {
     
@@ -93,48 +97,81 @@ extension RootViewModelFactory {
                 completion(.failure(failure))
                 
             case let .success(response):
-                completion(
-                    .success(
-                        .init(
-                            header: .init(
-                                title: response.product.title,
-                                options: response.product.features,
-                                md5Hash: response.product.image
-                            ),
-                            conditions: .init(
-                                title: response.conditions.title,
-                                list: response.conditions.list.compactMap({
-                                    .init(
-                                        md5hash: $0.md5hash,
-                                        title: $0.title,
-                                        subtitle: $0.subtitle
-                                    )
-                                })
-                            ),
-                            security: .init(
-                                title: response.security.title,
-                                list: response.security.list.compactMap({
-                                    .init(
-                                        md5hash: $0.md5hash,
-                                        title: $0.title,
-                                        subtitle: $0.subtitle
-                                    )
-                                })
-                            ),
-                            dropDownList: .init(
-                                title: response.frequentlyAskedQuestions.title,
-                                items: response.security.list.compactMap({
-                                    .init(
-                                        title: $0.title,
-                                        subTitle: $0.subtitle ?? ""
-                                    )
-                                })
-                            )
-                        )
-                    )
+                completion(.success(.init(response))
                 )
             }
         }
+    }
+}
+
+private extension OrderCardLanding {
+
+    init(_ response: OrderCardLandingResponse) {
+        self.init(
+            header: .init(product: response.product),
+            conditions: .init(conditions: response.conditions),
+            security: .init(security: response.security),
+            dropDownList: .init(questions: response.frequentlyAskedQuestions)
+        )
+    }
+}
+
+private extension DropDownTextList {
+
+    init(questions: OrderCardLandingResponse.Question) {
+        self.init(
+            title: questions.title,
+            items: questions.list.compactMap({
+                .init(
+                    title: $0.title,
+                    subTitle: $0.subtitle ?? ""
+                )
+            })
+        )
+    }
+}
+
+private extension ListLandingComponent.Items {
+    
+    init(security: OrderCardLandingResponse.Security) {
+        self.init(
+            title: security.title,
+            list: security.list.compactMap({
+                .init(
+                    md5hash: $0.md5hash,
+                    title: $0.title,
+                    subtitle: $0.subtitle
+                )
+            })
+        )
+    }
+}
+
+private extension ListLandingComponent.Items {
+
+    init(conditions: OrderCardLandingResponse.Condition) {
+        self.init(
+            title: conditions.title,
+            list: conditions.list.compactMap({
+                .init(
+                    md5hash: $0.md5hash,
+                    title: $0.title,
+                    subtitle: $0.subtitle
+                )
+            })
+        )
+    }
+}
+
+private extension Header {
+
+    init(product: OrderCardLandingResponse.Product) {
+        
+        self.init(
+            title: product.title,
+            options: product.features,
+            md5Hash: product.image
+        )
     }
 }
 
