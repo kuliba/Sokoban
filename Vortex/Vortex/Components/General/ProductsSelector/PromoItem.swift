@@ -17,7 +17,7 @@ struct PromoItem: Equatable {
     let action: PromoAction?
     let productType: ProductType
     let promoProduct: PromoProduct
-    let viewPriority: Bool
+    let hasHighPriority: Bool
     
     struct PromoAction: Equatable {
         
@@ -37,7 +37,7 @@ extension PromoItem {
             action: item.action.map { .init($0) },
             productType: .card,
             promoProduct: .sticker,
-            viewPriority: false
+            hasHighPriority: false
         )
     }
     
@@ -53,14 +53,14 @@ extension PromoItem {
             action: item.action.map { .init($0) },
             productType: productType,
             promoProduct: promoProduct,
-            viewPriority: promoProduct.viewPriority
+            hasHighPriority: promoProduct.hasHighPriority
         )
     }
 }
 
 private extension PromoProduct {
     
-    var viewPriority: Bool {
+    var hasHighPriority: Bool {
         
         switch self {
         case .creditCardMVP:  return true
@@ -99,7 +99,7 @@ extension PromoItem {
             action: item.action.map { .init($0) },
             productType: type,
             promoProduct: promoProduct,
-            viewPriority: promoProduct.viewPriority
+            hasHighPriority: promoProduct.hasHighPriority
         )
     }
 }
@@ -123,7 +123,7 @@ extension PromoItem {
         action: .init(type: "sticker", target: "landing"),
         productType: .card,
         promoProduct: .sticker,
-        viewPriority: false
+        hasHighPriority: false
     )
 
     static let creditCardMVPPreview: Self = .init(
@@ -133,7 +133,7 @@ extension PromoItem {
         action: .init(type: "SAVING_LANDING", target: "DEFAULT"),
         productType: .card,
         promoProduct: .creditCardMVP,
-        viewPriority: true
+        hasHighPriority: true
     )
     
     /*
@@ -155,7 +155,7 @@ extension PromoItem {
         action: .init(type: "SAVING_LANDING", target: "DEFAULT"),
         productType: .account,
         promoProduct: .savingsAccount,
-        viewPriority: true
+        hasHighPriority: true
     )
 }
 

@@ -824,7 +824,7 @@ struct ProductCarouselView: View {
         if let groupViewModel {
             makeGroupWithPromo(groupViewModel, productType)
         } else {
-            promoViews(productType: productType)
+            lowPriorityPromoViews(productType: productType)
         }
     }
     
@@ -835,34 +835,38 @@ struct ProductCarouselView: View {
     ) -> some View {
         HStack(spacing: 8) {
             
-            promoHighPriorityViews(productType: groupViewModel.productType)
+            highPriorityPromoViews(productType: groupViewModel.productType)
             ProductGroupView(viewModel: groupViewModel)
                 .accessibilityIdentifier("productScrollView")
-            promoViews(productType: groupViewModel.productType)
+            lowPriorityPromoViews(productType: groupViewModel.productType)
         }
     }
     
     // MARK: PromoActions
     
     @ViewBuilder
-    private func promoHighPriorityViews(
+    private func highPriorityPromoViews(
         productType: ProductType
     ) -> some View {
         
         HStack(spacing: 8) {
-            promoByTypeHighPriority(productType).map {
+            
+            highPriorityPromoByType(productType).map {
+                
                 ForEach($0, content: promoView)
             }
         }
     }
 
     @ViewBuilder
-    private func promoViews(
+    private func lowPriorityPromoViews(
         productType: ProductType
     ) -> some View {
         
         HStack(spacing: 8) {
-            promoByType(productType).map {
+            
+            lowPriorityPromoByType(productType).map {
+                
                 ForEach($0, content: promoView)
             }
         }
@@ -896,18 +900,18 @@ struct ProductCarouselView: View {
         }
     }
     
-    private func promoByTypeHighPriority(
+    private func highPriorityPromoByType(
         _ type: ProductType
     ) -> [AdditionalProductViewModel]? {
         
-        viewModel.promoProducts?.filter { $0.productType == type && $0.promoItem.viewPriority }
+        viewModel.promoProducts?.filter { $0.productType == type && $0.promoItem.hasHighPriority }
     }
     
-    private func promoByType(
+    private func lowPriorityPromoByType(
         _ type: ProductType
     ) -> [AdditionalProductViewModel]? {
         
-        viewModel.promoProducts?.filter { $0.productType == type && !$0.promoItem.viewPriority }
+        viewModel.promoProducts?.filter { $0.productType == type && !$0.promoItem.hasHighPriority }
     }
 }
 
