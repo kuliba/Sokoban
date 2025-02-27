@@ -93,9 +93,11 @@ extension ViewComponents {
             Color.clear
                 .fullScreenCover(cover: state.navigation?.cover) { cover in
                     
+                    // TODO: add status subtitle
                     makePaymentCompletionLayoutView(
                         state: cover.state,
-                        statusConfig: .c2g // TODO: - replace c2g with creditCardMVP
+                        details: { cover.message.text(withConfig: .placeholder, alignment: .center) },
+                        statusConfig: .creditCardMVP
                     )
                 }
         }

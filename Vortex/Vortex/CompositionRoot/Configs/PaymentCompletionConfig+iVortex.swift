@@ -31,6 +31,16 @@ extension PaymentCompletionConfig {
         )
     )
     
+    static let creditCardMVP: Self = .init(
+        statuses: .init(
+            completed: .completed(title: "Заявка успешно отправлена"),
+            inflight: .inflight(title: "Платеж в обработке"),
+            rejected: .rejected(title: "Заявка на выпуск\nкарты неуспешна"),
+            fraudCancelled: .fraudCancelled(),
+            fraudExpired: .fraudExpired()
+        )
+    )
+    
     static let orderCard: Self = .init(
         statuses: .init(
             completed: .completed(),

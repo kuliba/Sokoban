@@ -59,15 +59,22 @@ extension RootViewModelFactory {
             case let .order(payload):
                 switch payload.otp {
                 case "000000":
-                    completion(.complete(.init(status: .completed)))
+                    completion(.complete(.init(message: .success, status: .completed)))
                     
                 case "111111":
-                    completion(.complete(.init(status: .rejected)))
+                    completion(.complete(.init(message: .failure, status: .rejected)))
                     
                 default:
-                    completion(.complete(.init(status: .inflight))) // TODO: replace with otp failure
+                    completion(.complete(.init(message: .failure, status: .rejected))) // TODO: replace with otp failure
                 }
             }
         }
     }
+}
+
+private extension String {
+    
+    static let success = "Ожидайте рассмотрения Вашей заявки\nРезультат придет в Push/смс\nПримерное время рассмотрения заявки 10 минут."
+    
+    static let failure = "Что-то пошло не так...\nПопробуйте позже."
 }

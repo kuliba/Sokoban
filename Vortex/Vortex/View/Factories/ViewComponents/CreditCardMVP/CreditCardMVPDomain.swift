@@ -46,13 +46,16 @@ extension CreditCardMVPDomain {
         struct Complete: Identifiable {
             
             let id: UUID
+            let message: String
             let status: PaymentCompletion.Status
             
             init(
                 id: UUID = .init(),
+                message: String,
                 status: PaymentCompletion.Status
             ) {
                 self.id = id
+                self.message = message
                 self.status = status
             }
         }
