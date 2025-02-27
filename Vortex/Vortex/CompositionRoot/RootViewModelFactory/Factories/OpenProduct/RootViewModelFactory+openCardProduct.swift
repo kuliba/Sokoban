@@ -19,7 +19,7 @@ extension RootViewModelFactory {
     @inlinable
     func openCardProduct(
         notify: @escaping (OpenCardDomain.OrderCardResponse) -> Void
-    ) -> OpenProduct.OpenCard {
+    ) -> OpenProduct.Form {
         
         let content: OpenCardDomain.Content = makeContent()
         content.event(.load)
