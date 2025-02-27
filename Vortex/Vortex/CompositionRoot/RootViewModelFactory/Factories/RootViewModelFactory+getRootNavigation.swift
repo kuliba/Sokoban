@@ -86,6 +86,9 @@ extension RootViewModelFactory {
                     notify: notify
                 )))
                 
+            case .creditCardMVP:
+                completion(.openProduct(.creditCardMVP))
+                
             case .savingsAccount:
                 completion(.openProduct(openProduct(
                     type: type,

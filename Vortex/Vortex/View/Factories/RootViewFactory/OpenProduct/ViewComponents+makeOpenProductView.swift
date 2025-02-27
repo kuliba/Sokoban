@@ -22,10 +22,24 @@ extension ViewComponents {
                     title: "Заказать карту",
                     dismiss: dismiss
                 )
+            
+        case let .creditCardMVP:
+            Text("TBD: creditCardMVP")
+                .frame(maxHeight: .infinity, alignment: .top)
+                .navigationBarWithBack(
+                    title: "Кредитная карта",
+                    subtitle: "Всё включено",
+                    subtitleForegroundColor: .textPlaceholder,
+                    dismiss: dismiss
+                )
           
         case let .savingsAccount(nodes):
 
-            makeSavingsAccountBinderView(binder: nodes.savingsAccountNode.model, openAccountBinder: nodes.openSavingsAccountNode.model, dismiss: dismiss)
+            makeSavingsAccountBinderView(
+                binder: nodes.savingsAccountNode.model,
+                openAccountBinder: nodes.openSavingsAccountNode.model,
+                dismiss: dismiss
+            )
                 .navigationBarHidden(true)
 
         case .unknown:

@@ -11,6 +11,7 @@ enum OpenProductType: Equatable, CaseIterable, Hashable {
     
     case account
     case card
+    case creditCardMVP
     case deposit
     case insurance
     case loan
@@ -28,6 +29,7 @@ extension OpenProductType {
         switch self {
         case .account:          return .ic24FilePluseColor
         case .card:             return .ic24NewCardColor
+        case .creditCardMVP:    return .ic24NewCardColor
         case .deposit:          return .ic24DepositPlusColor
         case .insurance:        return .ic24InsuranceColor
         case .loan:             return .ic24CreditColor
@@ -42,6 +44,7 @@ extension OpenProductType {
         switch self {
         case .account:          return "Счет"
         case .card:             return "Карту"
+        case .creditCardMVP:    return "Кредитную карту"
         case .deposit:          return "Вклад"
         case .insurance:        return "Страховку"
         case .loan:             return "Кредит"

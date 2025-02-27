@@ -90,6 +90,9 @@ extension RootViewModelFactory {
                 completion(.openURL(url))
             }
             
+        case .creditCardMVP:
+            break // TODO: fixme
+            
         case .deposit:
             completion(.openDeposit(openDeposit(dismiss: { notify(.dismiss) })))
             
