@@ -39,7 +39,14 @@ extension CollateralLoanLandingDetailsButton {
         dismiss: @escaping () -> Void
     ) -> some View {
         
-        OperationDetailInfoView(viewModel: viewModel)
+        OperationDetailInfoView(
+            viewModel: .init(
+                model: viewModel.model,
+                logo: viewModel.logo,
+                cells: viewModel.cells,
+                dismissAction: dismiss
+            )
+        )
     }
     
     func makeSuccessButtonLabel(

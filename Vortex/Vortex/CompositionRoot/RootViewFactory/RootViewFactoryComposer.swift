@@ -1026,18 +1026,6 @@ private extension RootViewFactoryComposer {
             }
         }
     }
-    
-    func makeCollateralLoanLandingFactory(
-        getPDFDocument: @escaping CollateralLoanLandingFactory.GetPDFDocument
-    ) -> CollateralLoanLandingFactory {
-        
-        .init(
-            makeImageViewWithMD5Hash: { self.makeIconView(.md5Hash(.init($0))) },
-            makeImageViewWithURL: { self.makeGeneralIconView(.image($0.addingPercentEncoding())) },
-            getPDFDocument: getPDFDocument,
-            formatCurrency: { self.model.amountFormatted(amount: Double($0), currencyCode: "RUB", style: .normal) }
-        )
-    }
 
     private func makeTemplateButtonView(
         with completed: Completed

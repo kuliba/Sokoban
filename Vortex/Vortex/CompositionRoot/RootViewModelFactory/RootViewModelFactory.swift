@@ -107,6 +107,7 @@ extension RootViewModelFactory {
             infra: .init(
                 httpClient: httpClient,
                 imageCache: model.imageCache(),
+                generalImageCache: model.generalImageCache(.defaultLanding),
                 logger: logger
             ),
             model: model,

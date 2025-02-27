@@ -458,8 +458,7 @@ extension RootViewModelFactory {
                 )
             },
             marketShowcaseBinder: marketShowcaseBinder,
-            makePaymentsTransfers: { paymentsTransfersSwitcher },
-            makeCollateralLoanLandingFactory: { _ in .preview } // TODO: Replace real factory maker
+            makePaymentsTransfers: { paymentsTransfersSwitcher }
         )
         
         let marketBinder = MarketShowcaseToRootViewModelBinder(
@@ -818,8 +817,7 @@ private extension RootViewModelFactory {
         bannersBinder: BannersBinder,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
         marketShowcaseBinder: MarketShowcaseDomain.Binder,
-        makePaymentsTransfers: @escaping PaymentsTransfersFactory.MakePaymentsTransfers,
-        makeCollateralLoanLandingFactory: @escaping MakeCollateralLoanLandingFactory
+        makePaymentsTransfers: @escaping PaymentsTransfersFactory.MakePaymentsTransfers
     ) -> RootViewModel {
         
         let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
@@ -891,6 +889,18 @@ private extension RootViewModelFactory {
             scheduler: schedulers.main
         )
         
+        func makeCollateralLoanLandingFactory(
+            getPDFDocument: @escaping CollateralLoanLandingFactory.GetPDFDocument
+        ) -> CollateralLoanLandingFactory {
+    
+            .init(
+                makeImageViewWithMD5Hash: { self.infra.imageCache.makeIconView(for: .md5Hash(.init($0))) },
+                makeImageViewWithURL: { self.infra.generalImageCache.makeIconView(for: .image($0.addingPercentEncoding())) },
+                getPDFDocument: getPDFDocument,
+                formatCurrency: { self.model.amountFormatted(amount: Double($0), currencyCode: "RUB", style: .normal) }
+            )
+        }
+
         let paymentsTransfersViewModel = PaymentsTransfersViewModel(
             model: model,
             makeFlowManager: makePaymentsTransfersFlowManager,

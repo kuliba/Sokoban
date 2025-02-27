@@ -16,6 +16,7 @@ import LandingUIComponent
 import PaymentSticker
 import SberQR
 import SwiftUI
+import UIPrimitives
 import VortexTools
 
 class MainViewModel: ObservableObject, Resetable {
@@ -190,6 +191,28 @@ class MainViewModel: ObservableObject, Resetable {
         }
     }
         
+    func makeOperationDetailInfoViewModel(
+        payload: CollateralLandingApplicationSaveConsentsResult,
+        makeImageViewWithMD5Hash: @escaping (String) -> UIPrimitives.AsyncImage
+    ) -> OperationDetailInfoViewModel {
+        
+        OperationDetailInfoViewModel(
+            model: model,
+            logo: nil,
+            cells: payload.makeCells(
+                config: .default,
+                makeImageViewWithMD5Hash: makeImageViewWithMD5Hash,
+                formatCurrency: { [weak self] in
+                    self?.model.amountFormatted(
+                        amount: Double($0),
+                        currencyCode: "RUB",
+                        style: .normal
+                    )}
+            ),
+            dismissAction: {}
+        )
+    }
+
     // TODO: need delete
     
     private func getSticker() -> AdditionalProductViewModel? {

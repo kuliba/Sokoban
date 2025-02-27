@@ -271,30 +271,11 @@ struct MainView<NavigationOperationView: View>: View {
             servicePicker(flowModel: node.model)
             
         case let .collateralLoanLanding(binder):
-            let factory = viewModel.makeCollateralLoanFactory()
-            
-            viewFactory.components.makeCollateralLoanShowcaseWrapperView(
-                binder: binder,
-                factory: viewModel.makeCollateralLoanFactory(),
-                goToMain: viewModel.resetDestination
-            )
-                .navigationBarWithBack(
-                    title: "Кредиты",
-                    dismiss: viewModel.resetDestination
-                )
-                .edgesIgnoringSafeArea(.bottom)
+            makeCollateralLoanShowcaseWrapperView(binder: binder)
 
         case let .collateralLoanLandingProduct(binder):
-            viewFactory.components.makeCollateralLoanWrapperView(
-                binder: binder,
-                factory: viewModel.makeCollateralLoanFactory(), 
-                goToMain: viewModel.resetDestination
-            )
-                .navigationBarWithBack(
-                    title: "",
-                    dismiss: viewModel.resetDestination
-                )
- 
+            makeCollateralLoanWrapperView(binder: binder)
+            
         case .orderCard:
             viewFactory.components.makeOrderCardView()
         }
@@ -423,6 +404,51 @@ private extension MainView {
     }
     
     private typealias Config = BannerPickerSectionStateItemViewConfig
+    
+    private func makeCollateralLoanShowcaseWrapperView(binder: GetShowcaseDomain.Binder) -> some View {
+        
+        let factory = viewModel.makeCollateralLoanFactory()
+        
+        return viewFactory.components.makeCollateralLoanShowcaseWrapperView(
+            binder: binder,
+            goToMain: viewModel.resetDestination,
+            getPDFDocument: viewModel.getPDFDocument,
+            makeOperationDetailInfoViewModel: {
+                viewModel.makeOperationDetailInfoViewModel(
+                    payload: $0,
+                    makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash
+                )
+            },
+            makeCollateralLoanLandingFactory: viewModel.makeCollateralLoanLandingFactory
+        )
+        .navigationBarWithBack(
+            title: "Кредиты",
+            dismiss: viewModel.resetDestination
+        )
+        .edgesIgnoringSafeArea(.bottom)
+    }
+    
+    private func makeCollateralLoanWrapperView(binder: GetCollateralLandingDomain.Binder) -> some View {
+        
+        let factory = viewModel.makeCollateralLoanFactory()
+        
+        return viewFactory.components.makeCollateralLoanWrapperView(
+            binder: binder,
+            getPDFDocument: viewModel.getPDFDocument,
+            goToMain: viewModel.resetDestination,
+            makeOperationDetailInfoViewModel: {
+                viewModel.makeOperationDetailInfoViewModel(
+                    payload: $0,
+                    makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash
+                )
+            },
+            makeCollateralLoanLandingFactory: viewModel.makeCollateralLoanLandingFactory
+        )
+        .navigationBarWithBack(
+            title: "",
+            dismiss: viewModel.resetDestination
+        )
+    }
 }
 
 // MARK: - payment provider & service pickers

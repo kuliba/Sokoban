@@ -15,63 +15,42 @@ extension ViewComponents {
     
     func makeCollateralLoanWrapperView(
         binder: GetCollateralLandingDomain.Binder,
-        factory: CollateralLoanLandingFactory,
-        goToMain: @escaping () -> Void
+        getPDFDocument: @escaping GetPDFDocument,
+        goToMain: @escaping () -> Void,
+        makeOperationDetailInfoViewModel: @escaping MakeDetailsViewModel,
+        makeCollateralLoanLandingFactory: @escaping MakeCollateralLoanLandingFactory
     ) -> CollateralLoanLandingWrapperView {
         
         .init(
             binder: binder,
-            factory: factory,
+            factory: makeCollateralLoanLandingFactory(getPDFDocument),
             config: .default,
-            goToMain: goToMain
+            goToMain: goToMain,
+            makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel
         )
     }
-        
+    
     func makeCollateralLoanShowcaseWrapperView(
         binder: GetShowcaseDomain.Binder,
-        factory: CollateralLoanLandingFactory,
-        goToMain: @escaping () -> Void
+        goToMain: @escaping () -> Void,
+        getPDFDocument: @escaping GetPDFDocument,
+        makeOperationDetailInfoViewModel: @escaping MakeDetailsViewModel,
+        makeCollateralLoanLandingFactory: @escaping MakeCollateralLoanLandingFactory
     ) -> CollateralLoanShowcaseWrapperView {
         
         .init(
             binder: binder,
-            factory: factory,
+            factory: makeCollateralLoanLandingFactory(getPDFDocument),
             config: .default,
-            goToMain: goToMain
-//            makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel
+            goToMain: goToMain,
+            makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel
         )
     }
-
-//    func makeCollateralLoanShowcaseWrapperView(
-//        binder: GetShowcaseDomain.Binder,
-//        getPDFDocument: @escaping CollateralLoanLandingFactory.GetPDFDocument,
-//        goToMain: @escaping () -> Void
-//    ) -> CollateralLoanShowcaseWrapperView {
-//        
-//        .init(
-//            binder: binder,
-//            factory: makeCollateralLoanLandingFactory(getPDFDocument),
-//            config: .default,
-//            goToMain: goToMain,
-//            makeOperationDetailInfoViewModel:
-//        )
-//    }
+    
+    typealias GetPDFDocument = GetCollateralLandingFactory.GetPDFDocument
+    typealias MakeDetailsViewModel = CreateDraftCollateralLoanApplicationWrapperView.MakeOperationDetailInfoViewModel
+    typealias MakeCollateralLoanLandingFactory = (@escaping GetPDFDocument) -> CollateralLoanLandingFactory
 }
-
-//    func makeCollateralLoanWrapperView(
-//        binder: GetCollateralLandingDomain.Binder,
-//        getPDFDocument: @escaping CollateralLoanLandingFactory.GetPDFDocument,
-//        goToMain: @escaping () -> Void
-//    ) -> CollateralLoanLandingWrapperView {
-//
-//        .init(
-//            binder: binder,
-//            factory: makeCollateralLoanLandingFactory(getPDFDocument),
-//            config: .default,
-//            goToMain: goToMain,
-//            makeOperationDetailInfoViewModel:
-//        )
-//    }
 
 extension GetCollateralLandingConfig {
 

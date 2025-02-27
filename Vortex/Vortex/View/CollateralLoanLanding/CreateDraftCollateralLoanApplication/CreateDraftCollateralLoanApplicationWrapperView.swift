@@ -14,6 +14,7 @@ import OTPInputComponent
 import RemoteServices
 import RxViewModel
 import SwiftUI
+import PaymentCompletionUI
 
 struct CreateDraftCollateralLoanApplicationWrapperView: View {
     
@@ -23,7 +24,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     let config: Config
     let factory: Factory
     let goToMain: () -> Void
-//    let makeOperationDetailInfoViewModel: MakeOperationDetailInfoViewModel
+    let makeOperationDetailInfoViewModel: MakeOperationDetailInfoViewModel
     
     var body: some View {
         
@@ -129,14 +130,28 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         cover: CreateDraftCollateralLoanApplicationDomain.Navigation.Cover
     ) -> some View {
         
-        PaymentCompleteView(
-            state: makePaymentCompleteState(from: cover),
-            goToMain: goToMain,
-            repeat: {},
-            factory: makePaymentCompleteViewFactory(),
-            config: .collateralLoanLanding
-        )
-    }
+        switch cover {
+         case let .success(saveConsentsResult):
+             CreateDraftCollateralLoanApplicationCompleteView(
+                 state: PaymentCompletion.Status.completed,
+                 action: goToMain,
+                 makeIconView: factory.makeImageViewWithMD5Hash,
+                 pdfDocumentButton: makePDFDocumentButton(
+                     payload: saveConsentsResult.payload,
+                     getPDFDocument: factory.getPDFDocument
+                 ),
+                 detailsButton: makeDetailButton(payload: saveConsentsResult)
+             )
+             
+         case .failure:
+             PaymentCompleteView(
+                state: makePaymentCompleteState(from: cover),
+                 goToMain: goToMain,
+                 repeat: {},
+                 factory: makePaymentCompleteViewFactory(),
+                 config: .collateralLoanLanding
+             )
+         }    }
     
     private func makePaymentCompleteState(
         from cover: CreateDraftCollateralLoanApplicationDomain.Navigation.Cover
@@ -183,7 +198,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     func makeDetailButton(payload: CollateralLandingApplicationSaveConsentsResult) -> CollateralLoanLandingDetailsButton {
         
         return .init(
-            viewModel: makeOperationDetailInfoViewModel,
+            viewModel: makeOperationDetailInfoViewModel(payload),
             payload: payload
         )
     }
@@ -238,7 +253,7 @@ extension CreateDraftCollateralLoanApplicationWrapperView {
     typealias MakeAnywayElementModelMapper = () -> AnywayElementModelMapper
     typealias Confirmation = CreateDraftCollateralLoanApplicationDomain.Confirmation
     public typealias Payload = CollateralLandingApplicationSaveConsentsResult
-    public typealias MakeOperationDetailInfoViewModel = (Payload, @escaping () -> Void) -> OperationDetailInfoViewModel
+    public typealias MakeOperationDetailInfoViewModel = (Payload) -> OperationDetailInfoViewModel
 }
 
 // MARK: UI mapping

@@ -22,7 +22,7 @@ struct CollateralLoanShowcaseWrapperView: View {
     let factory: Factory
     let config: Config
     let goToMain: () -> Void
-//    let makeOperationDetailInfoViewModel: MakeOperationDetailInfoViewModel
+    let makeOperationDetailInfoViewModel: MakeOperationDetailInfoViewModel
 
     var body: some View {
         
@@ -93,8 +93,8 @@ struct CollateralLoanShowcaseWrapperView: View {
                     formatCurrency: factory.formatCurrency
                 ),
                 config: config,
-                goToMain: goToMain
-//                makeOperationDetailInfoViewModel: factory.makeOperationDetailInfoViewModel
+                goToMain: goToMain,
+                makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel
             )
             .navigationBarWithBack(title: "") { binder.flow.event(.dismiss) }
         }
@@ -105,7 +105,7 @@ struct CollateralLoanShowcaseWrapperView: View {
     typealias SaveConsentsResult = Domain.SaveConsentsResult
     typealias Factory = CollateralLoanLandingFactory
     typealias Payload = CollateralLandingApplicationSaveConsentsResult
-    typealias MakeOperationDetailInfoViewModel = (Payload, @escaping () -> Void) -> OperationDetailInfoViewModel
+    typealias MakeOperationDetailInfoViewModel = (Payload) -> OperationDetailInfoViewModel
 }
 
 extension GetShowcaseDomain.Navigation: Identifiable {

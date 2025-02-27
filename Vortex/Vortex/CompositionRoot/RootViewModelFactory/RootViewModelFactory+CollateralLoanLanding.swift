@@ -9,32 +9,6 @@ import UIPrimitives
 
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 
-extension RootViewModelFactory {
-    
-    func makeOperationDetailInfoViewModel(
-        payload: CollateralLandingApplicationSaveConsentsResult,
-        makeImageViewWithMD5Hash: @escaping (String) -> UIPrimitives.AsyncImage,
-        dismiss: @escaping () -> Void
-    ) -> OperationDetailInfoViewModel {
-        
-        OperationDetailInfoViewModel(
-            model: model,
-            logo: nil,
-            cells: payload.makeCells(
-                config: .default,
-                makeImageViewWithMD5Hash: makeImageViewWithMD5Hash,
-                formatCurrency: { [weak self] in
-                    self?.model.amountFormatted(
-                        amount: Double($0),
-                        currencyCode: "RUB",
-                        style: .normal
-                    )}
-            ),
-            dismissAction: dismiss
-        )
-    }
-}
-
 extension CollateralLandingApplicationSaveConsentsResult {
     
     func makeCells(

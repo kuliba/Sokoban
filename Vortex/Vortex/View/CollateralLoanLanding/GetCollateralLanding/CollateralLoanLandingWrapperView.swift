@@ -20,7 +20,7 @@ struct CollateralLoanLandingWrapperView: View {
     let factory: Factory
     let config: GetCollateralLandingConfig
     let goToMain: () -> Void
-//    let makeOperationDetailInfoViewModel: MakeOperationDetailInfoViewModel
+    let makeOperationDetailInfoViewModel: MakeOperationDetailInfoViewModel
 
     var body: some View {
         
@@ -118,8 +118,8 @@ struct CollateralLoanLandingWrapperView: View {
                     getPDFDocument: factory.getPDFDocument,
                     formatCurrency: factory.formatCurrency
                 ),
-                goToMain: goToMain
-//                makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel
+                goToMain: goToMain,
+                makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel
             )
             .navigationBarWithBack(title: "Оформление заявки", dismiss: dissmiss)
         }
@@ -196,7 +196,7 @@ extension CollateralLoanLandingWrapperView {
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
     typealias SaveConsentsResult = Domain.SaveConsentsResult
     typealias Payload = CollateralLandingApplicationSaveConsentsResult
-    typealias MakeOperationDetailInfoViewModel = (Payload, @escaping () -> Void) -> OperationDetailInfoViewModel
+    typealias MakeOperationDetailInfoViewModel = (Payload) -> OperationDetailInfoViewModel
 
     public typealias makeImageViewWithMD5Hash = (String) -> UIPrimitives.AsyncImage
     public typealias makeImageViewWithURL = (String) -> UIPrimitives.AsyncImage
