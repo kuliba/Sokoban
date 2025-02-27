@@ -34,7 +34,6 @@ let package = Package(
         .collateralLoanLandingSaveConsentsBackend,
         .orderCardLandingBackend,
         .createCardApplicationBackend,
-        .orderCardLandingUI,
         // Infra
         .ephemeralStores,
         .fetcher,
@@ -70,6 +69,7 @@ let package = Package(
         .cvvPINServices,
         .vortexCrypto,
         .genericRemoteService,
+        .getOperationDetailService,
         .getProcessingSessionCodeService,
         .getInfoRepeatPaymentService,
         .serverAgent,
@@ -105,6 +105,7 @@ let package = Package(
         .uiKitHelpers,
         .uiPrimitives,
         .userAccountNavigationComponent,
+        .listLandingComponent,
         // UI Components
         .bottomSheetComponent,
         .carouselComponent,
@@ -177,8 +178,6 @@ let package = Package(
         .orderCardLandingBackend,
         .orderCardLandingBackendTests,
         .createCardApplicationBackend,
-        .orderCardLandingUI,
-        .orderCardLandingUITests,
         // Infra
         .ephemeralStores,
         .ephemeralStoresTests,
@@ -254,6 +253,8 @@ let package = Package(
         .vortexCryptoTests,
         .genericRemoteService,
         .genericRemoteServiceTests,
+        .getOperationDetailService,
+        .getOperationDetailServiceTests,
         .getProcessingSessionCodeService,
         .getProcessingSessionCodeServiceTests,
         .getInfoRepeatPaymentService,
@@ -331,6 +332,7 @@ let package = Package(
         .uiPrimitivesTests,
         .userAccountNavigationComponent,
         .userAccountNavigationComponentTests,
+        .listLandingComponent,
         // UI Components
         .amountComponent,
         .amountComponentTests,
@@ -523,13 +525,6 @@ private extension Product {
         name: .collateralLoanLandingGetCollateralLandingUI,
         targets: [
             .collateralLoanLandingGetCollateralLandingUI
-        ]
-    )
-    
-    static let orderCardLandingUI = library(
-        name: .orderCardLandingUI,
-        targets: [
-            .orderCardLandingUI
         ]
     )
     
@@ -750,6 +745,13 @@ private extension Product {
         targets: [
             .userAccountNavigationComponent,
             .manageSubscriptionsUI
+        ]
+    )
+
+    static let listLandingComponent = library(
+        name: .listLandingComponent,
+        targets: [
+            .savingsAccount
         ]
     )
 
@@ -1054,6 +1056,13 @@ private extension Product {
         name: .vortexCrypto,
         targets: [
             .vortexCrypto,
+        ]
+    )
+    
+    static let getOperationDetailService = library(
+        name: .getOperationDetailService,
+        targets: [
+            .getOperationDetailService,
         ]
     )
     
@@ -1526,7 +1535,6 @@ private extension Target {
             .collateralLoanLandingGetConsentsBackend,
             .inputComponent,
             .linkableText,
-            .collateralLoanLandingGetShowcaseUI,
             .optionalSelectorComponent,
             .otpInputComponent,
             .paymentComponents,
@@ -1610,25 +1618,6 @@ private extension Target {
             .customDump
         ],
         path: "Tests/Landing/\(String.collateralLoanTests)/\(String.GetCollateralLanding)Tests/UI"
-    )
-
-    static let orderCardLandingUI = target(
-        name: .orderCardLandingUI,
-        dependencies: [
-            .sharedConfigs,
-            .dropDownTextListComponent,
-            .headerLandingComponent
-        ],
-        path: "Sources/Landing/\(String.orderCardLandingUI)"
-    )
-    
-    static let orderCardLandingUITests = testTarget(
-        name: .orderCardLandingUITests,
-        dependencies: [
-            .orderCardLandingUI,
-            .customDump
-        ],
-        path: "Tests/Landing/\(String.orderCardLandingUITests)"
     )
     
     static let collateralLoanLandingSaveConsentsBackend = target(
@@ -1741,7 +1730,8 @@ private extension Target {
         dependencies: [
             .vortexTools,
         ],
-        path: "Sources/Infra/\(String.stateMachines)"
+        path: "Sources/Infra/\(String.stateMachines)",
+        exclude: ["README.md"]
     )
     static let stateMachinesTests = testTarget(
         name: .stateMachinesTests,
@@ -2213,6 +2203,7 @@ private extension Target {
     static let cardStatementAPI = target(
         name: .cardStatementAPI,
         dependencies: [
+            .remoteServices,
             .tagged,
         ],
         path: "Sources/\(String.cardStatementAPI)"
@@ -2418,6 +2409,26 @@ private extension Target {
             .genericRemoteService,
         ],
         path: "Tests/Services/\(String.genericRemoteServiceTests)"
+    )
+    
+    static let getOperationDetailService = target(
+        name: .getOperationDetailService,
+        dependencies: [
+            .remoteServices
+        ],
+        path: "Sources/Services/\(String.getOperationDetailService)"
+    )
+    
+    static let getOperationDetailServiceTests = testTarget(
+        name: .getOperationDetailServiceTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .getOperationDetailService,
+            .remoteServices,
+        ],
+        path: "Tests/Services/\(String.getOperationDetailService)Tests"
     )
     
     static let getProcessingSessionCodeService = target(
@@ -2883,7 +2894,8 @@ private extension Target {
             // internal modules
             .rxViewModel,
         ],
-        path: "Sources/UI/\(String.flowCore)"
+        path: "Sources/UI/\(String.flowCore)",
+        exclude: ["README.md"]
     )
     static let flowCoreTests = testTarget(
         name: .flowCoreTests,
@@ -3012,6 +3024,7 @@ private extension Target {
         dependencies: [
             // internal packages
             .dropDownTextListComponent,
+            .listLandingComponent,
             .linkableText,
             .loadableState,
             .paymentComponents,
@@ -3176,6 +3189,15 @@ private extension Target {
         path: "Tests/UI/\(String.userAccountNavigationComponentTests)"
     )
     
+    static let listLandingComponent = target(
+        name: .listLandingComponent,
+        dependencies: [
+            .sharedConfigs,
+            .uiPrimitives
+        ],
+        path: "Sources/UI/Components/\(String.listLandingComponent)"
+    )
+
     // MARK: - UI Components
     
     static let amountComponent = target(
@@ -3691,10 +3713,6 @@ private extension Target.Dependency {
     static let collateralLoanLandingGetCollateralLandingUI = byName(
         name: .collateralLoanLandingGetCollateralLandingUI
     )
-
-    static let orderCardLandingUI = byName(
-        name: .orderCardLandingUI
-    )
     
     static let collateralLoanLandingGetCollateralLandingBackend = byName(
         name: .collateralLoanLandingGetCollateralLandingBackend
@@ -3822,6 +3840,10 @@ private extension Target.Dependency {
         name: .userAccountNavigationComponent
     )
 
+    static let listLandingComponent = byName(
+        name: .listLandingComponent
+    )
+    
     static let orderCard = byName(
         name: .orderCard
     )
@@ -4076,6 +4098,10 @@ private extension Target.Dependency {
         name: .genericRemoteService
     )
     
+    static let getOperationDetailService = byName(
+        name: .getOperationDetailService
+    )
+    
     static let getProcessingSessionCodeService = byName(
         name: .getProcessingSessionCodeService
     )
@@ -4212,9 +4238,6 @@ private extension String {
     static let collateralLoanLandingGetCollateralLandingUI = "CollateralLoanLandingGetCollateralLandingUI"
     static let collateralLoanLandingGetCollateralLandingUITests = "CollateralLoanLandingGetCollateralLandingUITests"
     
-    static let orderCardLandingUI = "OrderCardLandingUI"
-    static let orderCardLandingUITests = "OrderCardLandingUITests"
-    
     static let SaveConsents = "SaveConsents"
     static let collateralLoanLandingSaveConsentsBackend = "CollateralLoanLandingSaveConsentsBackend"
     static let collateralLoanLandingSaveConsentsBackendTests = "CollateralLoanLandingSaveConsentsBackendTests"
@@ -4223,6 +4246,7 @@ private extension String {
     static let orderCardLandingBackendTests = "OrderCardLandingBackendTests"
     
     static let createCardApplicationBackend = "CreateCardApplication"
+    
     // MARK: - UI
     
     static let activateSlider = "ActivateSlider"
@@ -4300,6 +4324,7 @@ private extension String {
     static let userAccountNavigationComponent = "UserAccountNavigationComponent"
     static let userAccountNavigationComponentTests = "UserAccountNavigationComponentTests"
 
+    static let listLandingComponent = "ListLandingComponent"
     // MARK: - UI Components
     
     static let amountComponent = "AmountComponent"
@@ -4475,6 +4500,9 @@ private extension String {
     
     static let genericRemoteService = "GenericRemoteService"
     static let genericRemoteServiceTests = "GenericRemoteServiceTests"
+    
+    static let getOperationDetailService = "GetOperationDetailService"
+    static let getOperationDetailServiceTests = "GetOperationDetailServiceTests"
     
     static let getProcessingSessionCodeService = "GetProcessingSessionCodeService"
     static let getProcessingSessionCodeServiceTests = "GetProcessingSessionCodeServiceTests"

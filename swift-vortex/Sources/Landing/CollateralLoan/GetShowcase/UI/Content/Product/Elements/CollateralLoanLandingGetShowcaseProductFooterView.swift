@@ -26,7 +26,12 @@ struct CollateralLoanLandingGetShowcaseProductFooterView: View {
                     config.footerView.icon
                         .resizable()
                         .frame(width: 24, height: 24)
-                    ("Подробные условия").text(withConfig: config.footerView.textConfig)
+                    ("Подробные условия").text(
+                        withConfig: .init(
+                            textFont: config.footerView.textConfig.textFont,
+                            textColor: theme.foregroundColor
+                        )
+                    )
                         .multilineTextAlignment(.leading)
                         .lineLimit(2)
                 }

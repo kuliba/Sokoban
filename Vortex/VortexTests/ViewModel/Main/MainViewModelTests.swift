@@ -116,7 +116,9 @@ final class MainViewModelTests: XCTestCase {
                 makeCreateDraftCollateralLoanApplicationBinder: { _ in .preview }
             ),
             viewModelsFactory: .preview,
-            makeOpenNewProductButtons: { _ in [] }
+            makeOpenNewProductButtons: { _ in [] },
+            getPDFDocument: { _,_  in },
+            makeCollateralLoanLandingFactory: { _ in .preview }
         )
         
         sut.orderSticker()
@@ -740,6 +742,8 @@ final class MainViewModelTests: XCTestCase {
             ),
             viewModelsFactory: viewModelsFactory,
             makeOpenNewProductButtons: { _ in buttons },
+            getPDFDocument: { _,_ in },
+            makeCollateralLoanLandingFactory: { _ in .preview },
             scheduler: scheduler
         )
         
@@ -808,6 +812,8 @@ final class MainViewModelTests: XCTestCase {
             ),
             viewModelsFactory: viewModelsFactory,
             makeOpenNewProductButtons: { _ in buttons },
+            getPDFDocument: { _,_ in },
+            makeCollateralLoanLandingFactory: { _ in .preview },
             scheduler: scheduler
         )
         
@@ -892,6 +898,8 @@ final class MainViewModelTests: XCTestCase {
             ),
             viewModelsFactory: .preview,
             makeOpenNewProductButtons: { _ in buttons },
+            getPDFDocument: { _,_ in },
+            makeCollateralLoanLandingFactory: { _ in .preview },
             scheduler: scheduler
         )
         
@@ -1013,7 +1021,7 @@ private extension GetCollateralLandingDomain.Binder {
 private extension GetCollateralLandingDomain.Content {
     
     static let preview = GetCollateralLandingDomain.Content(
-        initialState: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"),
+        initialState: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE", formatCurrency: { _ in "" }),
         reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }
     )
@@ -1069,7 +1077,7 @@ private extension CreateDraftCollateralLoanApplicationDomain.Binder {
 private extension CreateDraftCollateralLoanApplicationDomain.Content {
     
     static let preview = CreateDraftCollateralLoanApplicationDomain.Content(
-        initialState: .init(application: .preview),
+        initialState: .init(application: .preview, formatCurrency: { _ in "" }),
         reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }
     )

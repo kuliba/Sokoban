@@ -153,9 +153,7 @@ extension RootViewFactoryComposer {
             components: makeViewComponents(rootEvent: rootEvent),
             paymentsViewFactory: makePaymentsViewFactory(),
             makeTemplateButtonWrapperView: makeTemplateButtonWrapperView,
-            makeUpdatingUserAccountButtonLabel: makeUpdatingUserAccountButtonLabel, 
-            makeCollateralLoanShowcaseWrapperView: makeCollateralLoanShowcaseWrapperView,
-            makeCollateralLoanWrapperView: makeCollateralLoanWrapperView
+            makeUpdatingUserAccountButtonLabel: makeUpdatingUserAccountButtonLabel
         )
     }
     
@@ -205,7 +203,7 @@ extension RootViewFactoryComposer {
     }
     
     func makeImageViewFactory(
-    ) -> SavingsAccount.ImageViewFactory {
+    ) -> ListImageViewFactory {
         
         .init(
             makeIconView: makeIconView,
@@ -235,9 +233,7 @@ private extension RootViewFactoryComposer {
                 makePaymentCompleteView: makePaymentCompleteView,
                 makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
                 makeUserAccountView: makeUserAccountView,
-                components: makeViewComponents(rootEvent: rootEvent),
-                makeCollateralLoanShowcaseWrapperView: makeCollateralLoanShowcaseWrapperView,
-                makeCollateralLoanWrapperView: makeCollateralLoanWrapperView
+                components: makeViewComponents(rootEvent: rootEvent)
             ),
             productProfileViewFactory: .init(
                 makeActivateSliderView: ActivateSliderStateWrapperView.init,
@@ -785,7 +781,7 @@ private extension RootViewFactoryComposer {
             viewFactory: .init(makeQRFailedView: makeQRFailedView)
         )
     }
-        
+    
     func makePaymentsSuccessView(
         viewModel: PaymentsSuccessViewModel
     ) -> PaymentsSuccessView {
@@ -844,9 +840,7 @@ private extension RootViewFactoryComposer {
             makePaymentCompleteView: makePaymentCompleteView(result:goToMain:),
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView(viewModel:),
             makeUserAccountView: makeUserAccountView(viewModel:),
-            components: makeViewComponents(rootEvent: rootEvent),
-            makeCollateralLoanShowcaseWrapperView: makeCollateralLoanShowcaseWrapperView,
-            makeCollateralLoanWrapperView: makeCollateralLoanWrapperView
+            components: makeViewComponents(rootEvent: rootEvent)
         )
     }
     
@@ -931,7 +925,7 @@ private extension RootViewFactoryComposer {
         
         model.currencyOf(product: product) ?? ""
     }
-        
+    
     func makePaymentCompleteView(
         result: Completed,
         goToMain: @escaping () -> Void
@@ -1031,72 +1025,6 @@ private extension RootViewFactoryComposer {
                 _ = getDetailService
             }
         }
-    }
-    
-    private func getPDFDocument(
-        payload: RemoteServices.RequestFactory.GetConsentsPayload,
-        completion: @escaping (PDFDocument?) -> Void
-    ) {
-        
-        let getConsents = RemoteService(
-            createRequest: RequestFactory.createGetConsentsRequest(with:),
-            performRequest: httpClient.performRequest(_:completion:),
-            mapResponse: RemoteServices.ResponseMapper.mapGetConsentsResponse(_:_:)
-        )
-        
-        getConsents(payload) { [getConsents] in
-            
-            completion(try? $0.get())
-            _ = getConsents
-        }
-    }
-    
-    func makeCollateralLoanWrapperView(
-        binder: GetCollateralLandingDomain.Binder,
-        goToMain: @escaping () -> Void
-    ) -> CollateralLoanLandingWrapperView {
-
-        let factory = GetCollateralLandingFactory(
-            makeImageViewWithMD5Hash: { self.makeIconView(.md5Hash(.init($0))) },
-            makeImageViewWithURL: { self.makeGeneralIconView(.image($0.addingPercentEncoding())) },
-            getPDFDocument: getPDFDocument
-        )
-        
-        let viewModelFactory = CollateralLoanLandingViewModelFactory(
-            model: model,
-            makeImageViewWithMD5Hash: { self.makeIconView(.md5Hash(.init($0))) }
-        )
-
-        return .init(
-            binder: binder,
-            factory: factory,
-            viewModelFactory: viewModelFactory,
-            goToMain: goToMain
-        )
-    }
-    
-    func makeCollateralLoanShowcaseWrapperView(
-        binder: GetShowcaseDomain.Binder,
-        goToMain: @escaping () -> Void
-    ) -> CollateralLoanShowcaseWrapperView {
-        
-        let factory = CollateralLoanLandingGetShowcaseViewFactory(
-            makeImageViewWithMD5Hash: { self.makeIconView(.md5Hash(.init($0))) },
-            makeImageViewWithURL: { self.makeGeneralIconView(.image($0.addingPercentEncoding())) },
-            getPDFDocument: getPDFDocument
-        )
-        
-        let viewModelFactory = CollateralLoanLandingViewModelFactory(
-            model: model,
-            makeImageViewWithMD5Hash: { self.makeIconView(.md5Hash(.init($0))) }
-        )
-        
-        return .init(
-            binder: binder,
-            factory: factory,
-            viewModelFactory: viewModelFactory,
-            goToMain: goToMain
-        )
     }
 
     private func makeTemplateButtonView(

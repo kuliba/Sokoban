@@ -7,23 +7,27 @@
 
 import Combine
 import SwiftUI
+import CollateralLoanLandingGetShowcaseUI
 
 public struct GetCollateralLandingView: View {
     
     let state: State
     let domainEvent: (DomainEvent) -> Void
     let externalEvent: (ExternalEvent) -> Void
+    let config: Config
     let factory: Factory
 
     public init(
         state: State,
         domainEvent: @escaping (DomainEvent) -> Void,
         externalEvent: @escaping (ExternalEvent) -> Void,
+        config: Config,
         factory: Factory
     ) {
         self.state = state
         self.domainEvent = domainEvent
         self.externalEvent = externalEvent
+        self.config = config
         self.factory = factory
     }
     
@@ -73,13 +77,13 @@ public struct GetCollateralLandingView: View {
         
         VStack {
             
-            HeaderView(config: factory.config)
+            HeaderView(config: config)
             
             product.conditions.nilIfEmpty.map { _ in
                 
                 ConditionsView(
                     product: product,
-                    config: factory.config,
+                    config: config,
                     makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash
                 )
             }
@@ -87,21 +91,21 @@ public struct GetCollateralLandingView: View {
             CalculatorView(
                 state: state,
                 product: product,
-                config: factory.config,
+                config: config,
                 domainEvent: domainEvent,
                 externalEvent: externalEvent
             )
             
             product.faq.nilIfEmpty.map { _ in
 
-                FaqView(product: product, config: factory.config)
+                FaqView(product: product, config: config)
             }
 
             product.documents.nilIfEmpty.map { _ in
 
                 DocumentsView(
                     product: product,
-                    config: factory.config, 
+                    config: config, 
                     externalEvent: externalEvent,
                     factory: factory
                 )
@@ -109,7 +113,7 @@ public struct GetCollateralLandingView: View {
         }
         .background(Color.clear)
         .frame(maxHeight: .infinity, alignment: .top)
-        .padding(.bottom, factory.config.paddings.outerBottom)
+        .padding(.bottom, config.paddings.outerBottom)
         .ignoresSafeArea(edges: .all)
     }
     
@@ -117,7 +121,7 @@ public struct GetCollateralLandingView: View {
         
         FooterView(
             product: product,
-            config: factory.config.footer,
+            config: config.footer,
             state: state,
             externalEvent: externalEvent
         )
@@ -134,6 +138,7 @@ extension GetCollateralLandingView {
     typealias FooterView = GetCollateralLandingFooterView
     typealias Product = GetCollateralLandingProduct
     
+    public typealias Config = GetCollateralLandingConfig
     public typealias Factory = GetCollateralLandingFactory
     public typealias State = GetCollateralLandingDomain.State
     public typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent
@@ -148,12 +153,14 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
         
         GetCollateralLandingView(
             state: .init(
-                landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"
+                landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
+                formatCurrency: { _ in "" }
             ),
             domainEvent: { print($0) },
             externalEvent: {
                 print($0)
             },
+            config: .preview,
             factory: Factory.preview
         )
         .previewDisplayName("Product with calculator")
@@ -163,12 +170,14 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
         GetCollateralLandingView(
             state: .init(
                 landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
-                bottomSheet: periodBottomSheet
+                bottomSheet: periodBottomSheet,
+                formatCurrency: { _ in "" }
             ),
             domainEvent: { print($0) },
             externalEvent: {
                 print($0)
             },
+            config: .preview,
             factory: Factory.preview
         )
         .previewDisplayName("Product period selector")
@@ -178,12 +187,14 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
         GetCollateralLandingView(
             state: .init(
                 landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
-                bottomSheet: collateralBottomSheet
+                bottomSheet: collateralBottomSheet,
+                formatCurrency: { _ in "" }
             ),
             domainEvent: {
                 print($0)
             },
             externalEvent: { print($0) },
+            config: .preview,
             factory: Factory.preview
         )
         .previewDisplayName("Product collateral selector")

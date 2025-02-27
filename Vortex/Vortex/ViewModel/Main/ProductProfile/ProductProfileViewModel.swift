@@ -6,21 +6,22 @@
 //
 
 import ActivateSlider
+import CalendarUI
 import CardUI
 import Combine
-import VortexTools
 import Foundation
+import GetInfoRepeatPaymentService
+import LandingUIComponent
+import ManageSubscriptionsUI
 import OperatorsListComponents
 import PDFKit
 import PinCodeUI
+import RxViewModel
+import SavingsAccount
 import SwiftUI
 import Tagged
-import RxViewModel
-import LandingUIComponent
 import UIPrimitives
-import ManageSubscriptionsUI
-import CalendarUI
-import GetInfoRepeatPaymentService
+import VortexTools
 
 class ProductProfileViewModel: ObservableObject {
     
@@ -28,7 +29,7 @@ class ProductProfileViewModel: ObservableObject {
     typealias ResultShowCVV = Swift.Result<CardInfo.CVV, Error>
     typealias CompletionShowCVV = (ResultShowCVV) -> Void
     typealias ShowCVV = (CardDomain.CardId, @escaping CompletionShowCVV) -> Void
-
+    
     let action: PassthroughSubject<Action, Never> = .init()
     
     let navigationBar: NavigationBarView.ViewModel
@@ -39,10 +40,11 @@ class ProductProfileViewModel: ObservableObject {
     @Published var payment: PaymentsViewModel?
     @Published var operationDetail: OperationDetailViewModel?
     @Published var accentColor: Color
+    @Published var accountInfo: SavingsAccountDetailsState?
     
     @Published var historyState: HistoryState?
     @Published var filterState: FilterState
-
+    
     let filterHistoryRequest: (Date, Date, String?, [String]) -> Void
     
     @Published var bottomSheet: BottomSheet?
@@ -78,13 +80,13 @@ class ProductProfileViewModel: ObservableObject {
     private let productProfileViewModelFactory: ProductProfileViewModelFactory
     
     private let productNavigationStateManager: ProductProfileFlowManager
-
+    
     private var bindings = Set<AnyCancellable>()
     
     private var productData: ProductData? {
         model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId })
     }
-        
+    
     private let depositResponseSubject = CurrentValueSubject<Bool, Never>(false)
     private let bottomSheetSubject = PassthroughSubject<BottomSheet?, Never>()
     private let alertSubject = PassthroughSubject<Alert.ViewModel?, Never>()
@@ -92,7 +94,7 @@ class ProductProfileViewModel: ObservableObject {
     private let filterSubject = PassthroughSubject<FilterState, Never>()
     private let paymentSubject = PassthroughSubject<PaymentsViewModel?, Never>()
     private let scheduler: AnySchedulerOfDispatchQueue
-
+    
     init(
         navigationBar: NavigationBarView.ViewModel,
         product: ProductProfileCardView.ViewModel,
@@ -149,30 +151,30 @@ class ProductProfileViewModel: ObservableObject {
         
         // TODO: add removeDuplicates
         self.bottomSheetSubject
-            //.removeDuplicates()
+        //.removeDuplicates()
             .receive(on: scheduler)
             .assign(to: &$bottomSheet)
         
         self.alertSubject
-            //.removeDuplicates()
+        //.removeDuplicates()
             .receive(on: scheduler)
             .assign(to: &$alert)
         
         self.historySubject
-            //.removeDuplicates()
+        //.removeDuplicates()
             .receive(on: scheduler)
             .assign(to: &$historyState)
-
+        
         self.filterSubject
-            //.removeDuplicates()
+        //.removeDuplicates()
             .receive(on: scheduler)
             .assign(to: &$filterState)
         
         self.paymentSubject
-            //.removeDuplicates()
+        //.removeDuplicates()
             .receive(on: scheduler)
             .assign(to: &$payment)
-
+        
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductProfileViewModel initialized")
     }
     
@@ -253,13 +255,13 @@ class ProductProfileViewModel: ObservableObject {
                     completion: completion)
             },
             event: { [weak self] event in
-                    
+                
                 guard let self else { return }
                 
                 switch event {
                 case let .delayAlert(kind):
                     self.event(.alert(.delayAlert(kind)))
-                 
+                    
                 case let .delayAlertViewModel(alertViewModel):
                     self.event(.alert(.delayAlertViewModel(alertViewModel)))
                     
@@ -286,6 +288,14 @@ class ProductProfileViewModel: ObservableObject {
         bind(buttons: buttons)
         
         bind()
+        
+        productProfileServices.getSavingsAccountInfo(product) { [weak self] accountInfo in
+            
+            DispatchQueue.main.async {
+                
+                self?.accountInfo = accountInfo
+            }
+        }
     }
 }
 
@@ -1091,43 +1101,22 @@ private extension ProductProfileViewModel {
     
     func bind(history: ProductProfileHistoryView.ViewModel?) {
         
-        guard let history = history else { return }
+        guard let history else { return }
         
         history.action
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] action in
+            .compactMap { $0 as? ProductProfileHistoryViewModelAction.DidTapped.Detail }
+            .map(\.statementId)
+            .receive(on: scheduler)
+            .sink { [weak self] in
                 
                 guard let self = self else { return }
                 
-                switch action {
-                case let payload as ProductProfileHistoryViewModelAction.DidTapped.Detail:
-                    
-                    guard let storage = self.model.statements.value[self.product.activeProductId],
-                          let latestStatementData = storage.statements
-                        .filter({ $0.operationId == payload.statementId })
-                        .sorted(by: { ($0.tranDate ?? $0.date) > ($1.tranDate ?? $1.date) })
-                        .first,
-                          latestStatementData.paymentDetailType != .notFinance,
-                          let productData = self.model.products.value.values
-                        .flatMap({ $0 })
-                        .first(where: { $0.id == self.product.activeProductId }) 
-                    else { return }
-                    
-                    let operationDetailViewModel = operationDetailFactory.makeOperationDetailViewModel(
-                        latestStatementData,
-                        productData,
-                        self.model
-                    )
-                    self.bottomSheet = .init(type: .operationDetail(operationDetailViewModel))
-                    
-                    if #unavailable(iOS 14.5) {
-                        self.bind(operationDetailViewModel)
-                    }
-                    
-                default:
-                    break
-                }
-            }.store(in: &bindings)
+                guard let operationDetail = operationDetailFactory.makeOperationDetailViewModel(product.activeProductId, $0)
+                else { return }
+                
+                self.bottomSheet = .init(type: .operationDetail(operationDetail))
+            }
+            .store(in: &bindings)
     }
     
     func bind(detail: ProductProfileDetailView.ViewModel?) {
@@ -1146,37 +1135,6 @@ private extension ProductProfileViewModel {
                     
                     bind(meToMeViewModel)
                     bottomSheet = .init(type: .meToMe(meToMeViewModel))
-                    
-                default:
-                    break
-                }
-                
-            }.store(in: &bindings)
-    }
-    
-    func bind(_ operationDetailViewModel: OperationDetailViewModel) {
-        
-        operationDetailViewModel.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case let payload as OperationDetailViewModelAction.ShowInfo:
-                    self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
-                        
-                        self.bottomSheet = .init(type: .info(payload.viewModel))
-                    }
-                    
-                case let payload as OperationDetailViewModelAction.ShowDocument:
-                    self.action.send(ProductProfileViewModelAction.Close.BottomSheet())
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(700)) {
-                        
-                        self.bottomSheet = .init(type: .printForm(payload.viewModel))
-                    }
-                    
-                case _ as OperationDetailViewModelAction.CloseSheet:
-                    bottomSheet = nil
                     
                 default:
                     break
@@ -1276,13 +1234,10 @@ private extension ProductProfileViewModel {
                             let lastAccountNumber = "*\(accountNumber.suffix(4))"
                             let title = "Закрыть счет"
                             
-                            var message = "Вы действительно хотите закрыть счет \(lastAccountNumber)?"
-                            
-                            if productFrom.balanceValue > 0 {
-                                
-                                message = "\(message)\n\nПри закрытии будет предложено перевести остаток денежных средств на другой счет/карту. Счет будет закрыт после совершения перевода."
-                            }
-                            
+                            let message = "Вы действительно хотите закрыть счет \(lastAccountNumber)?".closeMessage(
+                                isBalanceMoreThanZero: productFrom.balanceValue > 0,
+                                isSavingsAccount: productData?.asAccount?.isSavingAccount == true)
+
                             alert = .init(
                                 title: title,
                                 message: message,
@@ -1775,7 +1730,31 @@ private extension ProductProfileViewModel {
     }
 }
 
-//MARK: - Reducers
+// MARK: - Reducers
+
+extension Model {
+    
+    func latestStatementWithProductData(
+        for productID: ProductData.ID,
+        and statementID: ProductStatementData.ID
+    ) -> (ProductStatementData, ProductData)? {
+        
+        guard let storage = statements.value[productID],
+              let latestStatementData = storage.statements
+            .filter({ $0.operationId == statementID })
+            .sorted(by: { ($0.tranDate ?? $0.date) > ($1.tranDate ?? $1.date) })
+            .first,
+              latestStatementData.paymentDetailType != .notFinance,
+              let productData = products.value.values
+            .flatMap({ $0 })
+            .first(where: { $0.id == productID })
+        else { return nil }
+        
+        return (latestStatementData, productData)
+    }
+}
+
+// MARK: - Reducers
 
 private extension ProductProfileViewModel {
     
@@ -1985,6 +1964,7 @@ private extension ProductProfileViewModel {
             }
             
             return .init(productLoan: productLoan, loanData: loanData, model: model)
+            
             
         default:
             return nil
@@ -2527,14 +2507,14 @@ extension ProductProfileViewModel {
         
         enum Kind {
             
-            case operationDetail(OperationDetailViewModel)
+            case operationDetail(OperationDetail)
             case optionsPannel(ProductProfileOptionsPannelView.ViewModel)
             case optionsPanelNew([PanelButtonDetails])
             case meToMe(PaymentsMeToMeViewModel)
             case meToMeLegacy(MeToMeViewModel)
-            case printForm(PrintFormView.ViewModel)
             case placesMap(PlacesViewModel)
-            case info(OperationDetailInfoViewModel)
+            
+            typealias OperationDetail = OperationDetailFactory.OperationDetail
         }
     }
     
@@ -3360,6 +3340,26 @@ extension Model {
             return Array(Set(statements.map(\.groupName)))
         } else {
             return []
+        }
+    }
+}
+
+private extension String {
+    
+    func closeMessage(
+        isBalanceMoreThanZero: Bool,
+        isSavingsAccount: Bool
+    ) -> Self {
+        
+        if isBalanceMoreThanZero {
+            if isSavingsAccount {
+                return "\(self)\n\nВ случае продолжения проценты за текущий месяц не будут выплачены\n\nПри закрытии будет предложено перевести остаток денежных средств на другой счет/карту. Счет будет закрыт после совершения перевода"
+            } else {
+                return "\(self)\n\nПри закрытии будет предложено перевести остаток денежных средств на другой счет/карту. Счет будет закрыт после совершения перевода."
+            }
+        }
+        else {
+            return self
         }
     }
 }

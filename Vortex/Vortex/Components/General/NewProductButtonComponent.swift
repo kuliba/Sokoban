@@ -11,49 +11,39 @@ import SwiftUI
 
 extension NewProductButton {
     
-    class ViewModel: Identifiable, ObservableObject {
+    class ViewModel: ObservableObject {
         
-        let id: String
-        let icon: Image
-        let title: String
-        @Published var subTitle: String
+        @Published var subTitle: String // used to update deposit rate only
+        
+        let type: OpenProductType
         let tapActionType: TapActionType
+        
+        init(
+            openProductType type: OpenProductType,
+            subTitle: String,
+            action tapActionType: TapActionType
+        ) {
+            self.type = type
+            self.subTitle = subTitle
+            self.tapActionType = tapActionType
+        }
         
         enum TapActionType {
             
             case action(() -> Void)
             case url(URL)
         }
+    }
+}
+
+private extension OpenProductType {
+    
+    // special treatment for deposit product type to update deposit rate
+    var productType: ProductType? {
         
-        init(id: String = UUID().description, icon: Image, title: String, subTitle: String, action: @escaping () -> Void) {
-            
-            self.id = id
-            self.icon = icon
-            self.title = title
-            self.subTitle = subTitle
-            self.tapActionType = .action(action)
-        }
+        guard case .deposit = self else { return nil }
         
-        init(id: String = UUID().description, icon: Image, title: String, subTitle: String, url: URL) {
-            
-            self.id = id
-            self.icon = icon
-            self.title = title
-            self.subTitle = subTitle
-            self.tapActionType = .url(url)
-        }
-        
-        init(
-            openProductType: OpenProductType,
-            subTitle: String,
-            action: TapActionType
-        ) {
-            self.id = openProductType.rawValue
-            self.icon = openProductType.openButtonIcon
-            self.title = openProductType.openButtonTitle
-            self.subTitle = subTitle
-            self.tapActionType = action
-        }
+        return .deposit
     }
 }
 
@@ -87,6 +77,21 @@ struct NewProductButton: View {
             subTitle: viewModel.subTitle
         )
     }
+}
+
+extension NewProductButton.ViewModel {
+    
+    var id: String {
+        
+        // special treatment for deposit product type
+        type.productType?.rawValue ?? type.openButtonTitle
+    }
+}
+
+private extension NewProductButton.ViewModel {
+    
+    var icon: Image { type.openButtonIcon }
+    var title: String { type.openButtonTitle }
 }
 
 struct NewProductButtonLabel: View {
@@ -129,7 +134,6 @@ struct NewProductButtonLabel: View {
     }
 }
 
-
 // MARK: - Preview
 
 struct NewProductButton_Previews: PreviewProvider {
@@ -154,11 +158,11 @@ struct NewProductButton_Previews: PreviewProvider {
 
 extension NewProductButton.ViewModel {
     
-    static let sample =  NewProductButton.ViewModel.init(id: "CARD", icon: .ic24NewCardColor, title: "Карту", subTitle: "62 дня без %", action: {})
+    static let sample =  NewProductButton.ViewModel.init(openProductType: .card, subTitle: "62 дня без %", action: .action({}))
     
-    static let sampleAccount =  NewProductButton.ViewModel.init(id: "ACCOUNT", icon: .ic24FilePluseColor, title: "Счет", subTitle: "Бесплатно", action: {})
+    static let sampleAccount =  NewProductButton.ViewModel.init(openProductType: .account, subTitle: "Бесплатно", action: .action({}))
     
-    static let sampleEmptySubtitle =  NewProductButton.ViewModel.init(id: "CARD", icon: .ic24NewCardColor, title: "Карту", subTitle: "", action: {})
+    static let sampleEmptySubtitle =  NewProductButton.ViewModel.init(openProductType: .card, subTitle: "", action: .action({}))
     
-    static let sampleLongSubtitle =  NewProductButton.ViewModel.init(id: "CARD", icon: .ic24NewCardColor, title: "Карту", subTitle: "13,08 % годовых", action: {})
+    static let sampleLongSubtitle =  NewProductButton.ViewModel.init(openProductType: .card, subTitle: "13,08 % годовых", action: .action({}))
 }

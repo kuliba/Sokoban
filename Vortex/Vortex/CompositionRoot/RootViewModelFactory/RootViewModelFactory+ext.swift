@@ -28,6 +28,7 @@ import SerialComponents
 import SharedAPIInfra
 import SwiftUI
 import VortexTools
+import CollateralLoanLandingGetShowcaseUI
 
 extension RootViewModelFactory {
     
@@ -72,11 +73,7 @@ extension RootViewModelFactory {
         
         let cachelessHTTPClient = model.cachelessAuthorizedHTTPClient()
         
-        if featureFlags.getProductListByTypeV6Flag.isActive {
-            model.getProductsV6 = Services.getProductListByTypeV6(cachelessHTTPClient, logger: logger)
-        } else {
-            model.getProducts = Services.getProductListByType(cachelessHTTPClient, logger: logger)
-        }
+        model.getProductsV7 = Services.getProductListByTypeV7(cachelessHTTPClient, logger: logger)
         
         model.getBannerCatalogListV2 = Services.getBannerCatalogListV2(httpClient, logger: logger)
         
@@ -161,7 +158,8 @@ extension RootViewModelFactory {
             createUserVisibilityProductsSettingsService: userVisibilityProductsSettingsServices,
             createCreateGetSVCardLimits: getSVCardLimitsServices,
             createChangeSVCardLimit: changeSVCardLimitServices,
-            createSVCardLanding: landingService,
+            createSVCardLanding: landingService, 
+            getSavingsAccountInfo: getSavingsAccountInfo,
             repeatPayment: repeatPayment,
             makeSVCardLandingViewModel: makeSVCardLandig,
             makeInformer: { [weak model] in
@@ -324,6 +322,7 @@ extension RootViewModelFactory {
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder,
             makeOpenNewProductButtons: { _ in [] },
+            operationDetailFactory: makeOperationDetailFactory(),
             makeOrderCardViewModel: makeOrderCardViewModel,
             makePaymentsTransfers: { paymentsTransfersSwitcher }
         )
@@ -503,7 +502,7 @@ extension RootViewModelFactory {
                 case .openProduct, .searchByUIN, .standardPayment, .userAccount:
                     return .milliseconds(600)
                     
-                case .orderSavingsAccountResponse:
+                case .savingsAccount:
                     return .milliseconds(100)
                 }
             }
@@ -536,8 +535,8 @@ extension SavingsAccountDomain.ContentState {
     
     var select: SavingsAccountDomain.Select? {
         
-        switch status {
-        case .initiate, .inflight, .loaded:
+        switch state {
+        case .idle, .inflight, .loaded:
             return nil
             
         case let .failure(failure, _):
@@ -650,6 +649,7 @@ extension ProductProfileViewModel {
         makePaymentProviderServicePickerFlowModel: @escaping PaymentsTransfersFactory.MakePaymentProviderServicePickerFlowModel,
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
+        operationDetailFactory: OperationDetailFactory,
         makeOrderCardViewModel: @escaping MakeOrderCardViewModel,
         makePaymentsTransfers: @escaping PaymentsTransfersFactory.MakePaymentsTransfers
     ) -> MakeProductProfileViewModel {
@@ -677,6 +677,7 @@ extension ProductProfileViewModel {
                 makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
                 makeServicePaymentBinder: makeServicePaymentBinder,
                 makeOpenNewProductButtons: makeOpenNewProductButtons,
+                operationDetailFactory: operationDetailFactory,
                 makeOrderCardViewModel: makeOrderCardViewModel,
                 makePaymentsTransfers: makePaymentsTransfers
             )
@@ -700,22 +701,6 @@ extension ProductProfileViewModel {
                 makeTemplates: makeTemplates,
                 makeUtilitiesViewModel: makeUtilitiesViewModel,
                 makePaymentsTransfers: makePaymentsTransfers
-            )
-            
-            let makeOperationDetailViewModel: OperationDetailFactory.MakeOperationDetailViewModel = { productStatementData, productData, model in
-                
-                return .init(
-                    productStatement: productStatementData,
-                    product: productData,
-                    updateFastAll: {
-                        model.action.send(ModelAction.Products.Update.Fast.All())
-                    },
-                    model: model
-                )
-            }
-            
-            let operationDetailFactory = OperationDetailFactory(
-                makeOperationDetailViewModel: makeOperationDetailViewModel
             )
             
             let makeProductProfileViewModelFactory: ProductProfileViewModelFactory = .init(
@@ -897,9 +882,23 @@ private extension RootViewModelFactory {
             ),
             viewModelsFactory: mainViewModelsFactory,
             makeOpenNewProductButtons: makeOpenNewProductButtons,
+            getPDFDocument: getPDFDocument,
+            makeCollateralLoanLandingFactory: makeCollateralLoanLandingFactory,
             scheduler: schedulers.main
         )
         
+        func makeCollateralLoanLandingFactory(
+            getPDFDocument: @escaping CollateralLoanLandingFactory.GetPDFDocument
+        ) -> CollateralLoanLandingFactory {
+    
+            .init(
+                makeImageViewWithMD5Hash: { self.infra.imageCache.makeIconView(for: .md5Hash(.init($0))) },
+                makeImageViewWithURL: { self.infra.generalImageCache.makeIconView(for: .image($0.addingPercentEncoding())) },
+                getPDFDocument: getPDFDocument,
+                formatCurrency: { self.model.amountFormatted(amount: Double($0), currencyCode: "RUB", style: .normal) }
+            )
+        }
+
         let paymentsTransfersViewModel = PaymentsTransfersViewModel(
             model: model,
             makeFlowManager: makePaymentsTransfersFlowManager,

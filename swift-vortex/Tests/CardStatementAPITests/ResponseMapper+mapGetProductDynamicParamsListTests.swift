@@ -5,8 +5,9 @@
 //  Created by Andryusina Nataly on 18.01.2024.
 //
 
-import XCTest
 import CardStatementAPI
+import RemoteServices
+import XCTest
 
 final class ResponseMapper_mapGetProductDynamicParamsListTests: XCTestCase {
     

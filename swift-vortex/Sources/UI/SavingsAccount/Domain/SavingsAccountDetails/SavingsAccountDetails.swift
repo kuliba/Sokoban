@@ -9,10 +9,27 @@ import SwiftUI
 
 public struct SavingsAccountDetails: Equatable {
     
-    let currentInterest: Decimal
-    let minBalance: Decimal
-    let paidInterest: Decimal
-    let progress: CGFloat
+    public let currentInterest: Decimal
+    public let minBalance: Decimal
+    public let paidInterest: Decimal
+    public let progress: CGFloat
+    public let dateNext: String?
 
-    let currencyCode: String
+    public let currencyCode: String
+    
+    public init(
+        currentInterest: Decimal,
+        minBalance: Decimal,
+        paidInterest: Decimal,
+        progress: CGFloat,
+        dateNext: String?,
+        currencyCode: String
+    ) {
+        self.currentInterest = currentInterest
+        self.minBalance = minBalance
+        self.paidInterest = paidInterest
+        self.progress = progress
+        self.dateNext = dateNext
+        self.currencyCode = currencyCode
+    }
 }

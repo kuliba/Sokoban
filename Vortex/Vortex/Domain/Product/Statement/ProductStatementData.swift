@@ -66,63 +66,18 @@ struct ProductStatementData: Identifiable, Equatable, Hashable {
     let tranDate: Date?
     let type: OperationEnvironment
     
-    init(
-        mcc: Int?,
-        accountId: Int?,
-        accountNumber: String,
-        amount: Double,
-        cardTranNumber: String?,
-        city: String?,
-        comment: String,
-        country: String?,
-        currencyCodeNumeric: Int,
-        date: Date,
-        deviceCode: String?,
-        documentAmount: Double?,
-        documentId: Int?,
-        fastPayment: ProductStatementData.FastPayment?,
-        groupName: String,
-        isCancellation: Bool?,
-        md5hash: String,
-        merchantName: String?,
-        merchantNameRus: String?,
-        opCode: Int?,
-        operationId: String,
-        operationType: OperationType,
-        paymentDetailType: ProductStatementData.Kind,
-        svgImage: SVGImageData?,
-        terminalCode: String?,
-        tranDate: Date?,
-        type: OperationEnvironment
-    ) {
-        self.mcc = mcc
-        self.accountId = accountId
-        self.accountNumber = accountNumber
-        self.amount = amount
-        self.cardTranNumber = cardTranNumber
-        self.city = city
-        self.comment = comment
-        self.country = country
-        self.currencyCodeNumeric = currencyCodeNumeric
-        self.date = date
-        self.deviceCode = deviceCode
-        self.documentAmount = documentAmount
-        self.documentId = documentId
-        self.fastPayment = fastPayment
-        self.groupName = groupName
-        self.isCancellation = isCancellation
-        self.md5hash = md5hash
-        self.merchantName = merchantName
-        self.merchantNameRus = merchantNameRus
-        self.opCode = opCode
-        self.operationId = operationId
-        self.operationType = operationType
-        self.paymentDetailType = paymentDetailType
-        self.svgImage = svgImage
-        self.terminalCode = terminalCode
-        self.tranDate = tranDate
-        self.type = type
-    }
+    // V3
+    let discount: String?
+    let transAmm: String?
+    let discountExpiry: String?
+    let dateN: String?
+    let paymentTerm: String?
+    let legalAct: String?
+    let supplierBillID: String?
+    let realPayerFIO: String?
+    let realPayerINN: String?
+    let realPayerKPP: String?
+    let upno: String?
 }
 
 extension ProductStatementData {
@@ -154,7 +109,7 @@ extension ProductStatementData: Codable {
         case accountId = "accountID"
         case documentId = "documentID"
         case accountNumber, amount, cardTranNumber, city, comment, country, currencyCodeNumeric, date, deviceCode, documentAmount, fastPayment, groupName, isCancellation, md5hash, merchantName, merchantNameRus, opCode, operationId, operationType, paymentDetailType, svgImage, terminalCode, tranDate, type
-        
+        case discount, transAmm, discountExpiry, dateN, paymentTerm, legalAct, supplierBillId, realPayerFIO, realPayerINN, realPayerKPP, UPNO
     }
     
     init(from decoder: Decoder) throws {
@@ -197,6 +152,19 @@ extension ProductStatementData: Codable {
         self.paymentDetailType = try container.decode(ProductStatementData.Kind.self, forKey: .paymentDetailType)
         self.svgImage = try container.decodeIfPresent(SVGImageData.self, forKey: .svgImage)
         self.type = try container.decode(OperationEnvironment.self, forKey: .type)
+        
+        // V3
+        self.discount = try container.decodeIfPresent(String.self, forKey: .discount)
+        self.transAmm = try container.decodeIfPresent(String.self, forKey: .transAmm)
+        self.discountExpiry = try container.decodeIfPresent(String.self, forKey: .discountExpiry)
+        self.dateN = try container.decodeIfPresent(String.self, forKey: .dateN)
+        self.paymentTerm = try container.decodeIfPresent(String.self, forKey: .paymentTerm)
+        self.legalAct = try container.decodeIfPresent(String.self, forKey: .legalAct)
+        self.supplierBillID = try container.decodeIfPresent(String.self, forKey: .supplierBillId)
+        self.realPayerFIO = try container.decodeIfPresent(String.self, forKey: .realPayerFIO)
+        self.realPayerINN = try container.decodeIfPresent(String.self, forKey: .realPayerINN)
+        self.realPayerKPP = try container.decodeIfPresent(String.self, forKey: .realPayerKPP)
+        self.upno = try container.decodeIfPresent(String.self, forKey: .UPNO)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -235,6 +203,20 @@ extension ProductStatementData: Codable {
         }
         
         try container.encode(type, forKey: .type)
+
+        // V3
+        try container.encodeIfPresent(merchantName, forKey: .merchantName)
+        try container.encodeIfPresent(discount, forKey: .discount)
+        try container.encodeIfPresent(transAmm, forKey: .transAmm)
+        try container.encodeIfPresent(discountExpiry, forKey: .discountExpiry)
+        try container.encodeIfPresent(dateN, forKey: .dateN)
+        try container.encodeIfPresent(paymentTerm, forKey: .paymentTerm)
+        try container.encodeIfPresent(legalAct, forKey: .legalAct)
+        try container.encodeIfPresent(supplierBillID, forKey: .supplierBillId)
+        try container.encodeIfPresent(realPayerFIO, forKey: .realPayerFIO)
+        try container.encodeIfPresent(realPayerINN, forKey: .realPayerINN)
+        try container.encodeIfPresent(realPayerKPP, forKey: .realPayerKPP)
+        try container.encodeIfPresent(upno, forKey: .UPNO)
     }
 }
 

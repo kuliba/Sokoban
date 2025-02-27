@@ -472,7 +472,18 @@ extension ProductStatementData {
             svgImage: nil,
             terminalCode: nil,
             tranDate: nil,
-            type: .inside
+            type: .inside,
+            discount: nil,
+            transAmm: nil,
+            discountExpiry: nil,
+            dateN: nil,
+            paymentTerm: nil,
+            legalAct: nil,
+            supplierBillID: nil,
+            realPayerFIO: nil,
+            realPayerINN: nil,
+            realPayerKPP: nil,
+            upno: nil
         )
     }
 }

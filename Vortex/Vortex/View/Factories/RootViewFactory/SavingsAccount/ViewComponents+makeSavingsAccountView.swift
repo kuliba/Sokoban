@@ -12,60 +12,73 @@ import RxViewModel
 import SwiftUI
 import OTPInputComponent
 import UIPrimitives
+import ListLandingComponent
 
 extension ViewComponents {
-        
+    
     func makeSavingsAccountBinderView(
         binder: SavingsAccountDomain.Binder,
         openAccountBinder: OpenSavingsAccountDomain.Binder,
+        config: SavingsAccountConfig = .iVortex,
+        navTitle:SavingsAccountNavTitle = .savingsAccount,
         dismiss: @escaping () -> Void
     ) -> some View {
         
-        RxWrapperView(model: binder.content) { contentState, contentEvent in
+        OffsetObservingScrollWithModelView(refresh: { binder.content.event(.load) }) { offset in
             
-            RxWrapperView(model: binder.flow) { flowState, flowEvent in
+            RxWrapperView(model: binder.content) { contentState, contentEvent in
                 
-                SavingsAccountDomain.FlowView(
-                    state: flowState,
-                    event: flowEvent,
-                    contentView: {
-                        
-                        OffsetObservingScrollView(
-                            axes: .vertical,
-                            showsIndicators: false,
-                            offset: .init(
-                                get: { .zero },
-                                set: { contentEvent(.offset($0.y)) }),
-                            coordinateSpaceName: "savingsAccountScroll"
-                        ) {
-                            SavingsAccountDomain.ContentView(
-                                state: contentState,
-                                event: contentEvent,
-                                config: .prod,
-                                factory: makeFactory()
-                            )
-                            .onFirstAppear { contentEvent(.load) }
-                            .onAppear { flowEvent(.dismiss) }
-                        }
-                    },
-                    informerView: informerView
-                )
-                .padding(.bottom)
-                .navigationBarWithBack(
-                    title: contentState.navTitle.title,
-                    subtitle: contentState.navTitle.subtitle,
-                    subtitleForegroundColor: .textPlaceholder,
-                    dismiss: dismiss
-                )
-                .navigationDestination(
-                    destination: flowState.navigation?.destination,
-                    content: { makeOpenSavingsAccountView(destination: $0, openAccountBinder: openAccountBinder) }
-                )
-                .safeAreaInset(edge: .bottom, spacing: 8) {
-                    if contentState.status.needContinueButton {
-                        continueButton({ flowEvent(.select(.openSavingsAccount)) }, .iVortex)
-                    }
+                RxWrapperView(model: binder.flow) { flowState, flowEvent in
+                    
+                    SavingsAccountDomain.FlowView(
+                        state: flowState,
+                        event: flowEvent,
+                        contentView: { content(contentState: contentState, contentEvent: contentEvent, flowEvent: flowEvent, offset: offset) },
+                        informerView: informerView
+                    )
+                    .navigationBarWithBack(
+                        title: offset.wrappedValue.y > config.offsetForDisplayHeader ? navTitle.title : "",
+                        subtitle: offset.wrappedValue.y > config.offsetForDisplayHeader ? navTitle.subtitle : "",
+                        subtitleForegroundColor: .textPlaceholder,
+                        dismiss: dismiss
+                    )
+                    .navigationDestination(
+                        destination: flowState.navigation?.destination,
+                        content: { makeOpenSavingsAccountView(destination: $0, openAccountBinder: openAccountBinder) }
+                    )
                 }
+            }
+        }
+    }
+    
+    private func content(
+        contentState: SavingsAccountDomain.ContentState,
+        contentEvent: @escaping (SavingsAccountDomain.ContentEvent) -> Void,
+        flowEvent: @escaping (SavingsAccountDomain.FlowEvent) -> Void,
+        offset: Binding<CGPoint>,
+        config: SavingsAccountConfig = .iVortex
+    ) -> some View {
+        
+        OffsetObservingScrollView(
+            axes: .vertical,
+            showsIndicators: false,
+            offset: offset,
+            coordinateSpaceName: "coordinateSpaceName"
+        ) {
+            SavingsAccountDomain.ContentView(
+                state: contentState,
+                event: contentEvent,
+                config: .prod,
+                factory: makeFactory()
+            )
+            .onFirstAppear { contentEvent(.load) }
+            .onAppear { flowEvent(.dismiss) }
+        }
+        .padding(.bottom)
+        .safeAreaInset(edge: .bottom) {
+            if contentState.state.needContinueButton {
+                continueButton({ flowEvent(.select(.openSavingsAccount)) }, config)
+                    .padding(.bottom, UIApplication.safeAreaInsets.bottom > 0 ? 0 : config.spacing)
             }
         }
     }
@@ -221,14 +234,14 @@ extension SavingsAccountState {
     }
 }
 
-private extension SavingsAccountState.Items.Item {
+private extension ListItems.Item {
     
     init(_ data: SavingsAccountDomain.LandingItem.Advantage) {
         self.init(md5hash: data.iconMd5hash, title: data.title, subtitle: data.subtitle)
     }
 }
 
-private extension SavingsAccountState.Items.Item {
+private extension ListItems.Item {
     
     init(_ data: SavingsAccountDomain.LandingItem.BasicCondition) {
         self.init(md5hash: data.iconMd5hash, title: data.title, subtitle: nil)
@@ -244,14 +257,14 @@ private extension SavingsAccountState.Question {
 
 private extension Array where Element == SavingsAccountDomain.LandingItem.Advantage {
     
-    var advantages: [SavingsAccountState.Items.Item]? {
+    var advantages: [ListItems.Item]? {
         map { .init($0) }
     }
 }
 
 private extension Array where Element == SavingsAccountDomain.LandingItem.BasicCondition {
     
-    var basicConditions: [SavingsAccountState.Items.Item]? {
+    var basicConditions: [ListItems.Item]? {
         map { .init($0) }
     }
 }
@@ -302,4 +315,10 @@ extension SavingsAccountDomain.Navigation.Destination: Identifiable {
         
         case openSavingsAccount
     }
+}
+
+private extension String {
+    
+    static let savingsAccountTitle: Self = "Накопительный счет"
+    static let savingsAccountSubtitle: Self = "Накопительный в рублях"
 }

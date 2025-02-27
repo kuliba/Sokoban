@@ -48,24 +48,24 @@ extension TemplatesListFlowView {
 
 extension TemplatesListFlowState<TemplatesListViewModel, AnywayFlowModel> {
     
-    var alert: Status.ServiceFailure? {
+    var alert: Navigation.ServiceFailure? {
         
-        guard case let .alert(alert) = status
+        guard case let .alert(alert) = navigation
         else { return nil }
         
         return alert
     }
     
-    var destination: Status.Destination? {
+    var destination: Navigation.Destination? {
         
-        guard case let .destination(destination) = status
+        guard case let .destination(destination) = navigation
         else { return nil }
         
         return destination
     }
 }
 
-extension TemplatesListFlowState<TemplatesListViewModel, AnywayFlowModel>.Status.Destination: Identifiable {
+extension TemplatesListFlowState<TemplatesListViewModel, AnywayFlowModel>.Navigation.Destination: Identifiable {
     
     var id: ObjectIdentifier {
         
@@ -116,7 +116,7 @@ private extension TemplatesListFlowView {
     
     @ViewBuilder
     func destinationContent(
-        destination: Model.State.Status.Destination
+        destination: Model.State.Navigation.Destination
     ) -> some View {
         
         switch destination {

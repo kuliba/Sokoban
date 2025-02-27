@@ -13,7 +13,33 @@ import SavingsAccount
 import OTPInputComponent
 import RemoteServices
 import LoadableState
+import PaymentComponents
 
+
+enum OpenSavingsAccountCompleteDomain {}
+
+extension OpenSavingsAccountCompleteDomain {
+    
+    struct Complete {
+        
+        let context: Context
+        let details: OperationDetailDomain.Model
+        let document: DocumentButtonDomain.Model
+        
+        struct Context: Equatable {
+            
+            let formattedAmount: String?
+            let merchantName: String?
+            let purpose: String?
+            let status: Status
+            
+            enum Status {
+                
+                case completed, inflight, rejected
+            }
+        }
+    }
+}
 extension RootViewModelFactory {
     
     @inlinable
@@ -21,8 +47,14 @@ extension RootViewModelFactory {
         notify: @escaping (OpenSavingsAccountDomain.OrderAccountResponse) -> Void
     ) -> OpenSavingsAccount {
         
-        let content: OpenSavingsAccountDomain.Content = makeContent()
-        content.event(.load)
+        let products = model.productSelectProducts
+
+        let initialState: OpenSavingsAccountDomain.State = .init(
+            loadableForm: .loaded(nil),
+            productSelect: .init(selected: products().first)
+        )
+
+        let content: OpenSavingsAccountDomain.Content = makeContent(initialState, products)
         
         let cancellable = content.$state
             .compactMap(\.form?.orderAccountResponse)
@@ -41,13 +73,22 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeContent(
-        initialState: OpenSavingsAccountDomain.State = .init(loadableForm: .loaded(nil))
+        _ initialState: OpenSavingsAccountDomain.State,
+        _ products: @escaping ProductSelectReducer.GetProducts
     ) -> OpenSavingsAccountDomain.Content {
         
-        let reducer = OpenSavingsAccountDomain.Reducer { confirmation in
-            
-            { confirmation.otp.event(.otpField(.failure(.serverError($0)))) }
-        }
+        let productSelectReducer = ProductSelectReducer(
+            getProducts: products
+        )
+        
+        let reducer = OpenSavingsAccountDomain.Reducer(
+            otpWitness:  { confirmation in
+                
+                { confirmation.otp.event(.otpField(.failure(.serverError($0)))) }
+            },
+            productSelectReduce: productSelectReducer.reduce(_:_:)
+        )
+        
         let effectHandler = OpenSavingsAccountDomain.EffectHandler(
             load: load,
             loadConfirmation: loadConfirmation,
@@ -107,6 +148,7 @@ extension RootViewModelFactory {
             }
             
             completion($0.loadFormResult)
+            _ = service
         }
     }
     
@@ -332,7 +374,7 @@ private extension SavingsAccountProduct {
         
         .init(
             constants: .init(
-                currencyCode: item.currency.code,
+                currency: .init(code: item.currency.code, symbol: item.currency.symbol),
                 designMd5hash: item.design,
                 header: .init(title: item.title, subtitle: item.description),
                 hint: item.hint,
@@ -340,7 +382,10 @@ private extension SavingsAccountProduct {
                 links: .init(conditions: item.conditionsLink, tariff: item.tariffLink),
                 openValue: openValue,
                 orderServiceOption: orderServiceOption),
-            messages: .default())
+            confirmation: .loaded(nil),
+            topUp: .default(),
+            amount: .init(title: "", value: 0, button: .init(title: "Продолжить", isEnabled: false))
+        )
     }
     
     var orderServiceOption: String {
@@ -365,32 +410,11 @@ private extension SavingsAccountProduct {
     }
 }
 
-private extension SavingsAccount.Messages {
+private extension SavingsAccount.TopUp {
     
     static func `default`() -> Self {
 
-        return .init(
-            description: description(
-                "Пополнение доступно без комиссии\nс рублевого счета или карты"
-            ),
-            icon: "ic24MessageSquare",
-            subtitle: "Пополнить сейчас",
-            title: "Хотите пополнить счет?",
-            isOn: false
-        )
-    }
-}
-
-private extension SavingsAccount.Messages {
-
-    static func description(
-        _ description: String
-    ) -> AttributedString {
-        
-        var attributedString = AttributedString(description)
-        attributedString.foregroundColor = .textPlaceholder
-        attributedString.font = .textBodySR12160()
-        return attributedString
+        return .init(isOn: false)
     }
 }
 
@@ -429,21 +453,33 @@ private extension RemoteServices.ResponseMapper.MappingResult<MakeOpenSavingsAcc
                 return .failure(.invalidCodeAlert)
                 
             default:
-                return .success(false)
+                return .failure(.tryLaterAlert)
             }
             
         case let .success(response):
             switch response.documentInfo.documentStatus {
             case .complete, .inProgress:
-                return .success(true)
+                return .success(.init(response))
                 
             default:
-                return .success(false)
+                return .success(.init(response))
             }
         }
     }
 }
 
+private extension OrderAccountResponse {
+    
+    init(_ data: MakeOpenSavingsAccountResponse) {
+        
+        self.init(
+            accountId: data.paymentInfo.accountId,
+            accountNumber: data.paymentInfo.accountNumber,
+            paymentOperationDetailId: data.paymentOperationDetailID,
+            status: data.documentInfo.documentStatus?.status ?? .inflight
+        )
+    }
+}
 private extension OpenSavingsAccountDomain.LoadFailure {
     
     static let invalidCodeAlert: Self = .init(message: ._invalidCode, type: .alert)
@@ -455,4 +491,19 @@ private extension String {
     
     static let _invalidCode = "Введен некорректный код. Попробуйте еще раз."
     static let _tryLater = "Что-то пошло не так.\nПопробуйте позже."
+}
+
+extension MakeOpenSavingsAccountResponse.DocumentStatus {
+    
+    var status: OrderAccountResponse.Status {
+        
+        switch self {
+        case .complete:
+            return .completed
+        case .inProgress:
+            return .inflight
+        case .rejected:
+            return .rejected
+        }
+    }
 }

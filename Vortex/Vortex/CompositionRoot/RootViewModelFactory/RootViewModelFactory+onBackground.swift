@@ -64,3 +64,64 @@ extension RootViewModelFactory {
         return { service((), $0) }
     }
 }
+
+extension RootViewModelFactory {
+    
+    /// Creates a remote service that executes on a background scheduler and maps errors to `BackendFailure`.
+    ///
+    /// The returned service:
+    /// - Schedules the network request on the background scheduler.
+    /// - Invokes the provided completion handler with the service result.
+    /// - Maps any encountered error into a `BackendFailure` using the provided connectivity failure message.
+    ///
+    /// - Parameters:
+    ///   - makeRequest: Closure that creates a URLRequest from the payload.
+    ///   - mapResponse: Closure that maps raw response data to a typed response.
+    ///   - connectivityFailureMessage: The message to use when converting errors into a connectivity failure.
+    /// - Returns: A remote service function that accepts a payload and a completion handler returning a result with a `BackendFailure` error type.
+    @inlinable
+    func onBackground<Payload, Response>(
+        makeRequest: @escaping RemoteDomainOf<Payload, Response, Error>.MakeRequest,
+        mapResponse: @escaping RemoteDomainOf<Payload, Response, Error>.MapResponse,
+        connectivityFailureMessage: String
+    ) -> RemoteDomainOf<Payload, Response, BackendFailure>.Service {
+        
+        let service = nanoServiceComposer.compose(makeRequest: makeRequest, mapResponse: mapResponse)
+        
+        return { [weak self] payload, completion in
+            
+            self?.schedulers.background.schedule {
+                
+                service(payload) { [service] in
+                    
+                    let result = $0.mapError {
+                        
+                        $0.backendFailure(
+                            connectivityMessage: connectivityFailureMessage
+                        )
+                    }
+                    
+                    completion(result)
+                    _ = service
+                }
+            }
+        }
+    }
+}
+
+extension Error {
+    
+    /// Converts the current error into a `BackendFailure`.
+    ///
+    /// If the error is already a `BackendFailure`, it is returned unchanged.
+    /// Otherwise, a connectivity failure is returned using the provided message.
+    ///
+    /// - Parameter connectivityMessage: The connectivity failure message to use if the error is not already a `BackendFailure`.
+    /// - Returns: A `BackendFailure` representing the error.
+    func backendFailure(
+        connectivityMessage: String
+    ) -> BackendFailure {
+        
+        return (self as? BackendFailure) ?? .connectivity(connectivityMessage)
+    }
+}

@@ -1035,7 +1035,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             createUserVisibilityProductsSettingsService: userVisibilityServices,
             createCreateGetSVCardLimits: getSVCardLimitsServices,
             createChangeSVCardLimit: changeSVCardLimitServices,
-            createSVCardLanding: svCardLandingServices, 
+            createSVCardLanding: svCardLandingServices,
+            getSavingsAccountInfo: { _,_ in }, 
             repeatPayment: { _,_,_ in },
             makeSVCardLandingViewModel: { _,_,_,_ in nil },
             makeInformer: { _ in }
@@ -1071,6 +1072,7 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
             makeServicePaymentBinder: ServicePaymentBinder.preview,
             makeOpenNewProductButtons: { _ in [] },
+            operationDetailFactory: .preview,
             makeOrderCardViewModel: { },
             makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() }
         )

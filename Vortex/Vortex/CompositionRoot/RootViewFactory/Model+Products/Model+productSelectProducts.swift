@@ -12,41 +12,28 @@ extension Model {
     func productSelectProducts() -> [ProductSelect.Product] {
         
         return paymentEligibleProducts()
-            .compactMap {
-                
-                $0.productSelectProduct(
-                    formatBalance: { [weak self] in
-                        
-                        self?.formattedBalance(of: $0) ?? ""
-                    },
-                    getImage: { [weak self] in
-                        
-                        self?.images.value[$0]?.image
-                    }
-                )
-            }
-    }
-    
-    func sbpLinkedProduct() -> ProductSelect.Product? {
-    
-        nil // TODO: FIXME
+            .compactMap(productSelectProduct)
     }
     
     func c2gProductSelectProducts() -> [ProductSelect.Product] {
         
         return c2gPaymentEligibleProducts()
-            .compactMap {
+            .compactMap(productSelectProduct)
+    }
+    
+    func productSelectProduct(
+        for data: ProductData
+    ) -> ProductSelect.Product? {
+        
+        data.productSelectProduct(
+            formatBalance: { [weak self] in
                 
-                $0.productSelectProduct(
-                    formatBalance: { [weak self] in
-                        
-                        self?.formattedBalance(of: $0) ?? ""
-                    },
-                    getImage: { [weak self] in
-                        
-                        self?.images.value[$0]?.image
-                    }
-                )
+                self?.formattedBalance(of: $0) ?? ""
+            },
+            getImage: { [weak self] in
+                
+                self?.images.value[$0]?.image
             }
+        )
     }
 }

@@ -9,7 +9,7 @@ import Foundation
 
 public struct Constants {
     
-    public let currencyCode: Int
+    public let currency: Currency
     public let designMd5hash: String
     public let header: Header
     public let hint: String
@@ -18,8 +18,19 @@ public struct Constants {
     public let openValue: String
     public let orderServiceOption: String
     
+    public struct Currency {
+        
+        public let code: Int
+        public let symbol: String
+        
+        public init(code: Int, symbol: String) {
+            self.code = code
+            self.symbol = symbol
+        }
+    }
+    
     public init(
-        currencyCode: Int,
+        currency: Currency,
         designMd5hash: String,
         header: Header,
         hint: String,
@@ -28,7 +39,7 @@ public struct Constants {
         openValue: String,
         orderServiceOption: String
     ) {
-        self.currencyCode = currencyCode
+        self.currency = currency
         self.designMd5hash = designMd5hash
         self.header = header
         self.hint = hint

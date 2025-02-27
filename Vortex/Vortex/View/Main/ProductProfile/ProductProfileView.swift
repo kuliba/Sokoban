@@ -7,13 +7,14 @@
 
 import ActivateSlider
 import CalendarUI
+import Combine
 import InfoComponent
 import PinCodeUI
 import RxViewModel
+import SavingsAccount
 import SberQR
 import SwiftUI
 import VortexTools
-import Combine
 
 struct ProductProfileView: View {
     
@@ -298,7 +299,13 @@ struct ProductProfileView: View {
         
         switch sheet.type {
         case let .operationDetail(operationDetail):
-            viewFactory.components.makeOperationDetailView(operationDetail, productProfileViewFactory.makeRepeatButtonView, { viewModel.payment(operationID: operationDetail.operationId, productStatement: operationDetail.productStatement) })
+            switch operationDetail {
+            case let .legacy(operationDetail):
+                viewFactory.components.makeOperationDetailView(operationDetail, productProfileViewFactory.makeRepeatButtonView, { viewModel.payment(operationID: operationDetail.operationId, productStatement: operationDetail.productStatement) })
+                
+            case let .v3(v3):
+                viewFactory.components.makeStatementDetailView(v3)
+            }
             
         case let .optionsPannel(viewModel):
             ProductProfileOptionsPannelView(viewModel: viewModel)
@@ -328,16 +335,8 @@ struct ProductProfileView: View {
                     transaction.disablesAnimations = false
                 }
             
-        case let .printForm(viewModel):
-            PrintFormView(viewModel: viewModel)
-            
         case let .placesMap(viewModel):
             PlacesView(viewModel: viewModel)
-            
-        case let .info(viewModel):
-            OperationDetailInfoView(
-                viewModel: viewModel
-            )
         }
     }
         
@@ -594,6 +593,31 @@ private extension ProductProfileView {
                 ProductProfileButtonsView(viewModel: viewModel.buttons)
                     .padding(.horizontal, 20)
                 
+                viewModel.accountInfo.map { accountInfo in
+                    
+                    SavingsAccountDetailsView(
+                        amountToString: {
+                            
+                            viewModel.model.amountFormatted(
+                                amount: $0.doubleValue,
+                                currencyCode: $1,
+                                style: .normal
+                            ) ?? ""
+                        },
+                        state: accountInfo,
+                        event: {
+                            
+                            switch $0 {
+                            case .expanded:
+                                viewModel.accountInfo?.isExpanded.toggle()
+                            }
+                        },
+                        config: .iVortex
+                    )
+                    .padding(.horizontal)
+                    .animation(.easeInOut, value: accountInfo.isExpanded)
+                }
+                
                 productProfileDetailView()
                 
                 historyView()
@@ -734,9 +758,9 @@ extension QRViewModel {
 
 extension OperationDetailFactory {
     
-    static let preview: Self = .init(makeOperationDetailViewModel: { _,_,_ in
-            .sampleComplete
-    })
+    static let preview: Self = .init(
+        makeOperationDetailViewModel: { _,_ in .legacy(.sampleComplete) }
+    )
 }
 
 extension Date {

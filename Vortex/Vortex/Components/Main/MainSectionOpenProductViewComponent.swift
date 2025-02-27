@@ -67,7 +67,7 @@ struct MainSectionOpenProductView: View {
                 
                 HStack(spacing: 8) {
                     
-                    ForEach($viewModel.newProducts.items) { $itemViewModel in
+                    ForEach($viewModel.newProducts.items, id: \.type) { $itemViewModel in
                         
                         NewProductButton(viewModel: itemViewModel)
                             .frame(width: 112, height: 124)

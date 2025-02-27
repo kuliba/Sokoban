@@ -40,7 +40,7 @@ private extension TemplatesListFlowReducer {
         switch event {
         case .dismiss(.destination):
             state.isLoading = false
-            state.status = nil
+            state.navigation = nil
             
         case let .flow(flow):
             reduce(&state, &effect, with: flow)
@@ -67,16 +67,16 @@ private extension TemplatesListFlowReducer {
             break
             
         case .dismiss:
-            state.status = nil
+            state.navigation = nil
             
         case .tab(.chat):
             break
             
         case .tab(.main):
-            state.status = .outside(.tab(.main))
+            state.navigation = .outside(.tab(.main))
             
         case .tab(.payments):
-            state.status = .outside(.tab(.payments))
+            state.navigation = .outside(.tab(.payments))
         }
     }
     
@@ -89,13 +89,13 @@ private extension TemplatesListFlowReducer {
         
         switch result {
         case let .failure(serviceFailure):
-            state.status = .alert(serviceFailure)
+            state.navigation = .alert(serviceFailure)
             
         case let .success(.legacy(legacy)):
-            state.status = .destination(.payment(.legacy(legacy)))
+            state.navigation = .destination(.payment(.legacy(legacy)))
             
         case let .success(.v1(node)):
-            state.status = .destination(.payment(.v1(node)))
+            state.navigation = .destination(.payment(.v1(node)))
         }
     }
     
@@ -106,7 +106,7 @@ private extension TemplatesListFlowReducer {
     ) {
         switch select {
         case let .productID(productID):
-            state.status = .outside(.productID(productID))
+            state.navigation = .outside(.productID(productID))
             
         case let .template(template):
             state.isLoading = true

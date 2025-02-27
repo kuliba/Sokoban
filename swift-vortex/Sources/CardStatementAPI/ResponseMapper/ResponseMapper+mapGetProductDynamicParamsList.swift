@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import RemoteServices
 
 public extension ResponseMapper {
     
-    typealias GetProductDynamicParamsListResult = Result<DynamicParamsList, MappingError>
+    typealias GetProductDynamicParamsListResult = Result<DynamicParamsList, CardStatementAPI.MappingError>
     
     static func mapGetProductDynamicParamsList(
         _ data: Data,
@@ -17,11 +18,22 @@ public extension ResponseMapper {
     ) -> GetProductDynamicParamsListResult {
         
         map(data, response, mapOrThrow: map)
+            .mapError {
+                
+                switch $0 {
+                case .invalid:
+                    return .mappingFailure(.defaultErrorMessage)
+                    
+                case let .server(statusCode: _, errorMessage: errorMessage):
+                    return .not200Status(errorMessage)
+                }
+            }
     }
     
     private static func map(
         _ data: _Data
     ) throws -> DynamicParamsList {
+        
         return .init(list: data.dynamicProductParamsList.map { .init(data: $0) })
     }
 }
@@ -34,9 +46,11 @@ private extension ResponseMapper {
 private extension ResponseMapper {
     
     struct _DTO: Decodable {
+        
         let dynamicProductParamsList: [ItemDecodable]
         
         enum CodingKeys: String, CodingKey {
+            
             case dynamicProductParamsList
         }
         

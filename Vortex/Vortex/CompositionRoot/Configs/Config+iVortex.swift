@@ -8,7 +8,6 @@
 import PaymentComponents
 import SberQR
 import ManageSubscriptionsUI
-import OrderCardLandingUI
 import HeaderLandingComponent
 
 extension SberQR.Config {

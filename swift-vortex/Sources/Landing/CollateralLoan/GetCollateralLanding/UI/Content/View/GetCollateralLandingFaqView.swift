@@ -40,7 +40,7 @@ struct GetCollateralLandingFaqView_Previews: PreviewProvider {
         
         GetCollateralLandingFaqView(
             product: .carStub,
-            config: .default
+            config: .preview
         )
     }
     

@@ -7,37 +7,41 @@
 
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 import CollateralLoanLandingGetShowcaseUI
+import CollateralLoanLandingGetConsentsBackend
 import Combine
 import PDFKit
+import RemoteServices
 import SwiftUI
 import UIPrimitives
 
 public struct GetCollateralLandingFactory {
 
-    public let config: GetCollateralLandingConfig
     public let makeImageViewWithMD5Hash: MakeImageViewWithMD5Hash
     public let makeImageViewWithURL: MakeImageViewWithURL
     public let getPDFDocument: GetPDFDocument
+    public let formatCurrency: FormatCurrency
     
     public init(
-        config: GetCollateralLandingConfig = .default,
         makeImageViewWithMD5Hash: @escaping MakeImageViewWithMD5Hash,
         makeImageViewWithURL: @escaping MakeImageViewWithURL,
-        getPDFDocument: @escaping GetPDFDocument
+        getPDFDocument: @escaping GetPDFDocument,
+        formatCurrency: @escaping FormatCurrency
     ) {
-        self.config = config
         self.makeImageViewWithMD5Hash = makeImageViewWithMD5Hash
         self.makeImageViewWithURL = makeImageViewWithURL
         self.getPDFDocument = getPDFDocument
+        self.formatCurrency = formatCurrency
     }
 }
 
 public extension GetCollateralLandingFactory {
         
-    typealias ShowcaseFactory = CollateralLoanLandingGetShowcaseViewFactory
-    typealias MakeImageViewWithMD5Hash = ShowcaseFactory.MakeImageViewWithMD5Hash
-    typealias MakeImageViewWithURL = ShowcaseFactory.MakeImageViewWithURL
-    typealias GetPDFDocument = CreateDraftCollateralLoanApplicationFactory.GetPDFDocument
+    typealias IconView = UIPrimitives.AsyncImage
+    typealias MakeImageViewWithMD5Hash = (String) -> IconView
+    typealias MakeImageViewWithURL = (String) -> IconView
+    typealias GetPDFDocumentCompletion = (PDFDocument?) -> Void
+    typealias GetPDFDocument = (RequestFactory.GetConsentsPayload, @escaping GetPDFDocumentCompletion) -> Void
+    typealias FormatCurrency = (UInt) -> String?
 }
 
 // MARK: Preview helpers
@@ -47,7 +51,8 @@ public extension GetCollateralLandingFactory {
     static let preview = Self(
         makeImageViewWithMD5Hash: { _ in .preview },
         makeImageViewWithURL: { _ in .preview },
-        getPDFDocument: { _,_ in }
+        getPDFDocument: { _,_ in },
+        formatCurrency: { _ in "" }
     )
 }
 

@@ -44,7 +44,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 state.amount = amountReduce(state.amount, amountEvent)
                 if state.isAmountVaild {
                     
-                    state.amount.message = .hint(state.application.hintText)
+                    state.amount.message = .hint(state.hintText)
                 } else {
                     
                     state.amount.message = .warning("Некорректная сумма")
@@ -159,14 +159,15 @@ public extension CreateDraftCollateralLoanApplicationDomain.Reducer {
     convenience init(
         application: CreateDraftCollateralLoanApplication,
         placeholderText: String = "Введите значение",
-        warningText: String = "Некорректная сумма"
+        warningText: String = "Некорректная сумма",
+        hintText: String
     ) {
         let decimalFormatter = DecimalFormatter(currencySymbol: "₽")
         
         let textFieldReducer = ChangingReducer.decimal(formatter: decimalFormatter)
         
         let textInputValidator = TextInputValidator(
-            hintText: application.hintText,
+            hintText: hintText,
             warningText: warningText,
             validate: { isValid($0) }
         )

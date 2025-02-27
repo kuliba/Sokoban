@@ -5,6 +5,8 @@
 //  Created by Andryusina Nataly on 08.11.2024.
 //
 
+import CollateralLoanLandingGetCollateralLandingUI
+import CollateralLoanLandingGetShowcaseUI
 import Combine
 import Foundation
 import LoadableResourceComponent

@@ -17,11 +17,15 @@ class ProductAccountData: ProductData {
     let miniStatement: [PaymentData]
     let detailedRatesUrl: String
     let detailedConditionUrl: String
+    let isSavingAccount: Bool?
+    let interestRate: String?
     
     init(id: Int, productType: ProductType, number: String?, numberMasked: String?, accountNumber: String?, balance: Double?, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date?, ownerId: Int, branchId: Int?, allowCredit: Bool, allowDebit: Bool, extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], externalId: Int, name: String, dateOpen: Date, status: Status, branchName: String?, miniStatement: [PaymentData], order: Int, visibility: Bool, smallDesignMd5hash: String, smallBackgroundDesignHash: String, detailedRatesUrl: String, detailedConditionUrl: String,
         mediumDesignMd5Hash: String = "",
         largeDesignMd5Hash: String = "",
-        xlDesignMd5Hash: String = ""
+        xlDesignMd5Hash: String = "",
+         isSavingAccount: Bool? = nil,
+         interestRate: String? = nil
     ) {
         
         self.externalId = externalId
@@ -32,6 +36,8 @@ class ProductAccountData: ProductData {
         self.miniStatement = miniStatement
         self.detailedRatesUrl = detailedRatesUrl
         self.detailedConditionUrl = detailedConditionUrl
+        self.isSavingAccount = isSavingAccount
+        self.interestRate = interestRate
         
         super.init(id: id, productType: productType, number: number, numberMasked: numberMasked, accountNumber: accountNumber, balance: balance, balanceRub: balanceRub, currency: currency, mainField: mainField, additionalField: additionalField, customName: customName, productName: productName, openDate: openDate, ownerId: ownerId, branchId: branchId, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: extraLargeDesign, largeDesign: largeDesign, mediumDesign: mediumDesign, smallDesign: smallDesign, fontDesignColor: fontDesignColor, background: background, order: order, isVisible: visibility, smallDesignMd5hash: smallDesignMd5hash, smallBackgroundDesignHash: smallBackgroundDesignHash, mediumDesignMd5Hash: mediumDesignMd5Hash, largeDesignMd5Hash: largeDesignMd5Hash, xlDesignMd5Hash: xlDesignMd5Hash)
     }
@@ -40,6 +46,7 @@ class ProductAccountData: ProductData {
         
         case externalId = "externalID"
         case name, dateOpen, status, branchName, miniStatement, detailedRatesUrl, detailedConditionUrl
+        case isSavingAccount, interestRate
     }
     
     required init(from decoder: Decoder) throws {
@@ -53,7 +60,9 @@ class ProductAccountData: ProductData {
         miniStatement = try container.decode([PaymentData].self, forKey: .miniStatement)
         detailedRatesUrl = try container.decode(String.self, forKey: .detailedRatesUrl)
         detailedConditionUrl = try container.decode(String.self, forKey: .detailedConditionUrl)
-        
+        isSavingAccount = try container.decodeIfPresent(Bool.self, forKey: .isSavingAccount)
+        interestRate = try container.decodeIfPresent(String.self, forKey: .interestRate)
+
         try super.init(from: decoder)
     }
     
@@ -68,6 +77,8 @@ class ProductAccountData: ProductData {
         try container.encode(miniStatement, forKey: .miniStatement)
         try container.encode(detailedRatesUrl, forKey: .detailedRatesUrl)
         try container.encode(detailedConditionUrl, forKey: .detailedConditionUrl)
+        try container.encode(isSavingAccount, forKey: .isSavingAccount)
+        try container.encode(interestRate, forKey: .interestRate)
         
         try super.encode(to: encoder)
     }
@@ -84,6 +95,8 @@ class ProductAccountData: ProductData {
         lhs.branchName == rhs.branchName &&
         lhs.miniStatement == rhs.miniStatement &&
         lhs.detailedRatesUrl == rhs.detailedRatesUrl &&
-        lhs.detailedConditionUrl == rhs.detailedConditionUrl
+        lhs.detailedConditionUrl == rhs.detailedConditionUrl &&
+        lhs.isSavingAccount == rhs.isSavingAccount &&
+        lhs.interestRate == rhs.interestRate
     }
 }

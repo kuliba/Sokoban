@@ -20,8 +20,9 @@ struct CollateralLoanShowcaseWrapperView: View {
     
     let binder: GetShowcaseDomain.Binder
     let factory: Factory
-    let viewModelFactory: ViewModelFactory
+    let config: Config
     let goToMain: () -> Void
+    let makeOperationDetailInfoViewModel: MakeOperationDetailInfoViewModel
 
     var body: some View {
         
@@ -83,25 +84,23 @@ struct CollateralLoanShowcaseWrapperView: View {
         
         switch navigation {
         case let .landing(_, landing):
-            // TODO: Remove to factory
             CollateralLoanLandingWrapperView(
                 binder: landing,
-                factory: .init(
-                    makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
-                    makeImageViewWithURL: factory.makeImageViewWithURL,
-                    getPDFDocument: factory.getPDFDocument
-                ),
-                viewModelFactory: viewModelFactory,
-                goToMain: goToMain
+                config: .default,
+                factory: factory,
+                goToMain: goToMain,
+                makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel
             )
             .navigationBarWithBack(title: "") { binder.flow.event(.dismiss) }
         }
     }
     
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias Config = GetCollateralLandingConfig
     typealias SaveConsentsResult = Domain.SaveConsentsResult
-    typealias Factory = CollateralLoanLandingGetShowcaseViewFactory
-    typealias ViewModelFactory = CollateralLoanLandingViewModelFactory
+    typealias Factory = CollateralLoanLandingFactory
+    typealias Payload = CollateralLandingApplicationSaveConsentsResult
+    typealias MakeOperationDetailInfoViewModel = (Payload) -> OperationDetailInfoViewModel
 }
 
 extension GetShowcaseDomain.Navigation: Identifiable {
@@ -112,16 +111,6 @@ extension GetShowcaseDomain.Navigation: Identifiable {
         case let .landing(_, binder): return .init(binder)
         }
     }
-}
-
-extension CollateralLoanShowcaseWrapperView {
-    
-    static let preview = Self(
-        binder: .preview,
-        factory: .preview,
-        viewModelFactory: .preview,
-        goToMain: {}
-    )
 }
 
 extension GetShowcaseDomain.Binder {
@@ -153,12 +142,13 @@ extension RxViewModel<
     )
 }
 
-extension CollateralLoanLandingGetShowcaseViewFactory {
+extension CollateralLoanLandingFactory {
     
     static let preview = Self(
         makeImageViewWithMD5Hash: { _ in .preview },
         makeImageViewWithURL: {_ in .preview },
-        getPDFDocument: { _,_ in }
+        getPDFDocument: { _,_ in },
+        formatCurrency: { _ in "" }
     )
 }
 

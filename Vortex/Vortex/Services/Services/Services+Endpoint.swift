@@ -76,6 +76,7 @@ extension Services {
             case v4
             case v5
             case v6
+            case v7
         }
         
         enum ServiceName: String {
@@ -112,6 +113,7 @@ extension Services {
             case getJsonAbroad
             case getNotAuthorizedZoneClientInformData
             case getOpenAccountForm
+            case getOperationDetail
             case getOperationDetailByPaymentId
             case getOperatorsListByParam
             case getPaymentTemplateList
@@ -121,7 +123,9 @@ extension Services {
             case getProductDetails
             case getProductDynamicParamsList
             case getProductListByType
+            case getPrintFormForSavingsAccount
             case getSavingLanding
+            case getSavingAccountInfo
             case getSberQRData
             case getScenarioQRData
             case getServiceCategoryList
@@ -286,6 +290,18 @@ extension Services.Endpoint {
         version: .none,
         serviceName: .makeOpenSavingsAccount
     )
+    
+    static let getPrintFormForSavingsAccountRequest: Self = .init(
+        pathPrefix: .rest,
+        version: .v1,
+        serviceName: .getPrintFormForSavingsAccount
+    )
+
+    static let getSavingAccountInfo: Self = .init(
+        pathPrefix: .rest,
+        version: .none,
+        serviceName: .getSavingAccountInfo
+    )
 
     static let createC2GPayment: Self = .init(
         pathPrefix: .transfer,
@@ -343,8 +359,8 @@ extension Services.Endpoint {
     
     static let getCardStatementForPeriod: Self = .init(
         pathPrefix: .rest,
-        version: .v5,
-        serviceName: .getCardStatementForPeriod
+        version: nil,
+        serviceName: .getCardStatementForPeriod_V3
     )
     
     static let getClientConsentMe2MePull: Self = .init(
@@ -357,6 +373,12 @@ extension Services.Endpoint {
         pathPrefix: .dict,
         version: nil,
         serviceName: .getSvgImageList
+    )
+    
+    static let getOperationDetailV3: Self = .init(
+        pathPrefix: .rest,
+        version: .v3,
+        serviceName: .getOperationDetail
     )
     
     static let getOperationDetailByPaymentID: Self = .init(
@@ -410,6 +432,12 @@ extension Services.Endpoint {
     static let getProductListByTypeV6: Self = .init(
         pathPrefix: .rest,
         version: .v6,
+        serviceName: .getProductListByType
+    )
+    
+    static let getProductListByTypeV7: Self = .init(
+        pathPrefix: .rest,
+        version: .v7,
         serviceName: .getProductListByType
     )
 

@@ -47,7 +47,7 @@ struct CreateDraftCollateralLoanApplicationOTPView_Previews<Confirmation, Inform
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationOTPView<Confirmation, InformerPayload>(
-            state: .init(application: .preview),
+            state: .init(application: .preview, formatCurrency: { _ in "" }),
             event: {
                 print($0)
             },
@@ -56,4 +56,13 @@ struct CreateDraftCollateralLoanApplicationOTPView_Previews<Confirmation, Inform
             otpViewModel: .preview
         )
     }
+}
+
+extension TimedOTPInputViewModel {
+    
+    static let preview = TimedOTPInputViewModel(
+        initialState: .init(phoneNumber: .init(""), status: .input(.completeOTP)),
+        reduce: { state, _ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
 }

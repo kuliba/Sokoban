@@ -6,24 +6,69 @@
 //
 import SwiftUI
 
-struct SavingsAccountDetailsView: View {
+private extension SavingsAccountDetailsState {
     
-    let amountToString: AmountToString
-    let state: SavingsAccountDetailsState
-    let event: (Event) -> Void
-    let config: Config
+    var period: String? {
+        
+        return data?.dateNext.map { "Отчетный период с \($0.suffix(2)) \(Date.nameOfMonth) по \(Date().lastDayOfMonth) \(Date.nameOfMonth)" }
+    }
     
-    var body: some View {
+    var paydate: String? {
+        
+        data?.dateNext.map { "Дата выплаты % - \($0.suffix(2)) \(Date.nameOfMonth)" }
+    }
+    
+    var days: String {
+       "\(Date.now.daysToEndMonth) дней"
+    }
+}
+
+extension Date {
+    
+    var lastDayOfMonth: Int { Calendar.current.range(of: .day, in: .month, for: self)!.count }
+    var day: Int { Calendar.current.component(.day, from:  self) }
+    var month: Int { Calendar.current.component(.month, from:  self) }
+
+    var daysToEndMonth: Int { lastDayOfMonth - day }
+    
+    static var nameOfMonth: String {
+        return Date().formatted(Date.FormatStyle().month(.abbreviated))
+    }
+}
+
+public struct SavingsAccountDetailsView: View {
+    
+    private let amountToString: AmountToString
+    private let state: SavingsAccountDetailsState
+    private let event: (Event) -> Void
+    private let config: Config
+    
+    public init(
+        amountToString: @escaping AmountToString,
+        state: SavingsAccountDetailsState,
+        event: @escaping (Event) -> Void,
+        config: Config
+    ) {
+        self.amountToString = amountToString
+        self.state = state
+        self.event = event
+        self.config = config
+    }
+    
+    public var body: some View {
         
         VStack {
             header(config.texts.header, needShimmering)
                 .padding(.bottom, config.padding)
-            config.texts.period
-                .string(needShimmering)
-                .text(withConfig: config.period)
-                .modifier(HeightWithMaxWidthModifier(height: config.heights.period))
-                .modifier(ShimmeringModifier(needShimmering, config.colors.shimmering))
-                .padding(.bottom, config.padding / 2)
+            
+            state.period.map {
+                
+                $0.text(withConfig: config.period)
+                    .modifier(HeightWithMaxWidthModifier(height: config.heights.period))
+                    .modifier(ShimmeringModifier(needShimmering, config.colors.shimmering))
+                    .padding(.bottom, config.padding / 2)
+            }
+            
             interest(needShimmering)
             
             lineProgressView(needShimmering)
@@ -40,6 +85,7 @@ struct SavingsAccountDetailsView: View {
     private func interest() -> some View {
         
         VStack(spacing: config.padding) {
+            
             titleWithSubtitle(
                 title: .init(text: config.texts.currentInterest, config: config.interestTitle),
                 subtitle: .init(text: currentInterest, config: config.interestSubtitle))
@@ -95,16 +141,19 @@ struct SavingsAccountDetailsView: View {
     ) -> some View {
         
         HStack {
-            config.texts.interestDate
-                .string(needShimmering)
-                .text(withConfig: config.interestDate)
-                .modifier(HeightWithMaxWidthModifier(height: config.heights.interest))
-                .modifier(ShimmeringModifier(needShimmering, config.colors.shimmering))
+            
+            state.paydate.map {
+                
+                $0.string(needShimmering)
+                    .text(withConfig: config.interestDate)
+                    .modifier(HeightWithMaxWidthModifier(height: config.heights.interest))
+                    .modifier(ShimmeringModifier(needShimmering, config.colors.shimmering))
+            }
             
             if (!needShimmering) {
                 config.info
                     .foregroundColor(config.colors.chevron)
-                config.texts.days
+                state.days
                     .text(withConfig: config.days)
             }
         }
@@ -199,16 +248,7 @@ struct SavingsAccountDetailsView: View {
     }
 }
 
-private extension String {
-    
-    func string(
-        _ needShimmering: Bool
-    ) -> String {
-        needShimmering ? "" : self
-    }
-}
-
-extension SavingsAccountDetailsView {
+public extension SavingsAccountDetailsView {
     
     typealias AmountToString = (Decimal, String) -> String
     typealias Event = SavingsAccountDetailsEvent

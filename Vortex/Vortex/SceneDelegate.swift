@@ -32,11 +32,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         featureFlags: featureFlags,
         rootEvent: { [weak binder] select in
             
-            binder?.flow.event(.select(select))
+            binder?.flow.event(.dismiss)
             
             DispatchQueue.main.delay(for: .milliseconds(100)) {
-         
-                binder?.content.tabsViewModel.reset()
+                
+                binder?.flow.event(.select(select))
+                
+                DispatchQueue.main.delay(for: .milliseconds(100)) {
+                    
+                    binder?.content.tabsViewModel.reset()
+                }
             }
         }
     )

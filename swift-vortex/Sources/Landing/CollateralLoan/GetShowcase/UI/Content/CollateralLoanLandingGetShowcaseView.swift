@@ -67,5 +67,5 @@ public extension CollateralLoanLandingGetShowcaseView {
     typealias Config = CollateralLoanLandingGetShowcaseViewConfig
     typealias Theme = CollateralLoanLandingGetShowcaseTheme
     typealias Event = GetShowcaseDomain.Event
-    typealias Factory = CollateralLoanLandingGetShowcaseViewFactory
+    typealias Factory = CollateralLoanLandingFactory
 }

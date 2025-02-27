@@ -100,7 +100,7 @@ struct CreateDraftCollateralLoanApplicationCityView_Previews<Confirmation, Infor
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationCityView<Confirmation, InformerPayload>(
-            state: .init(application: .preview, stage: .correctParameters),
+            state: .init(application: .preview, stage: .correctParameters, formatCurrency: { _ in ""}),
             event: { print($0) },
             config: .default,
             factory: .preview
@@ -108,7 +108,7 @@ struct CreateDraftCollateralLoanApplicationCityView_Previews<Confirmation, Infor
         .previewDisplayName("Edit mode")
 
         CreateDraftCollateralLoanApplicationCityView<Confirmation, InformerPayload>(
-            state: .init(application: .preview, stage: .confirm),
+            state: .init(application: .preview, stage: .confirm, formatCurrency: { _ in "" }),
             event: { print($0) },
             config: .default,
             factory: .preview

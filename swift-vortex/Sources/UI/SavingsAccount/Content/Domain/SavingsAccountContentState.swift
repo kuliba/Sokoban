@@ -9,15 +9,12 @@ import Foundation
 
 public struct SavingsAccountContentState<Landing, InformerPayload> {
     
-    public var status: SavingsAccountContentStatus<Landing, InformerPayload>
-    public var navTitle: SavingsAccountNavTitle
+    public var state: SavingsAccountContentStatus<Landing, InformerPayload>
     
     public init(
-        status: SavingsAccountContentStatus<Landing, InformerPayload>,
-        navTitle: SavingsAccountNavTitle = .empty
+        state: SavingsAccountContentStatus<Landing, InformerPayload>
     ) {
-        self.status = status
-        self.navTitle = navTitle
+        self.state = state
     }
 }
 
@@ -25,9 +22,9 @@ extension SavingsAccountContentState: Equatable where Landing: Equatable, Inform
 
 public enum SavingsAccountContentStatus<Landing, InformerPayload> {
     
-    case initiate
+    case idle
     case inflight(Landing?)
-    case loaded(Landing?)
+    case loaded(Landing?) // TODO: remove optinal
     case failure(Failure, Landing?)
 
     public enum Selection: Equatable {
@@ -45,7 +42,7 @@ public enum SavingsAccountContentStatus<Landing, InformerPayload> {
         switch self {
         case .inflight:
             return true
-        case .initiate, .failure, .loaded:
+        case .idle, .failure, .loaded:
             return false
         }
     }
@@ -62,7 +59,7 @@ public enum SavingsAccountContentStatus<Landing, InformerPayload> {
         case let .inflight(landing):
             return landing
             
-        case .initiate:
+        case .idle:
             return nil
         }
     }

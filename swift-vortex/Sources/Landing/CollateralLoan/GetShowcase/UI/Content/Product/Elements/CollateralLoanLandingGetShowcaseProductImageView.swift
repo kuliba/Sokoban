@@ -32,5 +32,5 @@ extension CollateralLoanLandingGetShowcaseProductImageView {
     
     typealias Md5hash = String
     typealias Config = CollateralLoanLandingGetShowcaseViewConfig
-    typealias Factory = CollateralLoanLandingGetShowcaseViewFactory
+    typealias Factory = CollateralLoanLandingFactory
 }

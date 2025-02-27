@@ -21,9 +21,21 @@ extension SavingsAccountConfig {
         list: .init(
             background: .gray30,
             item: .init(
-                title: .init(textFont: .footnote, textColor: .black),
-                subtitle: .init(textFont: .footnote, textColor: .gray)),
-            title: .init(textFont: .title3, textColor: .green)),
+                title: .init(
+                    textFont: .footnote,
+                    textColor: .black
+                ),
+                subtitle: .init(
+                    textFont: .footnote,
+                    textColor: .gray
+                )
+            ),
+            title: .init(
+                textFont: .title3,
+                textColor: .green
+            ),
+            spacing: 18
+        ),
         offsetForDisplayHeader: 100,
         paddings: .init(
             negativeBottomPadding: 60,
@@ -45,7 +57,7 @@ extension SavingsAccountState {
         title: "Накопительный счет")
 }
 
-extension SavingsAccountState.Items {
+extension ListItems {
     
     static let advantages: Self = .init(
         title: "Преимущества",
@@ -185,7 +197,8 @@ extension SavingsAccountDetails {
         currentInterest: 22400,
         minBalance: 8000,
         paidInterest: 11134056.77,
-        progress: 0.8,
+        progress: 0.8, 
+        dateNext: nil,
         currencyCode: "₽"
     )
 }

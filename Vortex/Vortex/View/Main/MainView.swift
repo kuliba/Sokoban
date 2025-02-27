@@ -271,20 +271,11 @@ struct MainView<NavigationOperationView: View>: View {
             servicePicker(flowModel: node.model)
             
         case let .collateralLoanLanding(binder):
-            viewFactory.makeCollateralLoanShowcaseWrapperView(binder, viewModel.resetDestination)
-                .navigationBarWithBack(
-                    title: "Кредиты",
-                    dismiss: viewModel.resetDestination
-                )
-                .edgesIgnoringSafeArea(.bottom)
+            makeCollateralLoanShowcaseWrapperView(binder: binder)
 
         case let .collateralLoanLandingProduct(binder):
-            viewFactory.makeCollateralLoanWrapperView(binder, viewModel.resetDestination)
-                .navigationBarWithBack(
-                    title: "",
-                    dismiss: viewModel.resetDestination
-                )
- 
+            makeCollateralLoanWrapperView(binder: binder)
+            
         case .orderCard:
             viewFactory.components.makeOrderCardView()
         }
@@ -413,6 +404,51 @@ private extension MainView {
     }
     
     private typealias Config = BannerPickerSectionStateItemViewConfig
+    
+    private func makeCollateralLoanShowcaseWrapperView(binder: GetShowcaseDomain.Binder) -> some View {
+        
+        let factory = viewModel.makeCollateralLoanFactory()
+        
+        return viewFactory.components.makeCollateralLoanShowcaseWrapperView(
+            binder: binder,
+            goToMain: viewModel.resetDestination,
+            getPDFDocument: viewModel.getPDFDocument,
+            makeOperationDetailInfoViewModel: {
+                viewModel.makeOperationDetailInfoViewModel(
+                    payload: $0,
+                    makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash
+                )
+            },
+            makeCollateralLoanLandingFactory: viewModel.makeCollateralLoanLandingFactory
+        )
+        .navigationBarWithBack(
+            title: "Кредиты",
+            dismiss: viewModel.resetDestination
+        )
+        .edgesIgnoringSafeArea(.bottom)
+    }
+    
+    private func makeCollateralLoanWrapperView(binder: GetCollateralLandingDomain.Binder) -> some View {
+        
+        let factory = viewModel.makeCollateralLoanFactory()
+        
+        return viewFactory.components.makeCollateralLoanWrapperView(
+            binder: binder,
+            getPDFDocument: viewModel.getPDFDocument,
+            goToMain: viewModel.resetDestination,
+            makeOperationDetailInfoViewModel: {
+                viewModel.makeOperationDetailInfoViewModel(
+                    payload: $0,
+                    makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash
+                )
+            },
+            makeCollateralLoanLandingFactory: viewModel.makeCollateralLoanLandingFactory
+        )
+        .navigationBarWithBack(
+            title: "",
+            dismiss: viewModel.resetDestination
+        )
+    }
 }
 
 // MARK: - payment provider & service pickers
@@ -595,21 +631,9 @@ extension MainViewFactory {
                     viewFactory: .preview
                 )
             },
-            components: .preview,
-            makeCollateralLoanShowcaseWrapperView: { _,_ in .preview },
-            makeCollateralLoanWrapperView: { _,_ in .preivew }
+            components: .preview
         )
     }
-}
-
-extension CollateralLoanLandingWrapperView {
-    
-    static let preivew = Self(
-        binder: .preview,
-        factory: .preview,
-        viewModelFactory: .preview,
-        goToMain: {}
-    )
 }
 
 extension ProductProfileViewModel  {
@@ -635,6 +659,7 @@ extension ProductProfileViewModel  {
         makePaymentProviderServicePickerFlowModel: AnywayServicePickerFlowModel.preview,
         makeServicePaymentBinder: ServicePaymentBinder.preview,
         makeOpenNewProductButtons: { _ in [] },
+        operationDetailFactory: .preview,
         makeOrderCardViewModel: { /*TODO:  implement preview*/ },
         makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() }
     )
@@ -661,7 +686,9 @@ extension MainViewModel {
         sections: [],
         bindersFactory: .preview,
         viewModelsFactory: .preview,
-        makeOpenNewProductButtons: { _ in [] }
+        makeOpenNewProductButtons: { _ in [] },
+        getPDFDocument: { _,_ in }, 
+        makeCollateralLoanLandingFactory: { _ in .preview }
     )
 }
 
@@ -680,7 +707,8 @@ private extension GetCollateralLandingDomain.Content {
     
     static let preview = GetCollateralLandingDomain.Content(
         initialState: .init(
-            landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE"
+            landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
+            formatCurrency: { _ in "" }
         ),
         reduce: {
             state,_ in (state, nil)

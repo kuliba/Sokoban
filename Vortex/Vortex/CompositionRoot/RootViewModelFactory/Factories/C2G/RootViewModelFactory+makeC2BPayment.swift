@@ -63,28 +63,33 @@ extension RootViewModelFactory {
             case let .failure(failure):
                 completion(.failure(failure))
                 
-            case let .success(enhancedResponse):
-                let model = makeOperationDetailModel(initialState: .init(
-                    details: .pending,
-                    response: enhancedResponse
-                ))
-                model.event(.load)
+            case let .success(payload):
+                let details = makeOperationDetailByPaymentID(payload)
+                details.event(.load)
                 
-                completion(.success(model))
+                let document = makeC2GDocumentButton()
+                document.event(.load)
+                
+                completion(.success(.init(
+                    context: .init(payload), 
+                    details: details,
+                    document: document
+                )))
             }
         }
     }
     
-    typealias EnhancedResponseResult = Result<OperationDetailDomain.State.EnhancedResponse, BackendFailure>
+    typealias ModelPayloadResult = Result<OperationDetailDomain.ModelPayload, BackendFailure>
     
     @inlinable
     func createC2GPayment(
         digest: C2GPaymentDomain.Select.Digest,
-        completion: @escaping (EnhancedResponseResult) -> Void
+        completion: @escaping (ModelPayloadResult) -> Void
     ) {
         let service = onBackground(
             makeRequest: RequestFactory.createCreateC2GPaymentRequest,
-            mapResponse: RemoteServices.ResponseMapper.mapCreateC2GPaymentResponse
+            mapResponse: RemoteServices.ResponseMapper.mapCreateC2GPaymentResponse,
+            connectivityFailureMessage: .connectivity
         )
         
         service(digest.payload) { [weak self] in
@@ -93,43 +98,38 @@ extension RootViewModelFactory {
             
             switch $0 {
             case let .failure(failure):
-                completion(.failure(
-                    failure.backendFailure(connectivityMessage: .connectivity)
-                ))
-
-            case let .success(response):
-                guard let status = response.status
-                else { return completion(.failure(.connectivityFailure)) }
+                completion(.failure(failure))
                 
-                completion(.success(.init(
-                    formattedAmount: formatAmount(value: response.amount),
-                    formattedDate: nil, // TODO: extract from new version of response - Lera
-                    merchantName: response.merchantName,
-                    message: response.message,
-                    paymentOperationDetailID: response.paymentOperationDetailID,
-                    product: digest.product,
-                    purpose: response.purpose,
-                    status: status,
-                    uin: digest.uin
-                )))
+            case let .success(response):
+                guard let basicDetails = response.payload(
+                    digest: digest,
+                    formattedAmount: format(amount: response.amount, currencyCode: "RUB")
+                ) else { return completion(.failure(.connectivityFailure)) }
+                
+                completion(.success(basicDetails))
             }
         }
     }
     
-    private func formatAmount(
-        value: Decimal?
-    ) -> String? {
+    @inlinable
+    func makeC2GDocumentButton(
+    ) -> DocumentButtonDomain.Model {
         
-        guard let value = value?.doubleValue else { return nil }
-        
-        return model.amountFormatted(amount: value, currencyCode: "RUB", style: .normal)
+        return makeDocumentButton { [weak self] completion in
+            
+            // TODO: replace stub with real service when API is ready
+            self?.schedulers.background.delay(for: .seconds(2)) {
+                
+                completion(.failure(NSError(domain: "Load print form error", code: -1)))
+            }
+        }
     }
     
     // TODO: remove stub
     @inlinable
     func easterEggsCreateC2GPayment(
         _ digest: C2GPaymentDomain.Select.Digest,
-        _ status: OperationDetailDomain.State.Status,
+        _ status: OperationDetailDomain.Status,
         _ completion: @escaping (C2GPaymentDomain.Navigation) -> Void
     ) {
         schedulers.background.delay(for: .seconds(2)) { [weak self] in
@@ -144,15 +144,21 @@ extension RootViewModelFactory {
                 completion(.failure(.server("server error")))
                 
             case "99999999999999999999":
-                let initialState = OperationDetailDomain.State(
-                    details: .pending,
-                    response: .stub(digest: digest, status: status)
+                let basicDetails: OperationDetailDomain.ModelPayload = .stub(
+                    digest: digest,
+                    status: status
                 )
+                let details = makeOperationDetailByPaymentID(basicDetails)
+                details.event(.load)
                 
-                let model = makeOperationDetailModel(initialState: initialState)
-                model.event(.load)
+                let document = makeC2GDocumentButton()
+                document.event(.load)
                 
-                completion(.success(model))
+                completion(.success(.init(
+                    context: .init(basicDetails), 
+                    details: details,
+                    document: document
+                )))
                 
             default:
                 completion(.failure(.server("server error")))
@@ -184,9 +190,35 @@ private extension String {
 
 // MARK: - Adapters
 
+private extension C2GPaymentDomain.Complete.Context {
+    
+    init(_ payload: OperationDetailDomain.ModelPayload) {
+        
+        self.init(
+            dateForDetail: payload.dateForDetail,
+            formattedAmount: payload.formattedAmount,
+            merchantName: payload.merchantName,
+            purpose: payload.purpose,
+            status: payload.status.status
+        )
+    }
+}
+
+private extension OperationDetailDomain.Status {
+    
+    var status: C2GPaymentDomain.Complete.Context.Status {
+        
+        switch self {
+        case .completed: return .completed
+        case .inflight:  return .inflight
+        case .rejected:  return .rejected
+        }
+    }
+}
+
 private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
     
-    var status: OperationDetailDomain.State.Status? {
+    var status: OperationDetailDomain.Status? {
         
         switch documentStatus {
         case "COMPLETE":    return .completed
@@ -211,96 +243,52 @@ private extension C2GPaymentDigest {
     }
 }
 
-private extension C2GPaymentState
-where Context == C2GPaymentDomain.Context {
-    
-    init(payload: C2GPaymentDomain.ContentPayload) {
-        
-        self.init(
-            context: .init(term: .terms(url: payload.url)),
-            productSelect: .init(selected: payload.selectedProduct),
-            termsCheck: payload.termsCheck,
-            uin: payload.uin
-        )
-    }
-}
-
-private extension AttributedString {
-    
-    static func terms(url: URL?) -> Self {
-        
-        var attributedString = AttributedString.turnSBPOnMessage
-        attributedString.foregroundColor = .textPlaceholder
-        attributedString.font = .textBodyMR14200()
-        
-        if let url, let terms = attributedString.range(of: String.termURLPlace) {
-            
-            attributedString[terms].link = url
-            attributedString[terms].underlineStyle = .single
-            attributedString[terms].foregroundColor = .textSecondary
-        }
-        
-        return attributedString
-    }
-}
-
-private extension AttributedString {
-    
-    static let turnSBPOnMessage: Self = .init("Включить переводы через СБП,\n\(String.termURLPlace)")
-}
-
 private extension String {
     
     static let connectivity = "Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения"
-    
-    static let termURLPlace = "принять условия обслуживания"
 }
 
-import CombineSchedulers
-
-extension C2GPaymentViewModel
-where State == C2GPaymentState<C2GPaymentDomain.Context>,
-      Event == C2GPaymentEvent,
-      Effect == C2GPaymentEffect {
+private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
     
-    convenience init(
-        payload: C2GPaymentDomain.ContentPayload,
-        scheduler: AnySchedulerOf<DispatchQueue>
-    ) {
-        let initialState = C2GPaymentState(payload: payload)
+    func payload(
+        digest: C2GPaymentDigest,
+        formattedAmount: String?
+    ) -> OperationDetailDomain.ModelPayload? {
         
-        let productSelectReducer = ProductSelectReducer(
-            getProducts: { payload.products }
-        )
-        let reducer = C2GPaymentDomain.ContentReducer(
-            productSelectReduce: productSelectReducer.reduce
-        )
+        guard let status else { return nil }
         
-        self.init(
-            initialState: initialState,
-            reduce: reducer.reduce,
-            handleEffect: { _,_ in },
-            scheduler: scheduler
+        return .init(
+            product: digest.product,
+            status: status,
+            dateForDetail: dateForDetail,
+            formattedAmount: formattedAmount,
+            merchantName: merchantName,
+            message: message,
+            paymentOperationDetailID: paymentOperationDetailID,
+            purpose: purpose,
+            uin: digest.uin
         )
     }
 }
 
-private extension OperationDetailDomain.State.EnhancedResponse {
+// MARK: - Stub
+
+private extension OperationDetailDomain.ModelPayload {
     
     static func stub(
         digest: C2GPaymentDomain.Select.Digest,
-        status: OperationDetailDomain.State.Status
+        status: OperationDetailDomain.Status
     ) -> Self {
         
         return .init(
+            product: digest.product,
+            status: status, 
+            dateForDetail: "19 февраля 2025, 12:44",
             formattedAmount: "100 ₽",
-            formattedDate: "06.05.2021 15:38:12",
             merchantName: "merchantName",
             message: "message",
             paymentOperationDetailID: 122004,
-            product: digest.product,
             purpose: "purpose",
-            status: status,
             uin: digest.uin
         )
     }

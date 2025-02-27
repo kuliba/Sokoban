@@ -100,7 +100,7 @@ struct CreateDraftCollateralLoanApplicationPeriodView_Previews<Confirmation, Inf
     static var previews: some View {
         
         CreateDraftCollateralLoanApplicationPeriodView<Confirmation, InformerPayload>(
-            state: .init(application: .preview),
+            state: .init(application: .preview, formatCurrency: { _ in "" }),
             event: { print($0) },
             config: .default,
             factory: .preview

@@ -66,5 +66,5 @@ extension CollateralLoanLandingGetShowcaseProductView {
     typealias Product = CollateralLoanLandingGetShowcaseData.Product
     typealias Config = CollateralLoanLandingGetShowcaseViewConfig
     typealias Event = GetShowcaseDomain.Event
-    typealias Factory = CollateralLoanLandingGetShowcaseViewFactory
+    typealias Factory = CollateralLoanLandingFactory
 }

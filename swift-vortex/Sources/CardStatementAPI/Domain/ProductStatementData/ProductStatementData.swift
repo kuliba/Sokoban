@@ -114,6 +114,19 @@ public struct ProductStatementData: Equatable {
     public let tranDate: Date?
     public let MCC: Int?
     
+    // V3
+    public let discount: String?
+    public let transAmm: String?
+    public let discountExpiry: String?
+    public let dateN: String?
+    public let paymentTerm: String?
+    public let legalAct: String?
+    public let supplierBillId: String?
+    public let realPayerFIO: String?
+    public let realPayerINN: String?
+    public let realPayerKPP: String?
+    public let upno: String?
+    
     public init(
         type: OperationEnvironment,
         accountID: Int?,
@@ -141,7 +154,18 @@ public struct ProductStatementData: Equatable {
         opCode: Int?,
         date: Date,
         tranDate: Date?,
-        MCC: Int?
+        MCC: Int?,
+        discount: String?,
+        transAmm: String?,
+        discountExpiry: String?,
+        dateN: String?,
+        paymentTerm: String?,
+        legalAct: String?,
+        supplierBillId: String?,
+        realPayerFIO: String?,
+        realPayerINN: String?,
+        realPayerKPP: String?,
+        upno: String?
     ) {
         self.type = type
         self.accountID = accountID
@@ -170,5 +194,16 @@ public struct ProductStatementData: Equatable {
         self.date = date
         self.tranDate = tranDate
         self.MCC = MCC
+        self.discount = discount
+        self.transAmm = transAmm
+        self.discountExpiry = discountExpiry
+        self.dateN = dateN
+        self.paymentTerm = paymentTerm
+        self.legalAct = legalAct
+        self.supplierBillId = supplierBillId
+        self.realPayerFIO = realPayerFIO
+        self.realPayerINN = realPayerINN
+        self.realPayerKPP = realPayerKPP
+        self.upno = upno
     }
 }

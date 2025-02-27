@@ -11,6 +11,8 @@ import RxViewModel
 import SavingsAccount
 import SwiftUI
 import UIPrimitives
+import PaymentCompletionUI
+import TextFieldComponent
 
 extension ViewComponents {
     
@@ -28,20 +30,22 @@ extension ViewComponents {
                     .padding(.top, 16)
                     .zIndex(1)
                 
-                makeOpenSavingsAccountContentView(binder.content)
+                makeOpenSavingsAccountContentView(binder.content, .prod, dismiss)
                     .frame(maxHeight: .infinity, alignment: .top)
-                    .padding(.horizontal)
                     .alert(
                         item: state.stringAlert,
                         content: { $0.error(dismiss: dismiss) }
                     )
             }
+            .onDisappear { binder.flow.event(.dismiss)}
         }
     }
     
     @inlinable
     func makeOpenSavingsAccountContentView(
-        _ content: OpenSavingsAccountDomain.Content
+        _ content: OpenSavingsAccountDomain.Content,
+        _ config: OrderSavingsAccountConfig,
+        _ dismiss: @escaping () -> Void
     ) -> some View {
         
         RxWrapperView(model: content) { state, event in
@@ -49,13 +53,14 @@ extension ViewComponents {
             RefreshableScrollView(
                 action: { event(.load) },
                 showsIndicators: false,
-                coordinateSpaceName: "openSavingsAccountScroll"
+                coordinateSpaceName: "openSavingsAccountScroll",
+                refreshCompletionDelay: 2.0
             ) {
                 
                 SavingsAccount.OrderAccountView(
                     state: state,
                     event: event,
-                    config: .prod,
+                    config: config,
                     factory: .init(
                         makeIconView: makeIconView,
                         makeBannerImageView: makeGeneralIconView
@@ -63,15 +68,29 @@ extension ViewComponents {
                     confirmationView: {
                         
                         confirmationView($0, state, event)
+                    }, 
+                    productSelectView: {
+                        
+                        makeProductSelectView(
+                            state: state.productSelect,
+                            event: { event(.productSelect($0)) })
                     }
                 )
+                .onFirstAppear { content.event(.load) }
+                .padding(.horizontal)
             }
+            .navigationBarWithBack(
+                title: .title,
+                subtitle: .subtitle,
+                dismiss: dismiss
+            )
             .safeAreaInset(edge: .bottom) {
-                
-                continueButton(state: state) { event(.continue) }
+               
+                footer(state: state, event: event)
             }
             .opacity(state.isLoading ? 0.7 : 1)
             .disabled(state.isLoading)
+            .loaderOverlay(isLoading: state.isLoading)
         }
     }
     
@@ -112,16 +131,32 @@ extension ViewComponents {
         }
     }
     
-    private func continueButton(
+    @ViewBuilder
+    private func footer(
         state: OpenSavingsAccountDomain.State,
-        action: @escaping () -> Void
+        event: @escaping (OpenSavingsAccountDomain.Event) -> Void
     ) -> some View {
-    
-        StatefulButtonView(
-            isActive: state.isValid,
-            event: action,
-            config: .iVortex(title: state.continueButtonTitle)
-        )
+        
+        if let form = state.form,
+           form.topUp.isOn,
+           form.topUp.isShowFooter
+        {
+            AmountView(
+                amount: form.amount,
+                event: { event(.amount($0)) },
+                currencySymbol: form.constants.currency.symbol,
+                config: .iVortex,
+                infoView: makeAmountInfoView
+            )
+        } else {
+            // TODO: add amount
+            StatefulButtonView(
+                isActive: state.isValid,
+                event: { event(.continue) },
+                config: .iVortex(title: state.continueButtonTitle)
+            )
+            .padding(.horizontal)
+        }
     }
 }
 
@@ -223,4 +258,10 @@ private extension InformerInternalView {
             color: informer.color
         )
     }
+}
+
+private extension String {
+    
+    static let title: Self = "Оформление"
+    static let subtitle: Self = "накопительного счета"
 }

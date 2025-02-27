@@ -12,12 +12,12 @@ struct TemplatesListFlowState<Content, PaymentFlow>{
     
     let content: Content
     var isLoading = false
-    var status: Status?
+    var navigation: Navigation?
 }
 
 extension TemplatesListFlowState {
  
-    enum Status {
+    enum Navigation {
         
         case alert(ServiceFailure)
         case destination(Destination)
@@ -56,9 +56,9 @@ extension TemplatesListFlowState {
         .init(isLoading: isLoading, outside: outside)
     }
     
-    var outside: Status.Outside? {
+    var outside: Navigation.Outside? {
         
-        guard case let .outside(outside) = status
+        guard case let .outside(outside) = navigation
         else { return nil }
  
         return outside
@@ -67,6 +67,6 @@ extension TemplatesListFlowState {
     struct ExternalTemplatesListFlowState: Equatable {
         
         let isLoading: Bool
-        let outside: Status.Outside?
+        let outside: Navigation.Outside?
     }
 }

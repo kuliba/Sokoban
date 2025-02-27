@@ -7,6 +7,7 @@
 
 import Combine
 import SwiftUI
+import CollateralLoanLandingGetShowcaseUI
 
 struct GetCollateralLandingConditionView: View{
 
@@ -90,7 +91,7 @@ struct GetCollateralLandingConditionView_Previews: PreviewProvider {
         
         GetCollateralLandingConditionView(
             condition: GetCollateralLandingProduct.carStub.conditions.first!,
-            config: .default,
+            config: .preview,
             makeImageViewWithMD5Hash: Factory.preview.makeImageViewWithMD5Hash
         )
         .padding(.top, 300)

@@ -17,14 +17,11 @@ final class RootViewModelFactory_makeOpenNewProductButtonsTests: RootViewModelFa
             savingsAccountFlag: .active
         )
         
-        XCTAssertNoDiff(
-            sut.map(\.id),
-            [
-                .card, .deposit, .account, .sticker, .loan,
-                .savingsAccount,
-                .insurance, .mortgage
-            ]
-        )
+        XCTAssertNoDiff(sut.map(\.type), [
+            .card, .deposit, .account, .sticker, .loan,
+            .savingsAccount,
+            .insurance, .mortgage
+        ])
     }
     
     func test_savingsAccountFlagInActive_shouldReturnButtonsWithoutSavingsAccountButton() {
@@ -34,13 +31,10 @@ final class RootViewModelFactory_makeOpenNewProductButtonsTests: RootViewModelFa
             savingsAccountFlag: .inactive
         )
         
-        XCTAssertNoDiff(
-            sut.map(\.id),
-            [
-                .card, .deposit, .account, .sticker, .loan,
-                .insurance, .mortgage
-            ]
-        )
+        XCTAssertNoDiff(sut.map(\.type), [
+            .card, .deposit, .account, .sticker, .loan,
+            .insurance, .mortgage
+        ])
     }
     
     // MARK: - collateralLoanFlag
@@ -105,21 +99,21 @@ final class RootViewModelFactory_makeOpenNewProductButtonsTests: RootViewModelFa
             action: { _ in }
         )
     }
-    
+        
     private func assert(
         _ buttons: [ViewModel],
         openProductType: OpenProductType,
-        type: _TapAction?,
+        type: EquatableTapAction?,
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        let button = buttons.first(where: { $0.id == openProductType.rawValue })
+        let button = buttons.first(where: { $0.type == openProductType })
         
         XCTAssertNoDiff(button?.tapActionType.type, type, "Expected \(String(describing: type)), but got \(String(describing: button?.tapActionType.type)) instead.", file: file, line: line)
     }
 }
 
-private enum _TapAction {
+private enum EquatableTapAction {
     
     case action
     case url
@@ -127,23 +121,11 @@ private enum _TapAction {
 
 private extension NewProductButton.ViewModel.TapActionType {
     
-    var type: _TapAction {
+    var type: EquatableTapAction {
         
         switch self {
         case .action:   return .action
         case .url:      return .url
         }
     }
-}
-
-private extension String {
-    
-    static let account = OpenProductType.account.rawValue
-    static let card = OpenProductType.card.rawValue
-    static let deposit = OpenProductType.deposit.rawValue
-    static let insurance = OpenProductType.insurance.rawValue
-    static let loan = OpenProductType.loan.rawValue
-    static let mortgage = OpenProductType.mortgage.rawValue
-    static let savingsAccount = OpenProductType.savingsAccount.rawValue
-    static let sticker = OpenProductType.sticker.rawValue
 }
