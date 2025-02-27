@@ -88,8 +88,8 @@ struct CollateralLoanShowcaseWrapperView: View {
                 binder: landing,
                 config: .default,
                 factory: factory,
-                viewModelFactory: viewModelFactory,
-                goToMain: goToMain
+                goToMain: goToMain,
+                makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel
             )
             .navigationBarWithBack(title: "") { binder.flow.event(.dismiss) }
         }

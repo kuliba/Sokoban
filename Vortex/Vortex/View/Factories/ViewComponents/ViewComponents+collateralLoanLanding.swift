@@ -23,8 +23,8 @@ extension ViewComponents {
         
         .init(
             binder: binder,
-            factory: makeCollateralLoanLandingFactory(getPDFDocument),
             config: .default,
+            factory: makeCollateralLoanLandingFactory(getPDFDocument),
             goToMain: goToMain,
             makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel
         )
