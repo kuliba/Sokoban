@@ -5,12 +5,15 @@
 //  Created by Igor Malyarov on 15.02.2025.
 //
 
+import SwiftUI
+
 extension ViewComponents {
     
     @inlinable
     func navBarModelWithQR(
         title: String,
         subtitle: String? = nil,
+        subtitleForeground: Color = .textSecondary,
         dismiss: @escaping () -> Void,
         scanQR: (() -> Void)? = nil
     ) -> NavigationBarView.ViewModel {
@@ -20,6 +23,7 @@ extension ViewComponents {
         return navBarModelWithBack(
             title: title,
             subtitle: subtitle,
+            subtitleForeground: subtitleForeground,
             dismiss: dismiss,
             rightItem: .barcodeScanner(action: scanQR)
         )
@@ -29,27 +33,42 @@ extension ViewComponents {
     func navBarModelWithBack(
         title: String,
         subtitle: String? = nil,
+        subtitleForeground: Color = .textSecondary,
         dismiss: @escaping () -> Void
     ) -> NavigationBarView.ViewModel {
         
-        navBarModelWithBack(title: title, subtitle: subtitle, dismiss: dismiss, rightItems: [])
+        navBarModelWithBack(
+            title: title,
+            subtitle: subtitle,
+            subtitleForeground: subtitleForeground,
+            dismiss: dismiss,
+            rightItems: []
+        )
     }
     
     @inlinable
     func navBarModelWithBack(
         title: String,
         subtitle: String? = nil,
+        subtitleForeground: Color = .textSecondary,
         dismiss: @escaping () -> Void,
         rightItem: NavigationBarView.ViewModel.ButtonItemViewModel
     ) -> NavigationBarView.ViewModel {
         
-        navBarModelWithBack(title: title, subtitle: subtitle, dismiss: dismiss, rightItems: [rightItem])
+        navBarModelWithBack(
+            title: title,
+            subtitle: subtitle,
+            subtitleForeground: subtitleForeground,
+            dismiss: dismiss,
+            rightItems: [rightItem]
+        )
     }
     
     @inlinable
     func navBarModelWithBack(
         title: String,
         subtitle: String? = nil,
+        subtitleForeground: Color = .textSecondary,
         dismiss: @escaping () -> Void,
         rightItems: [NavigationBarView.ViewModel.ButtonItemViewModel]
     ) -> NavigationBarView.ViewModel {
@@ -60,7 +79,8 @@ extension ViewComponents {
             title: title,
             subtitle: subtitle,
             leftItems: [BackButton(icon: .ic24ChevronLeft, action: dismiss)],
-            rightItems: rightItems
+            rightItems: rightItems,
+            subtitleForeground: subtitleForeground
         )
     }
 }

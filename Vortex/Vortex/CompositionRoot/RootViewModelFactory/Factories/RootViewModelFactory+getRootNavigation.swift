@@ -7,6 +7,9 @@
 
 import Combine
 import FlowCore
+import SavingsAccount
+import RemoteServices
+import PDFKit
 
 extension RootViewModelFactory {
     
@@ -30,8 +33,49 @@ extension RootViewModelFactory {
         case let .orderCardResponse(orderCardResponse):
             completion(.orderCardResponse(orderCardResponse))
         
-        case let .orderSavingsAccountResponse(orderAccountResponse):
-            completion(.orderSavingsAccountResponse(orderAccountResponse))
+        case let .savingsAccount(orderAccountResponse):
+            
+            let detailsService = nanoServiceComposer.compose(
+                createRequest: RequestFactory.createGetOperationDetailByPaymentIDRequest,
+                mapResponse: RemoteServices.ResponseMapper.mapGetOperationDetailByPaymentIDResponse
+            )
+            
+            let details = DocumentButtonDomain.Model.makeStateMachine(
+                load: { completion in
+                    if let paymentOperationDetailId = orderAccountResponse.paymentOperationDetailId {
+                        detailsService(.init(String(paymentOperationDetailId))) { response in
+                            
+                            completion(response)
+                            _ = detailsService
+                        }
+                    }
+                },
+                scheduler: schedulers.main
+            )
+            
+            details.event(.load)
+            
+            let documentService = nanoServiceComposer.compose(
+                createRequest: RequestFactory.createGetPrintFormForSavingsAccountRequest,
+                mapResponse: RemoteServices.ResponseMapper.mapGetPrintFormForSavingsAccountResponse
+            )
+
+            let document = makeDocumentButton { completion in
+                if let accountID = orderAccountResponse.accountId {
+                    documentService((accountID, orderAccountResponse.paymentOperationDetailId)) { response in
+                        
+                        completion(response)
+                        _ = documentService
+                    }
+                }
+            }
+            document.event(.load)
+            
+            completion(.savingsAccount(.init(
+                context: .init(formattedAmount: nil, merchantName: nil, purpose: nil, status: orderAccountResponse.status.status), 
+                details: .preview(basicDetails: .preview),
+                document: document
+            )))
 
         case let .openProduct(type):
             
@@ -293,4 +337,19 @@ private extension FeatureFailure {
     static let disabledForCorporate: Self = .init(title: "Информация", message: "Данный функционал не доступен\nдля корпоративных карт.\nОткройте продукт как физ. лицо,\nчтобы использовать все\nвозможности приложения.")
     
     static let updateForNewPaymentFlow: Self = .init(message: "Обновите приложение до последней версии, чтобы получить доступ к новому разделу.")
+}
+
+extension OrderAccountResponse.Status {
+    
+    var status: OpenSavingsAccountCompleteDomain.Complete.Context.Status {
+        
+        switch self {
+        case .completed:
+            return .completed
+        case .inflight:
+            return .inflight
+        case .rejected:
+            return .rejected
+        }
+    }
 }

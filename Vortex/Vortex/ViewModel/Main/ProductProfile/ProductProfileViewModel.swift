@@ -1233,13 +1233,10 @@ private extension ProductProfileViewModel {
                             let lastAccountNumber = "*\(accountNumber.suffix(4))"
                             let title = "Закрыть счет"
                             
-                            var message = "Вы действительно хотите закрыть счет \(lastAccountNumber)?"
-                            
-                            if productFrom.balanceValue > 0 {
-                                
-                                message = "\(message)\n\nПри закрытии будет предложено перевести остаток денежных средств на другой счет/карту. Счет будет закрыт после совершения перевода."
-                            }
-                            
+                            let message = "Вы действительно хотите закрыть счет \(lastAccountNumber)?".closeMessage(
+                                isBalanceMoreThanZero: productFrom.balanceValue > 0,
+                                isSavingsAccount: productData?.asAccount?.isSavingAccount == true)
+
                             alert = .init(
                                 title: title,
                                 message: message,
@@ -3342,6 +3339,26 @@ extension Model {
             return Array(Set(statements.map(\.groupName)))
         } else {
             return []
+        }
+    }
+}
+
+private extension String {
+    
+    func closeMessage(
+        isBalanceMoreThanZero: Bool,
+        isSavingsAccount: Bool
+    ) -> Self {
+        
+        if isBalanceMoreThanZero {
+            if isSavingsAccount {
+                return "\(self)\n\nВ случае продолжения проценты за текущий месяц не будут выплачены\n\nПри закрытии будет предложено перевести остаток денежных средств на другой счет/карту. Счет будет закрыт после совершения перевода"
+            } else {
+                return "\(self)\n\nПри закрытии будет предложено перевести остаток денежных средств на другой счет/карту. Счет будет закрыт после совершения перевода."
+            }
+        }
+        else {
+            return self
         }
     }
 }

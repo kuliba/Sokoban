@@ -123,6 +123,7 @@ extension Services {
             case getProductDetails
             case getProductDynamicParamsList
             case getProductListByType
+            case getPrintFormForSavingsAccount
             case getSavingLanding
             case getSavingAccountInfo
             case getSberQRData
@@ -288,6 +289,12 @@ extension Services.Endpoint {
         pathPrefix: .rest,
         version: .none,
         serviceName: .makeOpenSavingsAccount
+    )
+    
+    static let getPrintFormForSavingsAccountRequest: Self = .init(
+        pathPrefix: .rest,
+        version: .v1,
+        serviceName: .getPrintFormForSavingsAccount
     )
 
     static let getSavingAccountInfo: Self = .init(

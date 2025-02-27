@@ -27,7 +27,7 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapGetSavingsAccountInfoResponse
         )
         
-        service(.init(accountID: accountNumber)) {
+        service(.init(accountNumber: accountNumber)) {
             
             completion(try? $0.map {
                 
