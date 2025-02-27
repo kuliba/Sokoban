@@ -53,7 +53,8 @@ extension ViewComponents {
             RefreshableScrollView(
                 action: { event(.load) },
                 showsIndicators: false,
-                coordinateSpaceName: "openSavingsAccountScroll"
+                coordinateSpaceName: "openSavingsAccountScroll",
+                refreshCompletionDelay: 2.0
             ) {
                 
                 SavingsAccount.OrderAccountView(

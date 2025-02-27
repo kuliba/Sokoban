@@ -19,9 +19,9 @@ public struct SavingsAccountConfig {
     let divider: Color
     let icon: Icon
     let list: ListConfig
-    let offsetForDisplayHeader: CGFloat
+    public let offsetForDisplayHeader: CGFloat
     let paddings: Paddings
-    let spacing: CGFloat
+    public let spacing: CGFloat
     let questionHeight: CGFloat
     
     public init(

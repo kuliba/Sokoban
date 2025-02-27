@@ -9,16 +9,7 @@ import Foundation
 
 public final class ContentReducer<Landing, InformerPayload> {
     
-    let refreshRange: Range<CGFloat>
-    let showTitleRange: PartialRangeFrom<CGFloat>
-
-    public init(
-        refreshRange: Range<CGFloat> = -100..<0,
-        showTitleRange: PartialRangeFrom<CGFloat> = 100...
-    ) {
-        self.refreshRange = refreshRange
-        self.showTitleRange = showTitleRange
-    }
+    public init() {}
 }
 
 public extension ContentReducer {
@@ -33,44 +24,32 @@ public extension ContentReducer {
         
         switch event {
         case .load:
-            if !state.status.isLoading {
-                let oldLanding = state.status.oldLanding
-                state.status = .inflight(oldLanding)
+            if !state.state.isLoading {
+                let oldLanding = state.state.oldLanding
+                state.state = .inflight(oldLanding)
                 effect = .load
             }
-            
-        case let .loaded(landing):
-            state.status = .loaded(landing)
-            
-        case let .failure(failure):
-            switch failure.kind {
-            case let .alert(message):
-                let oldLanding = state.status.oldLanding
-                state.status = .failure(.alert(message), oldLanding)
-                
-            case let .informer(informer):
-                let oldLanding = state.status.oldLanding
-                state.status = .failure(.informer(informer), oldLanding)
-            }
                         
-        case let .offset(offset):
-            if refreshRange.contains(offset), !state.status.isLoading {
-                    let oldLanding = state.status.oldLanding
-                    state.status = .inflight(oldLanding)
-                    effect = .load
-            }
+        case .dismissInformer:
+            let oldLanding = state.state.oldLanding
+            state.state = .loaded(oldLanding)
             
-            if offset > showTitleRange.lowerBound {
-                if state.navTitle == .empty {
-                    state.navTitle = .savingsAccount
+        case let .result(result):
+            switch result {
+            case let .failure(failure):
+                switch failure.kind {
+                case let .alert(message):
+                    let oldLanding = state.state.oldLanding
+                    state.state = .failure(.alert(message), oldLanding)
+                    
+                case let .informer(informer):
+                    let oldLanding = state.state.oldLanding
+                    state.state = .failure(.informer(informer), oldLanding)
                 }
+
+            case let .success(landing):
+                state.state = .loaded(landing)
             }
-            else if state.navTitle == .savingsAccount {
-                state.navTitle = .empty
-            }
-            
-        case let .dismissInformer(oldLanding):
-            state.status = .loaded(oldLanding)
         }
         
         return (state, effect)

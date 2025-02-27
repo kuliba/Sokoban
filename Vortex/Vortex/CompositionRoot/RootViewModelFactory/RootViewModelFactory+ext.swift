@@ -534,8 +534,8 @@ extension SavingsAccountDomain.ContentState {
     
     var select: SavingsAccountDomain.Select? {
         
-        switch status {
-        case .initiate, .inflight, .loaded:
+        switch state {
+        case .idle, .inflight, .loaded:
             return nil
             
         case let .failure(failure, _):
