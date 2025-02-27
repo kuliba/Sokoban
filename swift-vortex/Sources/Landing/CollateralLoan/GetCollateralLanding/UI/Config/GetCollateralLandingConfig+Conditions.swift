@@ -18,7 +18,6 @@ extension GetCollateralLandingConfig {
             header: Header,
             list: List
         ) {
-            
             self.header = header
             self.list = list
         }
@@ -32,7 +31,6 @@ extension GetCollateralLandingConfig {
                 text: String,
                 headerFont: FontConfig
             ) {
-                
                 self.text = text
                 self.headerFont = headerFont
             }
@@ -44,7 +42,11 @@ extension GetCollateralLandingConfig {
             public let fonts: Fonts
             public let colors: Colors
             
-            public init(layouts: Layouts, fonts: Fonts, colors: Colors) {
+            public init(
+                layouts: Layouts,
+                fonts: Fonts,
+                colors: Colors
+            ) {
                 self.layouts = layouts
                 self.fonts = fonts
                 self.colors = colors
@@ -81,7 +83,10 @@ extension GetCollateralLandingConfig {
                 public let title: FontConfig
                 public let subTitle: FontConfig
                 
-                public init(title: FontConfig, subTitle: FontConfig) {
+                public init(
+                    title: FontConfig,
+                    subTitle: FontConfig
+                ) {
                     self.title = title
                     self.subTitle = subTitle
                 }
@@ -91,7 +96,6 @@ extension GetCollateralLandingConfig {
                 
                 public let background: Color
                 public let iconBackground: Color
-                
                 
                 public init(background: Color, iconBackground: Color) {
                     self.background = background

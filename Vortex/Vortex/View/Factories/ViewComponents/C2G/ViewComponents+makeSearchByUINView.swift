@@ -72,6 +72,7 @@ extension ViewComponents {
             makeSPBFooter(isActive: state.isContinueActive, event: search)
         }
         .padding([.horizontal, .top])
+        .conditionalBottomPadding()
     }
     
     @inlinable

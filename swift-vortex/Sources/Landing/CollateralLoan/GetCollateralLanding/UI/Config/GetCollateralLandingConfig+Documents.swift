@@ -37,7 +37,6 @@ extension GetCollateralLandingConfig {
                 text: String,
                 headerFont: FontConfig
             ) {
-                
                 self.text = text
                 self.headerFont = headerFont
             }

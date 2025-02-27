@@ -5,11 +5,12 @@
 //  Created by Andryusina Nataly on 03.12.2024.
 //
 
+import Foundation
+
 public final class ContentEffectHandler<Landing, InformerPayload> {
     
     private let load: Load
     private let landingType: String
-    private var oldLanding: Landing? = nil
     
     public init(
         load: @escaping Load,
@@ -27,23 +28,11 @@ public extension ContentEffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-            
         case .load:
-             
-            load(landingType, { dispatch(.dismissInformer(self.oldLanding)) }) { [weak self] in
-                switch $0 {
-                case let .failure(backendFailure):
-                    
-                    dispatch(.failure(backendFailure))
-                    
-                case let .success(landing):
-                    self?.oldLanding = landing
-                    dispatch(.loaded(landing))
-                }
+            load(landingType, { dispatch(.dismissInformer) }) {
+
+                dispatch(.result($0))
             }
-            
-        case .dismissInformer:
-            dispatch(.dismissInformer(oldLanding))
         }
     }
 }

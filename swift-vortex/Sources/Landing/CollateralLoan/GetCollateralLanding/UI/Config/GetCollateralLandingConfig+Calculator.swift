@@ -51,7 +51,11 @@ extension GetCollateralLandingConfig {
             public let fonts: Fonts
             public let colors: Colors
 
-            public init(layouts: Layouts, fonts: Fonts, colors: Colors) {
+            public init(
+                layouts: Layouts,
+                fonts: Fonts,
+                colors: Colors
+            ) {
                 self.layouts = layouts
                 self.fonts = fonts
                 self.colors = colors
@@ -94,7 +98,10 @@ extension GetCollateralLandingConfig {
                 public let title: FontConfig
                 public let value: FontConfig
                 
-                public init(title: FontConfig, value: FontConfig) {
+                public init(
+                    title: FontConfig,
+                    value: FontConfig
+                ) {
                     self.title = title
                     self.value = value
                 }
@@ -128,8 +135,12 @@ extension GetCollateralLandingConfig {
             public let topPadding: CGFloat
             public let bottomPadding: CGFloat
             
-            public init(text: String, font: FontConfig, topPadding: CGFloat, bottomPadding: CGFloat) {
-                
+            public init(
+                text: String,
+                font: FontConfig,
+                topPadding: CGFloat,
+                bottomPadding: CGFloat
+            ) {
                 self.text = text
                 self.font = font
                 self.topPadding = topPadding
@@ -193,8 +204,9 @@ extension GetCollateralLandingConfig {
             
             public let titleText: String
             
-            public init(titleText: String) {
-                
+            public init(
+                titleText: String
+            ) {
                 self.titleText = titleText
             }
         }
@@ -203,8 +215,9 @@ extension GetCollateralLandingConfig {
             
             public let titleText: String
 
-            public init(titleText: String) {
-                
+            public init(
+                titleText: String
+            ) {
                 self.titleText = titleText
             }
         }
@@ -252,8 +265,11 @@ extension GetCollateralLandingConfig {
             public let titleTopPadding: CGFloat
             public let valueTopPadding: CGFloat
             
-            public init(titleText: String, titleTopPadding: CGFloat, valueTopPadding: CGFloat) {
-                
+            public init(
+                titleText: String,
+                titleTopPadding: CGFloat,
+                valueTopPadding: CGFloat
+            ) {
                 self.titleText = titleText
                 self.titleTopPadding = titleTopPadding
                 self.valueTopPadding = valueTopPadding

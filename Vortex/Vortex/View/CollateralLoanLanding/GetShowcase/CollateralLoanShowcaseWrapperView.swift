@@ -86,15 +86,10 @@ struct CollateralLoanShowcaseWrapperView: View {
         case let .landing(_, landing):
             CollateralLoanLandingWrapperView(
                 binder: landing,
-                factory: .init(
-                    makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
-                    makeImageViewWithURL: factory.makeImageViewWithURL,
-                    getPDFDocument: factory.getPDFDocument,
-                    formatCurrency: factory.formatCurrency
-                ),
-                config: config,
-                goToMain: goToMain,
-                makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel
+                config: .default,
+                factory: factory,
+                viewModelFactory: viewModelFactory,
+                goToMain: goToMain
             )
             .navigationBarWithBack(title: "") { binder.flow.event(.dismiss) }
         }

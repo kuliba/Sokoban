@@ -33,7 +33,7 @@ extension GetCollateralLandingConfig {
         }
         
         public struct Layouts {
-
+            
             public let spacing: CGFloat
             public let scrollThreshold: UInt
             public let sheetTopOffset: CGFloat

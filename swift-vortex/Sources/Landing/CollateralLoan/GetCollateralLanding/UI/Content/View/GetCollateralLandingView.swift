@@ -105,7 +105,7 @@ public struct GetCollateralLandingView: View {
 
                 DocumentsView(
                     product: product,
-                    config: config,
+                    config: config, 
                     externalEvent: externalEvent,
                     factory: factory
                 )

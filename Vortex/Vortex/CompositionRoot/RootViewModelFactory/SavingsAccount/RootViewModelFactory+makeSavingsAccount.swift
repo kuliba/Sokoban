@@ -35,7 +35,7 @@ extension RootViewModelFactory {
         
         let contentCancellable = binder.content.$state
             .compactMap {
-                switch $0.status {
+                switch $0.state {
                 case .loaded: return ()
                     
                 default: return nil
@@ -53,7 +53,7 @@ extension RootViewModelFactory {
     func makeSavingsAccount() -> SavingsAccountDomain.Binder {
         
         let content = makeContent(
-            status: .initiate
+            status: .idle
         )
         
         return composeBinder(
@@ -105,7 +105,7 @@ extension RootViewModelFactory {
         )
         
         return .init(
-            initialState: .init(status: status, navTitle: .init(title: "", subtitle: "")),
+            initialState: .init(state: status),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect,
             scheduler: schedulers.main
