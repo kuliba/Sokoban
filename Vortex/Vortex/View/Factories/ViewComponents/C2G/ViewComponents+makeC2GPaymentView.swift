@@ -95,6 +95,7 @@ extension ViewComponents {
                 .padding(.horizontal)
                 .background(.white)
             }
+            .conditionalBottomPadding()
         }
     }
     
