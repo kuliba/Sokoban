@@ -44,30 +44,34 @@ extension ViewComponents {
         
         RxWrapperView(model: binder.content) { state, event in
             
-            VStack(spacing: 20) {
+            makeSearchByUINContentView(state, event) {
                 
-                TextInputView(
-                    state: state,
-                    event: event,
-                    config: .iVortex(keyboard: .number, title: "УИН"),
-                    iconView: {
-                        
-                        Image.ic24FileHash
-                            .foregroundColor(.iconGray)
-                    }
-                )
-                .keyboardType(.numberPad)
-                .paddedRoundedBackground()
-                
-                Spacer()
-                
-                makeSPBFooter(isActive: state.isContinueActive) {
-                    
-                    binder.flow.event(.select(.uin(.init(value: binder.content.value))))
-                }
+                binder.flow.event(.select(.uin(state.uinInputState.value)))
             }
-            .padding([.horizontal, .top])
         }
+    }
+    
+    @inlinable
+    func makeSearchByUINContentView(
+        _ state: TextInputState,
+        _ event: @escaping (TextInputEvent) -> Void,
+        _ search: @escaping () -> Void
+    ) -> some View {
+        
+        TextInputView(
+            state: state,
+            event: event,
+            config: .iVortex(keyboard: .number, title: "УИН"),
+            iconView: { Image.ic24FileHash .foregroundColor(.iconGray) }
+        )
+        .keyboardType(.numberPad)
+        .paddedRoundedBackground()
+        .frame(maxHeight: .infinity, alignment: .top)
+        .safeAreaInset(edge: .bottom) {
+            
+            makeSPBFooter(isActive: state.isContinueActive, event: search)
+        }
+        .padding([.horizontal, .top])
     }
     
     @inlinable
@@ -86,7 +90,7 @@ extension ViewComponents {
             }
         }
     }
-
+    
     @inlinable
     func searchByUINFlowView(
         flow: SearchByUINDomain.Flow,
@@ -129,11 +133,6 @@ extension ViewComponents {
     }
 }
 
-extension SearchByUINDomain.Content {
-    
-    var value: String { state.uinInputState.value }
-}
-
 private extension TextInputState {
     
     var isContinueActive: Bool  {
@@ -151,7 +150,7 @@ private extension TextInputState {
     }
 }
 
-struct UINInputState: Equatable {
+private struct UINInputState: Equatable {
     
     var isEditing = false
     var isValid = false
@@ -229,12 +228,12 @@ extension SearchByUINDomain.Navigation.Destination: Identifiable {
         
         switch self {
         case let .c2gPayment(c2gPayment):
-            return .c2gPayment
+            return .c2gPayment(.init(c2gPayment))
         }
     }
     
-    enum ID: Hashable { // TODO: improve with ObjectIdentifier
+    enum ID: Hashable {
         
-        case c2gPayment
+        case c2gPayment(ObjectIdentifier)
     }
 }

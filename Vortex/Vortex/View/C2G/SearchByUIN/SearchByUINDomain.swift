@@ -29,11 +29,8 @@ extension SearchByUINDomain {
     enum Select: Equatable {
         
         case uin(UIN)
-    }
-    
-    struct UIN: Equatable {
         
-        let value: String
+        typealias UIN =  String
     }
     
     typealias Navigation = Result<C2GPayment, BackendFailure>
