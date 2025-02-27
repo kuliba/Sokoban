@@ -29,8 +29,8 @@ extension ViewComponents {
                 makeOrderCardLandingContentView(landing: landing.content)
             }
 
-        case let .creditCardMVP:
-            makeCreditCardMVPView(continue: {}, dismiss: dismiss) // TOCO: call content on `continue`
+        case let .creditCardMVP(creditCardMVP):
+            makeCreditCardMVPView(binder: creditCardMVP, dismiss: dismiss)
           
         case let .savingsAccount(nodes):
 

@@ -1405,6 +1405,8 @@
 		2AA7EDBF2A783D1400F5B00D /* LoggingURLSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA7EDBE2A783D1400F5B00D /* LoggingURLSessionDelegate.swift */; };
 		2AA9EC3F2D70B67C0056E6D0 /* СreditCardMVPFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9EC3E2D70B67C0056E6D0 /* СreditCardMVPFlag.swift */; };
 		2AA9EC422D70ECCF0056E6D0 /* ViewComponents+makeCreditCardMVPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9EC412D70ECCF0056E6D0 /* ViewComponents+makeCreditCardMVPView.swift */; };
+		2AA9EC442D70FBAA0056E6D0 /* CreditCardMVPDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9EC432D70FBA90056E6D0 /* CreditCardMVPDomain.swift */; };
+		2AA9EC462D70FE800056E6D0 /* RootViewModelFactory+makeCreditCardMVP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9EC452D70FE800056E6D0 /* RootViewModelFactory+makeCreditCardMVP.swift */; };
 		2AA9F30C2A5214A200D2C435 /* SVGImageData+test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9F30B2A5214A200D2C435 /* SVGImageData+test.swift */; };
 		2AAB56F52C7D8AAF002D96BC /* ProductIDEmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAB56F42C7D8AAF002D96BC /* ProductIDEmitter.swift */; };
 		2AAB56F72C7D8ACE002D96BC /* TemplateEmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAB56F62C7D8ACE002D96BC /* TemplateEmitter.swift */; };
@@ -5193,6 +5195,8 @@
 		2AA7EDBE2A783D1400F5B00D /* LoggingURLSessionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingURLSessionDelegate.swift; sourceTree = "<group>"; };
 		2AA9EC3E2D70B67C0056E6D0 /* СreditCardMVPFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "СreditCardMVPFlag.swift"; sourceTree = "<group>"; };
 		2AA9EC412D70ECCF0056E6D0 /* ViewComponents+makeCreditCardMVPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeCreditCardMVPView.swift"; sourceTree = "<group>"; };
+		2AA9EC432D70FBA90056E6D0 /* CreditCardMVPDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditCardMVPDomain.swift; sourceTree = "<group>"; };
+		2AA9EC452D70FE800056E6D0 /* RootViewModelFactory+makeCreditCardMVP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeCreditCardMVP.swift"; sourceTree = "<group>"; };
 		2AA9F30B2A5214A200D2C435 /* SVGImageData+test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SVGImageData+test.swift"; sourceTree = "<group>"; };
 		2AAB56F42C7D8AAF002D96BC /* ProductIDEmitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductIDEmitter.swift; sourceTree = "<group>"; };
 		2AAB56F62C7D8ACE002D96BC /* TemplateEmitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateEmitter.swift; sourceTree = "<group>"; };
@@ -12098,6 +12102,7 @@
 			isa = PBXGroup;
 			children = (
 				2AA258642CEB969F0038642C /* RootViewModelFactory+getRootNavigation.swift */,
+				2AA9EC452D70FE800056E6D0 /* RootViewModelFactory+makeCreditCardMVP.swift */,
 				2A3479832D6AF69C009CCC33 /* RootViewModelFactory+formatAmount.swift */,
 				2A3479852D6AFEF4009CCC33 /* RootViewModelFactory+productSelectProduct.swift */,
 				2A6167322D5BE7970026B036 /* C2G */,
@@ -12395,6 +12400,7 @@
 			isa = PBXGroup;
 			children = (
 				2AA9EC412D70ECCF0056E6D0 /* ViewComponents+makeCreditCardMVPView.swift */,
+				2AA9EC432D70FBA90056E6D0 /* CreditCardMVPDomain.swift */,
 			);
 			path = CreditCardMVP;
 			sourceTree = "<group>";
@@ -22703,6 +22709,7 @@
 				777460EB291E5B4C00D3FF46 /* ContactsCountryItemViewComponent.swift in Sources */,
 				689ECA812846A4CB0098664F /* Model+Legacy.swift in Sources */,
 				0BE0BE01290F28940064549E /* ServerCommand+QR.swift in Sources */,
+				2AA9EC442D70FBAA0056E6D0 /* CreditCardMVPDomain.swift in Sources */,
 				C1F799A329CD18DF0048346B /* Model+ChangeAbroad.swift in Sources */,
 				774A8B4A2865FD3600B81140 /* MyProductsView.swift in Sources */,
 				2A79C9F72B039995003E6DDC /* CVVPINSessionCache.swift in Sources */,
@@ -22786,6 +22793,7 @@
 				68FE398F286EBED80026CBD7 /* QrScannerView+Legacy.swift in Sources */,
 				C1F799A529D3ED030048346B /* Model+PaymentsReturn.swift in Sources */,
 				682092A427AC0653003DCAFD /* ServerCommands+Person.swift in Sources */,
+				2AA9EC462D70FE800056E6D0 /* RootViewModelFactory+makeCreditCardMVP.swift in Sources */,
 				2AE8862D2AFB9CA300D86E84 /* Services+makeFormSessionKeyService.swift in Sources */,
 				2AB5EBFE2D1AA20B00D32B4E /* RootViewModelFactory+processPayments.swift in Sources */,
 				83415AC02CCBBA3E00326319 /* RootViewModel+openUtilityPayment.swift in Sources */,
