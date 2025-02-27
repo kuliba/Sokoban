@@ -43,31 +43,3 @@ public extension CollateralLoanLandingFactory {
     typealias GetPDFDocument = (Payload, @escaping GetPDFDocumentCompletion) -> Void
     typealias FormatCurrency = (UInt) -> String?
 }
-
-// MARK: Preview helpers
-
-public extension CollateralLoanLandingFactory {
-    
-    static var preview: CollateralLoanLandingFactory {
-      
-        .init (
-            makeImageViewWithMD5Hash: { _ in .preview },
-            makeImageViewWithURL: { _ in .preview },
-            getPDFDocument: { _,_ in },
-            formatCurrency: { _ in "" }
-        )
-    }
-}
-
-extension UIPrimitives.AsyncImage {
-    
-    static let preview = UIPrimitives.AsyncImage(
-        image: .iconPlaceholder,
-        publisher: Just(.iconPlaceholder).eraseToAnyPublisher()
-    )
-}
-
-extension Image {
-    
-    static var iconPlaceholder: Image { Image(systemName: "info.circle") }
-}
