@@ -715,20 +715,33 @@ private extension MainViewModel {
         sections.productsSection?.productCarouselViewModel.updatePromo(promoItems)
     }
 
+    func openProductByType(_ type: OpenProductType) {
+        
+        switch type {
+        case .account, .card, .deposit, .insurance, .loan, .mortgage:
+            break
+            
+        case .savingsAccount:
+            route = .empty
+            delay(for: .milliseconds(700)) { [weak self] in
+                self?.openSavingsAccount()
+            }
+            
+        case .sticker:
+            route = .empty
+            delay(for: .milliseconds(700)) { [weak self] in
+                
+                self?.handleLandingAction(.sticker)
+            }
+        }
+    }
+    
     func openMoreProducts() { //
         
         let myProductsViewModel = MyProductsViewModel(
             model,
             makeProductProfileViewModel: viewModelsFactory.makeProductProfileViewModel,
-            openOrderSticker: { [weak self] in
-                
-                self?.route = .empty
-                
-                self?.delay(for: .milliseconds(700)) { [weak self] in
-                    
-                    self?.handleLandingAction(.sticker)
-                }
-            },
+            openProductByType: openProductByType, 
             makeMyProductsViewFactory: .init(
                 makeInformerDataUpdateFailure: { [weak self] in
                     
