@@ -30,6 +30,7 @@ public struct HeaderView: View {
         ZStack(alignment: .top) {
             
             header.md5Hash.map(imageFactory.makeIconView)
+                .aspectRatio(contentMode: .fill)
             
             textView()
                 .padding(.leading, config.layout.textViewLeadingPadding)

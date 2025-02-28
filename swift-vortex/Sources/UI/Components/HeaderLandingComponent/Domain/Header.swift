@@ -10,6 +10,7 @@ import Foundation
 public struct Header {
     
     public let title: String
+    //TODO: ADD subtitle from name text
     public let options: [String]
     public let md5Hash: String?
     

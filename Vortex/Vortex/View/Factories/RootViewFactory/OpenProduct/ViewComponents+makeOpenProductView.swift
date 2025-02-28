@@ -25,8 +25,8 @@ extension ViewComponents {
                         dismiss: dismiss
                     )
                 
-            case let .landing(landing):
-                makeOrderCardLandingContentView(landing: landing.content)
+            case let .landing(binder):
+                makeOrderCardLandingView(binder: binder, dismiss: dismiss)
             }
 
         case let .savingsAccount(nodes):

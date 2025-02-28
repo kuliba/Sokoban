@@ -102,20 +102,10 @@ private extension RootBinderView {
         case let .userAccount(userAccount):
             userAccountView(userAccount)
             
-        case let .orderCardLanding(landing):
-            orderCardLandingView(landing)
+        case let .orderCardLanding(landing): //TODO: remove
+            EmptyView()
+//            orderCardLandingView(landing) //TODO: remove
         }
-    }
-    
-    private func orderCardLandingView(
-        _ orderCardLanding: OrderCardLanding
-    ) -> some View {
-        
-        rootViewFactory.components.makeOrderCardLandingView(
-            landing: orderCardLanding,
-            continue: { },
-            dismiss: { }
-        )
     }
     
     private func productProfileView(
