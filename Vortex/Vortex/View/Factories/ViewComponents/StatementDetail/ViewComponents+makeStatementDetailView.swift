@@ -28,6 +28,7 @@ extension ViewComponents {
             
             makeStatementDetailContentView(details: details)
         }
+        .padding(.horizontal)
     }
     
     @inlinable
