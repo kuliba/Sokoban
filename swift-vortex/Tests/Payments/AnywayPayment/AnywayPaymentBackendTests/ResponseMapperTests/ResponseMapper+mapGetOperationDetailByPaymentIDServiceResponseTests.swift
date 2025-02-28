@@ -159,6 +159,7 @@ final class ResponseMapper_mapGetOperationDetailByPaymentIDResponseTests: XCTest
             realPayerKPP: "000000000",
             requestDate: "18.02.2025 12:26:21",
             responseDate: "18.02.2025 12:26:26",
+            supplierBillID: "18810192085432512980",
             transAmm: 200,
             transfer: .unknown("C2G_PAYMENT"),
             transferDate: "18.02.2025",
