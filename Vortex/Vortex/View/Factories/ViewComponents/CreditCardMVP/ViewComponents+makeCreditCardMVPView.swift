@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 27.02.2025.
 //
 
+import ButtonComponent
 import PaymentCompletionUI
 import RxViewModel
 import SwiftUI
@@ -51,35 +52,32 @@ extension ViewComponents {
         _ order: @escaping () -> Void
     ) -> some View {
         
-        VStack {
-            
-            Text("6x0 = success\n6x1 = failure\n6x2 = otp mismatch")
-                .foregroundStyle(.secondary)
+        VStack(spacing: 32) {
             
             HStack {
                 
                 Button("success") { event(.otp("000000")) }
+                Divider()
                 Button("failure") { event(.otp("111111")) }
+                Divider()
                 Button("otp mismatch") { event(.otp("222222")) }
             }
+            .frame(height: 48)
             
-            TextField(
-                "OTP",
-                text: .init(
-                    get: { state.otp },
-                    set: { event(.otp($0)) }
-                )
-            )
-            .keyboardType(.numberPad)
+            Text("OTP: \(state.otp)")
+                .font(.headline)
         }
         .frame(maxHeight: .infinity, alignment: .top)
-        .padding([.horizontal, .top])
         .safeAreaInset(edge: .bottom) {
             
-            // TODO: title depends on state (if otp present)
-            heroButton(title: "Отправить заявку", action: order)
-                .padding(.bottom, 8)
+            StatefulButtonView(
+                isActive: state.isValid,
+                event: order,
+                config: .iVortex(title: "Отправить заявку")
+            )
+            .padding(.bottom, 8)
         }
+        .padding([.horizontal, .top])
         .conditionalBottomPadding(12)
     }
     
@@ -96,7 +94,13 @@ extension ViewComponents {
                     // TODO: add status subtitle
                     makePaymentCompletionLayoutView(
                         state: cover.state,
-                        details: { cover.message.text(withConfig: .placeholder, alignment: .center) },
+                        details: {
+                            
+                            cover.message.text(
+                                withConfig: .placeholder,
+                                alignment: .center
+                            )
+                        },
                         statusConfig: .creditCardMVP
                     )
                 }

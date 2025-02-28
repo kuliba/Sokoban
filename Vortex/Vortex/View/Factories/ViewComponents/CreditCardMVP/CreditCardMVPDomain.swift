@@ -67,6 +67,8 @@ extension CreditCardMVPDomain {
     struct State: Equatable {
         
         var otp: String
+        
+        var isValid: Bool { otp.count == 6 }
     }
     
     enum Event: Equatable {

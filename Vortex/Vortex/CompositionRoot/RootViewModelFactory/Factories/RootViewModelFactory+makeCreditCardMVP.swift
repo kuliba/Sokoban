@@ -65,7 +65,7 @@ extension RootViewModelFactory {
                     completion(.complete(.init(message: .failure, status: .rejected)))
                     
                 default:
-                    completion(.complete(.init(message: .failure, status: .rejected))) // TODO: replace with otp failure
+                    completion(.complete(.init(message: "TBD", status: .rejected))) // TODO: replace with otp failure
                 }
             }
         }
