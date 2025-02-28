@@ -24,8 +24,7 @@ class MainViewModel: ObservableObject, Resetable {
     typealias Templates = PaymentsTransfersFactory.Templates
     typealias TemplatesNode = PaymentsTransfersFactory.TemplatesNode
     typealias GetPDFDocument = CollateralLoanLandingFactory.GetPDFDocument
-    typealias MakeCollateralLoanLandingFactory = (@escaping GetPDFDocument) -> CollateralLoanLandingFactory
-
+    
     let action: PassthroughSubject<Action, Never> = .init()
     let routeSubject = PassthroughSubject<Route, Never>()
     
@@ -57,7 +56,6 @@ class MainViewModel: ObservableObject, Resetable {
     let viewModelsFactory: MainViewModelsFactory
     let makeOpenNewProductButtons: OpenNewProductsViewModel.MakeNewProductButtons
     let getPDFDocument: GetPDFDocument
-    let makeCollateralLoanLandingFactory: MakeCollateralLoanLandingFactory
 
     let bannersBox: any BannersBoxInterface<BannerList>
     
@@ -79,7 +77,6 @@ class MainViewModel: ObservableObject, Resetable {
         viewModelsFactory: MainViewModelsFactory,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
         getPDFDocument: @escaping CollateralLoanLandingFactory.GetPDFDocument,
-        makeCollateralLoanLandingFactory: @escaping MakeCollateralLoanLandingFactory,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.model = model
@@ -98,7 +95,6 @@ class MainViewModel: ObservableObject, Resetable {
         self.makeOpenNewProductButtons = makeOpenNewProductButtons
         self.getPDFDocument = getPDFDocument
         self.scheduler = scheduler
-        self.makeCollateralLoanLandingFactory = makeCollateralLoanLandingFactory
         self.navButtonsRight = createNavButtonsRight()
         
         bind()
@@ -109,7 +105,12 @@ class MainViewModel: ObservableObject, Resetable {
     
     func makeCollateralLoanFactory() -> CollateralLoanLandingFactory {
         
-        makeCollateralLoanLandingFactory(getPDFDocument)
+        .init(
+            makeImageViewWithMD5Hash: { self.model.imageCache().makeIconView(for: .md5Hash(.init($0))) },
+            makeImageViewWithURL: { self.model.imageCache().makeIconView(for: .image($0.addingPercentEncoding())) },
+            getPDFDocument: getPDFDocument,
+            formatCurrency: { self.model.amountFormatted(amount: Double($0), currencyCode: "RUB", style: .normal) }
+        )
     }
     
     private var disableAlertViewModel: Alert.ViewModel {

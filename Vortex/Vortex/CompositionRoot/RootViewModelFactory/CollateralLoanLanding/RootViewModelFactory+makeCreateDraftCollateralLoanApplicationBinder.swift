@@ -367,7 +367,7 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
             }
             
         default:
-            self = .init(kind: .alert("Попробуйте позже."))
+            self = .init(kind: .alert(error.localizedDescription))
         }
     }
 }

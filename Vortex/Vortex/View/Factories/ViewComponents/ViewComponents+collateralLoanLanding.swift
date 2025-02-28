@@ -24,7 +24,7 @@ extension ViewComponents {
         .init(
             binder: binder,
             config: .default,
-            factory: makeCollateralLoanLandingFactory(getPDFDocument),
+            factory: makeCollateralLoanLandingFactory(),
             goToMain: goToMain,
             makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel
         )
@@ -40,7 +40,7 @@ extension ViewComponents {
         
         .init(
             binder: binder,
-            factory: makeCollateralLoanLandingFactory(getPDFDocument),
+            factory: makeCollateralLoanLandingFactory(),
             config: .default,
             goToMain: goToMain,
             makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel
@@ -49,5 +49,5 @@ extension ViewComponents {
     
     typealias GetPDFDocument = GetCollateralLandingFactory.GetPDFDocument
     typealias MakeDetailsViewModel = CreateDraftCollateralLoanApplicationWrapperView.MakeOperationDetailInfoViewModel
-    typealias MakeCollateralLoanLandingFactory = (@escaping GetPDFDocument) -> CollateralLoanLandingFactory
+    typealias MakeCollateralLoanLandingFactory = () -> CollateralLoanLandingFactory
 }

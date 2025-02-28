@@ -117,8 +117,7 @@ final class MainViewModelTests: XCTestCase {
             ),
             viewModelsFactory: .preview,
             makeOpenNewProductButtons: { _ in [] },
-            getPDFDocument: { _,_  in },
-            makeCollateralLoanLandingFactory: { _ in .preview }
+            getPDFDocument: { _,_  in }
         )
         
         sut.orderSticker()
@@ -743,7 +742,6 @@ final class MainViewModelTests: XCTestCase {
             viewModelsFactory: viewModelsFactory,
             makeOpenNewProductButtons: { _ in buttons },
             getPDFDocument: { _,_ in },
-            makeCollateralLoanLandingFactory: { _ in .preview },
             scheduler: scheduler
         )
         
@@ -813,7 +811,6 @@ final class MainViewModelTests: XCTestCase {
             viewModelsFactory: viewModelsFactory,
             makeOpenNewProductButtons: { _ in buttons },
             getPDFDocument: { _,_ in },
-            makeCollateralLoanLandingFactory: { _ in .preview },
             scheduler: scheduler
         )
         
@@ -899,7 +896,6 @@ final class MainViewModelTests: XCTestCase {
             viewModelsFactory: .preview,
             makeOpenNewProductButtons: { _ in buttons },
             getPDFDocument: { _,_ in },
-            makeCollateralLoanLandingFactory: { _ in .preview },
             scheduler: scheduler
         )
         

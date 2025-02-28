@@ -50,28 +50,13 @@ enum CollateralLoanType {
         switch self {
             
         case .showcase:
-            return ""
+            return .showcase
             
         case .car:
             return .carLanding
         
         case .realEstate:
             return .realEstateLanding
-        }
-    }
-    
-    var title: String {
-        
-        switch self {
-            
-        case .showcase:
-            return ""
-            
-        case .car:
-            return "Кредит под залог транспорта"
-
-        case .realEstate:
-            return "Кредит под залог недвижимости"
         }
     }
 }
@@ -136,4 +121,5 @@ private extension String {
     static let collateralLoanRealEstate = "collateralLoanRealEstate"
     static let carLanding = "CAR_LANDING"
     static let realEstateLanding = "REAL_ESTATE_LANDING"
+    static let showcase = "showcase"
 }

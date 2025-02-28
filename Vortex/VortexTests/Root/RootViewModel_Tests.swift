@@ -63,8 +63,7 @@ class RootViewModel_Tests: XCTestCase {
                     ),
                     viewModelsFactory: .preview,
                     makeOpenNewProductButtons: { _ in [] }, 
-                    getPDFDocument: { _,_ in },
-                    makeCollateralLoanLandingFactory: { _ in CollateralLoanLandingFactory.preview }
+                    getPDFDocument: { _,_ in }
                 ),
                 paymentsModel: paymentsModel,
                 chatViewModel: .init(),

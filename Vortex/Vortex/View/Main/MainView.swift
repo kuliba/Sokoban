@@ -419,7 +419,7 @@ private extension MainView {
                     makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash
                 )
             },
-            makeCollateralLoanLandingFactory: viewModel.makeCollateralLoanLandingFactory
+            makeCollateralLoanLandingFactory: viewModel.makeCollateralLoanFactory
         )
         .navigationBarWithBack(
             title: "Кредиты",
@@ -442,7 +442,7 @@ private extension MainView {
                     makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash
                 )
             },
-            makeCollateralLoanLandingFactory: viewModel.makeCollateralLoanLandingFactory
+            makeCollateralLoanLandingFactory: viewModel.makeCollateralLoanFactory
         )
         .navigationBarWithBack(
             title: "",
@@ -687,8 +687,7 @@ extension MainViewModel {
         bindersFactory: .preview,
         viewModelsFactory: .preview,
         makeOpenNewProductButtons: { _ in [] },
-        getPDFDocument: { _,_ in }, 
-        makeCollateralLoanLandingFactory: { _ in .preview }
+        getPDFDocument: { _,_ in }
     )
 }
 

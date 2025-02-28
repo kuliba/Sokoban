@@ -502,7 +502,6 @@ final class RootViewModelTests: XCTestCase {
                     viewModelsFactory: .preview,
                     makeOpenNewProductButtons: { _ in [] },
                     getPDFDocument: { _,_  in },
-                    makeCollateralLoanLandingFactory: { _ in .preview },
                     scheduler: .immediate
                 ),
                 paymentsModel: .legacy(.init(
@@ -587,7 +586,6 @@ final class RootViewModelTests: XCTestCase {
                     viewModelsFactory: .preview,
                     makeOpenNewProductButtons: { _ in [] },
                     getPDFDocument: { _,_ in },
-                    makeCollateralLoanLandingFactory: { _ in .preview },
                     scheduler: .immediate
                 ),
                 paymentsModel: .legacy(.init(

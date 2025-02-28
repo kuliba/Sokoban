@@ -884,22 +884,9 @@ private extension RootViewModelFactory {
             viewModelsFactory: mainViewModelsFactory,
             makeOpenNewProductButtons: makeOpenNewProductButtons,
             getPDFDocument: getPDFDocument,
-            makeCollateralLoanLandingFactory: makeCollateralLoanLandingFactory,
             scheduler: schedulers.main
         )
         
-        func makeCollateralLoanLandingFactory(
-            getPDFDocument: @escaping CollateralLoanLandingFactory.GetPDFDocument
-        ) -> CollateralLoanLandingFactory {
-    
-            .init(
-                makeImageViewWithMD5Hash: { self.infra.imageCache.makeIconView(for: .md5Hash(.init($0))) },
-                makeImageViewWithURL: { self.infra.generalImageCache.makeIconView(for: .image($0.addingPercentEncoding())) },
-                getPDFDocument: getPDFDocument,
-                formatCurrency: { self.model.amountFormatted(amount: Double($0), currencyCode: "RUB", style: .normal) }
-            )
-        }
-
         let paymentsTransfersViewModel = PaymentsTransfersViewModel(
             model: model,
             makeFlowManager: makePaymentsTransfersFlowManager,
