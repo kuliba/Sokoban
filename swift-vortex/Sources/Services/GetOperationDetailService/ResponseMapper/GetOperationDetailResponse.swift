@@ -27,13 +27,17 @@ extension ResponseMapper {
         public let cursivePayeeAmount: String?
         public let cursivePayerAmount: String?
         public let dateForDetail: String?
+        public let dateN: String?
         public let depositDateOpen: String?
         public let depositNumber: String?
+        public let discount: String?
+        public let discountExpiry: String?
         public let division: String?
         public let driverLicense: String?
         public let externalTransferType: String?
         public let isForaBank: Bool?
         public let isTrafficPoliceService: Bool?
+        public let legalAct: String?
         public let MCC: String?
         public let memberID: String?
         public let merchantIcon: String?
@@ -76,10 +80,14 @@ extension ResponseMapper {
         public let paymentMethod: String?
         public let paymentOperationDetailID: Int?
         public let paymentTemplateID: Int?
+        public let paymentTerm: String?
         public let period: String?
         public let printFormType: String?
         public let provider: String?
         public let puref: String?
+        public let realPayerFIO: String?
+        public let realPayerINN: String?
+        public let realPayerKPP: String?
         public let regCert: String?
         public let requestDate: String?
         public let responseDate: String?
@@ -87,13 +95,16 @@ extension ResponseMapper {
         public let serviceName: String?
         public let serviceSelect: String?
         public let shopLink: String?
+        public let supplierBillID: String?
+        public let transAmm: Decimal?
         public let transferDate: String?
         public let transferEnum: String?
         public let transferNumber: String?
         public let transferReference: String?
         public let trnPickupPointName: String?
+        public let UPNO: String?
         
-        public init(account: String?, accountTitle: String?, amount: Decimal?, billDate: String?, billNumber: String?, cityName: String?, claimID: String, comment: String?, countryName: String?, currencyAmount: String?, currencyRate: Int?, cursiveAmount: String?, cursivePayeeAmount: String?, cursivePayerAmount: String?, dateForDetail: String?, depositDateOpen: String?, depositNumber: String?, division: String?, driverLicense: String?, externalTransferType: String?, isForaBank: Bool?, isTrafficPoliceService: Bool?, MCC: String?, memberID: String?, merchantIcon: String?, merchantSubName: String?, OKTMO: String?, operation: String?, operationStatus: String?, payeeAccountID: Int?, payeeAccountNumber: String?, payeeAmount: Int?, payeeBankBIC: String?, payeeBankCorrAccount: String?, payeeBankName: String?, payeeCardID: Int?, payeeCardNumber: String?, payeeCheckAccount: String?, payeeCurrency: String?, payeeFirstName: String?, payeeFullName: String?, payeeINN: String?, payeeKPP: String?, payeeMiddleName: String?, payeePhone: String?, payeeSurName: String?, payerAccountID: Int?, payerAccountNumber: String?, payerAddress: String?, payerAmount: Int?, payerCardID: Int?, payerCardNumber: String?, payerCurrency: String?, payerDocument: String?, payerFee: Int?, payerFirstName: String?, payerFullName: String?, payerINN: String?, payerMiddleName: String?, payerPhone: String?, payerSurName: String?, paymentMethod: String?, paymentOperationDetailID: Int?, paymentTemplateID: Int?, period: String?, printFormType: String?, provider: String?, puref: String?, regCert: String?, requestDate: String?, responseDate: String?, returned: Bool?, serviceName: String?, serviceSelect: String?, shopLink: String?, transferDate: String?, transferEnum: String?, transferNumber: String?, transferReference: String?, trnPickupPointName: String?) {
+        public init(account: String?, accountTitle: String?, amount: Decimal?, billDate: String?, billNumber: String?, cityName: String?, claimID: String, comment: String?, countryName: String?, currencyAmount: String?, currencyRate: Int?, cursiveAmount: String?, cursivePayeeAmount: String?, cursivePayerAmount: String?, dateForDetail: String?, dateN: String?, depositDateOpen: String?, depositNumber: String?, discount: String?, discountExpiry: String?, division: String?, driverLicense: String?, externalTransferType: String?, isForaBank: Bool?, isTrafficPoliceService: Bool?, legalAct: String?, MCC: String?, memberID: String?, merchantIcon: String?, merchantSubName: String?, OKTMO: String?, operation: String?, operationStatus: String?, payeeAccountID: Int?, payeeAccountNumber: String?, payeeAmount: Int?, payeeBankBIC: String?, payeeBankCorrAccount: String?, payeeBankName: String?, payeeCardID: Int?, payeeCardNumber: String?, payeeCheckAccount: String?, payeeCurrency: String?, payeeFirstName: String?, payeeFullName: String?, payeeINN: String?, payeeKPP: String?, payeeMiddleName: String?, payeePhone: String?, payeeSurName: String?, payerAccountID: Int?, payerAccountNumber: String?, payerAddress: String?, payerAmount: Int?, payerCardID: Int?, payerCardNumber: String?, payerCurrency: String?, payerDocument: String?, payerFee: Int?, payerFirstName: String?, payerFullName: String?, payerINN: String?, payerMiddleName: String?, payerPhone: String?, payerSurName: String?, paymentMethod: String?, paymentOperationDetailID: Int?, paymentTemplateID: Int?, paymentTerm: String?, period: String?, printFormType: String?, provider: String?, puref: String?, realPayerFIO: String?, realPayerINN: String?, realPayerKPP: String?, regCert: String?, requestDate: String?, responseDate: String?, returned: Bool?, serviceName: String?, serviceSelect: String?, shopLink: String?, supplierBillID: String?, transAmm: Decimal?, transferDate: String?, transferEnum: String?, transferNumber: String?, transferReference: String?, trnPickupPointName: String?, UPNO: String?) {
             self.account = account
             self.accountTitle = accountTitle
             self.amount = amount
@@ -109,13 +120,17 @@ extension ResponseMapper {
             self.cursivePayeeAmount = cursivePayeeAmount
             self.cursivePayerAmount = cursivePayerAmount
             self.dateForDetail = dateForDetail
+            self.dateN = dateN
             self.depositDateOpen = depositDateOpen
             self.depositNumber = depositNumber
+            self.discount = discount
+            self.discountExpiry = discountExpiry
             self.division = division
             self.driverLicense = driverLicense
             self.externalTransferType = externalTransferType
             self.isForaBank = isForaBank
             self.isTrafficPoliceService = isTrafficPoliceService
+            self.legalAct = legalAct
             self.MCC = MCC
             self.memberID = memberID
             self.merchantIcon = merchantIcon
@@ -158,10 +173,14 @@ extension ResponseMapper {
             self.paymentMethod = paymentMethod
             self.paymentOperationDetailID = paymentOperationDetailID
             self.paymentTemplateID = paymentTemplateID
+            self.paymentTerm = paymentTerm
             self.period = period
             self.printFormType = printFormType
             self.provider = provider
             self.puref = puref
+            self.realPayerFIO = realPayerFIO
+            self.realPayerINN = realPayerINN
+            self.realPayerKPP = realPayerKPP
             self.regCert = regCert
             self.requestDate = requestDate
             self.responseDate = responseDate
@@ -169,11 +188,14 @@ extension ResponseMapper {
             self.serviceName = serviceName
             self.serviceSelect = serviceSelect
             self.shopLink = shopLink
+            self.supplierBillID = supplierBillID
+            self.transAmm = transAmm
             self.transferDate = transferDate
             self.transferEnum = transferEnum
             self.transferNumber = transferNumber
             self.transferReference = transferReference
             self.trnPickupPointName = trnPickupPointName
+            self.UPNO = UPNO
         }
     }
 }
