@@ -140,22 +140,10 @@ class MainViewModel: ObservableObject, Resetable {
         case .savingsAccount:
             openSavingsAccount()
             
-        case .collateralLoan:
+        case let .collateralLoan(type):
             handlePromoItemAction(promoItem: promoItem) {
                 
-                openCollateralLoanLanding(type: .showcase)
-            }
-            
-        case .collateralLoanCar:
-            handlePromoItemAction(promoItem: promoItem) {
-                
-                openCollateralLoanLanding(type: .car)
-            }
-
-        case .collateralLoanRealEstate:
-            handlePromoItemAction(promoItem: promoItem) {
-                
-                openCollateralLoanLanding(type: .realEstate)
+                openCollateralLoanLanding(type: type)
             }
         }
     }
@@ -769,11 +757,13 @@ private extension MainViewModel {
         
         if let loanBannerList = banners.loanBannerList {
             
-            promo.append(contentsOf: loanBannerList.map { .init(
-                item: $0,
-                productType: .card,
-                promoProduct: PromoProduct.collateralLoanTypeMap(from: $0.productName))
-            })
+            promo.append(contentsOf: loanBannerList.map {
+
+                .init(
+                    item: $0,
+                    productType: .card,
+                    promoProduct: .collateralLoan(CollateralLoanType(rawValue: $0.action?.target))
+                )})
         }
 
         if let sticker = banners.cardBannerList?.first {
@@ -915,7 +905,7 @@ private extension MainViewModel {
         case let payload:
             switch payload.type {
             case .cardOrder:
-                action.send(RootEvent.select(.openProduct(.card)))
+                action.send(RootEvent.select(.openProduct(.card(.landing))))
                 
             case .savingLanding:
                 action.send(RootEvent.select(.openProduct(.savingsAccount)))
@@ -2006,14 +1996,8 @@ extension MainViewModel {
         case .savingsAccount:
             openSavingsAccount()
             
-        case .collateralLoan:
-            openCollateralLoanLanding(type: .showcase)
-            
-        case .collateralLoanCar:
-            openCollateralLoanLanding(type: .car)
-
-        case .collateralLoanRealEstate:
-            openCollateralLoanLanding(type: .realEstate)
+        case let .collateralLoan(type):
+            openCollateralLoanLanding(type: type)
         }
     }
     

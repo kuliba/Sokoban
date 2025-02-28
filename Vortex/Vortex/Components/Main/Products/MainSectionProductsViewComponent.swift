@@ -147,7 +147,7 @@ private extension NewProductButton.ViewModel {
     static func cardWanted(url: URL) -> NewProductButton.ViewModel {
         
         .init(
-            openProductType: .card,
+            openProductType: .card(.landing),
             subTitle: "Бесплатно",
             action: .url(url)
         )

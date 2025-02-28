@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import DropDownTextListComponent
 
-extension DropDownTextListConfig {
+public extension DropDownTextListConfig {
     
     static let preview = Self(
         cornerRadius: 12,

@@ -59,7 +59,7 @@ extension RootViewModelFactory {
         savingsAccountFlag: SavingsAccountFlag
     ) -> [OpenProductType] {
         
-        let displayButtonsTypes: [OpenProductType] = [.card, .deposit, .account, .sticker, .loan]
+        let displayButtonsTypes: [OpenProductType] = [.card(.landing), .deposit, .account, .sticker, .loan]
         let additionalItems: [OpenProductType] = savingsAccountFlag.isActive
         ? [.savingsAccount, .insurance, .mortgage]
         : [.insurance, .mortgage]
@@ -94,7 +94,7 @@ extension RootViewModelFactory {
             if model.onlyCorporateCards {
                 return .url(model.productsOpenAccountURL)
             } else {
-                return .action { action(.card) }
+                return .action { action(.card(.landing)) }
             }
             
         default:

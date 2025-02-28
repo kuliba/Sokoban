@@ -17,15 +17,18 @@ extension ViewComponents {
         
         switch openProduct {
         case let .card(openCard):
-            makeOpenCardProductView(openCard.model, dismiss: dismiss)
-                .navigationBarWithBack(
-                    title: "Заказать карту",
-                    dismiss: dismiss
-                )
+            switch openCard {
+            case let .form(form):
+                makeOpenCardProductView(form.model, dismiss: dismiss)
+                    .navigationBarWithBack(
+                        title: "Заказать карту",
+                        dismiss: dismiss
+                    )
+                
+            case let .landing(landing):
+                makeOrderCardLandingContentView(landing: landing.content)
+            }
 
-        case .loan:
-            Text("###########")
-            
         case let .savingsAccount(nodes):
 
             makeSavingsAccountBinderView(binder: nodes.savingsAccountNode.model, openAccountBinder: nodes.openSavingsAccountNode.model, dismiss: dismiss)

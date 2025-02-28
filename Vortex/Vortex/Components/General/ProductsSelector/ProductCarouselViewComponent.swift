@@ -640,7 +640,7 @@ enum ProductCarouselViewModelAction {
             let productId: ProductData.ID
         }
         
-        struct PromoDidTapped: Action, Equatable {
+        struct PromoDidTapped: Action {
             let promo: PromoProduct
         }
         
@@ -655,6 +655,17 @@ enum ProductCarouselViewModelAction {
             
             let offset: CGFloat
         }
+    }
+}
+
+extension ProductCarouselViewModelAction.Products.PromoDidTapped: Equatable {
+    
+    static func == (
+        lhs: ProductCarouselViewModelAction.Products.PromoDidTapped,
+        rhs: ProductCarouselViewModelAction.Products.PromoDidTapped
+    ) -> Bool {
+        
+        lhs.promo.rawValue == rhs.promo.rawValue
     }
 }
 

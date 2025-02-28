@@ -38,17 +38,15 @@ private extension ResponseMapper._Data {
     func getOrderCardLanding() throws
     -> OrderCardLandingResponse {
         
-        guard let id,
-              let theme,
-              let product = product?.product,
-              let conditions = conditions?.condition,
-              let security = security?.security,
-              let frequentlyAskedQuestions = frequentlyAskedQuestions?.question else {
+        guard let theme = products.first?.theme,
+              let product = products.first?.product?.product,
+              let conditions = products.first?.conditions?.condition,
+              let security = products.first?.security?.security,
+              let frequentlyAskedQuestions = products.first?.frequentlyAskedQuestions?.question else {
             throw ResponseMapper.InvalidResponse()
         }
         
         return .init(
-            id: id,
             theme: theme,
             product: product,
             conditions: conditions,
@@ -62,12 +60,29 @@ private extension ResponseMapper {
     
     struct _Data: Decodable {
         
-        let id: String?
-        let theme: String?
-        let product: Product?
-        let conditions: Condition?
-        let security: Security?
-        let frequentlyAskedQuestions: Question?
+        let products: [Item1]
+        
+        struct Item1: Decodable {
+            //        let id: String?
+            let header: Header?
+            let theme: String?
+            let product: Product?
+            let conditions: Condition?
+            let security: Security?
+            let frequentlyAskedQuestions: Question?
+            let cardLandingAction: CardLandingAction?
+        }
+        
+        struct CardLandingAction: Decodable {
+        
+            let type: String?
+            let target: String?
+            let fallbackUrl: String?
+        }
+        
+        struct Header: Decodable {
+            let title: String?
+        }
         
         struct Question: Decodable {
             
@@ -90,9 +105,16 @@ private extension ResponseMapper {
         struct Product: Decodable {
             
             let title: String?
+            let name: [Name]?
             let image: String?
             let features: [String]
-            let discount: Discount?
+            let discounts: Discount?
+            
+            struct Name: Decodable {
+            
+                let text: String?
+                let isBold: Bool?
+            }
             
             struct Discount: Decodable {
                 
@@ -131,20 +153,20 @@ private extension ResponseMapper._Data.Product {
     
     var product: OrderCardLandingResponse.Product? {
         
-        guard let title,
-              let image,
-              !features.isEmpty,
-              let discount else {
-            return nil
-        }
+//        guard let title,
+//              let image,
+//              !features.isEmpty,
+//              let discounts else {
+//            return nil
+//        }
     
         return .init(
-            title: title,
-            image: image,
+            title: title ?? "",
+            image: image ?? "",
             features: features,
             discount: .init(
-                title: title,
-                list: discount.list.compactMap(\.item)
+                title: title ?? "",
+                list: []
             )
         )
     }
