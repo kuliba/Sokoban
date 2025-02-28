@@ -111,14 +111,14 @@ private extension ResponseMapper.GetOperationDetailByPaymentIDResponse {
             serviceName: data.serviceName,
             serviceSelect: data.serviceSelect,
             shopLink: data.shopLink,
-            supplierBillID: data.supplierBillID,
+            supplierBillID: data.supplierBillId,
             transAmm: data.transAmm,
             transfer: .init(data.transferEnum),
             transferDate: data.transferDate,
             transferNumber: data.transferNumber,
             transferReference: data.transferReference,
             trnPickupPointName: data.trnPickupPointName,
-            upno: data.upno
+            upno: data.UPNO
         )
     }
 }
@@ -319,14 +319,14 @@ private extension ResponseMapper {
         let serviceName: String?
         let serviceSelect: String?
         let shopLink: String?
-        let supplierBillID: String?
+        let supplierBillId: String?
         let transAmm: Decimal?
         let transferDate: String
         let transferEnum: String?
         let transferNumber: String?
         let transferReference: String?
         let trnPickupPointName: String?
-        let upno: String?
+        let UPNO: String?
     }
 }
 
