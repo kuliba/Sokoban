@@ -120,17 +120,21 @@ final class RootViewModelFactory_getOpenNewProductNavigationTests: RootViewModel
             
         case let .openURL(url):
             return .openURL(url)
+            
+        case .openLoan:
+            return .openLoan
         }
     }
     
     // TODO: improve, but need to control objects creation => SUT needs a dependency
     enum EquatableNavigation: Equatable {
-        
+    
         case alert(String)
         case main
         case openAccount
         case openCard
         case openDeposit
+        case openLoan
         case openProduct
         case openSticker
         case openURL(URL)
