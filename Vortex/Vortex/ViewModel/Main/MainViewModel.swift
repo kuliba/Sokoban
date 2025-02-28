@@ -124,7 +124,7 @@ class MainViewModel: ObservableObject, Resetable {
        
         switch promoProduct {
         case .creditCardMVP:
-            fatalError()
+            openСreditCardMVP()
             
         case .sticker:
             handlePromoAction(.sticker)
@@ -552,6 +552,9 @@ private extension MainViewModel {
                             case .card:
                                 openCard()
                                 
+                            case .creditCardMVP:
+                                openСreditCardMVP()
+                                
                             case .loan:
                                 openCollateralLoanLanding()
                                 
@@ -586,8 +589,8 @@ private extension MainViewModel {
                         default:
                             break
                         }
-                        
-                    }.store(in: &bindings)
+                    }
+                    .store(in: &bindings)
                 
                 // Promo section
             case let promo as MainSectionPromoView.ViewModel:
@@ -1906,6 +1909,11 @@ extension MainViewModel {
 }
 
 extension MainViewModel {
+    
+    func openСreditCardMVP() {
+        
+        action.send(RootEvent.select(.openProduct(.creditCardMVP)))
+    }
     
     func openSavingsAccount() {
         

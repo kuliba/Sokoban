@@ -45,6 +45,7 @@ extension RootViewModelFactory {
         switch type {
         case .account:          return "Бесплатно"
         case .card:             return "С кешбэком"
+        case .creditCardMVP:    return ""
         case .deposit:          return depositDescription(with: model.deposits.value)
         case .insurance:        return "Надежно"
         case .loan:             return "Выгодно"
