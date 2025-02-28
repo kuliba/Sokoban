@@ -27,7 +27,7 @@ final class OffsetObservingScrollModel: ObservableObject {
             .scan(.zero, min)
             .map { $0 < -100 }
             .removeDuplicates()
-            .handleEvents(receiveOutput: { print("shouldRefresh", $0) })
+           // .handleEvents(receiveOutput: { print("shouldRefresh", $0) })
         
         let callRefresh = $offset
             .debounce(for: .seconds(2), scheduler: scheduler)
@@ -35,7 +35,7 @@ final class OffsetObservingScrollModel: ObservableObject {
         self.cancellable = shouldRefresh
             .combineLatest(callRefresh)
             .compactMap { $0 ? $1 : nil }
-            .handleEvents(receiveOutput: { print("cancellable", $0) })
+          //  .handleEvents(receiveOutput: { print("cancellable", $0) })
             .sink { _ in onChange() }
     }
 }
