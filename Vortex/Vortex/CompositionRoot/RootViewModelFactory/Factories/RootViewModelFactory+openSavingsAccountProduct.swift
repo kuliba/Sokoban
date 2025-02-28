@@ -20,6 +20,8 @@ enum OpenSavingsAccountCompleteDomain {}
 
 extension OpenSavingsAccountCompleteDomain {
     
+    typealias UpdateFastAll = () -> Void
+    
     struct Complete {
         
         let context: Context
@@ -29,8 +31,6 @@ extension OpenSavingsAccountCompleteDomain {
         struct Context: Equatable {
             
             let formattedAmount: String?
-            let merchantName: String?
-            let purpose: String?
             let status: Status
             
             enum Status {
@@ -322,6 +322,9 @@ private extension Error {
         case let failure as RemoteServiceError<Error, Error, LoadableState.LoadFailure>:
             
             switch failure {
+            case let .mapResponse(failure):
+                return failure
+
             case let .performRequest(error):
                 if error.isNotConnectedToInternetOrTimeout() {
                     return .init(message: ._error, type: .informer)
@@ -501,7 +504,8 @@ private extension OrderAccountResponse {
         self.init(
             accountId: data.paymentInfo.accountId,
             accountNumber: data.paymentInfo.accountNumber,
-            paymentOperationDetailId: data.paymentOperationDetailID, 
+            amount: data.paymentInfo.amount,
+            paymentOperationDetailId: data.paymentOperationDetailID,
             product: nil,
             openData: data.paymentInfo.dateOpen,
             status: data.documentInfo.documentStatus?.status ?? .inflight

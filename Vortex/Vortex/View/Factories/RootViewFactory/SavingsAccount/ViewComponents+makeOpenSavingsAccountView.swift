@@ -149,13 +149,13 @@ extension ViewComponents {
                 infoView: makeAmountInfoView
             )
         } else {
-            // TODO: add amount
             StatefulButtonView(
                 isActive: state.isValid,
                 event: { event(.continue) },
                 config: .iVortex(title: state.continueButtonTitle)
             )
             .padding(.horizontal)
+            .conditionalBottomPadding()
         }
     }
 }

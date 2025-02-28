@@ -220,7 +220,8 @@ private extension OrderAccountResponse {
         
         self.init(
             accountId: data.accountId,
-            accountNumber: data.accountNumber,
+            accountNumber: data.accountNumber, 
+            amount: data.amount,
             paymentOperationDetailId: data.paymentOperationDetailId,
             product: product,
             openData: data.openData,
@@ -231,5 +232,5 @@ private extension OrderAccountResponse {
 
 private extension OrderAccountResponse {
     
-    static let reject: Self = .init(.init(accountId: nil, accountNumber: nil, paymentOperationDetailId: nil, product: nil, openData: nil, status: .rejected), nil)
+    static let reject: Self = .init(.init(accountId: nil, accountNumber: nil, amount: nil, paymentOperationDetailId: nil, product: nil, openData: nil, status: .rejected), nil)
 }
