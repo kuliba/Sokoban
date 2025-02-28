@@ -118,7 +118,7 @@ private extension ResponseMapper.GetOperationDetailByPaymentIDResponse {
             transferNumber: data.transferNumber,
             transferReference: data.transferReference,
             trnPickupPointName: data.trnPickupPointName,
-            upno: data.upno
+            upno: data.UPNO
         )
     }
 }
@@ -326,7 +326,7 @@ private extension ResponseMapper {
         let transferNumber: String?
         let transferReference: String?
         let trnPickupPointName: String?
-        let upno: String?
+        let UPNO: String?
     }
 }
 

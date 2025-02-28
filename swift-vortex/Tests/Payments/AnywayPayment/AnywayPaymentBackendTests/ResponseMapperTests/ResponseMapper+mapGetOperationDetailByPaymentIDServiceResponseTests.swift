@@ -85,12 +85,12 @@ final class ResponseMapper_mapGetOperationDetailByPaymentIDResponseTests: XCTest
         }
     }
     
-    func test_map_shouldDeliverResponse() throws {
+    func test_map_shouldDeliverResponse_validData() throws {
         
         try assert(.validData, .valid())
     }
     
-    func test_map_shouldDeliverResponseRich() throws {
+    func test_map_shouldDeliverResponse_validDataRich() throws {
         
         try assert(.validDataRich, .valid(
             externalTransferType: .entity,
@@ -99,7 +99,7 @@ final class ResponseMapper_mapGetOperationDetailByPaymentIDResponseTests: XCTest
         ))
     }
     
-    func test_map_shouldDeliverResponseRichV2() throws {
+    func test_map_shouldDeliverResponse_validDataRichV2() throws {
         
         try assert(.validDataRichV2, .valid(
             documentNumber: "330322",
@@ -108,6 +108,62 @@ final class ResponseMapper_mapGetOperationDetailByPaymentIDResponseTests: XCTest
             operationStatus: .inProgress,
             paymentFlow: "STANDARD_FLOW",
             paymentMethod: .cashless
+        ))
+    }
+    
+    func test_map_shouldDeliverResponse_upno() throws {
+        
+        try assert(.upno, .valid(
+            account: nil,
+            accountTitle: nil,
+            amount: 200,
+            claimID: "121710",
+            comment: "Штраф ГИБДД",
+            dateForDetail: "18 февраля 2025, 12:26",
+            dateN: "2024-08-26",
+            discount: "10 %",
+            discountExpiry: "2024-12-25",
+            documentNumber: nil,
+            externalTransferType: nil,
+            legalAct: "Часть 1 статьи 12.16 КоАП тест тест тест тест тест тест тест тест тест тест тест тест тест тест",
+            memberID: "100000000300",
+            merchantIcon: "<svg>",
+            merchantSubName: "Федеральное Казначейство",
+            operationCategory: nil,
+            operationStatus: .rejected,
+            payeeBankName: "Федеральное казначейство",
+            payeeCheckAccount: "03100643000000019500",
+            payeeFullName: "Федеральное Казначейство",
+            payeeINN: nil,
+            payeeKPP: nil,
+            payerAccountID: 10004683510,
+            payerAccountNumber: "40817810988000001320",
+            payerAddress: "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 150014, Ярославская обл, Ярославль г, Толбухина пр-кт, д. 4, кв. 62",
+            payerAmount: 200,
+            payerCardID: nil,
+            payerCardNumber: nil,
+            payerFirstName: "Валерия",
+            payerFullName: "Белякова Валерия Валерьевна",
+            payerINN: "760406263431",
+            payerMiddleName: "Валерьевна",
+            payerPhone: "+79201176178",
+            paymentFlow: nil,
+            paymentMethod: nil,
+            paymentOperationDetailID: 121710,
+            paymentTemplateID: nil,
+            paymentTerm: "2025-04-25",
+            printFormType: "c2g",
+            puref: "0||PaymentsC2G",
+            realPayerFIO: "Тестов Тест Тестович",
+            realPayerINN: "000000000000",
+            realPayerKPP: "000000000",
+            requestDate: "18.02.2025 12:26:21",
+            responseDate: "18.02.2025 12:26:26",
+            transAmm: 200,
+            transfer: .unknown("C2G_PAYMENT"),
+            transferDate: "18.02.2025",
+            transferNumber: "A123456789",
+            upno: "10445253410000001802202500000011"
         ))
     }
     
@@ -347,6 +403,7 @@ private extension Data {
     static let validData: Data = String.validData.json
     static let validDataRich: Data = String.validDataRich.json
     static let validDataRichV2: Data = String.validDataRichV2.json
+    static let upno: Data = String.upno.json
 }
 
 private extension String {
@@ -611,4 +668,56 @@ private extension String {
 }
 """
     
+    static let upno = """
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": {
+    "claimId": "121710",
+    "requestDate": "18.02.2025 12:26:21",
+    "responseDate": "18.02.2025 12:26:26",
+    "transferDate": "18.02.2025",
+    "payerAccountId": 10004683510,
+    "payerAccountNumber": "40817810988000001320",
+    "payerFullName": "Белякова Валерия Валерьевна",
+    "payerAddress": "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 150014, Ярославская обл, Ярославль г, Толбухина пр-кт, д. 4, кв. 62",
+    "payerAmount": 200,
+    "payerFee": 0,
+    "payerCurrency": "RUB",
+    "payeeFullName": "Федеральное Казначейство",
+    "payeeBankName": "Федеральное казначейство",
+    "amount": 200,
+    "currencyAmount": "RUB",
+    "comment": "Штраф ГИБДД",
+    "transferEnum": "C2G_PAYMENT",
+    "payerFirstName": "Валерия",
+    "payerMiddleName": "Валерьевна",
+    "payerPhone": "+79201176178",
+    "puref": "0||PaymentsC2G",
+    "memberId": "100000000300",
+    "isTrafficPoliceService": false,
+    "merchantSubName": "Федеральное Казначейство",
+    "merchantIcon": "<svg>",
+    "operationStatus": "REJECTED",
+    "payeeCheckAccount": "03100643000000019500",
+    "paymentOperationDetailId": 121710,
+    "printFormType": "c2g",
+    "dateForDetail": "18 февраля 2025, 12:26",
+    "transAmm": 200,
+    "discount": "10 %",
+    "discountExpiry": "2024-12-25",
+    "dateN": "2024-08-26",
+    "legalAct": "Часть 1 статьи 12.16 КоАП тест тест тест тест тест тест тест тест тест тест тест тест тест тест",
+    "supplierBillId": "18810192085432512980",
+    "realPayerFIO": "Тестов Тест Тестович",
+    "realPayerINN": "000000000000",
+    "realPayerKPP": "000000000",
+    "returned": false,
+    "payerINN": "760406263431",
+    "paymentTerm": "2025-04-25",
+    "UPNO": "10445253410000001802202500000011",
+    "transferNumber": "A123456789"
+  }
+}
+"""
 }
