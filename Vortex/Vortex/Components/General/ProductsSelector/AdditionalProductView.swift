@@ -26,22 +26,13 @@ extension AdditionalProductViewModel: Identifiable {
         switch promoType {
         case .savingsAccount:           return .savingsAccount
         case .sticker:                  return .sticker
-        case .collateralLoan:           return .collateralLoan(.showcase)
-        case .collateralLoanCar:        return .collateralLoan(.car)
-        case .collateralLoanRealEstate: return .collateralLoan(.realEstate)
+        case let .collateralLoan(type): return .collateralLoan(type)
         }
     }
     
     public enum ID: Hashable {
         
-        case savingsAccount, sticker, collateralLoan(CollateralType)
-        
-        public enum CollateralType {
-            
-            case showcase
-            case car
-            case realEstate
-        }
+        case savingsAccount, sticker, collateralLoan(CollateralLoanType)
     }
 }
 
