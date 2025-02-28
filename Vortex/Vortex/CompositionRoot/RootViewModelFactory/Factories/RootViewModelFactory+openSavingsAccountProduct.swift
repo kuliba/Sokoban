@@ -320,18 +320,22 @@ private extension Error {
             return failure
             
         case let failure as RemoteServiceError<Error, Error, LoadableState.LoadFailure>:
-            switch failure {
-            case let .mapResponse(failure):
-                return failure
-                
-            default:
-                return .tryLaterInformer
-            }
             
+            switch failure {
+            case let .performRequest(error):
+                if error.isNotConnectedToInternetOrTimeout() {
+                    return .init(message: ._error, type: .informer)
+                } else {
+                    return .init(message: ._later, type: .alert)
+                }
+            default:
+                return .init(message: ._later, type: .alert)
+            }
+
         case let mappingError as RemoteServices.ResponseMapper.MappingError:
             switch mappingError {
             case let .server(_, errorMessage):
-                return .init(message: errorMessage, type: .alert)
+                return .init(message: ._later, type: .alert)
                 
             default:
                 return .tryLaterInformer
@@ -506,15 +510,16 @@ private extension OrderAccountResponse {
 }
 private extension OpenSavingsAccountDomain.LoadFailure {
     
-    static let invalidCodeAlert: Self = .init(message: ._invalidCode, type: .alert)
-    static let tryLaterAlert: Self = .init(message: ._tryLater, type: .alert)
-    static let tryLaterInformer: Self = .init(message: ._tryLater, type: .informer)
+    static let invalidCodeAlert: Self = .init(message: ._invalidCode, type: .otp)
+    static let tryLaterAlert: Self = .init(message: ._later, type: .alert)
+    static let tryLaterInformer: Self = .init(message: ._error, type: .informer)
 }
 
 private extension String {
     
     static let _invalidCode = "Введен некорректный код. Попробуйте еще раз."
-    static let _tryLater = "Что-то пошло не так.\nПопробуйте позже."
+    static let _error = "Ошибка загрузки данных.\nПопробуйте позже."
+    static let _later = "Попробуйте позже."
 }
 
 extension MakeOpenSavingsAccountResponse.DocumentStatus {

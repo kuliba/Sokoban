@@ -53,7 +53,7 @@ extension PaymentCompletionConfig {
                 title: "Операция в обработке"
             ),
             rejected: .rejected(
-                title: "Не удалось открыть счет"
+                title: "Операция не успешна!"
             ),
             fraudCancelled: .fraudCancelled(),
             fraudExpired: .fraudExpired()

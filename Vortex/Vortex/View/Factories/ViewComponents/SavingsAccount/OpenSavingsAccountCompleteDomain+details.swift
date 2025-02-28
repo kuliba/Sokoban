@@ -38,18 +38,14 @@ extension OpenSavingsAccountCompleteDomain.Details: TransactionDetailsProviding 
         }
     }
 
-    private var payerAccountNumberField: DetailsCell.Field? {
-        
-        payeeAccountNumber.map {
-            .init(image: .ic24Calendar, title: .accountName, value: $0)
-        }
-    }
-    
     private var dateForDetailField: DetailsCell.Field? {
         
-        dataForDetails.map {
-            return .init(image: .ic24Calendar, title: (product != nil) ? .dateForDetail : .dateForDetailShort, value: $0)
+        if (product != nil) {
+            return dataForDetails.map {
+                .init(image: .ic24Calendar, title: .dateForDetail, value: $0)
+            }
         }
+        return nil
     }
     
     private var formattedAmountField: DetailsCell.Field? {
@@ -64,7 +60,7 @@ extension OpenSavingsAccountCompleteDomain.Details: TransactionDetailsProviding 
         
         formattedFee.map {
             
-            .init(image: .ic24Percent, title: .formattedFee, value: $0)
+            .init(image: OperationDetailInfoViewModel.PropertyIconType.commission.icon, title: .formattedFee, value: $0)
         }
     }
 }
