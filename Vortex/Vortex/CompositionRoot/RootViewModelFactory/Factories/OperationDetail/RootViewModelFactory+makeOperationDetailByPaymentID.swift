@@ -5,6 +5,7 @@
 //  Created by Igor Malyarov on 19.02.2025.
 //
 
+import Foundation
 import RemoteServices
 
 extension RootViewModelFactory {
@@ -33,9 +34,13 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapGetOperationDetailByPaymentIDResponse
         )
         
-        load(.init(payload.paymentOperationDetailID)) {
+        load(.init(payload.paymentOperationDetailID)) { [weak self] in
             
-            completion($0.map { $0.details(payload: payload) })
+            guard let self else { return }
+            
+            let format = self.format(amount:currency:)
+            
+            completion($0.map { $0.details(payload: payload, format: format) })
         }
     }
 }
@@ -57,7 +62,8 @@ extension OperationDetailDomain.ModelPayload {
 private extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse {
     
     func details(
-        payload: OperationDetailDomain.ModelPayload
+        payload: OperationDetailDomain.ModelPayload,
+        format: @escaping (Decimal?, String?) -> String?
     ) -> OperationDetailDomain.ExtendedDetails {
         
         return .init(
@@ -68,7 +74,7 @@ private extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDRes
             dateN: dateN,
             discount: discount,
             discountExpiry: discountExpiry,
-            formattedAmount: formattedAmount,
+            formattedAmount: format(payerAmount, payerCurrency),
             legalAct: legalAct,
             payeeFullName: payeeFullName,
             paymentTerm: paymentTerm,
@@ -76,7 +82,7 @@ private extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDRes
             realPayerINN: realPayerINN,
             realPayerKPP: realPayerKPP,
             supplierBillID: supplierBillID,
-            transAmm: formattedAmount,
+            transAmm: format(transAmm, payerCurrency),
             transferNumber: transferNumber,
             upno: upno
         )

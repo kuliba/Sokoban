@@ -82,7 +82,7 @@ private extension StatementDetailContent {
     ) {
         self.init(
             // Сумма операции+ валюта операции-  amount + payerCurrency из getOperationDetail
-            formattedAmount: extendedDetails?.formattedAmount,
+            formattedAmount: extendedDetails?.signedFormattedAmount,
             // Дата операции - "dateForDetail" из getOperationDetail
             formattedDate: extendedDetails?.dateForDetail,
             // Лого- md5hash из getCardStatementForPeriod_V3/getAccountStatementForPeriod_V3
@@ -94,6 +94,14 @@ private extension StatementDetailContent {
             // Статус операции- operationStatus из getOperationDetail
             status: extendedDetails?.status._status
         )
+    }
+}
+
+private extension OperationDetailDomain.ExtendedDetails {
+    
+    var signedFormattedAmount: String? {
+        
+        formattedAmount.map { "- " + $0 }
     }
 }
 
