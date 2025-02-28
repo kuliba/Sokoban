@@ -38,6 +38,7 @@ class MyProductsViewModel: ObservableObject {
     var informerWasShown: Bool = false
     
     let openOrderSticker: () -> Void
+    let openCollateralLoanLanding: (CollateralLoanType) -> Void
     
     private lazy var settingsOnboarding = model.settingsMyProductsOnboarding
     private let model: Model
@@ -58,6 +59,7 @@ class MyProductsViewModel: ObservableObject {
          refreshingIndicator: RefreshingIndicatorView.ViewModel,
          showOnboarding: [Onboarding: Bool] = [:],
          openOrderSticker: @escaping () -> Void,
+         openCollateralLoanLanding: @escaping (CollateralLoanType) -> Void,
          makeMyProductsViewFactory: MyProductsViewFactory
     ) {
         self.model = model
@@ -71,6 +73,7 @@ class MyProductsViewModel: ObservableObject {
         self.refreshingIndicator = refreshingIndicator
         self.showOnboarding = showOnboarding
         self.openOrderSticker = openOrderSticker
+        self.openCollateralLoanLanding = openCollateralLoanLanding
         self.makeMyProductsViewFactory = makeMyProductsViewFactory
     }
     
@@ -79,6 +82,7 @@ class MyProductsViewModel: ObservableObject {
         cardAction: CardAction? = nil,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         openOrderSticker: @escaping () -> Void,
+        openCollateralLoanLanding: @escaping (CollateralLoanType) -> Void,
         makeMyProductsViewFactory: MyProductsViewFactory,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons
     ) {
@@ -94,6 +98,7 @@ class MyProductsViewModel: ObservableObject {
             refreshingIndicator: .init(isActive: false),
             showOnboarding: [:],
             openOrderSticker: openOrderSticker,
+            openCollateralLoanLanding: openCollateralLoanLanding,
             makeMyProductsViewFactory: makeMyProductsViewFactory
         )
         
@@ -282,8 +287,7 @@ class MyProductsViewModel: ObservableObject {
                     openOrderSticker()
                     
                 case .loan:
-                    // TODO: - add openCollateralLoanLanding
-                    break
+                    openCollateralLoanLanding(.showcase)
                     
                 default:
                     break

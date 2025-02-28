@@ -22,6 +22,7 @@ extension MyProductsViewModel {
         makeProductProfileViewModel: ProductProfileViewModel.makeProductProfileViewModel,
         refreshingIndicator: .init(isActive: true),
         openOrderSticker: {},
+        openCollateralLoanLanding: { _ in },
         makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { nil })
     )
     
@@ -39,6 +40,7 @@ extension MyProductsViewModel {
         refreshingIndicator: .init(isActive: true),
         showOnboarding: [.hide: true, .ordered: false],
         openOrderSticker: {},
+        openCollateralLoanLanding: { _ in },
         makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { nil })
     )
 }
