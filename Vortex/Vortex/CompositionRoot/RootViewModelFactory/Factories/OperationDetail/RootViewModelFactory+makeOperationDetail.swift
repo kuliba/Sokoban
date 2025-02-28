@@ -102,20 +102,20 @@ private extension RemoteServices.ResponseMapper.GetOperationDetailResponse {
             status: status,
             comment: comment,
             dateForDetail: dateForDetail,
-            dateN: digest.dateN,
-            discount: digest.discount,
-            discountExpiry: digest.discountExpiry,
+            dateN: dateN,
+            discount: discount,
+            discountExpiry: discountExpiry,
             formattedAmount: format(amount, payerCurrency),
-            legalAct: digest.legalAct,
+            legalAct: legalAct,
             payeeFullName: payeeFullName,
-            paymentTerm: digest.paymentTerm,
-            realPayerFIO: digest.realPayerFIO,
-            realPayerINN: digest.realPayerINN,
-            realPayerKPP: digest.realPayerKPP,
-            supplierBillID: digest.supplierBillID,
-            transAmm: digest.transAmm,
+            paymentTerm: paymentTerm,
+            realPayerFIO: realPayerFIO,
+            realPayerINN: realPayerINN,
+            realPayerKPP: realPayerKPP,
+            supplierBillID: supplierBillID,
+            transAmm: format(transAmm, payerCurrency),
             transferNumber: transferNumber,
-            upno: digest.upno
+            upno: UPNO
         )
     }
     
