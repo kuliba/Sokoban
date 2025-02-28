@@ -454,6 +454,7 @@
 		2A14A85C2A2750460018511E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A14A85B2A2750460018511E /* Preview Assets.xcassets */; };
 		2A14A8622A2751760018511E /* TextFieldComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A14A8612A2751760018511E /* TextFieldComponent */; };
 		2A15AF772CFC78F0004C4250 /* UpdatingUserAccountButtonLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A15AF762CFC78F0004C4250 /* UpdatingUserAccountButtonLabel.swift */; };
+		2A1669722D70307E003177BB /* Data+jsonDict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1669712D70307E003177BB /* Data+jsonDict.swift */; };
 		2A18BB2929E598E000BB460D /* StringReplacingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A18BB2829E598E000BB460D /* StringReplacingTests.swift */; };
 		2A18BB2D29E59CB900BB460D /* StringRestrictedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A18BB2C29E59CB900BB460D /* StringRestrictedTests.swift */; };
 		2A1980FC2CC10460005DEA3E /* Scheduler+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1980FA2CC102A0005DEA3E /* Scheduler+ext.swift */; };
@@ -654,6 +655,7 @@
 		2A3479882D6B050C009CCC33 /* ViewComponents+makeStatementDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3479872D6B050C009CCC33 /* ViewComponents+makeStatementDetailView.swift */; };
 		2A34798A2D6B09CB009CCC33 /* StatementDetailLayoutViewConfig+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3479892D6B09CB009CCC33 /* StatementDetailLayoutViewConfig+iVortex.swift */; };
 		2A34798C2D6B15B8009CCC33 /* StatementDetailContentLayoutViewConfig+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A34798B2D6B15B8009CCC33 /* StatementDetailContentLayoutViewConfig+iVortex.swift */; };
+		2A3569092D718131002408E0 /* XCTest+badURLString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3569082D718131002408E0 /* XCTest+badURLString.swift */; };
 		2A3599A92ADA7F5000820369 /* KeyChainStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3599A82ADA7F5000820369 /* KeyChainStoreTests.swift */; };
 		2A3599AD2ADA80A700820369 /* KeyChainStoreTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3599AB2ADA80A700820369 /* KeyChainStoreTestHelpers.swift */; };
 		2A3599AE2ADA80A700820369 /* KeyChainStoreTestTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A3599AC2ADA80A700820369 /* KeyChainStoreTestTypes.swift */; };
@@ -4233,6 +4235,7 @@
 		2A14A85B2A2750460018511E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2A15AF762CFC78F0004C4250 /* UpdatingUserAccountButtonLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatingUserAccountButtonLabel.swift; sourceTree = "<group>"; };
 		2A16509F2B1FA853000DB3B1 /* QRTypealiases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRTypealiases.swift; sourceTree = "<group>"; };
+		2A1669712D70307E003177BB /* Data+jsonDict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+jsonDict.swift"; sourceTree = "<group>"; };
 		2A18BB2829E598E000BB460D /* StringReplacingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringReplacingTests.swift; sourceTree = "<group>"; };
 		2A18BB2C29E59CB900BB460D /* StringRestrictedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringRestrictedTests.swift; sourceTree = "<group>"; };
 		2A1980FA2CC102A0005DEA3E /* Scheduler+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Scheduler+ext.swift"; sourceTree = "<group>"; };
@@ -4434,6 +4437,7 @@
 		2A3479872D6B050C009CCC33 /* ViewComponents+makeStatementDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeStatementDetailView.swift"; sourceTree = "<group>"; };
 		2A3479892D6B09CB009CCC33 /* StatementDetailLayoutViewConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StatementDetailLayoutViewConfig+iVortex.swift"; sourceTree = "<group>"; };
 		2A34798B2D6B15B8009CCC33 /* StatementDetailContentLayoutViewConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StatementDetailContentLayoutViewConfig+iVortex.swift"; sourceTree = "<group>"; };
+		2A3569082D718131002408E0 /* XCTest+badURLString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTest+badURLString.swift"; sourceTree = "<group>"; };
 		2A3599A82ADA7F5000820369 /* KeyChainStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChainStoreTests.swift; sourceTree = "<group>"; };
 		2A3599AB2ADA80A700820369 /* KeyChainStoreTestHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyChainStoreTestHelpers.swift; sourceTree = "<group>"; };
 		2A3599AC2ADA80A700820369 /* KeyChainStoreTestTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyChainStoreTestTypes.swift; sourceTree = "<group>"; };
@@ -12942,6 +12946,7 @@
 				2ACBA6722CE9B45000758D71 /* FeatureFlags+active.swift */,
 				2ABB84F02CECBC1C007ABFAD /* QRScannerSpy.swift */,
 				2A730E362CEDCF5700BF626C /* QRScannerViewModelSpy.swift */,
+				2A3569082D718131002408E0 /* XCTest+badURLString.swift */,
 			);
 			path = TestHelpers;
 			sourceTree = "<group>";
@@ -15913,6 +15918,7 @@
 				2A2E32F529A39596008B9626 /* Payments */,
 				684533732798530800104A8B /* Utility */,
 				77EC58CA277133C40054D75C /* PaymentTemplateTests.swift */,
+				2A1669712D70307E003177BB /* Data+jsonDict.swift */,
 				77EC58B0277121B00054D75C /* Transfer */,
 				77B6B3602852318500E3001B /* PeriodTests.swift */,
 				2A21E35E2AC2067700DB6456 /* Template */,
@@ -24179,6 +24185,7 @@
 				C1056A242BBBCA53002AC6EE /* Payments+ParameterSubscriberTests.swift in Sources */,
 				2A9338662A17D06B00397C88 /* PhoneKitReducerTextFieldViewModelTests.swift in Sources */,
 				C152489E2B83A6A20043F412 /* MyProductsSectionItemViewModel.swift in Sources */,
+				2A1669722D70307E003177BB /* Data+jsonDict.swift in Sources */,
 				5A5ABF9427AAF70300D548AA /* ServerCommandsAccountControllerTests.swift in Sources */,
 				832296B22BF78ECB009ACAED /* ProductDataProductStatusTests.swift in Sources */,
 				2AABD3D12A2540D90085CDA6 /* QRSearchCityViewModelTests.swift in Sources */,
@@ -24195,6 +24202,7 @@
 				2A90494B2C32698500313CB8 /* InMemoryValueStoreTests.swift in Sources */,
 				8353CD522B56B37E005F7D1A /* RequestFactory+getCardStatementForPeriodTests.swift in Sources */,
 				C1AA99E62A28F051009B208B /* PaymentsTemplateDataTests.swift in Sources */,
+				2A3569092D718131002408E0 /* XCTest+badURLString.swift in Sources */,
 				2AE63B232A4E082500C9E986 /* PaymentsOperationViewModelTests.swift in Sources */,
 				2A80C6CD2B6E259400293FE5 /* RequestFactory+createChangeClientConsentMe2MePullRequestTests.swift in Sources */,
 				2AA555702A3E603B00B13D47 /* Model+PaymentsTests.swift in Sources */,

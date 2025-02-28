@@ -9,13 +9,13 @@ import XCTest
 @testable import Vortex
 
 class PaymentTemplateTests: XCTestCase {
-
+    
     let bundle = Bundle(for: PaymentTemplateTests.self)
     let decoder = JSONDecoder()
     let encoder = JSONEncoder()
-
+    
     func testDecoding_Generic() throws {
-     
+        
         // given
         let url = bundle.url(forResource: "PaymentTemplateDecodingGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
@@ -36,16 +36,26 @@ class PaymentTemplateTests: XCTestCase {
     
     func testEncoding_Min() throws {
         
-        // given
-        let paymentTemplate = PaymentTemplateData(groupName: "Переводы СБП", name: "Иванов Иван Иванович", parameterList: [], paymentTemplateId: 1, productTemplate: nil, sort: 1, svgImage: SVGImageData(description: "string"), type: .sfp)
+        let paymentTemplate = PaymentTemplateData(
+            groupName: "Переводы СБП",
+            name: "Иванов Иван Иванович",
+            parameterList: [],
+            paymentTemplateId: 1,
+            productTemplate: nil,
+            sort: 1,
+            svgImage: SVGImageData(description: "string"),
+            type: .sfp
+        )
         
-        // when
         let result = try encoder.encode(paymentTemplate)
         
-        // then
-        let resultString = String(decoding: result, as: UTF8.self)
-        let jsonString = "{\"sort\":1,\"svgImage\":\"string\",\"parameterList\":[],\"groupName\":\"Переводы СБП\",\"type\":\"SFP\",\"name\":\"Иванов Иван Иванович\",\"paymentTemplateId\":1}"
-        
-        XCTAssertEqual(resultString, jsonString)
+        XCTAssertNoDiff(try result.jsonDict(), [
+            "sort":1,
+            "svgImage":"string",
+            "parameterList":[],
+            "groupName":"Переводы СБП",
+            "type":"SFP",
+            "name":"Иванов Иван Иванович",
+            "paymentTemplateId":1])
     }
 }

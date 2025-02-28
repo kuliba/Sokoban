@@ -14,24 +14,25 @@ final class TransferDataTests: XCTestCase {
 
     func test_amountRoundedFinance() throws {
         
-        // given
         let amountDouble: Double = 10.04
         let amountDecimal = Decimal(amountDouble)
-        let sut = makeSut(amount: amountDecimal.roundedFinance())
-        let expectedResult = "{\"amount\":10.04,\"check\":false,\"comment\":null,\"currencyAmount\":\"\",\"payer\":{}}"
+        let sut = makeSUT(amount: amountDecimal.roundedFinance())
         
-        // when
-        let sutEncoded = try encoder.encode(sut)
-        let result = String(data: sutEncoded, encoding: .utf8)
+        let encoded = try encoder.encode(sut)
         
-        // then
-        XCTAssertEqual(result, expectedResult)
+        try XCTAssertNoDiff(encoded.jsonDict(), [
+            "amount": 10.04,
+            "check": false,
+            "comment": NSNull(),
+            "currencyAmount": "",
+            "payer": [:]
+        ])
     }
 }
 
 private extension TransferDataTests {
     
-    func makeSut(amount: Decimal?) -> TransferData {
+    func makeSUT(amount: Decimal?) -> TransferData {
         
         .init(
             amount: amount,

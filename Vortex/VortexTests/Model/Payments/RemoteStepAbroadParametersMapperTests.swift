@@ -292,7 +292,7 @@ final class RemoteStepAbroadParametersMapperTests: XCTestCase {
         
         for paymentsOperator in allPaymentsOperators {
             
-            let fieldValue = " "
+            let fieldValue = badURLString
             let response = makeResponseWithAdditional([
                 .dummy(fieldName: "oferta", fieldValue: fieldValue)
             ])
