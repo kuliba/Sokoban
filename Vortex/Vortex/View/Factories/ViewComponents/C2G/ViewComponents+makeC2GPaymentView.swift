@@ -61,19 +61,8 @@ extension ViewComponents {
         
         VStack(spacing: 16) {
             
-            Group {
-                
-                groupView(state.context.payerNameField, state.context.merchantNameField)
-                groupView(state.context.uinField, state.context.purposeField)
-                
-                state.context.payerINNField.map(infoView)
-                state.context.payerKPPField.map(infoView)
-                
-                groupView(state.context.dateNField, state.context.paymentTermField)
-                
-                state.context.legalActField.map(infoView)
-            }
-            .paddedRoundedBackground(edgeInsets: .default2)
+            makeC2GPaymentContentContextView(state.context)
+                .paddedRoundedBackground(edgeInsets: .default2)
             
             makeProductSelectView(
                 state: state.productSelect,
@@ -92,6 +81,23 @@ extension ViewComponents {
             }
         }
         .padding(.bottom, 20)
+    }
+    
+    @inlinable
+    @ViewBuilder
+    func makeC2GPaymentContentContextView(
+        _ context: C2GPaymentDomain.Context
+    ) -> some View {
+        
+        groupView(context.payerNameField, context.merchantNameField)
+        groupView(context.uinField, context.purposeField)
+        
+        context.payerINNField.map(infoView)
+        context.payerKPPField.map(infoView)
+        
+        groupView(context.dateNField, context.paymentTermField)
+        
+        context.legalActField.map(infoView)
     }
     
     @inlinable
