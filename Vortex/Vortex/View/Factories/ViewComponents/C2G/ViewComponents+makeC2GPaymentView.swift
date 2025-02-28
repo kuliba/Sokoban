@@ -64,20 +64,7 @@ extension ViewComponents {
             Group {
                 
                 groupView(state.context.payerNameField, state.context.merchantNameField)
-                
-                VStack(spacing: 13) {
-                    
-                    infoView(state.context.uinField)
-                    
-                    state.context.purposeField.map { purposeField in
-                        
-                        VStack(spacing: 13) {
-                            
-                            Divider()
-                            infoView(purposeField)
-                        }
-                    }
-                }
+                groupView(state.context.uinField, state.context.purposeField)
                 
                 state.context.payerINNField.map(infoView)
                 state.context.payerKPPField.map(infoView)
