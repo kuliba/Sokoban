@@ -172,7 +172,7 @@ private extension Header {
             navTitle: product.navTitle,
             navSubtitle: product.navSubtitle,
             options: product.features,
-            md5Hash: product.image
+            imageUrl: product.image
         )
     }
 }
@@ -195,7 +195,7 @@ private extension OrderCardLandingDomain.Content {
                 "5% на категории сезона",
                 "от 0,5% до 1% кешбэк на остальные покупки**"
             ],
-            md5Hash: "dict/getProductCatalogImage?image=products/pages/order-card/digital-card-landing/images/digital_card_landing_bg.png"
+            imageUrl: "dict/getProductCatalogImage?image=products/pages/order-card/digital-card-landing/images/digital_card_landing_bg.png"
         ),
         conditions: .init(
             title: "Выгодные условия",

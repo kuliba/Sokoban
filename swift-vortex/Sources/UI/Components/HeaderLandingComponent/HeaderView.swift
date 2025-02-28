@@ -29,7 +29,7 @@ public struct HeaderView: View {
         
         ZStack(alignment: .top) {
             
-            header.md5Hash.map(imageFactory.makeBannerImageView)
+            header.imageUrl.map(imageFactory.makeBannerImageView)
                 .aspectRatio(contentMode: .fill)
             
             textView()
@@ -123,6 +123,6 @@ private extension Header {
         navTitle: "navTitle",
         navSubtitle: "navSubtitle",
         options: ["option"],
-        md5Hash: "1"
+        imageUrl: "1"
     )
 }
