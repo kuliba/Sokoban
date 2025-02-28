@@ -37,53 +37,7 @@ extension ViewComponents {
             
             ScrollView(showsIndicators: false) {
                 
-                // TODO: extract sub-components
-                VStack(spacing: 16) {
-                    
-                    Group {
-                        
-                        groupView(state.context.payerNameField, state.context.merchantNameField)
-                        
-                        VStack(spacing: 13) {
-                            
-                            infoView(state.context.uinField)
-                            
-                            state.context.purposeField.map { purposeField in
-                                
-                                VStack(spacing: 13) {
-                                    
-                                    Divider()
-                                    infoView(purposeField)
-                                }
-                            }
-                        }
-                        
-                        state.context.payerINNField.map(infoView)
-                        state.context.payerKPPField.map(infoView)
-                        
-                        groupView(state.context.dateNField, state.context.paymentTermField)
-                        
-                        state.context.legalActField.map(infoView)
-                    }
-                    .paddedRoundedBackground(edgeInsets: .default2)
-                    
-                    makeProductSelectView(
-                        state: state.productSelect,
-                        event: { event(.productSelect($0)) }
-                    )
-                    
-                    amountView(state.context)
-                    
-                    state.termsCheck.map {
-                        
-                        makeCheckBoxView(
-                            title: state.context.term,
-                            isChecked: $0,
-                            toggle: { event(.termsToggle) }
-                        )
-                    }
-                }
-                .padding(.bottom, 20)
+                makeC2GPaymentContentView(state, event)
             }
             .padding(.horizontal)
             .safeAreaInset(edge: .bottom) {
@@ -97,6 +51,53 @@ extension ViewComponents {
             }
             .conditionalBottomPadding()
         }
+    }
+    
+    @inlinable
+    func makeC2GPaymentContentView(
+        _ state: C2GPaymentState<C2GPaymentDomain.Context>,
+        _ event: @escaping (C2GPaymentEvent) -> Void
+    ) -> some View {
+        
+        VStack(spacing: 16) {
+            
+            makeC2GPaymentContentContextView(state.context)
+                .paddedRoundedBackground(edgeInsets: .default2)
+            
+            makeProductSelectView(
+                state: state.productSelect,
+                event: { event(.productSelect($0)) }
+            )
+            
+            amountView(state.context)
+            
+            state.termsCheck.map {
+                
+                makeCheckBoxView(
+                    title: state.context.term,
+                    isChecked: $0,
+                    toggle: { event(.termsToggle) }
+                )
+            }
+        }
+        .padding(.bottom, 20)
+    }
+    
+    @inlinable
+    @ViewBuilder
+    func makeC2GPaymentContentContextView(
+        _ context: C2GPaymentDomain.Context
+    ) -> some View {
+        
+        groupView(context.payerNameField, context.merchantNameField)
+        groupView(context.uinField, context.purposeField)
+        
+        context.payerINNField.map(infoView)
+        context.payerKPPField.map(infoView)
+        
+        groupView(context.dateNField, context.paymentTermField)
+        
+        context.legalActField.map(infoView)
     }
     
     @inlinable
