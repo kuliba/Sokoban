@@ -190,7 +190,7 @@ private extension Reducer {
             state.loadableForm = .loaded(.success(form))
             
         case(var.loading(.some(form)), let .success(orderAccountResponse)):
-            form.orderAccountResponse = .init(accountId: orderAccountResponse.accountId, accountNumber: orderAccountResponse.accountNumber, paymentOperationDetailId: orderAccountResponse.paymentOperationDetailId, status: orderAccountResponse.status)
+            form.orderAccountResponse = .init(orderAccountResponse, state.productSelect.selected)
             state.loadableForm = .loaded(.success(form))
         }
     }
@@ -210,5 +210,23 @@ private extension Form {
     var payload: ProductEffect.LoadConfirmationPayload {
         
         .init(condition: constants.links.conditions, tariff: constants.links.tariff)
+    }
+}
+
+private extension OrderAccountResponse {
+    
+    init(
+        _ data: OrderAccountResponse,
+        _ product: ProductSelect.Product?
+    ) {
+        
+        self.init(
+            accountId: data.accountId,
+            accountNumber: data.accountNumber,
+            paymentOperationDetailId: data.paymentOperationDetailId,
+            product: product,
+            openData: data.openData,
+            status: data.status
+        )
     }
 }

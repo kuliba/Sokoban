@@ -14,7 +14,7 @@ import OTPInputComponent
 import RemoteServices
 import LoadableState
 import PaymentComponents
-
+import StateMachines
 
 enum OpenSavingsAccountCompleteDomain {}
 
@@ -23,7 +23,7 @@ extension OpenSavingsAccountCompleteDomain {
     struct Complete {
         
         let context: Context
-        let details: OperationDetailDomain.Model
+        let details: OperationDetailSADomain.Model
         let document: DocumentButtonDomain.Model
         
         struct Context: Equatable {
@@ -39,7 +39,27 @@ extension OpenSavingsAccountCompleteDomain {
             }
         }
     }
+    
+    struct Details: Equatable {
+                
+        let product: Product?
+        
+        let payeeAccountId: Int?    // Счет поплнения - "payeeAccountId"
+        let payeeAccountNumber: String?    // Открытый накопительный счет - "payeeAccountNumber"
+        let payerCardId: Int?   // Карта списания - payerCardId
+        let payerCardNumber: String?   // Номер карты списания - payerCardNumber
+        let payerAccountId: Int?   // Счет списания - payerAccountId
+        
+        let formattedAmount: String? // Сумма платежа - payerAmount+ payerCurrency
+        let formattedFee: String? // Сумма комиссии - payerFee+ payerCurrency
+        let dataForDetails: String?   // Дата и время операции (МСК) - dataForDetails
+    }
+
+    typealias Product = ProductSelect.Product
 }
+
+typealias OperationDetailSADomain = StateMachineDomain<OpenSavingsAccountCompleteDomain.Details, Error>
+
 extension RootViewModelFactory {
     
     @inlinable
@@ -470,12 +490,16 @@ private extension RemoteServices.ResponseMapper.MappingResult<MakeOpenSavingsAcc
 
 private extension OrderAccountResponse {
     
-    init(_ data: MakeOpenSavingsAccountResponse) {
+    init(
+        _ data: MakeOpenSavingsAccountResponse
+    ) {
         
         self.init(
             accountId: data.paymentInfo.accountId,
             accountNumber: data.paymentInfo.accountNumber,
-            paymentOperationDetailId: data.paymentOperationDetailID,
+            paymentOperationDetailId: data.paymentOperationDetailID, 
+            product: nil,
+            openData: data.paymentInfo.dateOpen,
             status: data.documentInfo.documentStatus?.status ?? .inflight
         )
     }

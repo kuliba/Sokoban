@@ -40,6 +40,52 @@ extension ViewComponents {
         }
     }
     
+    @ViewBuilder
+    func makeDetailsButton(
+        state: OperationDetailSADomain.State
+    )  -> some View {
+        
+        switch state {
+        case let .completed(details):
+            WithFullScreenCoverView {
+                circleButton(image: .ic24File, title: "Детали", action: $0)
+            } sheet: {
+                saTransactionDetails(details: details, dismiss: $0)
+            }
+            
+        case .failure, .pending:
+            EmptyView()
+            
+        case .loading:
+            circleButtonPlaceholder()
+        }
+    }
+    
+    @inlinable
+    func saTransactionDetails(
+        details: any TransactionDetailsProviding<[DetailsCell]>,
+        dismiss: @escaping () -> Void
+    ) -> some View {
+        
+        saDetailsView(details: details.transactionDetails)
+            .navigationBarWithClose(
+                title: "Детали операции",
+                dismiss: dismiss
+            )
+    }
+
+    @inlinable
+    func saDetailsView(
+        details: [DetailsCell]
+    ) -> some View {
+        
+        DetailsView(
+            detailsCells: details,
+            config: .iVortex,
+            detailsCellView: detailsCellView
+        )
+    }
+    
     @inlinable
     @ViewBuilder
     func makeDocumentButtonViewWithShareButton(
