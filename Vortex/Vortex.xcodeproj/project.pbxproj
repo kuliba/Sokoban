@@ -2877,6 +2877,7 @@
 		8353CD5E2B57C2FE005F7D1A /* Services+getCardStatementServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8353CD5D2B57C2FE005F7D1A /* Services+getCardStatementServiceTests.swift */; };
 		8353CD612B57F699005F7D1A /* CardStatementFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8353CD602B57F699005F7D1A /* CardStatementFactory.swift */; };
 		8354294D2D43A1AB00963709 /* GetBannersMyProductListService in Frameworks */ = {isa = PBXBuildFile; productRef = 8354294C2D43A1AB00963709 /* GetBannersMyProductListService */; };
+		835621A72D7249B30023A0A7 /* OffsetObservingScrollModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835621A52D7249B30023A0A7 /* OffsetObservingScrollModelTests.swift */; };
 		835741C22C9DC0D9008E9B2E /* GeneralImageCacheImagePublisherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835741C12C9DC0D9008E9B2E /* GeneralImageCacheImagePublisherTests.swift */; };
 		8357E3312B6809540065E581 /* OperationDetailFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8357E3302B6809540065E581 /* OperationDetailFactory.swift */; };
 		8357E3382B6BD20D0065E581 /* CardGuardianConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8357E3372B6BD20D0065E581 /* CardGuardianConfig.swift */; };
@@ -2918,6 +2919,7 @@
 		8376CE542AA7395000DCDE63 /* LandingUIComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 8376CE532AA7395000DCDE63 /* LandingUIComponent */; };
 		8377ED042C36B52E00493D17 /* ControlPanelViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8377ED032C36B52E00493D17 /* ControlPanelViewModelTests.swift */; };
 		837E7D8B2C45213A007F7732 /* XCTestCase+assertError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 837E7D8A2C45213A007F7732 /* XCTestCase+assertError.swift */; };
+		837EBC172D74BFB600EC4628 /* SwipeToRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 837EBC162D74BFB600EC4628 /* SwipeToRefresh.swift */; };
 		837F82E52A3B271C003544BB /* PickerWithPreviewComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 837F82E42A3B271C003544BB /* PickerWithPreviewComponent */; };
 		83808C412B8CEDCB00E9F7BF /* CVVButtonEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83808C402B8CEDCB00E9F7BF /* CVVButtonEvent.swift */; };
 		83808C472B8DB97C00E9F7BF /* AlertModelOf+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83808C462B8DB97C00E9F7BF /* AlertModelOf+ext.swift */; };
@@ -6636,6 +6638,7 @@
 		8353CD542B57AF72005F7D1A /* Services+getCardStatementService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getCardStatementService.swift"; sourceTree = "<group>"; };
 		8353CD5D2B57C2FE005F7D1A /* Services+getCardStatementServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getCardStatementServiceTests.swift"; sourceTree = "<group>"; };
 		8353CD602B57F699005F7D1A /* CardStatementFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardStatementFactory.swift; sourceTree = "<group>"; };
+		835621A52D7249B30023A0A7 /* OffsetObservingScrollModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OffsetObservingScrollModelTests.swift; sourceTree = "<group>"; };
 		835741C12C9DC0D9008E9B2E /* GeneralImageCacheImagePublisherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralImageCacheImagePublisherTests.swift; sourceTree = "<group>"; };
 		8357E3302B6809540065E581 /* OperationDetailFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailFactory.swift; sourceTree = "<group>"; };
 		8357E3372B6BD20D0065E581 /* CardGuardianConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardGuardianConfig.swift; sourceTree = "<group>"; };
@@ -6674,6 +6677,7 @@
 		8376C1252C08CF0100B482FC /* MyProductsViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProductsViewFactory.swift; sourceTree = "<group>"; };
 		8377ED032C36B52E00493D17 /* ControlPanelViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPanelViewModelTests.swift; sourceTree = "<group>"; };
 		837E7D8A2C45213A007F7732 /* XCTestCase+assertError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+assertError.swift"; sourceTree = "<group>"; };
+		837EBC162D74BFB600EC4628 /* SwipeToRefresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeToRefresh.swift; sourceTree = "<group>"; };
 		83808C402B8CEDCB00E9F7BF /* CVVButtonEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVButtonEvent.swift; sourceTree = "<group>"; };
 		83808C462B8DB97C00E9F7BF /* AlertModelOf+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlertModelOf+ext.swift"; sourceTree = "<group>"; };
 		83815FA62C36859000C97E60 /* ControlPanelEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPanelEffectHandler.swift; sourceTree = "<group>"; };
@@ -15221,6 +15225,7 @@
 		7772978A27C3B7480099EF91 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				835621A62D7249B30023A0A7 /* ScrollViewWithReportingOffset */,
 				2AD64855299E7EF600D70B6B /* General */,
 				2AB5FEA329E681430055BE57 /* PaymentsTransfers */,
 				2AC2FB1B2C5104F8001972CB /* PaymentProviderServicePickerFlow */,
@@ -16599,6 +16604,14 @@
 			path = CardStatement;
 			sourceTree = "<group>";
 		};
+		835621A62D7249B30023A0A7 /* ScrollViewWithReportingOffset */ = {
+			isa = PBXGroup;
+			children = (
+				835621A52D7249B30023A0A7 /* OffsetObservingScrollModelTests.swift */,
+			);
+			path = ScrollViewWithReportingOffset;
+			sourceTree = "<group>";
+		};
 		8357E3362B6BD1FF0065E581 /* Config */ = {
 			isa = PBXGroup;
 			children = (
@@ -16639,6 +16652,7 @@
 			isa = PBXGroup;
 			children = (
 				2A75B5422D7046EC00BBDDDC /* OffsetObservingScrollWithModelView.swift */,
+				837EBC162D74BFB600EC4628 /* SwipeToRefresh.swift */,
 			);
 			path = ScrollViewWithReportingOffset;
 			sourceTree = "<group>";
@@ -22367,6 +22381,7 @@
 				2A248F632C691A5B00082814 /* AnywayPaymentSourceParser.swift in Sources */,
 				2A248F642C691A5B00082814 /* InitialAnywayTransactionComposer.swift in Sources */,
 				83B433DA2C9195DB0019CCD1 /* ComposedBannersView.swift in Sources */,
+				837EBC172D74BFB600EC4628 /* SwipeToRefresh.swift in Sources */,
 				2A248F652C691A5B00082814 /* InitiateAnywayPaymentMicroService.swift in Sources */,
 				C10423992A735A3700D0AC63 /* Model+C2B.swift in Sources */,
 				0BCFBE012812DD17003F2F36 /* Model+Notifications.swift in Sources */,
@@ -24067,6 +24082,7 @@
 				830207462D393BF60038EFA4 /* RootViewModelFactory+makeOpenNewProductButtonsTests.swift in Sources */,
 				8375C01E2C0851D900E4498E /* PaymentsTransfersViewModelGetSectionsTests.swift in Sources */,
 				2A730E372CEDCF5700BF626C /* QRScannerViewModelSpy.swift in Sources */,
+				835621A72D7249B30023A0A7 /* OffsetObservingScrollModelTests.swift in Sources */,
 				2A5190412A7E7DD60014B0B7 /* TestHelpers.swift in Sources */,
 				2A248F5C2C68E4D600082814 /* AnywayPaymentTestHelpers.swift in Sources */,
 				77D2D9B2275AB9280097234D /* Item.swift in Sources */,
