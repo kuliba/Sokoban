@@ -763,7 +763,7 @@ private extension MainViewModel {
                 .init(
                     item: $0,
                     productType: .card,
-                    promoProduct: .collateralLoan(CollateralLoanType(rawValue: $0.action?.target))
+                    promoProduct: .collateralLoan(CollateralLoanType(rawValue: $0.action?.target ?? ""))
                 )})
         }
 

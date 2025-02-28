@@ -31,7 +31,7 @@ enum CollateralLoanType {
     case car
     case realEstate
     
-    init(rawValue: String?) {
+    init(rawValue: String) {
         
         switch rawValue {
         case .carLanding:
