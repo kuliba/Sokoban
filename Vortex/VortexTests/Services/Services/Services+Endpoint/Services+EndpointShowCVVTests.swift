@@ -23,7 +23,7 @@ final class Services_EndpointShowCVVTests: XCTestCase {
     func test_urlWithBase_shouldThrowOnIllegalBase() throws {
         
         let endpoint: Services.Endpoint = .showCVV
-        let illegalBase = "🤯"
+        let illegalBase = badURLString
         
         XCTAssertThrowsError(
             try endpoint.url(withBase: illegalBase)

@@ -27,7 +27,7 @@ final class RootViewModelFactory_getOpenNewProductNavigationTests: RootViewModel
     
     func test_cardProductType_shouldDeliverOpenCard() {
         
-        expect(.productType(.card), toDeliver: .openCard)
+        expect(.productType(.card(.landing)), toDeliver: .openCard)
     }
     
     func test_depositProductType_shouldDeliverOpenDeposit() {

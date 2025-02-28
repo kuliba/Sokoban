@@ -45,6 +45,30 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         ))
     }
     
+    // MARK: - СreditCardMVP
+    
+    func test_load_shouldDeliverActiveСreditCardMVPForActiveRetrieveResult() {
+        
+        let sut = makeSUT { $0 == .creditCardMVPFlag ? "1" : nil }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            creditCardMVPFlag: .active
+        ))
+    }
+    
+    func test_load_shouldDeliverInactiveСreditCardMVPForInactiveRetrieveResult() {
+        
+        let sut = makeSUT { _ in "0" }
+        
+        let flags = sut.load()
+        
+        XCTAssertNoDiff(flags, makeFeatureFlags(
+            creditCardMVPFlag: .inactive
+        ))
+    }
+    
     // MARK: - PaymentsTransfersFlag
     
     func test_load_shouldDeliverInactivePaymentsTransfersFlagForRetrieveFailure() {
@@ -219,6 +243,7 @@ final class FeatureFlagsLoaderTests: XCTestCase {
     
     private func makeFeatureFlags(
         c2gFlag: C2GFlag? = nil,
+        creditCardMVPFlag: СreditCardMVPFlag? = nil,
         getProductListByTypeV6Flag: GetProductListByTypeV6Flag? = nil,
         paymentsTransfersFlag: PaymentsTransfersFlag? = nil,
         savingsAccountFlag: SavingsAccountFlag? = nil,
@@ -227,8 +252,9 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         orderCardFlag: OrderCardFlag? = nil
     ) -> FeatureFlags {
         
-        .init(
+        return .init(
             c2gFlag: c2gFlag?.map { $0 } ?? .inactive,
+            creditCardMVPFlag: creditCardMVPFlag.map { $0 } ?? .inactive,
             getProductListByTypeV6Flag: getProductListByTypeV6Flag?.map { $0 } ?? .inactive,
             paymentsTransfersFlag: paymentsTransfersFlag?.map { $0 } ?? .inactive,
             savingsAccountFlag: savingsAccountFlag?.map { $0 } ?? .inactive,

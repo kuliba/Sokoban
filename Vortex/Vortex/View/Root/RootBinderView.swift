@@ -101,7 +101,21 @@ private extension RootBinderView {
             
         case let .userAccount(userAccount):
             userAccountView(userAccount)
+            
+        case let .orderCardLanding(landing):
+            orderCardLandingView(landing)
         }
+    }
+    
+    private func orderCardLandingView(
+        _ orderCardLanding: OrderCardLanding
+    ) -> some View {
+        
+        rootViewFactory.components.makeOrderCardLandingView(
+            landing: orderCardLanding,
+            continue: { },
+            dismiss: { }
+        )
     }
     
     private func productProfileView(
@@ -311,6 +325,7 @@ extension RootViewNavigation {
         case searchByUIN(SearchByUIN)
         case standardPayment(PaymentProviderPickerDomain.Binder)
         case userAccount(UserAccountViewModel)
+        case orderCardLanding(OrderCardLanding)
         
         typealias SearchByUIN = SearchByUINDomain.Binder
         typealias TemplatesNode = RootViewNavigation.TemplatesNode
@@ -363,7 +378,14 @@ extension RootViewNavigation.Destination: Identifiable {
         case let .openProduct(openProduct):
             switch openProduct {
             case let .card(openCard):
-                return .openProduct(.card(.init(openCard.model)))
+                
+                switch openCard {
+                case let .form(form):
+                    return .openProduct(.card(.init(form.model)))
+
+                case let .landing(landing):
+                    return .orderCardLanding
+                }
                 
             case .savingsAccount:
                 return .openProduct(.savingsAccount)
@@ -383,6 +405,9 @@ extension RootViewNavigation.Destination: Identifiable {
             
         case let .userAccount(userAccount):
             return .userAccount(.init(userAccount))
+            
+        case let .orderCardLanding(landing):
+            return .orderCardLanding
         }
     }
     
@@ -394,6 +419,7 @@ extension RootViewNavigation.Destination: Identifiable {
         case searchByUIN(ObjectIdentifier)
         case standardPayment(ObjectIdentifier)
         case userAccount(ObjectIdentifier)
+        case orderCardLanding
         
         enum OpenProductID: Hashable {
             

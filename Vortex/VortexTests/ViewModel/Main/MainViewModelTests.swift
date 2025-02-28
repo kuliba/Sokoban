@@ -231,7 +231,7 @@ final class MainViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.route.destination)
         
-        sut.openProductSection?.tapOpenProductButtonAndWait(type: .card)
+        sut.openProductSection?.tapOpenProductButtonAndWait(type: .card(.landing))
         
         XCTAssertNil(sut.route.destination)
     }
@@ -248,7 +248,7 @@ final class MainViewModelTests: XCTestCase {
         
         XCTAssertNil(sut.route.destination)
         
-        sut.openProductSection?.tapOpenProductButtonAndWait(type: .card)
+        sut.openProductSection?.tapOpenProductButtonAndWait(type: .card(.landing))
         
         XCTAssertNoDiff(sut.route.case, .openCard)
     }

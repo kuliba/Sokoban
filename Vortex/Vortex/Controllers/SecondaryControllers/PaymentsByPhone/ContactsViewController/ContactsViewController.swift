@@ -927,6 +927,8 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
                 
             }
             
+        default:
+            break
         }
     }
     

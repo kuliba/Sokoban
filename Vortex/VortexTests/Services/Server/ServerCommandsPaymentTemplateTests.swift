@@ -15,9 +15,9 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
     let encoder = JSONEncoder.serverDate
     
     //MARK: - DeletePaymentTemplates
-
+    
     func testDeletePaymentTemplates_Payload_Encoding() throws {
-
+        
         // given
         let command = ServerCommands.PaymentTemplateController.DeletePaymentTemplates(token:"", payload: .init(paymentTemplateIdList: [1, 2, 3]))
         let expected = "{\"paymentTemplateIdList\":[1,2,3]}"
@@ -31,7 +31,7 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
     }
     
     func testDeletePaymentTemplates_Response_Decoding() throws {
-
+        
         // given
         let url = bundle.url(forResource: "DeletePaymentTemplatesResponseGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
@@ -46,7 +46,7 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
     //MARK: - GetPaymentTemplateList
     
     func testGetPaymentTemplateList_Payload_Encoding() throws {
-
+        
         // given
         let command = ServerCommands.PaymentTemplateController.GetPaymentTemplateList(token: "", serial: nil)
         
@@ -56,7 +56,7 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
     
     //TODO: - Complete data tests
     func testGetPaymentTemplateList_ServerResponse_Decoding() throws {
-
+        
         // given
         let url = bundle.url(forResource: "PaymentsTemplateListGenericResponse", withExtension: "json")!
         let json = try Data(contentsOf: url)
@@ -71,9 +71,9 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
         let paymentTemplate = PaymentTemplateData.init(groupName: "Перевод МИГ", name: "Перевод между счетами", parameterList: [parameter1, parameter2, parameter3], paymentTemplateId: 2513, productTemplate: nil, sort: 4, svgImage: .init(description: "image"), type: .newDirect)
         
         let expected = ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response
-                            .init(statusCode: .ok,
-                                  errorMessage: nil,
-                                  data: .init(templateList: [paymentTemplate], serial: ""))
+            .init(statusCode: .ok,
+                  errorMessage: nil,
+                  data: .init(templateList: [paymentTemplate], serial: ""))
         
         // when
         let result = try decoder.decode(ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response.self, from: json)
@@ -83,7 +83,7 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
     }
     
     func testGetPaymentTemplateList_Response_Decoding() throws {
-
+        
         // given
         let url = bundle.url(forResource: "GetPaymentTemplateListResponseGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
@@ -101,7 +101,7 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
     }
     
     func testGetPaymentTemplateList_Response_Decoding_Min() throws {
-
+        
         // given
         let url = bundle.url(forResource: "GetPaymentTemplateListResponseMin", withExtension: "json")!
         let json = try Data(contentsOf: url)
@@ -119,7 +119,7 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
     }
     
     func testGetPaymentTemplateList_Response_SFP_Decoding() throws {
-
+        
         // given
         let url = bundle.url(forResource: "GetPeymentTemlpateListResponseSFP", withExtension: "json")!
         let json = try Data(contentsOf: url)
@@ -134,21 +134,22 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
     //MARK: - SavePaymentTemplate
     
     func testSavePaymentTemplate_Payload_Encoding() throws {
-
-        // given
-        let command = ServerCommands.PaymentTemplateController.SavePaymentTemplate(token: "", payload: .init(name: "test", paymentOperationDetailId: 1))
-        let expected = "{\"name\":\"test\",\"paymentOperationDetailId\":1}"
         
-        // when
+        let command = ServerCommands.PaymentTemplateController.SavePaymentTemplate(
+            token: "",
+            payload: .init(name: "test", paymentOperationDetailId: 1)
+        )
+        
         let result = try encoder.encode(command.payload)
-        let resultString = String(decoding: result, as: UTF8.self)
         
-        // then
-        XCTAssertEqual(resultString, expected)
+        try XCTAssertNoDiff(result.jsonDict(), [
+            "name":"test",
+            "paymentOperationDetailId": 1
+        ])
     }
     
     func testSavePaymentTemplate_Response_Decoding() throws {
-
+        
         // given
         let url = bundle.url(forResource: "SavePaymentTemplateResponseGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
@@ -164,21 +165,21 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
     //MARK: - SortingPaymentTemplates
     
     func testSortingPaymentTemplates_Payload_Encoding() throws {
-
-        // given
+        
         let command = ServerCommands.PaymentTemplateController.SortingPaymentTemplates(token: "", payload: .init(sortDataList: [.init(paymentTemplateId: 1, sort: 1)]))
-        let expected = "{\"sortDataList\":[{\"paymentTemplateId\":1,\"sort\":1}]}"
         
-        // when
         let result = try encoder.encode(command.payload)
-        let resultString = String(decoding: result, as: UTF8.self)
         
-        // then
-        XCTAssertEqual(resultString, expected)
+        try XCTAssertNoDiff(result.jsonDict(), [
+            "sortDataList": [
+                ["paymentTemplateId": 1,
+                 "sort": 1]
+            ]
+        ])
     }
     
     func testSortingPaymentTemplates_Response_Decoding() throws {
-
+        
         // given
         let url = bundle.url(forResource: "SortingPaymentTemplatesResponseGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
@@ -194,24 +195,31 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
     //MARK: - UpdatePaymentTemplate
     
     func testUpdatePaymentTemplate_Payload_Encoding() throws {
-
+        
         // given
         let payer = TransferData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
         let amount: Double? = nil
         let transfer = TransferGeneralData(amount: amount, check: false, comment: nil, currencyAmount: "RUB", payer: payer, payeeExternal: nil, payeeInternal: nil)
         let command = ServerCommands.PaymentTemplateController.UpdatePaymentTemplate(token: "", payload: .init(name: "test", parameterList: [transfer], paymentTemplateId: 1))
-        let expected = "{\"name\":\"test\",\"paymentTemplateId\":1,\"parameterList\":[{\"amount\":null,\"currencyAmount\":\"RUB\",\"check\":false,\"payeeInternal\":null,\"comment\":null,\"payer\":{},\"payeeExternal\":null}]}"
         
-        // when
         let result = try encoder.encode(command.payload)
-        let resultString = String(decoding: result, as: UTF8.self)
         
-        // then
-        XCTAssertEqual(resultString, expected)
+        try XCTAssertNoDiff(result.jsonDict(), [
+            "name": "test",
+            "paymentTemplateId": 1,
+            "parameterList": [[
+                "amount": NSNull(),
+                "currencyAmount":"RUB",
+                "check": false,
+                "payeeInternal": NSNull(),
+                "comment": NSNull(),
+                "payer": [:],
+                "payeeExternal": NSNull()]
+                             ]])
     }
     
     func testUpdatePaymentTemplate_Response_Decoding() throws {
-
+        
         // given
         let url = bundle.url(forResource: "UpdatePaymentTemplateResponseGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)

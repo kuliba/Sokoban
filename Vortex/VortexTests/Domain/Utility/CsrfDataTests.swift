@@ -9,13 +9,13 @@ import XCTest
 @testable import Vortex
 
 class CsrfDataTests: XCTestCase {
-
+    
     let bundle = Bundle(for: CsrfDataTests.self)
     let decoder = JSONDecoder()
     let encoder = JSONEncoder()
-
+    
     func testDecoding_Generic() throws {
-     
+        
         // given
         let url = bundle.url(forResource: "CsrfDtoDecodingGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
@@ -33,16 +33,17 @@ class CsrfDataTests: XCTestCase {
     
     func testEncoding_Min() throws {
         
-        // given
-        let csrfDto = CsrfData(cert: "string", headerName: "string", pk: "string", sign: "string", token: "string")
+        let (cert, headerName, pk, sign, token) = (anyMessage(), anyMessage(), anyMessage(), anyMessage(), anyMessage())
+        let csrfDto = CsrfData(cert: cert, headerName: headerName, pk: pk, sign: sign, token: token)
         
-        // when
         let result = try encoder.encode(csrfDto)
         
-        // then
-        let resultString = String(decoding: result, as: UTF8.self)
-        let jsonString = "{\"headerName\":\"string\",\"pk\":\"string\",\"cert\":\"string\",\"sign\":\"string\",\"token\":\"string\"}"
-        
-        XCTAssertEqual(resultString, jsonString)
+        try XCTAssertNoDiff(result.jsonDict(), [
+            "headerName": headerName,
+            "pk": pk,
+            "cert": cert,
+            "sign": sign,
+            "token": token
+        ])
     }
 }
