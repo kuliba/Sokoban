@@ -10,16 +10,21 @@ import Foundation
 public struct Header {
     
     public let title: String
-    //TODO: ADD subtitle from name text
+    public let navTitle: String
+    public let navSubtitle: String
     public let options: [String]
-    public let md5Hash: String?
+    public let md5Hash: String? //TODO: rename to imageUrl
     
     public init(
         title: String,
+        navTitle: String,
+        navSubtitle: String,
         options: [String],
         md5Hash: String?
     ) {
         self.title = title
+        self.navTitle = navTitle
+        self.navSubtitle = navSubtitle
         self.options = options
         self.md5Hash = md5Hash
     }

@@ -55,8 +55,8 @@ extension ViewComponents {
             }
             .conditionalBottomPadding()
             .navigationBarWithBack(
-                title: offset.wrappedValue.y > 0 ?  binder.content.header.title : "",
-                subtitle: offset.wrappedValue.y > 0 ?  binder.content.header.title : "",
+                title: offset.wrappedValue.y > 0 ?  binder.content.header.navTitle : "",
+                subtitle: offset.wrappedValue.y > 0 ?  binder.content.header.navSubtitle : "",
                 subtitleForegroundColor: .textPlaceholder,
                 dismiss: dismiss
             )
@@ -81,34 +81,38 @@ extension ViewComponents {
                 HeaderView(
                     header: landing.header,
                     config: .iVortex,
-                    imageFactory: .init(makeIconView: makeIconView)
+                    imageFactory: .init(makeBannerImageView: makeGeneralIconView)
                 )
+                .edgesIgnoringSafeArea(.top)
                 
-                ListLandingComponent.List(
-                    items: landing.conditions,
-                    config: .iVortex,
-                    factory: .init(
-                        makeIconView: makeIconView,
-                        makeBannerImageView: makeGeneralIconView
+                VStack {
+                    
+                    ListLandingComponent.List(
+                        items: landing.conditions,
+                        config: .iVortex,
+                        factory: .init(
+                            makeIconView: makeIconView,
+                            makeBannerImageView: makeGeneralIconView
+                        )
                     )
-                )
-                
-                ListLandingComponent.List(
-                    items: landing.security,
-                    config: .iVortex,
-                    factory: .init(
-                        makeIconView: makeIconView,
-                        makeBannerImageView: makeGeneralIconView
+                    
+                    ListLandingComponent.List(
+                        items: landing.security,
+                        config: .iVortex,
+                        factory: .init(
+                            makeIconView: makeIconView,
+                            makeBannerImageView: makeGeneralIconView
+                        )
                     )
-                )
-                
-                DropDownTextListView(
-                    config: .default,
-                    list: landing.dropDownList
-                )
+                    
+                    DropDownTextListView(
+                        config: .default,
+                        list: landing.dropDownList
+                    )
+                }
+                .padding(.leading, 15)
+                .padding(.trailing, 16)
             }
-            .padding(.leading, 15)
-            .padding(.trailing, 16)
         }
     }
     

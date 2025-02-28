@@ -162,6 +162,8 @@ private extension ResponseMapper._Data.Product {
     
         return .init(
             title: title ?? "",
+            navTitle: name?.first?.text ?? "",
+            navSubtitle: name?.first?.text ?? "",
             image: image ?? "",
             features: features,
             discount: .init(
