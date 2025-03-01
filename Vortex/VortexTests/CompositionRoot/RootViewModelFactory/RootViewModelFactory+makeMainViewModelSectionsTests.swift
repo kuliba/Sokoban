@@ -64,8 +64,8 @@ final class RootViewModelFactory_makeMainViewModelSectionsTests: RootViewModelFa
         let fastOperationSection = try fastOperationSection(c2gFlag: .active)
         
         XCTAssertNoDiff(fastOperationSection.titles, [
-            FastOperationsTitles.uin,
             FastOperationsTitles.qr,
+            FastOperationsTitles.uin,
             FastOperationsTitles.byPhone,
             FastOperationsTitles.utilityPayment,
             FastOperationsTitles.templates,

@@ -65,15 +65,20 @@ extension RootViewModelFactory {
         action: @escaping (FastOperations) -> Void
     ) -> [ButtonIconTextView.ViewModel] {
         
-        let uin: FastOperations? = c2gFlag.isActive ? .uin : nil
-        let displayButtonsTypes: [FastOperations?] = [uin, .byQR, .byPhone, .utility, .templates]
-        
-        return displayButtonsTypes
-            .compactMap { $0 }
+        return fastOperations(c2gFlag: c2gFlag)
             .map { type in
                 
                 createButtonViewModel(for: type) { action(type) }
             }
+    }
+    
+    @inlinable
+    func fastOperations(
+        c2gFlag: C2GFlag
+    ) -> [FastOperations] {
+        
+        let uin: FastOperations? = c2gFlag.isActive ? .uin : nil
+        return [.byQR, uin, .byPhone, .utility, .templates].compactMap { $0 }
     }
     
     @inlinable
