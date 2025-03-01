@@ -206,4 +206,15 @@ private extension FastOperations {
         case .utility:   return .ic24Bulb
         }
     }
+    
+    var title: String {
+        
+        switch self {
+        case .byQR:      return FastOperationsTitles.qr
+        case .byPhone:   return FastOperationsTitles.byPhone
+        case .templates: return FastOperationsTitles.templates
+        case .uin:       return FastOperationsTitles.uin
+        case .utility:   return FastOperationsTitles.utilityPayment
+        }
+    }
 }
