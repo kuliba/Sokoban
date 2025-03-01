@@ -66,7 +66,7 @@ extension RootViewModelFactory {
     ) -> [ButtonIconTextView.ViewModel] {
         
         let uin: FastOperations? = c2gFlag.isActive ? .uin : nil
-        let displayButtonsTypes: [FastOperations?] = [uin, .byQr, .byPhone, .utility, .templates]
+        let displayButtonsTypes: [FastOperations?] = [uin, .byQR, .byPhone, .utility, .templates]
         
         return displayButtonsTypes
             .compactMap { $0 }

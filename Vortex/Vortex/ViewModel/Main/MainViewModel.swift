@@ -970,7 +970,7 @@ private extension MainViewModel {
         _ payload: MainSectionViewModelAction.FastPayment.ButtonTapped
     ) {
         switch payload.operationType {
-        case .byQr, .templates, .uin:
+        case .byQR, .templates, .uin:
             break // handled by root via rootEventPublisher
             
         case .byPhone:

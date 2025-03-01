@@ -9,12 +9,12 @@ import SwiftUI
 
 enum FastOperations {
     
-    case byQr, byPhone, templates, uin, utility
+    case byPhone, byQR, templates, uin, utility
     
     var title: String {
         
         switch self {
-        case .byQr:      return FastOperationsTitles.qr
+        case .byQR:      return FastOperationsTitles.qr
         case .byPhone:   return FastOperationsTitles.byPhone
         case .templates: return FastOperationsTitles.templates
         case .uin:       return FastOperationsTitles.uin
@@ -25,7 +25,7 @@ enum FastOperations {
     var icon: Image {
         
         switch self {
-        case .byQr:      return .ic24BarcodeScanner2
+        case .byQR:      return .ic24BarcodeScanner2
         case .byPhone:   return .ic24Smartphone
         case .templates: return .ic24Star
         case .uin:       return .ic24Contract
