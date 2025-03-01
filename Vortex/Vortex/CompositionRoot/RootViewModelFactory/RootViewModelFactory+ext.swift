@@ -848,10 +848,11 @@ private extension RootViewModelFactory {
         let makeAuthFactory: MakeModelAuthLoginViewModelFactory = { .init(model: $0, rootActions: $1)
         }
         
-        let mainViewModelsFactory: MainViewModelsFactory = .init(
+        let mainViewModelsFactory = MainViewModelsFactory(
             makeAuthFactory: makeAuthFactory,
             makeProductProfileViewModel: makeProductProfileViewModel,
             makePromoProductViewModel: { [weak self] in
+                
                 self?.makePromoViewModel(
                     viewModel: $0,
                     actions: $1,
@@ -859,9 +860,7 @@ private extension RootViewModelFactory {
                 )
             },
             qrViewModelFactory: qrViewModelFactory,
-            makeTrailingToolbarItems: makeTrailingToolbarItems(
-                featureFlags.c2gFlag
-            )
+            makeTrailingToolbarItems: makeTrailingToolbarItems
         )
                   
         let mainViewModel = MainViewModel(
