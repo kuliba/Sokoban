@@ -1507,6 +1507,9 @@
 		2ABDF6192D735BA20033C194 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABDF6182D735BA20033C194 /* ContentView.swift */; };
 		2ABDF61B2D735BA30033C194 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2ABDF61A2D735BA30033C194 /* Assets.xcassets */; };
 		2ABDF61E2D735BA30033C194 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2ABDF61D2D735BA30033C194 /* Preview Assets.xcassets */; };
+		2ABDF6252D735C850033C194 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2ABDF6242D735C850033C194 /* CombineSchedulers */; };
+		2ABDF6272D735C8B0033C194 /* VortexTools in Frameworks */ = {isa = PBXBuildFile; productRef = 2ABDF6262D735C8B0033C194 /* VortexTools */; };
+		2ABDF6292D735C920033C194 /* UIPrimitives in Frameworks */ = {isa = PBXBuildFile; productRef = 2ABDF6282D735C920033C194 /* UIPrimitives */; };
 		2ABFB8F12B55541300D6A0BA /* ConsentListRxViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE87AFE2B54550200B5B7CA /* ConsentListRxViewModel.swift */; };
 		2ABFB8FE2B55554200D6A0BA /* AnySchedulerOfDispatchQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8FC2B55552700D6A0BA /* AnySchedulerOfDispatchQueue.swift */; };
 		2ABFB9002B55557C00D6A0BA /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2ABFB8FF2B55557C00D6A0BA /* CombineSchedulers */; };
@@ -7582,6 +7585,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2ABDF6292D735C920033C194 /* UIPrimitives in Frameworks */,
+				2ABDF6272D735C8B0033C194 /* VortexTools in Frameworks */,
+				2ABDF6252D735C850033C194 /* CombineSchedulers in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -19747,6 +19753,11 @@
 			dependencies = (
 			);
 			name = ReactiveRefreshScrollViewPreview;
+			packageProductDependencies = (
+				2ABDF6242D735C850033C194 /* CombineSchedulers */,
+				2ABDF6262D735C8B0033C194 /* VortexTools */,
+				2ABDF6282D735C920033C194 /* UIPrimitives */,
+			);
 			productName = ReactiveRefreshScrollViewPreview;
 			productReference = 2ABDF6142D735BA20033C194 /* ReactiveRefreshScrollViewPreview.app */;
 			productType = "com.apple.product-type.application";
@@ -30358,6 +30369,19 @@
 		2ABD782D2AF90AF4001B5860 /* Fetcher */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Fetcher;
+		};
+		2ABDF6242D735C850033C194 /* CombineSchedulers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
+			productName = CombineSchedulers;
+		};
+		2ABDF6262D735C8B0033C194 /* VortexTools */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = VortexTools;
+		};
+		2ABDF6282D735C920033C194 /* UIPrimitives */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UIPrimitives;
 		};
 		2ABFB8FF2B55557C00D6A0BA /* CombineSchedulers */ = {
 			isa = XCSwiftPackageProductDependency;
