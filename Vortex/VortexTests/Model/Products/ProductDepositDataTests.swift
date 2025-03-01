@@ -29,44 +29,100 @@ class ProductDepositDataTests: XCTestCase {
     
     func test_encoding_endDateNil() throws {
         
-        // given
         let command = ServerCommands.ProductController.GetProductListByType.Response.List(
             serial: "",
             productList: [Self.interestDeposit(
                 endDate: nil,
                 demandDeposit: true)]
         )
-        
-        // when
         let encoder = JSONEncoder.serverDate
         
         let result = try encoder.encode(command.productList)
-        let resultString = String(decoding: result, as: UTF8.self)
         
-        // then
-        XCTAssertEqual(resultString, .interestDeposit)
+        try XCTAssertNoDiff(result.jsonArray(), [[
+            "accountID": 0,
+            "accountNumber": NSNull(),
+            "allowCredit": 1,
+            "allowDebit": 1,
+            "background": [],
+            "branchId": 0,
+            "creditMinimumAmount": 0,
+            "currency": "RUB",
+            "demandDeposit": 1,
+            "depositID": 0,
+            "depositProductID": 111111111,
+            "endDate_nf": 0,
+            "fontDesignColor": "",
+            "id": 30,
+            "interestRate": 0,
+            "isDebitInterestAvailable": 1,
+            "largeDesign": "",
+            "largeDesignMd5Hash": "",
+            "mainField": "Dep",
+            "mediumDesign": "",
+            "mediumDesignMd5Hash": "",
+            "minimumBalance": 0,
+            "order": 0,
+            "ownerID": 0,
+            "productName": "Dep",
+            "productType": "DEPOSIT",
+            "smallBackgroundDesignHash": "",
+            "smallDesign": "",
+            "smallDesignMd5hash": "",
+            "visibility": 1,
+            "XLDesign": "",
+            "xlDesignMd5Hash": "",
+        ]])
     }
     
     func test_encoding_endDateNotNil() throws {
         
         let endDate = Date()
-        
-        // given
         let command = ServerCommands.ProductController.GetProductListByType.Response.List(
             serial: "",
             productList: [Self.interestDeposit(
                 endDate: endDate,
                 demandDeposit: true)]
         )
-        
-        // when
         let encoder = JSONEncoder.serverDate
         
         let result = try encoder.encode(command.productList)
-        let resultString = String(decoding: result, as: UTF8.self)
         
-        // then
-        XCTAssertNoDiff(resultString, .interestDeposit(by: endDate))
+        try XCTAssertEqual(result.jsonArray(), [[
+            "mainField": "Dep",
+            "accountNumber": NSNull(),
+            "id": 30,
+            "creditMinimumAmount": 0,
+            "currency": "RUB",
+            "background": [],
+            "isDebitInterestAvailable": 1,
+            "smallBackgroundDesignHash": "",
+            "endDate_nf": 0,
+            "demandDeposit": 1,
+            "depositID": 0,
+            "ownerID": 0,
+            "xlDesignMd5Hash": "",
+            "allowDebit": 1,
+            "largeDesignMd5Hash": "",
+            "mediumDesignMd5Hash": "",
+            "smallDesignMd5hash": "",
+            "fontDesignColor": "",
+            "productType": "DEPOSIT",
+            "depositProductID": 111111111,
+            "order": 0,
+            "branchId": 0,
+            "mediumDesign": "",
+            "interestRate": 0,
+            "visibility": 1,
+            "largeDesign": "",
+            "productName": "Dep",
+            "minimumBalance": 0,
+            "allowCredit": 1,
+            "accountID": 0,
+            "smallDesign": "",
+            "endDate": endDate.secondsSince1970UTC,
+            "XLDesign": ""
+        ]])
     }
     
     func test_demandDeposit_shouldSetup_valueAllowCredit() {
