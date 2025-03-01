@@ -30,4 +30,54 @@ final class RootViewModelFactory_makeMainViewModelSectionsTests: RootViewModelFa
         XCTAssertTrue(sections[4] is MainSectionOpenProductView.ViewModel)
         XCTAssertTrue(sections[5] is MainSectionAtmView.ViewModel)
     }
+    
+    // MARK: - FastOperation
+    
+    func test_shouldMakeFastOperationSection_onInactiveC2GFlag() {
+        
+        let sections = makeMainViewModelSections(c2gFlag: .inactive)
+        
+        XCTAssertEqual(sections.fastOperationSections.count, 1)
+    }
+    
+    func test_shouldMakeFastOperationSection_onActiveC2GFlag() {
+        
+        let sections = makeMainViewModelSections(c2gFlag: .active)
+        
+        XCTAssertEqual(sections.fastOperationSections.count, 1)
+    }
+    
+    // MARK: - Helpers
+    
+    private func makeMainViewModelSections(
+        _ sut: SUT? = nil,
+        c2gFlag: C2GFlag,
+        collateralLoanLandingFlag: CollateralLoanLandingFlag = .inactive,
+        savingsAccountFlag: SavingsAccountFlag = .inactive,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> [MainSectionViewModel] {
+        
+        let sut = sut ?? makeSUT(file: file, line: line).sut
+        
+        return sut.makeMainViewModelSections(
+            bannersBinder: .immediate,
+            c2gFlag: c2gFlag,
+            collateralLoanLandingFlag: collateralLoanLandingFlag,
+            savingsAccountFlag: savingsAccountFlag
+        )
+    }
+}
+
+private extension Array where Element == MainSectionViewModel {
+    
+    var fastOperationSection: MainSectionFastOperationView.ViewModel? {
+        
+        fastOperationSections.first
+    }
+    
+    var fastOperationSections: [MainSectionFastOperationView.ViewModel] {
+        
+        compactMap { $0 as? MainSectionFastOperationView.ViewModel }
+    }
 }
