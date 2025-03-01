@@ -47,6 +47,31 @@ final class RootViewModelFactory_makeMainViewModelSectionsTests: RootViewModelFa
         XCTAssertEqual(sections.fastOperationSections.count, 1)
     }
     
+    func test_shouldMakeFastOperationSectionItemsWithTitles_onInactiveC2GFlag() throws {
+        
+        let fastOperationSection = try fastOperationSection(c2gFlag: .inactive)
+        
+        XCTAssertNoDiff(fastOperationSection.titles, [
+            FastOperationsTitles.qr,
+            FastOperationsTitles.byPhone,
+            FastOperationsTitles.utilityPayment,
+            FastOperationsTitles.templates,
+        ])
+    }
+    
+    func test_shouldMakeFastOperationSectionItemsWithTitles_onActiveC2GFlag() throws {
+        
+        let fastOperationSection = try fastOperationSection(c2gFlag: .active)
+        
+        XCTAssertNoDiff(fastOperationSection.titles, [
+            FastOperationsTitles.uin,
+            FastOperationsTitles.qr,
+            FastOperationsTitles.byPhone,
+            FastOperationsTitles.utilityPayment,
+            FastOperationsTitles.templates,
+        ])
+    }
+    
     // MARK: - Helpers
     
     private func makeMainViewModelSections(
@@ -67,7 +92,33 @@ final class RootViewModelFactory_makeMainViewModelSectionsTests: RootViewModelFa
             savingsAccountFlag: savingsAccountFlag
         )
     }
+    
+    private func fastOperationSection(
+        _ sut: SUT? = nil,
+        c2gFlag: C2GFlag,
+        collateralLoanLandingFlag: CollateralLoanLandingFlag = .inactive,
+        savingsAccountFlag: SavingsAccountFlag = .inactive,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> MainSectionFastOperationView.ViewModel {
+        
+        let sections = makeMainViewModelSections(
+            sut,
+            c2gFlag: c2gFlag,
+            collateralLoanLandingFlag: collateralLoanLandingFlag,
+            savingsAccountFlag: savingsAccountFlag,
+            file: file, line: line
+        )
+        
+        return try XCTUnwrap(
+            sections.fastOperationSection,
+            "Expected FastOperation Section, but got nil instead.",
+            file: file, line: line
+        )
+    }
 }
+
+// MARK: - DSL
 
 private extension Array where Element == MainSectionViewModel {
     
@@ -80,4 +131,9 @@ private extension Array where Element == MainSectionViewModel {
         
         compactMap { $0 as? MainSectionFastOperationView.ViewModel }
     }
+}
+
+private extension MainSectionFastOperationView.ViewModel {
+    
+    var titles: [String] { items.map(\.title.text) }
 }
