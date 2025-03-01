@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension RootViewModelFactory {
     
@@ -41,7 +42,7 @@ extension RootViewModelFactory {
                         action: $0
                     )
                 }
-            ),
+                                                ),
             MainSectionAtmView.ViewModel.initial
         ]
         
@@ -65,11 +66,10 @@ extension RootViewModelFactory {
         action: @escaping (FastOperations) -> Void
     ) -> [ButtonIconTextView.ViewModel] {
         
-        return fastOperations(c2gFlag: c2gFlag)
-            .map { type in
-                
-                createButtonViewModel(for: type) { action(type) }
-            }
+        return fastOperations(c2gFlag: c2gFlag).map { type in
+            
+            createButtonViewModel(c2gFlag: c2gFlag, for: type) { action(type) }
+        }
     }
     
     @inlinable
@@ -83,13 +83,14 @@ extension RootViewModelFactory {
     
     @inlinable
     func createButtonViewModel(
+        c2gFlag: C2GFlag,
         for type: FastOperations,
         action: @escaping () -> Void
     ) -> ButtonIconTextView.ViewModel {
         
         switch type {
         case .utility: return .utility(action)
-        default:       return .default(for: type, action)
+        default:       return .default(c2gFlag: c2gFlag, for: type, action)
         }
     }
 }
@@ -97,19 +98,73 @@ extension RootViewModelFactory {
 extension ButtonIconTextView.ViewModel {
     
     static func `default`(
+        c2gFlag: C2GFlag,
         for type: FastOperations,
         _ action: @escaping () -> Void
     ) -> ButtonIconTextView.ViewModel {
         
         return .init(
             icon: .init(
-                image: type.icon,
-                background: .circle
+                image: image(c2gFlag: c2gFlag, for: type),
+                style: style(c2gFlag: c2gFlag, for: type),
+                background: .circle,
+                backgroundColor: backgroundColor(c2gFlag: c2gFlag, for: type)
             ),
             title: .init(text: type.title),
             orientation: .vertical,
             action: action
         )
+    }
+    
+    private static func image(
+        c2gFlag: C2GFlag,
+        for type: FastOperations
+    ) -> Image {
+        
+        switch type {
+        case .byQR:
+            switch c2gFlag.rawValue {
+            case .active:   return .ic24Qr
+            case .inactive: return .ic24BarcodeScanner2
+            }
+            
+        default:
+            return type.icon
+        }
+    }
+    
+    private static func style(
+        c2gFlag: C2GFlag,
+        for type: FastOperations
+    ) -> ButtonIconTextView.ViewModel.Icon.Style {
+        
+        switch type {
+        case .byQR:
+            switch c2gFlag.rawValue {
+            case .active:   return .color(.iconWhite)
+            case .inactive: return .color(.iconBlack)
+            }
+            
+        case .byPhone, .templates, .uin, .utility:
+            return .color(.iconBlack)
+        }
+    }
+    
+    private static func backgroundColor(
+        c2gFlag: C2GFlag,
+        for type: FastOperations
+    ) -> Color {
+        
+        switch type {
+        case .byQR:
+            switch c2gFlag.rawValue {
+            case .active:   return .iconBlack
+            case .inactive: return .mainColorsGrayLightest
+            }
+            
+        case .byPhone, .templates, .uin, .utility:
+            return .mainColorsGrayLightest
+        }
     }
     
     static func utility(
@@ -136,5 +191,19 @@ extension ButtonIconTextView.ViewModel {
             orientation: .vertical,
             action: action
         )
+    }
+}
+
+private extension FastOperations {
+    
+    var icon: Image {
+        
+        switch self {
+        case .byQR:      return .ic24BarcodeScanner2
+        case .byPhone:   return .ic24Smartphone
+        case .templates: return .ic24Star
+        case .uin:       return .ic24Contract
+        case .utility:   return .ic24Bulb
+        }
     }
 }

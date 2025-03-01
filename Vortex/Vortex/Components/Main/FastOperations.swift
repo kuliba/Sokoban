@@ -21,17 +21,6 @@ enum FastOperations {
         case .utility:   return FastOperationsTitles.utilityPayment
         }
     }
-    
-    var icon: Image {
-        
-        switch self {
-        case .byQR:      return .ic24BarcodeScanner2
-        case .byPhone:   return .ic24Smartphone
-        case .templates: return .ic24Star
-        case .uin:       return .ic24Contract
-        case .utility:   return .ic24Bulb
-        }
-    }
 }
 
 enum FastOperationsTitles {
