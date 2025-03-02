@@ -82,6 +82,7 @@ extension ViewComponents {
             .navigationBarWithBack(
                 title: .title,
                 subtitle: .subtitle,
+                subtitleFont: .textH3M18240(),
                 dismiss: dismiss
             )
             .safeAreaInset(edge: .bottom) {
