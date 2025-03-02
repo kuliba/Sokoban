@@ -15,14 +15,14 @@ public struct SwipeToRefreshConfig {
     /// Minimum offset required to trigger refresh.
     public let threshold: CGFloat
     /// Debounce interval (the period during which offset events are collected).
-    public let debounceInterval: DebounceInterval
+    public let debounce: DebounceInterval
     
     public init(
         threshold: CGFloat,
-        debounceInterval: DebounceInterval
+        debounce: DebounceInterval
     ) {
         self.threshold = threshold
-        self.debounceInterval = debounceInterval
+        self.debounce = debounce
     }
     
     public typealias DebounceInterval = DispatchQueue.SchedulerTimeType.Stride
@@ -50,7 +50,7 @@ public extension Publisher where Output == CGFloat, Failure == Never {
                 
                 return (current: newValue, max: Swift.max(acc.max, newValue))
             }
-            .debounce(for: config.debounceInterval, scheduler: scheduler)
+            .debounce(for: config.debounce, scheduler: scheduler)
             .filter { $0.max >= config.threshold }
             .sink { _ in refresh() }
     }

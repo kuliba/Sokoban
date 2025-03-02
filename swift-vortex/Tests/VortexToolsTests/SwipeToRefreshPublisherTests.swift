@@ -206,7 +206,7 @@ final class SwipeToRefreshPublisherTests: XCTestCase {
                 refresh: spy.call,
                 config: .init(
                     threshold: threshold,
-                    debounceInterval: debounceInterval
+                    debounce: debounceInterval
                 ),
                 scheduler: scheduler.eraseToAnyScheduler()
             )
