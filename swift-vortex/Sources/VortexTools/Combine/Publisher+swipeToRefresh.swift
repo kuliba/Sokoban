@@ -30,14 +30,14 @@ public struct SwipeToRefreshConfig {
 
 public extension Publisher where Output == CGFloat, Failure == Never {
     
-    /// Collects offset events over the specified debounce interval and, if the maximum offset in that
-    /// window is at or above the configured threshold, calls the refresh closure. The collection resets
-    /// automatically between debounce windows so that subsequent valid pulls can trigger refresh again.
+    /// Triggers a refresh action when a valid pull-to-refresh gesture is detected.
+    ///
+    /// This operator monitors a stream of offset values (for example, from a scroll view). It collects offset events during a specified time interval (the debounce period) and determines the maximum offset reached during that period. If the maximum offset is equal to or exceeds the configured threshold, it invokes the refresh action. Once the debounce period completes, the collected state resets, allowing subsequent valid pull gestures to trigger refresh again.
     ///
     /// - Parameters:
-    ///   - refresh: The closure to call when a valid pull-to-refresh gesture is detected.
-    ///   - config: The refresh configuration containing the threshold and debounce interval.
-    ///   - scheduler: The scheduler used to drive the debounce timer.
+    ///   - refresh: A closure that is called when a valid pull-to-refresh gesture is detected.
+    ///   - config: A configuration that specifies the minimum offset threshold and the debounce interval.
+    ///   - scheduler: The scheduler used to control the timing of the debounce period.
     /// - Returns: An `AnyCancellable` that must be retained to keep the subscription active.
     func swipeToRefresh(
         refresh: @escaping () -> Void,
@@ -46,12 +46,12 @@ public extension Publisher where Output == CGFloat, Failure == Never {
     ) -> AnyCancellable {
         
         return self
-        // Collect all offset events that occur during the debounce interval.
-            .collect(.byTime(scheduler, config.debounceInterval))
-        // Proceed only if the collected array is non-empty and the maximum offset is at or above the threshold.
-            .filter { ($0.max() ?? 0) >= config.threshold }
-        // When the condition is met, trigger the refresh closure.
+            .scan((current: CGFloat.zero, max: CGFloat.zero)) { acc, newValue in
+                
+                return (current: newValue, max: Swift.max(acc.max, newValue))
+            }
+            .debounce(for: config.debounceInterval, scheduler: scheduler)
+            .filter { $0.max >= config.threshold }
             .sink { _ in refresh() }
     }
 }
-
