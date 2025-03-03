@@ -22,6 +22,6 @@ public struct LoadFailure: Error, Equatable {
     
     public enum FailureType {
         
-        case alert, informer
+        case alert, informer, otp
     }
 }

@@ -59,7 +59,7 @@ struct PaymentsSuccessTextView: View {
 
         case .warning:
             Text(viewModel.text)
-                .font(.textH4M16240())
+                .font(.textH4Sb16240())
                 .foregroundColor(.systemColorError)
                 .padding(.horizontal, 20)
                 .multilineTextAlignment(.center)

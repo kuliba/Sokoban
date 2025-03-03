@@ -5,12 +5,14 @@
 //  Created by Andryusina Nataly on 09.02.2025.
 //
 
+import Foundation
 import ProductSelectComponent
 
 public struct OrderAccountResponse: Equatable {
     
     public let accountId: Int?
     public let accountNumber: String?
+    public let amount: Decimal?
     public let paymentOperationDetailId: Int?
     public let product: ProductSelect.Product?
     public let openData: String?
@@ -24,6 +26,7 @@ public struct OrderAccountResponse: Equatable {
     public init(
         accountId: Int?,
         accountNumber: String?,
+        amount: Decimal?,
         paymentOperationDetailId: Int?,
         product: ProductSelect.Product?,
         openData: String?,
@@ -31,6 +34,7 @@ public struct OrderAccountResponse: Equatable {
     ) {
         self.accountId = accountId
         self.accountNumber = accountNumber
+        self.amount = amount
         self.paymentOperationDetailId = paymentOperationDetailId
         self.product = product
         self.openData = openData

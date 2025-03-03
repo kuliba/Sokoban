@@ -304,7 +304,8 @@ extension Payments.Success {
                 amount: amount)
             
         case let .closeAccountEmpty(_, currency, balance: balance, transferData):
-            let amount = amountFormatter(balance, currency.description, .fraction)
+            
+            let amount = balance > 0 ? amountFormatter(balance, currency.description, .fraction) : nil
             
             self.init(
                 model: model,

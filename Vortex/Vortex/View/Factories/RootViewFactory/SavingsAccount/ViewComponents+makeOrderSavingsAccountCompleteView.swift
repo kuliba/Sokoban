@@ -19,8 +19,11 @@ extension ViewComponents {
     ) -> some View {
        
         makePaymentCompletionLayoutView(
-            state: .init(formattedAmount: nil, merchantIcon: nil, status: complete.context.status.status),
-            statusConfig: .orderSavingsAccount
+            state: .init(formattedAmount: complete.context.formattedAmount, merchantIcon: nil, status: complete.context.status.status),
+            statusConfig: .orderSavingsAccount(
+                title: complete.context.formattedAmount != nil
+                ? "Накопительный счет открыт\nи пополнен на сумму"
+                : "Накопительный счет открыт")
         ) {
             HStack {
                 RxWrapperView(model: complete.document) { state, _ in
@@ -36,7 +39,10 @@ extension ViewComponents {
         } details: {
             EmptyView()
         } footer: {
-            heroButton(title: "На главный", action: goToMain)
+            heroButton(title: "На главный") {
+                action()
+                goToMain()
+            }
         }
     }
     
