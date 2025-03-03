@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 03.03.2025.
 //
 
+import Combine
+
 protocol Provider<Resource> {
     
     associatedtype Resource
@@ -26,25 +28,47 @@ protocol Fallback<Resource> {
     func value(forKey key: String) -> Resource
 }
 
-final class WIPImageProvider<Resource>: Provider {
+protocol Loader<Resource> {
+    
+    associatedtype Resource
+    
+    func requestDownload(for key: String)
+    
+    var publisher: AnyPublisher<(key: String, resource: Resource), Never> { get }
+}
+
+final class WIPProvider<Resource>: Provider {
     
     let cache: any Cache<Resource>
     let fallback: any Fallback<Resource>
+    let loader: any Loader<Resource>
+    
+    private var requested = Set<String>()
     
     init(
         cache: any Cache<Resource>,
-        fallback: any Fallback<Resource>
+        fallback: any Fallback<Resource>,
+        loader: any Loader<Resource>
     ) {
         self.cache = cache
         self.fallback = fallback
+        self.loader = loader
     }
 }
 
-extension WIPImageProvider {
+extension WIPProvider {
     
     func value(forKey key: String) -> Resource {
         
-        cache.value(forKey: key) ?? fallback.value(forKey: key)
+        if let resource = cache.value(forKey: key) {
+            return resource
+        } else {
+            if !requested.contains(key) {
+                requested.insert(key)
+                loader.requestDownload(for: key)
+            }
+            return fallback.value(forKey: key)
+        }
     }
 }
 
@@ -104,12 +128,35 @@ final class ProviderTests: XCTestCase {
         XCTAssertNoDiff(sut.value(forKey: key), backed)
     }
     
+    func test_shouldCallLoader_onCacheMiss() {
+        
+        let key = anyMessage()
+        let (sut, _,_, loader) = makeSUT(cacheStubs: nil)
+        
+        _ = sut.value(forKey: key)
+        
+        XCTAssertNoDiff(loader.requested, [key])
+    }
+    
+    func test_shouldNotCallLoaderAgain_onCacheMiss() {
+        
+        let key = anyMessage()
+        let (sut, _,_, loader) = makeSUT(
+            cacheStubs: nil, nil,
+            fallbackStubs: makeResource(), makeResource()
+        )
+        
+        _ = sut.value(forKey: key)
+        _ = sut.value(forKey: key)
+        
+        XCTAssertNoDiff(loader.requested, [key])
+    }
+    
     // MARK: - Helpers
     
-    private typealias SUT = WIPImageProvider<Resource>
+    private typealias SUT = WIPProvider<Resource>
     private typealias Cache = CallSpy<String, Resource?>
     private typealias Fallback = CallSpy<String, Resource>
-    private typealias Loader = CallSpy<String, Void>
     
     private func makeSUT(
         cacheStubs: Resource?...,
@@ -120,12 +167,12 @@ final class ProviderTests: XCTestCase {
         sut: SUT,
         cache: Cache,
         fallback: Fallback,
-        loader: Loader
+        loader: LoaderSpy
     ) {
         let cache = Cache(stubs: cacheStubs.isEmpty ? [nil] : cacheStubs)
         let fallback = Fallback(stubs: fallbackStubs.isEmpty ? [makeResource()] : fallbackStubs)
-        let loader = Loader(stubs: .init(repeating: (), count: 10))
-        let sut = SUT(cache: cache, fallback: fallback)
+        let loader = LoaderSpy()
+        let sut = SUT(cache: cache, fallback: fallback, loader: loader)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(loader, file: file, line: line)
@@ -143,6 +190,31 @@ final class ProviderTests: XCTestCase {
     ) -> Resource {
         
         return .init(value: value)
+    }
+    
+    private final class LoaderSpy: Loader {
+        
+        typealias Value = (key: String, resource: Resource)
+        
+        private let subject = PassthroughSubject<Value, Never>()
+        private(set) var requested = [String]()
+        
+        var callCount: Int { requested.count }
+        
+        var publisher: AnyPublisher<Value, Never> {
+            
+            subject.eraseToAnyPublisher()
+        }
+        
+        func emit(_ value: Value) {
+            
+            subject.send(value)
+        }
+        
+        func requestDownload(for key: String) {
+            
+            requested.append(key)
+        }
     }
 }
 
