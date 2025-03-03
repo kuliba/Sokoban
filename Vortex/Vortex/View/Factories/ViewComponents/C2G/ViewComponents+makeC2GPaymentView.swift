@@ -14,6 +14,18 @@ extension ViewComponents {
     @inlinable
     func makeC2GPaymentView(
         binder: C2GPaymentDomain.Binder,
+        dismiss: @escaping () -> Void
+    ) -> some View {
+        
+        makeC2GPaymentView(binder: binder, dismiss: dismiss) {
+            
+            c2gPaymentFlowView(flow: $0, dismiss: dismiss)
+        }
+    }
+    
+    @inlinable
+    func makeC2GPaymentView(
+        binder: C2GPaymentDomain.Binder,
         dismiss: @escaping () -> Void,
         c2gPaymentFlowView: @escaping (C2GPaymentDomain.Flow) -> some View
     ) -> some View {
