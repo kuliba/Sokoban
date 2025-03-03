@@ -166,16 +166,15 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
     
     var createDraftApplicationPayload: CollateralLandingApplicationCreateDraftPayload {
         
-        // TODO: Need to realize. Stub!
         .init(
-            name: "Кредит под залог транспорта",
-            amount: 1000000,
-            termMonth: 12,
-            collateralType: "CAR",
-            interestRate: 18.5,
-            collateralInfo: "Лада веста 2012 года выпуска",
-            cityName: "Москва",
-            payrollClient: true
+            name: application.name,
+            amount: selectedAmount,
+            termMonth: application.selectedMonths,
+            collateralType: application.collateralType,
+            interestRate: application.percent,
+            collateralInfo: "", // Не заполняем
+            cityName: selectedCity,
+            payrollClient: application.payrollClient
         )
     }
     

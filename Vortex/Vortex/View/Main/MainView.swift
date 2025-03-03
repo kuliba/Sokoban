@@ -411,7 +411,7 @@ private extension MainView {
         
         return viewFactory.components.makeCollateralLoanShowcaseWrapperView(
             binder: binder,
-            goToMain: viewModel.resetDestination,
+            goToMain: viewModel.reset,
             getPDFDocument: viewModel.getPDFDocument,
             makeOperationDetailInfoViewModel: {
                 viewModel.makeOperationDetailInfoViewModel(

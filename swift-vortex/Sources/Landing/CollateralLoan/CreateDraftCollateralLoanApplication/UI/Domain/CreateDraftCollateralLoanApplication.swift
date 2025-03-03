@@ -19,6 +19,8 @@ public struct CreateDraftCollateralLoanApplication {
     public let percent: Double
     public let periods: [Period]
     public let selectedMonths: UInt
+    public let payrollClient: Bool
+    public let collateralType: String
 
     public init(
         amount: UInt,
@@ -30,7 +32,9 @@ public struct CreateDraftCollateralLoanApplication {
         name: String,
         percent: Double,
         periods: [Period],
-        selectedMonths: UInt
+        selectedMonths: UInt,
+        payrollClient: Bool,
+        collateralType: String
     ) {
         self.amount = amount
         self.cities = cities
@@ -42,6 +46,8 @@ public struct CreateDraftCollateralLoanApplication {
         self.percent = percent
         self.periods = periods
         self.selectedMonths = selectedMonths
+        self.payrollClient = payrollClient
+        self.collateralType = collateralType
     }
     
     public struct Period: Equatable {
@@ -179,7 +185,9 @@ extension CreateDraftCollateralLoanApplication {
             .init(title: "6 лет", months: 72),
             .init(title: "7 лет", months: 84)
         ],
-        selectedMonths: 24
+        selectedMonths: 24,
+        payrollClient: true,
+        collateralType: "CAR"
     )
 }
 

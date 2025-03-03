@@ -86,7 +86,7 @@ struct GetCollateralLandingCalculatorView: View {
                     .toggleStyle(ToggleComponentStyle(config: config.salary.toggle))
                     .onChange(of: toggleIsOn) { state in
                         
-                        domainEvent(.toggleIHaveSalaryInCompany(state))
+                        domainEvent(.togglePayrollClient(state))
                     }
                     .padding(.trailing, config.salary.toggleTrailingPadding)
             }

@@ -46,8 +46,8 @@ extension GetCollateralLandingDomain {
             case let .selectMonthPeriod(period):
                 state.selectedMonthPeriod = period
 
-            case let .toggleIHaveSalaryInCompany(iHave):
-                state.iHaveSalaryInCompany = iHave
+            case let .togglePayrollClient(payrollClient):
+                state.payrollClient = payrollClient
             }
             
             return (state, effect)

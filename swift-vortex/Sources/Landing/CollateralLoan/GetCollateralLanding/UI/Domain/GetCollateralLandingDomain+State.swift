@@ -17,7 +17,7 @@ extension GetCollateralLandingDomain {
         public var result: Result?
 
         var isLoading = false
-        var iHaveSalaryInCompany = false
+        var payrollClient = false
         var selectedCollateralType: String
         var selectedMonthPeriod: UInt
         var desiredAmount: UInt
@@ -56,7 +56,7 @@ extension GetCollateralLandingDomain.State {
     
     var selectedPercentDouble: Double {
         
-        iHaveSalaryInCompany
+        payrollClient
             ? product?.calc.rates.first { $0.termMonth == selectedMonthPeriod }?.ratePayrollClient ?? .zero
             : product?.calc.rates.first { $0.termMonth == selectedMonthPeriod }?.rateBase ?? .zero
     }
@@ -183,7 +183,9 @@ extension GetCollateralLandingDomain.State {
             name: product.name,
             percent: selectedPercentDouble,
             periods: product.calc.rates.map { .init(title: $0.termStringValue, months: $0.termMonth) },
-            selectedMonths: selectedMonthPeriod
+            selectedMonths: selectedMonthPeriod,
+            payrollClient: payrollClient,
+            collateralType: selectedCollateralType
         )
     }
 }

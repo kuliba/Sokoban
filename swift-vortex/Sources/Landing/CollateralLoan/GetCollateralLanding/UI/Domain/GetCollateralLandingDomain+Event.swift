@@ -21,7 +21,7 @@ extension GetCollateralLandingDomain {
         case selectCaseList(String, String)
         case selectCollateral(String)
         case selectMonthPeriod(UInt)
-        case toggleIHaveSalaryInCompany(Bool)
+        case togglePayrollClient(Bool)
     }
         
     public enum ExternalEvent: Equatable {
