@@ -11,7 +11,7 @@ protocol Provider<Resource> {
     
     associatedtype Resource
     
-    func value(forKey key: String) -> Resource
+    func value(forKey key: String) -> CurrentValueSubject<Resource, Never>
 }
 
 protocol Cache<Resource> {
@@ -43,7 +43,11 @@ final class WIPProvider<Resource>: Provider {
     let fallback: any Fallback<Resource>
     let loader: any Loader<Resource>
     
+    // TODO: protect shared mutable state
+    private var subjects = [String: Subject]()
     private var requested = Set<String>()
+    // TODO: manage subscriptions lifetime
+    private var cancellables = Set<AnyCancellable>()
     
     init(
         cache: any Cache<Resource>,
@@ -54,20 +58,35 @@ final class WIPProvider<Resource>: Provider {
         self.fallback = fallback
         self.loader = loader
     }
+    
+    typealias Subject = CurrentValueSubject<Resource, Never>
 }
 
 extension WIPProvider {
     
-    func value(forKey key: String) -> Resource {
+    func value(forKey key: String) -> Subject {
+        
+        if let subject = subjects[key] {
+            return subject
+        }
+        
+        let subject = Subject(fallback.value(forKey: key))
+        subjects[key] = subject
         
         if let resource = cache.value(forKey: key) {
-            return resource
+            subject.send(resource)
+            return subject
         } else {
             if !requested.contains(key) {
                 requested.insert(key)
                 loader.requestDownload(for: key)
+                loader.publisher
+                    .compactMap { $0.key == key ? $0.resource : nil }
+                    .sink { [weak subject] in subject?.send($0) }
+                    .store(in: &cancellables)
             }
-            return fallback.value(forKey: key)
+            
+            return subject
         }
     }
 }
@@ -106,8 +125,9 @@ final class ProviderTests: XCTestCase {
         
         let (key, cached) = (anyMessage(), makeResource())
         let (sut, _,_,_) = makeSUT(cacheStubs: cached)
+        let spy = ValueSpy(sut.value(forKey: key))
         
-        XCTAssertNoDiff(sut.value(forKey: key), cached)
+        XCTAssertNoDiff(spy.values, [cached])
     }
     
     func test_shouldCallFallback_onCacheMiss() {
@@ -124,8 +144,9 @@ final class ProviderTests: XCTestCase {
         
         let (key, backed) = (anyMessage(), makeResource())
         let (sut, _,_,_) = makeSUT(fallbackStubs: backed)
+        let spy = ValueSpy(sut.value(forKey: key))
         
-        XCTAssertNoDiff(sut.value(forKey: key), backed)
+        XCTAssertNoDiff(spy.values, [backed])
     }
     
     func test_shouldCallLoader_onCacheMiss() {
@@ -150,6 +171,83 @@ final class ProviderTests: XCTestCase {
         _ = sut.value(forKey: key)
         
         XCTAssertNoDiff(loader.requested, [key])
+    }
+    
+    func test_shouldNotUpdateSubject_onLoaderDownloadForDifferentKey() {
+        
+        let (key, foreign, backed) = (anyMessage(), anyMessage(), makeResource())
+        let (sut, _,_, loader) = makeSUT(fallbackStubs: backed)
+        let spy = ValueSpy(sut.value(forKey: key))
+        
+        loader.emit((foreign, makeResource()))
+        
+        XCTAssertNoDiff(spy.values, [backed])
+    }
+    
+    func test_shouldUpdateSubject_onLoaderDownloadForKey() {
+        
+        let (key, backed, new) = (anyMessage(), makeResource(), makeResource())
+        let (sut, _,_, loader) = makeSUT(fallbackStubs: backed)
+        let spy = ValueSpy(sut.value(forKey: key))
+        
+        loader.emit((key, new))
+        
+        XCTAssertNoDiff(spy.values, [backed, new])
+    }
+    
+    func test_shouldUpdateSubjectTwice_onLoaderSecondDownloadForKey() {
+        
+        let (key, backed) = (anyMessage(), makeResource())
+        let (first, second) = (makeResource(), makeResource())
+        let (sut, _,_, loader) = makeSUT(fallbackStubs: backed)
+        let spy = ValueSpy(sut.value(forKey: key))
+        
+        loader.emit((key, first))
+        loader.emit((key, second))
+        
+        XCTAssertNoDiff(spy.values, [backed, first, second])
+    }
+    
+    func test_shouldReturnSameSubject_onRepeatedImageRequestsWithEmptyCache() {
+        
+        let key = anyMessage()
+        let (sut, _,_,_) = makeSUT(
+            cacheStubs: nil, nil,
+            fallbackStubs: makeResource(), makeResource()
+        )
+        
+        let first = sut.value(forKey: key)
+        let second = sut.value(forKey: key)
+        
+        XCTAssertNoDiff(ObjectIdentifier(first), .init(second))
+    }
+    
+    func test_shouldReturnSameSubject_onRepeatedImageRequests() {
+        
+        let key = anyMessage()
+        let (sut, _,_,_) = makeSUT(
+            cacheStubs: makeResource(), nil,
+            fallbackStubs: makeResource(), makeResource()
+        )
+        
+        let first = sut.value(forKey: key)
+        let second = sut.value(forKey: key)
+        
+        XCTAssertNoDiff(ObjectIdentifier(first), .init(second))
+    }
+    
+    func test_shouldReturnSameSubject_onRepeatedImageRequests2() {
+        
+        let key = anyMessage()
+        let (sut, _,_,_) = makeSUT(
+            cacheStubs: makeResource(), makeResource(),
+            fallbackStubs: makeResource(), makeResource()
+        )
+        
+        let first = sut.value(forKey: key)
+        let second = sut.value(forKey: key)
+        
+        XCTAssertNoDiff(ObjectIdentifier(first), .init(second))
     }
     
     // MARK: - Helpers
