@@ -61,24 +61,28 @@ extension ViewComponents {
         
         VStack(spacing: 16) {
             
-            makeC2GPaymentContentContextView(state.context)
-                .paddedRoundedBackground(edgeInsets: .default2)
-            
-            makeProductSelectView(
-                state: state.productSelect,
-                event: { event(.productSelect($0)) }
-            )
-            
-            amountView(state.context)
-            
-            state.termsCheck.map {
+            Group {
                 
-                makeCheckBoxView(
-                    title: state.context.term,
-                    isChecked: $0,
-                    toggle: { event(.termsToggle) }
+                makeC2GPaymentContentContextView(state.context)
+                    .paddedRoundedBackground(edgeInsets: .default2)
+                
+                makeProductSelectView(
+                    state: state.productSelect,
+                    event: { event(.productSelect($0)) }
                 )
+                
+                amountView(state.context)
+                
+                state.termsCheck.map {
+                    
+                    makeCheckBoxView(
+                        title: state.context.term,
+                        isChecked: $0,
+                        toggle: { event(.termsToggle) }
+                    )
+                }
             }
+            .customScrollTransition()
         }
         .padding(.bottom, 20)
     }
@@ -170,6 +174,30 @@ extension ViewComponents {
                 dismiss: dismiss,
                 successView: successView
             )
+        }
+    }
+}
+
+extension View {
+    
+    @ViewBuilder
+    func customScrollTransition(
+        axis: Axis = .vertical
+    ) -> some View {
+        
+        if #available(iOS 17, *) {
+            scrollTransition(
+                topLeading: .interactive(timingCurve: .easeIn),
+                bottomTrailing: .animated(.bouncy),
+                axis: axis
+            ) { effect, phase in
+                
+                effect
+                    .scaleEffect(phase == .identity ? 1 : 1 - 0.1 * abs(phase.value))
+                    .opacity(1 - 0.7 * abs(phase.value))
+            }
+        } else {
+            self
         }
     }
 }
