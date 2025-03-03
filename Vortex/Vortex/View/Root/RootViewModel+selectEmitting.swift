@@ -119,7 +119,7 @@ private extension FastOperations {
         
         switch self {
         case .byPhone:   return nil
-        case .byQr:      return .select(.scanQR)
+        case .byQR:      return .select(.scanQR)
         case .templates: return .select(.templates)
         case .uin:       return .select(.searchByUIN)
         case .utility:   return nil

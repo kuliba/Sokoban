@@ -16,13 +16,38 @@ extension MainSectionFastOperationView.ViewModel {
     ) {
         let createItems = createItems ?? { action in
             
-            let qr = ButtonIconTextView.ViewModel(icon: .init(image: .ic40Qr, background: .circle), title: .init(text: FastOperationsTitles.qr), orientation: .horizontal) { action(.byQr) }
-            
-            let templates = ButtonIconTextView.ViewModel(icon: .init(image: .ic40Qr, background: .circle), title: .init(text: FastOperationsTitles.templates), orientation: .horizontal) { action(.templates) }
+            let qr = ButtonIconTextView.ViewModel.qr(action)
+            let templates = ButtonIconTextView.ViewModel.templates(action)
             
             return [qr, templates]
         }
+        
         self.init(createItems: createItems, isCollapsed: isCollapsed)
+    }
+}
+
+extension ButtonIconTextView.ViewModel {
+    
+    static func qr(
+        _ action: @escaping (FastOperations) -> Void
+    ) -> Self {
+        
+        return .init(
+            icon: .init(image: .ic40Qr, background: .circle),
+            title: .init(text: FastOperationsTitles.qr),
+            orientation: .horizontal
+        ) { action(.byQR) }
+    }
+    
+    static func templates(
+        _ action: @escaping (FastOperations) -> Void
+    ) -> Self {
+        
+        return .init(
+            icon: .init(image: .ic40Qr, background: .circle),
+            title: .init(text: FastOperationsTitles.templates),
+            orientation: .horizontal
+        ) { action(.templates) }
     }
 }
 
@@ -35,7 +60,7 @@ extension XCTestCase {
         
         return .init(origin: origin ?? .service(makeLatestService()), avatar: avatar ?? .init(fullName: "", image: nil, topIcon: nil, icon: nil))
     }
-
+    
     func makeLatestService(
         additionalItems: [LatestOrigin.Service.AdditionalItem]? = nil,
         amount: Decimal? = nil,
