@@ -16,8 +16,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeSavingsNodes(
-        _ dismiss: @escaping () -> Void,
-        _ notify: @escaping (OpenSavingsAccountDomain.OrderAccountResponse) -> Void
+        notify: @escaping RootViewDomain.Notify
     ) -> SavingsAccountNodes {
         
         let binder: SavingsAccountDomain.Binder = makeSavingsAccount()
@@ -31,7 +30,7 @@ extension RootViewModelFactory {
                 default: return nil
                 }
             }
-            .sink { dismiss() }
+            .sink { notify(.dismiss) }
         
         let contentCancellable = binder.content.$state
             .compactMap {
