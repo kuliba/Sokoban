@@ -13,7 +13,7 @@ public extension ResponseMapper {
     static func mapGetCardStatementResponse(
         _ data: Data,
         _ response: HTTPURLResponse
-    ) -> Swift.Result<[ProductStatementData], CardStatementAPI.MappingError> {
+    ) -> Swift.Result<ProductStatementWithExtendedInfo, CardStatementAPI.MappingError> {
         
         map(data, response, dateDecodingStrategy: .formatted(.iso8601), mapOrThrow: map)
             .mapError {
@@ -29,10 +29,14 @@ public extension ResponseMapper {
     }
     
     private static func map(
-        _ data: [_DTO.ProductStatementData]
-    ) throws -> [ProductStatementData] {
+        _ data: _DTO
+    ) throws -> ProductStatementWithExtendedInfo {
         
-        data.map { .init(data: $0 ) }
+        return .init(
+            summary: .init(data: data.summary),
+            aggregated: data.aggregated.map { $0.map { .init(data: $0) }},
+            operationList: data.operationList.map { .init(data: $0) }
+        )
     }
 }
 
@@ -45,7 +49,7 @@ private extension ResponseMapper {
         let operationList: [ProductStatementData]
         
         public struct ProductStatementSummary: Decodable, Equatable {
-        
+            
             let currencyCodeNumeric: String?
             let creditOperation: Bool?
             let debitOperation: Bool?
@@ -107,7 +111,7 @@ private extension ResponseMapper {
             let realPayerINN: String?
             let realPayerKPP: String?
             let upno: String?
-
+            
         }
     }
 }
@@ -220,7 +224,7 @@ private struct GetCardStatementForPeriodResponse: Decodable {
 }
 
 private extension ProductStatementWithExtendedInfo.ProductStatementAggregated {
-
+    
     init(data: ResponseMapper._DTO.ProductStatementAggregated?) {
         
         self.init(
@@ -233,7 +237,7 @@ private extension ProductStatementWithExtendedInfo.ProductStatementAggregated {
 }
 
 private extension ProductStatementWithExtendedInfo.ProductStatementSummary {
-
+    
     init(data: ResponseMapper._DTO.ProductStatementSummary?) {
         
         self.init(

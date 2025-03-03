@@ -82,6 +82,7 @@ extension ViewComponents {
             .navigationBarWithBack(
                 title: .title,
                 subtitle: .subtitle,
+                subtitleFont: .textH3M18240(),
                 dismiss: dismiss
             )
             .safeAreaInset(edge: .bottom) {
@@ -149,13 +150,13 @@ extension ViewComponents {
                 infoView: makeAmountInfoView
             )
         } else {
-            // TODO: add amount
             StatefulButtonView(
                 isActive: state.isValid,
                 event: { event(.continue) },
                 config: .iVortex(title: state.continueButtonTitle)
             )
             .padding(.horizontal)
+            .conditionalBottomPadding()
         }
     }
 }

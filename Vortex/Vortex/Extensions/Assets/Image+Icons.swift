@@ -803,6 +803,7 @@ public extension Image {
     static var ic24Zkx: Image { Image(#function) }
     static var ic24ZoomIn: Image { Image(#function) }
     static var ic24ZoomOut: Image { Image(#function) }
+    static var ic32AccountsRub: Image { Image(#function) }
     static var ic32AbroadLine: Image { Image(#function) }
     static var ic32Camera: Image { Image(#function) }
     static var ic32Edit2: Image { Image(#function) }

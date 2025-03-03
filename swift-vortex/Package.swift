@@ -751,7 +751,7 @@ private extension Product {
     static let listLandingComponent = library(
         name: .listLandingComponent,
         targets: [
-            .savingsAccount
+            .listLandingComponent
         ]
     )
 

@@ -46,19 +46,23 @@ extension PaymentCompletionConfig {
         )
     )
     
-    static let orderSavingsAccount: Self = .init(
-        statuses: .init(
-            completed: .completed(title: "Накопительный счет открыт"),
-            inflight: .inflight(
-                title: "Операция в обработке"
-            ),
-            rejected: .rejected(
-                title: "Не удалось открыть счет"
-            ),
-            fraudCancelled: .fraudCancelled(),
-            fraudExpired: .fraudExpired()
+    static func orderSavingsAccount(
+        title: String
+    ) -> Self {
+        .init(
+            statuses: .init(
+                completed: .completed(title: title),
+                inflight: .inflight(
+                    title: "Операция в обработке"
+                ),
+                rejected: .rejected(
+                    title: "Операция не успешна!"
+                ),
+                fraudCancelled: .fraudCancelled(),
+                fraudExpired: .fraudExpired()
+            )
         )
-    )
+    }
 }
 
 extension PaymentCompletionConfig.Statuses.Status {

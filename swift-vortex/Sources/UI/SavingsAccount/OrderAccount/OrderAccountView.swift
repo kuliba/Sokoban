@@ -122,6 +122,9 @@ private extension OrderAccountView {
                 
             case .informer:
                 EmptyView()
+                
+            case .otp:
+                EmptyView()
             }
             
         case let .loaded(.success(confirmation)):
