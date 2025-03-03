@@ -1503,6 +1503,13 @@
 		2ABD9DA12BDBF6AA003830EE /* PaymentsEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABD9DA02BDBF6AA003830EE /* PaymentsEffectHandler.swift */; };
 		2ABD9DA32BDBF83F003830EE /* PaymentsEffectHandler+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABD9DA22BDBF83F003830EE /* PaymentsEffectHandler+preview.swift */; };
 		2ABD9DA52BDBF883003830EE /* PaymentEvent.Initiated.InitiateResponse+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABD9DA42BDBF883003830EE /* PaymentEvent.Initiated.InitiateResponse+preview.swift */; };
+		2ABDF6172D735BA20033C194 /* ReactiveRefreshScrollViewPreviewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABDF6162D735BA20033C194 /* ReactiveRefreshScrollViewPreviewApp.swift */; };
+		2ABDF6192D735BA20033C194 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABDF6182D735BA20033C194 /* ContentView.swift */; };
+		2ABDF61B2D735BA30033C194 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2ABDF61A2D735BA30033C194 /* Assets.xcassets */; };
+		2ABDF61E2D735BA30033C194 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2ABDF61D2D735BA30033C194 /* Preview Assets.xcassets */; };
+		2ABDF6252D735C850033C194 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2ABDF6242D735C850033C194 /* CombineSchedulers */; };
+		2ABDF6272D735C8B0033C194 /* VortexTools in Frameworks */ = {isa = PBXBuildFile; productRef = 2ABDF6262D735C8B0033C194 /* VortexTools */; };
+		2ABDF6292D735C920033C194 /* UIPrimitives in Frameworks */ = {isa = PBXBuildFile; productRef = 2ABDF6282D735C920033C194 /* UIPrimitives */; };
 		2ABFB8F12B55541300D6A0BA /* ConsentListRxViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE87AFE2B54550200B5B7CA /* ConsentListRxViewModel.swift */; };
 		2ABFB8FE2B55554200D6A0BA /* AnySchedulerOfDispatchQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABFB8FC2B55552700D6A0BA /* AnySchedulerOfDispatchQueue.swift */; };
 		2ABFB9002B55557C00D6A0BA /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 2ABFB8FF2B55557C00D6A0BA /* CombineSchedulers */; };
@@ -5294,6 +5301,11 @@
 		2ABD9DA02BDBF6AA003830EE /* PaymentsEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsEffectHandler.swift; sourceTree = "<group>"; };
 		2ABD9DA22BDBF83F003830EE /* PaymentsEffectHandler+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsEffectHandler+preview.swift"; sourceTree = "<group>"; };
 		2ABD9DA42BDBF883003830EE /* PaymentEvent.Initiated.InitiateResponse+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentEvent.Initiated.InitiateResponse+preview.swift"; sourceTree = "<group>"; };
+		2ABDF6142D735BA20033C194 /* ReactiveRefreshScrollViewPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReactiveRefreshScrollViewPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2ABDF6162D735BA20033C194 /* ReactiveRefreshScrollViewPreviewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactiveRefreshScrollViewPreviewApp.swift; sourceTree = "<group>"; };
+		2ABDF6182D735BA20033C194 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		2ABDF61A2D735BA30033C194 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2ABDF61D2D735BA30033C194 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2ABFB8FC2B55552700D6A0BA /* AnySchedulerOfDispatchQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnySchedulerOfDispatchQueue.swift; sourceTree = "<group>"; };
 		2AC04E582CF4F7E000AF331D /* getSberQRData_fix_sum.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = getSberQRData_fix_sum.json; path = "../../../../swift-vortex/Tests/SberQRTests/BackendDomain/Responses/getSberQRData_fix_sum.json"; sourceTree = "<group>"; };
 		2AC067DF2BECEBF1004CBC0B /* PaymentsTransfersFlowManagerComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersFlowManagerComposer.swift; sourceTree = "<group>"; };
@@ -7568,6 +7580,16 @@
 			files = (
 				2A95CBB32B2C818A0041F5EC /* TextFieldComponent in Frameworks */,
 				2A95CBB12B2C80C80041F5EC /* SberQR in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2ABDF6112D735BA20033C194 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2ABDF6292D735C920033C194 /* UIPrimitives in Frameworks */,
+				2ABDF6272D735C8B0033C194 /* VortexTools in Frameworks */,
+				2ABDF6252D735C850033C194 /* CombineSchedulers in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -12615,6 +12637,25 @@
 			path = UtilityServicePrepayment;
 			sourceTree = "<group>";
 		};
+		2ABDF6152D735BA20033C194 /* ReactiveRefreshScrollViewPreview */ = {
+			isa = PBXGroup;
+			children = (
+				2ABDF6162D735BA20033C194 /* ReactiveRefreshScrollViewPreviewApp.swift */,
+				2ABDF6182D735BA20033C194 /* ContentView.swift */,
+				2ABDF61A2D735BA30033C194 /* Assets.xcassets */,
+				2ABDF61C2D735BA30033C194 /* Preview Content */,
+			);
+			path = ReactiveRefreshScrollViewPreview;
+			sourceTree = "<group>";
+		};
+		2ABDF61C2D735BA30033C194 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				2ABDF61D2D735BA30033C194 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
 		2ABFB8FB2B55551400D6A0BA /* ThirdPartyDependencies */ = {
 			isa = PBXGroup;
 			children = (
@@ -13282,6 +13323,7 @@
 				C1C6F1C72B83642400237C07 /* OperatorsListPreview */,
 				2A783A822B5A87CE0035CEAB /* OTPInputComponentPreview */,
 				2AE5972B29F918C20083F138 /* PhoneNumberTextViewPreview */,
+				2ABDF6152D735BA20033C194 /* ReactiveRefreshScrollViewPreview */,
 				2AF529CC2CC01C9A00D49804 /* RefreshableScrollViewPreview */,
 				2A0E31762C63D52800143969 /* SberNumericTextFieldPreview */,
 				2A20F8CD2B05E1D000E3AE79 /* SberQRPreview */,
@@ -18601,6 +18643,7 @@
 				2A4CC4972D227E4B00F5C263 /* BinderComposerPreviewTests.xctest */,
 				2ADD15F12D5CB6A2003C2AB5 /* C2GPreviewApp.app */,
 				2A3B69232D64BCB0004075A8 /* ShareSheetPreviewApp.app */,
+				2ABDF6142D735BA20033C194 /* ReactiveRefreshScrollViewPreview.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -19708,6 +19751,28 @@
 			productReference = 2A95CBA02B2C80560041F5EC /* DecimalTextFieldPreview.app */;
 			productType = "com.apple.product-type.application";
 		};
+		2ABDF6132D735BA20033C194 /* ReactiveRefreshScrollViewPreview */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2ABDF6232D735BA30033C194 /* Build configuration list for PBXNativeTarget "ReactiveRefreshScrollViewPreview" */;
+			buildPhases = (
+				2ABDF6102D735BA20033C194 /* Sources */,
+				2ABDF6112D735BA20033C194 /* Frameworks */,
+				2ABDF6122D735BA20033C194 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ReactiveRefreshScrollViewPreview;
+			packageProductDependencies = (
+				2ABDF6242D735C850033C194 /* CombineSchedulers */,
+				2ABDF6262D735C8B0033C194 /* VortexTools */,
+				2ABDF6282D735C920033C194 /* UIPrimitives */,
+			);
+			productName = ReactiveRefreshScrollViewPreview;
+			productReference = 2ABDF6142D735BA20033C194 /* ReactiveRefreshScrollViewPreview.app */;
+			productType = "com.apple.product-type.application";
+		};
 		2AD0928D2BFA30A100777EE4 /* TransactionPreview */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2AD0929D2BFA30A200777EE4 /* Build configuration list for PBXNativeTarget "TransactionPreview" */;
@@ -20286,6 +20351,9 @@
 					2A95CB9F2B2C80560041F5EC = {
 						CreatedOnToolsVersion = 15.0.1;
 					};
+					2ABDF6132D735BA20033C194 = {
+						CreatedOnToolsVersion = 15.3;
+					};
 					2AD0928D2BFA30A100777EE4 = {
 						CreatedOnToolsVersion = 15.3;
 					};
@@ -20416,6 +20484,7 @@
 				2A4CC4962D227E4B00F5C263 /* BinderComposerPreviewTests */,
 				2ADD15F02D5CB6A2003C2AB5 /* C2GPreviewApp */,
 				2A3B69222D64BCB0004075A8 /* ShareSheetPreviewApp */,
+				2ABDF6132D735BA20033C194 /* ReactiveRefreshScrollViewPreview */,
 			);
 		};
 /* End PBXProject section */
@@ -20532,6 +20601,15 @@
 			files = (
 				2A95CBAA2B2C80580041F5EC /* Preview Assets.xcassets in Resources */,
 				2A95CBA72B2C80580041F5EC /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2ABDF6122D735BA20033C194 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2ABDF61E2D735BA30033C194 /* Preview Assets.xcassets in Resources */,
+				2ABDF61B2D735BA30033C194 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -21366,6 +21444,15 @@
 			files = (
 				2A95CBA52B2C80560041F5EC /* ContentView.swift in Sources */,
 				2A95CBA32B2C80560041F5EC /* DecimalTextFieldPreviewApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2ABDF6102D735BA20033C194 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2ABDF6192D735BA20033C194 /* ContentView.swift in Sources */,
+				2ABDF6172D735BA20033C194 /* ReactiveRefreshScrollViewPreviewApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -26394,6 +26481,147 @@
 			};
 			name = Preprod;
 		};
+		2ABDF61F2D735BA30033C194 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/ReactiveRefreshScrollViewPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.ReactiveRefreshScrollViewPreview.ReactiveRefreshScrollViewPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2ABDF6202D735BA30033C194 /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/ReactiveRefreshScrollViewPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.ReactiveRefreshScrollViewPreview.ReactiveRefreshScrollViewPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Mock;
+		};
+		2ABDF6212D735BA30033C194 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/ReactiveRefreshScrollViewPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.ReactiveRefreshScrollViewPreview.ReactiveRefreshScrollViewPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2ABDF6222D735BA30033C194 /* Preprod */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"PreviewApps/ReactiveRefreshScrollViewPreview/Preview Content\"";
+				DEVELOPMENT_TEAM = VRVJ9YNRQU;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.vortex.ReactiveRefreshScrollViewPreview.ReactiveRefreshScrollViewPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Preprod;
+		};
 		2AC371842A2FD32A008F1994 /* Preprod */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -29429,6 +29657,17 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		2ABDF6232D735BA30033C194 /* Build configuration list for PBXNativeTarget "ReactiveRefreshScrollViewPreview" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2ABDF61F2D735BA30033C194 /* Debug */,
+				2ABDF6202D735BA30033C194 /* Mock */,
+				2ABDF6212D735BA30033C194 /* Release */,
+				2ABDF6222D735BA30033C194 /* Preprod */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		2AD0929D2BFA30A200777EE4 /* Build configuration list for PBXNativeTarget "TransactionPreview" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -30142,6 +30381,19 @@
 		2ABD782D2AF90AF4001B5860 /* Fetcher */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Fetcher;
+		};
+		2ABDF6242D735C850033C194 /* CombineSchedulers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A12674629EFE53200461884 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
+			productName = CombineSchedulers;
+		};
+		2ABDF6262D735C8B0033C194 /* VortexTools */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = VortexTools;
+		};
+		2ABDF6282D735C920033C194 /* UIPrimitives */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UIPrimitives;
 		};
 		2ABFB8FF2B55557C00D6A0BA /* CombineSchedulers */ = {
 			isa = XCSwiftPackageProductDependency;
