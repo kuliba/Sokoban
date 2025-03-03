@@ -10,6 +10,7 @@ import FlowCore
 import SavingsAccount
 import RemoteServices
 import PDFKit
+import ProductSelectComponent
 
 extension RootViewModelFactory {
     
@@ -40,20 +41,30 @@ extension RootViewModelFactory {
                 mapResponse: RemoteServices.ResponseMapper.mapGetOperationDetailByPaymentIDResponse
             )
             
-            let details = DocumentButtonDomain.Model.makeStateMachine(
-                load: { completion in
+            let details: OperationDetailSADomain.Model = {
+                return makeDetailsButton { completion in
                     if let paymentOperationDetailId = orderAccountResponse.paymentOperationDetailId {
                         detailsService(.init(String(paymentOperationDetailId))) { response in
                             
-                            completion(response)
+                            switch response {
+                                
+                            case let .success(details):
+                                completion(.success(.init(product: orderAccountResponse.product, details, { self.format(amount: $0, currencyCode: $1, style: .fraction)})))
+                                
+                            case let .failure(error):
+                                completion(.failure(error))
+                            }
                             _ = detailsService
                         }
                     }
-                },
-                scheduler: schedulers.main
-            )
+                }
+            }()
             
-            details.event(.load)
+            if orderAccountResponse.paymentOperationDetailId != nil {
+                details.event(.load)
+            } else {
+                details.event(.loaded(.success(.init(orderAccountResponse))))
+            }
             
             let documentService = nanoServiceComposer.compose(
                 createRequest: RequestFactory.createGetPrintFormForSavingsAccountRequest,
@@ -72,10 +83,13 @@ extension RootViewModelFactory {
             document.event(.load)
             
             completion(.savingsAccount(.init(
-                context: .init(formattedAmount: nil, merchantName: nil, purpose: nil, status: orderAccountResponse.status.status), 
-                details: .preview(basicDetails: .preview),
+                context: .init(formattedAmount: format(amount: orderAccountResponse.amount, currency: "RUB"), status: orderAccountResponse.status.status),
+                details: details,
                 document: document
-            )))
+            ), { [weak model] in
+                
+                model?.handleProductsUpdateTotalAll()
+            }))
 
         case let .openProduct(type):
             
@@ -359,4 +373,48 @@ extension OrderAccountResponse.Status {
             return .rejected
         }
     }
+}
+
+private extension OpenSavingsAccountCompleteDomain.Details {
+    init(
+        product: ProductSelect.Product?,
+        _ data: RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDResponse,
+        _ formattedAmount: @escaping (Decimal, String) -> String?
+    ) {
+        self.init(
+            product: product,
+            payeeAccountId: data.payeeAccountID,
+            payeeAccountNumber: .dot + String(data.payeeAccountNumber?.suffix(4) ?? "") + .saRubWithDot,
+            payerCardId: data.payerCardID,
+            payerCardNumber: data.payerCardNumber,
+            payerAccountId: data.payerAccountID,
+            formattedAmount: formattedAmount(data.amount, data.payerCurrency),
+            formattedFee: formattedAmount(data.payerFee, data.payerCurrency),
+            dataForDetails: data.dateForDetail
+        )
+    }
+}
+
+private extension OpenSavingsAccountCompleteDomain.Details {
+    init(
+        _ data: OpenSavingsAccountDomain.OrderAccountResponse
+    ) {
+        self.init(
+            product: nil,
+            payeeAccountId: nil,
+            payeeAccountNumber: .dot + String(data.accountNumber?.suffix(4) ?? "") + .saRubWithDot ,
+            payerCardId: nil,
+            payerCardNumber: nil,
+            payerAccountId: nil,
+            formattedAmount: nil,
+            formattedFee: nil,
+            dataForDetails: data.openData
+        )
+    }
+}
+
+private extension String {
+    
+    static let saRubWithDot: Self = "  ∙ Рублевый"
+    static let dot: Self = "∙ "
 }

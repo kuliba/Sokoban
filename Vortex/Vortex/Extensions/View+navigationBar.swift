@@ -30,6 +30,23 @@ extension View {
     func navigationBarWithBack(
         title: String,
         subtitle: String? = nil,
+        subtitleFont: Font,
+        dismiss: @escaping () -> Void
+    ) -> some View {
+        
+        navigationBar(with: .init(
+            title: title,
+            subtitle: subtitle,
+            leftItems: [
+                backButton(action: dismiss)
+            ],
+            subtitleFont: subtitleFont
+        ))
+    }
+
+    func navigationBarWithBack(
+        title: String,
+        subtitle: String? = nil,
         dismiss: @escaping () -> Void
     ) -> some View {
         

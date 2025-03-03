@@ -23,7 +23,7 @@ final class Services_EndpointGetProcessingSessionCodeTests: XCTestCase {
     func test_urlWithBase_shouldThrowOnIllegalBase() throws {
         
         let endpoint: Services.Endpoint = .getProcessingSessionCode
-        let illegalBase = "🤯"
+        let illegalBase = badURLString
         
         XCTAssertThrowsError(
             try endpoint.url(withBase: illegalBase)

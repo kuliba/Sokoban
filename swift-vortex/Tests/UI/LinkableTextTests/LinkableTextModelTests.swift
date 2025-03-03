@@ -14,7 +14,6 @@ final class LinkableTextModelTests: XCTestCase {
     
     func test_init_shouldReturnEmptyOnEmptyStringOnBadURLString() {
         
-        let badURLString = " "
         let emptyString = ""
         
         let linkableText = make(text: emptyString, urlString: badURLString)
@@ -25,7 +24,6 @@ final class LinkableTextModelTests: XCTestCase {
     func test_init_shouldSplitTextWithTagsInsideOnBadURLString() {
         
         let textWithTagsInside = "Very <u>important</u> message."
-        let badURLString = " "
         
         let linkableText = make(text: textWithTagsInside, urlString: badURLString)
         
@@ -39,7 +37,6 @@ final class LinkableTextModelTests: XCTestCase {
     func test_init_shouldNotSplitTextWithNonMatchingTagsOnBadURLString() {
         
         let textWithTagsInside = "Very <i>important</i> message."
-        let badURLString = " "
         
         let linkableText = make(text: textWithTagsInside, urlString: badURLString)
         
@@ -51,7 +48,6 @@ final class LinkableTextModelTests: XCTestCase {
     func test_init_tagsLeadingOnBadURLString() {
         
         let textWithTagsLeading = "<u>important</u> message."
-        let badURLString = " "
         
         let linkableText = make(text: textWithTagsLeading, urlString: badURLString)
         
@@ -64,7 +60,6 @@ final class LinkableTextModelTests: XCTestCase {
     func test_init_tagsTrailingOnBadURLString() {
         
         let textWithTagsTrailing = "Very <u>important</u>"
-        let badURLString = " "
         
         let linkableText = make(text: textWithTagsTrailing, urlString: badURLString)
         
@@ -139,6 +134,15 @@ final class LinkableTextModelTests: XCTestCase {
     }
     
     // MARK: - Helpers
+    
+    private var badURLString: String {
+        
+        if #available(iOS 17.0, *) {
+            return "http://example.com:abc"
+        } else {
+            return " "
+        }
+    }
     
     private func make(text: String, urlString: String) -> LinkableText {
         
