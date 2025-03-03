@@ -45,13 +45,20 @@ public extension Publisher where Output == CGFloat, Failure == Never {
         scheduler: AnySchedulerOf<DispatchQueue>
     ) -> AnyCancellable {
         
+        var accumulatedMax: CGFloat = 0
+        
         return self
-            .scan((current: CGFloat.zero, max: CGFloat.zero)) { acc, newValue in
+            .handleEvents(receiveOutput: { value in
                 
-                return (current: newValue, max: Swift.max(acc.max, newValue))
-            }
+                accumulatedMax = Swift.max(accumulatedMax, value)
+            })
             .debounce(for: config.debounce, scheduler: scheduler)
-            .filter { $0.max >= config.threshold }
-            .sink { _ in refresh() }
+            .sink { _ in
+                
+                if accumulatedMax >= config.threshold {
+                    refresh()
+                }
+                accumulatedMax = 0
+            }
     }
 }

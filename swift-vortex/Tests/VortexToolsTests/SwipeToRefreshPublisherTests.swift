@@ -183,6 +183,24 @@ final class SwipeToRefreshPublisherTests: XCTestCase {
         XCTAssertNotNil(cancellable)
     }
     
+    func test_shouldNotTriggerSecondRefresh_onInsignificantOffset() {
+        
+        let (subject, spy, scheduler, cancellable) = makeSUT(
+            debounceInterval: .milliseconds(100)
+        )
+        
+        subject.send(101) // above
+        scheduler.advance(by: .milliseconds(100))
+        
+        XCTAssertEqual(spy.callCount, 1)
+        
+        subject.send(99) // below
+        scheduler.advance(by: .milliseconds(100))
+
+        XCTAssertEqual(spy.callCount, 1)
+        XCTAssertNotNil(cancellable)
+    }
+    
     // MARK: - Helpers
     
     typealias RefreshSpy = CallSpy<Void, Void>
