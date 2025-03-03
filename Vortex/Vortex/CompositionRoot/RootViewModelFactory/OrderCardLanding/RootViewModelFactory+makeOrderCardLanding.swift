@@ -29,19 +29,37 @@ extension RootViewModelFactory {
     func makeOrderCardLandinContent(
     ) -> OrderCardLandingDomain.Content {
         
-        var orderCard: OrderCardLandingDomain.Content? = nil
+        typealias Landing = OrderCardLanding
         
-        createOrderCardLanding { result in
-        
-            switch result {
-            case let .success(landing):
-                orderCard = landing
-            case let .failure(error):
-                break
+        let reducer = LandingReducer<Landing>()
+        let effectHandler = LandingEffectHandler<Landing>(
+            load: { completion in
+                
+                self.createOrderCardLanding { result in
+                    
+                    switch result {
+                    case let .success(landing):
+                        completion(.success(landing))
+                    case let .failure(error):
+                        completion(
+                            .failure(
+                                .init(
+                                    message: error.message,
+                                    type: .informer
+                                )
+                            )
+                        )
+                    }
+                }
             }
-        }
+        )
         
-        return orderCard ?? .stub
+        return .init(
+            initialState: .init(isLoading: true, status: .none),
+            reduce: reducer.reduce(_:event:),
+            handleEffect: effectHandler.handleEffect(effect:dispatch:),
+            scheduler: schedulers.main
+        )
     }
     
     @inlinable
@@ -182,7 +200,7 @@ private extension String {
     static let connectivity = "Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения"
 }
 
-private extension OrderCardLandingDomain.Content {
+private extension OrderCardLanding {
     
     static let stub: Self = .init(
         header: .init(

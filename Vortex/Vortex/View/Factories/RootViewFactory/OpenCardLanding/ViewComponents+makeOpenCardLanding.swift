@@ -40,11 +40,11 @@ extension ViewComponents {
     ) -> some View {
         
         OffsetObservingScrollWithModelView(refresh: {
-            //TODO: create binder.content.event(.load)
+            binder.content.event(.load)
         }) { offset in
             
             makeOrderCardLandingContentView(
-                landing: binder.content,
+                landing: binder.content.state.landing,
                 offset: offset
             )
             .safeAreaInset(edge: .bottom) {
@@ -55,64 +55,77 @@ extension ViewComponents {
             }
             .conditionalBottomPadding()
             .navigationBarWithBack(
-                title: offset.wrappedValue.y > 0 ?  binder.content.header.navTitle : "",
-                subtitle: offset.wrappedValue.y > 0 ?  binder.content.header.navSubtitle : "",
+                title: offset.wrappedValue.y > 0 ? (binder.content.state.landing?.header.navTitle ?? "") : "",
+                subtitle: offset.wrappedValue.y > 0 ? (binder.content.state.landing?.header.navSubtitle ?? "") : "",
                 subtitleForegroundColor: .textPlaceholder,
                 dismiss: dismiss
             )
+            .onAppear(perform: {
+                
+                if binder.content.state.landing == nil {    
+                    binder.content.event(.load)
+                }
+            })
         }
     }
     
     @inlinable
     @ViewBuilder
     func makeOrderCardLandingContentView(
-        landing: OrderCardLanding,
+        landing: OrderCardLanding?,
         offset: Binding<CGPoint>
     ) -> some View {
         
-        OffsetObservingScrollView(
-            axes: .vertical,
-            showsIndicators: false,
-            offset: offset,
-            coordinateSpaceName: "coordinateSpaceName"
-        ) {
-            VStack(spacing: 16) {
-                
-                HeaderView(
-                    header: landing.header,
-                    config: .iVortex,
-                    imageFactory: .init(makeBannerImageView: makeGeneralIconView)
-                )
-                .edgesIgnoringSafeArea(.top)
-                
-                VStack {
+        if let landing {
+            
+            OffsetObservingScrollView(
+                axes: .vertical,
+                showsIndicators: false,
+                offset: offset,
+                coordinateSpaceName: "coordinateSpaceName"
+            ) {
+                VStack(spacing: 16) {
                     
-                    ListLandingComponent.List(
-                        items: landing.conditions,
+                    HeaderView(
+                        header: landing.header,
                         config: .iVortex,
-                        factory: .init(
-                            makeIconView: makeIconView,
-                            makeBannerImageView: makeGeneralIconView
-                        )
+                        imageFactory: .init(makeBannerImageView: makeGeneralIconView)
                     )
+                    .edgesIgnoringSafeArea(.top)
                     
-                    ListLandingComponent.List(
-                        items: landing.security,
-                        config: .iVortex,
-                        factory: .init(
-                            makeIconView: makeIconView,
-                            makeBannerImageView: makeGeneralIconView
+                    VStack {
+                        
+                        ListLandingComponent.List(
+                            items: landing.conditions,
+                            config: .iVortex,
+                            factory: .init(
+                                makeIconView: makeIconView,
+                                makeBannerImageView: makeGeneralIconView
+                            )
                         )
-                    )
-                    
-                    DropDownTextListView(
-                        config: .default,
-                        list: landing.dropDownList
-                    )
+                        
+                        ListLandingComponent.List(
+                            items: landing.security,
+                            config: .iVortex,
+                            factory: .init(
+                                makeIconView: makeIconView,
+                                makeBannerImageView: makeGeneralIconView
+                            )
+                        )
+                        
+                        DropDownTextListView(
+                            config: .default,
+                            list: landing.dropDownList
+                        )
+                    }
+                    .padding(.leading, 15)
+                    .padding(.trailing, 16)
                 }
-                .padding(.leading, 15)
-                .padding(.trailing, 16)
             }
+        } else {
+            
+            Color.gray
+                .frame(width: 100, height: 100, alignment: .center)
         }
     }
     
@@ -157,5 +170,22 @@ struct DismissibleScrollView<Content: View>: View {
             title: title(offset.y),
             dismiss: dismiss
         )
+    }
+}
+
+extension OrderCardLandingDomain.LandingState<OrderCardLanding> {
+
+    var landing: OrderCardLanding? {
+        
+        guard !isLoading else { return nil }
+        
+        switch status {
+        case let .landing(landing),
+             let .mix(landing, _):
+            return landing
+            
+        default:
+            return nil
+        }
     }
 }
