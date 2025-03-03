@@ -11,25 +11,40 @@ import SwiftUI
 public struct AsyncImage: View {
     
     @State private var image: Image
+    @StateObject private var publisherHolder: PublisherHolder
     
-    private let publisher: ImagePublisher
     private let modify: Modify
-    
+
     public init(
         image: Image,
         publisher: ImagePublisher,
-        _ modify: @escaping Modify = { $0.resizable() }
+        modify: @escaping Modify = { $0.resizable() }
     ) {
+        self._publisherHolder = .init(wrappedValue: .init(image: image, publisher: publisher))
         self.image = image
-        self.publisher = publisher
         self.modify = modify
     }
-    
+
     public var body: some View {
         
         modify(image)
-            .onReceive(publisher) { self.image = $0 }
-            .animation(.easeInOut, value: image)
+            .onReceive(publisherHolder.$image) { image = $0 }
+    }
+
+    private class PublisherHolder: ObservableObject {
+        
+        @Published var image: Image
+        
+        init(
+            image: Image,
+            publisher: AnyPublisher<Image, Never>
+        ) {
+            self.image = image
+            publisher
+                .removeDuplicates()
+                .receive(on: DispatchQueue.main)
+                .assign(to: &$image)
+        }
     }
 }
 
@@ -38,7 +53,6 @@ public extension AsyncImage {
     typealias ImagePublisher = AnyPublisher<Image, Never>
     typealias Modify = (Image) -> Image
 }
-
 
 struct AsyncImage_Previews: PreviewProvider {
     
