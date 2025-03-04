@@ -271,10 +271,6 @@ extension RootViewModelFactory {
             mapResponse: LandingMapper.map
         )
         
-        let makeOrderCardViewModel = {
-            //TODO: implement makeOrderCardViewModel composer
-        }
-        
         let (paymentsTransfersPersonal, loadCategoriesAndNotifyPicker) = makePaymentsTransfersPersonal(c2gFlag: featureFlags.c2gFlag)
         
         let loadBannersList = makeLoadBanners()
@@ -323,7 +319,6 @@ extension RootViewModelFactory {
             makeServicePaymentBinder: makeServicePaymentBinder,
             makeOpenNewProductButtons: { _ in [] },
             operationDetailFactory: makeOperationDetailFactory(),
-            makeOrderCardViewModel: makeOrderCardViewModel,
             makePaymentsTransfers: { paymentsTransfersSwitcher }
         )
         
@@ -476,7 +471,8 @@ extension RootViewModelFactory {
         let getRootNavigation = { select, notify, completion in
             
             self.getRootNavigation(
-                c2gFlag: featureFlags.c2gFlag, 
+                c2gFlag: featureFlags.c2gFlag,
+                orderCardFlag: featureFlags.orderCardFlag, 
                 makeProductProfileByID: makeProductProfileByID,
                 select: select,
                 notify: notify,
@@ -626,7 +622,6 @@ extension ProductProfileViewModel {
     typealias MakePTFlowManger = (RootViewModel.RootActions.Spinner?) -> PaymentsTransfersFlowManager
     
     typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
-    typealias MakeOrderCardViewModel = () -> Void
     
     static func make(
         with model: Model,
@@ -650,7 +645,6 @@ extension ProductProfileViewModel {
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
         operationDetailFactory: OperationDetailFactory,
-        makeOrderCardViewModel: @escaping MakeOrderCardViewModel,
         makePaymentsTransfers: @escaping PaymentsTransfersFactory.MakePaymentsTransfers
     ) -> MakeProductProfileViewModel {
         
@@ -678,7 +672,6 @@ extension ProductProfileViewModel {
                 makeServicePaymentBinder: makeServicePaymentBinder,
                 makeOpenNewProductButtons: makeOpenNewProductButtons,
                 operationDetailFactory: operationDetailFactory,
-                makeOrderCardViewModel: makeOrderCardViewModel,
                 makePaymentsTransfers: makePaymentsTransfers
             )
             
@@ -728,7 +721,6 @@ extension ProductProfileViewModel {
                 makeCardGuardianPanel: makeCardGuardianPanel,
                 makeRepeatPaymentNavigation: makeRepeatPaymentNavigation,
                 makeSubscriptionsViewModel: makeSubscriptionsViewModel,
-                makeOrderCardViewModel: makeOrderCardViewModel,
                 model: model
             )
             
