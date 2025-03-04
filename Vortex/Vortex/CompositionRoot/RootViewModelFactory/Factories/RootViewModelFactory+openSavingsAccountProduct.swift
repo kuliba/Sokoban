@@ -14,37 +14,63 @@ import OTPInputComponent
 import RemoteServices
 import LoadableState
 import PaymentComponents
-
+import StateMachines
 
 enum OpenSavingsAccountCompleteDomain {}
 
 extension OpenSavingsAccountCompleteDomain {
     
+    typealias UpdateFastAll = () -> Void
+    
     struct Complete {
         
         let context: Context
-        let details: OperationDetailDomain.Model
+        let details: OperationDetailSADomain.Model
         let document: DocumentButtonDomain.Model
         
         struct Context: Equatable {
             
             let formattedAmount: String?
-            let merchantName: String?
-            let purpose: String?
             let status: Status
             
-            enum Status {
+            enum Status: Equatable {
                 
-                case completed, inflight, rejected
+                case completed, inflight, rejected, suspend
+                case fraud(Fraud)
+                
+                enum Fraud: Equatable {
+                    
+                    case cancelled, expired
+                }
             }
         }
     }
+    
+    struct Details: Equatable {
+                
+        let product: Product?
+        
+        let payeeAccountId: Int?    // Счет поплнения - "payeeAccountId"
+        let payeeAccountNumber: String?    // Открытый накопительный счет - "payeeAccountNumber"
+        let payerCardId: Int?   // Карта списания - payerCardId
+        let payerCardNumber: String?   // Номер карты списания - payerCardNumber
+        let payerAccountId: Int?   // Счет списания - payerAccountId
+        
+        let formattedAmount: String? // Сумма платежа - payerAmount+ payerCurrency
+        let formattedFee: String? // Сумма комиссии - payerFee+ payerCurrency
+        let dataForDetails: String?   // Дата и время операции (МСК) - dataForDetails
+    }
+
+    typealias Product = ProductSelect.Product
 }
+
+typealias OperationDetailSADomain = StateMachineDomain<OpenSavingsAccountCompleteDomain.Details, Error>
+
 extension RootViewModelFactory {
     
     @inlinable
     func openSavingsAccountProduct(
-        notify: @escaping (OpenSavingsAccountDomain.OrderAccountResponse) -> Void
+        notify: @escaping RootViewDomain.Notify
     ) -> OpenSavingsAccount {
         
         let products = model.productSelectProducts
@@ -58,7 +84,12 @@ extension RootViewModelFactory {
         
         let cancellable = content.$state
             .compactMap(\.form?.orderAccountResponse)
-            .sink { notify($0) }
+            .sink { notify(.select(.savingsAccount($0))) }
+        
+        let goToMainCancellable = content.$state
+            .map(\.needGoToMain)
+            .sink { if $0 { notify(.dismiss) } }
+
         
         let binder = composeBinder(
             content: content,
@@ -66,7 +97,7 @@ extension RootViewModelFactory {
             witnesses: witnesses()
         )
         
-        return .init(model: binder, cancellable: cancellable)
+        return .init(model: binder, cancellables: [cancellable, goToMainCancellable])
     }
     
     // MARK: - Content
@@ -300,18 +331,25 @@ private extension Error {
             return failure
             
         case let failure as RemoteServiceError<Error, Error, LoadableState.LoadFailure>:
+            
             switch failure {
             case let .mapResponse(failure):
                 return failure
-                
+
+            case let .performRequest(error):
+                if error.isNotConnectedToInternetOrTimeout() {
+                    return .init(message: ._error, type: .informer)
+                } else {
+                    return .init(message: ._later, type: .alert)
+                }
             default:
-                return .tryLaterInformer
+                return .init(message: ._later, type: .alert)
             }
-            
+
         case let mappingError as RemoteServices.ResponseMapper.MappingError:
             switch mappingError {
             case let .server(_, errorMessage):
-                return .init(message: errorMessage, type: .alert)
+                return .init(message: ._later, type: .alert)
                 
             default:
                 return .tryLaterInformer
@@ -470,27 +508,33 @@ private extension RemoteServices.ResponseMapper.MappingResult<MakeOpenSavingsAcc
 
 private extension OrderAccountResponse {
     
-    init(_ data: MakeOpenSavingsAccountResponse) {
+    init(
+        _ data: MakeOpenSavingsAccountResponse
+    ) {
         
         self.init(
             accountId: data.paymentInfo.accountId,
             accountNumber: data.paymentInfo.accountNumber,
+            amount: data.paymentInfo.amount,
             paymentOperationDetailId: data.paymentOperationDetailID,
+            product: nil,
+            openData: data.paymentInfo.dateOpen,
             status: data.documentInfo.documentStatus?.status ?? .inflight
         )
     }
 }
 private extension OpenSavingsAccountDomain.LoadFailure {
     
-    static let invalidCodeAlert: Self = .init(message: ._invalidCode, type: .alert)
-    static let tryLaterAlert: Self = .init(message: ._tryLater, type: .alert)
-    static let tryLaterInformer: Self = .init(message: ._tryLater, type: .informer)
+    static let invalidCodeAlert: Self = .init(message: ._invalidCode, type: .otp)
+    static let tryLaterAlert: Self = .init(message: ._later, type: .alert)
+    static let tryLaterInformer: Self = .init(message: ._error, type: .informer)
 }
 
 private extension String {
     
     static let _invalidCode = "Введен некорректный код. Попробуйте еще раз."
-    static let _tryLater = "Что-то пошло не так.\nПопробуйте позже."
+    static let _error = "Ошибка загрузки данных.\nПопробуйте позже."
+    static let _later = "Попробуйте позже."
 }
 
 extension MakeOpenSavingsAccountResponse.DocumentStatus {
@@ -504,6 +548,8 @@ extension MakeOpenSavingsAccountResponse.DocumentStatus {
             return .inflight
         case .rejected:
             return .rejected
+        case .suspend:
+            return .suspend
         }
     }
 }

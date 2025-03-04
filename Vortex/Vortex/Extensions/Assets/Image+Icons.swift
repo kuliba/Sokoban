@@ -683,6 +683,7 @@ public extension Image {
     static var ic24Power: Image { Image(#function) }
     static var ic24Printer: Image { Image(#function) }
     static var ic24Promotions: Image { Image(#function) }
+    static var ic24Qr: Image { Image(#function) }
     static var ic24Rabbit: Image { Image(#function) }
     static var ic24Radio: Image { Image(#function) }
     static var ic24RadioChecked: Image { Image(#function) }
@@ -803,6 +804,7 @@ public extension Image {
     static var ic24Zkx: Image { Image(#function) }
     static var ic24ZoomIn: Image { Image(#function) }
     static var ic24ZoomOut: Image { Image(#function) }
+    static var ic32AccountsRub: Image { Image(#function) }
     static var ic32AbroadLine: Image { Image(#function) }
     static var ic32Camera: Image { Image(#function) }
     static var ic32Edit2: Image { Image(#function) }

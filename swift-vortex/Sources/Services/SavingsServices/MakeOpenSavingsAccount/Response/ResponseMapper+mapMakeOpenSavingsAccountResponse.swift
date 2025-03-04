@@ -53,7 +53,8 @@ private extension MakeOpenSavingsAccountResponse.PaymentInfo {
             currencyAmount: data.currencyAmount,
             currencyPayee: data.currencyPayee,
             currencyPayer: data.currencyPayer,
-            currencyRate: data.currencyRate,
+            currencyRate: data.currencyRate, 
+            dateOpen: data.dateOpen,
             debitAmount: data.debitAmount,
             fee: data.fee,
             payeeName: data.payeeName)
@@ -68,6 +69,7 @@ private extension MakeOpenSavingsAccountResponse.DocumentStatus {
         case "COMPLETE":    self = .complete
         case "IN_PROGRESS": self = .inProgress
         case "REJECTED":    self = .rejected
+        case "SUSPEND":     self = .suspend
         default:            return nil
         }
     }
@@ -97,6 +99,7 @@ private extension ResponseMapper {
         let currencyPayee: String?
         let currencyPayer: String?
         let currencyRate: Decimal?
+        let dateOpen: String?
         let debitAmount: Decimal?
         let documentStatus: String?
         let fee: Decimal?

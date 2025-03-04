@@ -82,16 +82,25 @@ extension ViewComponents {
         
         searchByUINFlowView(flow: flow) {
             
-            c2gPaymentFlowView(
-                flow: $0,
-                dismiss: { flow.event(.dismiss) }
-            ) { cover in
-                
-                makeC2GPaymentCompleteView(cover: cover)
-            }
+            c2gPaymentFlowView(flow: $0) { flow.event(.dismiss) }
         }
     }
     
+    @inlinable
+    func c2gPaymentFlowView(
+        flow: C2GPaymentDomain.Flow,
+        dismiss: @escaping () -> Void
+    ) -> some View {
+        
+        c2gPaymentFlowView(
+            flow: flow,
+            dismiss: dismiss
+        ) { cover in
+            
+            makeC2GPaymentCompleteView(cover: cover)
+        }
+    }
+
     @inlinable
     func searchByUINFlowView(
         flow: SearchByUINDomain.Flow,

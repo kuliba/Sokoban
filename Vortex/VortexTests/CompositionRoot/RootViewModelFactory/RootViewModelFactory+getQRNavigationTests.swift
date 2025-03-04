@@ -464,8 +464,8 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         case .sberQRComplete:
             return .sberQRComplete
 
-        case .searchByUIN:
-            return .searchByUIN
+        case .c2gPayment:
+            return .c2gPayment
         }
     }
     
@@ -481,7 +481,7 @@ final class RootViewModelFactory_getQRNavigationTests: RootViewModelFactoryTests
         case sberQR
         case sberQRFailure
         case sberQRComplete
-        case searchByUIN
+        case c2gPayment
     }
     
     private func makePayments(

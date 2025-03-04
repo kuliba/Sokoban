@@ -274,6 +274,32 @@ final class Model_allProductTests: XCTestCase {
         XCTAssertTrue(sut.onlyCorporateCards)
     }
 
+    // MARK: - hasSavingsAccount
+    
+    func test_hasSavingsAccount_accountWithOutSavings_shouldReturnFalse() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .account: [
+                makeAccountProduct(id: 2, currency: "RUB", isSavings: false)
+            ]
+        ])
+                
+        XCTAssertFalse(sut.hasSavingsAccount)
+    }
+    
+    func test_hasSavingsAccount_accountWithSavings_shouldReturnTrue() {
+        
+        let sut = makeSUT()
+        sut.changeProducts(to: [
+            .account: [
+                makeAccountProduct(id: 2, currency: "RUB", isSavings: true)
+            ]
+        ])
+                
+        XCTAssertTrue(sut.hasSavingsAccount)
+    }
+    
     // MARK: - Helpers
     
     func makeSUT(
@@ -348,7 +374,8 @@ extension XCTestCase {
 
     func makeAccountProduct(
         id: Int,
-        currency: String = "RUB"
+        currency: String = "RUB",
+        isSavings: Bool?
     ) -> ProductAccountData {
         
         .init(
@@ -386,7 +413,8 @@ extension XCTestCase {
             smallDesignMd5hash: "",
             smallBackgroundDesignHash: "",
             detailedRatesUrl: "",
-            detailedConditionUrl: ""
+            detailedConditionUrl: "",
+            isSavingAccount: isSavings
         )
     }
 

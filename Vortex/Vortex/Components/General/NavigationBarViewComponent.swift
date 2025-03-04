@@ -26,6 +26,7 @@ extension NavigationBarView {
         @Published var background: Color
         @Published var foreground: Color
         @Published var subtitleForeground: Color
+        let subtitleFont: Font
 
         @Published var backgroundDimm: BackgroundColorDimm?
         
@@ -38,6 +39,7 @@ extension NavigationBarView {
              background: Color = Color.textWhite,
              foreground: Color = Color.textSecondary,
              subtitleForeground: Color = Color.textSecondary,
+             subtitleFont: Font = .textBodySR12160(),
              backgroundDimm: BackgroundColorDimm? = nil
         ) {
             
@@ -50,6 +52,7 @@ extension NavigationBarView {
             self.background = background
             self.foreground = foreground
             self.subtitleForeground = subtitleForeground
+            self.subtitleFont = subtitleFont
             self.backgroundDimm = backgroundDimm
         }
 
@@ -329,7 +332,7 @@ struct NavigationBarView: View {
                     if let subtitle = viewModel.subtitle {
                         
                         Text(subtitle)
-                            .font(.textBodySR12160())
+                            .font(viewModel.subtitleFont)
                             .foregroundColor(viewModel.subtitleForeground)
                             .lineLimit(1)
                             .opacity(viewModel.opacity)

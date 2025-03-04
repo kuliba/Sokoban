@@ -33,6 +33,8 @@ extension SearchByUINDomain {
         typealias UIN =  String
     }
     
-    typealias Navigation = Result<C2GPayment, BackendFailure>
+    typealias Navigation = C2GPaymentResult
+    
+    typealias C2GPaymentResult = Result<C2GPayment, BackendFailure>
     typealias C2GPayment = C2GPaymentDomain.Binder
 }

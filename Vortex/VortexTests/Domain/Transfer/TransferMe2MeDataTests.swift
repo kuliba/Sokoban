@@ -9,13 +9,13 @@ import XCTest
 @testable import Vortex
 
 class TransferMe2MeDataTests: XCTestCase {
-
+    
     let bundle = Bundle(for: TransferMe2MeDataTests.self)
     let decoder = JSONDecoder.serverDate
     let encoder = JSONEncoder.serverDate
-
+    
     func testDecoding_Generic() throws {
-     
+        
         // given
         let url = bundle.url(forResource: "TransferMe2MeDecodingGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
@@ -34,43 +34,47 @@ class TransferMe2MeDataTests: XCTestCase {
     
     func testEncoding_Min() throws {
         
-        // given
         let payer = TransferData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
         let amount: Double? = nil
         let transfer = TransferMe2MeData(amount: amount, check: false, comment: nil, currencyAmount: "RUB", payer: payer, bankId: "12345678")
         
-        // when
         let result = try encoder.encode(transfer)
         
-        // then
         let url = bundle.url(forResource: "TransferMe2MeEncodingMin", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let resultString = String(decoding: result, as: UTF8.self)
-        let jsonString = String(decoding: json, as: UTF8.self)
-                                .replacingOccurrences(of: "\n", with: "")
-                                .replacingOccurrences(of: " ", with: "")
         
-        XCTAssertEqual(resultString, jsonString)
+        let jsonDict: NSDictionary = [
+            "amount": NSNull(),
+            "bankId": "12345678",
+            "check": 0,
+            "comment": NSNull(),
+            "currencyAmount": "RUB",
+            "payer": [:]
+        ]
+        
+        try XCTAssertNoDiff(result.jsonDict(), jsonDict)
+        try XCTAssertNoDiff(json.jsonDict(), jsonDict)
     }
     
     func test_amountRoundedFinance() throws {
         
-        // given
-        let sut = makeSut(amount: 10.04)
-        let expectedResult = "{\"amount\":10.04,\"check\":false,\"bankId\":\"\",\"comment\":null,\"currencyAmount\":\"\",\"payer\":{}}"
+        let sut = makeSUT(amount: 10.04)
         
-        // when
-        let sutEncoded = try encoder.encode(sut)
-        let result = String(data: sutEncoded, encoding: .utf8)
+        let encoded = try encoder.encode(sut)
         
-        // then
-        XCTAssertEqual(result, expectedResult)
+        try XCTAssertNoDiff(encoded.jsonDict(), [
+            "amount": 10.04,
+            "bankId": "",
+            "check": 0,
+            "comment": NSNull(),
+            "currencyAmount": "",
+            "payer": [:]
+        ])
     }
-}
-
-private extension TransferMe2MeDataTests {
     
-    func makeSut(amount: Double?) -> TransferMe2MeData {
+    // MARK: - Helpers
+    
+    private func makeSUT(amount: Double?) -> TransferMe2MeData {
         
         .init(
             amount: amount,

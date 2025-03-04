@@ -47,43 +47,44 @@ class TransferGeneralDataTests: XCTestCase {
     
     func testEncoding_Min() throws {
         
-        // given
         let payer = TransferData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
         let amount: Double? = nil
         let transfer = TransferGeneralData(amount: amount, check: false, comment: nil, currencyAmount: "RUB", payer: payer, payeeExternal: nil, payeeInternal: nil)
         
-        // when
         let result = try encoder.encode(transfer)
         
-        // then
-        let url = bundle.url(forResource: "TransferEncodingMin", withExtension: "json")!
-        let json = try Data(contentsOf: url)
-        let resultString = String(decoding: result, as: UTF8.self)
-        let jsonString = String(decoding: json, as: UTF8.self)
-                                .replacingOccurrences(of: "\n", with: "")
-                                .replacingOccurrences(of: " ", with: "")
-        
-        XCTAssertEqual(resultString, jsonString)
+        try XCTAssertNoDiff(result.jsonDict(), [
+            "amount": NSNull(),
+            "check": 0,
+            "comment": NSNull(),
+            "currencyAmount": "RUB",
+            "payeeExternal": NSNull(),
+            "payeeInternal": NSNull(),
+            "payer": [:]
+        ])
     }
     
     func test_amountRoundedFinance() throws {
         
-        // given
-        let sut = makeSut(amount: 10.04)
-        let expectedResult = "{\"amount\":10.04,\"currencyAmount\":\"\",\"check\":false,\"payeeInternal\":null,\"comment\":null,\"payer\":{},\"payeeExternal\":null}"
+        let sut = makeSUT(amount: 10.04)
         
-        // when
-        let sutEncoded = try encoder.encode(sut)
-        let result = String(data: sutEncoded, encoding: .utf8)
+        let encoded = try encoder.encode(sut)
         
-        // then
-        XCTAssertEqual(result, expectedResult)
+        try XCTAssertNoDiff(encoded.jsonDict(), [
+            "amount": 10.04,
+            "currencyAmount": "",
+            "check": false,
+            "payeeInternal": NSNull(),
+            "comment": NSNull(),
+            "payer": [:],
+            "payeeExternal": NSNull()
+        ])
     }
 }
 
 private extension TransferGeneralDataTests {
     
-    func makeSut(amount: Double?) -> TransferGeneralData {
+    func makeSUT(amount: Double?) -> TransferGeneralData {
         
         .init(
             amount: amount,

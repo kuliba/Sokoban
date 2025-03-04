@@ -9,36 +9,5 @@ import SwiftUI
 
 enum FastOperations {
     
-    case byQr, byPhone, templates, uin, utility
-    
-    var title: String {
-        
-        switch self {
-        case .byQr:      return FastOperationsTitles.qr
-        case .byPhone:   return FastOperationsTitles.byPhone
-        case .templates: return FastOperationsTitles.templates
-        case .uin:       return FastOperationsTitles.uin
-        case .utility:   return FastOperationsTitles.utilityPayment
-        }
-    }
-    
-    var icon: Image {
-        
-        switch self {
-        case .byQr:      return .ic24BarcodeScanner2
-        case .byPhone:   return .ic24Smartphone
-        case .templates: return .ic24Star
-        case .uin:       return .ic24Contract
-        case .utility:   return .ic24Bulb
-        }
-    }
-}
-
-enum FastOperationsTitles {
-    
-    static let qr             = "Оплата по QR"
-    static let byPhone        = "Перевод по телефону"
-    static let templates      = "Шаблоны"
-    static let uin            = "Поиск по УИН"
-    static let utilityPayment = "Оплата ЖКУ"
+    case byPhone, byQR, templates, uin, utility
 }

@@ -10,16 +10,32 @@ private extension SavingsAccountDetailsState {
     
     var period: String? {
         
-        return data?.dateNext.map { "Отчетный период с \($0.suffix(2)) \(Date.nameOfMonth) по \(Date().lastDayOfMonth) \(Date.nameOfMonth)" }
+        return reportingPeriod(dateStart: dateStart, dateNext: data?.dateNext)
+    }
+    
+    var dateStart: String? {
+        "2025-03-01" // TODO: delete stub after analytics update
+    }
+    
+    var daysLeft: String? {
+        "5 дней" // TODO: delete stub after analytics update
     }
     
     var paydate: String? {
         
-        data?.dateNext.map { "Дата выплаты % - \($0.suffix(2)) \(Date.nameOfMonth)" }
+        data?.dateNext.map { "Дата выплаты % - \($0.dateToString())" }
     }
     
     var days: String {
-       "\(Date.now.daysToEndMonth) дней"
+       daysLeft ?? ""
+    }
+    
+    func reportingPeriod(
+        dateStart: String?,
+        dateNext: String?
+    ) -> String {
+        
+        "Отчетный период \(dateStart?.suffix(2) ?? "")-\(dateNext?.dateToString() ?? "")"
     }
 }
 
@@ -33,6 +49,14 @@ extension Date {
     
     static var nameOfMonth: String {
         return Date().formatted(Date.FormatStyle().month(.abbreviated))
+    }
+
+    func getComponents(_ components: Calendar.Component..., calendar: Calendar = Calendar.current) -> DateComponents {
+        return calendar.dateComponents(Set(components), from: self)
+    }
+    
+    func getComponents(_ component: Calendar.Component, calendar: Calendar = Calendar.current) -> Int {
+        return calendar.component(component, from: self)
     }
 }
 
@@ -127,7 +151,7 @@ public struct SavingsAccountDetailsView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             
             HStack {
-                (subtitle.text + config.texts.per).text(withConfig: subtitle.config)
+                subtitle.text.text(withConfig: subtitle.config)
                     .frame(alignment: .leading)
                 config.info
                     .foregroundColor(config.colors.chevron)
@@ -269,7 +293,11 @@ private extension SavingsAccountDetailsView {
     }
     
     var minBalance: String {
-        amountToString(state.minBalance, state.currencyCode)
+        if state.minBalance > 0 {
+            amountToString(state.minBalance, state.currencyCode) + config.texts.per
+        } else {
+            ""
+        }
     }
 
     var paidInterest: String {
@@ -381,3 +409,36 @@ extension SavingsAccountDetailsWrapperView {
 }
 
 typealias SavingsAccountDetailsViewModel = RxViewModel<SavingsAccountDetailsState, SavingsAccountDetailsEvent, SavingsAccountDetailsEffect>
+
+extension String {
+    
+    // 2024-12-31
+    func dateToString() -> String {
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let date = dateFormatter.date(from: self)
+        
+        if let components = date?.getComponents(.day, .month), let day = components.day, let month = components.month {
+            switch (day, month) {
+                
+            case (31, 1): return "\(day) января"
+            case (28, 2): return "\(day) февраля"
+            case (29, 2): return "\(day) февраля"
+            case (31, 3): return "\(day) марта"
+            case (30, 4): return "\(day) апреля"
+            case (31, 5): return "\(day) мая"
+            case (30, 6): return "\(day) июня"
+            case (31, 7): return "\(day) июля"
+            case (31, 8): return "\(day) августа"
+            case (30, 9): return "\(day) сентября"
+            case (31, 10): return "\(day) октября"
+            case (30, 11): return "\(day) ноября"
+            case (31, 12): return "\(day) декабря"
+                
+            default: return "\(day).\(month)"
+            }
+        }
+        return self
+    }
+}

@@ -33,10 +33,7 @@ extension RootViewModelFactory {
         case .insurance:      return .unknown
         case .loan:           return .unknown
         case .mortgage:       return .unknown
-            
-        case .savingsAccount:
-            return .savingsAccount(makeSavingsNodes({ notify(.dismiss) }, { notify(.select(.savingsAccount($0))) }))
-            
+        case .savingsAccount: return .savingsAccount(makeSavingsNodes(notify: notify))
         case .sticker:        return .unknown
         }
     }

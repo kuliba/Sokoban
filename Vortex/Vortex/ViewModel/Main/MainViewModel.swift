@@ -315,12 +315,7 @@ private extension MainViewModel {
             .receive(on: scheduler)
             .sink { [weak self] in self?.handleBanners($0) }
             .store(in: &bindings)
-        
-        model.productListBannersWithSticker
-            .receive(on: scheduler)
-            .sink { [weak self] in self?.handleBanners($0) }
-            .store(in: &bindings)
-        
+                
         if updateInfoStatusFlag.isActive {
             model.updateInfo
                 .receive(on: scheduler)
@@ -508,6 +503,8 @@ private extension MainViewModel {
                         })
                     ))
                 }
+                
+                handleBanners(sections.productsSection?.productCarouselViewModel.promoProducts)
             }.store(in: &bindings)
         
         model.clientInfo
@@ -689,20 +686,7 @@ private extension MainViewModel {
                 .store(in: &bindings)
         }
     }
-    
-    func handleBanners(
-        _ banners: [CardBannerList]
-    ) {
-        if let sticker = banners.first {
-            
-            let promoItems = makePromoViewModels(promoItems: [
-                .init(sticker)
-            ]) ?? []
-            
-            sections.productsSection?.productCarouselViewModel.updatePromo(promoItems)
-        }
-    }
-    
+        
     func handleBanners(
         _ banners: BannerList
     ) {
@@ -712,7 +696,7 @@ private extension MainViewModel {
             promo.append(.init(item: sticker, productType: .card, promoProduct: .sticker))
         }
         
-        if let accountBannerList = banners.accountBannerList {
+        if let accountBannerList = banners.accountBannerList, !model.hasSavingsAccount {
             promo.append(contentsOf: accountBannerList.map { .init(item: $0, productType: .account, promoProduct: .savingsAccount) })
         }
         
@@ -722,21 +706,47 @@ private extension MainViewModel {
         
         sections.productsSection?.productCarouselViewModel.updatePromo(promoItems)
     }
+    
+    func handleBanners(
+        _ promoItems: [AdditionalProductViewModel]?
+    ) {
+        
+        if model.hasSavingsAccount {
+            var newPromo = promoItems
+            newPromo?.removeAll(where: { $0.promoItem.promoProduct == .savingsAccount })
+            sections.productsSection?.productCarouselViewModel.updatePromo(newPromo)
+        } else {
+            bannersBox.requestUpdate()
+        }
+    }
 
+    func openProductByType(_ type: OpenProductType) {
+        
+        switch type {
+        case .account, .card, .creditCardMVP, .deposit, .insurance, .loan, .mortgage:
+            break
+            
+        case .savingsAccount:
+            route = .empty
+            delay(for: .milliseconds(700)) { [weak self] in
+                self?.openSavingsAccount()
+            }
+            
+        case .sticker:
+            route = .empty
+            delay(for: .milliseconds(700)) { [weak self] in
+                
+                self?.handleLandingAction(.sticker)
+            }
+        }
+    }
+    
     func openMoreProducts() { //
         
         let myProductsViewModel = MyProductsViewModel(
             model,
             makeProductProfileViewModel: viewModelsFactory.makeProductProfileViewModel,
-            openOrderSticker: { [weak self] in
-                
-                self?.route = .empty
-                
-                self?.delay(for: .milliseconds(700)) { [weak self] in
-                    
-                    self?.handleLandingAction(.sticker)
-                }
-            },
+            openProductByType: openProductByType, 
             makeMyProductsViewFactory: .init(
                 makeInformerDataUpdateFailure: { [weak self] in
                     
@@ -978,7 +988,7 @@ private extension MainViewModel {
         _ payload: MainSectionViewModelAction.FastPayment.ButtonTapped
     ) {
         switch payload.operationType {
-        case .byQr, .templates, .uin:
+        case .byQR, .templates, .uin:
             break // handled by root via rootEventPublisher
             
         case .byPhone:

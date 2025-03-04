@@ -53,6 +53,7 @@ public struct MakeOpenSavingsAccountResponse: Equatable {
         public let currencyPayee: String?
         public let currencyPayer: String?
         public let currencyRate: Decimal?
+        public let dateOpen: String?
         public let debitAmount: Decimal?
         public let fee: Decimal?
         public let payeeName: String?
@@ -66,6 +67,7 @@ public struct MakeOpenSavingsAccountResponse: Equatable {
             currencyPayee: String?,
             currencyPayer: String?,
             currencyRate: Decimal?,
+            dateOpen: String?,
             debitAmount: Decimal?,
             fee: Decimal?,
             payeeName: String?
@@ -78,6 +80,7 @@ public struct MakeOpenSavingsAccountResponse: Equatable {
             self.currencyPayee = currencyPayee
             self.currencyPayer = currencyPayer
             self.currencyRate = currencyRate
+            self.dateOpen = dateOpen
             self.debitAmount = debitAmount
             self.fee = fee
             self.payeeName = payeeName
@@ -86,7 +89,7 @@ public struct MakeOpenSavingsAccountResponse: Equatable {
     
     public enum DocumentStatus: Equatable {
         
-        case complete, inProgress, rejected
+        case complete, inProgress, rejected, suspend
     }
 
     public enum AntiFraudScenario: Equatable {

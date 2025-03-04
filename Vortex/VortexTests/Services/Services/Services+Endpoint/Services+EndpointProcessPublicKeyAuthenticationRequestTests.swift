@@ -23,7 +23,7 @@ final class Services_EndpointProcessPublicKeyAuthenticationRequestTests: XCTestC
     func test_urlWithBase_shouldThrowOnIllegalBase() throws {
         
         let endpoint: Services.Endpoint = .processPublicKeyAuthenticationRequest
-        let illegalBase = "🤯"
+        let illegalBase = badURLString
         
         XCTAssertThrowsError(
             try endpoint.url(withBase: illegalBase)
