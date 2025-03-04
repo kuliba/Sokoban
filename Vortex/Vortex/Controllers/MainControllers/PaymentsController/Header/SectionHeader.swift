@@ -148,7 +148,7 @@ class SectionHeader: UICollectionReusableView {
     
     func addProductTypeSelectorView(with viewModel: OptionSelectorView.ViewModel) {
         
-        let makeProductsCategoryView: MakeProductsCategoryView = { ProductsCategoryView(newImplementation: true, isSelected: $0, title: $1) }
+        let makeProductsCategoryView: MakeProductsCategoryView = { ProductsCategoryView(newImplementation: true, isSelected: $0, title: $1, isSavingsAccount: $2) }
 
         let makeOptionButtonView: MakeOptionButtonView = { .init(viewModel: $0, isSelected: $1, viewFactory: .init(makeProductsCategoryView: makeProductsCategoryView))}
         
