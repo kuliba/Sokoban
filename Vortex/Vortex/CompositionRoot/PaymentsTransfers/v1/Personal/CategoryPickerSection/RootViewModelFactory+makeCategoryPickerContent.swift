@@ -6,17 +6,19 @@
 //
 
 import Combine
+import PayHub
 import PayHubUI
 
 extension RootViewModelFactory {
     
     @inlinable
     func makeCategoryPickerContent(
-        _ nanoServices: PaymentsTransfersPersonalNanoServices
+        nanoServices: PaymentsTransfersPersonalNanoServices,
+        map: @escaping ([ServiceCategory]) -> [Stateful<ServiceCategory, LoadState>] = { $0.pending }
     ) -> CategoryPickerContentDomain<ServiceCategory>.Content {
         
         let placeholderCount = settings.categoryPickerPlaceholderCount
-      
+        
         let makeID: () -> UUID = UUID.init
         let placeholderIDs = (0..<placeholderCount).map { _ in makeID() }
         let reducer = ItemListDomain.Reducer(
@@ -29,14 +31,14 @@ extension RootViewModelFactory {
                 
                 nanoServices.loadCategories {
                     
-                    completion($0?.pending)
+                    completion($0.map(map))
                 }
             },
             reload: { notify, completion in
                 
                 nanoServices.reloadCategories(notify) {
                     
-                    completion($0?.pending)
+                    completion($0.map(map))
                 }
             }
         )
