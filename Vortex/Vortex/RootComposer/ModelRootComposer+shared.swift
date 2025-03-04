@@ -43,7 +43,6 @@ extension ModelRootComposer {
                 return .init(
                     model: model,
                     httpClient: httpClient,
-                    savingsAccountFlag: featureFlags.savingsAccountFlag,
                     schedulers: schedulers
                 )
             }

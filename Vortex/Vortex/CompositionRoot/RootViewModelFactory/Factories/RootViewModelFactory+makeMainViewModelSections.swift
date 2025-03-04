@@ -14,8 +14,7 @@ extension RootViewModelFactory {
     func makeMainViewModelSections(
         bannersBinder: BannersBinder,
         c2gFlag: C2GFlag,
-        collateralLoanLandingFlag: CollateralLoanLandingFlag,
-        savingsAccountFlag: SavingsAccountFlag
+        collateralLoanLandingFlag: CollateralLoanLandingFlag
     ) -> [MainSectionViewModel] {
         
         var sections = [
@@ -38,7 +37,6 @@ extension RootViewModelFactory {
                     
                     return self.makeOpenNewProductButtons(
                         collateralLoanLandingFlag: collateralLoanLandingFlag,
-                        savingsAccountFlag: savingsAccountFlag,
                         action: $0
                     )
                 }
