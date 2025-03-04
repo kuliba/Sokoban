@@ -37,7 +37,7 @@ class MyProductsViewModel: ObservableObject {
     var contactsAction: () -> Void = { }
     var informerWasShown: Bool = false
     
-    let openOrderSticker: () -> Void
+    let openProductByType: (OpenProductType) -> Void
     
     private lazy var settingsOnboarding = model.settingsMyProductsOnboarding
     private let model: Model
@@ -57,7 +57,7 @@ class MyProductsViewModel: ObservableObject {
          makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
          refreshingIndicator: RefreshingIndicatorView.ViewModel,
          showOnboarding: [Onboarding: Bool] = [:],
-         openOrderSticker: @escaping () -> Void,
+         openProductByType: @escaping (OpenProductType) -> Void,
          makeMyProductsViewFactory: MyProductsViewFactory
     ) {
         self.model = model
@@ -70,7 +70,7 @@ class MyProductsViewModel: ObservableObject {
         self.sections = productSections
         self.refreshingIndicator = refreshingIndicator
         self.showOnboarding = showOnboarding
-        self.openOrderSticker = openOrderSticker
+        self.openProductByType = openProductByType
         self.makeMyProductsViewFactory = makeMyProductsViewFactory
     }
     
@@ -78,7 +78,7 @@ class MyProductsViewModel: ObservableObject {
         _ model: Model,
         cardAction: CardAction? = nil,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
-        openOrderSticker: @escaping () -> Void,
+        openProductByType: @escaping (OpenProductType) -> Void,
         makeMyProductsViewFactory: MyProductsViewFactory,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons
     ) {
@@ -93,7 +93,7 @@ class MyProductsViewModel: ObservableObject {
             makeProductProfileViewModel: makeProductProfileViewModel,
             refreshingIndicator: .init(isActive: false),
             showOnboarding: [:],
-            openOrderSticker: openOrderSticker,
+            openProductByType: openProductByType,
             makeMyProductsViewFactory: makeMyProductsViewFactory
         )
         
@@ -279,7 +279,10 @@ class MyProductsViewModel: ObservableObject {
                     }
                     
                 case .sticker:
-                    openOrderSticker()
+                    openProductByType(.sticker)
+                    
+                case .savingsAccount:
+                    openProductByType(.savingsAccount)
                     
                 case .loan:
                     // TODO: - add openCollateralLoanLanding

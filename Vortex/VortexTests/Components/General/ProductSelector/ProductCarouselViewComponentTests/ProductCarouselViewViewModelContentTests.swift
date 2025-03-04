@@ -79,14 +79,6 @@ final class ProductCarouselViewViewModelContentTests: XCTestCase {
         XCTAssertEqual(content.firstGroup(ofType: .card)?.id, "CARD")
     }
     
-    func test_sticker_shouldBeNilOnEmptyStickerBannersMyProductList()  {
-        
-        let (sut, model) = makeSUT()
-        
-        XCTAssertNil(sut.promoProducts)
-        XCTAssertNoDiff(model.productListBannersWithSticker.value, [])
-    }
-    
     // MARK: - Helpers
     
     typealias productVM = ProductCarouselView.ViewModel

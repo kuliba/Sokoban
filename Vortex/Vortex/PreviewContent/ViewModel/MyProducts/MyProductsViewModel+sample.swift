@@ -21,7 +21,7 @@ extension MyProductsViewModel {
         cardAction: { _ in },
         makeProductProfileViewModel: ProductProfileViewModel.makeProductProfileViewModel,
         refreshingIndicator: .init(isActive: true),
-        openOrderSticker: {},
+        openProductByType: { _ in },
         makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { nil })
     )
     
@@ -38,7 +38,7 @@ extension MyProductsViewModel {
         makeProductProfileViewModel: ProductProfileViewModel.makeProductProfileViewModel,
         refreshingIndicator: .init(isActive: true),
         showOnboarding: [.hide: true, .ordered: false],
-        openOrderSticker: {},
+        openProductByType: { _ in },
         makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { nil })
     )
 }

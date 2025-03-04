@@ -24,7 +24,7 @@ final class Services_EndpointChangePINTests: XCTestCase {
     func test_urlWithBase_shouldThrowOnIllegalBase() throws {
         
         let endpoint: Services.Endpoint = .changePIN
-        let illegalBase = "🤯"
+        let illegalBase = badURLString
         
         XCTAssertThrowsError(
             try endpoint.url(withBase: illegalBase)

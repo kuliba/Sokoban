@@ -16,7 +16,6 @@ extension FeatureFlags {
         creditCardMVPFlag: СreditCardMVPFlag = .active,
         getProductListByTypeV6Flag: GetProductListByTypeV6Flag = .active,
         paymentsTransfersFlag: PaymentsTransfersFlag = .active,
-        savingsAccountFlag: SavingsAccountFlag = .active,
         collateralLoanLandingFlag: CollateralLoanLandingFlag = .active,
         splashScreenFlag: SplashScreenFlag = .inactive,
         orderCardFlag: OrderCardFlag = .active
@@ -27,7 +26,6 @@ extension FeatureFlags {
             creditCardMVPFlag: creditCardMVPFlag,
             getProductListByTypeV6Flag: getProductListByTypeV6Flag,
             paymentsTransfersFlag: paymentsTransfersFlag,
-            savingsAccountFlag: savingsAccountFlag,
             collateralLoanLandingFlag: collateralLoanLandingFlag,
             splashScreenFlag: splashScreenFlag,
             orderCardFlag: orderCardFlag

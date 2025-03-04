@@ -538,7 +538,7 @@ final class Model_AbroadTests: XCTestCase {
             let operation = operationWithCountryDropDownList(
                 paymentsOperator: paymentsOperator
             )
-            let fieldValue = " "
+            let fieldValue = badURLString
             let response: TransferAnywayResponseData = .makeDummy(
                 additionalList: [
                     .dummy(fieldName: "oferta", fieldValue: fieldValue)

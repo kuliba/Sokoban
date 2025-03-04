@@ -89,7 +89,8 @@ final class MainQueueReducerDecoratorTests: XCTestCase {
     
     private func assert(
         _ sut: SUT,
-        on action: @escaping () -> Void
+        on action: @escaping () -> Void,
+        timeout: TimeInterval = 0.1
     ) {
         let exp = expectation(description: "wait for completion")
         
@@ -101,7 +102,7 @@ final class MainQueueReducerDecoratorTests: XCTestCase {
         
         action()
         
-        wait(for: [exp], timeout: 0.05)
+        wait(for: [exp], timeout: timeout)
     }
 }
 

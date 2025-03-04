@@ -54,7 +54,7 @@ final class QRResolverTests: XCTestCase {
     
     func test_notQRNotURLString_shouldDeliverUnknown() {
         
-        let notQRNotURLString = "This is not a URL"
+        let notQRNotURLString = badURLString
         
         XCTAssertNoDiff(resolve(notQRNotURLString), .unknown)
     }

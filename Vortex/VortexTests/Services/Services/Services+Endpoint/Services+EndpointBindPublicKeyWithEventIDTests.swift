@@ -23,7 +23,7 @@ final class Services_EndpointBindPublicKeyWithEventIDTests: XCTestCase {
     func test_urlWithBase_shouldThrowOnIllegalBase() throws {
         
         let endpoint: Services.Endpoint = .bindPublicKeyWithEventID
-        let illegalBase = "🤯"
+        let illegalBase = badURLString
         
         XCTAssertThrowsError(
             try endpoint.url(withBase: illegalBase)
