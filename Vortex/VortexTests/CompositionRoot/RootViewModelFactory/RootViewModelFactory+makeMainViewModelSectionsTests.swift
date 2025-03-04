@@ -19,8 +19,7 @@ final class RootViewModelFactory_makeMainViewModelSectionsTests: RootViewModelFa
         let sections = sut.makeMainViewModelSections(
             bannersBinder: bannersBinder,
             c2gFlag: .inactive,
-            collateralLoanLandingFlag: .active,
-            savingsAccountFlag: .inactive
+            collateralLoanLandingFlag: .active
         )
         
         XCTAssertTrue(sections.count == 6)
@@ -107,7 +106,6 @@ final class RootViewModelFactory_makeMainViewModelSectionsTests: RootViewModelFa
         _ sut: SUT? = nil,
         c2gFlag: C2GFlag,
         collateralLoanLandingFlag: CollateralLoanLandingFlag = .inactive,
-        savingsAccountFlag: SavingsAccountFlag = .inactive,
         file: StaticString = #file,
         line: UInt = #line
     ) -> [MainSectionViewModel] {
@@ -117,8 +115,7 @@ final class RootViewModelFactory_makeMainViewModelSectionsTests: RootViewModelFa
         return sut.makeMainViewModelSections(
             bannersBinder: .immediate,
             c2gFlag: c2gFlag,
-            collateralLoanLandingFlag: collateralLoanLandingFlag,
-            savingsAccountFlag: savingsAccountFlag
+            collateralLoanLandingFlag: collateralLoanLandingFlag
         )
     }
     
@@ -126,7 +123,6 @@ final class RootViewModelFactory_makeMainViewModelSectionsTests: RootViewModelFa
         _ sut: SUT? = nil,
         c2gFlag: C2GFlag,
         collateralLoanLandingFlag: CollateralLoanLandingFlag = .inactive,
-        savingsAccountFlag: SavingsAccountFlag = .inactive,
         file: StaticString = #file,
         line: UInt = #line
     ) throws -> MainSectionFastOperationView.ViewModel {
@@ -135,7 +131,6 @@ final class RootViewModelFactory_makeMainViewModelSectionsTests: RootViewModelFa
             sut,
             c2gFlag: c2gFlag,
             collateralLoanLandingFlag: collateralLoanLandingFlag,
-            savingsAccountFlag: savingsAccountFlag,
             file: file, line: line
         )
         

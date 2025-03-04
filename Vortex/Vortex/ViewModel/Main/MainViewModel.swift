@@ -311,12 +311,7 @@ private extension MainViewModel {
             .receive(on: scheduler)
             .sink { [weak self] in self?.handleBanners($0) }
             .store(in: &bindings)
-        
-        model.productListBannersWithSticker
-            .receive(on: scheduler)
-            .sink { [weak self] in self?.handleBanners($0) }
-            .store(in: &bindings)
-        
+                
         if updateInfoStatusFlag.isActive {
             model.updateInfo
                 .receive(on: scheduler)
@@ -682,20 +677,7 @@ private extension MainViewModel {
                 .store(in: &bindings)
         }
     }
-    
-    func handleBanners(
-        _ banners: [CardBannerList]
-    ) {
-        if let sticker = banners.first {
-            
-            let promoItems = makePromoViewModels(promoItems: [
-                .init(sticker)
-            ]) ?? []
-            
-            sections.productsSection?.productCarouselViewModel.updatePromo(promoItems)
-        }
-    }
-    
+        
     func handleBanners(
         _ banners: BannerList
     ) {

@@ -751,52 +751,7 @@ extension ServerCommands {
                 self.endpoint = "/" + endpoint
             }
         }
-        
-        struct GetBannersMyProductListWithSticker: ServerCommand {
-            
-            let token: String
-            let endpoint = "/dict/v1/getBannersMyProductList"
-            let method: ServerCommandMethod = .get
-            let parameters: [ServerCommandParameter]?
-            
-            struct Payload: Encodable {}
-            
-            struct Response: ServerResponse {
                 
-                let statusCode: ServerStatusCode
-                let data: StickerResponseData?
-                let errorMessage: String?
-                
-                struct StickerResponseData: Codable, Equatable {
-                    
-                    let stickerCardData: [CardBannerList]
-                    let serial: String
-                    
-                    private enum CodingKeys: String, CodingKey {
-                        
-                        case stickerCardData = "cardBannerList"
-                        case serial
-                    }
-                }
-            }
-            
-            init(token: String, serial: String?) {
-                
-                self.token = token
-                
-                if let serial = serial{
-                    
-                    var parameters = [ServerCommandParameter]()
-                    parameters.append(.init(name: "serial", value: serial))
-                    self.parameters = parameters
-                    
-                } else {
-                    
-                    self.parameters = nil
-                }
-            }
-        }
-        
         /*
          https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getBannerCatalogListUsingGet
          */
