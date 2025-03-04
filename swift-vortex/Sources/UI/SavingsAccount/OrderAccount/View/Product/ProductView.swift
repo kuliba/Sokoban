@@ -67,7 +67,7 @@ where IconView: View {
                 )
             }
         }
-        .modifier(ViewWithBackgroundCornerRadiusAndPaddingModifier(config.background, config.cornerRadius, config.padding))
+        .modifier(ViewWithBackgroundCornerRadiusAndPaddingModifier(config.background, config.cornerRadius, 0))
     }
 
     private func shadow() -> some View {

@@ -83,10 +83,13 @@ extension RootViewModelFactory {
             document.event(.load)
             
             completion(.savingsAccount(.init(
-                context: .init(formattedAmount: nil, merchantName: nil, purpose: nil, status: orderAccountResponse.status.status), 
+                context: .init(formattedAmount: format(amount: orderAccountResponse.amount, currency: "RUB"), status: orderAccountResponse.status.status),
                 details: details,
                 document: document
-            )))
+            ), { [weak model] in
+                
+                model?.handleProductsUpdateTotalAll()
+            }))
 
         case let .openProduct(type):
             
@@ -368,6 +371,15 @@ extension OrderAccountResponse.Status {
             return .inflight
         case .rejected:
             return .rejected
+        case let .fraud(fraud):
+            switch fraud {
+            case .cancelled:
+                return .fraud(.cancelled)
+            case .expired:
+                return .fraud(.expired)
+            }
+        case .suspend:
+            return .suspend
         }
     }
 }

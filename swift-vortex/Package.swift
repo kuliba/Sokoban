@@ -39,6 +39,7 @@ let package = Package(
         .fetcher,
         .genericLoader,
         .keyChainStore,
+        .resourceProvider,
         .serialComponents,
         .stateMachines,
         // Payments
@@ -187,6 +188,8 @@ let package = Package(
         .genericLoaderTests,
         .keyChainStore,
         .keyChainStoreTests,
+        .resourceProvider,
+        .resourceProviderTests,
         .serialComponents,
         .serialComponentsTests,
         .stateMachines,
@@ -751,7 +754,7 @@ private extension Product {
     static let listLandingComponent = library(
         name: .listLandingComponent,
         targets: [
-            .savingsAccount
+            .listLandingComponent
         ]
     )
 
@@ -873,6 +876,13 @@ private extension Product {
         name: .keyChainStore,
         targets: [
             .keyChainStore
+        ]
+    )
+    
+    static let resourceProvider = library(
+        name: .resourceProvider,
+        targets: [
+            .resourceProvider
         ]
     )
     
@@ -1702,6 +1712,21 @@ private extension Target {
             .keyChainStore,
         ],
         path: "Tests/Infra/\(String.keyChainStoreTests)"
+    )
+    
+    static let resourceProvider = target(
+        name: .resourceProvider,
+        path: "Sources/Infra/\(String.resourceProvider)"
+    )
+    static let resourceProviderTests = testTarget(
+        name: .resourceProviderTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .resourceProvider,
+        ],
+        path: "Tests/Infra/\(String.resourceProviderTests)"
     )
     
     static let serialComponents = target(
@@ -3954,6 +3979,10 @@ private extension Target.Dependency {
         name: .keyChainStore
     )
     
+    static let resourceProvider = byName(
+        name: .resourceProvider
+    )
+    
     static let serialComponents = byName(
         name: .serialComponents
     )
@@ -4398,6 +4427,9 @@ private extension String {
     
     static let keyChainStore = "KeyChainStore"
     static let keyChainStoreTests = "KeyChainStoreTests"
+    
+    static let resourceProvider = "ResourceProviderComponent"
+    static let resourceProviderTests = "ResourceProviderComponentTests"
     
     static let serialComponents = "SerialComponents"
     static let serialComponentsTests = "SerialComponentsTests"

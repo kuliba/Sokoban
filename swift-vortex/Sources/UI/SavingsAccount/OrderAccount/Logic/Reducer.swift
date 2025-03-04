@@ -100,12 +100,15 @@ public extension Reducer {
                 state.form?.amount = .init(title: form.amount.title, value: decimal, button: .init(title: form.amount.button.title, isEnabled: isValid))
                 
             case .pay:
-                let isValid = true // check balance!!! + validate
-
-                guard isValid else { break }
                 state.form?.topUp.isShowFooter = false
                 reduceContinue(&state, &effect)
             }
+            
+        case .goToMain:
+            state.needGoToMain = true
+            
+        case .cancel:
+            state.needGoToMain = false
         }
         
         return (state, effect)
@@ -172,21 +175,19 @@ private extension Reducer {
         case (.loading(nil), _):
             break // cannot receive orderAccountResult in empty loading state
             
-        case let (.loading(.some(form)), .failure(loadFailure)): // TODO otpFailure & orderFailure
+        case (var .loading(.some(form)), let .failure(loadFailure)):
             
-//            switch loadFailure {
-//            case .otpFailure:
-//                
-//                if let notifyOTP = form.confirmation.state.map(otpWitness) {
-//                    notifyOTP(loadFailure.message)
-//                }
-//                
-//            case .orderFailure:
-//                state.form?.orderAccountResponse = false
-//
-//            }
-            let notifyOTP = form.confirmation.state.map(otpWitness)
-            notifyOTP?(loadFailure.message)
+            switch loadFailure.type {
+            case .otp:
+                let notifyOTP = form.confirmation.state.map(otpWitness)
+                notifyOTP?(loadFailure.message)
+                
+            case .informer:
+                break
+                
+            case .alert:
+                form.orderAccountResponse = .reject
+            }
             state.loadableForm = .loaded(.success(form))
             
         case(var.loading(.some(form)), let .success(orderAccountResponse)):
@@ -222,11 +223,17 @@ private extension OrderAccountResponse {
         
         self.init(
             accountId: data.accountId,
-            accountNumber: data.accountNumber,
+            accountNumber: data.accountNumber, 
+            amount: data.amount,
             paymentOperationDetailId: data.paymentOperationDetailId,
             product: product,
             openData: data.openData,
             status: data.status
         )
     }
+}
+
+private extension OrderAccountResponse {
+    
+    static let reject: Self = .init(.init(accountId: nil, accountNumber: nil, amount: nil, paymentOperationDetailId: nil, product: nil, openData: nil, status: .rejected), nil)
 }

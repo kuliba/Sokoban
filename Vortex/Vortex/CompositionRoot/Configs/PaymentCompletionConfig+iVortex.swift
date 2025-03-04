@@ -17,7 +17,8 @@ extension PaymentCompletionConfig {
             inflight: .inflight(),
             rejected: .rejected(),
             fraudCancelled: .fraudCancelled(),
-            fraudExpired: .fraudExpired()
+            fraudExpired: .fraudExpired(), 
+            suspend: .suspend()
         )
     )
     
@@ -27,7 +28,8 @@ extension PaymentCompletionConfig {
             inflight: .inflight(title: "Платеж в обработке"),
             rejected: .rejected(title: "Платеж отклонен"),
             fraudCancelled: .fraudCancelled(),
-            fraudExpired: .fraudExpired()
+            fraudExpired: .fraudExpired(),
+            suspend: .suspend()
         )
     )
     
@@ -42,23 +44,29 @@ extension PaymentCompletionConfig {
                 subtitle: "Что-то пошло не так...\nПопробуйте позже."
             ),
             fraudCancelled: .fraudCancelled(),
-            fraudExpired: .fraudExpired()
+            fraudExpired: .fraudExpired(),
+            suspend: .suspend()
         )
     )
     
-    static let orderSavingsAccount: Self = .init(
-        statuses: .init(
-            completed: .completed(title: "Накопительный счет открыт"),
-            inflight: .inflight(
-                title: "Операция в обработке"
-            ),
-            rejected: .rejected(
-                title: "Не удалось открыть счет"
-            ),
-            fraudCancelled: .fraudCancelled(),
-            fraudExpired: .fraudExpired()
+    static func orderSavingsAccount(
+        title: String
+    ) -> Self {
+        .init(
+            statuses: .init(
+                completed: .completed(title: title),
+                inflight: .inflight(
+                    title: "Операция в обработке"
+                ),
+                rejected: .rejected(
+                    title: "Операция неуспешна!"
+                ),
+                fraudCancelled: .fraudCancelled(),
+                fraudExpired: .fraudExpired(),
+                suspend: .suspend()
+            )
         )
-    )
+    }
 }
 
 extension PaymentCompletionConfig.Statuses.Status {
@@ -186,6 +194,20 @@ extension PaymentCompletionConfig.Statuses.Status {
     static func fraudExpired(
         title: String = "Перевод отменен!",
         subtitle: String? = "Время на подтверждение\nперевода вышло"
+    ) -> Self {
+        
+        return .init(
+            content: .init(
+                logo: .ic48Clock,
+                title: title,
+                subtitle: subtitle
+            ),
+            config: .fraud()
+        )
+    }
+    static func suspend(
+        title: String = "Операция временно приостановлена в целях безопасности",
+        subtitle: String = Payments.Success.antifraudSubtitle
     ) -> Self {
         
         return .init(

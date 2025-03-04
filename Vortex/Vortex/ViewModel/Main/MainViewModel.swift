@@ -780,6 +780,27 @@ private extension MainViewModel {
         sections.productsSection?.productCarouselViewModel.updatePromo(promoItems)
     }
 
+    func openProductByType(_ type: OpenProductType) {
+        
+        switch type {
+        case .account, .card, .deposit, .insurance, .loan, .mortgage:
+            break
+            
+        case .savingsAccount:
+            route = .empty
+            delay(for: .milliseconds(700)) { [weak self] in
+                self?.openSavingsAccount()
+            }
+            
+        case .sticker:
+            route = .empty
+            delay(for: .milliseconds(700)) { [weak self] in
+                
+                self?.handleLandingAction(.sticker)
+            }
+        }
+    }
+    
     func openMoreProducts() { //
         
         let myProductsViewModel = MyProductsViewModel(
@@ -1036,7 +1057,7 @@ private extension MainViewModel {
         _ payload: MainSectionViewModelAction.FastPayment.ButtonTapped
     ) {
         switch payload.operationType {
-        case .byQr, .templates, .uin:
+        case .byQR, .templates, .uin:
             break // handled by root via rootEventPublisher
             
         case .byPhone:

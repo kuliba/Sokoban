@@ -690,6 +690,13 @@
         "identifier" : "GetOperationDetailServiceTests",
         "name" : "GetOperationDetailServiceTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ResourceProviderComponentTests",
+        "name" : "ResourceProviderComponentTests"
+      }
     }
   ],
   "version" : 1

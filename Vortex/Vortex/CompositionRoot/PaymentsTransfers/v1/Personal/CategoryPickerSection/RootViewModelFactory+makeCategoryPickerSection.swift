@@ -42,7 +42,7 @@ extension RootViewModelFactory {
         nanoServices: PaymentsTransfersPersonalNanoServices
     ) -> CategoryPickerSectionDomain.Binder {
         
-        let content = makeCategoryPickerContent(nanoServices)
+        let content = makeCategoryPickerContent(nanoServices: nanoServices)
         
         return composeBinder(
             content: content,
