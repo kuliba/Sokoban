@@ -21,17 +21,16 @@ final class LandingReducer<Landing> {
         switch event {
         case .dismissInformer:
             dismissInformer(&state)
+            
         case .load:
-            if !state.isLoading {
+            if state.isLoading {
                 
                 state.isLoading = true
                 effect = .load
             }
             
         case let .loadResult(result):
-            //TODO: extract to method
             state.isLoading = false
-            
             updateResult(result, &state)
         }
         

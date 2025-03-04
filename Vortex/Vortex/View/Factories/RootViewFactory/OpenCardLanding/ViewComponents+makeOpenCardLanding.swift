@@ -124,8 +124,11 @@ extension ViewComponents {
             }
         } else {
             
-            Color.gray
-                .frame(width: 100, height: 100, alignment: .center)
+            Rectangle()
+                .fill(.gray.opacity(0.6))
+                .frame(height: UIScreen.main.bounds.height)
+                .frame(maxWidth: .infinity)
+                .shimmering()
         }
     }
     
