@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "E300A8E5-FB55-47FC-AA12-EAC4A0B44B1E",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ResourceProviderComponentTests",
+        "name" : "ResourceProviderComponentTests"
+      }
+    }
+  ],
+  "version" : 1
+}

@@ -1,5 +1,5 @@
 //
-//  ProviderTests.swift
+//  ResourceProviderTests.swift
 //
 //
 //  Created by Igor Malyarov on 03.03.2025.
@@ -37,7 +37,7 @@ protocol Loader<Resource> {
     var publisher: AnyPublisher<(key: String, resource: Resource), Never> { get }
 }
 
-final class WIPProvider<Resource>: Provider {
+final class ResourceProvider<Resource>: Provider {
     
     let cache: any Cache<Resource>
     let fallback: any Fallback<Resource>
@@ -62,7 +62,7 @@ final class WIPProvider<Resource>: Provider {
     typealias Subject = CurrentValueSubject<Resource, Never>
 }
 
-extension WIPProvider {
+extension ResourceProvider {
     
     func value(forKey key: String) -> Subject {
         
@@ -87,14 +87,14 @@ extension WIPProvider {
             }
             
             return subject
-        }
+        } 
     }
 }
 
 import SwiftUI
 import XCTest
 
-final class ProviderTests: XCTestCase {
+final class ResourceProviderTests: XCTestCase {
     
     // MARK: - init
     
@@ -252,7 +252,7 @@ final class ProviderTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = WIPProvider<Resource>
+    private typealias SUT = ResourceProvider<Resource>
     private typealias Cache = CallSpy<String, Resource?>
     private typealias Fallback = CallSpy<String, Resource>
     
@@ -318,7 +318,7 @@ final class ProviderTests: XCTestCase {
 
 extension CallSpy: Cache
 where Payload == String,
-      Response == ProviderTests.Resource? {
+      Response == ResourceProviderTests.Resource? {
     
     func value(forKey key: String) -> Response {
         
@@ -328,7 +328,7 @@ where Payload == String,
 
 extension CallSpy: Fallback
 where Payload == String,
-      Response == ProviderTests.Resource {
+      Response == ResourceProviderTests.Resource {
     
     func value(forKey key: String) -> Response {
         

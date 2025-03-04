@@ -1242,6 +1242,7 @@
 		2A8CC2432B29B4C100191B8E /* RootViewFactoryComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8CC2422B29B4C100191B8E /* RootViewFactoryComposer.swift */; };
 		2A8CC2472B29F54E00191B8E /* SberQRConfirmPaymentViewModel+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8CC2462B29F54E00191B8E /* SberQRConfirmPaymentViewModel+ext.swift */; };
 		2A8CC2492B29FA5A00191B8E /* View+navigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8CC2482B29FA5A00191B8E /* View+navigationBar.swift */; };
+		2A8DAD2F2D763B9E00AC7018 /* ResourceProviderComponent in Frameworks */ = {isa = PBXBuildFile; productRef = 2A8DAD2E2D763B9E00AC7018 /* ResourceProviderComponent */; };
 		2A8DF0DE2CC8B33200FB76D4 /* PaymentsTransfersPersonalTransfersNavigationComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8DF0DD2CC8B33200FB76D4 /* PaymentsTransfersPersonalTransfersNavigationComposerTests.swift */; };
 		2A8DF0E02CC8CE4200FB76D4 /* PaymentsTransfersPersonalTransfersDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8DF0DF2CC8CE4200FB76D4 /* PaymentsTransfersPersonalTransfersDomain.swift */; };
 		2A8DF0E32CC8CF9200FB76D4 /* PaymentsTransfersPersonalTransfersNavigationComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8DF0E22CC8CF9200FB76D4 /* PaymentsTransfersPersonalTransfersNavigationComposer.swift */; };
@@ -5292,6 +5293,7 @@
 		2ABC988D2BDBAD7000EA7CFB /* UtilityServicePaymentEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityServicePaymentEffect.swift; sourceTree = "<group>"; };
 		2ABC988F2BDBAEB700EA7CFB /* PaymentEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentEvent.swift; sourceTree = "<group>"; };
 		2ABCD3E82AB78B09009D6DA4 /* SchedulerAuthLoginViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulerAuthLoginViewModelTests.swift; sourceTree = "<group>"; };
+		2ABD45322D763A2E009153CD /* ResourceProviderComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ResourceProviderComponent.xctestplan; sourceTree = "<group>"; };
 		2ABD782F2AF90CC1001B5860 /* AuthenticateWithPublicKeyService+Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthenticateWithPublicKeyService+Fetcher.swift"; sourceTree = "<group>"; };
 		2ABD78322AF91781001B5860 /* FormSessionKeyService+Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FormSessionKeyService+Fetcher.swift"; sourceTree = "<group>"; };
 		2ABD78342AF924A6001B5860 /* ChangePINService+Fetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChangePINService+Fetcher.swift"; sourceTree = "<group>"; };
@@ -7801,6 +7803,7 @@
 				0B7A18AB2681CED70007CC75 /* SwiftEntryKit in Frameworks */,
 				0B67728E277CCD7500DCCECD /* PhoneNumberKit-Static in Frameworks */,
 				ED39EC88268B308800158E46 /* SDWebImageSVGCoder in Frameworks */,
+				2A8DAD2F2D763B9E00AC7018 /* ResourceProviderComponent in Frameworks */,
 				684AD35A26B7D2520071C762 /* CryptoSwift in Frameworks */,
 				2AD7EBDF2B0CB292009FDCAB /* ButtonWithSheet in Frameworks */,
 				835D0DF72BEA667A00FFE90B /* ProductProfile in Frameworks */,
@@ -10737,6 +10740,7 @@
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
+				2ABD45322D763A2E009153CD /* ResourceProviderComponent.xctestplan */,
 				2A5AFD982D68CCB200BD15EC /* GetOperationDetailService.xctestplan */,
 				2AD073702D65A83700922062 /* StateMachines.xctestplan */,
 				2A50E6C72D5631E500C00949 /* GetCardOrderFormService.xctestplan */,
@@ -20266,6 +20270,7 @@
 				8372A8B12D688B1D00CD1CFB /* LoadableState */,
 				2A5AFD9D2D69080600BD15EC /* GetOperationDetailService */,
 				C127C51F2D6CA96C00683F85 /* HeaderLandingComponent */,
+				2A8DAD2E2D763B9E00AC7018 /* ResourceProviderComponent */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* Vortex.app */;
@@ -30352,6 +30357,10 @@
 		2A8142602A0B9237005CF83F /* SearchBarComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SearchBarComponent;
+		};
+		2A8DAD2E2D763B9E00AC7018 /* ResourceProviderComponent */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ResourceProviderComponent;
 		};
 		2A95CBB02B2C80C80041F5EC /* SberQR */ = {
 			isa = XCSwiftPackageProductDependency;
