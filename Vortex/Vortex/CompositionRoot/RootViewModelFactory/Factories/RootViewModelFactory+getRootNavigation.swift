@@ -371,6 +371,15 @@ extension OrderAccountResponse.Status {
             return .inflight
         case .rejected:
             return .rejected
+        case let .fraud(fraud):
+            switch fraud {
+            case .cancelled:
+                return .fraud(.cancelled)
+            case .expired:
+                return .fraud(.expired)
+            }
+        case .suspend:
+            return .suspend
         }
     }
 }

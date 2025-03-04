@@ -12,13 +12,16 @@ public struct ProductState<Confirmation> {
     
     public var loadableForm: Loadable<Form<Confirmation>>
     public var productSelect: ProductSelect
+    public var needGoToMain: Bool
 
     public init(
         loadableForm: Loadable<Form<Confirmation>>,
+        needGoToMain: Bool = false,
         productSelect: ProductSelect = .init(selected: nil)
     ) {
         self.loadableForm = loadableForm
         self.productSelect = productSelect
+        self.needGoToMain = needGoToMain
     }
 }
 

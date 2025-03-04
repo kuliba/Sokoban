@@ -6,6 +6,7 @@
 //
 
 import Combine
+import PayHub
 import PayHubUI
 
 extension RootViewModelFactory {
@@ -14,11 +15,14 @@ extension RootViewModelFactory {
     func makeCategoryPicker(
     ) -> CategoryPickerViewDomain.Binder {
         
-        let content = makeCategoryPickerContent(.init(
-            loadCategories: getServiceCategoriesWithoutQR,
-            reloadCategories: { $1(nil) },
-            loadAllLatest: { $0(nil) }
-        ))
+        let content = makeCategoryPickerContent(
+            nanoServices: .init(
+                loadCategories: getServiceCategoriesWithoutQR,
+                reloadCategories: { $1(nil) },
+                loadAllLatest: { $0(nil) }
+            ),
+            map: { $0.completed }
+        )
         
         return composeBinder(
             content: content,
@@ -121,6 +125,8 @@ extension RootViewModelFactory {
     }
 }
 
+// MARK: - Adapters
+
 private extension ServiceCategoryFailureDomain.FlowDomain.State {
     
     var outside: CategoryPickerViewDomain.Outside? {
@@ -150,6 +156,16 @@ private extension PaymentProviderPickerDomain.FlowDomain.State {
             case .qr:       return .qr
             }
         }
+    }
+}
+
+// MARK: - Helpers
+
+extension Array where Element == ServiceCategory {
+    
+    var completed: [Stateful<Element, LoadState>] {
+        
+        map { .init(entity: $0, state: .completed) }
     }
 }
 

@@ -25,6 +25,23 @@ extension ViewComponents {
                 ? "Накопительный счет открыт\nи пополнен на сумму"
                 : "Накопительный счет открыт")
         ) {
+            makeButtons(complete)
+        } details: {
+            EmptyView()
+        } footer: {
+            heroButton(title: "На главный") {
+                action()
+                goToMain()
+            }
+        }
+    }
+    
+    @ViewBuilder
+    func makeButtons(
+        _ complete: OpenSavingsAccountCompleteDomain.Complete
+    ) -> some View {
+        
+        if complete.context.status.status != .suspend {
             HStack {
                 RxWrapperView(model: complete.document) { state, _ in
                     
@@ -36,13 +53,8 @@ extension ViewComponents {
                     makeDetailsButton(state: state)
                 }
             }
-        } details: {
+        } else {
             EmptyView()
-        } footer: {
-            heroButton(title: "На главный") {
-                action()
-                goToMain()
-            }
         }
     }
     
@@ -149,6 +161,15 @@ extension OpenSavingsAccountCompleteDomain.Complete.Context.Status {
             return .inflight
         case .rejected:
             return .rejected
+        case let .fraud(fraud):
+            switch fraud {
+            case .cancelled:
+                return .fraud(.cancelled)
+            case .expired:
+                return .fraud(.expired)
+            }
+        case .suspend:
+            return .suspend
         }
     }
 }

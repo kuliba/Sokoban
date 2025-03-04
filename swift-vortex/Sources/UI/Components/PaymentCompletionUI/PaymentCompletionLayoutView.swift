@@ -296,6 +296,34 @@ private extension PaymentCompletionConfig {
                         textColor: .primary
                     )
                 )
+            ),
+            suspend: .init(
+                content: .init(
+                    logo: .init(systemName: "clock.badge.xmark"),
+                    title: "Suspend",
+                    subtitle: "Payment cancelled due to confirmation period expiration"
+                ),
+                config: .init(
+                    amount: .init(
+                        textFont: .headline.bold(),
+                        textColor: .secondary
+                    ),
+                    icon: .init(
+                        foregroundColor: .white,
+                        backgroundColor: .orange,
+                        innerSize: .init(width: 44, height: 44),
+                        outerSize: .init(width: 88, height: 88)
+                    ),
+                    logoHeight: 44,
+                    title: .init(
+                        textFont: .title3.bold(),
+                        textColor: .red
+                    ),
+                    subtitle: .init(
+                        textFont: .body,
+                        textColor: .primary
+                    )
+                )
             )
         )
     )
