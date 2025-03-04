@@ -106,10 +106,10 @@ extension RootViewModelFactory {
     ) -> (products: [ProductSelect.Product], selected: ProductSelect.Product?) {
         
         let products = model.c2gProductSelectProducts()
-        let fastProduct = fastAccountID.map { id in products.first { $0.id.rawValue == id }}
+        let fastProduct = fastAccountID.flatMap { id in products.first { $0.id.rawValue == id }}
         let selected = fastProduct ?? products.first
         
-        return (products, selected)
+        return (products, fastProduct ?? products.first)
     }
     
     // TODO: remove easter egg stub
