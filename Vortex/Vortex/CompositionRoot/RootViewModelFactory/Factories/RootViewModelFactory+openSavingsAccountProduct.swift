@@ -548,6 +548,8 @@ extension MakeOpenSavingsAccountResponse.DocumentStatus {
             return .inflight
         case .rejected:
             return .rejected
+        case .suspend:
+            return .suspend
         }
     }
 }
