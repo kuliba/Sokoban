@@ -349,7 +349,8 @@ private extension RootViewFactoryComposer {
             .init(
                 newImplementation: true,
                 isSelected: $0,
-                title: $1
+                title: $1, 
+                isSavingsAccount: $2
             )
         }
     }

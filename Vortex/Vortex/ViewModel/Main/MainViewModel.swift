@@ -499,6 +499,8 @@ private extension MainViewModel {
                         })
                     ))
                 }
+                
+                handleBanners(sections.productsSection?.productCarouselViewModel.promoProducts)
             }.store(in: &bindings)
         
         model.clientInfo
@@ -688,13 +690,26 @@ private extension MainViewModel {
             promo.append(.init(item: sticker, productType: .card, promoProduct: .sticker))
         }
         
-        if let accountBannerList = banners.accountBannerList {
+        if let accountBannerList = banners.accountBannerList, !model.hasSavingsAccount {
             promo.append(contentsOf: accountBannerList.map { .init(item: $0, productType: .account, promoProduct: .savingsAccount) })
         }
         
         let promoItems = makePromoViewModels(promoItems: promo) ?? []
         
         sections.productsSection?.productCarouselViewModel.updatePromo(promoItems)
+    }
+    
+    func handleBanners(
+        _ promoItems: [AdditionalProductViewModel]?
+    ) {
+        
+        if model.hasSavingsAccount {
+            var newPromo = promoItems
+            newPromo?.removeAll(where: { $0.promoType == .savingsAccount })
+            sections.productsSection?.productCarouselViewModel.updatePromo(newPromo)
+        } else {
+            bannersBox.requestUpdate()
+        }
     }
 
     func openProductByType(_ type: OpenProductType) {

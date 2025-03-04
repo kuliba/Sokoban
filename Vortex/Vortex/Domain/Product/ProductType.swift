@@ -21,7 +21,7 @@ extension ProductType {
         
         switch self {
         case .card: return "Карты"
-        case .account: return "Счета"
+        case .account: return .account
         case .deposit: return "Вклады"
         case .loan: return "Кредиты"
         }
@@ -36,4 +36,9 @@ extension ProductType {
         case .loan: return 3
         }
     }
+}
+
+extension String {
+    
+    static let account: Self = "Счета"
 }
