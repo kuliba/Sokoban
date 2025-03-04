@@ -11,7 +11,6 @@ struct FeatureFlags: Equatable {
     let creditCardMVPFlag: СreditCardMVPFlag
     let getProductListByTypeV6Flag: GetProductListByTypeV6Flag
     let paymentsTransfersFlag: PaymentsTransfersFlag
-    let savingsAccountFlag: SavingsAccountFlag
     let collateralLoanLandingFlag: CollateralLoanLandingFlag
     let splashScreenFlag: SplashScreenFlag
     let orderCardFlag: OrderCardFlag

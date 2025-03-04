@@ -10,11 +10,10 @@ import XCTest
 
 final class RootViewModelFactory_makeOpenNewProductButtonsTests: RootViewModelFactoryTests {
     
-    func test_savingsAccountFlagActive_shouldReturnButtonsWithSavingsAccountButton() {
+    func test_makeOpenNewProductButtons_shouldReturnButtonsWithSavingsAccountButton() {
         
         let sut = makeSUT(
-            collateralLoanFlag: .active,
-            savingsAccountFlag: .active
+            collateralLoanFlag: .active
         )
         
         XCTAssertNoDiff(sut.map(\.type), [
@@ -24,26 +23,12 @@ final class RootViewModelFactory_makeOpenNewProductButtonsTests: RootViewModelFa
         ])
     }
     
-    func test_savingsAccountFlagInActive_shouldReturnButtonsWithoutSavingsAccountButton() {
-        
-        let sut = makeSUT(
-            collateralLoanFlag: .active,
-            savingsAccountFlag: .inactive
-        )
-        
-        XCTAssertNoDiff(sut.map(\.type), [
-            .card(.landing), .deposit, .account, .sticker, .loan,
-            .insurance, .mortgage
-        ])
-    }
-    
     // MARK: - collateralLoanFlag
     
     func test_collateralLoanFlagActive_shouldReturnActionForLoan() {
         
         let sut = makeSUT(
-            collateralLoanFlag: .active,
-            savingsAccountFlag: .inactive
+            collateralLoanFlag: .active
         )
         
         assert(sut, openProductType: .loan, type: .action)
@@ -52,50 +37,36 @@ final class RootViewModelFactory_makeOpenNewProductButtonsTests: RootViewModelFa
     func test_collateralLoanFlagInActive_shouldReturnUrlActionForLoan() {
         
         let sut = makeSUT(
-            collateralLoanFlag: .inactive,
-            savingsAccountFlag: .inactive
+            collateralLoanFlag: .inactive
         )
         
         assert(sut, openProductType: .loan, type: .url)
     }
     
-    // MARK: - savingsAccountFlag
+    // MARK: - savingsAccount
     
-    func test_savingsAccountFlagFlagActive_shouldReturnActionForSavingsAccount() {
+    func test_openProduct_savingsAccount_shouldReturnActionForSavingsAccount() {
         
         let sut = makeSUT(
-            collateralLoanFlag: .active,
-            savingsAccountFlag: .active
+            collateralLoanFlag: .active
         )
         
         assert(sut, openProductType: .savingsAccount, type: .action)
     }
-    
-    func test_savingsAccountFlagFlagInActive_shouldReturnNilActionForSavingsAccount() {
         
-        let sut = makeSUT(
-            collateralLoanFlag: .active,
-            savingsAccountFlag: .inactive
-        )
-        
-        assert(sut, openProductType: .savingsAccount, type: nil)
-    }
-    
     // MARK: - Helpers
     
     typealias ViewModel = NewProductButton.ViewModel
     typealias TapAction = ViewModel.TapActionType
     
     private func makeSUT(
-        collateralLoanFlag: CollateralLoanLandingFlag,
-        savingsAccountFlag: SavingsAccountFlag
+        collateralLoanFlag: CollateralLoanLandingFlag
     ) -> [ViewModel] {
         
         let (sut, _, _) = makeSUT()
         
         return sut.makeOpenNewProductButtons(
             collateralLoanLandingFlag: collateralLoanFlag,
-            savingsAccountFlag: savingsAccountFlag,
             action: { _ in }
         )
     }

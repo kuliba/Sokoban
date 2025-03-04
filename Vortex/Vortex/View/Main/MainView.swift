@@ -39,33 +39,8 @@ struct MainView<NavigationOperationView: View>: View {
         
         ZStack(alignment: .top) {
             
-            ScrollView(showsIndicators: false) {
-                
-                VStack(spacing: 0) {
-                    
-                    ForEach(viewModel.sections, content: sectionView)
-                }
-                .padding(.vertical, 20)
-                .background(
-                    GeometryReader { geo in
-                        
-                        Color.clear
-                            .preference(
-                                key: ScrollOffsetKey.self,
-                                value: -geo.frame(in: .named("scroll")).origin.y
-                            )
-                    }
-                )
-                .onPreferenceChange(ScrollOffsetKey.self) { offset in
-                    
-                    if offset < -100 {
-                        
-                        viewModel.action.send(MainViewModelAction.PullToRefresh())
-                    }
-                }
-            }
-            .coordinateSpace(name: "scroll")
-            .zIndex(0)
+            mainView()
+                .zIndex(0)
             
             Color.clear
                 .sheet(
@@ -117,6 +92,25 @@ struct MainView<NavigationOperationView: View>: View {
                     ForEach(viewModel.navButtonsRight, content: NavBarButton.init)
                 }
         )
+    }
+    
+    private func mainView() -> some View {
+       
+        OffsetObservingScrollWithModelView(refresh: { viewModel.action.send(MainViewModelAction.PullToRefresh()) }) { offset in
+            
+            OffsetObservingScrollView(
+                axes: .vertical,
+                showsIndicators: false,
+                offset: offset,
+                coordinateSpaceName: "coordinateSpaceName"
+            ) {
+                VStack(spacing: 0) {
+                    
+                    ForEach(viewModel.sections, content: sectionView)
+                }
+                .padding(.vertical, 20)
+            }
+        }
     }
     
     @ViewBuilder
