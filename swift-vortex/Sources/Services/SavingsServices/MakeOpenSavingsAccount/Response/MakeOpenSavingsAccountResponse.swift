@@ -89,7 +89,7 @@ public struct MakeOpenSavingsAccountResponse: Equatable {
     
     public enum DocumentStatus: Equatable {
         
-        case complete, inProgress, rejected
+        case complete, inProgress, rejected, suspend
     }
 
     public enum AntiFraudScenario: Equatable {
