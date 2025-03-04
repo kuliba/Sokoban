@@ -622,7 +622,6 @@ extension ProductProfileViewModel  {
         makeServicePaymentBinder: ServicePaymentBinder.preview,
         makeOpenNewProductButtons: { _ in [] },
         operationDetailFactory: .preview,
-        makeOrderCardViewModel: { /*TODO:  implement preview*/ },
         makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() }
     )
 }

@@ -33,9 +33,15 @@ extension OpenSavingsAccountCompleteDomain {
             let formattedAmount: String?
             let status: Status
             
-            enum Status {
+            enum Status: Equatable {
                 
-                case completed, inflight, rejected
+                case completed, inflight, rejected, suspend
+                case fraud(Fraud)
+                
+                enum Fraud: Equatable {
+                    
+                    case cancelled, expired
+                }
             }
         }
     }
@@ -64,7 +70,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func openSavingsAccountProduct(
-        notify: @escaping (OpenSavingsAccountDomain.OrderAccountResponse) -> Void
+        notify: @escaping RootViewDomain.Notify
     ) -> OpenSavingsAccount {
         
         let products = model.productSelectProducts
@@ -78,7 +84,12 @@ extension RootViewModelFactory {
         
         let cancellable = content.$state
             .compactMap(\.form?.orderAccountResponse)
-            .sink { notify($0) }
+            .sink { notify(.select(.savingsAccount($0))) }
+        
+        let goToMainCancellable = content.$state
+            .map(\.needGoToMain)
+            .sink { if $0 { notify(.dismiss) } }
+
         
         let binder = composeBinder(
             content: content,
@@ -86,7 +97,7 @@ extension RootViewModelFactory {
             witnesses: witnesses()
         )
         
-        return .init(model: binder, cancellable: cancellable)
+        return .init(model: binder, cancellables: [cancellable, goToMainCancellable])
     }
     
     // MARK: - Content
@@ -537,6 +548,8 @@ extension MakeOpenSavingsAccountResponse.DocumentStatus {
             return .inflight
         case .rejected:
             return .rejected
+        case .suspend:
+            return .suspend
         }
     }
 }

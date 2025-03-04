@@ -2209,11 +2209,6 @@ extension ProductProfileViewModel {
             controlPanelViewModel.event(.bannerEvent(.openDeposit(openDepositViewModel)))
         }
     }
-
-    func orderCard() {
-        
-        productProfileViewModelFactory.makeOrderCardViewModel()
-    }
     
     func orderSticker() {
         
@@ -2376,10 +2371,6 @@ extension ProductProfileViewModel {
                 
             case .payment:
                 rootActions?.openUtilityPayment(ProductStatementData.Kind.housingAndCommunalService)
-            
-            case .cardOrder:
-                orderCard()
-                
             }
         case let .listVerticalRoundImageAction(action):
             switch action {

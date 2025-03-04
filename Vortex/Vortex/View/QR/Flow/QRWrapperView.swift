@@ -156,11 +156,10 @@ private extension QRWrapperView {
                     dismiss: { binder.flow.event(.dismiss) }
                 )
             
-        case let .searchByUIN(searchByUIN):
-            factory.components.makeSearchByUINView(
-                binder: searchByUIN,
-                dismiss: { binder.flow.event(.dismiss) },
-                scanQR: { binder.flow.event(.dismiss) }
+        case let .c2gPayment(c2gPayment):
+            factory.components.makeC2GPaymentView(
+                binder: c2gPayment,
+                dismiss: { binder.flow.event(.dismiss) }
             )
         }
     }
@@ -202,7 +201,7 @@ extension QRScannerDomain.Navigation {
     var alert: BackendFailure? {
         
         switch self {
-        case .sberQR(nil), .sberQRComplete(nil):
+        case .sberQR(nil), .sberQRComplete(nil), .c2gPayment(.failure):
             return .server("Возникла техническая ошибка")
             
         default:
@@ -240,8 +239,11 @@ extension QRScannerDomain.Navigation {
         case let .sberQR(.some(sberQRConfirm)):
             return .sberQR(sberQRConfirm)
             
-        case let .searchByUIN(searchByUIN):
-            return .searchByUIN(searchByUIN)
+        case .c2gPayment(.failure):
+            return nil
+            
+        case let .c2gPayment(.success(c2gPayment)):
+            return .c2gPayment(c2gPayment)
             
         case .sberQRComplete:
             return nil
@@ -252,7 +254,7 @@ extension QRScannerDomain.Navigation {
     var fullScreenCover: FullScreenCover? {
         
         switch self {
-        case .failure, .operatorSearch, .operatorView, .outside, .payments, .providerPicker, .providerServicePicker, .sberQR, .searchByUIN:
+        case .failure, .operatorSearch, .operatorView, .outside, .payments, .providerPicker, .providerServicePicker, .sberQR, .c2gPayment:
             return nil
             
         case .sberQRComplete(nil):
@@ -272,9 +274,9 @@ extension QRScannerDomain.Navigation {
         case providerPicker(SegmentedPaymentProviderPickerFlowModel)
         case providerServicePicker(AnywayServicePickerFlowModel)
         case sberQR(SberQRConfirmPaymentViewModel)
-        case searchByUIN(SearchByUIN)
+        case c2gPayment(SearchByUIN)
         
-        typealias SearchByUIN = SearchByUINDomain.Binder
+        typealias SearchByUIN = C2GPaymentDomain.Binder
     }
     
     enum FullScreenCover {
@@ -309,8 +311,8 @@ extension QRScannerDomain.Navigation.Destination: Identifiable {
         case let .sberQR(sberQRConfirm):
             return .sberQR(.init(sberQRConfirm))
             
-        case let .searchByUIN(searchByUIN):
-            return .searchByUIN(.init(searchByUIN))
+        case let .c2gPayment(c2gPayment):
+            return .c2gPayment(.init(c2gPayment))
         }
     }
     
@@ -323,7 +325,7 @@ extension QRScannerDomain.Navigation.Destination: Identifiable {
         case providerPicker(ObjectIdentifier)
         case providerServicePicker(ObjectIdentifier)
         case sberQR(ObjectIdentifier)
-        case searchByUIN(ObjectIdentifier)
+        case c2gPayment(ObjectIdentifier)
     }
 }
 

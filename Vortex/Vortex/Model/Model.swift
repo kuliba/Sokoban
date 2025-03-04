@@ -75,7 +75,7 @@ class Model {
     let prefferedBanksList: CurrentValueSubject<[String], Never>
     let currencyWalletList: CurrentValueSubject<[CurrencyWalletData], Never>
     let centralBankRates: CurrentValueSubject<[CentralBankRatesData], Never>
-    var images: CurrentValueSubject<[String: ImageData], Never>
+    let images: CurrentValueSubject<[String: ImageData], Never>
     
     // MARK: Client Inform Alerts and Notifications
     let clientAuthorizationState: CurrentValueSubject<ClientAuthorizationState, Never>

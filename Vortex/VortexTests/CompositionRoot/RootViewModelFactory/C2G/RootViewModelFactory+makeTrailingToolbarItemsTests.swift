@@ -10,69 +10,19 @@ import XCTest
 
 final class RootViewModelFactory_makeTrailingToolbarItemsTests: RootViewModelFactoryTests {
     
-    // MARK: - inactive
-    
-    func test_shouldDeliverOneButtonWithIcon_onInactiveFlag() {
+    func test_shouldDeliverOneButtonWithIcon() {
         
         let sut = makeSUT().sut
         
-        let makeTrailingToolbarItems = sut.makeTrailingToolbarItems(.inactive)
-        
-        XCTAssertEqual(makeTrailingToolbarItems({ _ in }).map(\.icon), [.ic24Bell])
+        XCTAssertEqual(sut.makeTrailingToolbarItems(action: { _ in }).map(\.icon), [.ic24Bell])
     }
     
-    func test_shouldDeliverOneButtonWithNotificationsAction_onInactiveFlag() {
+    func test_shouldDeliverOneButtonWithNotificationsAction() {
         
         let sut = makeSUT().sut
         let spy = ActionSpy(stubs: [()])
-        
-        let makeTrailingToolbarItems = sut.makeTrailingToolbarItems(.inactive)
-        let first = makeTrailingToolbarItems(spy.call).first
+        let first = sut.makeTrailingToolbarItems(action: spy.call).first
         first?.action()
-        
-        XCTAssertNoDiff(spy.payloads, [.notifications])
-    }
-    
-    // MARK: - active
-    
-    func test_shouldDeliverTwoButtonsWithIcon_onActiveFlag() {
-        
-        let sut = makeSUT().sut
-        
-        let makeTrailingToolbarItems = sut.makeTrailingToolbarItems(.active)
-        
-        XCTAssertEqual(makeTrailingToolbarItems({ _ in }).map(\.icon), [.ic24BarcodeScanner2, .ic24Bell])
-    }
-    
-    func test_shouldDeliverTwoButtonsFirstWithTitle_onActiveFlag() {
-        
-        let sut = makeSUT().sut
-        
-        let makeTrailingToolbarItems = sut.makeTrailingToolbarItems(.active)
-        
-        XCTAssertEqual(makeTrailingToolbarItems({ _ in }).map(\.title), ["Сканировать", ""])
-    }
-    
-    func test_shouldDeliverFirstButtonWithScanQRsAction_onActiveFlag() {
-        
-        let sut = makeSUT().sut
-        let spy = ActionSpy(stubs: [()])
-        
-        let makeTrailingToolbarItems = sut.makeTrailingToolbarItems(.active)
-        let first = makeTrailingToolbarItems(spy.call).first
-        first?.action()
-        
-        XCTAssertNoDiff(spy.payloads, [.scanQR])
-    }
-    
-    func test_shouldDeliverSecondButtonWithNotificationsAction_onActiveFlag() {
-        
-        let sut = makeSUT().sut
-        let spy = ActionSpy(stubs: [()])
-        
-        let makeTrailingToolbarItems = sut.makeTrailingToolbarItems(.active)
-        let last = makeTrailingToolbarItems(spy.call).last
-        last?.action()
         
         XCTAssertNoDiff(spy.payloads, [.notifications])
     }

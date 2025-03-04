@@ -25,6 +25,7 @@ extension RootViewModelFactory {
     @inlinable
     func getRootNavigation(
         c2gFlag: C2GFlag,
+        orderCardFlag: OrderCardFlag,
         makeProductProfileByID: MakeProductProfileByID,
         select: RootViewSelect,
         notify: @escaping RootViewDomain.Notify,
@@ -95,16 +96,18 @@ extension RootViewModelFactory {
             
             switch type {
             case let .card(kind):
-                
-                switch kind {
-                case .form:
-                    break
+                if orderCardFlag == .active {
                     
-                case .landing:
-                    completion(.openProduct(openProduct(
-                        type: type,
-                        notify: notify
-                    )))
+                    switch kind {
+                    case .form:
+                        break
+                        
+                    case .landing:
+                        completion(.openProduct(openProduct(
+                            type: type,
+                            notify: notify
+                        )))
+                    }
                 }
                 
             case .savingsAccount:
@@ -371,6 +374,15 @@ extension OrderAccountResponse.Status {
             return .inflight
         case .rejected:
             return .rejected
+        case let .fraud(fraud):
+            switch fraud {
+            case .cancelled:
+                return .fraud(.cancelled)
+            case .expired:
+                return .fraud(.expired)
+            }
+        case .suspend:
+            return .suspend
         }
     }
 }

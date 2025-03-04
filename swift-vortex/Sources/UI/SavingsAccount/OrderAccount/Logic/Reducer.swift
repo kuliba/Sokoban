@@ -100,12 +100,15 @@ public extension Reducer {
                 state.form?.amount = .init(title: form.amount.title, value: decimal, button: .init(title: form.amount.button.title, isEnabled: isValid))
                 
             case .pay:
-                let isValid = true // check balance!!! + validate
-
-                guard isValid else { break }
                 state.form?.topUp.isShowFooter = false
                 reduceContinue(&state, &effect)
             }
+            
+        case .goToMain:
+            state.needGoToMain = true
+            
+        case .cancel:
+            state.needGoToMain = false
         }
         
         return (state, effect)

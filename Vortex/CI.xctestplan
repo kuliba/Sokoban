@@ -702,6 +702,13 @@
         "identifier" : "GetOperationDetailServiceTests",
         "name" : "GetOperationDetailServiceTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "ResourceProviderComponentTests",
+        "name" : "ResourceProviderComponentTests"
+      }
     }
   ],
   "version" : 1
