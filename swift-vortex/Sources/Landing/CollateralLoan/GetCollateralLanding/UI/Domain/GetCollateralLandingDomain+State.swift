@@ -10,11 +10,11 @@ import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 
 extension GetCollateralLandingDomain {
     
-    public struct State {
+    public struct State<InformerPayload> {
         
         public let landingID: String
         public var bottomSheet: BottomSheet?
-        public var result: Result?
+        public var result: Result<InformerPayload>?
 
         var isLoading = false
         var payrollClient = false
@@ -89,7 +89,7 @@ extension GetCollateralLandingDomain.State {
         return annuity.formatted(.currency(code: "RUB"))
     }
     
-    var selectedBottomSheetItem: GetCollateralLandingDomain.State.BottomSheet.Item? {
+    var selectedBottomSheetItem: GetCollateralLandingDomain.State<InformerPayload>.BottomSheet.Item? {
         
         bottomSheetItems.first { $0.termMonth == selectedMonthPeriod }
     }
@@ -131,12 +131,12 @@ extension GetCollateralLandingDomain.State {
 
 extension GetCollateralLandingDomain.State.BottomSheet.Item {
     
-    static let preview = Self(
+    static var preview: Self { Self(
         id: "",
         termMonth: 12,
         icon: "",
         title: "1 год"
-    )
+    )}
 }
 
 extension GetCollateralLandingDomain.State {
@@ -155,10 +155,10 @@ extension GetCollateralLandingDomain.State {
         
         switch bottomSheet.sheetType {
         case .periods:
-            return product.calc.rates.map(\.bottomSheetItem)
+            return product.calc.rates.map { .init(rate: $0) }
 
         case .collaterals:
-            return product.calc.collaterals.map(\.bottomSheetItem)
+            return product.calc.collaterals.map { .init(collateral: $0) }
         }
     }
 }

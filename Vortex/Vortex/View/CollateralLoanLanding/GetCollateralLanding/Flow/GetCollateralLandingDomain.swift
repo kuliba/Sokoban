@@ -18,7 +18,8 @@ extension GetCollateralLandingDomain {
     
     // MARK: - Content
     
-    typealias Content = RxViewModel<State, Event, Effect>
+    typealias Content = RxViewModel<State<InformerPayload>, Event<InformerPayload>, Effect>
+    typealias ContentError = CollateralLoanLandingGetCollateralLandingUI.BackendFailure<InformerPayload>
     typealias Domain = GetCollateralLandingDomain
     typealias State = Domain.State
     typealias Event = Domain.Event
@@ -31,17 +32,27 @@ extension GetCollateralLandingDomain {
     
     typealias NotifyEvent = FlowDomain.NotifyEvent
     typealias Notify = (NotifyEvent) -> Void
+    typealias InformerPayload = InformerData
     
     enum Select: Equatable {
+        
         case createDraft(Payload)
         case showCaseList(ExternalEvent.CaseType)
+        case failure(Failure)
     }
     
     enum Navigation {
 
         case createDraft(DraftDomain.Binder)
         case showBottomSheet(ExternalEvent.CaseType)
+        case failure(Failure)
     }
-    
+
+    enum Failure: Equatable {
+        
+        case alert(String)
+        case informer(InformerData)
+    }
+
     typealias DraftDomain = CreateDraftCollateralLoanApplicationDomain
 }

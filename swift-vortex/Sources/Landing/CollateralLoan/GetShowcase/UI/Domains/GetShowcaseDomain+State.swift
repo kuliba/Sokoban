@@ -7,15 +7,15 @@
 
 extension GetShowcaseDomain {
     
-    public struct State: Equatable {
+    public struct State<InformerPayload> {
         
         public var isLoading = false
-        var result: Result?
+        public var result: Result<InformerPayload>?
         var selectedLandingId: String?
 
         public init(
             isLoading: Bool = false,
-            result: Result? = nil,
+            result: Result<InformerPayload>? = nil,
             selectedLandingId: String? = nil
         ) {
             self.isLoading = isLoading

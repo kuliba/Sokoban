@@ -204,25 +204,6 @@ extension RootViewModelFactory {
         }
     }
 
-    private func getConsents(
-        payload: CollateralLandingApplicationSaveConsentsPayload,
-        completion: @escaping (Domain.SaveConsentsResult<InformerData>) -> Void
-    ) {
-        let saveConsents = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createSaveConsentsRequest(with:),
-            mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:),
-            mapError: Domain.ContentError.init(error:)
-        )
-        
-        let save = schedulers.background.scheduled(saveConsents)
-
-        save(payload.payload) { [saveConsents] in
-
-            completion($0.map {$0.response(payload: payload)})
-            _ = saveConsents
-        }
-    }
-
     private func saveConsents(
         payload: CollateralLandingApplicationSaveConsentsPayload,
         completion: @escaping (Domain.SaveConsentsResult<InformerData>) -> Void
@@ -272,9 +253,17 @@ extension RootViewModelFactory {
             switch result {
             case let .success(success):
                 completion(.saveConsents(success))
-
             case let .failure(failure):
-                break
+                switch failure.navigationFailure {
+                case let .informer(informerPayload):
+                    completion(.failure(.informer(informerPayload)))
+
+                case let .alert(message):
+                    completion(.failure(.alert(message)))
+
+                case .complete:
+                    completion(.failure(.complete))
+                }
             }
         }
     }
@@ -363,11 +352,25 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
             if error.isNotConnectedToInternetOrTimeout() {
                 self = .init(kind: .informer(.init(message: "Проверьте подключение к сети", icon: .wifiOff)))
             } else {
-                self = .init(kind: .alert("Попробуйте позже."))
+                self = .init(kind: .alert("Что-то пошло не так. Попробуйте позже."))
             }
             
         default:
             self = .init(kind: .alert(error.localizedDescription))
+        }
+    }
+    
+    var navigationFailure: CreateDraftCollateralLoanApplicationDomain.Failure {
+        
+        switch self.kind {
+        case let .alert(message):
+            return .alert(message)
+            
+        case let .informer(informerPayload):
+            return .informer(informerPayload)
+            
+        case .complete:
+            return .complete
         }
     }
 }

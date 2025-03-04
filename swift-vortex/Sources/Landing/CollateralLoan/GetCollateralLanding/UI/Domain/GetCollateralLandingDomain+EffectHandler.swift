@@ -7,7 +7,7 @@
 
 extension GetCollateralLandingDomain {
     
-    public final class EffectHandler {
+    public final class EffectHandler<InformerPayload> {
         
         private let landingID: LandingID
         private let load: Load
@@ -29,8 +29,8 @@ extension GetCollateralLandingDomain {
         }
 
         public typealias LandingID = String
-        public typealias Dispatch = (Event) -> Void
+        public typealias Dispatch = (Event<InformerPayload>) -> Void
         public typealias Load = (LandingID, @escaping Completion) -> Void
-        public typealias Completion = (Result) -> Void
+        public typealias Completion = (Result<InformerPayload>) -> Void
     }
 }

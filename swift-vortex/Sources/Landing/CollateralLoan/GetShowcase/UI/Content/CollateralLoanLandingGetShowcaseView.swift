@@ -7,17 +7,17 @@
 
 import SwiftUI
 
-public struct CollateralLoanLandingGetShowcaseView: View {
+public struct CollateralLoanLandingGetShowcaseView<InformerPayload>: View {
         
     private let data: Data
-    private let event: (GetShowcaseViewEvent.External) -> Void
+    private let event: (GetShowcaseViewEvent<InformerPayload>.External) -> Void
     private let config: Config
     private let theme: Theme
     private let factory: Factory
     
     public init(
         data: Data,
-        event: @escaping (GetShowcaseViewEvent.External) -> Void,
+        event: @escaping (GetShowcaseViewEvent<InformerPayload>.External) -> Void,
         config: Config = .base,
         factory: Factory,
         theme: Theme = .white
@@ -49,9 +49,9 @@ public struct CollateralLoanLandingGetShowcaseView: View {
     }
 }
 
-public enum GetShowcaseViewEvent: Equatable {
+public enum GetShowcaseViewEvent<InformerPayload> {
     
-    case domainEvent(GetShowcaseDomain.Event)
+    case domainEvent(GetShowcaseDomain.Event<InformerPayload>)
     case external(External)
     
     public enum External: Equatable {

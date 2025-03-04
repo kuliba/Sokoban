@@ -134,6 +134,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 
             case .dismissFailure:
                 state.failure = nil
+                state.isLoading = false
             }
             
             return (state, effect)

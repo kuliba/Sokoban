@@ -8,7 +8,7 @@
 import SwiftUI
 import CollateralLoanLandingGetShowcaseUI
 
-public struct GetCollateralLandingBottomSheetView: View {
+public struct GetCollateralLandingBottomSheetView<InformerPayload>: View {
     
     @SwiftUI.State var selected: Item? = nil
 
@@ -207,22 +207,22 @@ public struct GetCollateralLandingBottomSheetView: View {
     }
 }
 
-extension GetCollateralLandingBottomSheetView {
+public extension GetCollateralLandingBottomSheetView {
     
-    public typealias Item = GetCollateralLandingDomain.State.BottomSheet.Item
-    public typealias Config = GetCollateralLandingConfig.BottomSheet
-    public typealias Factory = GetCollateralLandingFactory
-    public typealias Event = GetCollateralLandingDomain.Event
-    public typealias State = GetCollateralLandingDomain.State
+    typealias Item = State.BottomSheet.Item
+    typealias Config = GetCollateralLandingConfig.BottomSheet
+    typealias Factory = GetCollateralLandingFactory
+    typealias Event = GetCollateralLandingDomain.Event<InformerPayload>
+    typealias State = GetCollateralLandingDomain.State<InformerPayload>
 }
 
 // MARK: - Previews
 
-struct GetCollateralLandingBottomSheetView_Previews: PreviewProvider {
+struct GetCollateralLandingBottomSheetView_Previews<InformerPayload>: PreviewProvider {
     
     static var previews: some View {
         
-        GetCollateralLandingBottomSheetView(
+        GetCollateralLandingBottomSheetView<InformerPayload>(
             state: .init(
                 landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
                 bottomSheet: .init(sheetType: .periods),
@@ -235,7 +235,7 @@ struct GetCollateralLandingBottomSheetView_Previews: PreviewProvider {
         )
         .previewDisplayName("Product period selector")
         
-        GetCollateralLandingBottomSheetView(
+        GetCollateralLandingBottomSheetView<InformerPayload>(
             state: .init(
                 landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
                 bottomSheet: .init(sheetType: .periods),
@@ -250,5 +250,5 @@ struct GetCollateralLandingBottomSheetView_Previews: PreviewProvider {
     }
     
     typealias Factory = GetCollateralLandingFactory
-    typealias Item = GetCollateralLandingDomain.State.BottomSheet.Item
+    typealias Item = GetCollateralLandingDomain.State<InformerPayload>.BottomSheet.Item
 }

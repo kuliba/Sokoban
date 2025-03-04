@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import ToggleComponent
 
-struct GetCollateralLandingCalculatorView: View {
+struct GetCollateralLandingCalculatorView<InformerPayload>: View {
     
     @SwiftUI.State private var toggleIsOn = false
     @SwiftUI.State private var sliderCurrentValue: Double = .zero
@@ -362,18 +362,18 @@ extension GetCollateralLandingCalculatorView {
     typealias Config = GetCollateralLandingConfig
     typealias Theme = GetCollateralLandingTheme
     typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent
-    typealias DomainEvent = GetCollateralLandingDomain.Event
-    typealias State = GetCollateralLandingDomain.State
+    typealias DomainEvent = GetCollateralLandingDomain.Event<InformerPayload>
+    typealias State = GetCollateralLandingDomain.State<InformerPayload>
     typealias Product = GetCollateralLandingProduct
 }
 
 // MARK: - Previews
 
-struct CollateralLoanLandingGetCollateralLandingCalculatorView_Previews: PreviewProvider {
+struct CollateralLoanLandingGetCollateralLandingCalculatorView_Previews<InformerPayload>: PreviewProvider {
     
     static var previews: some View {
         
-        GetCollateralLandingCalculatorView(
+        GetCollateralLandingCalculatorView<InformerPayload>(
             state: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE", formatCurrency: { _ in "" }),
             product: .carStub,
             config: .preview,

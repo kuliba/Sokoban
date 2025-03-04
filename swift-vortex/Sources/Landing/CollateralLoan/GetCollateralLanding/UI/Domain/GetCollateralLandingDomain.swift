@@ -7,11 +7,6 @@
 
 public enum GetCollateralLandingDomain {
     
-    public struct LoadResultFailure: Equatable, Error {
-        
-        public init() {}
-    }
-    
     public typealias GetCollateralLanding = GetCollateralLandingProduct
-    public typealias Result = Swift.Result<GetCollateralLanding, LoadResultFailure>
+    public typealias Result<InformerPayload> = Swift.Result<GetCollateralLanding, BackendFailure<InformerPayload>>
 }

@@ -11,16 +11,26 @@ import RemoteServices
 import RxViewModel
 import Foundation
 import Combine
+import GenericRemoteService
 
 extension RootViewModelFactory {
     
     func makeCollateralLoanLandingShowcaseBinder() -> GetShowcaseDomain.Binder {
         
-        composeBinder(
-            content: makeContent(),
+        let content = makeContent()
+        
+        return composeBinder(
+            content: content,
             delayProvider: delayProvider,
             getNavigation: getNavigation,
-            witnesses: witnesses()
+            witnesses: .init(
+                emitting: { $0.$state
+                        .compactMap { $0.result?.failure }
+                        .map { .select(.failure($0.navigationFailure)) }
+                        .eraseToAnyPublisher()
+                },
+                dismissing: { _ in { content.event(.dismissFailure) } }
+            )
         )
     }
         
@@ -28,8 +38,8 @@ extension RootViewModelFactory {
     
     private func makeContent() -> GetShowcaseDomain.Content {
         
-        let reducer = GetShowcaseDomain.Reducer()
-        let effectHandler = GetShowcaseDomain.EffectHandler(load: loadCollateralLoanLanding)
+        let reducer = GetShowcaseDomain.Reducer<InformerPayload>()
+        let effectHandler = GetShowcaseDomain.EffectHandler<InformerPayload>(load: getShowcase)
         
         return .init(
             initialState: .init(),
@@ -39,21 +49,18 @@ extension RootViewModelFactory {
         )
     }
     
-    private func loadCollateralLoanLanding(
-        completion: @escaping(GetShowcaseDomain.Result) -> Void
+    private func getShowcase(
+        completion: @escaping(GetShowcaseDomain.Result<InformerPayload>) -> Void
     ) {
-        // TODO: Fix error case
-        //      return completion(.init(result: .failure(NSError(domain: "Showcase error", code: -1))))
-        //      return completion(.init(result: .success(.init(serial: "", products: []))))
-
         let load = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetShowcaseRequest,
-            mapResponse: RemoteServices.ResponseMapper.mapCreateGetShowcaseResponse(_:_:)
+            mapResponse: RemoteServices.ResponseMapper.mapCreateGetShowcaseResponse(_:_:),
+            mapError: GetShowcaseDomain.ContentError.init(error:)
         )
         
         load(nil) { [load] in
             
-            completion(.init(result: $0))
+            completion($0.map { .init(products: $0.products.map(\.product)) })
             _ = load
         }
     }
@@ -65,8 +72,8 @@ extension RootViewModelFactory {
     ) -> Delay {
         
         switch navigation {
-        case .landing:
-            return .milliseconds(100)
+        case .landing: return .milliseconds(100)
+        case .failure: return .milliseconds(100)
         }
     }
     
@@ -79,26 +86,16 @@ extension RootViewModelFactory {
         case let .landing(landingID):
             let collateralLoanLandingBinder = makeCollateralLoanLandingBinder(landingID: landingID)
             completion(.landing(landingID, collateralLoanLandingBinder))
-        }
-    }
-    
-    // Управление производится через Flow напрямую
-    private func witnesses() -> ContentWitnesses<
-        GetShowcaseDomain.Content,
-        FlowEvent<GetShowcaseDomain.Select, Never>
-    > {
-        .init(
-            emitting: { _ in Empty() },
-            dismissing: { _ in {} }
-        )
-    }
-}
 
-private extension GetShowcaseDomain.Result {
-    
-    init(result: Result<RemoteServices.ResponseMapper.GetShowcaseData, Error>) {
-        
-        self = result.map { .init(products: $0.products.map(\.product)) }.mapError { _ in .init() }
+        case let .failure(failure):
+            switch failure {
+            case let .informer(informerPayload):
+                completion(.failure(.informer(informerPayload)))
+
+            case let .alert(message):
+                completion(.failure(.alert(message)))
+            }
+        }
     }
 }
 
@@ -164,5 +161,37 @@ private extension RemoteServices.ResponseMapper.GetShowcaseData.Product.Features
     var list: CollateralLoanLandingGetShowcaseData.Product.Features.List {
         
         .init(bullet: bullet, text: text)
+    }
+}
+
+extension GetShowcaseDomain.ContentError {
+    
+    typealias RemoteError = RemoteServiceError<Error, Error, RemoteServices.ResponseMapper.MappingError>
+    
+    init(
+        error: RemoteError
+    ) {
+        switch error {
+        case let .performRequest(error):
+            if error.isNotConnectedToInternetOrTimeout() {
+                self = .init(kind: .informer(.init(message: "Проверьте подключение к сети", icon: .wifiOff)))
+            } else {
+                self = .init(kind: .alert("Что-то пошло не так. Попробуйте позже."))
+            }
+            
+        default:
+            self = .init(kind: .alert(error.localizedDescription))
+        }
+    }
+    
+    var navigationFailure: GetShowcaseDomain.Failure {
+        
+        switch self.kind {
+        case let .alert(message):
+            return .alert(message)
+            
+        case let .informer(informerPayload):
+            return .informer(informerPayload)
+        }
     }
 }

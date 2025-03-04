@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct GetCollateralLandingFooterView: View {
+struct GetCollateralLandingFooterView<InformerPayload>: View {
     
     let product: Product
     let config: Config.Footer
@@ -37,16 +37,16 @@ extension GetCollateralLandingFooterView {
     typealias Theme = GetCollateralLandingTheme
     typealias Product = GetCollateralLandingProduct
     typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent
-    typealias State = GetCollateralLandingDomain.State
+    typealias State = GetCollateralLandingDomain.State<InformerPayload>
 }
 
 // MARK: - Previews
 
-struct GetCollateralLandingFooterView_Previews: PreviewProvider {
+struct GetCollateralLandingFooterView_Previews<InformerPayload>: PreviewProvider {
     
     static var previews: some View {
         
-        GetCollateralLandingFooterView(
+        GetCollateralLandingFooterView<InformerPayload>(
             product: .carStub,
             config: .preview,
             state: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE", formatCurrency: { _ in "" }),

@@ -2,7 +2,7 @@
 //  BackendFailure.swift
 //
 //
-//  Created by Valentin Ozerov on 13.02.2025.
+//  Created by Valentin Ozerov on 03.03.2025.
 //
 
 import Foundation

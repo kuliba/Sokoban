@@ -9,7 +9,7 @@ import Combine
 import SwiftUI
 import CollateralLoanLandingGetShowcaseUI
 
-public struct GetCollateralLandingView: View {
+public struct GetCollateralLandingView<InformerPayload>: View {
     
     let state: State
     let domainEvent: (DomainEvent) -> Void
@@ -140,18 +140,18 @@ extension GetCollateralLandingView {
     
     public typealias Config = GetCollateralLandingConfig
     public typealias Factory = GetCollateralLandingFactory
-    public typealias State = GetCollateralLandingDomain.State
+    public typealias State = GetCollateralLandingDomain.State<InformerPayload>
     public typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent
-    public typealias DomainEvent = GetCollateralLandingDomain.Event
+    public typealias DomainEvent = GetCollateralLandingDomain.Event<InformerPayload>
 }
 
 // MARK: - Previews
 
-struct GetCollateralLandingView_Previews: PreviewProvider {
+struct GetCollateralLandingView_Previews<InformerPayload>: PreviewProvider {
     
     static var previews: some View {
         
-        GetCollateralLandingView(
+        GetCollateralLandingView<InformerPayload>(
             state: .init(
                 landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
                 formatCurrency: { _ in "" }
@@ -200,8 +200,8 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
         .previewDisplayName("Product collateral selector")
     }
 
-    static let carStub = GetCollateralLandingProduct.carStub
+    static var carStub: GetCollateralLandingProduct { .carStub }
 
-    typealias State = GetCollateralLandingDomain.State
+    typealias State = GetCollateralLandingDomain.State<InformerPayload>
     typealias Factory = GetCollateralLandingFactory
 }

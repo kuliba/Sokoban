@@ -7,21 +7,22 @@
 
 extension GetCollateralLandingDomain {
     
-    public enum ViewEvent: Equatable {
+    public enum ViewEvent<InformerPayload> {
         
-        case domainEvent(Event)
+        case domainEvent(Event<InformerPayload>)
         case externalEvent(ExternalEvent)
     }
 
-    public enum Event: Equatable {
+    public enum Event<InformerPayload> {
         
         case changeDesiredAmount(UInt)
         case load(String)
-        case loaded(Result)
+        case loaded(Result<InformerPayload>)
         case selectCaseList(String, String)
         case selectCollateral(String)
         case selectMonthPeriod(UInt)
         case togglePayrollClient(Bool)
+        case dismissFailure
     }
         
     public enum ExternalEvent: Equatable {

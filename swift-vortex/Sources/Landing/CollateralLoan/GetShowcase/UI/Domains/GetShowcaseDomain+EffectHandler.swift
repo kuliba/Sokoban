@@ -7,7 +7,7 @@
 
 extension GetShowcaseDomain {
     
-    public final class EffectHandler {
+    public final class EffectHandler<InformerPayload> {
         
         let load: Load
         
@@ -25,8 +25,8 @@ extension GetShowcaseDomain {
             }
         }
 
-        public typealias Dispatch = (Event) -> Void
+        public typealias Dispatch = (Event<InformerPayload>) -> Void
         public typealias Load = (@escaping Completion) -> Void
-        public typealias Completion = (Result) -> Void
+        public typealias Completion = (Result<InformerPayload>) -> Void
     }
 }

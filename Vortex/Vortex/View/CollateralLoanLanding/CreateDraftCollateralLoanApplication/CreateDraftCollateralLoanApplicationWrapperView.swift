@@ -44,10 +44,16 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     
     private func content() -> some View {
 
-        RxWrapperView(
-            model: binder.content,
-            makeContentView: makeContentView(state:event:)
-        )
+        ZStack(alignment: .top) {
+            
+            binder.flow.state.navigation?.informer.map(informerView)
+                .zIndex(1)
+            
+            RxWrapperView(
+                model: binder.content,
+                makeContentView: makeContentView(state:event:)
+            )
+        }
     }
     
     @ViewBuilder
@@ -143,9 +149,9 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
                  detailsButton: makeDetailButton(payload: saveConsentsResult)
              )
              
-         case .failure:
+         case .failureComplete:
              PaymentCompleteView(
-                state: makePaymentCompleteState(from: cover),
+                state: .rejected,
                  goToMain: goToMain,
                  repeat: {},
                  factory: makePaymentCompleteViewFactory(),
@@ -153,40 +159,6 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
              )
          }    }
     
-    private func makePaymentCompleteState(
-        from cover: CreateDraftCollateralLoanApplicationDomain.Navigation.Cover
-    ) -> PaymentCompleteState {
-        
-        switch cover {
-        case let .success(sucess):
-            return .init(
-                formattedAmount: factory.formatCurrency(sucess.amount) ?? "",
-                merchantIcon: nil,
-                result: .success(makeReport(from: sucess))
-            )
-            
-        case .failure:
-            return .init(
-                formattedAmount: "",
-                merchantIcon: nil,
-                result: .failure(.init(hasExpired: false))
-            )
-        }
-    }
-
-    private func makeReport(
-        from saveConsentsResult: CollateralLandingApplicationSaveConsentsResult
-    ) -> PaymentCompleteState.Report {
-        
-        .init(
-            detailID: 123,
-            details: operationDetails(from: saveConsentsResult),
-            operationDetail: nil,
-            printFormType: "",
-            status: .completed
-        )
-    }
-
     private func makePDFDocumentButton(
         payload: RemoteServices.RequestFactory.GetConsentsPayload,
         getPDFDocument: @escaping PDFDocumentButton.GetPDFDocument
@@ -226,18 +198,15 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         .init(getDocument: { _ in })
     }
     
-    // TODO: realize map
-    private func operationDetails(
-        from saveConsentsResult: CollateralLandingApplicationSaveConsentsResult
-    ) -> TransactionDetailButton.Details {
-
+    private func informerView(
+        _ informerData: InformerData
+    ) -> InformerView {
+        
         .init(
-            logo: nil,
-            cells: [
-                .init(title: "Деталь 1"),
-                .init(title: "Деталь 2"),
-                .init(title: "Деталь 3")
-            ]
+            viewModel: .init(
+                message: informerData.message,
+                icon: informerData.icon.image,
+                color: informerData.color)
         )
     }
 }
@@ -265,11 +234,11 @@ extension CreateDraftCollateralLoanApplicationDomain.Navigation {
         switch self {
         case let .failure(kind):
             switch kind {
-            case let .timeout(informerPayload):
-                return .failure(informerPayload.message)
-
-            case let .error(message):
+            case let .alert(message):
                 return .failure(message)
+                
+            default:
+                return nil
             }
         case .saveConsents:
             return nil
@@ -284,17 +253,30 @@ extension CreateDraftCollateralLoanApplicationDomain.Navigation {
     var cover: Cover? {
         
         switch self {
-        case .failure:
-            return .failure
+        case let .failure(kind):
+            switch kind {
+            case .complete:
+                return .failureComplete
+            default:
+                return nil
+            }
             
         case let .saveConsents(result):
             return .success(result)
         }
     }
     
+    var informer: CreateDraftCollateralLoanApplicationDomain.InformerPayload? {
+        
+        guard case let .failure(.informer(informer)) = self
+        else { return nil }
+        
+        return informer
+    }
+
     enum Cover {
         case success(CollateralLandingApplicationSaveConsentsResult)
-        case failure
+        case failureComplete
     }
 }
 
@@ -303,8 +285,8 @@ extension CreateDraftCollateralLoanApplicationDomain.Navigation.Cover: Identifia
     var id: String {
         
         switch self {
-        case .failure:
-            return "failure"
+        case .failureComplete:
+            return "failureComplete"
         case .success:
             return "success"
         }

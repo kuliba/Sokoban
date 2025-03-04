@@ -28,6 +28,10 @@ struct CollateralLoanLandingWrapperView: View {
         RxWrapperView(model: binder.flow) { state, event in
             
             content()
+                .alert(
+                    item: state.navigation?.alert,
+                    content: makeAlert
+                )
                 .navigationDestination(
                     destination: state.navigation?.destination,
                     content: { destinationView(destination: $0) { event(.dismiss) }}
@@ -42,15 +46,21 @@ struct CollateralLoanLandingWrapperView: View {
     
     private func content() -> some View {
         
-        RxWrapperView(
-            model: binder.content,
-            makeContentView: makeContentView(state:event:)
-        )
+        ZStack(alignment: .top) {
+            
+            binder.flow.state.navigation?.informer.map(informerView)
+                .zIndex(1)
+            
+            RxWrapperView(
+                model: binder.content,
+                makeContentView: makeContentView(state:event:)
+            )
+        }
     }
     
     private func makeContentView(
-        state: GetCollateralLandingDomain.State,
-        event: @escaping (GetCollateralLandingDomain.Event) -> Void
+        state: State,
+        event: @escaping (Event) -> Void
     ) -> some View {
         
         Group {
@@ -69,8 +79,8 @@ struct CollateralLoanLandingWrapperView: View {
     
     private func getCollateralLandingView(
         _ product: GetCollateralLandingProduct,
-        _ state: GetCollateralLandingDomain.State,
-        _ event: @escaping (GetCollateralLandingDomain.Event) -> Void,
+        _ state: State,
+        _ event: @escaping (Event) -> Void,
         _ config: GetCollateralLandingConfig
     ) -> some View {
         
@@ -175,7 +185,19 @@ struct CollateralLoanLandingWrapperView: View {
         )
     }
 
-    private func handlePeriodsDomainEvent(_ event: GetCollateralLandingDomain.Event) {
+    private func informerView(
+        _ informerData: InformerData
+    ) -> InformerView {
+        
+        .init(
+            viewModel: .init(
+                message: informerData.message,
+                icon: informerData.icon.image,
+                color: informerData.color)
+        )
+    }
+
+    private func handlePeriodsDomainEvent(_ event: Event) {
         
         binder.content.event(event)
         // Делаем задержку закрытия, чтобы пользователь увидел на шторке выбранный айтем
@@ -184,35 +206,69 @@ struct CollateralLoanLandingWrapperView: View {
         }
     }
     
-    private func handleCollateralsDomainEvent(_ event: GetCollateralLandingDomain.Event) {
+    private func handleCollateralsDomainEvent(_ event: Event) {
         
         binder.content.event(event)
         binder.flow.event(.dismiss)
     }
+    
+    private func makeAlert(
+        alert: GetCollateralLandingDomain.Navigation.Alert
+    ) -> SwiftUI.Alert {
+        
+        switch alert {
+            
+        case let .failure(failure):
+            return .init(
+                title: Text("Ошибка"),
+                message: Text(failure),
+                dismissButton: .default(Text("ОK")) { goToMain() }
+            )
+        }
+    }
 }
  
-extension CollateralLoanLandingWrapperView {
-    
-    typealias Factory = CollateralLoanLandingFactory
-    typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    typealias SaveConsentsResult = Domain.SaveConsentsResult
-    typealias Config = GetCollateralLandingConfig
-    typealias Payload = CollateralLandingApplicationSaveConsentsResult
-    typealias MakeOperationDetailInfoViewModel = (Payload) -> OperationDetailInfoViewModel
-
-    public typealias makeImageViewWithMD5Hash = (String) -> UIPrimitives.AsyncImage
-    public typealias makeImageViewWithURL = (String) -> UIPrimitives.AsyncImage
-}
+// MARK: UI mapping
 
 extension GetCollateralLandingDomain.Navigation {
     
+    var alert: Alert? {
+        
+        switch self {
+        case let .failure(kind):
+            switch kind {
+            case let .alert(message):
+                return .failure(message)
+                
+            default:
+                return nil
+            }
+            
+        default:
+            return nil
+        }
+    }
+
+    enum Alert {
+        
+        case failure(String)
+    }
+
+    var informer: GetCollateralLandingDomain.InformerPayload? {
+        
+        guard case let .failure(.informer(informer)) = self
+        else { return nil }
+        
+        return informer
+    }
+
     var destination: Destination? {
         
         switch self {
         case let .createDraft(binder):
             return .createDraft(binder)
             
-        case .showBottomSheet:
+        case .showBottomSheet, .failure:
             return nil
         }
     }
@@ -225,7 +281,7 @@ extension GetCollateralLandingDomain.Navigation {
     var bottomSheet: BottomSheet? {
         
             switch self {
-            case .createDraft:
+            case .createDraft, .failure:
                 return nil
                 
             case let .showBottomSheet(id):
@@ -264,6 +320,17 @@ extension GetCollateralLandingDomain.Navigation.BottomSheet: Identifiable, Botto
             case .collaterals:
                 return "collaterals"
             }
+        }
+    }
+}
+
+extension GetCollateralLandingDomain.Navigation.Alert: Identifiable {
+    
+    var id: String {
+        
+        switch self {
+        case let .failure(message):
+            return message
         }
     }
 }
@@ -553,4 +620,20 @@ private extension Color {
     static let divider: Self = .init(red: 0.6, green: 0.6, blue: 0.6)
     static let bottomPanelBackground: Self = .init(red: 0.16, green: 0.16, blue: 0.16)
     static let faqDivider: Self = .init(red: 0.83, green: 0.83, blue: 0.83)
+}
+
+extension CollateralLoanLandingWrapperView {
+    
+    typealias Factory = CollateralLoanLandingFactory
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias SaveConsentsResult = Domain.SaveConsentsResult
+    typealias Config = GetCollateralLandingConfig
+    typealias Payload = CollateralLandingApplicationSaveConsentsResult
+    typealias MakeOperationDetailInfoViewModel = (Payload) -> OperationDetailInfoViewModel
+    typealias Event = GetCollateralLandingDomain.Event<InformerData>
+    typealias State = GetCollateralLandingDomain.State<InformerData>
+    typealias Informer = GetCollateralLandingDomain.InformerPayload
+
+    public typealias makeImageViewWithMD5Hash = (String) -> UIPrimitives.AsyncImage
+    public typealias makeImageViewWithURL = (String) -> UIPrimitives.AsyncImage
 }

@@ -18,8 +18,13 @@ extension GetShowcaseDomain {
     
     // MARK: - Content
     
-    typealias Content = RxViewModel<GetShowcaseDomain.State, GetShowcaseDomain.Event, GetShowcaseDomain.Effect>
-    
+    typealias Content = RxViewModel<
+        GetShowcaseDomain.State<InformerPayload>,
+        GetShowcaseDomain.Event<InformerPayload>,
+        GetShowcaseDomain.Effect
+    >
+    typealias ContentError = CollateralLoanLandingGetShowcaseUI.BackendFailure<InformerPayload>
+
     // MARK: - Flow
     
     typealias FlowDomain = Vortex.FlowDomain<Select, Navigation>
@@ -27,14 +32,23 @@ extension GetShowcaseDomain {
     
     typealias NotifyEvent = FlowDomain.NotifyEvent
     typealias Notify = (NotifyEvent) -> Void
+    typealias InformerPayload = InformerData
 
     enum Select: Equatable {
 
         case landing(String)
+        case failure(Failure)
     }
     
     enum Navigation {
 
         case landing(String, GetCollateralLandingDomain.Binder)
+        case failure(Failure)
+    }
+    
+    enum Failure: Equatable {
+        
+        case alert(String)
+        case informer(InformerData)
     }
 }

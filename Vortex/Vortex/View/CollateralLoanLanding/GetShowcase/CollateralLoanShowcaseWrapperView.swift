@@ -29,8 +29,12 @@ struct CollateralLoanShowcaseWrapperView: View {
         RxWrapperView(model: binder.flow) { state, event in
             
             content()
+                .alert(
+                    item: state.navigation?.alert,
+                    content: makeAlert
+                )
                 .navigationDestination(
-                    destination: state.navigation,
+                    destination: state.navigation?.destination,
                     content: destinationView
                 )
         }
@@ -38,20 +42,26 @@ struct CollateralLoanShowcaseWrapperView: View {
     
     private func content() -> some View {
         
-        RxWrapperView(model: binder.content) { state, event in
+        ZStack(alignment: .top) {
             
-            Group {
+            binder.flow.state.navigation?.informer.map(informerView)
+                .zIndex(1)
+            
+            RxWrapperView(model: binder.content) { state, event in
                 
-                switch state.showcase {
-                case .none:
-                    Color.clear
-                        .loader(isLoading: state.showcase == nil, color: .clear)
+                Group {
                     
-                case let .some(showcase):
-                    getShowcaseView(showcase)
+                    switch state.showcase {
+                    case .none:
+                        Color.clear
+                            .loader(isLoading: state.showcase == nil, color: .clear)
+                        
+                    case let .some(showcase):
+                        getShowcaseView(showcase)
+                    }
                 }
+                .onFirstAppear { event(.load) }
             }
-            .onFirstAppear { event(.load) }
         }
     }
         
@@ -64,7 +74,7 @@ struct CollateralLoanShowcaseWrapperView: View {
         )
     }
     
-    private func handleExternalEvent(_ event: GetShowcaseViewEvent.External) {
+    private func handleExternalEvent(_ event: GetShowcaseViewEvent<InformerData>.External) {
 
         switch event {
         case let .showLanding(landingId):
@@ -79,10 +89,10 @@ struct CollateralLoanShowcaseWrapperView: View {
     
     @ViewBuilder
     private func destinationView(
-        navigation: GetShowcaseDomain.Navigation
+        destination: GetShowcaseDomain.Navigation.Destination
     ) -> some View {
         
-        switch navigation {
+        switch destination {
         case let .landing(_, landing):
             CollateralLoanLandingWrapperView(
                 binder: landing,
@@ -95,20 +105,112 @@ struct CollateralLoanShowcaseWrapperView: View {
         }
     }
     
-    typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    typealias Config = GetCollateralLandingConfig
-    typealias SaveConsentsResult = Domain.SaveConsentsResult
-    typealias Factory = CollateralLoanLandingFactory
-    typealias Payload = CollateralLandingApplicationSaveConsentsResult
-    typealias MakeOperationDetailInfoViewModel = (Payload) -> OperationDetailInfoViewModel
+    private func makeAlert(
+        alert: GetShowcaseDomain.Navigation.Alert
+    ) -> SwiftUI.Alert {
+        
+        switch alert {
+            
+        case let .failure(failure):
+            return .init(
+                title: Text("Ошибка"),
+                message: Text(failure),
+                dismissButton: .default(Text("ОK")) { goToMain() }
+            )
+        }
+    }
+    
+    private func informerView(
+        _ informerData: InformerData
+    ) -> InformerView {
+        
+        .init(
+            viewModel: .init(
+                message: informerData.message,
+                icon: informerData.icon.image,
+                color: informerData.color)
+        )
+    }
+}
+
+extension GetShowcaseDomain.Navigation {
+    
+    var alert: Alert? {
+        
+        switch self {
+        case let .failure(kind):
+            switch kind {
+            case let .alert(message):
+                return .failure(message)
+                
+            default:
+                return nil
+            }
+            
+        case .landing:
+            return nil
+        }
+    }
+
+    var destination: Destination? {
+        
+        switch self {
+        case .landing(let landingID, let binder):
+            return .landing(landingID, binder)
+
+        case .failure:
+            return nil
+        }
+    }
+    
+    var informer: GetShowcaseDomain.InformerPayload? {
+        
+        guard case let .failure(.informer(informer)) = self
+        else { return nil }
+        
+        return informer
+    }
+
+    enum Alert {
+        
+        case failure(String)
+    }
+    
+    enum Destination {
+        
+        case landing(String, GetCollateralLandingDomain.Binder)
+    }
 }
 
 extension GetShowcaseDomain.Navigation: Identifiable {
 
+    var id: String {
+        
+        switch self {
+        case .landing: return "landing"
+        case .failure: return "failure"
+        }
+    }
+}
+
+extension GetShowcaseDomain.Navigation.Destination: Identifiable {
+    
     var id: ObjectIdentifier {
         
         switch self {
+            
         case let .landing(_, binder): return .init(binder)
+        }
+    }
+}
+
+extension GetShowcaseDomain.Navigation.Alert: Identifiable {
+    
+    var id: String {
+        
+        switch self {
+        case let .failure(message):
+            return message
         }
     }
 }
@@ -122,7 +224,11 @@ extension GetShowcaseDomain.Binder {
     )
 }
 
-extension RxViewModel<GetShowcaseDomain.State, GetShowcaseDomain.Event, GetShowcaseDomain.Effect> {
+extension RxViewModel<
+    GetShowcaseDomain.State<InformerData>,
+    GetShowcaseDomain.Event<InformerData>,
+    GetShowcaseDomain.Effect
+> {
     
     static let preview = RxViewModel(
         initialState: .init(),
@@ -163,4 +269,14 @@ extension UIPrimitives.AsyncImage {
 extension Image {
     
     static var iconPlaceholder: Image { Image(systemName: "info.circle") }
+}
+
+extension CollateralLoanShowcaseWrapperView {
+ 
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias Config = GetCollateralLandingConfig
+    typealias SaveConsentsResult = Domain.SaveConsentsResult
+    typealias Factory = CollateralLoanLandingFactory
+    typealias Payload = CollateralLandingApplicationSaveConsentsResult
+    typealias MakeOperationDetailInfoViewModel = (Payload) -> OperationDetailInfoViewModel
 }

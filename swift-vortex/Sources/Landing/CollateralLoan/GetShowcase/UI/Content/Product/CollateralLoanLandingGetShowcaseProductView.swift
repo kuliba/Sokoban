@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-public struct CollateralLoanLandingGetShowcaseProductView: View {
+public struct CollateralLoanLandingGetShowcaseProductView<InformerPayload>: View {
     
     let product: Product
-    let event: (GetShowcaseViewEvent.External) -> Void
+    let event: (GetShowcaseViewEvent<InformerPayload>.External) -> Void
     let config: Config
     let factory: Factory
     

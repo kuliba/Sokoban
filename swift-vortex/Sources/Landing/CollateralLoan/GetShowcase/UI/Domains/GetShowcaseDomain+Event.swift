@@ -9,9 +9,10 @@ import Foundation
 
 extension GetShowcaseDomain {
     
-    public enum Event: Equatable {
+    public enum Event<InformerPayload> {
         
         case load
-        case loaded(Result)
+        case loaded(Result<InformerPayload>)
+        case dismissFailure
     }
 }

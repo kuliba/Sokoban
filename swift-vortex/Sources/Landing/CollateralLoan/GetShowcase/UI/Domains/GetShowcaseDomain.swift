@@ -7,11 +7,6 @@
 
 public enum GetShowcaseDomain {
 
-    public struct LoadResultFailure: Equatable, Error {
-        
-        public init() {}
-    }
-    
     public typealias ShowCase = CollateralLoanLandingGetShowcaseData
-    public typealias Result = Swift.Result<ShowCase, LoadResultFailure>
+    public typealias Result<InformerPayload> = Swift.Result<ShowCase, BackendFailure<InformerPayload>>
 }

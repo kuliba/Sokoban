@@ -5,10 +5,12 @@
 //  Created by Valentin Ozerov on 13.01.2025.
 //
 
+import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 import CollateralLoanLandingGetCollateralLandingUI
-import RemoteServices
-import Foundation
 import Combine
+import Foundation
+import GenericRemoteService
+import RemoteServices
 
 extension RootViewModelFactory {
     
@@ -20,7 +22,14 @@ extension RootViewModelFactory {
             content: content,
             delayProvider: delayProvider,
             getNavigation: getNavigation,
-            witnesses: .empty
+            witnesses: .init(
+                emitting: { $0.$state
+                        .compactMap { $0.result?.failure }
+                        .map { .select(.failure($0.navigationFailure)) }
+                        .eraseToAnyPublisher()
+                },
+                dismissing: { _ in { content.event(.dismissFailure) } }
+            )
         )
     }
 
@@ -28,10 +37,10 @@ extension RootViewModelFactory {
     
     private func makeContent(landingID: String) -> GetCollateralLandingDomain.Content {
         
-        let reducer = GetCollateralLandingDomain.Reducer()
-        let effectHandler = GetCollateralLandingDomain.EffectHandler(
+        let reducer = GetCollateralLandingDomain.Reducer<InformerPayload>()
+        let effectHandler = GetCollateralLandingDomain.EffectHandler<InformerPayload>(
             landingID: landingID,
-            load: loadCollateralLoanLanding
+            load: getCollateralLoanLanding
         )
                     
         return .init(
@@ -42,18 +51,19 @@ extension RootViewModelFactory {
         )
     }
     
-    private func loadCollateralLoanLanding(
+    private func getCollateralLoanLanding(
         landingId: String,
-        completion: @escaping(GetCollateralLandingDomain.Result) -> Void
+        completion: @escaping(GetCollateralLandingDomain.Result<InformerPayload>) -> Void
     ) {
         let load = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetCollateralLandingRequest,
-            mapResponse: RemoteServices.ResponseMapper.mapCreateGetCollateralLandingResponse(_:_:)
+            mapResponse: RemoteServices.ResponseMapper.mapCreateGetCollateralLandingResponse(_:_:),
+            mapError: GetCollateralLandingDomain.ContentError.init(error:)
         )
             
         load((nil, landingId)) { [load] in
             
-            completion(.init(result: $0))
+            completion($0.map { $0.product })
             _ = load
         }
     }
@@ -72,6 +82,15 @@ extension RootViewModelFactory {
 
         case let .showCaseList(id):
             completion(.showBottomSheet(id))
+            
+        case let .failure(failure):
+            switch failure {
+            case let .informer(informerPayload):
+                completion(.failure(.informer(informerPayload)))
+
+            case let .alert(message):
+                completion(.failure(.alert(message)))
+            }
         }
     }
 
@@ -80,19 +99,10 @@ extension RootViewModelFactory {
     ) -> Delay {
         
         switch navigation {
-        case .createDraft:
-            return .milliseconds(100)
-        case .showBottomSheet:
-            return .milliseconds(100)
+        case .createDraft:     return .milliseconds(100)
+        case .failure:         return .milliseconds(100)
+        case .showBottomSheet: return .milliseconds(100)
         }
-    }
-}
-
-private extension GetCollateralLandingDomain.Result {
-    
-    init(result: Result<RemoteServices.ResponseMapper.GetCollateralLandingResponse, Error>) {
-        
-        self = result.map(\.product).mapError { _ in .init() }
     }
 }
 
@@ -222,6 +232,38 @@ private extension RemoteServices.ResponseMapper.GetCollateralLandingResponse {
             rate: icons.rate,
             city: icons.city
         )
+    }
+}
+
+private extension GetCollateralLandingDomain.ContentError {
+    
+    typealias RemoteError = RemoteServiceError<Error, Error, RemoteServices.ResponseMapper.MappingError>
+    
+    init(
+        error: RemoteError
+    ) {
+        switch error {
+        case let .performRequest(error):
+            if error.isNotConnectedToInternetOrTimeout() {
+                self = .init(kind: .informer(.init(message: "Проверьте подключение к сети", icon: .wifiOff)))
+            } else {
+                self = .init(kind: .alert("Что-то пошло не так. Попробуйте позже."))
+            }
+            
+        default:
+            self = .init(kind: .alert(error.localizedDescription))
+        }
+    }
+    
+    var navigationFailure: GetCollateralLandingDomain.Failure {
+        
+        switch self.kind {
+        case let .alert(message):
+            return .alert(message)
+            
+        case let .informer(informerPayload):
+            return .informer(informerPayload)
+        }
     }
 }
 

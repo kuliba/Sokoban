@@ -7,11 +7,12 @@
 
 extension GetShowcaseDomain {
     
-    public final class Reducer {
+    public final class Reducer<InformerPayload> {
         
         public init() {}
         
-        public func reduce(_ state: State, _ event: Event) -> (State, Effect?) {
+        public func reduce(_ state: State<InformerPayload>, _ event: Event<InformerPayload>)
+            -> (State<InformerPayload>, Effect?) {
            
             var state = state
             var effect: Effect?
@@ -26,6 +27,10 @@ extension GetShowcaseDomain {
             case let .loaded(result):
                 state.isLoading = false
                 state.result = result
+                
+            case .dismissFailure:
+                state.isLoading = false
+                state.result = nil
             }
             
             return (state, effect)
