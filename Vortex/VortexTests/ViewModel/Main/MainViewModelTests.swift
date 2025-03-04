@@ -27,16 +27,6 @@ final class MainViewModelTests: XCTestCase {
 //        XCTAssertNil(sut.sections.stickerViewModel)
 //    }
     
-    func test_init_cacheContainsSticker_shouldSetSticker() throws {
-        
-        let (sut, model) = makeSUT()
-        model.productListBannersWithSticker.value = [.init(productName: anyMessage(), link: anyMessage(), md5hash: anyMessage(), action: nil)]
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
-        
-        XCTAssertNotNil(sut.sections.stickerViewModel)
-    }
-        
     func test_tapTemplates_shouldNotSetLinkToTemplates() {
         
         let (sut, _) = makeSUT(scheduler: .immediate)

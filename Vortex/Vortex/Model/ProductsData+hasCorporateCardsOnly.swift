@@ -54,6 +54,17 @@ extension ProductsData {
         return rubAccounts.count > 0
     }
     
+    var hasSavingsAccount: Bool {
+        
+        return products(.account).compactMap{
+            
+            guard let isSavingsAccount = $0.asAccount?.isSavingAccount
+            else { return false }
+            
+            return isSavingsAccount
+        }.uniqued().contains(true)
+    }
+
     var cardsTypes: [ProductCardData.CardType] {
         
         products(.card).compactMap(\.asCard?.cardType).uniqued()

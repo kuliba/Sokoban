@@ -110,6 +110,11 @@ extension Model {
         products.value.hasCorporateCardsOnly
     }
     
+    var hasSavingsAccount: Bool {
+        
+        products.value.hasSavingsAccount
+    }
+
     var containsLessThenTwoIndividualBusinessmanMainCard: Bool {
         
         guard productsTypes.contains(.card), let cards = products(.card) else { return false }
