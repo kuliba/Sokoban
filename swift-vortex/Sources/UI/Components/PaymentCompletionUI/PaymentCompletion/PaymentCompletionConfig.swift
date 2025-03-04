@@ -27,19 +27,22 @@ extension PaymentCompletionConfig {
         public let rejected: Status
         public let fraudCancelled: Status
         public let fraudExpired: Status
-        
+        public let suspend: Status
+
         public init(
             completed: Status,
             inflight: Status,
             rejected: Status,
             fraudCancelled: Status,
-            fraudExpired: Status
+            fraudExpired: Status,
+            suspend: Status
         ) {
             self.completed = completed
             self.inflight = inflight
             self.rejected = rejected
             self.fraudCancelled = fraudCancelled
             self.fraudExpired = fraudExpired
+            self.suspend = suspend
         }
     }
 }
