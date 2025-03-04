@@ -33,9 +33,15 @@ extension OpenSavingsAccountCompleteDomain {
             let formattedAmount: String?
             let status: Status
             
-            enum Status {
+            enum Status: Equatable {
                 
-                case completed, inflight, rejected
+                case completed, inflight, rejected, suspend
+                case fraud(Fraud)
+                
+                enum Fraud: Equatable {
+                    
+                    case cancelled, expired
+                }
             }
         }
     }

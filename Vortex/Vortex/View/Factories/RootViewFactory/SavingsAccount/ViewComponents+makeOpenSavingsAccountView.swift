@@ -105,9 +105,8 @@ extension ViewComponents {
                 }
 
                 ToolbarItem(placement: .navigationBarLeading) {
-                    backButton(action: { binder.flow.event(.navigation(.failure(.init(message: "При возврате назад потребуется повторный ввод данных.", type: .alert))))})
+                    backButton(action: { binder.flow.event(.navigation(.failure(.init(message: .returnMessage, type: .alert))))})
                 }
-
             }
             .navigationBarBackButtonHidden(true)
             .safeAreaInset(edge: .bottom) {

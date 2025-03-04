@@ -18,9 +18,15 @@ public struct OrderAccountResponse: Equatable {
     public let openData: String?
     public let status: Status
     
-    public enum Status {
+    public enum Status: Equatable {
         
-        case completed, inflight, rejected
+        case completed, inflight, rejected, suspend
+        case fraud(Fraud)
+        
+        public enum Fraud: Equatable {
+            
+            case cancelled, expired
+        }
     }
     
     public init(
