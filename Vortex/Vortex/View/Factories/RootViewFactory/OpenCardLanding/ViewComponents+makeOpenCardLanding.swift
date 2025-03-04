@@ -6,8 +6,9 @@
 //
 
 import DropDownTextListComponent
-import ListLandingComponent
 import HeaderLandingComponent
+import ListLandingComponent
+import RxViewModel
 import SwiftUI
 import UIPrimitives
 
@@ -43,29 +44,26 @@ extension ViewComponents {
             binder.content.event(.load)
         }) { offset in
             
-            makeOrderCardLandingContentView(
-                landing: binder.content.state.landing,
-                offset: offset
-            )
-            .safeAreaInset(edge: .bottom) {
+            RxWrapperView(model: binder.content) { state, event in
                 
-                heroButton(action: { binder.flow.event(.select(.continue)) })
-                    .frame(maxWidth: .infinity)
-                    .background(.white)
+                makeOrderCardLandingContentView(
+                    landing: state.landing,
+                    offset: offset
+                )
+                .navigationBarWithBack(
+                    title: offset.wrappedValue.y > 0 ? (state.landing?.header.navTitle ?? "") : "",
+                    subtitle: offset.wrappedValue.y > 0 ? (state.landing?.header.navSubtitle ?? "") : "",
+                    subtitleForegroundColor: .textPlaceholder,
+                    dismiss: dismiss
+                )
             }
-            .conditionalBottomPadding()
-            .navigationBarWithBack(
-                title: offset.wrappedValue.y > 0 ? (binder.content.state.landing?.header.navTitle ?? "") : "",
-                subtitle: offset.wrappedValue.y > 0 ? (binder.content.state.landing?.header.navSubtitle ?? "") : "",
-                subtitleForegroundColor: .textPlaceholder,
-                dismiss: dismiss
-            )
-            .onAppear(perform: {
-                
-                if binder.content.state.landing == nil {    
-                    binder.content.event(.load)
-                }
-            })
+        }
+        .conditionalBottomPadding()
+        .safeAreaInset(edge: .bottom) {
+            
+            heroButton { binder.flow.event(.select(.continue)) }
+                .frame(maxWidth: .infinity)
+                .background(.white)
         }
     }
     

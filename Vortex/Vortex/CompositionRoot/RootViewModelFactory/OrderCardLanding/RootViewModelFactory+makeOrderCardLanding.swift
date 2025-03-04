@@ -17,9 +17,12 @@ extension RootViewModelFactory {
     @inlinable
     func makeOrderCardLanding(
     ) -> OrderCardLandingDomain.Binder {
+    
+        let content = makeOrderCardLandinContent()
+        content.event(.load)
         
-        composeBinder(
-            content: makeOrderCardLandinContent(),
+        return composeBinder(
+            content: content,
             getNavigation: getNavigation,
             selectWitnesses: .empty
         )
@@ -55,7 +58,7 @@ extension RootViewModelFactory {
         )
         
         return .init(
-            initialState: .init(isLoading: true, status: .none),
+            initialState: .init(),
             reduce: reducer.reduce(_:event:),
             handleEffect: effectHandler.handleEffect(effect:dispatch:),
             scheduler: schedulers.main
@@ -197,4 +200,91 @@ private extension Header {
 private extension String {
     
     static let connectivity = "Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения"
+}
+
+// MARK: Stub
+
+private extension OrderCardLanding {
+    
+    static let stub: Self = .init(
+        header: .init(
+            title: "Карта МИР «Все включено»",
+            navTitle: "Карта МИР",
+            navSubtitle: "«Все включено»",
+            options: [
+                "кешбэк до 10 000 ₽ в месяц",
+                "5% выгода при покупке топлива",
+                "5% на категории сезона",
+                "от 0,5% до 1% кешбэк на остальные покупки**"
+            ],
+            imageUrl: "dict/getProductCatalogImage?image=products/pages/order-card/digital-card-landing/images/digital_card_landing_bg.png"
+        ),
+        conditions: .init(
+            title: "Выгодные условия",
+            list: [
+                .init(
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15",
+                    title: "0 ₽",
+                    subtitle: "Условия обслуживания"
+                ),
+                .init(
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15",
+                    title: "До 35%",
+                    subtitle: "Кешбэк и скидки"
+                ),
+                .init(
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15",
+                    title: "Кешбэк 5%",
+                    subtitle: "На востребованные категории"
+                ),
+                .init(
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15",
+                    title: "Кешбэк 5%",
+                    subtitle: "На топливо и 3% кешбэк на кофе"
+                ),
+                .init(
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15",
+                    title: "8% годовых",
+                    subtitle: "При сумме остатка от 500 001 ₽"
+                )
+            ]
+        ),
+        security: .init(
+            title: "Безопасность",
+            list: [
+                .init(
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15",
+                    title: "Ваши средства застрахованы в АСВ",
+                    subtitle: "Банк входит в систему страхования вкладов Агентства по страхованию вкладов"
+                ),
+                .init(
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15",
+                    title: "Безопасные платежи в Интернете (3-D Secure)",
+                    subtitle: "3-D Secure — технология, предназначенная для повышения безопасности расчетов"
+                ),
+                .init(
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15",
+                    title: "Блокировка подозрительных операций",
+                    subtitle: "На востребованные категории"
+                )
+            ]
+        ),
+        dropDownList: .init(
+            title: "Часто задаваемые вопросы",
+            items: [
+                .init(
+                    title: "Как повторно подключить подписку?",
+                    subTitle: "тест"
+                ),
+                .init(
+                    title: "Как начисляются проценты?",
+                    subTitle: "тесттесттесттесттесттесттесттест"
+                ),
+                .init(
+                    title: "Какие условия бесплатного обслуживания?",
+                    subTitle: ""
+                )
+            ]
+        )
+    )
 }

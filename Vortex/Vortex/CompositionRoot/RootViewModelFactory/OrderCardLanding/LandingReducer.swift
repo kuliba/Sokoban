@@ -23,15 +23,14 @@ final class LandingReducer<Landing> {
             dismissInformer(&state)
             
         case .load:
-            if state.isLoading {
+            if !state.isLoading {
                 
                 state.isLoading = true
                 effect = .load
             }
             
         case let .loadResult(result):
-            state.isLoading = false
-            updateResult(result, &state)
+            update(&state, with: result)
         }
         
         return (state, effect)
@@ -44,10 +43,12 @@ final class LandingReducer<Landing> {
 
 extension LandingReducer {
     
-    private func updateResult(
-        _ result: (Result<Landing, LoadFailure>),
-        _ state: inout OrderCardLandingDomain.LandingState<Landing>
+    private func update(
+        _ state: inout OrderCardLandingDomain.LandingState<Landing>,
+        with result: (Result<Landing, LoadFailure>)
     ) {
+        state.isLoading = false
+
         switch result {
         case let .success(landing):
             state.status = .landing(landing)

@@ -13,7 +13,7 @@ extension OrderCardLandingDomain {
     struct LandingState<Landing> {
         
         var isLoading = false
-        var status: Status?
+        var status: Status? = nil
 
         enum Status {
             
