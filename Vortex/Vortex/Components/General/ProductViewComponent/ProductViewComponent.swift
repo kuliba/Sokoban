@@ -133,7 +133,7 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
         )
         
         bind()
-        bind(statusAction)
+        statusAction.map(bind)
     }
     
     private func bind() {
@@ -167,9 +167,9 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
             }.store(in: &bindings)
     }
     
-    private func bind(_ statusAction: StatusActionViewModel?) {
+    private func bind(_ statusAction: StatusActionViewModel) {
         
-        statusAction?.action
+        statusAction.action
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [unowned self] action in
                 
@@ -194,7 +194,7 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
         let backgroundImage = Self.backgroundImage(with: productData, size: appearance.size, getImage: { model.images.value[.init($0)]?.image })
         appearance.background = .init(color: productData.backgroundColor, image: backgroundImage)
         config = .config(appearance: appearance)
-        bind(statusAction)
+        statusAction.map(bind)
     }
     
     static func rateFormatted(product: ProductData) -> String? {
