@@ -34,7 +34,7 @@ class MainViewModel: ObservableObject, Resetable {
     )
     
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
-    @Published var sections: [MainSectionViewModel]
+    @Published var sections: [Node<MainSectionViewModel>]
     @Published var productProfile: ProductProfileViewModel?
     
     @Published var route: Route
@@ -81,7 +81,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.bannersBox = bannersBox
         self.updateInfoStatusFlag = updateInfoStatusFlag
         self.navButtonsRight = []
-        self.sections = sections
+        self.sections = []
         self.navigationStateManager = navigationStateManager
         self.sberQRServices = sberQRServices
         self.landingServices = landingServices
@@ -95,10 +95,9 @@ class MainViewModel: ObservableObject, Resetable {
         self.scheduler = scheduler
         self.navButtonsRight = createNavButtonsRight()
         
+        self.sections = bind(sections)
         bind()
         update(sections, with: model.settingsMainSections)
-        bindProductSection(sections)
-        bind(sections)
     }
     
     private var disableAlertViewModel: Alert.ViewModel {
@@ -139,51 +138,26 @@ class MainViewModel: ObservableObject, Resetable {
     private func updatePromo(
         promoProducts: [AdditionalProductViewModel]
     ) {
-        if let index = sections.indexProductsSection {
-            sections[index] = MainSectionProductsView.ViewModel(
+        if let index = sections.map(\.model).indexProductsSection {
+            let model = MainSectionProductsView.ViewModel(
                 model,
                 promoProducts: promoProducts
             )
-            bindProductSection(sections)
+            let cancellables = bindProductSection(model)
+            sections[index] = .init(model: model, cancellables: cancellables)
         }
-    }
-        
-    // TODO: need delete
-    
-    private func getSticker() -> AdditionalProductViewModel? {
-        guard let index = sections.indexProductsSection,
-              let section = sections[index] as? MainSectionProductsView.ViewModel,
-              let stickerVM = section.productCarouselViewModel.promoProducts?.first(where: { $0.promoType == .sticker })
-        else { return nil }
-        
-        return stickerVM
     }
 
-    private func removePromo(_ type: PromoProduct) {
-        
-        if let products = sections.productsSection {
+    private func removePromo(
+        _ type: PromoProduct
+    ) {
+        if let products = sections.map(\.model).productsSection {
             
-            if var promoProducts = products.productCarouselViewModel.promoProducts, let index = promoProducts.firstIndex(where: { $0.promoType == type}) {
+            if var promoProducts = products.productCarouselViewModel.promoProducts, 
+                let index = promoProducts.firstIndex(where: { $0.promoType == type}) {
+                
                 promoProducts.remove(at: index)
                 products.productCarouselViewModel.updatePromo(promoProducts)
-            }
-        }
-    }
-    
-    private func updateProducts(
-        _ model: Model
-    ) {
-        if let index = sections.indexProductsSection,
-            let section = sections[index] as? MainSectionProductsView.ViewModel {
-            
-            if let stickerVM = section.productCarouselViewModel.promoProducts?.first(where: { $0.promoType == .sticker }) {
-                withAnimation {
-                    sections[index] = MainSectionProductsView.ViewModel(
-                        model,
-                        promoProducts: [stickerVM]
-                    )
-                }
-                bindProductSection(sections)
             }
         }
     }
@@ -460,15 +434,7 @@ private extension MainViewModel {
                 self?.action.send($0)
                 
             }).store(in: &bindings)
-        
-        model.productsOrdersUpdating
-            .receive(on: scheduler)
-            .sink { [weak self] in
-                guard let self else { return }
                 
-                if !$0 { self.updateProducts(model) }
-            }.store(in: &bindings)
-        
         model.products
             .receive(on: scheduler)
             .sink { [unowned self] products in
@@ -500,8 +466,9 @@ private extension MainViewModel {
                     ))
                 }
                 
-                handleBanners(sections.productsSection?.productCarouselViewModel.promoProducts)
-            }.store(in: &bindings)
+                handleBanners(sections.map(\.model).productsSection?.productCarouselViewModel.promoProducts)
+            }
+            .store(in: &bindings)
         
         model.clientInfo
             .combineLatest(model.clientPhoto, model.clientName)
@@ -510,12 +477,15 @@ private extension MainViewModel {
                 
                 userAccountButton.update(clientInfo: clientData.0, clientPhoto: clientData.1, clientName: clientData.2)
                 
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
-    func bind(_ sections: [MainSectionViewModel]) {
+    func bind(_ sections: [MainSectionViewModel]) -> [Node<MainSectionViewModel>]{
         
-        for section in sections {
+        sections.map { section in
+            
+            var bindings = Set<AnyCancellable>()
             
             switch section {
             case let openProductSection as MainSectionOpenProductView.ViewModel:
@@ -580,7 +550,8 @@ private extension MainViewModel {
                             break
                         }
                         
-                    }.store(in: &bindings)
+                    }
+                    .store(in: &bindings)
                 
                 // Promo section
             case let promo as MainSectionPromoView.ViewModel:
@@ -596,7 +567,11 @@ private extension MainViewModel {
                             break
                         }
                         
-                    }.store(in: &bindings)
+                    }
+                    .store(in: &bindings)
+                
+            case let productSection as MainSectionProductsView.ViewModel:
+                bindings.formUnion(bindProductSection(productSection))
                 
             default: break
             }
@@ -631,7 +606,8 @@ private extension MainViewModel {
                         break
                         
                     }
-                }.store(in: &bindings)
+                }
+                .store(in: &bindings)
             
             if let collapsableSection = section as? MainSectionCollapsableViewModel {
                 
@@ -644,46 +620,50 @@ private extension MainViewModel {
                         settings.update(sectionType: collapsableSection.type, isCollapsed: isCollapsed)
                         model.settingsMainSectionsUpdate(settings)
                         
-                    }.store(in: &bindings)
+                    }
+                    .store(in: &bindings)
             }
+            
+            return .init(model: section, cancellables: bindings)
         }
     }
     
-    func bindProductSection(_ sections: [MainSectionViewModel]) {
+    func bindProductSection(
+        _ section: MainSectionProductsView.ViewModel
+    ) -> Set<AnyCancellable> {
         
-        if let section = sections.productsSection {
-            
-            let shared = section.action.share()
-            
-            shared
-                .compactMap { $0 as? MainSectionViewModelAction.Products.ProductDidTapped }
-                .map(\.productId)
-                .receive(on: scheduler)
-                .sink { [weak self] in
-                    
-                    self?.action.send(MainViewModelAction.Show.ProductProfile(productId: $0))
-                }
-                .store(in: &bindings)
-            
-            shared
-                .compactMap { $0 as? MainSectionViewModelAction.Products.MoreButtonTapped }
-                .receive(on: scheduler)
-                .sink { [weak self] _ in self?.openMoreProducts() }
-                .store(in: &bindings)
-            
-            shared
-                .compactMap { $0 as? MainSectionViewModelAction.Products.PromoDidTapped }
-                .receive(on: scheduler)
-                .sink { [weak self] in
-                    self?.handlePromoAction($0.promo) }
-                .store(in: &bindings)
-        }
+        var bindings = Set<AnyCancellable>()
+        let shared = section.action.share()
+        
+        shared
+            .compactMap { $0 as? MainSectionViewModelAction.Products.ProductDidTapped }
+            .map(\.productId)
+            .receive(on: scheduler)
+            .sink { [weak self] in
+                
+                self?.action.send(MainViewModelAction.Show.ProductProfile(productId: $0))
+            }
+            .store(in: &bindings)
+        
+        shared
+            .compactMap { $0 as? MainSectionViewModelAction.Products.MoreButtonTapped }
+            .receive(on: scheduler)
+            .sink { [weak self] _ in self?.openMoreProducts() }
+            .store(in: &bindings)
+        
+        shared
+            .compactMap { $0 as? MainSectionViewModelAction.Products.PromoDidTapped }
+            .receive(on: scheduler)
+            .sink { [weak self] in
+                self?.handlePromoAction($0.promo) }
+            .store(in: &bindings)
+        
+        return bindings
     }
         
     func handleBanners(
         _ banners: BannerList
     ) {
-        
         var promo: [PromoItem] = []
         
         if let sticker = banners.cardBannerList?.first {
@@ -695,9 +675,8 @@ private extension MainViewModel {
         }
         
         let newPromo = makePromoViewModels(promoItems: promo) ?? []
-        sections.productsSection?.productCarouselViewModel.updatePromo(newPromo)
-
-        updateSections()
+        let productSection = sections.map(\.model).productsSection
+        productSection?.productCarouselViewModel.updatePromo(newPromo)
     }
     
     func handleBanners(
@@ -707,19 +686,12 @@ private extension MainViewModel {
         if model.hasSavingsAccount {
             var newPromo = promoItems
             newPromo?.removeAll(where: { $0.promoType == .savingsAccount })
-            sections.productsSection?.productCarouselViewModel.updatePromo(newPromo)
+            sections.map(\.model).productsSection?.productCarouselViewModel.updatePromo(newPromo)
         } else {
             bannersBox.requestUpdate()
         }
-        updateSections()
     }
 
-    func updateSections(
-    ) {
-        bindProductSection(sections)
-        bind(sections)
-    }
-    
     func openProductByType(_ type: OpenProductType) {
         
         switch type {
@@ -1118,13 +1090,13 @@ private extension MainViewModel {
     
     func updateSections(_ updateInfo: UpdateInfo) {
         
-        let containUpdateInfoSection: Bool = sections.first(where: { $0.type == .updateInfo }) is UpdateInfoViewModel
+        let containUpdateInfoSection: Bool = sections.map(\.model).first(where: { $0.type == .updateInfo }) is UpdateInfoViewModel
         switch (updateInfo.areProductsUpdated, containUpdateInfoSection) {
             
         case (true, true):
             sections.removeFirst()
         case (false, false):
-            sections.insert(UpdateInfoViewModel.init(content: .updateInfoText), at: 0)
+            sections.insert(.init(model: UpdateInfoViewModel.init(content: .updateInfoText), cancellables: []), at: 0)
         default:
             break
         }

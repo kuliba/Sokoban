@@ -261,7 +261,7 @@ private extension RootViewModel {
     
     var mainViewSections: [MainSectionViewModel] {
         
-        return mainViewModel.sections
+        return mainViewModel.sections.map(\.model)
     }
     
     func tapMainViewFastSectionQRButton(
