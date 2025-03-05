@@ -32,7 +32,7 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
     
     @Published var cardInfo: CardInfo
     @Published var footer: FooterDetails
-    @Published var statusAction: StatusActionViewModel?
+    @Published var statusAction: Node<StatusActionViewModel>?
     @Published var isUpdating: Bool
     
     var appearance: Appearance
@@ -48,7 +48,7 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
         header: HeaderDetails,
         cardInfo: CardInfo,
         footer: FooterDetails,
-        statusAction: StatusActionViewModel?,
+        statusAction: Node<StatusActionViewModel>?,
         isChecked: Bool = false,
         appearance: Appearance,
         isUpdating: Bool,
@@ -108,14 +108,13 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
         let productType = productData.productType
         let backgroundColor = productData.backgroundColor
         let backgroundImage = Self.backgroundImage(with: productData, size: size, getImage: { model.images.value[.init($0)]?.image })
-        let statusAction = Self.statusAction(product: productData)
         let interestRate = Self.rateFormatted(product: productData)
         self.init(
             id: productData.id,
             header: .init(number: number, period: period, icon: productData.cloverImage),
             cardInfo: cardInfo,
             footer: .init(balance: balance, interestRate: interestRate),
-            statusAction: statusAction,
+            statusAction: nil,
             isChecked: isChecked,
             appearance: .init(
                 background: .init(
@@ -133,7 +132,7 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
         )
         
         bind()
-        bind(statusAction)
+        self.statusAction = makeStatusActionNode(productData)
     }
     
     private func bind() {
@@ -144,10 +143,10 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
                 
                 switch action {
                 case _ as ProductViewModelAction.CardActivation.Complete:
-                    statusAction?.action.send(ProductViewModel.StatusActionViewModelAction.CardActivation.Complete())
+                    statusAction?.model.action.send(ProductViewModel.StatusActionViewModelAction.CardActivation.Complete())
                     
                 case _ as ProductViewModelAction.CardActivation.Failed:
-                    statusAction?.action.send(ProductViewModel.StatusActionViewModelAction.CardActivation.Failed())
+                    statusAction?.model.action.send(ProductViewModel.StatusActionViewModelAction.CardActivation.Failed())
                     
                 default:
                     return
@@ -167,34 +166,34 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
             }.store(in: &bindings)
     }
     
-    private func bind(_ statusAction: StatusActionViewModel?) {
+    private func makeStatusActionNode(
+        _ product: ProductData
+    ) -> Node<StatusActionViewModel>? {
         
-        statusAction?.action
+        guard let statusAction = Self.statusAction(product: product)
+        else { return nil }
+
+        let cancellable = statusAction.action
+            .compactMap { $0 as? ProductViewModel.StatusActionViewModelAction.CardActivation.Started }
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [unowned self] action in
+            .sink { [weak self] _ in
                 
-                switch action {
-                case _ as ProductViewModel.StatusActionViewModelAction.CardActivation.Started:
-                    self.action.send(ProductViewModelAction.CardActivation.Started())
-                    
-                default:
-                    break
-                }
-                
-            }).store(in: &bindings)
+                self?.action.send(ProductViewModelAction.CardActivation.Started())
+            }
+        
+        return .init(model: statusAction, cancellable: cancellable)
     }
     
     func update(with productData: ProductData, model: Model) {
         
         cardInfo.name = Self.name(product: productData, style: appearance.style, creditProductName: .cardTitle)
         cardInfo.owner = Self.owner(from: productData)
-        statusAction = Self.statusAction(product: productData)
+        self.statusAction = makeStatusActionNode(productData)
         header.updateIcon(productData.cloverImage)
         footer.balance = Self.balanceFormatted(product: productData, style: appearance.style, model: model)
         let backgroundImage = Self.backgroundImage(with: productData, size: appearance.size, getImage: { model.images.value[.init($0)]?.image })
         appearance.background = .init(color: productData.backgroundColor, image: backgroundImage)
         config = .config(appearance: appearance)
-        bind(statusAction)
     }
     
     static func rateFormatted(product: ProductData) -> String? {
@@ -670,7 +669,7 @@ struct GenericProductView<Slider: View>: View {
         viewModel.statusAction.map {
             
             return StatusActionView(
-                viewModel: $0,
+                viewModel: $0.model,
                 color: viewModel.config.appearance.colors.text,
                 style: viewModel.config.appearance.style)
         }
