@@ -66,6 +66,7 @@ private extension PromoProduct {
         case .creditCardMVP:  return true
         case .sticker:        return false
         case .savingsAccount: return true
+        case .collateralLoan: return false
         }
     }
 }

@@ -771,7 +771,7 @@ private extension MainViewModel {
     func openProductByType(_ type: OpenProductType) {
         
         switch type {
-        case .account, .card, .creditCardMVP, .deposit, .insurance, .loan, .mortgage:
+        case .account, .card, .creditCardMVP, .deposit, .insurance, .mortgage:
             break
             
         case .savingsAccount:

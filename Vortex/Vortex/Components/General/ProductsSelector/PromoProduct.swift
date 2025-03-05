@@ -110,6 +110,9 @@ extension PromoProduct: RawRepresentable {
             case .realEstate:
                 return .collateralLoanRealEstate
             }
+            
+        case .creditCardMVP:
+            return .creditCardMVP
         }
     }
 }
@@ -124,4 +127,5 @@ private extension String {
     static let carLanding = "CAR_LANDING"
     static let realEstateLanding = "REAL_ESTATE_LANDING"
     static let showcase = "showcase"
+    static let creditCardMVP = "creditCardMVP"
 }

@@ -176,6 +176,9 @@ extension SettingType.Interface: RawRepresentable {
             case .realEstate:
                 return .collateralLoanRealEstate
             }
+            
+        case .creditCardMVP:
+                return .creditCardMVP
         }
     }
 }
@@ -185,17 +188,18 @@ extension SettingType.Interface: Equatable {}
 
 private extension String {
     
-    static let mainSections = "mainSections"
-    static let inactiveProducts = "inactiveProducts"
-    static let paymentTemplates = "paymentTemplates"
-    static let productsHidden = "productsHidden"
-    static let productsSections = "productsSections"
-    static let productsMoney = "productsMoney"
-    static let myProductsOnboarding = "myProductsOnboarding"
-    static let sticker = "sticker"
-    static let savingsAccount = "savingsAccount"
-    static let profileOnboarding = "profileOnboarding"
-    static let collateralLoanShowcase = "collateralLoanShowcase"
     static let collateralLoanCar = "collateralLoanCar"
     static let collateralLoanRealEstate = "collateralLoanRealEstate"
+    static let collateralLoanShowcase = "collateralLoanShowcase"
+    static let creditCardMVP = "creditCardMVP"
+    static let inactiveProducts = "inactiveProducts"
+    static let mainSections = "mainSections"
+    static let myProductsOnboarding = "myProductsOnboarding"
+    static let paymentTemplates = "paymentTemplates"
+    static let productsHidden = "productsHidden"
+    static let productsMoney = "productsMoney"
+    static let productsSections = "productsSections"
+    static let profileOnboarding = "profileOnboarding"
+    static let savingsAccount = "savingsAccount"
+    static let sticker = "sticker"
 }
