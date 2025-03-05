@@ -113,7 +113,7 @@ private extension ResponseMapper {
             let title: String?
             let name: [Name]?
             let image: String?
-            let features: [String]
+            let features: [String]?
             let discounts: Discount?
             
             struct Name: Decodable {
@@ -132,7 +132,7 @@ private extension ResponseMapper {
         struct Item: Decodable {
             
             let title: String?
-            let subtitle: String?
+            let subTitle: String?
             let md5hash: String?
         }
     }
@@ -164,22 +164,30 @@ private extension ResponseMapper._Data.Product {
     
     var product: OrderCardLandingResponse.Product? {
         
-//        guard let title,
-//              let image,
-//              !features.isEmpty,
-//              let discounts else {
-//            return nil
-//        }
+        guard let title,
+              let image,
+              let features,
+              let navTitle = name?.first?.text,
+              let navSubtitle = name?.last?.text,
+              let discounts else {
+            return nil
+        }
     
         return .init(
-            title: title ?? "",
-            navTitle: name?.first?.text ?? "",
-            navSubtitle: name?.first?.text ?? "",
-            image: image ?? "",
+            title: title,
+            navTitle: navTitle,
+            navSubtitle: navSubtitle,
+            image: image,
             features: features,
             discount: .init(
-                title: title ?? "",
-                list: []
+                title: discounts.title ?? "",
+                list: discounts.list.map({
+                    .init(
+                        title: $0.title ?? "",
+                        subtitle: $0.subTitle ?? "",
+                        md5hash: $0.md5hash ?? ""
+                    )
+                })
             )
         )
     }
@@ -244,7 +252,7 @@ private extension ResponseMapper._Data.Item {
         
         return .init(
             title: title,
-            subtitle: subtitle,
+            subtitle: subTitle,
             md5hash: md5hash
         )
     }
