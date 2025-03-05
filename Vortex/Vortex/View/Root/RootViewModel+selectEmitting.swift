@@ -83,6 +83,7 @@ private extension MainViewModel {
     private var fastRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
         
         sections
+            .map(\.model)
             .compactMap { $0 as? MainSectionFastOperationView.ViewModel }
             .map(\.rootEventPublisher)
     }
