@@ -526,27 +526,59 @@ private extension OrderCardLandingBackend.OrderCardLandingResponse {
         conditions: .init(
             title: "Выгодные условия",
             list: [
-                .init(title: "0 ₽", subtitle: "Условия обслуживания", md5hash: "b6fa019f307d6a72951ab7268708aa15"),
-                .init(title: "До 35%", subtitle: "Кешбэк и скидки", md5hash: "b6fa019f307d6a72951ab7268708aa15"),
-                .init(title: "Кешбэк 5%", subtitle: "На востребованные категории", md5hash: "b6fa019f307d6a72951ab7268708aa15"),
-                .init(title: "Кешбэк 5%", subtitle: "На топливо и 3% кешбэк на кофе", md5hash: "b6fa019f307d6a72951ab7268708aa15"),
-                .init(title: "8% годовых", subtitle: "При сумме остатка от 500 001 ₽", md5hash: "b6fa019f307d6a72951ab7268708aa15")
+                .init(
+                    title: "0 ₽",
+                    subtitle: "Условия обслуживания",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                ),
+                .init(
+                    title: "До 35%",
+                    subtitle: "Кешбэк и скидки",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                ),
+                .init(
+                    title: "Кешбэк 5%",
+                    subtitle: "На востребованные категории",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                ),
+                .init(
+                    title: "Кешбэк 5%",
+                    subtitle: "На топливо и 3% кешбэк на кофе",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                ),
+                .init(
+                    title: "8% годовых",
+                    subtitle: "При сумме остатка от 500 001 ₽",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                )
             ]
         ),
         security: .init(
             title: "Безопасность",
             list: [
-                .init(title: "Ваши средства застрахованы в АСВ", subtitle: "Банк входит в систему страхования вкладов Агентства по страхованию вкладов", md5hash: "b6fa019f307d6a72951ab7268708aa15"),
-                .init(title: "Безопасные платежи в Интернете (3-D Secure)", subtitle: "3-D Secure — технология, предназначенная для повышения безопасности расчетов", md5hash: "b6fa019f307d6a72951ab7268708aa15"),
-                .init(title: "Блокировка подозрительных операций", subtitle: "На востребованные категории", md5hash: "b6fa019f307d6a72951ab7268708aa15")
+                .init(
+                    title: "Ваши средства застрахованы в АСВ",
+                    subtitle: "Банк входит в систему страхования вкладов Агентства по страхованию вкладов",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                ),
+                .init(
+                    title: "Безопасные платежи в Интернете (3-D Secure)",
+                    subtitle: "3-D Secure — технология, предназначенная для повышения безопасности расчетов",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                ),
+                .init(
+                    title: "Блокировка подозрительных операций",
+                    subtitle: "На востребованные категории",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                )
             ]
         ),
         frequentlyAskedQuestions: .init(
             title: "Часто задаваемые вопросы",
             list: [
-                .init(title: "Как повторно подключить подписку?", md5hash: "тест"),
-                .init(title: "Как начисляются проценты?", md5hash: "тесттесттесттесттесттесттесттест"),
-                .init(title: "Какие условия бесплатного обслуживания?", md5hash: ""),
+                .init(title: "Как повторно подключить подписку?", description: "тест"),
+                .init(title: "Как начисляются проценты?", description: "тесттесттесттесттесттесттесттест"),
+                .init(title: "Какие условия бесплатного обслуживания?", description: ""),
             ]
         )
     )
@@ -581,17 +613,29 @@ private extension OrderCardLandingBackend.OrderCardLandingResponse {
         security: .init(
             title: "Безопасность",
             list: [
-                .init(title: "Ваши средства застрахованы в АСВ", subtitle: "Банк входит в систему страхования вкладов Агентства по страхованию вкладов", md5hash: "b6fa019f307d6a72951ab7268708aa15"),
-                .init(title: "Безопасные платежи в Интернете (3-D Secure)", subtitle: "3-D Secure — технология, предназначенная для повышения безопасности расчетов", md5hash: "b6fa019f307d6a72951ab7268708aa15"),
-                .init(title: "Блокировка подозрительных операций", subtitle: "На востребованные категории", md5hash: "b6fa019f307d6a72951ab7268708aa15")
+                .init(
+                    title: "Ваши средства застрахованы в АСВ",
+                    subtitle: "Банк входит в систему страхования вкладов Агентства по страхованию вкладов",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                ),
+                .init(
+                    title: "Безопасные платежи в Интернете (3-D Secure)",
+                    subtitle: "3-D Secure — технология, предназначенная для повышения безопасности расчетов",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                ),
+                .init(
+                    title: "Блокировка подозрительных операций",
+                    subtitle: "На востребованные категории",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                )
             ]
         ),
         frequentlyAskedQuestions: .init(
             title: "Часто задаваемые вопросы",
             list: [
-                .init(title: "Как повторно подключить подписку?", md5hash: "тест"),
-                .init(title: "Как начисляются проценты?", md5hash: "тесттесттесттесттесттесттесттест"),
-                .init(title: "Какие условия бесплатного обслуживания?", md5hash: ""),
+                .init(title: "Как повторно подключить подписку?", description: "тест"),
+                .init(title: "Как начисляются проценты?", description: "тесттесттесттесттесттесттесттест"),
+                .init(title: "Какие условия бесплатного обслуживания?", description: ""),
             ]
         )
     )
@@ -622,11 +666,31 @@ private extension OrderCardLandingBackend.OrderCardLandingResponse {
         conditions: .init(
             title: "Выгодные условия",
             list: [
-                .init(title: "0 ₽", subtitle: "Условия обслуживания", md5hash: "b6fa019f307d6a72951ab7268708aa15"),
-                .init(title: "До 35%", subtitle: "Кешбэк и скидки", md5hash: "b6fa019f307d6a72951ab7268708aa15"),
-                .init(title: "Кешбэк 5%", subtitle: "На востребованные категории", md5hash: "b6fa019f307d6a72951ab7268708aa15"),
-                .init(title: "Кешбэк 5%", subtitle: "На топливо и 3% кешбэк на кофе", md5hash: "b6fa019f307d6a72951ab7268708aa15"),
-                .init(title: "8% годовых", subtitle: "При сумме остатка от 500 001 ₽", md5hash: "b6fa019f307d6a72951ab7268708aa15")
+                .init(
+                    title: "0 ₽",
+                    subtitle: "Условия обслуживания",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                ),
+                .init(
+                    title: "До 35%",
+                    subtitle: "Кешбэк и скидки",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                ),
+                .init(
+                    title: "Кешбэк 5%",
+                    subtitle: "На востребованные категории",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                ),
+                .init(
+                    title: "Кешбэк 5%",
+                    subtitle: "На топливо и 3% кешбэк на кофе",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                ),
+                .init(
+                    title: "8% годовых",
+                    subtitle: "При сумме остатка от 500 001 ₽",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                )
             ]
         ),
         security: .init(
@@ -636,9 +700,18 @@ private extension OrderCardLandingBackend.OrderCardLandingResponse {
         frequentlyAskedQuestions: .init(
             title: "Часто задаваемые вопросы",
             list: [
-                .init(title: "Как повторно подключить подписку?", md5hash: "тест"),
-                .init(title: "Как начисляются проценты?", md5hash: "тесттесттесттесттесттесттесттест"),
-                .init(title: "Какие условия бесплатного обслуживания?", md5hash: ""),
+                .init(
+                    title: "Как повторно подключить подписку?",
+                    description: "тест"
+                ),
+                .init(
+                    title: "Как начисляются проценты?",
+                    description: "тесттесттесттесттесттесттесттест"
+                ),
+                .init(
+                    title: "Какие условия бесплатного обслуживания?",
+                    description: ""
+                ),
             ]
         )
     )
@@ -669,19 +742,51 @@ private extension OrderCardLandingBackend.OrderCardLandingResponse {
         conditions: .init(
             title: "Выгодные условия",
             list: [
-                .init(title: "0 ₽", subtitle: "Условия обслуживания", md5hash: "b6fa019f307d6a72951ab7268708aa15"),
-                .init(title: "До 35%", subtitle: "Кешбэк и скидки", md5hash: "b6fa019f307d6a72951ab7268708aa15"),
-                .init(title: "Кешбэк 5%", subtitle: "На востребованные категории", md5hash: "b6fa019f307d6a72951ab7268708aa15"),
-                .init(title: "Кешбэк 5%", subtitle: "На топливо и 3% кешбэк на кофе", md5hash: "b6fa019f307d6a72951ab7268708aa15"),
-                .init(title: "8% годовых", subtitle: "При сумме остатка от 500 001 ₽", md5hash: "b6fa019f307d6a72951ab7268708aa15")
+                .init(
+                    title: "0 ₽",
+                    subtitle: "Условия обслуживания",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                ),
+                .init(
+                    title: "До 35%",
+                    subtitle: "Кешбэк и скидки",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                ),
+                .init(
+                    title: "Кешбэк 5%",
+                    subtitle: "На востребованные категории",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                ),
+                .init(
+                    title: "Кешбэк 5%",
+                    subtitle: "На топливо и 3% кешбэк на кофе",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                ),
+                .init(
+                    title: "8% годовых",
+                    subtitle: "При сумме остатка от 500 001 ₽",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                )
             ]
         ),
         security: .init(
             title: "Безопасность",
             list: [
-                .init(title: "Ваши средства застрахованы в АСВ", subtitle: "Банк входит в систему страхования вкладов Агентства по страхованию вкладов", md5hash: "b6fa019f307d6a72951ab7268708aa15"),
-                .init(title: "Безопасные платежи в Интернете (3-D Secure)", subtitle: "3-D Secure — технология, предназначенная для повышения безопасности расчетов", md5hash: "b6fa019f307d6a72951ab7268708aa15"),
-                .init(title: "Блокировка подозрительных операций", subtitle: "На востребованные категории", md5hash: "b6fa019f307d6a72951ab7268708aa15")
+                .init(
+                    title: "Ваши средства застрахованы в АСВ",
+                    subtitle: "Банк входит в систему страхования вкладов Агентства по страхованию вкладов",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                ),
+                .init(
+                    title: "Безопасные платежи в Интернете (3-D Secure)",
+                    subtitle: "3-D Secure — технология, предназначенная для повышения безопасности расчетов",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                ),
+                .init(
+                    title: "Блокировка подозрительных операций",
+                    subtitle: "На востребованные категории",
+                    md5hash: "b6fa019f307d6a72951ab7268708aa15"
+                )
             ]
         ),
         frequentlyAskedQuestions: .init(

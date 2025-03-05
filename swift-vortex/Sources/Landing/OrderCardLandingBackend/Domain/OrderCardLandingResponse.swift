@@ -46,6 +46,14 @@ public struct OrderCardLandingResponse: Equatable {
             
             public let title: String
             public let description: String
+            
+            public init(
+                title: String,
+                description: String
+            ) {
+                self.title = title
+                self.description = description
+            }
         }
     }
     
@@ -56,7 +64,7 @@ public struct OrderCardLandingResponse: Equatable {
         
         public init(
             title: String,
-            list: [OrderCardLandingResponse.Item]
+            list: [Item]
         ) {
             self.title = title
             self.list = list
@@ -70,7 +78,7 @@ public struct OrderCardLandingResponse: Equatable {
         
         public init(
             title: String,
-            list: [OrderCardLandingResponse.Item]
+            list: [Item]
         ) {
             self.title = title
             self.list = list
@@ -92,7 +100,7 @@ public struct OrderCardLandingResponse: Equatable {
             navSubtitle: String,
             image: String,
             features: [String],
-            discount: OrderCardLandingResponse.Product.Discount
+            discount: Discount
         ) {
             self.title = title
             self.navTitle = navTitle
@@ -109,7 +117,7 @@ public struct OrderCardLandingResponse: Equatable {
             
             public init(
                 title: String,
-                list: [OrderCardLandingResponse.Item]
+                list: [Item]
             ) {
                 self.title = title
                 self.list = list
