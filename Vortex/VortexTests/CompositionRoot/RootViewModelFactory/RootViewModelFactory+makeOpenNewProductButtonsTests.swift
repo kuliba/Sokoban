@@ -17,7 +17,7 @@ final class RootViewModelFactory_makeOpenNewProductButtonsTests: RootViewModelFa
         )
         
         XCTAssertNoDiff(sut.map(\.type), [
-            .card(.landing), .deposit, .account, .sticker, .loan,
+            .card(.landing), .deposit, .account, .sticker, .collateralLoan(.showcase),
             .savingsAccount,
             .insurance, .mortgage
         ])
@@ -31,7 +31,7 @@ final class RootViewModelFactory_makeOpenNewProductButtonsTests: RootViewModelFa
             collateralLoanFlag: .active
         )
         
-        assert(sut, openProductType: .loan, type: .action)
+        assert(sut, openProductType: .collateralLoan(.showcase), type: .action)
     }
     
     func test_collateralLoanFlagInActive_shouldReturnUrlActionForLoan() {
@@ -40,7 +40,7 @@ final class RootViewModelFactory_makeOpenNewProductButtonsTests: RootViewModelFa
             collateralLoanFlag: .inactive
         )
         
-        assert(sut, openProductType: .loan, type: .url)
+        assert(sut, openProductType: .collateralLoan(.showcase), type: .url)
     }
     
     // MARK: - savingsAccount
