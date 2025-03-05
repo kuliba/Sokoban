@@ -40,6 +40,7 @@ enum SettingType: Equatable {
         case productsSections
         case productsMoney
         case myProductsOnboarding
+        case creditCardMVP
         case sticker
         case savingsAccount
         case profileOnboarding

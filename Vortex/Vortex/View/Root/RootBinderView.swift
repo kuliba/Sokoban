@@ -369,6 +369,9 @@ extension RootViewNavigation.Destination: Identifiable {
                     return .orderCardLanding
                 }
                 
+            case .creditCardMVP:
+                return .openProduct(.creditCardMVP) // TODO: improve with ObjectIdentifier
+                
             case .savingsAccount:
                 return .openProduct(.savingsAccount)
                 
@@ -403,6 +406,7 @@ extension RootViewNavigation.Destination: Identifiable {
         enum OpenProductID: Hashable {
             
             case card(ObjectIdentifier)
+            case creditCardMVP
             case savingsAccount
             case unknown
         }
