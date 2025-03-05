@@ -405,7 +405,7 @@ private extension MainView {
         
         return viewFactory.components.makeCollateralLoanShowcaseWrapperView(
             binder: binder,
-            goToMain: viewModel.reset,
+            goToMain: viewModel.reset, // TODO: отремонтировать возврат на главный экран. Не работает скролл после возврата
             getPDFDocument: viewModel.getPDFDocument,
             makeOperationDetailInfoViewModel: {
                 viewModel.makeOperationDetailInfoViewModel(

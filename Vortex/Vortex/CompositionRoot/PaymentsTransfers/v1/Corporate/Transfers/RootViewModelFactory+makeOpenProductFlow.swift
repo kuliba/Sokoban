@@ -97,7 +97,7 @@ extension RootViewModelFactory {
         case .insurance:
             break // TODO: fixme
             
-        case .loan:
+        case .collateralLoan:
             break // TODO: fixme - add openCollateralLoanLanding
             
         case .mortgage:

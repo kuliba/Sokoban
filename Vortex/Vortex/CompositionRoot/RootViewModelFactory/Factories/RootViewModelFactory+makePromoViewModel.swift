@@ -11,6 +11,7 @@ extension RootViewModelFactory {
 
     func makePromoViewModel(
         viewModel: PromoItem,
+        featureFlags: FeatureFlags,
         actions: PromoProductActions
     ) -> AdditionalProductViewModel? {
        

@@ -73,9 +73,6 @@ extension ViewComponents {
         case let .openDeposit(openDeposit):
             makeOpenDepositListView(openDeposit)
             
-        case .openLoan:
-            Text("openLoan")
-            
         case let .openSticker(sticker):
             LandingWrapperView(viewModel: sticker)
                 .ignoresSafeArea(edges: .bottom)
@@ -148,14 +145,11 @@ extension OpenProductDomain.Navigation {
         case let .openDeposit(openDeposit):
             return .openDeposit(openDeposit)
             
-        case .openProduct, .openURL, .main:
+        case .openProduct, .openURL, .main, .openLoan:
             return nil
             
         case let .openSticker(sticker):
             return .openSticker(sticker)
-            
-        case .openLoan:
-            return .openLoan
         }
     }
     
@@ -163,7 +157,6 @@ extension OpenProductDomain.Navigation {
         
         case openCard(AuthProductsViewModel)
         case openDeposit(OpenDepositListViewModel)
-        case openLoan
         case openSticker(LandingWrapperViewModel)
     }
 }
@@ -200,9 +193,6 @@ extension OpenProductDomain.Navigation.Destination: Identifiable {
             
         case let .openDeposit(openDeposit):
             return .openDeposit(.init(openDeposit))
-            
-        case .openLoan:
-            return .openLoan
             
         case let .openSticker(openSticker):
             return .openSticker(.init(openSticker))

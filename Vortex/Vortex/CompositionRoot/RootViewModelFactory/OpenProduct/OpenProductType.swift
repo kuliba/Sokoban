@@ -13,7 +13,7 @@ enum OpenProductType: Hashable {
     case card(Card)
     case deposit
     case insurance
-    case loan
+    case collateralLoan(CollateralLoanType)
     case mortgage
     case savingsAccount
     case sticker
@@ -36,7 +36,7 @@ extension OpenProductType {
         case .card:             return .ic24NewCardColor
         case .deposit:          return .ic24DepositPlusColor
         case .insurance:        return .ic24InsuranceColor
-        case .loan:             return .ic24CreditColor
+        case .collateralLoan:   return .ic24CreditColor
         case .mortgage:         return .ic24Mortgage
         case .savingsAccount:   return .ic24FilePluseColorProcent
         case .sticker:          return .ic24Sticker
@@ -50,7 +50,7 @@ extension OpenProductType {
         case .card:             return "Карту"
         case .deposit:          return "Вклад"
         case .insurance:        return "Страховку"
-        case .loan:             return "Кредит"
+        case .collateralLoan:   return "Кредит"
         case .mortgage:         return "Ипотеку"
         case .savingsAccount:   return "Счет накопительный"
         case .sticker:          return "Стикер"

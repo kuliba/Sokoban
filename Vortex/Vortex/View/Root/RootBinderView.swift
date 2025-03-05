@@ -384,7 +384,7 @@ extension RootViewNavigation.Destination: Identifiable {
                     return .orderCardLanding
                 }
                 
-            case let .savingsAccount(openSavingsAccount):
+            case .savingsAccount:
                 return .openProduct(.savingsAccount)
                 
             case .unknown:

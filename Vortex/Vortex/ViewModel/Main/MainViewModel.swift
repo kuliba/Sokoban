@@ -127,14 +127,14 @@ class MainViewModel: ObservableObject, Resetable {
                 promoItem,
                 .init(
                     hide: { [weak self] in self?.hide(promoItem.promoProduct)},
-                    show: { [weak self] in self?.handlePromoTap(promoItem)})
+                    show: { [weak self] in self?.handlePromoTap(promoItem.promoProduct)})
             )
         }
     }
 
-    private func handlePromoTap(_ promoItem: PromoItem) {
+    private func handlePromoTap(_ promoProduct: PromoProduct) {
        
-        switch promoItem.promoProduct {
+        switch promoProduct {
         case .sticker:
             handlePromoAction(.sticker)
             
@@ -142,24 +142,7 @@ class MainViewModel: ObservableObject, Resetable {
             openSavingsAccount()
             
         case let .collateralLoan(type):
-            handlePromoItemAction(promoItem: promoItem) {
-                
-                openCollateralLoanLanding(type: type)
-            }
-        }
-    }
-    
-    private func handlePromoItemAction(
-        promoItem: PromoItem,
-        action: () -> Void
-    ) {
-
-        if promoItem.action != nil {
-            
-            action()
-        } else if let url = URL(string: promoItem.link) {
-
-            Self.openLinkURL(url)
+            handlePromoAction(.collateralLoan(type))
         }
     }
     
@@ -599,8 +582,8 @@ private extension MainViewModel {
                             case .card:
                                 openCard()
                                 
-                            case .loan:
-                                openCollateralLoanLanding(type: .showcase)
+                            case .collateralLoan:
+                                openProductByType(.collateralLoan(.showcase))
                                 
                             case .sticker:
                                 handleLandingAction(.sticker)
@@ -780,7 +763,7 @@ private extension MainViewModel {
     func openProductByType(_ type: OpenProductType) {
         
         switch type {
-        case .account, .card, .deposit, .insurance, .loan, .mortgage:
+        case .account, .card, .deposit, .insurance, .mortgage:
             break
             
         case .savingsAccount:
@@ -795,6 +778,19 @@ private extension MainViewModel {
                 
                 self?.handleLandingAction(.sticker)
             }
+            
+        case let .collateralLoan(type):
+            
+            switch type {
+            case .showcase:
+                let binder = bindersFactory.makeCollateralLoanShowcaseBinder()
+                route.destination = .collateralLoanLanding(binder)
+                
+            case .car, .realEstate:
+                guard !type.id.isEmpty else { return }
+                let binder = bindersFactory.makeCollateralLoanLandingBinder(type.id)
+                route.destination = .collateralLoanLandingProduct(binder)
+            }
         }
     }
     
@@ -803,6 +799,7 @@ private extension MainViewModel {
         let myProductsViewModel = MyProductsViewModel(
             model,
             makeProductProfileViewModel: viewModelsFactory.makeProductProfileViewModel,
+            openProductByType: openProductByType,
             openOrderSticker: { [weak self] in
                 
                 self?.route = .empty
@@ -812,7 +809,6 @@ private extension MainViewModel {
                     self?.handleLandingAction(.sticker)
                 }
             },
-            openCollateralLoanLanding: openCollateralLoanLanding,
             makeMyProductsViewFactory: .init(
                 makeInformerDataUpdateFailure: { [weak self] in
                     
@@ -1104,20 +1100,6 @@ private extension MainViewModel {
                     self?.action.send(MainViewModelAction.Toolbar.scanQR)
                 }
             }
-        }
-    }
-    
-    func openCollateralLoanLanding(type: CollateralLoanType) {
-        
-        switch type {
-        case .showcase:
-            let binder = bindersFactory.makeCollateralLoanShowcaseBinder()
-            route.destination = .collateralLoanLanding(binder)
-            
-        case .car, .realEstate:
-            guard !type.id.isEmpty else { return }
-            let binder = bindersFactory.makeCollateralLoanLandingBinder(type.id)
-            route.destination = .collateralLoanLandingProduct(binder)
         }
     }
     
@@ -2016,7 +1998,7 @@ extension MainViewModel {
             openSavingsAccount()
             
         case let .collateralLoan(type):
-            openCollateralLoanLanding(type: type)
+            openProductByType(.collateralLoan(type))
         }
     }
     

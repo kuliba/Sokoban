@@ -34,13 +34,13 @@ extension GetCollateralLandingDomain {
     
     enum Select: Equatable {
         case createDraft(Payload)
-        case showCaseList(ExternalEvent.CaseType)
+        case showCaseList(State.BottomSheet.SheetType)
     }
     
     enum Navigation {
 
         case createDraft(DraftDomain.Binder)
-        case showBottomSheet(ExternalEvent.CaseType)
+        case showBottomSheet(GetCollateralLandingDomain.State.BottomSheet.SheetType)
     }
     
     typealias DraftDomain = CreateDraftCollateralLoanApplicationDomain

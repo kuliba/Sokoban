@@ -840,6 +840,7 @@ private extension RootViewModelFactory {
                 
                 self?.makePromoViewModel(
                     viewModel: $0,
+                    featureFlags: featureFlags,
                     actions: $1
                 )
             },

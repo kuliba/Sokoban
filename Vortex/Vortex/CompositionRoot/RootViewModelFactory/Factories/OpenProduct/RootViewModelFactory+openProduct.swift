@@ -24,7 +24,7 @@ extension RootViewModelFactory {
             }
         case .deposit:        return .unknown
         case .insurance:      return .unknown
-        case .loan:           return .unknown
+        case .collateralLoan: return .unknown
         case .mortgage:       return .unknown
         case .savingsAccount: return .savingsAccount(makeSavingsNodes(notify: notify))
         case .sticker:        return .unknown
