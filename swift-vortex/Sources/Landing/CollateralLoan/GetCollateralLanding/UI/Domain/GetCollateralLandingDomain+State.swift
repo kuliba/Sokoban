@@ -44,6 +44,15 @@ extension GetCollateralLandingDomain {
 
 extension GetCollateralLandingDomain.State {
     
+    var isButtonDisabled: Bool {
+        
+        if let product,
+        desiredAmount >= product.calc.amount.minIntValue && desiredAmount <= product.calc.amount.maxIntValue {
+        
+            return false
+        } else { return true }
+    }
+    
     var selectedPeriodTitle: String {
         
         product?.calc.rates.first { $0.termMonth == selectedMonthPeriod }?.termStringValue ?? ""

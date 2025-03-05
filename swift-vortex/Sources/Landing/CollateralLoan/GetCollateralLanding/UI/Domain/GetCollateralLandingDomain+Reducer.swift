@@ -53,6 +53,14 @@ extension GetCollateralLandingDomain {
             case .dismissFailure:
                 state.isLoading = false
                 state.result = nil
+                
+            case let .enterDesiredAmount(newValue):
+                if
+                    let newDesiredAmount = UInt(newValue.filter(\.isWholeNumber)),
+                    newDesiredAmount != state.desiredAmount {
+                    
+                    state.desiredAmount = newDesiredAmount
+                }
             }
             
             return (state, effect)

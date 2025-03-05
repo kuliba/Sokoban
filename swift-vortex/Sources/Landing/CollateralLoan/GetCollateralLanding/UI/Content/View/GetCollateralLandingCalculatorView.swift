@@ -13,6 +13,7 @@ struct GetCollateralLandingCalculatorView<InformerPayload>: View {
     
     @SwiftUI.State private var toggleIsOn = false
     @SwiftUI.State private var sliderCurrentValue: Double = .zero
+    @SwiftUI.State private var desiredAmount: String
     
     let state: State
     let product: Product
@@ -35,6 +36,7 @@ struct GetCollateralLandingCalculatorView<InformerPayload>: View {
         self.domainEvent = domainEvent
         self.externalEvent = externalEvent
         self.toggleIsOn = toggleIsOn
+        self.desiredAmount = state.formattedDesiredAmount ?? ""
     }
     
     var body: some View {
@@ -232,11 +234,26 @@ struct GetCollateralLandingCalculatorView<InformerPayload>: View {
                 .frame(minWidth: 0, maxWidth: .infinity)
             
             HStack {
-                
-                desiredAmountValueText(config: config)
+
+                TextField("", text: $desiredAmount)
                     .padding(.leading, config.root.layouts.contentLeadingPadding)
-                    .fixedSize(horizontal: true, vertical: false)
-                
+                    .font(config.desiredAmount.fontValue.font)
+                    .foregroundColor(.white)
+                    .tint(.white)
+                    .keyboardType(.numberPad)
+                    .onChange(of: state.formattedDesiredAmount) {
+                        
+                        if let amount = $0 {
+                            
+                            desiredAmount = String(amount)
+                        }
+                    }
+                    .onChange(of: desiredAmount) {
+
+                        domainEvent(.enterDesiredAmount($0))
+                        sliderCurrentValue = Double(state.desiredAmount)
+                    }
+
                 desiredAmountMaxText(config: config)
                     .padding(.trailing, config.root.layouts.contentTrailingPadding)
                     .frame(maxWidth: .infinity, alignment: .trailing)

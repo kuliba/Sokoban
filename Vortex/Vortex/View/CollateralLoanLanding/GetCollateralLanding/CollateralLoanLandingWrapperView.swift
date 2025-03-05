@@ -561,6 +561,7 @@ extension GetCollateralLandingConfig.Footer {
         font: .init(Font.system(size: 16).bold()),
         foreground: .white,
         background: .red,
+        disabledBackground: .unselected,
         layouts: .init(
             height: 56,
             cornerRadius: 12,

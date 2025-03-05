@@ -106,7 +106,7 @@ class MainViewModel: ObservableObject, Resetable {
     func makeCollateralLoanFactory() -> CollateralLoanLandingFactory {
         
         .init(
-            makeImageViewWithMD5Hash: { self.model.generalImageCache().makeIconView(for: .md5Hash(.init($0))) },
+            makeImageViewWithMD5Hash: { self.model.imageCache().makeIconView(for: .md5Hash(.init($0))) },
             makeImageViewWithURL: { self.model.generalImageCache().makeIconView(for: .image($0.addingPercentEncoding())) },
             getPDFDocument: getPDFDocument,
             formatCurrency: { self.model.amountFormatted(amount: Double($0), currencyCode: "RUB", style: .normal) }
