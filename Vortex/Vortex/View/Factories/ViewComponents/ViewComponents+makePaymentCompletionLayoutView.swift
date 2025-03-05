@@ -57,6 +57,26 @@ extension ViewComponents {
     func makePaymentCompletionLayoutView(
         state: PaymentCompletion,
         config: PaymentCompletionLayoutViewConfig = .iVortex,
+        details: @escaping () -> some View,
+        statusConfig: PaymentCompletionConfig
+    ) -> some View {
+        
+        makePaymentCompletionLayoutView(
+            state: state,
+            config: config,
+            statusConfig: statusConfig,
+            buttons: EmptyView.init,
+            details: details
+        ) {
+            PaymentComponents.ButtonView.goToMain(goToMain: goToMain)
+                .conditionalBottomPadding()
+        }
+    }
+    
+    @inlinable
+    func makePaymentCompletionLayoutView(
+        state: PaymentCompletion,
+        config: PaymentCompletionLayoutViewConfig = .iVortex,
         statusConfig: PaymentCompletionConfig,
         buttons: @escaping () -> some View
     ) -> some View {
@@ -65,9 +85,11 @@ extension ViewComponents {
             state: state,
             config: config,
             statusConfig: statusConfig,
-            buttons: buttons
+            buttons: buttons,
+            details: EmptyView.init
         ) {
             PaymentComponents.ButtonView.goToMain(goToMain: goToMain)
+                .conditionalBottomPadding()
         }
     }
     

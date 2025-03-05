@@ -18,10 +18,17 @@ extension RootViewModelFactory {
         case let .card(type):
             switch type {
             case .form:
-                return .card(.form(openCardProduct(notify: { notify(.select(.orderCardResponse($0))) })))
+                return .card(.form(openCardProduct(
+                    notify: { notify(.select(.orderCardResponse($0))) }
+                )))
+                
             case .landing:
                 return .card(.landing(makeOrderCardLanding()))
             }
+            
+        case .creditCardMVP:
+            return .creditCardMVP(makeCreditCardMVP())
+            
         case .deposit:        return .unknown
         case .insurance:      return .unknown
         case .loan:           return .unknown
