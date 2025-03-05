@@ -709,6 +709,13 @@
         "identifier" : "ResourceProviderComponentTests",
         "name" : "ResourceProviderComponentTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "OrderCardLandingTests",
+        "name" : "OrderCardLandingTests"
+      }
     }
   ],
   "version" : 1
