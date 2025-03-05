@@ -34,7 +34,7 @@ extension RootViewModelFactory {
         switch select {
         case let .orderCardResponse(orderCardResponse):
             completion(.orderCardResponse(orderCardResponse))
-        
+            
         case let .savingsAccount(orderAccountResponse):
             
             let detailsService = nanoServiceComposer.compose(
@@ -71,7 +71,7 @@ extension RootViewModelFactory {
                 createRequest: RequestFactory.createGetPrintFormForSavingsAccountRequest,
                 mapResponse: RemoteServices.ResponseMapper.mapGetPrintFormForSavingsAccountResponse
             )
-
+            
             let document = makeDocumentButton { completion in
                 if let accountID = orderAccountResponse.accountId {
                     documentService((accountID, orderAccountResponse.paymentOperationDetailId)) { response in
@@ -109,6 +109,11 @@ extension RootViewModelFactory {
                         )))
                     }
                 }
+                
+            case .creditCardMVP:
+                completion(.openProduct(.creditCardMVP(
+                    makeCreditCardMVP()
+                )))
                 
             case .savingsAccount:
                 completion(.openProduct(openProduct(

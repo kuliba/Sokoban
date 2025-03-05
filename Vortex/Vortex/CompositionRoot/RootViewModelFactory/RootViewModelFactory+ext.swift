@@ -831,11 +831,13 @@ private extension RootViewModelFactory {
                 
                 self?.makePromoViewModel(
                     viewModel: $0,
-                    actions: $1
+                    actions: $1,
+                    featureFlags: featureFlags
                 )
             },
             qrViewModelFactory: qrViewModelFactory,
-            makeTrailingToolbarItems: makeTrailingToolbarItems
+            makeTrailingToolbarItems: makeTrailingToolbarItems,
+            makeCreditCardMVP: { featureFlags.creditCardMVPFlag.isActive ? .creditCardMVPPreview : nil }
         )
                   
         let mainViewModel = MainViewModel(

@@ -123,6 +123,9 @@ class MainViewModel: ObservableObject, Resetable {
     private func handlePromoTap(_ promoProduct: PromoProduct) {
        
         switch promoProduct {
+        case .creditCardMVP:
+            openСreditCardMVP()
+            
         case .sticker:
             handlePromoAction(.sticker)
             
@@ -151,9 +154,10 @@ class MainViewModel: ObservableObject, Resetable {
     // TODO: need delete
     
     private func getSticker() -> AdditionalProductViewModel? {
+        
         guard let index = sections.indexProductsSection,
               let section = sections[index] as? MainSectionProductsView.ViewModel,
-              let stickerVM = section.productCarouselViewModel.promoProducts?.first(where: { $0.promoType == .sticker })
+              let stickerVM = section.productCarouselViewModel.promoProducts?.first(where: { $0.promoItem.promoProduct == .sticker })
         else { return nil }
         
         return stickerVM
@@ -163,7 +167,7 @@ class MainViewModel: ObservableObject, Resetable {
         
         if let products = sections.productsSection {
             
-            if var promoProducts = products.productCarouselViewModel.promoProducts, let index = promoProducts.firstIndex(where: { $0.promoType == type}) {
+            if var promoProducts = products.productCarouselViewModel.promoProducts, let index = promoProducts.firstIndex(where: { $0.promoItem.promoProduct == type}) {
                 promoProducts.remove(at: index)
                 products.productCarouselViewModel.updatePromo(promoProducts)
             }
@@ -176,7 +180,7 @@ class MainViewModel: ObservableObject, Resetable {
         if let index = sections.indexProductsSection,
             let section = sections[index] as? MainSectionProductsView.ViewModel {
             
-            if let stickerVM = section.productCarouselViewModel.promoProducts?.first(where: { $0.promoType == .sticker }) {
+            if let stickerVM = section.productCarouselViewModel.promoProducts?.first(where: { $0.promoItem.promoProduct == .sticker }) {
                 withAnimation {
                     sections[index] = MainSectionProductsView.ViewModel(
                         model,
@@ -545,6 +549,9 @@ private extension MainViewModel {
                             case .card:
                                 openCard()
                                 
+                            case .creditCardMVP:
+                                openСreditCardMVP()
+                                
                             case .loan:
                                 openCollateralLoanLanding()
                                 
@@ -579,8 +586,8 @@ private extension MainViewModel {
                         default:
                             break
                         }
-                        
-                    }.store(in: &bindings)
+                    }
+                    .store(in: &bindings)
                 
                 // Promo section
             case let promo as MainSectionPromoView.ViewModel:
@@ -683,7 +690,6 @@ private extension MainViewModel {
     func handleBanners(
         _ banners: BannerList
     ) {
-        
         var promo: [PromoItem] = []
         
         if let sticker = banners.cardBannerList?.first {
@@ -693,6 +699,8 @@ private extension MainViewModel {
         if let accountBannerList = banners.accountBannerList, !model.hasSavingsAccount {
             promo.append(contentsOf: accountBannerList.map { .init(item: $0, productType: .account, promoProduct: .savingsAccount) })
         }
+        
+        viewModelsFactory.makeCreditCardMVP().map { promo.append($0) }
         
         let promoItems = makePromoViewModels(promoItems: promo) ?? []
         
@@ -705,7 +713,7 @@ private extension MainViewModel {
         
         if model.hasSavingsAccount {
             var newPromo = promoItems
-            newPromo?.removeAll(where: { $0.promoType == .savingsAccount })
+            newPromo?.removeAll(where: { $0.promoItem.promoProduct == .savingsAccount })
             sections.productsSection?.productCarouselViewModel.updatePromo(newPromo)
         } else {
             bannersBox.requestUpdate()
@@ -715,7 +723,7 @@ private extension MainViewModel {
     func openProductByType(_ type: OpenProductType) {
         
         switch type {
-        case .account, .card, .deposit, .insurance, .loan, .mortgage:
+        case .account, .card, .creditCardMVP, .deposit, .insurance, .loan, .mortgage:
             break
             
         case .savingsAccount:
@@ -1912,6 +1920,11 @@ extension MainViewModel {
 
 extension MainViewModel {
     
+    func openСreditCardMVP() {
+        
+        action.send(RootEvent.select(.openProduct(.creditCardMVP)))
+    }
+    
     func openSavingsAccount() {
         
         action.send(RootEvent.select(.openProduct(.savingsAccount)))
@@ -1923,6 +1936,9 @@ extension MainViewModel {
     func handlePromoAction(_ promo: PromoProduct) {
         
         switch promo {
+        case .creditCardMVP:
+            fatalError()
+            
         case .sticker:
             handleLandingAction(.sticker)
             
@@ -2129,11 +2145,11 @@ extension Array where Element == MainSectionViewModel {
     }
     
     var stickerViewModel: AdditionalProductViewModel? {
-        productsSection?.productCarouselViewModel.promoProducts?.first(where: { $0.promoType == .sticker })
+        productsSection?.productCarouselViewModel.promoProducts?.first(where: { $0.promoItem.promoProduct == .sticker })
     }
     
     var savingsAccountViewModel: AdditionalProductViewModel? {
-        productsSection?.productCarouselViewModel.promoProducts?.first(where: { $0.promoType == .savingsAccount })
+        productsSection?.productCarouselViewModel.promoProducts?.first(where: { $0.promoItem.promoProduct == .savingsAccount })
     }
     
     var promoProducts: [AdditionalProductViewModel]? {

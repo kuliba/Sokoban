@@ -248,6 +248,9 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
             switch openProduct {
             case .card:
                 return .openProduct(.card)
+                
+            case .creditCardMVP:
+                return .openProduct(.creditCardMVP)
             
             case .savingsAccount:
                 return .openProduct(.savingsAccount)
@@ -312,7 +315,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         
         enum OpenProduct: Equatable {
             
-            case card, savingsAccount, unknown
+            case card, creditCardMVP, savingsAccount, unknown
         }
         
         enum EquatableRootViewOutside: Equatable {
