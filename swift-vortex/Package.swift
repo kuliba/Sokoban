@@ -313,6 +313,7 @@ let package = Package(
         .operatorsListComponentsTests,
         .orderCard,
         .orderCardLanding,
+        .orderCardLandingTests,
         .pickerWithPreviewComponent,
         .pickerWithPreviewComponentTests,
         .pinCodeUI,
@@ -3115,6 +3116,16 @@ private extension Target {
         path: "Sources/UI/\(String.orderCardLanding)"
     )
     
+    static let orderCardLandingTests = testTarget(
+        name: .orderCardLandingTests,
+        dependencies: [
+            .orderCardLanding,
+            .customDump,
+            .uiPrimitives
+        ],
+        path: "Tests/UI/\(String.orderCardLandingTests)"
+    )
+    
     static let searchBarComponent = target(
         name: .searchBarComponent,
         dependencies: [
@@ -4337,7 +4348,9 @@ private extension String {
     static let otpInputComponentTests = "OTPInputComponentTests"
     
     static let orderCard = "OrderCard"
+    
     static let orderCardLanding = "OrderCardLanding"
+    static let orderCardLandingTests = "OrderCardLandingTests"
     
     static let paymentCompletionUI = "PaymentCompletionUI"
     

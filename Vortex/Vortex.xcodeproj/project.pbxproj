@@ -7011,6 +7011,7 @@
 		C16157242C2A894A000EFC3A /* ProductProfileFlowManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductProfileFlowManager.swift; sourceTree = "<group>"; };
 		C16157262C2A89A4000EFC3A /* Reducer+makeProductProfileFlowReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Reducer+makeProductProfileFlowReducer.swift"; sourceTree = "<group>"; };
 		C161C48F299505BF003830C9 /* PaymentsSelectDropDownListComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSelectDropDownListComponent.swift; sourceTree = "<group>"; };
+		C1622E512D7880DA0028536B /* OrderCardLanding.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = OrderCardLanding.xctestplan; sourceTree = "<group>"; };
 		C16502F22939FED600B034D0 /* PaymentsAntifraudViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsAntifraudViewModel.swift; sourceTree = "<group>"; };
 		C16502F42939FF2200B034D0 /* PaymentsAntifraudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsAntifraudView.swift; sourceTree = "<group>"; };
 		C16502F62942199F00B034D0 /* PaymentsSelectBankViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSelectBankViewComponent.swift; sourceTree = "<group>"; };
@@ -10743,6 +10744,7 @@
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
+				C1622E512D7880DA0028536B /* OrderCardLanding.xctestplan */,
 				2ABD45322D763A2E009153CD /* ResourceProviderComponent.xctestplan */,
 				2A5AFD982D68CCB200BD15EC /* GetOperationDetailService.xctestplan */,
 				2AD073702D65A83700922062 /* StateMachines.xctestplan */,
