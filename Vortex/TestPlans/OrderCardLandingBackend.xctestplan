@@ -1,8 +1,8 @@
 {
   "configurations" : [
     {
-      "id" : "53EA1314-5D12-4636-9B79-0634B525B9ED",
-      "name" : "Test Scheme Action",
+      "id" : "61EDD06D-D3BD-4135-9F63-D9A5E04A204E",
+      "name" : "Configuration 1",
       "options" : {
 
       }
@@ -15,8 +15,8 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "OrderCardLandingTests",
-        "name" : "OrderCardLandingTests"
+        "identifier" : "OrderCardLandingBackendTests",
+        "name" : "OrderCardLandingBackendTests"
       }
     }
   ],
