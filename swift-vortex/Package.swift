@@ -93,6 +93,7 @@ let package = Package(
         .linkableText,
         .manageSubscriptionsUI,
         .orderCard,
+        .orderCardLanding,
         .otpInputComponent,
         .pickerWithPreviewComponent,
         .pinCodeUI,
@@ -311,6 +312,8 @@ let package = Package(
         .operatorsListComponents,
         .operatorsListComponentsTests,
         .orderCard,
+        .orderCardLanding,
+        .orderCardLandingTests,
         .pickerWithPreviewComponent,
         .pickerWithPreviewComponentTests,
         .pinCodeUI,
@@ -657,6 +660,13 @@ private extension Product {
         name: .orderCard,
         targets: [
             .orderCard
+        ]
+    )
+    
+    static let orderCardLanding = library(
+        name: .orderCardLanding,
+        targets: [
+            .orderCardLanding
         ]
     )
     
@@ -3097,6 +3107,24 @@ private extension Target {
         path: "Sources/UI/\(String.orderCard)"
     )
     
+    static let orderCardLanding = target(
+        name: .orderCardLanding,
+        dependencies: [
+            // internal packages
+        ],
+        path: "Sources/UI/\(String.orderCardLanding)"
+    )
+    
+    static let orderCardLandingTests = testTarget(
+        name: .orderCardLandingTests,
+        dependencies: [
+            .orderCardLanding,
+            .customDump,
+            .uiPrimitives
+        ],
+        path: "Tests/UI/\(String.orderCardLandingTests)"
+    )
+    
     static let searchBarComponent = target(
         name: .searchBarComponent,
         dependencies: [
@@ -3873,6 +3901,10 @@ private extension Target.Dependency {
         name: .orderCard
     )
     
+    static let orderCardLanding = byName(
+        name: .orderCardLanding
+    )
+    
     // MARK: - UI Components
     
     static let amountComponent = byName(
@@ -4315,6 +4347,9 @@ private extension String {
     static let otpInputComponentTests = "OTPInputComponentTests"
     
     static let orderCard = "OrderCard"
+    
+    static let orderCardLanding = "OrderCardLanding"
+    static let orderCardLandingTests = "OrderCardLandingTests"
     
     static let paymentCompletionUI = "PaymentCompletionUI"
     

@@ -17,6 +17,7 @@ struct PromoItem: Equatable {
     let action: PromoAction?
     let productType: ProductType
     let promoProduct: PromoProduct
+    let hasHighPriority: Bool
     
     struct PromoAction: Equatable {
         
@@ -35,7 +36,8 @@ extension PromoItem {
             md5hash: item.md5hash,
             action: item.action.map { .init($0) },
             productType: .card,
-            promoProduct: .sticker
+            promoProduct: .sticker,
+            hasHighPriority: false
         )
     }
     
@@ -44,15 +46,27 @@ extension PromoItem {
         productType: ProductType,
         promoProduct: PromoProduct
     ) {
-        
         self.init(
             productName: item.productName,
             link: item.link,
             md5hash: item.md5hash,
             action: item.action.map { .init($0) },
             productType: productType,
-            promoProduct: promoProduct
+            promoProduct: promoProduct,
+            hasHighPriority: promoProduct.hasHighPriority
         )
+    }
+}
+
+private extension PromoProduct {
+    
+    var hasHighPriority: Bool {
+        
+        switch self {
+        case .creditCardMVP:  return true
+        case .sticker:        return false
+        case .savingsAccount: return true
+        }
     }
 }
 
@@ -78,14 +92,14 @@ extension PromoItem {
         type: ProductType,
         promoProduct: PromoProduct
     ) {
-        
         self.init(
             productName: item.productName,
             link: item.link,
             md5hash: item.md5hash,
             action: item.action.map { .init($0) },
             productType: type,
-            promoProduct: promoProduct
+            promoProduct: promoProduct,
+            hasHighPriority: promoProduct.hasHighPriority
         )
     }
 }
@@ -101,6 +115,27 @@ extension PromoItem.PromoAction {
 }
 
 extension PromoItem {
+    
+    static let sticker: Self = .init(
+        productName: "Платежный стикер",
+        link: "",
+        md5hash: "baf4ce68d067b657e21ce34f2d6a92c9",
+        action: .init(type: "sticker", target: "landing"),
+        productType: .card,
+        promoProduct: .sticker,
+        hasHighPriority: false
+    )
+
+    static let creditCardMVPPreview: Self = .init(
+        productName: "Кредитная карта (MVP)",
+        link: "",
+        md5hash: "baf4ce68d067b657e21ce34f2d6a92c9",
+        action: .init(type: "SAVING_LANDING", target: "DEFAULT"),
+        productType: .card,
+        promoProduct: .creditCardMVP,
+        hasHighPriority: true
+    )
+    
     /*
      {
          "productName": "Накопительный счет",
@@ -119,7 +154,8 @@ extension PromoItem {
         md5hash: "3e0d7b5a2a1522c9d67e048f7c807afb",
         action: .init(type: "SAVING_LANDING", target: "DEFAULT"),
         productType: .account,
-        promoProduct: .savingsAccount
+        promoProduct: .savingsAccount,
+        hasHighPriority: true
     )
 }
 
@@ -133,7 +169,7 @@ extension PromoItem {
         .init(
             md5Hash: md5hash,
             productType: productType,
-            promoType: promoProduct,
+            promoItem: self,
             onTap: onTap,
             onHide: onHide
         )
