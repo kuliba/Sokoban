@@ -97,7 +97,7 @@ class MainViewModel: ObservableObject, Resetable {
         
         bind()
         update(sections, with: model.settingsMainSections)
-        bind(productsSections: sections)
+        bindProductSection(sections)
         bind(sections)
     }
     
@@ -144,7 +144,7 @@ class MainViewModel: ObservableObject, Resetable {
                 model,
                 promoProducts: promoProducts
             )
-            bind(productsSections: sections)
+            bindProductSection(sections)
         }
     }
         
@@ -183,7 +183,7 @@ class MainViewModel: ObservableObject, Resetable {
                         promoProducts: [stickerVM]
                     )
                 }
-                bind(productsSections: sections)
+                bindProductSection(sections)
             }
         }
     }
@@ -649,7 +649,7 @@ private extension MainViewModel {
         }
     }
     
-    func bind(productsSections: [MainSectionViewModel]) {
+    func bindProductSection(_ sections: [MainSectionViewModel]) {
         
         if let section = sections.productsSection {
             
@@ -716,7 +716,7 @@ private extension MainViewModel {
 
     func updateSections(
     ) {
-        bind(productsSections: sections)
+        bindProductSection(sections)
         bind(sections)
     }
     
