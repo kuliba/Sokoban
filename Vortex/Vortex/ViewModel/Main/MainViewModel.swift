@@ -694,9 +694,10 @@ private extension MainViewModel {
             promo.append(contentsOf: accountBannerList.map { .init(item: $0, productType: .account, promoProduct: .savingsAccount) })
         }
         
-        let promoItems = makePromoViewModels(promoItems: promo) ?? []
-        
-        sections.productsSection?.productCarouselViewModel.updatePromo(promoItems)
+        let newPromo = makePromoViewModels(promoItems: promo) ?? []
+        sections.productsSection?.productCarouselViewModel.updatePromo(newPromo)
+
+        updateSections()
     }
     
     func handleBanners(
@@ -710,8 +711,15 @@ private extension MainViewModel {
         } else {
             bannersBox.requestUpdate()
         }
+        updateSections()
     }
 
+    func updateSections(
+    ) {
+        bind(productsSections: sections)
+        bind(sections)
+    }
+    
     func openProductByType(_ type: OpenProductType) {
         
         switch type {

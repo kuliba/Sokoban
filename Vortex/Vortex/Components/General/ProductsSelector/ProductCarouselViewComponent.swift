@@ -348,6 +348,7 @@ extension ProductCarouselView {
                 promoProducts: visiblePromoProductsType(promoProducts: promoProducts),
                 style: style.optionsSelectorStyle
             )
+            bind()
         }
         
         func visiblePromoProductsType(promoProducts: [AdditionalProductViewModel]?) -> [ProductType]? {
