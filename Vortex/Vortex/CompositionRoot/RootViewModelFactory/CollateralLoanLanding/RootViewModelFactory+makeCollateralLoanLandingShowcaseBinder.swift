@@ -176,11 +176,11 @@ extension GetShowcaseDomain.ContentError {
             if error.isNotConnectedToInternetOrTimeout() {
                 self = .init(kind: .informer(.init(message: "Проверьте подключение к сети", icon: .wifiOff)))
             } else {
-                self = .init(kind: .alert("Что-то пошло не так. Попробуйте позже."))
+                self = .init(kind: .alert("Попробуйте позже."))
             }
             
         default:
-            self = .init(kind: .alert(error.localizedDescription))
+            self = .init(kind: .alert("Попробуйте позже."))
         }
     }
     

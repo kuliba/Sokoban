@@ -211,7 +211,7 @@ extension RootViewModelFactory {
         let saveConsents = nanoServiceComposer.compose(
             createRequest: RequestFactory.createSaveConsentsRequest(with:),
             mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:),
-            mapError: Domain.ContentError.init(error:)
+            mapError: { _ in Domain.ContentError.init(kind: .complete) }
         )
         
         let save = schedulers.background.scheduled(saveConsents)
@@ -352,11 +352,11 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
             if error.isNotConnectedToInternetOrTimeout() {
                 self = .init(kind: .informer(.init(message: "Проверьте подключение к сети", icon: .wifiOff)))
             } else {
-                self = .init(kind: .alert("Что-то пошло не так. Попробуйте позже."))
+                self = .init(kind: .alert("Попробуйте позже."))
             }
             
         default:
-            self = .init(kind: .alert(error.localizedDescription))
+            self = .init(kind: .alert("Попробуйте позже."))
         }
     }
     
