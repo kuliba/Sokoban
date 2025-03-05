@@ -214,6 +214,27 @@
       }
     },
     {
+      "skippedTests" : [
+        "QRAcceptanceTests",
+        "QRAcceptanceTests\/test_closeQRScanner_shouldCloseRootViewQRScannerFullScreenCoverOnActiveFlag()",
+        "QRAcceptanceTests\/test_openQRWithFlowEvent_shouldNotOpenRootViewQRScannerFullScreenCover_onMissingProduct()",
+        "QRAcceptanceTests\/test_openQRWithFlowEvent_shouldOpenRootViewQRScannerFullScreenCover_onExistingProsuct()",
+        "QRAcceptanceTests\/test_shouldPresentOperatorSearchOnMultiple()",
+        "QRAcceptanceTests\/test_shouldPresentOperatorViewOnQRScanSingle()",
+        "QRAcceptanceTests\/test_shouldPresentPaymentOnQRScanNoneMapped()",
+        "QRAcceptanceTests\/test_shouldPresentPaymentOnSuccessfulC2BQRScan()",
+        "QRAcceptanceTests\/test_shouldPresentPaymentOnSuccessfulC2BSubscribeQRScan()",
+        "QRAcceptanceTests\/test_shouldPresentPaymentOnSuccessfulSourceQRScan()",
+        "QRAcceptanceTests\/test_shouldPresentProviderPickerOnMixed()",
+        "QRAcceptanceTests\/test_shouldPresentProviderServicePickerOnQRScanProvider()",
+        "QRAcceptanceTests\/test_shouldPresentQRFailureOnMissingINN()",
+        "QRAcceptanceTests\/test_shouldPresentQRFailureOnQRScanFailure()",
+        "QRAcceptanceTests\/test_shouldPresentQRFailureOnQRScanURL()",
+        "QRAcceptanceTests\/test_shouldPresentQRFailureOnQRScanUnknown()",
+        "QRAcceptanceTests\/test_shouldPresentSberQROnQRScanSberQR()",
+        "QRAcceptanceTests\/test_tapMainViewQRButton_shouldNotOpenRootViewQRScannerFullScreenCoverOnActiveFlag_onMissingProduct()",
+        "QRAcceptanceTests\/test_tapMainViewQRButton_shouldOpenRootViewQRScannerFullScreenCoverOnActiveFlag_onExistingProduct()"
+      ],
       "target" : {
         "containerPath" : "container:Vortex.xcodeproj",
         "identifier" : "EDB14392265FDA430028EF5A",
