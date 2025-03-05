@@ -69,7 +69,7 @@ private extension ResponseMapper {
             let product: Product?
             let conditions: Condition?
             let security: Security?
-            let frequentlyAskedQuestions: Question?
+            let frequentlyAskedQuestions: Questions?
             let cardLandingAction: CardLandingAction?
         }
         
@@ -84,10 +84,16 @@ private extension ResponseMapper {
             let title: String?
         }
         
-        struct Question: Decodable {
+        struct Questions: Decodable {
             
             let title: String?
-            let list: [Item]
+            let list: [Question]
+            
+            struct Question: Decodable {
+                
+                let title: String?
+                let description: String?
+            }
         }
         
         struct Security: Decodable {
@@ -132,9 +138,9 @@ private extension ResponseMapper {
     }
 }
 
-private extension ResponseMapper._Data.Question {
+private extension ResponseMapper._Data.Questions {
     
-    var question: OrderCardLandingResponse.Question? {
+    var question: OrderCardLandingResponse.Questions? {
         
         guard let title,
               !title.isEmpty,
@@ -144,7 +150,12 @@ private extension ResponseMapper._Data.Question {
         
         return .init(
             title: title,
-            list: list.compactMap(\.item)
+            list: list.map({
+                .init(
+                    title: $0.title ?? "",
+                    description: $0.description ?? ""
+                )
+            })
         )
     }
 }

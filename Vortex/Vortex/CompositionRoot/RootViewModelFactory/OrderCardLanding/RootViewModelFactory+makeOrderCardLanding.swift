@@ -138,13 +138,13 @@ private extension OrderCardLanding {
 
 private extension DropDownTextList {
 
-    init(questions: OrderCardLandingResponse.Question) {
+    init(questions: OrderCardLandingResponse.Questions) {
         self.init(
             title: questions.title,
             items: questions.list.compactMap({
                 .init(
                     title: $0.title,
-                    subTitle: $0.subtitle ?? ""
+                    subTitle: $0.description
                 )
             })
         )
