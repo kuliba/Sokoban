@@ -367,18 +367,17 @@ extension ProductCarouselView {
         
         func visiblePromoProductsType(promoProducts: [AdditionalProductViewModel]?) -> [ProductType]? {
             
-            return promoProducts?.filter { shouldShowPromo($0.promoType)}.uniqueValues(by: \.productType).map(\.productType)
+            return promoProducts?.filter { shouldShowPromo($0.promoItem.promoProduct)}.uniqueValues(by: \.productType).map(\.productType)
         }
 
         func visiblePromoProducts(productType: ProductType) -> Int {
             
-            return promoProducts?.filter { $0.productType == productType && shouldShowPromo($0.promoType)}.count ?? 0
+            return promoProducts?.filter { $0.productType == productType && shouldShowPromo($0.promoItem.promoProduct)}.count ?? 0
         }
     }
 }
 
-// MARK: StickerActions
-private extension SettingsAgentProtocol {
+extension SettingsAgentProtocol {
     
     func shouldShowPromo(_ promoProduct: PromoProduct) -> Bool {
         
@@ -839,7 +838,7 @@ struct ProductCarouselView: View {
         if let groupViewModel {
             makeGroupWithPromo(groupViewModel, productType)
         } else {
-            promoViews(productType: productType)
+            lowPriorityPromoViews(productType: productType)
         }
     }
     
@@ -848,42 +847,40 @@ struct ProductCarouselView: View {
         _ groupViewModel: ProductGroupView.ViewModel,
         _ productType: ProductType
     ) -> some View {
-        
         HStack(spacing: 8) {
             
-            if isFirst(groupViewModel.productType) {
-                promoViews(productType: groupViewModel.productType)
-                ProductGroupView(viewModel: groupViewModel)
-                    .accessibilityIdentifier("productScrollView")
-            } else {
-                ProductGroupView(viewModel: groupViewModel)
-                    .accessibilityIdentifier("productScrollView")
-                promoViews(productType: groupViewModel.productType)
-            }
-        }
-    }
-    
-    private func isFirst(
-        _ productType: ProductType
-    ) -> Bool {
-        
-        switch productType {
-        case .card:     return false
-        case .account:  return true
-        case .deposit:  return false
-        case .loan:     return true
+            highPriorityPromoViews(productType: groupViewModel.productType)
+            ProductGroupView(viewModel: groupViewModel)
+                .accessibilityIdentifier("productScrollView")
+            lowPriorityPromoViews(productType: groupViewModel.productType)
         }
     }
     
     // MARK: PromoActions
     
     @ViewBuilder
-    private func promoViews(
+    private func highPriorityPromoViews(
         productType: ProductType
     ) -> some View {
         
         HStack(spacing: 8) {
-            promoByType(productType).map {
+            
+            highPriorityPromoByType(productType).map {
+                
+                ForEach($0, content: promoView)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func lowPriorityPromoViews(
+        productType: ProductType
+    ) -> some View {
+        
+        HStack(spacing: 8) {
+            
+            lowPriorityPromoByType(productType).map {
+                
                 ForEach($0, content: promoView)
             }
         }
@@ -894,7 +891,7 @@ struct ProductCarouselView: View {
         model: AdditionalProductViewModel
     ) -> some View {
         
-        if viewModel.shouldShowPromo(model.promoType) {
+        if viewModel.shouldShowPromo(model.promoItem.promoProduct) {
             
             viewFactory.makePromoView(model)
         }
@@ -917,11 +914,18 @@ struct ProductCarouselView: View {
         }
     }
     
-    private func promoByType(
+    private func highPriorityPromoByType(
         _ type: ProductType
     ) -> [AdditionalProductViewModel]? {
         
-        viewModel.promoProducts?.filter { $0.productType == type }
+        viewModel.promoProducts?.filter { $0.productType == type && $0.promoItem.hasHighPriority }
+    }
+    
+    private func lowPriorityPromoByType(
+        _ type: ProductType
+    ) -> [AdditionalProductViewModel]? {
+        
+        viewModel.promoProducts?.filter { $0.productType == type && !$0.promoItem.hasHighPriority }
     }
 }
 

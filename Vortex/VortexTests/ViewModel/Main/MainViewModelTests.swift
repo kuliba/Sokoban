@@ -707,7 +707,8 @@ final class MainViewModelTests: XCTestCase {
             makeProductProfileViewModel: { _,_,_,_ in .sample },
             makePromoProductViewModel: { $0.mapper(onTap: $1.show, onHide: $1.hide)},
             qrViewModelFactory: qrViewModelFactory,
-            makeTrailingToolbarItems: { _ in [] }
+            makeTrailingToolbarItems: { _ in [] },
+            makeCreditCardMVP: { nil }
         )
         
         let sut = MainViewModel(
@@ -779,7 +780,8 @@ final class MainViewModelTests: XCTestCase {
             makeProductProfileViewModel: { _,_,_,_ in nil },
             makePromoProductViewModel: { $0.mapper(onTap: $1.show, onHide: $1.hide)},
             qrViewModelFactory: .preview(),
-            makeTrailingToolbarItems: { _ in [] }
+            makeTrailingToolbarItems: { _ in [] },
+            makeCreditCardMVP: { nil }
         )
 
         let sut = MainViewModel(
@@ -1084,7 +1086,7 @@ private extension MainViewModel {
     
     var fastPayment: MainSectionFastOperationView.ViewModel? {
         
-        sections.compactMap {
+        sections.map(\.model).compactMap {
             
             $0 as? MainSectionFastOperationView.ViewModel
         }
@@ -1104,7 +1106,7 @@ private extension MainViewModel {
     
     var openProductSection: MainSectionOpenProductView.ViewModel? {
         
-        sections.compactMap {
+        sections.map(\.model).compactMap {
             
             $0 as? MainSectionOpenProductView.ViewModel
         }
@@ -1135,7 +1137,7 @@ private extension MainViewModel {
 
     var currencyWalletSection: MainSectionCurrencyMetallView.ViewModel? {
         
-        sections.compactMap {
+        sections.map(\.model).compactMap {
             
             $0 as? MainSectionCurrencyMetallView.ViewModel
         }
@@ -1144,7 +1146,7 @@ private extension MainViewModel {
     
     var mainSection: MainSectionProductsView.ViewModel? {
         
-        sections.compactMap {
+        sections.map(\.model).compactMap {
             
             $0 as? MainSectionProductsView.ViewModel
         }
@@ -1242,7 +1244,7 @@ private extension MainViewModel {
         line: UInt = #line
     ) throws {
         
-        let section = sections.compactMap {
+        let section = sections.map(\.model).compactMap {
             
             $0 as? MainSectionOpenProductView.ViewModel
         }.first
