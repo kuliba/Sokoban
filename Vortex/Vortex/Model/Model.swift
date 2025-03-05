@@ -65,7 +65,6 @@ class Model {
     let dictionariesUpdating: CurrentValueSubject<Set<DictionaryType>, Never>
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
     let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
-    let productListBannersWithSticker: CurrentValueSubject<[CardBannerList], Never>
     let currencyList: CurrentValueSubject<[CurrencyData], Never>
     let countriesList: CurrentValueSubject<[CountryData], Never>
     let countriesListWithSevice: CurrentValueSubject<[CountryWithServiceData], Never>
@@ -209,7 +208,6 @@ class Model {
         self.ratesUpdating = .init([])
         self.catalogProducts = .init([])
         self.catalogBanners = .init([])
-        self.productListBannersWithSticker = .init([])
         self.currencyList = .init([])
         self.currencyWalletList = .init([])
         self.centralBankRates = .init([])
@@ -412,7 +410,6 @@ class Model {
                     action.send(ModelAction.Settings.GetUserSettings())
                     action.send(ModelAction.ProductTemplate.List.Request())
                     action.send(ModelAction.C2B.GetC2BSubscription.Request())
-                    action.send(ModelAction.Dictionary.UpdateCache.List(types: [.bannersMyProductListWithSticker]))
                     
                     if let deepLinkType = deepLinkType {
                         
@@ -944,9 +941,6 @@ class Model {
                     case .bannerCatalogList:
                         handleDictionaryBannerCatalogList(payload.serial)
                         
-                    case .bannersMyProductListWithSticker:
-                        handleDictionaryBannersMyProductListWithSticker(payload.serial)
-                        
                     case .atmList:
                         handleDictionaryAtmDataList(payload.serial)
                         
@@ -1213,12 +1207,7 @@ private extension Model {
             
             self.catalogBanners.value = catalogBanner
         }
-        
-        if let productListBannersWithSticker = localAgent.load(type: [CardBannerList].self) {
-            
-            self.productListBannersWithSticker.value = productListBannersWithSticker
-        }
-        
+                
         if let currency = localAgent.load(type: [CurrencyData].self) {
             
             self.currencyList.value = currency

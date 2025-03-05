@@ -201,10 +201,10 @@ extension OptionSelectorView {
                     .background(Capsule().foregroundColor(capsuleColor))
                 
             case .products:
-                viewFactory.makeProductsCategoryView(isSelected, viewModel.title)
+                viewFactory.makeProductsCategoryView(isSelected, viewModel.title, viewModel.title == .account)
                 
             case .productsSmall:
-                ProductsCategoryView(newImplementation: false, isSelected: isSelected, title: viewModel.title)
+                ProductsCategoryView(newImplementation: false, isSelected: isSelected, title: viewModel.title, isSavingsAccount: false)
             }
         }
     }

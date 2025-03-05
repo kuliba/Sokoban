@@ -45,11 +45,15 @@ private extension GetSavingsAccountInfoResponse {
     
     var details: SavingsAccountDetails {
         
+        let calendar = Calendar.current
+        let current: Double = Double(calendar.component(.day, from: Date()))
+        let next: Double = Double(dateNext?.suffix(2) ?? "1") ?? 1
+        
         return .init(
             currentInterest: NSDecimalNumber(floatLiteral: interestAmount ?? 0).decimalValue,
             minBalance: NSDecimalNumber(floatLiteral: minRest ?? 0).decimalValue,
             paidInterest: NSDecimalNumber(floatLiteral: interestPaid ?? 0).decimalValue,
-            progress: 3,
+            progress:  current / next,
             dateNext: dateNext,
             currencyCode: "₽"
         )

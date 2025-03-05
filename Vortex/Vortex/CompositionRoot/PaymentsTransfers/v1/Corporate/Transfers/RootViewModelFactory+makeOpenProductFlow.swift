@@ -140,7 +140,6 @@ extension RootViewModelFactory {
             
             return makeOpenNewProductButtons(
                 collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
-                savingsAccountFlag: featureFlags.savingsAccountFlag,
                 action: $0
             )
         }

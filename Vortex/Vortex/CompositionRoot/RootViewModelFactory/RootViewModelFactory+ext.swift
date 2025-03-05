@@ -43,7 +43,6 @@ extension RootViewModelFactory {
             creditCardMVPFlag: featureFlags.creditCardMVPFlag,
             getProductListByTypeV6Flag: .active,
             paymentsTransfersFlag: .active,
-            savingsAccountFlag: featureFlags.savingsAccountFlag,
             collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
             splashScreenFlag: featureFlags.splashScreenFlag,
             orderCardFlag: featureFlags.orderCardFlag
@@ -419,12 +418,9 @@ extension RootViewModelFactory {
         
         let bannersBox = makeBannersBox(flags: featureFlags)
         
-        if featureFlags.needGetBannersMyProductListV2 {
+        performOrWaitForAuthorized { [weak bannersBox] in
             
-            performOrWaitForAuthorized { [weak bannersBox] in
-                
-                bannersBox?.requestUpdate()
-            }
+            bannersBox?.requestUpdate()
         }
         
         let rootViewModel = make(
@@ -454,7 +450,6 @@ extension RootViewModelFactory {
                 guard let self else { return [] }
                 return makeOpenNewProductButtons(
                     collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
-                    savingsAccountFlag: featureFlags.savingsAccountFlag,
                     action: $0
                 )
             },
@@ -519,16 +514,6 @@ extension RootViewModelFactory {
         )
         
         return composer.compose(with: rootViewModel)
-    }
-}
-
-extension FeatureFlags {
-    
-    var needGetBannersMyProductListV2: Bool {
-        
-        return savingsAccountFlag.isActive ||
-        collateralLoanLandingFlag.isActive ||
-        orderCardFlag.isActive
     }
 }
 
@@ -842,8 +827,7 @@ private extension RootViewModelFactory {
         let sections = makeMainViewModelSections(
             bannersBinder: bannersBinder,
             c2gFlag: featureFlags.c2gFlag,
-            collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
-            savingsAccountFlag: featureFlags.savingsAccountFlag
+            collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag
         )
                 
         let makeAuthFactory: MakeModelAuthLoginViewModelFactory = { .init(model: $0, rootActions: $1)
@@ -856,8 +840,7 @@ private extension RootViewModelFactory {
                 
                 self?.makePromoViewModel(
                     viewModel: $0,
-                    actions: $1,
-                    featureFlags: featureFlags
+                    actions: $1
                 )
             },
             qrViewModelFactory: qrViewModelFactory,

@@ -11,14 +11,13 @@ extension RootViewModelFactory {
 
     func makePromoViewModel(
         viewModel: PromoItem,
-        actions: PromoProductActions,
-        featureFlags: FeatureFlags
+        actions: PromoProductActions
     ) -> AdditionalProductViewModel? {
        
         let needShow = {
             switch viewModel.promoProduct {
             case .sticker:        return true
-            case .savingsAccount: return featureFlags.savingsAccountFlag.isActive
+            case .savingsAccount: return true
             case .collateralLoan: return featureFlags.collateralLoanLandingFlag.isActive
             }
         }()

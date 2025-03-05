@@ -365,12 +365,7 @@ private extension MainViewModel {
             .receive(on: scheduler)
             .sink { [weak self] in self?.handleBanners($0) }
             .store(in: &bindings)
-        
-        model.productListBannersWithSticker
-            .receive(on: scheduler)
-            .sink { [weak self] in self?.handleBanners($0) }
-            .store(in: &bindings)
-        
+                
         if updateInfoStatusFlag.isActive {
             model.updateInfo
                 .receive(on: scheduler)
@@ -558,6 +553,8 @@ private extension MainViewModel {
                         })
                     ))
                 }
+                
+                handleBanners(sections.productsSection?.productCarouselViewModel.promoProducts)
             }.store(in: &bindings)
         
         model.clientInfo
@@ -736,20 +733,7 @@ private extension MainViewModel {
                 .store(in: &bindings)
         }
     }
-    
-    func handleBanners(
-        _ banners: [CardBannerList]
-    ) {
-        if let sticker = banners.first {
-            
-            let promoItems = makePromoViewModels(promoItems: [
-                .init(sticker)
-            ]) ?? []
-            
-            sections.productsSection?.productCarouselViewModel.updatePromo(promoItems)
-        }
-    }
-    
+        
     func handleBanners(
         _ banners: BannerList
     ) {
@@ -771,13 +755,26 @@ private extension MainViewModel {
             promo.append(.init(item: sticker, productType: .card, promoProduct: .sticker))
         }
         
-        if let accountBannerList = banners.accountBannerList {
+        if let accountBannerList = banners.accountBannerList, !model.hasSavingsAccount {
             promo.append(contentsOf: accountBannerList.map { .init(item: $0, productType: .account, promoProduct: .savingsAccount) })
         }
         
         let promoItems = makePromoViewModels(promoItems: promo) ?? []
         
         sections.productsSection?.productCarouselViewModel.updatePromo(promoItems)
+    }
+    
+    func handleBanners(
+        _ promoItems: [AdditionalProductViewModel]?
+    ) {
+        
+        if model.hasSavingsAccount {
+            var newPromo = promoItems
+            newPromo?.removeAll(where: { $0.promoType == .savingsAccount })
+            sections.productsSection?.productCarouselViewModel.updatePromo(newPromo)
+        } else {
+            bannersBox.requestUpdate()
+        }
     }
 
     func openProductByType(_ type: OpenProductType) {
