@@ -332,6 +332,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         toDeliver expectedNavigation: EquatableNavigation,
         on action: () -> Void = {},
         c2gFlag: C2GFlag = .inactive, // TODO: add tests for active flag
+        orderCardFlag: OrderCardFlag = .inactive,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -351,7 +352,9 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         
         sut.getRootNavigation(
             c2gFlag: c2gFlag,
-            makeProductProfileByID: { productID,_  in
+            orderCardFlag: orderCardFlag,
+            makeProductProfileByID: {
+                productID,_  in
                 return makeProductProfileViewModel(productID, model)
             },
             select: select,
@@ -373,6 +376,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         on assert: @escaping (RootViewNavigation) -> Void,
         action: () -> Void = {},
         c2gFlag: C2GFlag = .inactive, // TODO: add tests for active flag
+        orderCardFlag: OrderCardFlag = .inactive, // TODO: add tests for active flag
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -382,6 +386,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         
         sut.getRootNavigation(
             c2gFlag: c2gFlag,
+            orderCardFlag: orderCardFlag,
             makeProductProfileByID: {_,_  in nil },
             select: select,
             notify: notifySpy.call

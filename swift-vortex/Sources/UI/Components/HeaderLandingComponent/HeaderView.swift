@@ -29,7 +29,8 @@ public struct HeaderView: View {
         
         ZStack(alignment: .top) {
             
-            header.md5Hash.map(imageFactory.makeIconView)
+            header.imageUrl.map(imageFactory.makeBannerImageView)
+                .aspectRatio(contentMode: .fill)
             
             textView()
                 .padding(.leading, config.layout.textViewLeadingPadding)
@@ -118,8 +119,10 @@ private extension HeaderViewConfig {
 private extension Header {
     
     static let preview: Self = .init(
-        title: "titile",
+        title: "titile", 
+        navTitle: "navTitle",
+        navSubtitle: "navSubtitle",
         options: ["option"],
-        md5Hash: "1"
+        imageUrl: "1"
     )
 }

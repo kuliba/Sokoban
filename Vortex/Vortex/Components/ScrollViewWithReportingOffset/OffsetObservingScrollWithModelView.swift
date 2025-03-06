@@ -32,6 +32,13 @@ final class OffsetObservingScrollModel: ObservableObject {
     }
 }
 
+struct OffsetThreshold {
+    
+    let title: CGFloat
+    let refresh: CGFloat
+}
+
+//TODO: change name or add scrollView
 struct OffsetObservingScrollWithModelView<Content: View>: View {
     
     @StateObject var model: OffsetObservingScrollModel
@@ -42,7 +49,7 @@ struct OffsetObservingScrollWithModelView<Content: View>: View {
         delay: Delay = .seconds(2),
         threshold: CGFloat = -100,
         refresh: @escaping () -> Void,
-        content: @escaping (Binding<CGPoint>) -> Content
+        @ViewBuilder content: @escaping (Binding<CGPoint>) -> Content
     ) {
         self._model = .init(
             wrappedValue: .init(

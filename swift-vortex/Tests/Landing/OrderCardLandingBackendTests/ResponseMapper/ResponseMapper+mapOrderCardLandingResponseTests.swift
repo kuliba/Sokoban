@@ -504,6 +504,8 @@ private extension OrderCardLandingBackend.OrderCardLandingResponse {
         theme: "DEFAULT",
         product: .init(
             title: "Карта МИР «Все включено»",
+            navTitle: "Карта МИР",
+            navSubtitle: "«Все включено»",
             image: "dict/getProductCatalogImage?image=/products/banners/car_collateral_loan.png",
             features: [
                 "кешбэк до 10 000 ₽ в месяц",
@@ -553,6 +555,8 @@ private extension OrderCardLandingBackend.OrderCardLandingResponse {
         theme: "DEFAULT",
         product: .init(
             title: "Карта МИР «Все включено»",
+            navTitle: "Карта МИР",
+            navSubtitle: "«Все включено»",
             image: "dict/getProductCatalogImage?image=/products/banners/car_collateral_loan.png",
             features: [
                 "кешбэк до 10 000 ₽ в месяц",
@@ -596,6 +600,8 @@ private extension OrderCardLandingBackend.OrderCardLandingResponse {
         theme: "DEFAULT",
         product: .init(
             title: "Карта МИР «Все включено»",
+            navTitle: "Карта МИР",
+            navSubtitle: "«Все включено»",
             image: "dict/getProductCatalogImage?image=/products/banners/car_collateral_loan.png",
             features: [
                 "кешбэк до 10 000 ₽ в месяц",
@@ -641,6 +647,8 @@ private extension OrderCardLandingBackend.OrderCardLandingResponse {
         theme: "DEFAULT",
         product: .init(
             title: "Карта МИР «Все включено»",
+            navTitle: "Карта МИР",
+            navSubtitle: "«Все включено»",
             image: "dict/getProductCatalogImage?image=/products/banners/car_collateral_loan.png",
             features: [
                 "кешбэк до 10 000 ₽ в месяц",
