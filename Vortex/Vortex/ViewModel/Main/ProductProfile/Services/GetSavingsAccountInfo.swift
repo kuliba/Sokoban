@@ -29,7 +29,7 @@ extension GetSavingsAccountInfoServices {
         
         .init(createGetSavingsAccountInfo: { _, completion in
             
-            completion(.success(.init(dateNext: "", interestAmount: 4, interestPaid: 5, minRest: 6)))
+            completion(.success(.init(dateNext: nil, dateSettlement: nil, dateStart: nil, daysLeft: 1, daysLeftText: nil, interestAmount: 2, interestPaid: 3, isNeedTopUp: nil, isPercentBurned: nil, minRest: 4)))
         })
     }
     

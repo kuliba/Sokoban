@@ -289,12 +289,20 @@ class ProductProfileViewModel: ObservableObject {
         
         bind()
         
-        productProfileServices.getSavingsAccountInfo(product) { [weak self] accountInfo in
-            
-            DispatchQueue.main.async {
+        updateSavingsAccountInfo()
+    }
+    
+    func updateSavingsAccountInfo() {
+        if let productData {
+            productProfileServices.getSavingsAccountInfo(productData) { [weak self] accountInfo in
                 
-                self?.accountInfo = accountInfo
+                DispatchQueue.main.async {
+                    
+                    self?.accountInfo = accountInfo
+                }
             }
+        } else {
+            accountInfo = nil
         }
     }
 }
@@ -968,6 +976,8 @@ private extension ProductProfileViewModel {
                 }
                 self.product.productType = product.productType
                 
+                self.updateSavingsAccountInfo()
+                
                 if let deposit = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }) as? ProductDepositData {
                     
                     self.model.action.send(ModelAction.Deposits.Info.Single.Request(productId: deposit.id))
@@ -1208,7 +1218,7 @@ private extension ProductProfileViewModel {
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
                             
                         case .account:
-                            let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .statementOpenAccount(false), .tariffsByAccount, .termsOfService], productType: product.productType)
+                            let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.requisites, .statement, .statementOpenAccount(productData?.asAccount?.isSavingAccount == true), .tariffsByAccount, .termsOfService], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.Show.OptionsPannel(viewModel: optionsPannelViewModel))
                             
                         default:
@@ -1573,7 +1583,11 @@ private extension ProductProfileViewModel {
                             }
                             
                         case .statementOpenAccount:
-                            break
+                            if let account = productData.asAccount, account.isSavingAccount == true {
+                                productProfileServices.getSavingsAccountPrintForm(account.id) { [weak self] in
+                                    self?.handlePrintForm($0)
+                                }
+                            }
                             
                         case .tariffsByAccount:
                             
@@ -1697,6 +1711,46 @@ private extension ProductProfileViewModel {
                 model.action.send(ModelAction.Products.Update.ForProductType(productType: .account))
                 
             }.store(in: &bindings)
+    }
+    
+    private func handlePrintForm(_ pdf: PDFDocument?) {
+        
+        DispatchQueue.main.async { [weak self] in
+            
+            guard let self else { return }
+            
+            switch pdf {
+            case let .some(printForm):
+                self.sheet = .init(type: .printForm(.init(pdfDocument: printForm)))
+                
+            case .none:
+                let alertViewModel = alertWithOfficeButton("Форма временно недоступна", "Для получения Заявления-анкеты\nобратитесь в отделение банка")
+                self.alert = .init(alertViewModel)
+            }
+        }
+    }
+    
+    func alertWithOfficeButton(
+        _ title: String,
+        _ message: String?
+    ) -> Alert.ViewModel {
+        
+        return Alert.ViewModel(
+            title: title,
+            message: message,
+            primary: .init(
+                type: .default,
+                title: "Наши офисы",
+                action: { [weak self] in
+                    
+                    self?.action.send(ProductProfileViewModelAction.Close.Alert())
+                    self?.action.send(ProductProfileViewModelAction.Show.PlacesMap())
+                }),
+            secondary: .init(
+                type: .default,
+                title: "ОК",
+                action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert()) })
+        )
     }
     
     func makeProductProfileViewModel(

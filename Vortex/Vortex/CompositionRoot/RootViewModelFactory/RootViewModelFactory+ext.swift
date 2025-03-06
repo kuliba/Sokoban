@@ -158,7 +158,8 @@ extension RootViewModelFactory {
             createCreateGetSVCardLimits: getSVCardLimitsServices,
             createChangeSVCardLimit: changeSVCardLimitServices,
             createSVCardLanding: landingService, 
-            getSavingsAccountInfo: getSavingsAccountInfo,
+            getSavingsAccountInfo: getSavingsAccountInfo, 
+            getSavingsAccountPrintForm: getPrintFormForSavingsAccount,
             repeatPayment: repeatPayment,
             makeSVCardLandingViewModel: makeSVCardLandig,
             makeInformer: { [weak model] in

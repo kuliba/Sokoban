@@ -18,6 +18,14 @@ final class ResponseMapper_mapGetSavingsAccountInfoRequestTests: XCTestCase {
             .success(.valid))
     }
     
+    func test_map_shouldDeliverValidOnValidWithFullData() {
+        
+        XCTAssertNoDiff(
+            map(.validWithFullData),
+            .success(.validWithFullData))
+    }
+
+    
     func test_map_shouldDeliverInvalidFailureOnEmptyData() {
         
         XCTAssertNoDiff(
@@ -105,6 +113,7 @@ private extension Data {
     static let nullServerResponse: Data = String.nullServerResponse.json
     static let serverError: Data = String.serverError.json
     static let valid: Data = String.valid.json
+    static let validWithFullData: Data = String.validWithFullData.json
 }
 
 private extension String {
@@ -157,16 +166,54 @@ private extension String {
     }
 }
 """
+    
+    static let validWithFullData = """
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "dateNext": "2025-02-28",
+        "interestAmount": 41311.0097,
+        "interestPaid": 14.9400,
+        "minRest": 2447811.4500,
+        "dateStart": "2025-02-05",
+        "dateSettlement": "2025-02-05",
+        "daysLeft": 26,
+        "daysLeftText": "26 дней",
+        "isPercentBurned": false,
+        "isNeedTopUp": false
+    }
+}
+"""
 }
 
 private extension GetSavingsAccountInfoResponse {
     
     static let valid: Self = .init(
         dateNext: "2025-02-28",
+        dateSettlement: nil,
+        dateStart: nil,
+        daysLeft: nil,
+        daysLeftText: nil,
         interestAmount: 41311.0097,
         interestPaid: 14.9400,
+        isNeedTopUp: nil,
+        isPercentBurned: nil,
         minRest: 2447811.4500
     )
     
-    static let empty: Self = .init(dateNext: nil, interestAmount: nil, interestPaid: nil, minRest: nil)
+    static let validWithFullData: Self = .init(
+        dateNext: "2025-02-28",
+        dateSettlement: "2025-02-05",
+        dateStart: "2025-02-05",
+        daysLeft: 26,
+        daysLeftText: "26 дней",
+        interestAmount: 41311.0097,
+        interestPaid: 14.9400,
+        isNeedTopUp: false,
+        isPercentBurned: false,
+        minRest: 2447811.4500
+    )
+    
+    static let empty: Self = .init(dateNext: nil, dateSettlement: nil, dateStart: nil, daysLeft: nil, daysLeftText: nil, interestAmount: nil, interestPaid: nil, isNeedTopUp: nil, isPercentBurned: nil, minRest: nil)
 }

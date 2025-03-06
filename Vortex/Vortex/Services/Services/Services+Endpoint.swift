@@ -299,7 +299,7 @@ extension Services.Endpoint {
 
     static let getSavingAccountInfo: Self = .init(
         pathPrefix: .rest,
-        version: .none,
+        version: .v2,
         serviceName: .getSavingAccountInfo
     )
 

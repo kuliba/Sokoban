@@ -704,6 +704,13 @@
         "identifier" : "OrderCardLandingTests",
         "name" : "OrderCardLandingTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "EphemeralCacheTests",
+        "name" : "EphemeralCacheTests"
+      }
     }
   ],
   "version" : 1

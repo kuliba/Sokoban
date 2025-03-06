@@ -75,6 +75,30 @@ public extension ResponseMapper {
         }
     }
     
+    /// Generic map.
+    static func map(
+        _ data: Data,
+        _ httpURLResponse: HTTPURLResponse,
+        file: StaticString = #file,
+        line: Int = #line
+    ) -> MappingResult<Data> {
+        
+        do {
+            guard httpURLResponse.statusCode == 200
+            else { throw InvalidResponse() }
+                
+            return .success(data)
+        } catch {
+            #if DEBUG
+            customDump(error, file: file, line: line)
+            #endif
+            return .failure(.invalid(
+                statusCode: httpURLResponse.statusCode,
+                data: data
+            ))
+        }
+    }
+    
     private struct InvalidResponse: Error {}
     
     private struct _Response<T: Decodable>: Decodable {
