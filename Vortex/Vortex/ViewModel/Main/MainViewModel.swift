@@ -1046,12 +1046,9 @@ private extension MainViewModel {
             Self.openLinkURL(model.productsOpenAccountURL)
         } else {
             
-            let authProductsViewModel = AuthProductsViewModel(
-                model,
-                products: model.catalogProducts.value,
-                dismissAction: { [weak self] in
-                    self?.action.send(MainViewModelAction.Close.Link())
-                })
+            let authProductsViewModel = viewModelsFactory.makeAuthProductsViewModel { [weak self] in
+                self?.action.send(MainViewModelAction.Close.Link())
+            }
             
             route.destination = .openCard(authProductsViewModel)
         }

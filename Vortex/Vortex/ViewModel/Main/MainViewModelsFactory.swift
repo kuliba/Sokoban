@@ -26,10 +26,13 @@ struct MainViewModelsFactory {
     let qrViewModelFactory: QRViewModelFactory
     let makeTrailingToolbarItems: MakeTrailingToolbarItems
     let makeCreditCardMVP: MakeCreditCardMVP
+    let makeAuthProductsViewModel: MakeAuthProductsViewModel
     
     typealias MakeTrailingToolbarItems = (@escaping (MainViewModelAction.Toolbar) -> Void) -> [NavigationBarButtonViewModel]
     
     typealias MakeCreditCardMVP = () -> PromoItem?
+    
+    typealias MakeAuthProductsViewModel = (@escaping () -> Void) -> AuthProductsViewModel
 }
 
 extension MainViewModelsFactory {
@@ -40,6 +43,7 @@ extension MainViewModelsFactory {
         makePromoProductViewModel: {_,_ in return nil },
         qrViewModelFactory: .preview(),
         makeTrailingToolbarItems: { _ in [] },
-        makeCreditCardMVP: { nil }
+        makeCreditCardMVP: { nil },
+        makeAuthProductsViewModel: { _ in .mockData }
     )
 }

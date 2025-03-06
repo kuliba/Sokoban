@@ -837,7 +837,15 @@ private extension RootViewModelFactory {
             },
             qrViewModelFactory: qrViewModelFactory,
             makeTrailingToolbarItems: makeTrailingToolbarItems,
-            makeCreditCardMVP: { featureFlags.creditCardMVPFlag.isActive ? .creditCardMVPPreview : nil }
+            makeCreditCardMVP: { featureFlags.creditCardMVPFlag.isActive ? .creditCardMVPPreview : nil },
+            makeAuthProductsViewModel: { dismiss in
+                
+                    .init(
+                        self.model,
+                        products: self.model.catalogProducts.value,
+                        dismissAction: dismiss
+                    )
+            }
         )
                   
         let mainViewModel = MainViewModel(
