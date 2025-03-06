@@ -63,60 +63,6 @@ enum CollateralLoanType {
     }
 }
 
-extension PromoProduct: RawRepresentable {
-
-    typealias RawValue = String
-
-    init?(rawValue: String) {
-        
-        switch rawValue {
-        case .sticker:
-            self = .sticker
-            
-        case .savingsAccount:
-            self = .savingsAccount
-            
-        case .collateralLoanShowcase:
-            self = .collateralLoan(.showcase)
-            
-        case .collateralLoanCar:
-            self = .collateralLoan(.car)
-            
-        case .collateralLoanRealEstate:
-            self = .collateralLoan(.realEstate)
-            
-        default:
-            return nil
-        }
-    }
-    
-    var rawValue: String {
-        
-        switch self {
-        case .sticker:
-            return .sticker
-            
-        case .savingsAccount:
-            return .savingsAccount
-            
-        case let .collateralLoan(type):
-            switch type {
-            case .showcase:
-                return .collateralLoanShowcase
-                
-            case .car:
-                return .collateralLoanCar
-                
-            case .realEstate:
-                return .collateralLoanRealEstate
-            }
-            
-        case .creditCardMVP:
-            return .creditCardMVP
-        }
-    }
-}
-
 private extension String {
     
     static let sticker = "sticker"
