@@ -45,10 +45,9 @@ private extension GetSavingsAccountInfoResponse {
     
     var details: SavingsAccountDetails {
         
-        let calendar = Calendar.current
-        let current: Double = Double(calendar.component(.day, from: Date()))
+        let current: Double = Double(daysLeft ?? 0)
         let next: Double = Double(dateNext?.suffix(2) ?? "1") ?? 1
-        let progress: Double = dateStart == dateNext ? 0 : current / next
+        let progress: Double = dateStart == dateNext ? 0 : 1 - current / next
         
         return .init(
             dateNext: dateNext,

@@ -12,6 +12,7 @@ extension SavingsAccountDetailsConfig {
     
     static let iVortex: Self = .init(
         chevronDown: .ic24ChevronDown,
+        clock: .ic24HistoryInactive,
         colors: .init(
             background: .textSecondary,
             chevron: .gray,
