@@ -7028,7 +7028,7 @@
 		C16DDBEF2B2C9A67001BF988 /* Model+QRHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+QRHelpers.swift"; sourceTree = "<group>"; };
 		C16DDBF32B314E26001BF988 /* GetSberQRDataResult+emptySuccess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "GetSberQRDataResult+emptySuccess.swift"; sourceTree = "<group>"; };
 		C17094312D5A285B001E3094 /* StatefulButtonConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StatefulButtonConfig+iVortex.swift"; sourceTree = "<group>"; };
-		C170C78C2D79DB2500A7C480 /* OrderCardLandingBackend.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = OrderCardLandingBackend.xctestplan; path = TestPlans/OrderCardLandingBackend.xctestplan; sourceTree = "<group>"; };
+		C170C78C2D79DB2500A7C480 /* OrderCardLandingBackend.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = OrderCardLandingBackend.xctestplan; sourceTree = "<group>"; };
 		C172098B2A9E28EC0020CE93 /* ProductDataFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDataFilterTests.swift; sourceTree = "<group>"; };
 		C1722C302989454B00C503E3 /* GetCountriesWithServiceResponseGenericFromServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetCountriesWithServiceResponseGenericFromServer.json; sourceTree = "<group>"; };
 		C1722C342989613E00C503E3 /* CountyWithServiceData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountyWithServiceData.swift; sourceTree = "<group>"; };
@@ -10751,6 +10751,7 @@
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
+				C170C78C2D79DB2500A7C480 /* OrderCardLandingBackend.xctestplan */,
 				2AAB64E52D79615D00B40177 /* EphemeralCache.xctestplan */,
 				2AD090A42D788F290033012A /* OrderCardLandingBackend.xctestplan */,
 				C1622E512D7880DA0028536B /* OrderCardLanding.xctestplan */,
@@ -18633,7 +18634,6 @@
 		EDB14374265FDA410028EF5A = {
 			isa = PBXGroup;
 			children = (
-				C170C78C2D79DB2500A7C480 /* OrderCardLandingBackend.xctestplan */,
 				2AE7E4D529EE63300058863D /* CI.xctestplan */,
 				2A87FCCA2B9310E4008257ED /* swift-vortex-Package.xctestplan */,
 				2A3F1B1F2A49844800D8FE55 /* Vortex-SELECTED_TESTS.xctestplan */,
