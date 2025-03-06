@@ -716,6 +716,13 @@
         "identifier" : "OrderCardLandingTests",
         "name" : "OrderCardLandingTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "EphemeralCacheTests",
+        "name" : "EphemeralCacheTests"
+      }
     }
   ],
   "version" : 1
