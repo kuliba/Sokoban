@@ -61,7 +61,7 @@ private extension GetSavingsAccountInfoResponse {
             isNeedTopUp: isNeedTopUp,
             isPercentBurned: isPercentBurned,
             minRest: NSDecimalNumber(floatLiteral: minRest ?? 0).decimalValue,
-            currencyCode: "₽",
+            currencyCode: "RUB",
             progress: progress
         )
     }

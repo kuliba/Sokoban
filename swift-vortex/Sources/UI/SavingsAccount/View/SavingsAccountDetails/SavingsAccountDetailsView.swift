@@ -293,7 +293,7 @@ private extension SavingsAccountDetailsView {
 private extension SavingsAccountDetailsView {
    
     var currentInterest: String {
-        if let currentInterest = state.currentInterest {
+        if let currentInterest = state.currentInterest, currentInterest > 0 {
             return amountToString(currentInterest, state.currencyCode)
         }
         return ""
@@ -308,7 +308,7 @@ private extension SavingsAccountDetailsView {
     }
 
     var paidInterest: String {
-        if let paidInterest = state.paidInterest {
+        if let paidInterest = state.paidInterest, paidInterest > 0 {
             amountToString(paidInterest, state.currencyCode)
         } else {
             ""
