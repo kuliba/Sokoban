@@ -36,7 +36,7 @@ class MainViewModel: ObservableObject, Resetable {
     )
     
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
-    @Published var sections: [MainSectionViewModel]
+    @Published var sections: [Node<MainSectionViewModel>]
     @Published var productProfile: ProductProfileViewModel?
     
     @Published var route: Route
@@ -83,7 +83,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.bannersBox = bannersBox
         self.updateInfoStatusFlag = updateInfoStatusFlag
         self.navButtonsRight = []
-        self.sections = sections
+        self.sections = []
         self.navigationStateManager = navigationStateManager
         self.sberQRServices = sberQRServices
         self.landingServices = landingServices
@@ -97,10 +97,9 @@ class MainViewModel: ObservableObject, Resetable {
         self.scheduler = scheduler
         self.navButtonsRight = createNavButtonsRight()
         
+        self.sections = bind(sections)
         bind()
         update(sections, with: model.settingsMainSections)
-        bind(productsSections: sections)
-        bind(sections)
     }
     
     func makeCollateralLoanFactory() -> CollateralLoanLandingFactory {
@@ -127,14 +126,17 @@ class MainViewModel: ObservableObject, Resetable {
                 promoItem,
                 .init(
                     hide: { [weak self] in self?.hide(promoItem.promoProduct)},
-                    show: { [weak self] in self?.handlePromoTap(promoItem)})
+                    show: { [weak self] in self?.handlePromoTap(promoItem.promoProduct)})
             )
         }
     }
 
-    private func handlePromoTap(_ promoItem: PromoItem) {
+    private func handlePromoTap(_ promoProduct: PromoProduct) {
        
-        switch promoItem.promoProduct {
+        switch promoProduct {
+        case .creditCardMVP:
+            openСreditCardMVP()
+            
         case .sticker:
             handlePromoAction(.sticker)
             
@@ -142,24 +144,7 @@ class MainViewModel: ObservableObject, Resetable {
             openSavingsAccount()
             
         case let .collateralLoan(type):
-            handlePromoItemAction(promoItem: promoItem) {
-                
-                openCollateralLoanLanding(type: type)
-            }
-        }
-    }
-    
-    private func handlePromoItemAction(
-        promoItem: PromoItem,
-        action: () -> Void
-    ) {
-
-        if promoItem.action != nil {
-            
-            action()
-        } else if let url = URL(string: promoItem.link) {
-
-            Self.openLinkURL(url)
+            handlePromoAction(.collateralLoan(type))
         }
     }
     
@@ -171,12 +156,13 @@ class MainViewModel: ObservableObject, Resetable {
     private func updatePromo(
         promoProducts: [AdditionalProductViewModel]
     ) {
-        if let index = sections.indexProductsSection {
-            sections[index] = MainSectionProductsView.ViewModel(
+        if let index = sections.map(\.model).indexProductsSection {
+            let model = MainSectionProductsView.ViewModel(
                 model,
                 promoProducts: promoProducts
             )
-            bind(productsSections: sections)
+            let cancellables = bindProductSection(model)
+            sections[index] = .init(model: model, cancellables: cancellables)
         }
     }
         
@@ -202,42 +188,16 @@ class MainViewModel: ObservableObject, Resetable {
         )
     }
 
-    // TODO: need delete
-    
-    private func getSticker() -> AdditionalProductViewModel? {
-        guard let index = sections.indexProductsSection,
-              let section = sections[index] as? MainSectionProductsView.ViewModel,
-              let stickerVM = section.productCarouselViewModel.promoProducts?.first(where: { $0.promoType == .sticker })
-        else { return nil }
-        
-        return stickerVM
-    }
-
-    private func removePromo(_ type: PromoProduct) {
-        
-        if let products = sections.productsSection {
+    private func removePromo(
+        _ type: PromoProduct
+    ) {
+        if let products = sections.map(\.model).productsSection {
             
-            if var promoProducts = products.productCarouselViewModel.promoProducts, let index = promoProducts.firstIndex(where: { $0.promoType == type}) {
+            if var promoProducts = products.productCarouselViewModel.promoProducts, 
+                let index = promoProducts.firstIndex(where: { $0.promoItem.promoProduct == type }) {
+                
                 promoProducts.remove(at: index)
                 products.productCarouselViewModel.updatePromo(promoProducts)
-            }
-        }
-    }
-    
-    private func updateProducts(
-        _ model: Model
-    ) {
-        if let index = sections.indexProductsSection,
-            let section = sections[index] as? MainSectionProductsView.ViewModel {
-            
-            if let stickerVM = section.productCarouselViewModel.promoProducts?.first(where: { $0.promoType == .sticker }) {
-                withAnimation {
-                    sections[index] = MainSectionProductsView.ViewModel(
-                        model,
-                        promoProducts: [stickerVM]
-                    )
-                }
-                bind(productsSections: sections)
             }
         }
     }
@@ -252,7 +212,7 @@ extension MainViewModel {
         resetDestination()
         resetModal()
         
-        for section in sections {
+        for section in sections.map(\.model) {
             
             switch section {
             case let productsSection as MainSectionProductsView.ViewModel:
@@ -365,12 +325,7 @@ private extension MainViewModel {
             .receive(on: scheduler)
             .sink { [weak self] in self?.handleBanners($0) }
             .store(in: &bindings)
-        
-        model.productListBannersWithSticker
-            .receive(on: scheduler)
-            .sink { [weak self] in self?.handleBanners($0) }
-            .store(in: &bindings)
-        
+                
         if updateInfoStatusFlag.isActive {
             model.updateInfo
                 .receive(on: scheduler)
@@ -519,15 +474,7 @@ private extension MainViewModel {
                 self?.action.send($0)
                 
             }).store(in: &bindings)
-        
-        model.productsOrdersUpdating
-            .receive(on: scheduler)
-            .sink { [weak self] in
-                guard let self else { return }
                 
-                if !$0 { self.updateProducts(model) }
-            }.store(in: &bindings)
-        
         model.products
             .receive(on: scheduler)
             .sink { [unowned self] products in
@@ -558,7 +505,10 @@ private extension MainViewModel {
                         })
                     ))
                 }
-            }.store(in: &bindings)
+                
+                handleBanners(sections.map(\.model).productsSection?.productCarouselViewModel.promoProducts)
+            }
+            .store(in: &bindings)
         
         model.clientInfo
             .combineLatest(model.clientPhoto, model.clientName)
@@ -567,12 +517,15 @@ private extension MainViewModel {
                 
                 userAccountButton.update(clientInfo: clientData.0, clientPhoto: clientData.1, clientName: clientData.2)
                 
-            }.store(in: &bindings)
+            }
+            .store(in: &bindings)
     }
     
-    func bind(_ sections: [MainSectionViewModel]) {
+    func bind(_ sections: [MainSectionViewModel]) -> [Node<MainSectionViewModel>]{
         
-        for section in sections {
+        sections.map { section in
+            
+            var bindings = Set<AnyCancellable>()
             
             switch section {
             case let openProductSection as MainSectionOpenProductView.ViewModel:
@@ -602,8 +555,11 @@ private extension MainViewModel {
                             case .card:
                                 openCard()
                                 
-                            case .loan:
-                                openCollateralLoanLanding(type: .showcase)
+                            case .creditCardMVP:
+                                openСreditCardMVP()
+                                
+                            case .collateralLoan:
+                                openProductByType(.collateralLoan(.showcase))
                                 
                             case .sticker:
                                 handleLandingAction(.sticker)
@@ -636,8 +592,8 @@ private extension MainViewModel {
                         default:
                             break
                         }
-                        
-                    }.store(in: &bindings)
+                    }
+                    .store(in: &bindings)
                 
                 // Promo section
             case let promo as MainSectionPromoView.ViewModel:
@@ -653,7 +609,11 @@ private extension MainViewModel {
                             break
                         }
                         
-                    }.store(in: &bindings)
+                    }
+                    .store(in: &bindings)
+                
+            case let productSection as MainSectionProductsView.ViewModel:
+                bindings.formUnion(bindProductSection(productSection))
                 
             default: break
             }
@@ -688,7 +648,8 @@ private extension MainViewModel {
                         break
                         
                     }
-                }.store(in: &bindings)
+                }
+                .store(in: &bindings)
             
             if let collapsableSection = section as? MainSectionCollapsableViewModel {
                 
@@ -701,59 +662,50 @@ private extension MainViewModel {
                         settings.update(sectionType: collapsableSection.type, isCollapsed: isCollapsed)
                         model.settingsMainSectionsUpdate(settings)
                         
-                    }.store(in: &bindings)
+                    }
+                    .store(in: &bindings)
             }
+            
+            return .init(model: section, cancellables: bindings)
         }
     }
     
-    func bind(productsSections: [MainSectionViewModel]) {
+    func bindProductSection(
+        _ section: MainSectionProductsView.ViewModel
+    ) -> Set<AnyCancellable> {
         
-        if let section = sections.productsSection {
-            
-            let shared = section.action.share()
-            
-            shared
-                .compactMap { $0 as? MainSectionViewModelAction.Products.ProductDidTapped }
-                .map(\.productId)
-                .receive(on: scheduler)
-                .sink { [weak self] in
-                    
-                    self?.action.send(MainViewModelAction.Show.ProductProfile(productId: $0))
-                }
-                .store(in: &bindings)
-            
-            shared
-                .compactMap { $0 as? MainSectionViewModelAction.Products.MoreButtonTapped }
-                .receive(on: scheduler)
-                .sink { [weak self] _ in self?.openMoreProducts() }
-                .store(in: &bindings)
-            
-            shared
-                .compactMap { $0 as? MainSectionViewModelAction.Products.PromoDidTapped }
-                .receive(on: scheduler)
-                .sink { [weak self] in
-                    self?.handlePromoAction($0.promo) }
-                .store(in: &bindings)
-        }
+        var bindings = Set<AnyCancellable>()
+        let shared = section.action.share()
+        
+        shared
+            .compactMap { $0 as? MainSectionViewModelAction.Products.ProductDidTapped }
+            .map(\.productId)
+            .receive(on: scheduler)
+            .sink { [weak self] in
+                
+                self?.action.send(MainViewModelAction.Show.ProductProfile(productId: $0))
+            }
+            .store(in: &bindings)
+        
+        shared
+            .compactMap { $0 as? MainSectionViewModelAction.Products.MoreButtonTapped }
+            .receive(on: scheduler)
+            .sink { [weak self] _ in self?.openMoreProducts() }
+            .store(in: &bindings)
+        
+        shared
+            .compactMap { $0 as? MainSectionViewModelAction.Products.PromoDidTapped }
+            .receive(on: scheduler)
+            .sink { [weak self] in
+                self?.handlePromoAction($0.promo) }
+            .store(in: &bindings)
+        
+        return bindings
     }
-    
-    func handleBanners(
-        _ banners: [CardBannerList]
-    ) {
-        if let sticker = banners.first {
-            
-            let promoItems = makePromoViewModels(promoItems: [
-                .init(sticker)
-            ]) ?? []
-            
-            sections.productsSection?.productCarouselViewModel.updatePromo(promoItems)
-        }
-    }
-    
+        
     func handleBanners(
         _ banners: BannerList
     ) {
-        
         var promo: [PromoItem] = []
         
         if let loanBannerList = banners.loanBannerList {
@@ -771,20 +723,69 @@ private extension MainViewModel {
             promo.append(.init(item: sticker, productType: .card, promoProduct: .sticker))
         }
         
-        if let accountBannerList = banners.accountBannerList {
+        if let accountBannerList = banners.accountBannerList, !model.hasSavingsAccount {
             promo.append(contentsOf: accountBannerList.map { .init(item: $0, productType: .account, promoProduct: .savingsAccount) })
         }
         
-        let promoItems = makePromoViewModels(promoItems: promo) ?? []
+        viewModelsFactory.makeCreditCardMVP().map { promo.append($0) }
+        let newPromo = makePromoViewModels(promoItems: promo) ?? []
+        let productSection = sections.map(\.model).productsSection
+        productSection?.productCarouselViewModel.updatePromo(newPromo)
+    }
+    
+    func handleBanners(
+        _ promoItems: [AdditionalProductViewModel]?
+    ) {
         
-        sections.productsSection?.productCarouselViewModel.updatePromo(promoItems)
+        if model.hasSavingsAccount {
+            var newPromo = promoItems
+            newPromo?.removeAll(where: { $0.promoItem.promoProduct == .savingsAccount })
+            sections.map(\.model).productsSection?.productCarouselViewModel.updatePromo(newPromo)
+        } else {
+            bannersBox.requestUpdate()
+        }
     }
 
+    func openProductByType(_ type: OpenProductType) {
+        
+        switch type {
+        case .account, .card, .creditCardMVP, .deposit, .insurance, .mortgage:
+            break
+            
+        case .savingsAccount:
+            route = .empty
+            delay(for: .milliseconds(700)) { [weak self] in
+                self?.openSavingsAccount()
+            }
+            
+        case .sticker:
+            route = .empty
+            delay(for: .milliseconds(700)) { [weak self] in
+                
+                self?.handleLandingAction(.sticker)
+            }
+            
+        case let .collateralLoan(type):
+            
+            switch type {
+            case .showcase:
+                let binder = bindersFactory.makeCollateralLoanShowcaseBinder()
+                route.destination = .collateralLoanLanding(binder)
+                
+            case .car, .realEstate:
+                guard !type.id.isEmpty else { return }
+                let binder = bindersFactory.makeCollateralLoanLandingBinder(type.id)
+                route.destination = .collateralLoanLandingProduct(binder)
+            }
+        }
+    }
+    
     func openMoreProducts() { //
         
         let myProductsViewModel = MyProductsViewModel(
             model,
             makeProductProfileViewModel: viewModelsFactory.makeProductProfileViewModel,
+            openProductByType: openProductByType,
             openOrderSticker: { [weak self] in
                 
                 self?.route = .empty
@@ -794,7 +795,6 @@ private extension MainViewModel {
                     self?.handleLandingAction(.sticker)
                 }
             },
-            openCollateralLoanLanding: openCollateralLoanLanding,
             makeMyProductsViewFactory: .init(
                 makeInformerDataUpdateFailure: { [weak self] in
                     
@@ -1036,7 +1036,7 @@ private extension MainViewModel {
         _ payload: MainSectionViewModelAction.FastPayment.ButtonTapped
     ) {
         switch payload.operationType {
-        case .byQr, .templates, .uin:
+        case .byQR, .templates, .uin:
             break // handled by root via rootEventPublisher
             
         case .byPhone:
@@ -1086,20 +1086,6 @@ private extension MainViewModel {
                     self?.action.send(MainViewModelAction.Toolbar.scanQR)
                 }
             }
-        }
-    }
-    
-    func openCollateralLoanLanding(type: CollateralLoanType) {
-        
-        switch type {
-        case .showcase:
-            let binder = bindersFactory.makeCollateralLoanShowcaseBinder()
-            route.destination = .collateralLoanLanding(binder)
-            
-        case .car, .realEstate:
-            guard !type.id.isEmpty else { return }
-            let binder = bindersFactory.makeCollateralLoanLandingBinder(type.id)
-            route.destination = .collateralLoanLandingProduct(binder)
         }
     }
     
@@ -1174,13 +1160,13 @@ private extension MainViewModel {
     
     func updateSections(_ updateInfo: UpdateInfo) {
         
-        let containUpdateInfoSection: Bool = sections.first(where: { $0.type == .updateInfo }) is UpdateInfoViewModel
+        let containUpdateInfoSection: Bool = sections.map(\.model).first(where: { $0.type == .updateInfo }) is UpdateInfoViewModel
         switch (updateInfo.areProductsUpdated, containUpdateInfoSection) {
             
         case (true, true):
             sections.removeFirst()
         case (false, false):
-            sections.insert(UpdateInfoViewModel.init(content: .updateInfoText), at: 0)
+            sections.insert(.init(model: UpdateInfoViewModel.init(content: .updateInfoText), cancellables: []), at: 0)
         default:
             break
         }
@@ -1980,6 +1966,11 @@ extension MainViewModel {
 
 extension MainViewModel {
     
+    func openСreditCardMVP() {
+        
+        action.send(RootEvent.select(.openProduct(.creditCardMVP)))
+    }
+    
     func openSavingsAccount() {
         
         action.send(RootEvent.select(.openProduct(.savingsAccount)))
@@ -1991,6 +1982,9 @@ extension MainViewModel {
     func handlePromoAction(_ promo: PromoProduct) {
         
         switch promo {
+        case .creditCardMVP:
+            fatalError()
+            
         case .sticker:
             handleLandingAction(.sticker)
             
@@ -1998,7 +1992,7 @@ extension MainViewModel {
             openSavingsAccount()
             
         case let .collateralLoan(type):
-            openCollateralLoanLanding(type: type)
+            openProductByType(.collateralLoan(type))
         }
     }
     
@@ -2200,11 +2194,11 @@ extension Array where Element == MainSectionViewModel {
     }
     
     var stickerViewModel: AdditionalProductViewModel? {
-        productsSection?.productCarouselViewModel.promoProducts?.first(where: { $0.promoType == .sticker })
+        productsSection?.productCarouselViewModel.promoProducts?.first(where: { $0.promoItem.promoProduct == .sticker })
     }
     
     var savingsAccountViewModel: AdditionalProductViewModel? {
-        productsSection?.productCarouselViewModel.promoProducts?.first(where: { $0.promoType == .savingsAccount })
+        productsSection?.productCarouselViewModel.promoProducts?.first(where: { $0.promoItem.promoProduct == .savingsAccount })
     }
     
     var promoProducts: [AdditionalProductViewModel]? {

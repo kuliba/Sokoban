@@ -52,8 +52,9 @@ extension QRScannerDomain {
         case providerServicePicker(AnywayServicePickerFlowModel)
         case sberQR(SberQRConfirmPaymentViewModel?)
         case sberQRComplete(PaymentsSuccessViewModel?)
-        case searchByUIN(SearchByUIN)
+        case c2gPayment(C2GPaymentResult)
         
-        typealias SearchByUIN = SearchByUINDomain.Binder
+        typealias C2GPaymentResult = Result<C2GPayment, BackendFailure>
+        typealias C2GPayment = C2GPaymentDomain.Binder
     }
 }

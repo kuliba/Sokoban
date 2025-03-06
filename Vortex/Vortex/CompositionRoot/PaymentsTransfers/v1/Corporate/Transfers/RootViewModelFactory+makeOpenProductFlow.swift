@@ -91,13 +91,16 @@ extension RootViewModelFactory {
                 completion(.openURL(url))
             }
             
+        case .creditCardMVP:
+            break // TODO: fixme
+            
         case .deposit:
             completion(.openDeposit(openDeposit(dismiss: { notify(.dismiss) })))
             
         case .insurance:
             break // TODO: fixme
             
-        case .loan:
+        case .collateralLoan:
             break // TODO: fixme - add openCollateralLoanLanding
             
         case .mortgage:
@@ -140,7 +143,6 @@ extension RootViewModelFactory {
             
             return makeOpenNewProductButtons(
                 collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
-                savingsAccountFlag: featureFlags.savingsAccountFlag,
                 action: $0
             )
         }

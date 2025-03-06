@@ -11,7 +11,6 @@ extension RootViewModelFactory {
         
         let httpClient: HTTPClient
         let imageCache: ImageCache
-        let generalImageCache: ImageCache
         let logger: LoggerAgentProtocol
     }
 }

@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-//MARK: - ViewModel
+// MARK: - ViewModel
 
 extension ButtonIconTextView {
     
     struct ViewModel: Identifiable {
-
+        
         let id: UUID
         let icon: Icon
         let title: Title
@@ -25,6 +25,7 @@ extension ButtonIconTextView {
             let image: Image
             var style: Style = .color(.iconBlack)
             let background: Background
+            var backgroundColor: Color = .mainColorsGrayLightest
             var badge: Badge? = nil
             
             enum Style {
@@ -73,7 +74,7 @@ extension ButtonIconTextView {
             case vertical
             case horizontal
         }
-
+        
         init(id: UUID = UUID(), icon: ButtonIconTextView.ViewModel.Icon, title: ButtonIconTextView.ViewModel.Title, orientation: ButtonIconTextView.ViewModel.Orientation, action: @escaping () -> Void, isActive: Bool = true) {
             self.id = id
             self.icon = icon
@@ -82,15 +83,10 @@ extension ButtonIconTextView {
             self.action = action
             self.isActive = isActive
         }
-
-        static func == (lhs: ViewModel, rhs: ViewModel) -> Bool {
-            
-            lhs.id == rhs.id
-        }
     }
 }
 
-//MARK: - View
+// MARK: - View
 
 struct ButtonIconTextView: View {
     
@@ -100,61 +96,57 @@ struct ButtonIconTextView: View {
         
         switch viewModel.title.style {
         case .normal: return .textBodySR12160()
-        case .bold: return .textH4M16240()
+        case .bold:   return .textH4M16240()
         }
     }
     
     var body: some View {
         
-        Button(action: viewModel.action) {
+        Button(action: viewModel.action, label: label)
+            .buttonStyle(PushButtonStyle())
+            .disabled(!viewModel.isActive)
+    }
+    
+    @ViewBuilder
+    private func label() -> some View {
+        
+        switch viewModel.orientation {
+        case .vertical:
             
-            switch viewModel.orientation {
-            case .vertical:
+            VStack {
                 
-                VStack {
-                    
-                    IconView(viewModel: viewModel.icon)
-                    
-                    Text(viewModel.title.text)
-                        .font(titleFont)
-                        .foregroundColor(viewModel.title.color)
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: 75)
-                }
+                iconView()
                 
-            case .horizontal:
-                
-                if viewModel.isActive {
-                    
-                    HStack(spacing: 16) {
-                        
-                        IconView(viewModel: viewModel.icon)
-                        
-                        Text(viewModel.title.text)
-                            .font(titleFont)
-                            .foregroundColor(viewModel.title.color)
-                            .multilineTextAlignment(.leading)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                    
-                } else {
-                    
-                    HStack(spacing: 16) {
-                        
-                        IconView(viewModel: viewModel.icon)
-                        
-                        Text(viewModel.title.text)
-                            .font(titleFont)
-                            .foregroundColor(viewModel.title.color)
-                            .multilineTextAlignment(.leading)
-                            .fixedSize(horizontal: false, vertical: true)
-                        
-                    }.opacity(0.6)
-                }
+                titleView(multilineTextAlignment: .center)
+                    .frame(maxWidth: 75)
             }
+            
+        case .horizontal:
+            
+            HStack(spacing: 16) {
+                
+                iconView()
+                
+                titleView(multilineTextAlignment: .leading)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .opacity(viewModel.isActive ? 1 : 0.6)
         }
-        .buttonStyle(PushButtonStyle())
-        .disabled(!viewModel.isActive)
+    }
+    
+    private func iconView() -> some View {
+        
+        IconView(viewModel: viewModel.icon)
+    }
+    
+    private func titleView(
+        multilineTextAlignment alignment: TextAlignment
+    ) -> some View {
+        
+        Text(viewModel.title.text)
+            .font(titleFont)
+            .foregroundColor(viewModel.title.color)
+            .multilineTextAlignment(alignment)
     }
 }
 
@@ -168,8 +160,8 @@ extension ButtonIconTextView {
             
             switch viewModel.background {
             case .circleSmall: return 40
-            case .circle: return 56
-            case .square: return 48
+            case .circle:      return 56
+            case .square:      return 48
             }
         }
         
@@ -177,8 +169,8 @@ extension ButtonIconTextView {
             
             switch viewModel.background {
             case .circleSmall: return 10.7
-            case .circle: return 15
-            case .square: return 12.9
+            case .circle:      return 15
+            case .square:      return 12.9
             }
         }
         
@@ -186,8 +178,8 @@ extension ButtonIconTextView {
             
             switch viewModel.background {
             case .circleSmall: return -8.6
-            case .circle: return -12
-            case .square: return -10.3
+            case .circle:      return -12
+            case .square:      return -10.3
             }
         }
         
@@ -195,7 +187,7 @@ extension ButtonIconTextView {
             
             ZStack {
                 
-                ButtonIconTextView.IconBackgroundView(viewModel: viewModel.background)
+                ButtonIconTextView.IconBackgroundView(viewModel: viewModel)
                 
                 switch viewModel.style {
                 case .original:
@@ -231,31 +223,31 @@ extension ButtonIconTextView {
     
     struct IconBackgroundView: View {
         
-        let viewModel: ButtonIconTextView.ViewModel.Icon.Background
+        let viewModel: ButtonIconTextView.ViewModel.Icon
         
         var body: some View {
             
-            switch viewModel {
+            switch viewModel.background {
             case .circle:
                 Circle()
-                    .foregroundColor(.mainColorsGrayLightest)
+                    .foregroundColor(viewModel.backgroundColor)
                     .frame(width: 56, height: 56)
                 
             case .square:
                 RoundedRectangle(cornerRadius: 8)
-                    .foregroundColor(.mainColorsGrayLightest)
+                    .foregroundColor(viewModel.backgroundColor)
                     .frame(width: 48, height: 48)
                 
             case .circleSmall:
                 Circle()
-                    .foregroundColor(.mainColorsGrayLightest)
+                    .foregroundColor(viewModel.backgroundColor)
                     .frame(width: 40, height: 40)
             }
         }
     }
 }
 
-//MARK: - Preview
+// MARK: - Preview
 
 struct FastOperationButtonView_Previews: PreviewProvider {
     
@@ -267,16 +259,16 @@ struct FastOperationButtonView_Previews: PreviewProvider {
             
             ButtonIconTextView(viewModel: .verticalSquare)
                 .previewLayout(.fixed(width: 375, height: 200))
-
+            
             ButtonIconTextView(viewModel: .horizontalSquare)
                 .previewLayout(.fixed(width: 375, height: 200))
-
+            
             ButtonIconTextView(viewModel: .horizontalCircle)
                 .previewLayout(.fixed(width: 375, height: 200))
-
+            
             ButtonIconTextView(viewModel: .horizontalCircleBold)
                 .previewLayout(.fixed(width: 375, height: 200))
-
+            
             ButtonIconTextView(viewModel: .horizontalCircleBoldOriginal)
                 .previewLayout(.fixed(width: 375, height: 200))
         }
@@ -299,20 +291,20 @@ struct CornerBadgeShape: Shape {
     }
 }
 
-//MARK: - Preview Content
+// MARK: - Preview Content
 
 extension ButtonIconTextView.ViewModel {
     
     static let telephoneTranslation = ButtonIconTextView.ViewModel(icon: .init(image: .ic24Smartphone, background: .circle), title: .init(text: "Перевод по телефону"), orientation: .vertical, action: {})
     
     static let qrPayment = ButtonIconTextView.ViewModel(icon: .init(image: .ic24BarcodeScanner2, background: .circle), title: .init(text: "Оплата по QR"), orientation: .vertical, action: {})
-
+    
     static let templates = ButtonIconTextView.ViewModel(icon: .init(image: .ic24Star, background: .circle), title: .init(text:  "Шаблоны"), orientation: .vertical, action: {})
     
     static let verticalSquare = ButtonIconTextView.ViewModel(icon: .init(image: .ic24BarcodeScanner2, background: .square), title: .init(text: "Оплата по QR"), orientation: .vertical, action: {})
-
+    
     static let horizontalSquare = ButtonIconTextView.ViewModel(icon: .init(image: .ic24BarcodeScanner2, background: .square), title: .init(text: "Оплата по QR"), orientation: .horizontal, action: {})
-
+    
     static let horizontalCircle = ButtonIconTextView.ViewModel(icon: .init(image: .ic24BarcodeScanner2, background: .circle), title: .init(text: "Оплата по QR"), orientation: .horizontal, action: {})
     
     static let horizontalCircleBold = ButtonIconTextView.ViewModel(icon: .init(image: .ic24BarcodeScanner2, background: .circle), title: .init(text: "Оплата по QR", style: .bold), orientation: .horizontal, action: {})

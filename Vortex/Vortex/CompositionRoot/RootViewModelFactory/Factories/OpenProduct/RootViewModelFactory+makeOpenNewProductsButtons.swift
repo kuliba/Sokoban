@@ -12,15 +12,14 @@ extension RootViewModelFactory {
     
     func makeOpenNewProductButtons(
         collateralLoanLandingFlag: CollateralLoanLandingFlag,
-        savingsAccountFlag: SavingsAccountFlag,
         action: @escaping (OpenProductType) -> Void
     ) -> [NewProductButton.ViewModel] {
         
-        let displayButtons = displayButtons(collateralLoanLandingFlag: collateralLoanLandingFlag, savingsAccountFlag: savingsAccountFlag)
+        let displayButtons = displayButtons(collateralLoanLandingFlag: collateralLoanLandingFlag)
         
         return displayButtons.compactMap {
             
-            guard let tapAction = tapAction(type: $0, collateralLoanLandingFlag: collateralLoanLandingFlag, savingsAccountFlag: savingsAccountFlag, action: action)
+            guard let tapAction = tapAction(type: $0, collateralLoanLandingFlag: collateralLoanLandingFlag, action: action)
             else { return nil }
             
             return .init(
@@ -45,9 +44,10 @@ extension RootViewModelFactory {
         switch type {
         case .account:          return "Бесплатно"
         case .card:             return "С кешбэком"
+        case .creditCardMVP:    return ""
         case .deposit:          return depositDescription(with: model.deposits.value)
         case .insurance:        return "Надежно"
-        case .loan:             return "Выгодно"
+        case .collateralLoan:   return "Выгодно"
         case .mortgage:         return "Удобно"
         case .savingsAccount:   return "% на остаток"
         case .sticker:          return "Быстро"
@@ -55,34 +55,28 @@ extension RootViewModelFactory {
     }
     
     private func displayButtons(
-        collateralLoanLandingFlag: CollateralLoanLandingFlag,
-        savingsAccountFlag: SavingsAccountFlag
+        collateralLoanLandingFlag: CollateralLoanLandingFlag
     ) -> [OpenProductType] {
         
-        let displayButtonsTypes: [OpenProductType] = [.card(.landing), .deposit, .account, .sticker, .loan]
-        let additionalItems: [OpenProductType] = savingsAccountFlag.isActive
-        ? [.savingsAccount, .insurance, .mortgage]
-        : [.insurance, .mortgage]
+        let displayButtonsTypes: [OpenProductType] = [.card(.landing), .deposit, .account, .sticker, .collateralLoan(.showcase)]
+        let additionalItems: [OpenProductType] = [.savingsAccount, .insurance, .mortgage]
         return (displayButtonsTypes + additionalItems)
     }
     
     private func tapAction(
         type: OpenProductType,
         collateralLoanLandingFlag: CollateralLoanLandingFlag,
-        savingsAccountFlag: SavingsAccountFlag,
         action: @escaping (OpenProductType) -> Void
     ) -> NewProductButton.ViewModel.TapActionType? {
         
         switch type {
-        case .loan:
+        case .collateralLoan:
             return collateralLoanLandingFlag.isActive
             ? .action({ action(type) })
             : .url(model.productsOpenLoanURL)
             
         case .savingsAccount:
-            return savingsAccountFlag.isActive
-            ? .action({ action(type) })
-            : nil
+            return .action({ action(type) })
             
         case .insurance:
             return .url(model.productsOpenInsuranceURL)

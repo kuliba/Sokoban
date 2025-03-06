@@ -683,6 +683,7 @@ public extension Image {
     static var ic24Power: Image { Image(#function) }
     static var ic24Printer: Image { Image(#function) }
     static var ic24Promotions: Image { Image(#function) }
+    static var ic24Qr: Image { Image(#function) }
     static var ic24Rabbit: Image { Image(#function) }
     static var ic24Radio: Image { Image(#function) }
     static var ic24RadioChecked: Image { Image(#function) }

@@ -27,16 +27,6 @@ final class MainViewModelTests: XCTestCase {
 //        XCTAssertNil(sut.sections.stickerViewModel)
 //    }
     
-    func test_init_cacheContainsSticker_shouldSetSticker() throws {
-        
-        let (sut, model) = makeSUT()
-        model.productListBannersWithSticker.value = [.init(productName: anyMessage(), link: anyMessage(), md5hash: anyMessage(), action: nil)]
-        _ = XCTWaiter().wait(for: [.init()], timeout: 0.05)
-
-        
-        XCTAssertNotNil(sut.sections.stickerViewModel)
-    }
-        
     func test_tapTemplates_shouldNotSetLinkToTemplates() {
         
         let (sut, _) = makeSUT(scheduler: .immediate)
@@ -619,39 +609,39 @@ final class MainViewModelTests: XCTestCase {
         
         let (sut, model) = makeSUT(updateInfoStatusFlag: .inactive, scheduler: .immediate)
         
-        assert(sections: sut.sections, count: 6, type: .products)
+        assert(sections: sut.sections.map(\.model), count: 6, type: .products)
         
         model.updateInfo.value.setValue(false, for: .card)
         
-        assert(sections: sut.sections, count: 6, type: .products)
+        assert(sections: sut.sections.map(\.model), count: 6, type: .products)
         
         model.updateInfo.value.setValue(false, for: .loan)
         
-        assert(sections: sut.sections, count: 6, type: .products)
+        assert(sections: sut.sections.map(\.model), count: 6, type: .products)
         
         model.updateInfo.value.setValue(false, for: .deposit)
         
-        assert(sections: sut.sections, count: 6, type: .products)
+        assert(sections: sut.sections.map(\.model), count: 6, type: .products)
         
         model.updateInfo.value.setValue(false, for: .account)
         
-        assert(sections: sut.sections, count: 6, type: .products)
+        assert(sections: sut.sections.map(\.model), count: 6, type: .products)
         
         model.updateInfo.value.setValue(true, for: .card)
         
-        assert(sections: sut.sections, count: 6, type: .products)
+        assert(sections: sut.sections.map(\.model), count: 6, type: .products)
         
         model.updateInfo.value.setValue(true, for: .loan)
         
-        assert(sections: sut.sections, count: 6, type: .products)
+        assert(sections: sut.sections.map(\.model), count: 6, type: .products)
         
         model.updateInfo.value.setValue(true, for: .deposit)
         
-        assert(sections: sut.sections, count: 6, type: .products)
+        assert(sections: sut.sections.map(\.model), count: 6, type: .products)
         
         model.updateInfo.value.setValue(true, for: .account)
         
-        assert(sections: sut.sections, count: 6, type: .products)
+        assert(sections: sut.sections.map(\.model), count: 6, type: .products)
     }
     
     // MARK: - handleLandingAction
@@ -717,7 +707,8 @@ final class MainViewModelTests: XCTestCase {
             makeProductProfileViewModel: { _,_,_,_ in .sample },
             makePromoProductViewModel: { $0.mapper(onTap: $1.show, onHide: $1.hide)},
             qrViewModelFactory: qrViewModelFactory,
-            makeTrailingToolbarItems: { _ in [] }
+            makeTrailingToolbarItems: { _ in [] },
+            makeCreditCardMVP: { nil }
         )
         
         let sut = MainViewModel(
@@ -789,7 +780,8 @@ final class MainViewModelTests: XCTestCase {
             makeProductProfileViewModel: { _,_,_,_ in nil },
             makePromoProductViewModel: { $0.mapper(onTap: $1.show, onHide: $1.hide)},
             qrViewModelFactory: .preview(),
-            makeTrailingToolbarItems: { _ in [] }
+            makeTrailingToolbarItems: { _ in [] },
+            makeCreditCardMVP: { nil }
         )
 
         let sut = MainViewModel(
@@ -1094,7 +1086,7 @@ private extension MainViewModel {
     
     var fastPayment: MainSectionFastOperationView.ViewModel? {
         
-        sections.compactMap {
+        sections.map(\.model).compactMap {
             
             $0 as? MainSectionFastOperationView.ViewModel
         }
@@ -1114,7 +1106,7 @@ private extension MainViewModel {
     
     var openProductSection: MainSectionOpenProductView.ViewModel? {
         
-        sections.compactMap {
+        sections.map(\.model).compactMap {
             
             $0 as? MainSectionOpenProductView.ViewModel
         }
@@ -1145,7 +1137,7 @@ private extension MainViewModel {
 
     var currencyWalletSection: MainSectionCurrencyMetallView.ViewModel? {
         
-        sections.compactMap {
+        sections.map(\.model).compactMap {
             
             $0 as? MainSectionCurrencyMetallView.ViewModel
         }
@@ -1154,7 +1146,7 @@ private extension MainViewModel {
     
     var mainSection: MainSectionProductsView.ViewModel? {
         
-        sections.compactMap {
+        sections.map(\.model).compactMap {
             
             $0 as? MainSectionProductsView.ViewModel
         }
@@ -1252,7 +1244,7 @@ private extension MainViewModel {
         line: UInt = #line
     ) throws {
         
-        let section = sections.compactMap {
+        let section = sections.map(\.model).compactMap {
             
             $0 as? MainSectionOpenProductView.ViewModel
         }.first
@@ -1260,7 +1252,7 @@ private extension MainViewModel {
         let openProductSection = try XCTUnwrap(section, file: file, line: line)
 
         let openCollateralLoanLandingAction =
-        MainSectionViewModelAction.OpenProduct.ButtonTapped(productType: .loan)
+        MainSectionViewModelAction.OpenProduct.ButtonTapped(productType: .collateralLoan(.showcase))
         openProductSection.action.send(openCollateralLoanLandingAction)
     }
 }

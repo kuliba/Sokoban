@@ -14,20 +14,19 @@ class ServerCommandsRegistrationTests: XCTestCase {
     let decoder = JSONDecoder.serverDate
     let encoder = JSONEncoder.serverDate
     
-    //MARK: - CheckClient
+    // MARK: - CheckClient
     
     func testCheckClient_Payload_Encoding() throws {
         
-        // given
         let command = ServerCommands.RegistrationContoller.CheckClient(token: "", payload: .init(cardNumber: "test", cryptoVersion: "1.0"))
         let expected = "{\"cryptoVersion\":\"1.0\",\"cardNumber\":\"test\"}"
         
-        // when
         let result = try encoder.encode(command.payload)
-        let resultString = String(decoding: result, as: UTF8.self)
         
-        // then
-        XCTAssertEqual(resultString, expected)
+        try XCTAssertNoDiff(result.jsonDict(), [
+            "cardNumber": "test",
+            "cryptoVersion": "1.0"
+        ])
     }
     
     func testCheckClient_Response_Decoding() throws {

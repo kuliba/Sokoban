@@ -1070,8 +1070,8 @@ private extension ProductProfileViewModel {
                             model,
                             cardAction: cardAction,
                             makeProductProfileViewModel: makeProductProfileViewModel,
+                            openProductByType: { _ in },
                             openOrderSticker: {}, 
-                            openCollateralLoanLanding: { _ in },
                             makeMyProductsViewFactory: .init(
                                 makeInformerDataUpdateFailure: productProfileViewModelFactory.makeInformerDataUpdateFailure
                             ),

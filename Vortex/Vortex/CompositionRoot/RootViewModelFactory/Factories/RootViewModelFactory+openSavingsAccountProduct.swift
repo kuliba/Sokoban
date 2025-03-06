@@ -20,6 +20,8 @@ enum OpenSavingsAccountCompleteDomain {}
 
 extension OpenSavingsAccountCompleteDomain {
     
+    typealias UpdateFastAll = () -> Void
+    
     struct Complete {
         
         let context: Context
@@ -29,13 +31,17 @@ extension OpenSavingsAccountCompleteDomain {
         struct Context: Equatable {
             
             let formattedAmount: String?
-            let merchantName: String?
-            let purpose: String?
             let status: Status
             
-            enum Status {
+            enum Status: Equatable {
                 
-                case completed, inflight, rejected
+                case completed, inflight, rejected, suspend
+                case fraud(Fraud)
+                
+                enum Fraud: Equatable {
+                    
+                    case cancelled, expired
+                }
             }
         }
     }
@@ -64,7 +70,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func openSavingsAccountProduct(
-        notify: @escaping (OpenSavingsAccountDomain.OrderAccountResponse) -> Void
+        notify: @escaping RootViewDomain.Notify
     ) -> OpenSavingsAccount {
         
         let products = model.productSelectProducts
@@ -78,7 +84,12 @@ extension RootViewModelFactory {
         
         let cancellable = content.$state
             .compactMap(\.form?.orderAccountResponse)
-            .sink { notify($0) }
+            .sink { notify(.select(.savingsAccount($0))) }
+        
+        let goToMainCancellable = content.$state
+            .map(\.needGoToMain)
+            .sink { if $0 { notify(.dismiss) } }
+
         
         let binder = composeBinder(
             content: content,
@@ -86,7 +97,7 @@ extension RootViewModelFactory {
             witnesses: witnesses()
         )
         
-        return .init(model: binder, cancellable: cancellable)
+        return .init(model: binder, cancellables: [cancellable, goToMainCancellable])
     }
     
     // MARK: - Content
@@ -320,18 +331,25 @@ private extension Error {
             return failure
             
         case let failure as RemoteServiceError<Error, Error, LoadableState.LoadFailure>:
+            
             switch failure {
             case let .mapResponse(failure):
                 return failure
-                
+
+            case let .performRequest(error):
+                if error.isNotConnectedToInternetOrTimeout() {
+                    return .init(message: ._error, type: .informer)
+                } else {
+                    return .init(message: ._later, type: .alert)
+                }
             default:
-                return .tryLaterInformer
+                return .init(message: ._later, type: .alert)
             }
-            
+
         case let mappingError as RemoteServices.ResponseMapper.MappingError:
             switch mappingError {
             case let .server(_, errorMessage):
-                return .init(message: errorMessage, type: .alert)
+                return .init(message: ._later, type: .alert)
                 
             default:
                 return .tryLaterInformer
@@ -497,7 +515,8 @@ private extension OrderAccountResponse {
         self.init(
             accountId: data.paymentInfo.accountId,
             accountNumber: data.paymentInfo.accountNumber,
-            paymentOperationDetailId: data.paymentOperationDetailID, 
+            amount: data.paymentInfo.amount,
+            paymentOperationDetailId: data.paymentOperationDetailID,
             product: nil,
             openData: data.paymentInfo.dateOpen,
             status: data.documentInfo.documentStatus?.status ?? .inflight
@@ -506,15 +525,16 @@ private extension OrderAccountResponse {
 }
 private extension OpenSavingsAccountDomain.LoadFailure {
     
-    static let invalidCodeAlert: Self = .init(message: ._invalidCode, type: .alert)
-    static let tryLaterAlert: Self = .init(message: ._tryLater, type: .alert)
-    static let tryLaterInformer: Self = .init(message: ._tryLater, type: .informer)
+    static let invalidCodeAlert: Self = .init(message: ._invalidCode, type: .otp)
+    static let tryLaterAlert: Self = .init(message: ._later, type: .alert)
+    static let tryLaterInformer: Self = .init(message: ._error, type: .informer)
 }
 
 private extension String {
     
     static let _invalidCode = "Введен некорректный код. Попробуйте еще раз."
-    static let _tryLater = "Что-то пошло не так.\nПопробуйте позже."
+    static let _error = "Ошибка загрузки данных.\nПопробуйте позже."
+    static let _later = "Попробуйте позже."
 }
 
 extension MakeOpenSavingsAccountResponse.DocumentStatus {
@@ -528,6 +548,8 @@ extension MakeOpenSavingsAccountResponse.DocumentStatus {
             return .inflight
         case .rejected:
             return .rejected
+        case .suspend:
+            return .suspend
         }
     }
 }

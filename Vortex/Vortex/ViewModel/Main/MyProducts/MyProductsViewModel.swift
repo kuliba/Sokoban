@@ -37,8 +37,8 @@ class MyProductsViewModel: ObservableObject {
     var contactsAction: () -> Void = { }
     var informerWasShown: Bool = false
     
+    let openProductByType: (OpenProductType) -> Void
     let openOrderSticker: () -> Void
-    let openCollateralLoanLanding: (CollateralLoanType) -> Void
     
     private lazy var settingsOnboarding = model.settingsMyProductsOnboarding
     private let model: Model
@@ -58,8 +58,8 @@ class MyProductsViewModel: ObservableObject {
          makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
          refreshingIndicator: RefreshingIndicatorView.ViewModel,
          showOnboarding: [Onboarding: Bool] = [:],
+         openProductByType: @escaping (OpenProductType) -> Void,
          openOrderSticker: @escaping () -> Void,
-         openCollateralLoanLanding: @escaping (CollateralLoanType) -> Void,
          makeMyProductsViewFactory: MyProductsViewFactory
     ) {
         self.model = model
@@ -73,7 +73,7 @@ class MyProductsViewModel: ObservableObject {
         self.refreshingIndicator = refreshingIndicator
         self.showOnboarding = showOnboarding
         self.openOrderSticker = openOrderSticker
-        self.openCollateralLoanLanding = openCollateralLoanLanding
+        self.openProductByType = openProductByType
         self.makeMyProductsViewFactory = makeMyProductsViewFactory
     }
     
@@ -81,8 +81,8 @@ class MyProductsViewModel: ObservableObject {
         _ model: Model,
         cardAction: CardAction? = nil,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
+        openProductByType: @escaping (OpenProductType) -> Void,
         openOrderSticker: @escaping () -> Void,
-        openCollateralLoanLanding: @escaping (CollateralLoanType) -> Void,
         makeMyProductsViewFactory: MyProductsViewFactory,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons
     ) {
@@ -97,8 +97,8 @@ class MyProductsViewModel: ObservableObject {
             makeProductProfileViewModel: makeProductProfileViewModel,
             refreshingIndicator: .init(isActive: false),
             showOnboarding: [:],
+            openProductByType: openProductByType,
             openOrderSticker: openOrderSticker,
-            openCollateralLoanLanding: openCollateralLoanLanding,
             makeMyProductsViewFactory: makeMyProductsViewFactory
         )
         
@@ -284,10 +284,13 @@ class MyProductsViewModel: ObservableObject {
                     }
                     
                 case .sticker:
-                    openOrderSticker()
+                    openProductByType(.sticker)
                     
-                case .loan:
-                    openCollateralLoanLanding(.showcase)
+                case .savingsAccount:
+                    openProductByType(.savingsAccount)
+                    
+                case .collateralLoan:
+                    openProductByType(.collateralLoan(.showcase))
                     
                 default:
                     break

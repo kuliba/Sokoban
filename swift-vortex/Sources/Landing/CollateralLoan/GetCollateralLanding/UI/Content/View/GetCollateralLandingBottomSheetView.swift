@@ -225,26 +225,26 @@ struct GetCollateralLandingBottomSheetView_Previews<InformerPayload>: PreviewPro
         GetCollateralLandingBottomSheetView<InformerPayload>(
             state: .init(
                 landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
-                bottomSheet: .init(sheetType: .periods),
+                bottomSheet: .init(sheetType: .periods([])),
                 formatCurrency: { _ in "" }
             ),
             event: { print($0) },
             config: .preview,
             factory: .preview,
-            type: .periods
+            type: .periods([])
         )
         .previewDisplayName("Product period selector")
         
         GetCollateralLandingBottomSheetView<InformerPayload>(
             state: .init(
                 landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
-                bottomSheet: .init(sheetType: .periods),
+                bottomSheet: .init(sheetType: .periods([])),
                 formatCurrency: { _ in "" }
             ),
             event: { print($0) },
             config: .preview,
             factory: .preview,
-            type: .collaterals
+            type: .collaterals([])
         )
         .previewDisplayName("Product collateral selector")
     }
