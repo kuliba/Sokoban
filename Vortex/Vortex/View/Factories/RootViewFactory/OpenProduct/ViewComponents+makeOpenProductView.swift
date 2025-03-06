@@ -29,9 +29,16 @@ extension ViewComponents {
                 makeOrderCardLandingContentView(landing: landing.content)
             }
 
+        case let .creditCardMVP(creditCardMVP):
+            makeCreditCardMVPView(binder: creditCardMVP, dismiss: dismiss)
+          
         case let .savingsAccount(nodes):
 
-            makeSavingsAccountBinderView(binder: nodes.savingsAccountNode.model, openAccountBinder: nodes.openSavingsAccountNode.model, dismiss: dismiss)
+            makeSavingsAccountBinderView(
+                binder: nodes.savingsAccountNode.model,
+                openAccountBinder: nodes.openSavingsAccountNode.model,
+                dismiss: dismiss
+            )
                 .navigationBarHidden(true)
 
         case .unknown:

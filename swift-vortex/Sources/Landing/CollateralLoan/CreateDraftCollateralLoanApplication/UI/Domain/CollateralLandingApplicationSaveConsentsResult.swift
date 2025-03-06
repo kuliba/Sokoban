@@ -20,6 +20,7 @@ public struct CollateralLandingApplicationSaveConsentsResult: Equatable {
     public let collateralInfo: String?
     public let documents: [String]
     public let cityName: String
+    // Allowed values: "draft", "consents_receive", "submitted_for_review"
     public let status: String
     public let responseMessage: String
     public let description: String?

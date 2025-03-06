@@ -8,7 +8,8 @@
 import Foundation
 
 enum PromoProduct {
-
+    
+    case creditCardMVP
     case sticker
     case savingsAccount
     case collateralLoan(CollateralLoanType)
@@ -18,6 +19,7 @@ extension PromoProduct {
     
     var interfaceType: SettingType.Interface {
         switch self {
+        case .creditCardMVP:            return .creditCardMVP
         case .sticker:                  return .sticker
         case .savingsAccount:           return .savingsAccount
         case let .collateralLoan(type): return .collateralLoan(type)
@@ -108,6 +110,9 @@ extension PromoProduct: RawRepresentable {
             case .realEstate:
                 return .collateralLoanRealEstate
             }
+            
+        case .creditCardMVP:
+            return .creditCardMVP
         }
     }
 }
@@ -122,4 +127,5 @@ private extension String {
     static let carLanding = "CAR_LANDING"
     static let realEstateLanding = "REAL_ESTATE_LANDING"
     static let showcase = "showcase"
+    static let creditCardMVP = "creditCardMVP"
 }

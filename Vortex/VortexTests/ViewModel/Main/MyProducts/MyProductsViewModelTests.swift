@@ -90,8 +90,8 @@ final class MyProductsViewModelTests: XCTestCase {
         let sut = MyProductsViewModel.init(
             model,
             makeProductProfileViewModel: { _,_,_,_   in nil },
-            openOrderSticker: {},
-            openCollateralLoanLanding: { _ in },
+            openProductByType: { _ in },
+            openOrderSticker: {}, 
             makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { return nil }),
             makeOpenNewProductButtons: { _ in [] }
         )

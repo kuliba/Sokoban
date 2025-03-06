@@ -28,7 +28,6 @@ struct CardBannerList: Codable, Equatable {
     let action: CardBannerAction?
 }
 
-
 struct CardBannerAction: Codable, Equatable {
     
     let actionType: String
@@ -45,7 +44,7 @@ extension CardBannerList {
         .init(
             md5Hash: md5hash,
             productType: .card,
-            promoType: .sticker,
+            promoItem: .sticker,
             onTap: onTap,
             onHide: onHide
         )

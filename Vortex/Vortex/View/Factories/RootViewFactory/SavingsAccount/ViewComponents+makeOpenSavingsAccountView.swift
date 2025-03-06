@@ -30,25 +30,44 @@ extension ViewComponents {
                     .padding(.top, 16)
                     .zIndex(1)
                 
-                makeOpenSavingsAccountContentView(binder.content, .prod, dismiss)
+                makeOpenSavingsAccountContentView(binder, .prod, dismiss)
                     .frame(maxHeight: .infinity, alignment: .top)
                     .alert(
                         item: state.stringAlert,
-                        content: { $0.error(dismiss: dismiss) }
+                        content: { alertContent(binder, dismiss, $0) }
                     )
             }
             .onDisappear { binder.flow.event(.dismiss)}
         }
     }
     
+    func alertContent(
+        _ binder: OpenSavingsAccountDomain.Binder,
+        _ dismiss: @escaping () -> Void,
+        _ stringAlert: StringAlert
+    ) -> SwiftUI.Alert {
+        
+        switch stringAlert.message {
+        case .returnMessage:
+            stringAlert.error(
+                title: "Внимание",
+                cancel: { binder.content.event(.cancel) },
+                goToMain: { binder.content.event(.goToMain) }
+            )
+            
+        default:
+            stringAlert.error(dismiss: dismiss)
+        }
+    }
+    
     @inlinable
     func makeOpenSavingsAccountContentView(
-        _ content: OpenSavingsAccountDomain.Content,
+        _ binder: OpenSavingsAccountDomain.Binder,
         _ config: OrderSavingsAccountConfig,
         _ dismiss: @escaping () -> Void
     ) -> some View {
         
-        RxWrapperView(model: content) { state, event in
+        RxWrapperView(model: binder.content) { state, event in
             
             RefreshableScrollView(
                 action: { event(.load) },
@@ -76,14 +95,20 @@ extension ViewComponents {
                             event: { event(.productSelect($0)) })
                     }
                 )
-                .onFirstAppear { content.event(.load) }
+                .onFirstAppear { binder.content.event(.load) }
                 .padding(.horizontal)
+            } 
+            .toolbar {
+                
+                ToolbarItem(placement: .principal) {
+                    header()
+                }
+
+                ToolbarItem(placement: .navigationBarLeading) {
+                    backButton(action: { binder.flow.event(.navigation(.failure(.init(message: .returnMessage, type: .alert))))})
+                }
             }
-            .navigationBarWithBack(
-                title: .title,
-                subtitle: .subtitle,
-                dismiss: dismiss
-            )
+            .navigationBarBackButtonHidden(true)
             .safeAreaInset(edge: .bottom) {
                
                 footer(state: state, event: event)
@@ -92,6 +117,25 @@ extension ViewComponents {
             .disabled(state.isLoading)
             .loaderOverlay(isLoading: state.isLoading)
         }
+    }
+    
+    @ViewBuilder
+    private func header() -> some View {
+        
+        VStack {
+            Text(String.title)
+                .font(.textH3M18240())
+            Text(String.subtitle)
+                .font(.textH3M18240())
+        }
+    }
+    
+    func backButton(
+        action: @escaping () -> Void
+    ) -> some View {
+        
+        Button(action: action) { Image(systemName: "chevron.backward") }
+            .buttonStyle(.plain)
     }
     
     @ViewBuilder
@@ -149,13 +193,13 @@ extension ViewComponents {
                 infoView: makeAmountInfoView
             )
         } else {
-            // TODO: add amount
             StatefulButtonView(
                 isActive: state.isValid,
                 event: { event(.continue) },
                 config: .iVortex(title: state.continueButtonTitle)
             )
             .padding(.horizontal)
+            .conditionalBottomPadding()
         }
     }
 }
@@ -264,4 +308,35 @@ private extension String {
     
     static let title: Self = "Оформление"
     static let subtitle: Self = "накопительного счета"
+}
+
+private extension  StringAlert {
+    
+    func error(
+        title: String,
+        cancel: @escaping () -> Void,
+        goToMain: @escaping () -> Void
+    ) -> SwiftUI.Alert {
+        
+        return alertWithCancel(title: .init(title), cancel: cancel, goToMain: goToMain)
+    }
+    
+    func alertWithCancel(
+        title: String,
+        cancel: @escaping () -> Void,
+        goToMain: @escaping () -> Void
+    ) -> SwiftUI.Alert {
+        
+        return .init(
+            title: .init(title),
+            message: .init(message),
+            primaryButton: .default(.init("Отмена"), action: cancel),
+            secondaryButton: .default(.init("Продолжить"), action: goToMain)
+        )
+    }
+}
+
+private extension String {
+    
+    static let returnMessage: String = "При возврате назад потребуется повторный ввод данных"
 }

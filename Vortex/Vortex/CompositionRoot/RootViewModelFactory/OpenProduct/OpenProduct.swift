@@ -8,13 +8,15 @@
 enum OpenProduct {
     
     case card(OpenCardType)
+    case creditCardMVP(CreditCardMVPDomain.Binder)
     case savingsAccount(SavingsAccountNodes)
     case unknown // TODO: replace with other types
     
     enum OpenCardType {
+        
         case landing(OrderCardLandingDomain.Binder)
         case form(Form)
+        
+        typealias Form = Node<OpenCardDomain.Binder>
     }
-    
-    typealias Form = Node<OpenCardDomain.Binder>
 }

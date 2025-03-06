@@ -5,14 +5,12 @@
 //  Created by Andryusina Nataly on 08.11.2024.
 //
 
-import CollateralLoanLandingGetCollateralLandingUI
-import CollateralLoanLandingGetShowcaseUI
 import Combine
 import Foundation
 import LoadableResourceComponent
 import SwiftUI
 
-typealias MakeProductsCategoryView = (Bool, String) -> ProductsCategoryView
+typealias MakeProductsCategoryView = (Bool, String, Bool) -> ProductsCategoryView
 typealias MakeAnywayServicePickerFlowView = (AnywayServicePickerFlowModel) -> AnywayServicePickerFlowView<AnywayFlowView<PaymentCompleteView>>
 typealias MakeSegmentedPaymentProviderPickerView = (SegmentedPaymentProviderPickerFlowModel) -> ComposedSegmentedPaymentProviderPickerFlowView<AnywayFlowView<PaymentCompleteView>>
 typealias MakeContactsBanksSectionView = (ContactsBanksSectionViewModel) -> ContactsBanksSectionView
@@ -145,7 +143,7 @@ extension ViewComponents {
         makePaymentsMeToMeView: makePaymentsMeToMeView,
         makePaymentsServicesOperatorsView: makePaymentsServicesOperatorsView,
         makePaymentsSuccessView: makePaymentsSuccessView, 
-        makeCategoryView: { _,_ in fatalError() },
+        makeCategoryView: { _,_,_  in fatalError() },
         makeProductProfileView: makeProductProfileView,
         makeQRFailedView: makeQRFailedView,
         makeQRFailedWrapperView: makeQRFailedWrapperView,

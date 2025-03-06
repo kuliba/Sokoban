@@ -35,37 +35,43 @@ class TransferAnywayDataTests: XCTestCase {
     
     func testEncoding_Min() throws {
         
-        // given
         let payer = TransferData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
         let amount: Double? = nil
         let transfer = TransferAnywayData(amount: amount, check: false, comment: nil, currencyAmount: "RUB", payer: payer, additional: [.init(fieldid: 0, fieldname: "string", fieldvalue: "string")], puref: nil)
         
-        // when
         let result = try encoder.encode(transfer)
-        
-        // then
-        let url = bundle.url(forResource: "TransferAnywayEncodingMin", withExtension: "json")!
+        let url = try XCTUnwrap(bundle.url(forResource: "TransferAnywayEncodingMin", withExtension: "json"))
         let json = try Data(contentsOf: url)
-        let resultString = String(decoding: result, as: UTF8.self)
-        let jsonString = String(decoding: json, as: UTF8.self)
-                                .replacingOccurrences(of: "\n", with: "")
-                                .replacingOccurrences(of: " ", with: "")
         
-        XCTAssertEqual(resultString, jsonString)
+        let jsonDict: NSDictionary = [
+            "amount": NSNull(),
+            "currencyAmount": "RUB",
+            "check": false,
+            "puref": NSNull(),
+            "additional": [["fieldid": 0, "fieldname": "string", "fieldvalue": "string"]],
+            "comment": NSNull(),
+            "payer": [:]
+        ]
+        
+        try XCTAssertNoDiff(result.jsonDict(), jsonDict)
+        try XCTAssertNoDiff(json.jsonDict(), jsonDict)
     }
     
     func test_amountRoundedFinance() throws {
         
-        // given
-        let sut = makeSut(amount: 10.04)
-        let expectedResult = "{\"amount\":10.04,\"currencyAmount\":\"\",\"check\":false,\"puref\":null,\"additional\":[],\"comment\":null,\"payer\":{}}"
+        let sut = makeUT(amount: 10.04)
         
-        // when
-        let sutEncoded = try encoder.encode(sut)
-        let result = String(data: sutEncoded, encoding: .utf8)
-        
-        // then
-        XCTAssertEqual(result, expectedResult)
+        let encoded = try encoder.encode(sut)
+
+        try XCTAssertNoDiff(encoded.jsonDict(), [
+            "amount": 10.04,
+            "currencyAmount": "",
+            "check": false,
+            "puref": NSNull(),
+            "additional": [],
+            "comment": NSNull(),
+            "payer": [:]
+        ])
     }
     
     func test_sfpBank_shouldReturnBankId() throws {
@@ -95,7 +101,7 @@ class TransferAnywayDataTests: XCTestCase {
 
 private extension TransferAnywayDataTests {
     
-    func makeSut(amount: Double?) -> TransferAnywayData {
+    func makeUT(amount: Double?) -> TransferAnywayData {
         
         .init(
             amount: amount,

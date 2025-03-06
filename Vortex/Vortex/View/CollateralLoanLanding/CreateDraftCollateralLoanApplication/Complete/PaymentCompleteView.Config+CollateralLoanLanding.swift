@@ -148,7 +148,8 @@ extension PaymentCompleteView.Config {
                         textColor: .textSecondary
                     )
                 )
-            )
+            ), 
+            suspend: .suspend()
         )
     )
 }

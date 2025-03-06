@@ -13,7 +13,7 @@ struct AdditionalProductViewModel {
     
     let md5Hash: String
     let productType: ProductType
-    let promoType: PromoProduct
+    let promoItem: PromoItem
     
     let onTap: () -> Void
     let onHide: () -> Void
@@ -23,7 +23,8 @@ extension AdditionalProductViewModel: Identifiable {
     
     public var id: ID {
         
-        switch promoType {
+        switch promoItem.promoProduct {
+        case .creditCardMVP:            return .creditCardMVP
         case .savingsAccount:           return .savingsAccount
         case .sticker:                  return .sticker
         case let .collateralLoan(type): return .collateralLoan(type)
@@ -32,7 +33,7 @@ extension AdditionalProductViewModel: Identifiable {
     
     public enum ID: Hashable {
         
-        case savingsAccount, sticker, collateralLoan(CollateralLoanType)
+        case creditCardMVP, savingsAccount, sticker, collateralLoan(CollateralLoanType)
     }
 }
 
@@ -100,17 +101,15 @@ struct AdditionalProductView: View {
 // MARK: - Previews
 
 #Preview {
+    
     AdditionalProductView(
         viewModel: .init(
             md5Hash: "dsdsd",
             productType: .card,
-            promoType: .sticker,
-            onTap: {
-                print("onTap")
-            }, 
-            onHide: {
-                print("onHide")
-            }), 
+            promoItem: .savingsAccountPreview,
+            onTap: { print("onTap") },
+            onHide: { print("onHide") }
+        ),
         makeIconView: { _ in .init(
             image: .cardPlaceholder,
             publisher: Just(.cardPlaceholder).eraseToAnyPublisher()

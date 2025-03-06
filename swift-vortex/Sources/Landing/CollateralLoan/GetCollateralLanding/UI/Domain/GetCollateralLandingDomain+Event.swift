@@ -29,17 +29,11 @@ extension GetCollateralLandingDomain {
     public enum ExternalEvent: Equatable {
         
         case createDraftApplication(Product)
-        case showCaseList(CaseType)
+        case showCaseList(State.BottomSheet.SheetType)
         case openDocument(String)
-
-        public enum CaseType: Equatable {
-            
-            case periods([Period])
-            case collaterals([Collateral])
-        }
     }
     
-    public typealias Period = GetCollateralLandingProduct.Calc.Rate
-    public typealias Collateral = GetCollateralLandingProduct.Calc.Collateral
+    public typealias Period = Product.Calc.Rate
+    public typealias Collateral = Product.Calc.Collateral
     public typealias Product = GetCollateralLandingProduct
 }

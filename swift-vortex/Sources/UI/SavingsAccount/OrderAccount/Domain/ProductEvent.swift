@@ -14,14 +14,16 @@ public enum ProductEvent<Confirmation> {
     case `continue`
     case amount(AmountEvent)
     case dismissInformer
+    case goToMain
+    case cancel
     case load
-    case loaded(LoadFormResult<Confirmation>)
     case loadConfirmation(LoadConfirmationResult<Confirmation>)
-    case setMessages(Bool)
+    case loaded(LoadFormResult<Confirmation>)
     case orderAccountResult(OrderAccountResult)
     case otp(String)
-    case setConsent(Bool)
     case productSelect(ProductSelectEvent)
-
+    case setConsent(Bool)
+    case setMessages(Bool)
+    
     public typealias OrderAccountResult = Result<OrderAccountResponse, LoadFailure>
 }

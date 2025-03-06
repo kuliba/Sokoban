@@ -26,7 +26,7 @@ public struct PaymentCompletion: Equatable {
     
     public enum Status: Equatable {
         
-        case completed, inflight, rejected
+        case completed, inflight, rejected, suspend
         case fraud(Fraud)
         
         public enum Fraud: Equatable {

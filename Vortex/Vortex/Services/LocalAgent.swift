@@ -156,6 +156,9 @@ extension LocalAgent {
         file: StaticString = #file,
         line: UInt = #line
     ) {
+        lock.lock()
+        defer { lock.unlock() }
+        
         do {
             let fileManager = context.fileManager
             let rootFolder = try rootFolderURL()

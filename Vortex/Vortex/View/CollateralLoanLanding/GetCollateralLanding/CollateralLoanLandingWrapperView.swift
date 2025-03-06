@@ -71,17 +71,16 @@ struct CollateralLoanLandingWrapperView: View {
                     .loader(isLoading: state.product == nil, color: .clear)
                 
             case let .some(product):
-                getCollateralLandingView(product, state, event, config)
+                content(product, state, event)
             }
         }
         .onFirstAppear { event(.load(state.landingID)) }
     }
     
-    private func getCollateralLandingView(
+    private func content(
         _ product: GetCollateralLandingProduct,
-        _ state: State,
-        _ event: @escaping (Event) -> Void,
-        _ config: GetCollateralLandingConfig
+        _ state: GetCollateralLandingDomain.State,
+        _ event: @escaping (GetCollateralLandingDomain.Event) -> Void
     ) -> some View {
         
         GetCollateralLandingView(
@@ -143,47 +142,27 @@ struct CollateralLoanLandingWrapperView: View {
         
         switch bottomSheet {
         case let .showBottomSheet(type):
-            switch type {
-            case .periods:
-                periodsBottomSheetView
-                
-            case .collaterals:
-                collateralsBottomSheetView
-            }
+            bottomSheetView(type)
         }
     }
     
-    private var periodsBottomSheetView: some View {
-        
-        GetCollateralLandingBottomSheetView(
-            state: binder.content.state,
-            event: handlePeriodsDomainEvent(_:),
-            config: config.bottomSheet,
-            factory: .init(
-                makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
-                makeImageViewWithURL: factory.makeImageViewWithURL,
-                getPDFDocument: factory.getPDFDocument,
-                formatCurrency: factory.formatCurrency
-            ),
-            type: .periods
-        )
-    }
-    
-    private var collateralsBottomSheetView: some View {
-        
-        GetCollateralLandingBottomSheetView(
-            state: binder.content.state,
-            event: handlePeriodsDomainEvent(_:),
-            config: config.bottomSheet,
-            factory: .init(
-                makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
-                makeImageViewWithURL: factory.makeImageViewWithURL,
-                getPDFDocument: factory.getPDFDocument,
-                formatCurrency: factory.formatCurrency
-            ),
-            type: .collaterals
-        )
-    }
+    private func bottomSheetView(
+            _ type: GetCollateralLandingDomain.State.BottomSheet.SheetType
+        ) -> some View {
+            
+            GetCollateralLandingBottomSheetView(
+                state: binder.content.state,
+                event: handlePeriodsDomainEvent(_:),
+                config: config.bottomSheet,
+                factory: .init(
+                    makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
+                    makeImageViewWithURL: factory.makeImageViewWithURL,
+                    getPDFDocument: factory.getPDFDocument,
+                    formatCurrency: factory.formatCurrency
+                ),
+                type: type
+            )
+        }
 
     private func informerView(
         _ informerData: InformerData
@@ -291,7 +270,7 @@ extension GetCollateralLandingDomain.Navigation {
     
     enum BottomSheet {
         
-        case showBottomSheet(GetCollateralLandingDomain.ExternalEvent.CaseType)
+        case showBottomSheet(GetCollateralLandingDomain.State.BottomSheet.SheetType)
     }
     
     typealias Domain = CreateDraftCollateralLoanApplicationDomain

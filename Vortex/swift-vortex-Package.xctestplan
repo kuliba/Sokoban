@@ -690,6 +690,27 @@
         "identifier" : "GetOperationDetailServiceTests",
         "name" : "GetOperationDetailServiceTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ResourceProviderComponentTests",
+        "name" : "ResourceProviderComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "OrderCardLandingTests",
+        "name" : "OrderCardLandingTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "EphemeralCacheTests",
+        "name" : "EphemeralCacheTests"
+      }
     }
   ],
   "version" : 1

@@ -261,7 +261,7 @@ private extension RootViewModel {
     
     var mainViewSections: [MainSectionViewModel] {
         
-        return mainViewModel.sections
+        return mainViewModel.sections.map(\.model)
     }
     
     func tapMainViewFastSectionQRButton(
@@ -327,7 +327,7 @@ private extension MainViewModel {
         line: UInt = #line
     ) throws -> FastSectionButtons {
         
-        let sections = sections.compactMap { $0 as? FastSection }
+        let sections = sections.map(\.model).compactMap { $0 as? FastSection }
         
         return try XCTUnwrap(sections.first?.items, "Expected to have Fast Section.", file: file, line: line)
     }

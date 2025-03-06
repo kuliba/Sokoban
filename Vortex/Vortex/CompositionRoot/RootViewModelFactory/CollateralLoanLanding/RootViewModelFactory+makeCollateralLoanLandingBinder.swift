@@ -245,7 +245,7 @@ private extension GetCollateralLandingDomain.ContentError {
         switch error {
         case let .performRequest(error):
             if error.isNotConnectedToInternetOrTimeout() {
-                self = .init(kind: .informer(.init(message: "Проверьте подключение к сети", icon: .wifiOff)))
+                self = .init(kind: .informer(.init(message: "Проверьте подключение к сети", icon: .close)))
             } else {
                 self = .init(kind: .alert("Попробуйте позже."))
             }

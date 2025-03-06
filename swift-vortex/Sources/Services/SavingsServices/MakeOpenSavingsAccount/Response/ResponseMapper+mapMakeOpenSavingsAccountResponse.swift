@@ -69,6 +69,7 @@ private extension MakeOpenSavingsAccountResponse.DocumentStatus {
         case "COMPLETE":    self = .complete
         case "IN_PROGRESS": self = .inProgress
         case "REJECTED":    self = .rejected
+        case "SUSPEND":     self = .suspend
         default:            return nil
         }
     }

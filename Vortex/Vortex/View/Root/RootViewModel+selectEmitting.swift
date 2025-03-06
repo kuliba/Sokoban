@@ -76,13 +76,14 @@ private extension MainViewModel {
         + sections
             .map {
                 
-                $0.action.compactMap(\.rootEvent).eraseToAnyPublisher()
+                $0.model.action.compactMap(\.rootEvent).eraseToAnyPublisher()
             }
     }
     
     private var fastRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
         
         sections
+            .map(\.model)
             .compactMap { $0 as? MainSectionFastOperationView.ViewModel }
             .map(\.rootEventPublisher)
     }
@@ -119,7 +120,7 @@ private extension FastOperations {
         
         switch self {
         case .byPhone:   return nil
-        case .byQr:      return .select(.scanQR)
+        case .byQR:      return .select(.scanQR)
         case .templates: return .select(.templates)
         case .uin:       return .select(.searchByUIN)
         case .utility:   return nil

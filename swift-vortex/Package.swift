@@ -35,10 +35,12 @@ let package = Package(
         .orderCardLandingBackend,
         .createCardApplicationBackend,
         // Infra
+        .ephemeralCache,
         .ephemeralStores,
         .fetcher,
         .genericLoader,
         .keyChainStore,
+        .resourceProvider,
         .serialComponents,
         .stateMachines,
         // Payments
@@ -92,6 +94,7 @@ let package = Package(
         .linkableText,
         .manageSubscriptionsUI,
         .orderCard,
+        .orderCardLanding,
         .otpInputComponent,
         .pickerWithPreviewComponent,
         .pinCodeUI,
@@ -179,6 +182,8 @@ let package = Package(
         .orderCardLandingBackendTests,
         .createCardApplicationBackend,
         // Infra
+        .ephemeralCache,
+        .ephemeralCacheTests,
         .ephemeralStores,
         .ephemeralStoresTests,
         .fetcher,
@@ -187,6 +192,8 @@ let package = Package(
         .genericLoaderTests,
         .keyChainStore,
         .keyChainStoreTests,
+        .resourceProvider,
+        .resourceProviderTests,
         .serialComponents,
         .serialComponentsTests,
         .stateMachines,
@@ -308,6 +315,8 @@ let package = Package(
         .operatorsListComponents,
         .operatorsListComponentsTests,
         .orderCard,
+        .orderCardLanding,
+        .orderCardLandingTests,
         .pickerWithPreviewComponent,
         .pickerWithPreviewComponentTests,
         .pinCodeUI,
@@ -657,6 +666,13 @@ private extension Product {
         ]
     )
     
+    static let orderCardLanding = library(
+        name: .orderCardLanding,
+        targets: [
+            .orderCardLanding
+        ]
+    )
+    
     static let pickerWithPreviewComponent = library(
         name: .pickerWithPreviewComponent,
         targets: [
@@ -751,7 +767,7 @@ private extension Product {
     static let listLandingComponent = library(
         name: .listLandingComponent,
         targets: [
-            .savingsAccount
+            .listLandingComponent
         ]
     )
 
@@ -848,6 +864,13 @@ private extension Product {
     
     // MARK: - Infra
     
+    static let ephemeralCache = library(
+        name: .ephemeralCache,
+        targets: [
+            .ephemeralCache
+        ]
+    )
+    
     static let ephemeralStores = library(
         name: .ephemeralStores,
         targets: [
@@ -873,6 +896,13 @@ private extension Product {
         name: .keyChainStore,
         targets: [
             .keyChainStore
+        ]
+    )
+    
+    static let resourceProvider = library(
+        name: .resourceProvider,
+        targets: [
+            .resourceProvider
         ]
     )
     
@@ -1640,6 +1670,23 @@ private extension Target {
     
     // MARK: - Infra
     
+    static let ephemeralCache = target(
+        name: .ephemeralCache,
+        dependencies: [
+        ],
+        path: "Sources/Infra/\(String.ephemeralCache)"
+    )
+    static let ephemeralCacheTests = testTarget(
+        name: .ephemeralCacheTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .ephemeralCache,
+        ],
+        path: "Tests/Infra/\(String.ephemeralCacheTests)"
+    )
+    
     static let ephemeralStores = target(
         name: .ephemeralStores,
         dependencies: [
@@ -1702,6 +1749,21 @@ private extension Target {
             .keyChainStore,
         ],
         path: "Tests/Infra/\(String.keyChainStoreTests)"
+    )
+    
+    static let resourceProvider = target(
+        name: .resourceProvider,
+        path: "Sources/Infra/\(String.resourceProvider)"
+    )
+    static let resourceProviderTests = testTarget(
+        name: .resourceProviderTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .resourceProvider,
+        ],
+        path: "Tests/Infra/\(String.resourceProviderTests)"
     )
     
     static let serialComponents = target(
@@ -3072,6 +3134,24 @@ private extension Target {
         path: "Sources/UI/\(String.orderCard)"
     )
     
+    static let orderCardLanding = target(
+        name: .orderCardLanding,
+        dependencies: [
+            // internal packages
+        ],
+        path: "Sources/UI/\(String.orderCardLanding)"
+    )
+    
+    static let orderCardLandingTests = testTarget(
+        name: .orderCardLandingTests,
+        dependencies: [
+            .orderCardLanding,
+            .customDump,
+            .uiPrimitives
+        ],
+        path: "Tests/UI/\(String.orderCardLandingTests)"
+    )
+    
     static let searchBarComponent = target(
         name: .searchBarComponent,
         dependencies: [
@@ -3578,6 +3658,7 @@ private extension Target {
             .customDump,
             .tagged,
             // internal modules
+            .ephemeralCache,
             .ephemeralStores,
             .fetcher,
             .genericLoader,
@@ -3848,6 +3929,10 @@ private extension Target.Dependency {
         name: .orderCard
     )
     
+    static let orderCardLanding = byName(
+        name: .orderCardLanding
+    )
+    
     // MARK: - UI Components
     
     static let amountComponent = byName(
@@ -3938,6 +4023,10 @@ private extension Target.Dependency {
     
     // MARK: - Infra
     
+    static let ephemeralCache = byName(
+        name: .ephemeralCache
+    )
+    
     static let ephemeralStores = byName(
         name: .ephemeralStores
     )
@@ -3952,6 +4041,10 @@ private extension Target.Dependency {
     
     static let keyChainStore = byName(
         name: .keyChainStore
+    )
+    
+    static let resourceProvider = byName(
+        name: .resourceProvider
     )
     
     static let serialComponents = byName(
@@ -4287,6 +4380,9 @@ private extension String {
     
     static let orderCard = "OrderCard"
     
+    static let orderCardLanding = "OrderCardLanding"
+    static let orderCardLandingTests = "OrderCardLandingTests"
+    
     static let paymentCompletionUI = "PaymentCompletionUI"
     
     static let pickerWithPreviewComponent = "PickerWithPreviewComponent"
@@ -4387,6 +4483,9 @@ private extension String {
     
     // MARK: - Infra
     
+    static let ephemeralCache = "EphemeralCache"
+    static let ephemeralCacheTests = "EphemeralCacheTests"
+    
     static let ephemeralStores = "EphemeralStores"
     static let ephemeralStoresTests = "EphemeralStoresTests"
     
@@ -4398,6 +4497,9 @@ private extension String {
     
     static let keyChainStore = "KeyChainStore"
     static let keyChainStoreTests = "KeyChainStoreTests"
+    
+    static let resourceProvider = "ResourceProviderComponent"
+    static let resourceProviderTests = "ResourceProviderComponentTests"
     
     static let serialComponents = "SerialComponents"
     static let serialComponentsTests = "SerialComponentsTests"

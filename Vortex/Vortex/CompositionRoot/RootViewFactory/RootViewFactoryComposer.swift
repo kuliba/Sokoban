@@ -32,25 +32,21 @@ final class RootViewFactoryComposer {
     private let infra: RootViewFactory.Infra
     private let model: Model
     private let httpClient: HTTPClient
-    private let savingsAccountFlag: SavingsAccountFlag
     private let schedulers: Schedulers
     
     init(
         model: Model,
         httpClient: HTTPClient,
-        savingsAccountFlag: SavingsAccountFlag,
         schedulers: Schedulers
     ) {
 
-        let defaultImage: Image = savingsAccountFlag.isActive ? .defaultSavingsAccount : .defaultLanding
         self.infra = .init(
             imageCache: model.imageCache(),
-            generalImageCache: model.generalImageCache(defaultImage),
+            generalImageCache: model.generalImageCache(.defaultSavingsAccount),
             getUImage: { model.images.value[$0]?.uiImage }
         )
         self.model = model
         self.httpClient = httpClient
-        self.savingsAccountFlag = savingsAccountFlag
         self.schedulers = schedulers
     }
 }
@@ -180,7 +176,7 @@ extension RootViewFactoryComposer {
             makePaymentsMeToMeView: makePaymentsMeToMeView,
             makePaymentsServicesOperatorsView: makePaymentsServicesOperatorsView,
             makePaymentsSuccessView: makePaymentsSuccessView,
-            makeCategoryView: makeCategoryView(savingsAccountFlag: savingsAccountFlag.isActive),
+            makeCategoryView: makeCategoryView(),
             makeProductProfileView: {
                 
                 self.makeProductProfileView(viewModel: $0, rootEvent: rootEvent)
@@ -294,7 +290,7 @@ private extension RootViewFactoryComposer {
     }
     
     func makeOptionButtonViewFactory() -> OptionSelectorView.OptionButtonViewFactory {
-        .init(makeProductsCategoryView: makeCategoryView(savingsAccountFlag: savingsAccountFlag.isActive))
+        .init(makeProductsCategoryView: makeCategoryView())
     }
     
     func makeUserAccountView(
@@ -344,16 +340,17 @@ private extension RootViewFactoryComposer {
         return composer.compose(event: event)
     }
     
-    func makeCategoryView(
-        savingsAccountFlag: Bool
-    ) -> MakeProductsCategoryView  {
+    func makeCategoryView() -> MakeProductsCategoryView  {
+        
+        let shouldShowPromo = model.settingsAgent.shouldShowPromo(.savingsAccount) && !model.hasSavingsAccount
         
         return {
             
             .init(
-                newImplementation: savingsAccountFlag,
+                newImplementation: true,
                 isSelected: $0,
-                title: $1
+                title: $1, 
+                isSavingsAccount: $2 && shouldShowPromo
             )
         }
     }

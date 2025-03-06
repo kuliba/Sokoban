@@ -419,7 +419,6 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
             creditCardMVPFlag: .inactive,
             getProductListByTypeV6Flag: .active,
             paymentsTransfersFlag: .active,
-            savingsAccountFlag: .active,
             collateralLoanLandingFlag: .active,
             splashScreenFlag: .inactive,
             orderCardFlag: .inactive

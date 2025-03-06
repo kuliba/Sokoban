@@ -123,8 +123,8 @@ extension GetCollateralLandingDomain.State {
         
         public enum SheetType: Equatable {
             
-            case periods
-            case collaterals
+            case periods([Period])
+            case collaterals([Collateral])
         }
         
         public struct Item: Equatable, Identifiable {
