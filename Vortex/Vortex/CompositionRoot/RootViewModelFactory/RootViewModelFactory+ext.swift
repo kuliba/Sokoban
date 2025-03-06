@@ -840,11 +840,21 @@ private extension RootViewModelFactory {
             makeCreditCardMVP: { featureFlags.creditCardMVPFlag.isActive ? .creditCardMVPPreview : nil },
             makeAuthProductsViewModel: { dismiss in
                 
-                    .init(
+                switch featureFlags.orderCardFlag.rawValue {
+                case .inactive:
+                    return .init(
                         self.model,
                         products: self.model.catalogProducts.value,
                         dismissAction: dismiss
                     )
+                case .active:
+                    return .init(
+                        self.model,
+                        products: self.model.catalogProducts.value,
+                        action: { _ in  fatalError() },
+                        dismissAction: dismiss
+                    )
+                }
             }
         )
                   
