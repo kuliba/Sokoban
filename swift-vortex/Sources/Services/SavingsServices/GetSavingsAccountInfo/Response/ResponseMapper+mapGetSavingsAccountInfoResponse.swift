@@ -24,8 +24,14 @@ public extension ResponseMapper {
         
         .init(
             dateNext: data.dateNext,
+            dateSettlement: data.dateSettlement,
+            dateStart: data.dateStart,
+            daysLeft: data.daysLeft,
+            daysLeftText: data.daysLeftText,
             interestAmount: data.interestAmount,
             interestPaid: data.interestPaid,
+            isNeedTopUp: data.isNeedTopUp,
+            isPercentBurned: data.isPercentBurned,
             minRest: data.minRest
         )
     }
@@ -36,8 +42,14 @@ private extension ResponseMapper {
     struct _Data: Decodable {
         
         let dateNext: String?
+        let dateSettlement: String?
+        let dateStart: String?
+        let daysLeft: Int?
+        let daysLeftText: String?
         let interestAmount: Double?
         let interestPaid: Double?
+        let isNeedTopUp: Bool?
+        let isPercentBurned: Bool?
         let minRest: Double?
     }
 }
