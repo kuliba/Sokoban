@@ -48,14 +48,21 @@ private extension GetSavingsAccountInfoResponse {
         let calendar = Calendar.current
         let current: Double = Double(calendar.component(.day, from: Date()))
         let next: Double = Double(dateNext?.suffix(2) ?? "1") ?? 1
+        let progress: Double = dateStart == dateNext ? 0 : current / next
         
         return .init(
-            currentInterest: NSDecimalNumber(floatLiteral: interestAmount ?? 0).decimalValue,
-            minBalance: NSDecimalNumber(floatLiteral: minRest ?? 0).decimalValue,
-            paidInterest: NSDecimalNumber(floatLiteral: interestPaid ?? 0).decimalValue,
-            progress:  current / next,
             dateNext: dateNext,
-            currencyCode: "₽"
+            dateSettlement: dateSettlement,
+            dateStart: dateStart,
+            daysLeft: daysLeft,
+            daysLeftText: daysLeftText,
+            interestAmount: NSDecimalNumber(floatLiteral: interestAmount ?? 0).decimalValue,
+            interestPaid: NSDecimalNumber(floatLiteral: interestPaid ?? 0).decimalValue,
+            isNeedTopUp: isNeedTopUp,
+            isPercentBurned: isPercentBurned,
+            minRest: NSDecimalNumber(floatLiteral: minRest ?? 0).decimalValue,
+            currencyCode: "₽",
+            progress: progress
         )
     }
 }
