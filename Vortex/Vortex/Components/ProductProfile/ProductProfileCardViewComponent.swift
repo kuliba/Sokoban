@@ -28,6 +28,7 @@ extension ProductProfileCardView {
         @Published var activeProductId: ProductData.ID
         
         var productType: ProductType
+        var isSavingsAccount: Bool = false
         
         private let model: Model
         private let cardAction: CardAction?
@@ -109,6 +110,7 @@ extension ProductProfileCardView {
             self.products = productsViewModels
             self.activeProductId = productData.id
             self.productType = productData.productType
+            self.isSavingsAccount = productData.asAccount?.isSavingAccount ?? false
             self.model = model
             self.showCvv = showCvv
             self.cardAction = cardAction
