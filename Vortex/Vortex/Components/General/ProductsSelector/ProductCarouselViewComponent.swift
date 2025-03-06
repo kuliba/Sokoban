@@ -113,50 +113,12 @@ extension ProductCarouselView {
             
             return selectedType
         }
-        
+                
         private func bind() {
             
             model.products
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] productsUpdate in
-                    
-                    // all existing products view models list
-                    let currentProductsViewModels = products.value.values.flatMap { $0 }
-                    
-                    let updatedProducts: [ProductType: [ProductViewModel]] = mode
-                        .filtered(products: productsUpdate)
-                        .mapValues {
-                            
-                            $0.map { product in
-                                
-                                // check if we already have view model for product data
-                                if let currentProductViewModel = currentProductsViewModels.first(where: { $0.id == product.id }) {
-                                    
-                                    // just update existing view model with product data
-                                    currentProductViewModel.update(with: product, model: model)
-                                    
-                                    return currentProductViewModel
-                                    
-                                } else {
-                                    
-                                    // create new product view model
-                                    let productViewModel = ProductViewModel(
-                                        with: product,
-                                        isChecked: (selectedProductId == product.id),
-                                        size: style.productAppearanceSize,
-                                        style: .main,
-                                        model: model,
-                                        cardAction: nil,
-                                        cvvInfo: nil)
-                                    bind(productViewModel)
-                                    
-                                    return productViewModel
-                                }
-                            }
-                        }
-                    
-                    self.products.send(updatedProducts)
-                }
+                .sink { [weak self] in self?.updateProducts($0) }
                 .store(in: &bindings)
             
             products
@@ -300,6 +262,58 @@ extension ProductCarouselView {
                 .store(in: &bindings)
         }
         
+        private func updateProducts(
+            _ productsUpdate: ProductsData
+        )  {
+            // all existing products view models list
+            let currentProductsViewModels = products.value.values.flatMap { $0 }
+            
+            let updatedProducts: [ProductType: [ProductViewModel]] = mode
+                .filtered(products: productsUpdate)
+                .mapValues {
+                    
+                    $0.map { product in
+                        
+                        return makeOrUpdateProductModel(
+                            currentProductViewModel: currentProductsViewModels.first(where: { $0.id == product.id }),
+                            with: product
+                        )
+                    }
+                }
+            
+            products.send(updatedProducts)
+        }
+        
+        private func makeOrUpdateProductModel(
+            currentProductViewModel: ProductViewModel?,
+            with product: ProductData
+        ) -> ProductViewModel {
+            
+            if let currentProductViewModel {
+                
+                // just update existing view model with product data
+                currentProductViewModel.update(with: product, model: model)
+                
+                return currentProductViewModel
+                
+            } else {
+                
+                // create new product view model
+                let productViewModel = ProductViewModel(
+                    with: product,
+                    isChecked: (selectedProductId == product.id),
+                    size: style.productAppearanceSize,
+                    style: .main,
+                    model: model,
+                    cardAction: nil,
+                    cvvInfo: nil)
+                bind(productViewModel)
+                
+                return productViewModel
+            }
+        }
+        
+
         private func updateSelector(with offset: CGFloat) {
             
             guard let selector = selector,
@@ -348,6 +362,7 @@ extension ProductCarouselView {
                 promoProducts: visiblePromoProductsType(promoProducts: promoProducts),
                 style: style.optionsSelectorStyle
             )
+            bind()
         }
         
         func visiblePromoProductsType(promoProducts: [AdditionalProductViewModel]?) -> [ProductType]? {
@@ -362,8 +377,7 @@ extension ProductCarouselView {
     }
 }
 
-// MARK: StickerActions
-private extension SettingsAgentProtocol {
+extension SettingsAgentProtocol {
     
     func shouldShowPromo(_ promoProduct: PromoProduct) -> Bool {
         

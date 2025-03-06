@@ -1063,7 +1063,7 @@ private extension MainViewModel {
     
     var fastPayment: MainSectionFastOperationView.ViewModel? {
         
-        sections.compactMap {
+        sections.map(\.model).compactMap {
             
             $0 as? MainSectionFastOperationView.ViewModel
         }

@@ -106,7 +106,7 @@ struct MainView<NavigationOperationView: View>: View {
             ) {
                 VStack(spacing: 0) {
                     
-                    ForEach(viewModel.sections, content: sectionView)
+                    ForEach(viewModel.sections.map(\.model), content: sectionView)
                 }
                 .padding(.vertical, 20)
             }

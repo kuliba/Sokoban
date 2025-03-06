@@ -6905,7 +6905,6 @@
 		A72955C22D304A3A0076A5F3 /* CollateralLoanLandingCreateDraftCollateralLoanApplicationUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingCreateDraftCollateralLoanApplicationUI.xctestplan; sourceTree = "<group>"; };
 		A72955C52D3113030076A5F3 /* GetShowcaseDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetShowcaseDomain.swift; sourceTree = "<group>"; };
 		A72F3E2E2D5C963C00E25EAD /* PDFDocumentButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFDocumentButton.swift; sourceTree = "<group>"; };
-		A73E21F02CB6CF8A00BD6D3B /* CollateralLoanLanding.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = CollateralLoanLanding.xctestplan; path = ../CollateralLoanLanding.xctestplan; sourceTree = "<group>"; };
 		A73E430C2CF868700060A548 /* CollateralLoanLandingGetCollateralLandingBackend.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollateralLoanLandingGetCollateralLandingBackend.xctestplan; sourceTree = "<group>"; };
 		A73E430D2CF8B58E0060A548 /* RequestFactory+createGetCollateralLandingRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetCollateralLandingRequest.swift"; sourceTree = "<group>"; };
 		A73E43112CF995B90060A548 /* RequestFactory+createGetCollateralLandingRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetCollateralLandingRequestTests.swift"; sourceTree = "<group>"; };
@@ -10797,7 +10796,6 @@
 				2A566EAF2B6816BB00359E05 /* CardStatementAPI.xctestplan */,
 				2A566EB82B6816BC00359E05 /* CarouselComponent.xctestplan */,
 				EC7A0A272CC9356B00FA652F /* ClientInformList.xctestplan */,
-				A73E21F02CB6CF8A00BD6D3B /* CollateralLoanLanding.xctestplan */,
 				2A566EB32B6816BC00359E05 /* CryptoSwaddler.xctestplan */,
 				2A566EC32B6816BD00359E05 /* CVVPIN_Services.xctestplan */,
 				2A566EBF2B6816BD00359E05 /* CvvPin.xctestplan */,
