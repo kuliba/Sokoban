@@ -565,7 +565,7 @@ final class CardViewComponentTests: XCTestCase {
                 numberMasked: .maskedNumber
             ),
             footer: footer,
-            statusAction: .init(status: .unblock),
+            statusAction: .init(model: .init(status: .unblock), cancellables: []),
             appearance: appearance,
             isUpdating: false,
             productType: productType,
@@ -594,7 +594,7 @@ final class CardViewComponentTests: XCTestCase {
             header: .init(number: "7854"),
             cardInfo: .classicCard,
             footer: .init(balance: "170 897 ₽"),
-            statusAction: .init(status: .unblock),
+            statusAction: .init(model: .init(status: .unblock), cancellables: []),
             appearance: .init(
                 background: .init(color: .clear, image: nil),
                 colors: .init(text: .clear, checkBackground: .gray),
