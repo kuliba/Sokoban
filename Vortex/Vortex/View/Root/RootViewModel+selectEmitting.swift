@@ -76,13 +76,14 @@ private extension MainViewModel {
         + sections
             .map {
                 
-                $0.action.compactMap(\.rootEvent).eraseToAnyPublisher()
+                $0.model.action.compactMap(\.rootEvent).eraseToAnyPublisher()
             }
     }
     
     private var fastRootEventPublishers: [AnyPublisher<RootEvent, Never>] {
         
         sections
+            .map(\.model)
             .compactMap { $0 as? MainSectionFastOperationView.ViewModel }
             .map(\.rootEventPublisher)
     }

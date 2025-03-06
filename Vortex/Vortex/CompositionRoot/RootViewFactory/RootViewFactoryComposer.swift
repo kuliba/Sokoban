@@ -344,13 +344,15 @@ private extension RootViewFactoryComposer {
     
     func makeCategoryView() -> MakeProductsCategoryView  {
         
+        let shouldShowPromo = model.settingsAgent.shouldShowPromo(.savingsAccount) && !model.hasSavingsAccount
+        
         return {
             
             .init(
                 newImplementation: true,
                 isSelected: $0,
                 title: $1, 
-                isSavingsAccount: $2
+                isSavingsAccount: $2 && shouldShowPromo
             )
         }
     }
