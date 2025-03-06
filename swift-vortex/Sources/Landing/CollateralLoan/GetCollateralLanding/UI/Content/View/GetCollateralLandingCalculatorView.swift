@@ -361,7 +361,7 @@ extension GetCollateralLandingCalculatorView {
     
     typealias Config = GetCollateralLandingConfig
     typealias Theme = GetCollateralLandingTheme
-    typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent
+    typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent<InformerPayload>
     typealias DomainEvent = GetCollateralLandingDomain.Event<InformerPayload>
     typealias State = GetCollateralLandingDomain.State<InformerPayload>
     typealias Product = GetCollateralLandingProduct

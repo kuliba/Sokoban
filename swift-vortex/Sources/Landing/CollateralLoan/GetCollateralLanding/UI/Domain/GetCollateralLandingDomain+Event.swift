@@ -10,7 +10,7 @@ extension GetCollateralLandingDomain {
     public enum ViewEvent<InformerPayload> {
         
         case domainEvent(Event<InformerPayload>)
-        case externalEvent(ExternalEvent)
+        case externalEvent(ExternalEvent<InformerPayload>)
     }
 
     public enum Event<InformerPayload> {
@@ -25,10 +25,10 @@ extension GetCollateralLandingDomain {
         case dismissFailure
     }
         
-    public enum ExternalEvent: Equatable {
+    public enum ExternalEvent<InformerPayload>: Equatable {
         
         case createDraftApplication(Product)
-        case showCaseList(State.BottomSheet.SheetType)
+        case showCaseList(State<InformerPayload>.BottomSheet.SheetType)
         case openDocument(String)
     }
     

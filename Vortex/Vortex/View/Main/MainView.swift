@@ -401,19 +401,12 @@ private extension MainView {
     
     private func makeCollateralLoanShowcaseWrapperView(binder: GetShowcaseDomain.Binder) -> some View {
         
-        let factory = viewModel.makeCollateralLoanFactory()
-        
         return viewFactory.components.makeCollateralLoanShowcaseWrapperView(
+            model: viewModel.model,
             binder: binder,
-            goToMain: viewModel.reset, // TODO: отремонтировать возврат на главный экран. Не работает скролл после возврата
+            goToMain: viewModel.resetDestination,
             getPDFDocument: viewModel.getPDFDocument,
-            makeOperationDetailInfoViewModel: {
-                viewModel.makeOperationDetailInfoViewModel(
-                    payload: $0,
-                    makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash
-                )
-            },
-            makeCollateralLoanLandingFactory: viewModel.makeCollateralLoanFactory
+            formatCurrency: viewModel.formatCurrency
         )
         .navigationBarWithBack(
             title: "Кредиты",
@@ -424,19 +417,12 @@ private extension MainView {
     
     private func makeCollateralLoanWrapperView(binder: GetCollateralLandingDomain.Binder) -> some View {
         
-        let factory = viewModel.makeCollateralLoanFactory()
-        
         return viewFactory.components.makeCollateralLoanWrapperView(
+            model: viewModel.model,
             binder: binder,
-            getPDFDocument: viewModel.getPDFDocument,
             goToMain: viewModel.resetDestination,
-            makeOperationDetailInfoViewModel: {
-                viewModel.makeOperationDetailInfoViewModel(
-                    payload: $0,
-                    makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash
-                )
-            },
-            makeCollateralLoanLandingFactory: viewModel.makeCollateralLoanFactory
+            getPDFDocument: viewModel.getPDFDocument,
+            formatCurrency: viewModel.formatCurrency
         )
         .navigationBarWithBack(
             title: "",

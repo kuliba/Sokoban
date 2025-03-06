@@ -36,7 +36,7 @@ extension GetCollateralLandingFooterView {
     typealias Config = GetCollateralLandingConfig
     typealias Theme = GetCollateralLandingTheme
     typealias Product = GetCollateralLandingProduct
-    typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent
+    typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent<InformerPayload>
     typealias State = GetCollateralLandingDomain.State<InformerPayload>
 }
 
@@ -47,8 +47,8 @@ struct GetCollateralLandingFooterView_Previews<InformerPayload>: PreviewProvider
     static var previews: some View {
         
         GetCollateralLandingFooterView<InformerPayload>(
-            product: .carStub,
-            config: .preview,
+            product: GetCollateralLandingProduct.carStub,
+            config: GetCollateralLandingConfig.preview.footer,
             state: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE", formatCurrency: { _ in "" }),
             externalEvent: { print($0) }
         )

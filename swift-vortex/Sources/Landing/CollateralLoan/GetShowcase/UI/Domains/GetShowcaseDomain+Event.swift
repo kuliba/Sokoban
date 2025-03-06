@@ -9,7 +9,7 @@ import Foundation
 
 extension GetShowcaseDomain {
     
-    public enum Event<InformerPayload> {
+    public enum Event<InformerPayload>: Equatable where InformerPayload: Equatable {
         
         case load
         case loaded(Result<InformerPayload>)

@@ -28,7 +28,6 @@ import SerialComponents
 import SharedAPIInfra
 import SwiftUI
 import VortexTools
-import CollateralLoanLandingGetShowcaseUI
 
 extension RootViewModelFactory {
     

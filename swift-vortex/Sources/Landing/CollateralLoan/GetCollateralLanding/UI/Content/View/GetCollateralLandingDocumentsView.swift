@@ -8,7 +8,7 @@
 import SwiftUI
 import CollateralLoanLandingGetShowcaseUI
 
-struct GetCollateralLandingDocumentsView: View {
+struct GetCollateralLandingDocumentsView<InformerPayload>: View {
 
     let product: Product
     let config: Config
@@ -77,16 +77,16 @@ extension GetCollateralLandingDocumentsView {
     typealias Product = GetCollateralLandingProduct
     typealias Factory = GetCollateralLandingFactory
     typealias State = GetCollateralLandingDomain.State
-    typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent
+    typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent<InformerPayload>
 }
 
 // MARK: - Previews
 
-struct GetCollateralLandingDocumentsView_Previews: PreviewProvider {
+struct GetCollateralLandingDocumentsView_Previews<InformerPayload>: PreviewProvider {
     
     static var previews: some View {
         
-        GetCollateralLandingDocumentsView(
+        GetCollateralLandingDocumentsView<InformerPayload>(
             product: .carStub,
             config: .preview,
             externalEvent: { print($0) },
@@ -94,7 +94,7 @@ struct GetCollateralLandingDocumentsView_Previews: PreviewProvider {
         )
     }
     
-    static let carStub = GetCollateralLandingProduct.carStub
-    static let realEstateData = GetCollateralLandingProduct.realEstateStub
+    static var carStub: GetCollateralLandingProduct { .carStub }
+    static var realEstateData: GetCollateralLandingProduct { .realEstateStub }
     typealias Factory = GetCollateralLandingFactory
 }

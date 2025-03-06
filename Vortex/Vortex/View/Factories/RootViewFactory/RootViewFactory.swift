@@ -11,11 +11,11 @@ import Banners
 import CollateralLoanLandingGetShowcaseUI
 import LoadableResourceComponent
 import MarketShowcase
+import PDFKit
 import RemoteServices
 import SberQR
 import SplashScreen
 import SwiftUI
-import CollateralLoanLandingGetCollateralLandingUI
 
 typealias MakeActivateSliderView = (ProductData.ID, ActivateSliderViewModel, SliderConfig) -> ActivateSliderStateWrapperView
 typealias MakeAnywayPaymentFactory = (@escaping (AnywayPaymentEvent) -> Void) -> AnywayPaymentFactory<IconDomain.IconView>
@@ -29,6 +29,11 @@ typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> Sber
 typealias MakeSplashScreenView = (SplashScreenState, @escaping (SplashScreenEvent) -> Void) -> SplashScreenView
 typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
 typealias MakeTemplateButtonWrapperView = (OperationDetailData) -> TemplateButtonStateWrapperView
+typealias Payload = RemoteServices.RequestFactory.GetConsentsPayload
+typealias GetDocumentCompletion = (PDFDocument?) -> Void
+typealias GetDocument = (@escaping GetDocumentCompletion) -> Void
+typealias GetPDFDocument = (Payload, @escaping GetDocumentCompletion) -> Void
+typealias MakeCollateralLoanLandingFactory = (Model, @escaping GetPDFDocument) -> CollateralLoanLandingFactory
 
 typealias MakeMarketShowcaseView = (MarketShowcaseDomain.Binder, @escaping MakeOrderCard, @escaping MakePaymentByType) -> MarketShowcaseWrapperView?
 typealias MakeOrderCard = () -> Void

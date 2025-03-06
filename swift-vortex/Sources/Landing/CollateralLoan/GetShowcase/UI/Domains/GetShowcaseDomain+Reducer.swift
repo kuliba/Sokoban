@@ -7,7 +7,7 @@
 
 extension GetShowcaseDomain {
     
-    public final class Reducer<InformerPayload> {
+    public final class Reducer<InformerPayload> where InformerPayload: Equatable {
         
         public init() {}
         

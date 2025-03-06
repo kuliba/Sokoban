@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum PromoProduct {
+enum PromoProduct: Equatable {
     
     case creditCardMVP
     case sticker

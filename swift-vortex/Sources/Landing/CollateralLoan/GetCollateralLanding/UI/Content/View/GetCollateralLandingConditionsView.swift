@@ -8,7 +8,6 @@
 import Combine
 import SwiftUI
 import UIPrimitives
-import CollateralLoanLandingGetShowcaseUI
 
 struct GetCollateralLandingConditionsView: View {
     

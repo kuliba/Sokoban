@@ -79,8 +79,8 @@ struct CollateralLoanLandingWrapperView: View {
     
     private func content(
         _ product: GetCollateralLandingProduct,
-        _ state: GetCollateralLandingDomain.State,
-        _ event: @escaping (GetCollateralLandingDomain.Event) -> Void
+        _ state: GetCollateralLandingDomain.State<InformerData>,
+        _ event: @escaping (GetCollateralLandingDomain.Event<InformerData>) -> Void
     ) -> some View {
         
         GetCollateralLandingView(
@@ -147,7 +147,7 @@ struct CollateralLoanLandingWrapperView: View {
     }
     
     private func bottomSheetView(
-            _ type: GetCollateralLandingDomain.State.BottomSheet.SheetType
+            _ type: GetCollateralLandingDomain.State<InformerData>.BottomSheet.SheetType
         ) -> some View {
             
             GetCollateralLandingBottomSheetView(
@@ -270,7 +270,7 @@ extension GetCollateralLandingDomain.Navigation {
     
     enum BottomSheet {
         
-        case showBottomSheet(GetCollateralLandingDomain.State.BottomSheet.SheetType)
+        case showBottomSheet(GetCollateralLandingDomain.State<InformerData>.BottomSheet.SheetType)
     }
     
     typealias Domain = CreateDraftCollateralLoanApplicationDomain

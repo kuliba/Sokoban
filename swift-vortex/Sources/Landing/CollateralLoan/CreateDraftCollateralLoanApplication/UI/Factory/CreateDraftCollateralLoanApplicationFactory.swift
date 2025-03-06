@@ -35,19 +35,6 @@ public struct CreateDraftCollateralLoanApplicationFactory {
 
 public extension CreateDraftCollateralLoanApplicationFactory {
     
-    func makeCreateDraftCollateralLoanApplicationFactory() -> CreateDraftCollateralLoanApplicationFactory {
-        
-        .init(
-            makeImageViewWithMD5Hash: makeImageViewWithMD5Hash,
-            makeImageViewWithURL: makeImageViewWithURL,
-            getPDFDocument: getPDFDocument,
-            formatCurrency: formatCurrency
-        )
-    }
-}
-
-public extension CreateDraftCollateralLoanApplicationFactory {
-    
     typealias IconView = UIPrimitives.AsyncImage
     typealias MakeImageViewWithMD5Hash = (String) -> IconView
     typealias MakeImageViewWithURL = (String) -> IconView

@@ -101,17 +101,7 @@ class MainViewModel: ObservableObject, Resetable {
         bind()
         update(sections, with: model.settingsMainSections)
     }
-    
-    func makeCollateralLoanFactory() -> CollateralLoanLandingFactory {
         
-        .init(
-            makeImageViewWithMD5Hash: { self.model.generalImageCache().makeIconView(for: .md5Hash(.init($0))) },
-            makeImageViewWithURL: { self.model.generalImageCache().makeIconView(for: .image($0.addingPercentEncoding())) },
-            getPDFDocument: getPDFDocument,
-            formatCurrency: { self.model.amountFormatted(amount: Double($0), currencyCode: "RUB", style: .normal) }
-        )
-    }
-    
     private var disableAlertViewModel: Alert.ViewModel {
         
         paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard({})
@@ -166,28 +156,11 @@ class MainViewModel: ObservableObject, Resetable {
         }
     }
         
-    func makeOperationDetailInfoViewModel(
-        payload: CollateralLandingApplicationSaveConsentsResult,
-        makeImageViewWithMD5Hash: @escaping (String) -> UIPrimitives.AsyncImage
-    ) -> OperationDetailInfoViewModel {
+    func formatCurrency(_ currency: UInt) -> String? {
         
-        OperationDetailInfoViewModel(
-            model: model,
-            logo: nil,
-            cells: payload.makeCells(
-                config: .default,
-                makeImageViewWithMD5Hash: makeImageViewWithMD5Hash,
-                formatCurrency: { [weak self] in
-                    self?.model.amountFormatted(
-                        amount: Double($0),
-                        currencyCode: "RUB",
-                        style: .normal
-                    )}
-            ),
-            dismissAction: {}
-        )
+        model.amountFormatted(amount: Double(currency), currencyCode: "RUB", style: .normal)
     }
-
+    
     private func removePromo(
         _ type: PromoProduct
     ) {
@@ -780,7 +753,7 @@ private extension MainViewModel {
         }
     }
     
-    func openMoreProducts() { //
+    func openMoreProducts() {
         
         let myProductsViewModel = MyProductsViewModel(
             model,

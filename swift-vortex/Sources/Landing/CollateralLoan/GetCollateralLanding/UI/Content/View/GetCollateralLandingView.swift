@@ -7,7 +7,6 @@
 
 import Combine
 import SwiftUI
-import CollateralLoanLandingGetShowcaseUI
 
 public struct GetCollateralLandingView<InformerPayload>: View {
     
@@ -141,7 +140,7 @@ extension GetCollateralLandingView {
     public typealias Config = GetCollateralLandingConfig
     public typealias Factory = GetCollateralLandingFactory
     public typealias State = GetCollateralLandingDomain.State<InformerPayload>
-    public typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent
+    public typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent<InformerPayload>
     public typealias DomainEvent = GetCollateralLandingDomain.Event<InformerPayload>
 }
 
