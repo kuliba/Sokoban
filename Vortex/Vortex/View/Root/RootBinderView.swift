@@ -101,21 +101,7 @@ private extension RootBinderView {
             
         case let .userAccount(userAccount):
             userAccountView(userAccount)
-            
-        case let .orderCardLanding(landing):
-            orderCardLandingView(landing)
         }
-    }
-    
-    private func orderCardLandingView(
-        _ orderCardLanding: OrderCardLanding
-    ) -> some View {
-        
-        rootViewFactory.components.makeOrderCardLandingView(
-            landing: orderCardLanding,
-            continue: { },
-            dismiss: { }
-        )
     }
     
     private func productProfileView(
@@ -322,7 +308,6 @@ extension RootViewNavigation {
         case searchByUIN(SearchByUIN)
         case standardPayment(PaymentProviderPickerDomain.Binder)
         case userAccount(UserAccountViewModel)
-        case orderCardLanding(OrderCardLanding)
         
         typealias SearchByUIN = SearchByUINDomain.Binder
         typealias TemplatesNode = RootViewNavigation.TemplatesNode
@@ -380,7 +365,7 @@ extension RootViewNavigation.Destination: Identifiable {
                 case let .form(form):
                     return .openProduct(.card(.init(form.model)))
 
-                case let .landing(landing):
+                case .landing(_):
                     return .orderCardLanding
                 }
                 
@@ -405,9 +390,6 @@ extension RootViewNavigation.Destination: Identifiable {
             
         case let .userAccount(userAccount):
             return .userAccount(.init(userAccount))
-            
-        case let .orderCardLanding(landing):
-            return .orderCardLanding
         }
     }
     

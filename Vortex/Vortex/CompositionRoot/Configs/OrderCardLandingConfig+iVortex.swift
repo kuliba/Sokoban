@@ -14,7 +14,7 @@ extension ListLandingComponent.Config {
         item: .init(
             title: .init(
                 textFont: .textH4M16240(),
-                textColor: .secondary
+                textColor: .textSecondary
             ),
             subtitle: .init(
                 textFont: .textBodyMR14180(),

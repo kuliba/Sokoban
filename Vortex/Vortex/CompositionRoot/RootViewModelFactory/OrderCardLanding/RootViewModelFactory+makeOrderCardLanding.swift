@@ -168,9 +168,11 @@ private extension Header {
     init(product: OrderCardLandingResponse.Product) {
         
         self.init(
-            title: product.title,
+            title: product.title, 
+            navTitle: product.navTitle,
+            navSubtitle: product.navSubtitle,
             options: product.features,
-            md5Hash: product.image
+            imageUrl: product.image
         )
     }
 }
@@ -185,13 +187,15 @@ private extension OrderCardLandingDomain.Content {
     static let stub: Self = .init(
         header: .init(
             title: "Карта МИР «Все включено»",
+            navTitle: "Карта МИР",
+            navSubtitle: "«Все включено»",
             options: [
                 "кешбэк до 10 000 ₽ в месяц",
                 "5% выгода при покупке топлива",
                 "5% на категории сезона",
                 "от 0,5% до 1% кешбэк на остальные покупки**"
             ],
-            md5Hash: "b6fa019f307d6a72951ab7268708aa15"
+            imageUrl: "dict/getProductCatalogImage?image=products/pages/order-card/digital-card-landing/images/digital_card_landing_bg.png"
         ),
         conditions: .init(
             title: "Выгодные условия",

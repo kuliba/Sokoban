@@ -60,10 +60,10 @@ private extension ResponseMapper {
     
     struct _Data: Decodable {
         
-        let products: [Item1]
+        let products: [ProductItem]
         
-        struct Item1: Decodable {
-            //        let id: String?
+        struct ProductItem: Decodable {
+            
             let header: Header?
             let theme: String?
             let product: Product?
@@ -162,6 +162,8 @@ private extension ResponseMapper._Data.Product {
     
         return .init(
             title: title ?? "",
+            navTitle: name?.first?.text ?? "",
+            navSubtitle: name?.first?.text ?? "",
             image: image ?? "",
             features: features,
             discount: .init(

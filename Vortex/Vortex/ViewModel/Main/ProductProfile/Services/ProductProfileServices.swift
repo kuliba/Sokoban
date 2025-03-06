@@ -10,6 +10,7 @@ import GetInfoRepeatPaymentService
 import LandingMapping
 import LandingUIComponent
 import SavingsAccount
+import PDFKit
 
 struct ProductProfileServices {
     
@@ -20,6 +21,7 @@ struct ProductProfileServices {
     let createChangeSVCardLimit: ChangeSVCardLimitServices
     let createSVCardLanding: SVCardLandingServices
     let getSavingsAccountInfo: GetSavingsAccountInfo
+    let getSavingsAccountPrintForm: GetSavingsAccountPrintForm
     let repeatPayment: RepeatPayment
     
     let makeSVCardLandingViewModel: (Landing, ListHorizontalRectangleLimitsViewModel?, UILanding.Component.Config, @escaping (LandingEvent) -> Void
@@ -35,6 +37,7 @@ struct ProductProfileServices {
     typealias RepeatPayment = (GetInfoRepeatPaymentDomain.PaymentPayload, @escaping CloseAction, @escaping (PaymentsDomain.Navigation?) -> Void) -> Void
 
     typealias GetSavingsAccountInfo = (ProductData, @escaping (SavingsAccountDetailsState?) -> Void) -> Void
+    typealias GetSavingsAccountPrintForm = (Int, @escaping (PDFDocument?) -> Void) -> Void
 }
 
 // MARK: - Preview Content
@@ -48,7 +51,8 @@ extension ProductProfileServices {
         createCreateGetSVCardLimits: .preview(),
         createChangeSVCardLimit: .preview(),
         createSVCardLanding: .preview(),
-        getSavingsAccountInfo: { _,_ in },
+        getSavingsAccountInfo: { _,_ in }, 
+        getSavingsAccountPrintForm: { _,_  in },
         repeatPayment: { _,_,_ in },
         makeSVCardLandingViewModel: { _,_,_,_ in nil },
         makeInformer: { _ in }
