@@ -2960,6 +2960,7 @@
 		83943ECD2A8F790100042CB2 /* ProductsSwapViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83943ECC2A8F790100042CB2 /* ProductsSwapViewTests.swift */; };
 		8394B2F32BBF2F5C0078CB10 /* AlertReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8394B2F22BBF2F5C0078CB10 /* AlertReducer.swift */; };
 		8394B2F52BBFD70E0078CB10 /* CvvInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8394B2F42BBFD70E0078CB10 /* CvvInfo.swift */; };
+		8398654F2D79BAB1007317CD /* RootViewModelFactory+getPrintFormForSavingsAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8398654E2D79BAB1007317CD /* RootViewModelFactory+getPrintFormForSavingsAccount.swift */; };
 		839914772C6CF72300E9D275 /* GetProductListByTypeV6Flag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839914762C6CF72200E9D275 /* GetProductListByTypeV6Flag.swift */; };
 		8399147B2C6DE7B700E9D275 /* Services+getProductListByTypeV6.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8399147A2C6DE7B700E9D275 /* Services+getProductListByTypeV6.swift */; };
 		8399147D2C6DE80C00E9D275 /* GetProductListByTypeV6Service in Frameworks */ = {isa = PBXBuildFile; productRef = 8399147C2C6DE80C00E9D275 /* GetProductListByTypeV6Service */; };
@@ -6727,6 +6728,7 @@
 		83943ECC2A8F790100042CB2 /* ProductsSwapViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsSwapViewTests.swift; sourceTree = "<group>"; };
 		8394B2F22BBF2F5C0078CB10 /* AlertReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertReducer.swift; sourceTree = "<group>"; };
 		8394B2F42BBFD70E0078CB10 /* CvvInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CvvInfo.swift; sourceTree = "<group>"; };
+		8398654E2D79BAB1007317CD /* RootViewModelFactory+getPrintFormForSavingsAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+getPrintFormForSavingsAccount.swift"; sourceTree = "<group>"; };
 		839914752C6CB31E00E9D275 /* GetProductListByTypeV6Service.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = GetProductListByTypeV6Service.xctestplan; sourceTree = "<group>"; };
 		839914762C6CF72200E9D275 /* GetProductListByTypeV6Flag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetProductListByTypeV6Flag.swift; sourceTree = "<group>"; };
 		8399147A2C6DE7B700E9D275 /* Services+getProductListByTypeV6.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+getProductListByTypeV6.swift"; sourceTree = "<group>"; };
@@ -17089,6 +17091,7 @@
 			children = (
 				842C42352D11FD2B006A307D /* RootViewModelFactory+makeSavingsAccount.swift */,
 				2A0BAB4F2D6E0CA4006ED2CA /* RootViewModelFactory+getSavingsAccountInfo.swift */,
+				8398654E2D79BAB1007317CD /* RootViewModelFactory+getPrintFormForSavingsAccount.swift */,
 			);
 			path = SavingsAccount;
 			sourceTree = "<group>";
@@ -22499,6 +22502,7 @@
 				2A0D9B882B0E3BD800F1DFD1 /* StickerViewFactory+makeButtonLabel.swift in Sources */,
 				ED75CDFB26E27F150074F5D5 /* UIApplication.swift in Sources */,
 				2AB87C572C135FF90013EFFE /* RxInputViewModel.swift in Sources */,
+				8398654F2D79BAB1007317CD /* RootViewModelFactory+getPrintFormForSavingsAccount.swift in Sources */,
 				ECCA5B492CFDFC250034A64A /* LoggingRemoteNanoServiceComposer+composeServiceCategoryRemoteLoad.swift in Sources */,
 				2A248F632C691A5B00082814 /* AnywayPaymentSourceParser.swift in Sources */,
 				2A248F642C691A5B00082814 /* InitialAnywayTransactionComposer.swift in Sources */,
