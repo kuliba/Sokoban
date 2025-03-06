@@ -35,6 +35,7 @@ let package = Package(
         .orderCardLandingBackend,
         .createCardApplicationBackend,
         // Infra
+        .ephemeralCache,
         .ephemeralStores,
         .fetcher,
         .genericLoader,
@@ -181,6 +182,8 @@ let package = Package(
         .orderCardLandingBackendTests,
         .createCardApplicationBackend,
         // Infra
+        .ephemeralCache,
+        .ephemeralCacheTests,
         .ephemeralStores,
         .ephemeralStoresTests,
         .fetcher,
@@ -860,6 +863,13 @@ private extension Product {
     )
     
     // MARK: - Infra
+    
+    static let ephemeralCache = library(
+        name: .ephemeralCache,
+        targets: [
+            .ephemeralCache
+        ]
+    )
     
     static let ephemeralStores = library(
         name: .ephemeralStores,
@@ -1659,6 +1669,23 @@ private extension Target {
     )
     
     // MARK: - Infra
+    
+    static let ephemeralCache = target(
+        name: .ephemeralCache,
+        dependencies: [
+        ],
+        path: "Sources/Infra/\(String.ephemeralCache)"
+    )
+    static let ephemeralCacheTests = testTarget(
+        name: .ephemeralCacheTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .ephemeralCache,
+        ],
+        path: "Tests/Infra/\(String.ephemeralCacheTests)"
+    )
     
     static let ephemeralStores = target(
         name: .ephemeralStores,
@@ -3631,6 +3658,7 @@ private extension Target {
             .customDump,
             .tagged,
             // internal modules
+            .ephemeralCache,
             .ephemeralStores,
             .fetcher,
             .genericLoader,
@@ -3994,6 +4022,10 @@ private extension Target.Dependency {
     )
     
     // MARK: - Infra
+    
+    static let ephemeralCache = byName(
+        name: .ephemeralCache
+    )
     
     static let ephemeralStores = byName(
         name: .ephemeralStores
@@ -4450,6 +4482,9 @@ private extension String {
     static let operatorsListComponentsTests = "OperatorsListComponentsTests"
     
     // MARK: - Infra
+    
+    static let ephemeralCache = "EphemeralCache"
+    static let ephemeralCacheTests = "EphemeralCacheTests"
     
     static let ephemeralStores = "EphemeralStores"
     static let ephemeralStoresTests = "EphemeralStoresTests"
