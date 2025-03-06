@@ -194,12 +194,18 @@ extension OrderSavingsAccountConfig {
 extension SavingsAccountDetails {
     
     static let preview: Self = .init(
-        currentInterest: 22400,
-        minBalance: 8000,
-        paidInterest: 11134056.77,
-        progress: 0.8, 
-        dateNext: nil,
-        currencyCode: "₽"
+        dateNext: "2025-03-31",
+        dateSettlement: nil,
+        dateStart: "2025-03-01",
+        daysLeft: 26,
+        daysLeftText: nil,
+        interestAmount: 22400,
+        interestPaid: 11134,
+        isNeedTopUp: nil,
+        isPercentBurned: nil,
+        minRest: nil,
+        currencyCode: "₽",
+        progress: 0.96
     )
 }
 

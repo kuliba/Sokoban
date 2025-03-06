@@ -14,11 +14,11 @@ private extension SavingsAccountDetailsState {
     }
     
     var dateStart: String? {
-        "2025-03-01" // TODO: delete stub after analytics update
+        data?.dateStart
     }
     
     var daysLeft: String? {
-        "5 дней" // TODO: delete stub after analytics update
+        data?.daysLeftText
     }
     
     var paydate: String? {
@@ -35,7 +35,8 @@ private extension SavingsAccountDetailsState {
         dateNext: String?
     ) -> String {
         
-        "Отчетный период \(dateStart?.suffix(2) ?? "")-\(dateNext?.dateToString() ?? "")"
+        let day: Int = Int(dateStart?.suffix(2) ?? "1") ?? 1
+        return "Отчетный период \(day)-\(dateNext?.dateToString() ?? "")"
     }
 }
 
@@ -58,6 +59,8 @@ extension Date {
     func getComponents(_ component: Calendar.Component, calendar: Calendar = Calendar.current) -> Int {
         return calendar.component(component, from: self)
     }
+    
+    var daysInCurrentMonth: Int { Calendar.current.range(of: .day, in: .month, for: Date())?.count ?? 30 }
 }
 
 public struct SavingsAccountDetailsView: View {
@@ -174,7 +177,7 @@ public struct SavingsAccountDetailsView: View {
                     .modifier(ShimmeringModifier(needShimmering, config.colors.shimmering))
             }
             
-            if (!needShimmering) {
+            if !needShimmering, !state.days.isEmpty {
                 config.info
                     .foregroundColor(config.colors.chevron)
                 state.days
@@ -221,7 +224,7 @@ public struct SavingsAccountDetailsView: View {
                     .modifier(ShimmeringModifier(needShimmering, config.colors.shimmering))
                 
                 if !needShimmering {
-                    ruler(width: geometry.size.width)
+                    ruler(width: geometry.size.width, days: Date().daysInCurrentMonth)
                     progress(width: geometry.size.width, value: state.data?.progress)
                 }
             }
@@ -230,11 +233,12 @@ public struct SavingsAccountDetailsView: View {
     }
     
     private func ruler(
-        width: CGFloat
+        width: CGFloat,
+        days: Int
     ) -> some View {
         
-        HStack(spacing: (width - config.padding * 2) / 40) {
-            ForEach(0..<40) { _ in
+        HStack(spacing: (width - config.padding * 2) / CGFloat(days)) {
+            ForEach(0..<days, id: \.self) { _ in
                 Capsule()
                     .frame(width: 1, height: 2)
                     .foregroundColor(config.colors.progress)
@@ -289,28 +293,35 @@ private extension SavingsAccountDetailsView {
 private extension SavingsAccountDetailsView {
    
     var currentInterest: String {
-        amountToString(state.currentInterest, state.currencyCode)
+        if let currentInterest = state.currentInterest {
+            return amountToString(currentInterest, state.currencyCode)
+        }
+        return ""
     }
     
     var minBalance: String {
-        if state.minBalance > 0 {
-            amountToString(state.minBalance, state.currencyCode) + config.texts.per
+        if let minBalance = state.minBalance, minBalance > 0 {
+            amountToString(minBalance, state.currencyCode) + config.texts.per
         } else {
             ""
         }
     }
 
     var paidInterest: String {
-        amountToString(state.paidInterest, state.currencyCode)
+        if let paidInterest = state.paidInterest {
+            amountToString(paidInterest, state.currencyCode)
+        } else {
+            ""
+        }
     }
 }
 private extension SavingsAccountDetailsState {
     
-    var currentInterest: Decimal { data?.currentInterest ?? 0 }
+    var currentInterest: Decimal? { data?.interestAmount }
     
-    var minBalance: Decimal { data?.minBalance ?? 0 }
+    var minBalance: Decimal? { data?.minRest}
 
-    var paidInterest: Decimal { data?.paidInterest ?? 0 }
+    var paidInterest: Decimal? { data?.interestPaid }
 
     var currencyCode: String { data?.currencyCode ?? "" }
 }
