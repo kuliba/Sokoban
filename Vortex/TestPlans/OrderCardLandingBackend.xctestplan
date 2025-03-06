@@ -18,13 +18,6 @@
         "identifier" : "OrderCardLandingBackendTests",
         "name" : "OrderCardLandingBackendTests"
       }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
-        "identifier" : "OrderCardLandingTests",
-        "name" : "OrderCardLandingTests"
-      }
     }
   ],
   "version" : 1
