@@ -2,7 +2,7 @@
 //  TimedStrategyTests.swift
 //  
 //
-//  Created by Nikolay Pochekuev on 21.02.2025.
+//  Created by Igor Malyarov on 07.03.2025.
 //
 
 import CombineSchedulers
