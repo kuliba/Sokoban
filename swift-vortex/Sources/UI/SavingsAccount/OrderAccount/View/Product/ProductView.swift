@@ -55,11 +55,7 @@ where IconView: View {
             
             HStack(alignment:.top, spacing: config.padding) {
                 
-                ZStack {
-                    shadow()
-                    product(designMd5hash: designMd5hash, needShimmering)
-                    
-                }
+                product(designMd5hash: designMd5hash, needShimmering)
                 orderOptions(
                     open: orderOption.open,
                     service: orderOption.service,
@@ -87,14 +83,17 @@ where IconView: View {
         
         if needShimmering {
             RoundedRectangle(cornerRadius: 8)
-                .fill(config.shimmering)
+                .fill(config.shadowColor)
                 .frame(config.order.card)
                 .shimmering()
         }
         else {
-            makeIconView(designMd5hash)
-                .aspectRatio(contentMode: .fit)
-                .frame(config.order.card)
+            ZStack {
+                shadow()
+                makeIconView(designMd5hash)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(config.order.card)
+            }
         }
     }
 

@@ -1,5 +1,5 @@
 //
-//  OrderCardView_Previews.swift
+//  OrderAccountView_Previews.swift
 //
 //
 //  Created by Igor Malyarov on 09.02.2025.
@@ -9,7 +9,7 @@ import Combine
 import LoadableState
 import SwiftUI
 
-struct OrderCardView_Previews: PreviewProvider {
+struct OrderAccountView_Previews: PreviewProvider {
     
     static var previews: some View {
         
