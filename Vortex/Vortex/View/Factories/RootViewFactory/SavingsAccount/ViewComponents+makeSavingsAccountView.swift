@@ -44,7 +44,7 @@ extension ViewComponents {
                     )
                     .navigationDestination(
                         destination: flowState.navigation?.destination,
-                        content: { makeOpenSavingsAccountView(destination: $0, openAccountBinder: openAccountBinder) }
+                        content: { makeOpenSavingsAccountView(destination: $0, openAccountBinder: openAccountBinder, dismiss: dismiss) }
                     )
                 }
             }
@@ -118,13 +118,14 @@ extension ViewComponents {
     @ViewBuilder
     func makeOpenSavingsAccountView(
         destination: SavingsAccountDomain.Navigation.Destination,
-        openAccountBinder: OpenSavingsAccountDomain.Binder
+        openAccountBinder: OpenSavingsAccountDomain.Binder,
+        dismiss: @escaping () -> Void
     ) -> some View {
         
         switch destination {
         case .openSavingsAccount:
             
-            makeOpenSavingsAccountView(openAccountBinder, dismiss: {})
+            makeOpenSavingsAccountView(openAccountBinder, dismiss: dismiss)
         }
     }
 

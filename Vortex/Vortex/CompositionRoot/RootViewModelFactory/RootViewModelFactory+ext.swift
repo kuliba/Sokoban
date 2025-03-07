@@ -964,7 +964,7 @@ extension Error {
         switch sessionError {
         case let .sessionError(error):
             let nsError = error as NSError
-            return nsError.code == NSURLErrorNotConnectedToInternet || nsError.code == NSURLErrorTimedOut
+            return nsError.code == NSURLErrorNotConnectedToInternet || nsError.code == NSURLErrorTimedOut || nsError.code == NSURLErrorNetworkConnectionLost
             
         default: return false
         }
