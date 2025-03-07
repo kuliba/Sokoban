@@ -297,6 +297,13 @@ class ProductProfileViewModel: ObservableObject {
             
             productProfileServices.getSavingsAccountInfo(productData) { [weak self] accountInfo in
                 
+                switch accountInfo?.status {
+                case .none, .inflight, .result:
+                    break
+                case let .failure(kind):
+                    self?.handleFailure(kind)
+                }
+                
                 DispatchQueue.main.async {
                     
                     self?.accountInfo = accountInfo
@@ -304,6 +311,28 @@ class ProductProfileViewModel: ObservableObject {
             }
         } else {
             accountInfo = nil
+        }
+    }
+    
+    private func handleFailure(
+        _ kind: SavingsAccountDetailsState.Kind
+    ) {
+        switch kind {
+        case .alert:
+            let alertViewModel = Alert.ViewModel(
+                title: "Внимание",
+                message: "Что-то пошло не так.\nПопробуйте позже",
+                primary: .init(type: .default, title: "ОК") { [weak self] in
+                    self?.handleCloseLinkAction()
+                })
+            
+            DispatchQueue.main.async { [weak self] in
+                
+                self?.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
+            }
+            
+        case .informer:
+            errorData()
         }
     }
 }
@@ -3267,6 +3296,10 @@ extension ProductProfileViewModel {
         model.action.send(ModelAction.Informer.Show(informer: .init(message: "Не удалось повторить операцию. Попробуйте позже", icon: .close)))
     }
     
+    func errorData() {
+        model.action.send(ModelAction.Informer.Show(informer: .init(message: "Ошибка загрузки данных. Попробуйте позже", icon: .close)))
+    }
+
     func payment(
         operationID: Int?,
         productStatement: ProductStatementData

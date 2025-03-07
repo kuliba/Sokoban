@@ -35,8 +35,10 @@ private extension SavingsAccountDetailsState {
         dateNext: String?
     ) -> String {
         
-        let day: Int = Int(dateStart?.suffix(2) ?? "1") ?? 1
-        return "Отчетный период \(day)-\(dateNext?.dateToString() ?? "")"
+        if let day = Int(dateStart?.suffix(2) ?? "") {
+            return "Отчетный период \(day)-\(dateNext?.dateToString() ?? "")"
+        }
+        return ""
     }
 }
 
