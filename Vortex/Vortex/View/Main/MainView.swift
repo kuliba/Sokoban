@@ -399,21 +399,24 @@ private extension MainView {
     
     private typealias Config = BannerPickerSectionStateItemViewConfig
     
+    private func makeOperationDetailInfoViewModel() -> OperationDetailInfoViewModel {
+
+        OperationDetailInfoViewModel(
+            model: viewModel.model,
+            logo: nil,
+            cells: [],
+            dismissAction: {}
+        )
+    }
+    
     private func makeCollateralLoanShowcaseWrapperView(binder: GetShowcaseDomain.Binder) -> some View {
         
-        let factory = viewModel.makeCollateralLoanFactory()
-        
-        return viewFactory.components.makeCollateralLoanShowcaseWrapperView(
+        viewFactory.components.makeCollateralLoanShowcaseWrapperView(
+            operationDetailInfoViewModel: makeOperationDetailInfoViewModel(),
             binder: binder,
-            goToMain: viewModel.reset, // TODO: отремонтировать возврат на главный экран. Не работает скролл после возврата
+            goToMain: viewModel.resetDestination,
             getPDFDocument: viewModel.getPDFDocument,
-            makeOperationDetailInfoViewModel: {
-                viewModel.makeOperationDetailInfoViewModel(
-                    payload: $0,
-                    makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash
-                )
-            },
-            makeCollateralLoanLandingFactory: viewModel.makeCollateralLoanFactory
+            formatCurrency: viewModel.formatCurrency
         )
         .navigationBarWithBack(
             title: "Кредиты",
@@ -424,19 +427,12 @@ private extension MainView {
     
     private func makeCollateralLoanWrapperView(binder: GetCollateralLandingDomain.Binder) -> some View {
         
-        let factory = viewModel.makeCollateralLoanFactory()
-        
         return viewFactory.components.makeCollateralLoanWrapperView(
             binder: binder,
-            getPDFDocument: viewModel.getPDFDocument,
+            operationDetailInfoViewModel: makeOperationDetailInfoViewModel(),
             goToMain: viewModel.resetDestination,
-            makeOperationDetailInfoViewModel: {
-                viewModel.makeOperationDetailInfoViewModel(
-                    payload: $0,
-                    makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash
-                )
-            },
-            makeCollateralLoanLandingFactory: viewModel.makeCollateralLoanFactory
+            getPDFDocument: viewModel.getPDFDocument,
+            formatCurrency: viewModel.formatCurrency
         )
         .navigationBarWithBack(
             title: "",
@@ -654,7 +650,6 @@ extension ProductProfileViewModel  {
         makeServicePaymentBinder: ServicePaymentBinder.preview,
         makeOpenNewProductButtons: { _ in [] },
         operationDetailFactory: .preview,
-        makeOrderCardViewModel: { /*TODO:  implement preview*/ },
         makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() }
     )
 }

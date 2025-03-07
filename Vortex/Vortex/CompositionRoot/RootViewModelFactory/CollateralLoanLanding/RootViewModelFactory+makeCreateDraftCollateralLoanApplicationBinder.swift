@@ -211,7 +211,7 @@ extension RootViewModelFactory {
         let saveConsents = nanoServiceComposer.compose(
             createRequest: RequestFactory.createSaveConsentsRequest(with:),
             mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:),
-            mapError: { _ in Domain.ContentError.init(kind: .complete) }
+            mapError: { _ in Domain.ContentError.init(kind: .failureResultScreen) }
         )
         
         let save = schedulers.background.scheduled(saveConsents)
@@ -261,8 +261,8 @@ extension RootViewModelFactory {
                 case let .alert(message):
                     completion(.failure(.alert(message)))
 
-                case .complete:
-                    completion(.failure(.complete))
+                case .failureResultScreen:
+                    completion(.failure(.failureResultScreen))
                 }
             }
         }
@@ -369,8 +369,8 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
         case let .informer(informerPayload):
             return .informer(informerPayload)
             
-        case .complete:
-            return .complete
+        case .failureResultScreen:
+            return .failureResultScreen
         }
     }
 }

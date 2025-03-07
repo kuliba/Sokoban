@@ -36,6 +36,10 @@ public struct List: View {
             ForEach(items.list, content: itemView)
                 .accessibilityIdentifier("Items")
         }
+        .padding(.vertical, 12)
+        .padding(.horizontal, 16)
+        .background(config.background)
+        .cornerRadius(12)
     }
     
     private func itemView (

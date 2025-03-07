@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum SettingType {
+enum SettingType: Equatable {
     
     case general(General)
     case transfers(Transfers)
@@ -183,7 +183,6 @@ extension SettingType.Interface: RawRepresentable {
     }
 }
 
-extension SettingType: Equatable {}
 extension SettingType.Interface: Equatable {}
 
 private extension String {

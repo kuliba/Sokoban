@@ -74,17 +74,23 @@ public struct OrderCardLandingResponse: Equatable {
     public struct Product: Equatable {
         
         public let title: String
+        public let navTitle: String
+        public let navSubtitle: String
         public let image: String
         public let features: [String]
         public let discount: Discount
         
         public init(
             title: String,
+            navTitle: String,
+            navSubtitle: String,
             image: String,
             features: [String],
             discount: OrderCardLandingResponse.Product.Discount
         ) {
             self.title = title
+            self.navTitle = navTitle
+            self.navSubtitle = navSubtitle
             self.image = image
             self.features = features
             self.discount = discount

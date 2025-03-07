@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct CollateralLoanLandingGetShowcaseView<InformerPayload>: View {
+public struct CollateralLoanLandingGetShowcaseView<InformerPayload>: View where InformerPayload: Equatable {
         
     private let data: Data
     private let event: (GetShowcaseViewEvent<InformerPayload>.External) -> Void
@@ -37,7 +37,7 @@ public struct CollateralLoanLandingGetShowcaseView<InformerPayload>: View {
                 
                 ForEach(data.products, id: \.landingId) {
                     
-                    CollateralLoanLandingGetShowcaseProductView(
+                    CollateralLoanLandingGetShowcaseProductView<InformerPayload>(
                         product: $0,
                         event: event,
                         config: config,
@@ -49,7 +49,7 @@ public struct CollateralLoanLandingGetShowcaseView<InformerPayload>: View {
     }
 }
 
-public enum GetShowcaseViewEvent<InformerPayload> {
+public enum GetShowcaseViewEvent<InformerPayload> where InformerPayload: Equatable {
     
     case domainEvent(GetShowcaseDomain.Event<InformerPayload>)
     case external(External)

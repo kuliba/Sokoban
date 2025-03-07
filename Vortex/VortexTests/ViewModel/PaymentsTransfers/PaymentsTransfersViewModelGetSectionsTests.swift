@@ -99,7 +99,6 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
             makeServicePaymentBinder: ServicePaymentBinder.preview,
             makeOpenNewProductButtons: { _ in [] },
             operationDetailFactory: .preview,
-            makeOrderCardViewModel: { },
             makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() }
         )
         

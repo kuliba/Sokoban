@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-public struct CollateralLoanLandingGetShowcaseProductView<InformerPayload>: View {
+public struct CollateralLoanLandingGetShowcaseProductView<InformerPayload>: View
+    where InformerPayload: Equatable {
     
     let product: Product
     let event: (GetShowcaseViewEvent<InformerPayload>.External) -> Void

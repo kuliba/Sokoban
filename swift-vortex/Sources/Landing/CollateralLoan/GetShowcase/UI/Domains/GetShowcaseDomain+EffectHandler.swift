@@ -7,7 +7,7 @@
 
 extension GetShowcaseDomain {
     
-    public final class EffectHandler<InformerPayload> {
+    public final class EffectHandler<InformerPayload> where InformerPayload: Equatable {
         
         let load: Load
         

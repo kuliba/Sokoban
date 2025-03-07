@@ -22,7 +22,7 @@ struct CollateralLoanShowcaseWrapperView: View {
     let factory: Factory
     let config: Config
     let goToMain: () -> Void
-    let makeOperationDetailInfoViewModel: MakeOperationDetailInfoViewModel
+    let operationDetailInfoViewModel: OperationDetailInfoViewModel
 
     var body: some View {
         
@@ -99,7 +99,7 @@ struct CollateralLoanShowcaseWrapperView: View {
                 config: .default,
                 factory: factory,
                 goToMain: goToMain,
-                makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel
+                operationDetailInfoViewModel: operationDetailInfoViewModel
             )
             .navigationBarWithBack(title: "") { binder.flow.event(.dismiss) }
         }

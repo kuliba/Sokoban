@@ -91,7 +91,6 @@ final class MyProductsViewModelTests: XCTestCase {
             model,
             makeProductProfileViewModel: { _,_,_,_   in nil },
             openProductByType: { _ in },
-            openOrderSticker: {}, 
             makeMyProductsViewFactory: .init(makeInformerDataUpdateFailure: { return nil }),
             makeOpenNewProductButtons: { _ in [] }
         )

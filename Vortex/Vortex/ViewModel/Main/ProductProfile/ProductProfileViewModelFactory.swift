@@ -19,7 +19,6 @@ struct ProductProfileViewModelFactory {
     let makeCardGuardianPanel: MakeCardGuardianPanel
     let makeRepeatPaymentNavigation: MakeRepeatPaymentNavigation
     let makeSubscriptionsViewModel: UserAccountNavigationStateManager.MakeSubscriptionsViewModel
-    let makeOrderCardViewModel: () -> Void
 
     // TODO: need remove model
     private let model: Model
@@ -31,7 +30,6 @@ struct ProductProfileViewModelFactory {
         makeCardGuardianPanel: @escaping MakeCardGuardianPanel,
         makeRepeatPaymentNavigation: @escaping MakeRepeatPaymentNavigation,
         makeSubscriptionsViewModel: @escaping UserAccountNavigationStateManager.MakeSubscriptionsViewModel,
-        makeOrderCardViewModel: @escaping () -> Void,
         model: Model
     ) {
         self.makeInfoProductViewModel = makeInfoProductViewModel
@@ -40,7 +38,6 @@ struct ProductProfileViewModelFactory {
         self.makeCardGuardianPanel = makeCardGuardianPanel
         self.makeRepeatPaymentNavigation = makeRepeatPaymentNavigation
         self.makeSubscriptionsViewModel = makeSubscriptionsViewModel
-        self.makeOrderCardViewModel = makeOrderCardViewModel
         self.model = model
     }
 
@@ -137,7 +134,6 @@ extension ProductProfileViewModelFactory {
         makeCardGuardianPanel: { .bottomSheet(.cardGuardian($0)) },
         makeRepeatPaymentNavigation: { _,_,_,_  in .none },
         makeSubscriptionsViewModel: { _,_ in .preview },
-        makeOrderCardViewModel: { },
         model: .emptyMock
     )
 }

@@ -2693,7 +2693,8 @@ private extension Target {
     static let getSplashScreenServices = target(
         name: .getSplashScreenServices,
         dependencies: [
-            .remoteServices
+            .remoteServices,
+            .vortexTools,
         ],
         path: "Sources/Services/\(String.getSplashScreenServices)"
     )
@@ -2701,7 +2702,11 @@ private extension Target {
     static let getSplashScreenServicesTests = testTarget(
         name: .getSplashScreenServicesTests,
         dependencies: [
-            .getSplashScreenServices
+            // external packages
+            .customDump,
+            // internal modules
+            .getSplashScreenServices,
+            .remoteServices,
         ],
         path: "Tests/Services/\(String.getSplashScreenServicesTests)"
     )

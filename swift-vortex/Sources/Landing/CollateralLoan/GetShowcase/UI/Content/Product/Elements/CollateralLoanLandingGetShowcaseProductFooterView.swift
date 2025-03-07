@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-struct CollateralLoanLandingGetShowcaseProductFooterView<InformerPayload>: View {
+struct CollateralLoanLandingGetShowcaseProductFooterView<InformerPayload>: View
+    where InformerPayload: Equatable {
     
     let landingId: String
     let termsUrl: String

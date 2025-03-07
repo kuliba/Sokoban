@@ -35,65 +35,84 @@ extension ViewComponents {
     
     @inlinable
     func makeOrderCardLandingView(
-        landing: OrderCardLanding,
-        continue: @escaping () -> Void,
+        binder: OrderCardLandingDomain.Binder,
         dismiss: @escaping () -> Void
     ) -> some View {
         
-        DismissibleScrollView(
-            title: { $0 > 0 ? landing.header.title : "" },
-            dismiss: dismiss
-        ) {
-            makeOrderCardLandingContentView(landing: landing)
-        }
-        .safeAreaInset(edge: .bottom) {
+        OffsetObservingScrollWithModelView(refresh: {
+            //TODO: create binder.content.event(.load)
+        }) { offset in
             
-            heroButton(action: `continue`)
+            makeOrderCardLandingContentView(
+                landing: binder.content,
+                offset: offset
+            )
+            .safeAreaInset(edge: .bottom) {
+                
+                heroButton(action: { binder.flow.event(.select(.continue)) })
+                    .frame(maxWidth: .infinity)
+                    .background(.white)
+            }
+            .conditionalBottomPadding()
+            .navigationBarWithBack(
+                title: offset.wrappedValue.y > 0 ?  binder.content.header.navTitle : "",
+                subtitle: offset.wrappedValue.y > 0 ?  binder.content.header.navSubtitle : "",
+                subtitleForegroundColor: .textPlaceholder,
+                dismiss: dismiss
+            )
         }
     }
     
     @inlinable
     @ViewBuilder
     func makeOrderCardLandingContentView(
-        landing: OrderCardLanding
+        landing: OrderCardLanding,
+        offset: Binding<CGPoint>
     ) -> some View {
-       
-        ScrollView {
-            
-            LazyVStack(spacing: 16) {
+        
+        OffsetObservingScrollView(
+            axes: .vertical,
+            showsIndicators: false,
+            offset: offset,
+            coordinateSpaceName: "coordinateSpaceName"
+        ) {
+            VStack(spacing: 16) {
                 
                 HeaderView(
                     header: landing.header,
                     config: .iVortex,
-                    imageFactory: .init(makeIconView: makeIconView)
+                    imageFactory: .init(makeBannerImageView: makeGeneralIconView)
                 )
+                .edgesIgnoringSafeArea(.top)
                 
-                ListLandingComponent.List(
-                    items: landing.conditions,
-                    config: .iVortex,
-                    factory: .init(
-                        makeIconView: makeIconView,
-                        makeBannerImageView: makeGeneralIconView
+                VStack {
+                    
+                    ListLandingComponent.List(
+                        items: landing.conditions,
+                        config: .iVortex,
+                        factory: .init(
+                            makeIconView: makeIconView,
+                            makeBannerImageView: makeGeneralIconView
+                        )
                     )
-                )
-                
-                ListLandingComponent.List(
-                    items: landing.security,
-                    config: .iVortex,
-                    factory: .init(
-                        makeIconView: makeIconView,
-                        makeBannerImageView: makeGeneralIconView
+                    
+                    ListLandingComponent.List(
+                        items: landing.security,
+                        config: .iVortex,
+                        factory: .init(
+                            makeIconView: makeIconView,
+                            makeBannerImageView: makeGeneralIconView
+                        )
                     )
-                )
-                
-                DropDownTextListView(
-                    config: .default,
-                    list: landing.dropDownList
-                )
+                    
+                    DropDownTextListView(
+                        config: .default,
+                        list: landing.dropDownList
+                    )
+                }
+                .padding(.leading, 15)
+                .padding(.trailing, 16)
             }
-            .padding(.leading, 15)
-            .padding(.trailing, 16)
-            .padding(.bottom, 25)
         }
     }
     

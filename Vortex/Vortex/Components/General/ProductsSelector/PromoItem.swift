@@ -176,5 +176,3 @@ extension PromoItem {
         )
     }
 }
-
-extension PromoProduct: Equatable {}
