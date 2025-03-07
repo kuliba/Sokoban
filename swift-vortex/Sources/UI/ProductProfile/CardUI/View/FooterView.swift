@@ -10,7 +10,7 @@ import SwiftUI
 public struct FooterDetails {
     
     public var balance: String
-    public let interestRate: String?
+    public var interestRate: String?
     public let paymentSystem: Image?
     
     public init(
