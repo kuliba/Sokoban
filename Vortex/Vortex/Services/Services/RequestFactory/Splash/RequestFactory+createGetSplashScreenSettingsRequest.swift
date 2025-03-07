@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import GetSplashScreenServices
 import RemoteServices
 
 extension RequestFactory {
