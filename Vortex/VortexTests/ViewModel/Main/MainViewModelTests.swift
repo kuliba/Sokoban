@@ -709,7 +709,7 @@ final class MainViewModelTests: XCTestCase {
             qrViewModelFactory: qrViewModelFactory,
             makeTrailingToolbarItems: { _ in [] },
             makeCreditCardMVP: { nil }, 
-            makeAuthProductsViewModel: { _ in .mockData }
+            makeAuthProductsViewModel: { _ in .preview }
         )
         
         let sut = MainViewModel(
@@ -783,7 +783,7 @@ final class MainViewModelTests: XCTestCase {
             qrViewModelFactory: .preview(),
             makeTrailingToolbarItems: { _ in [] },
             makeCreditCardMVP: { nil },
-            makeAuthProductsViewModel: { _ in .mockData }
+            makeAuthProductsViewModel: { _ in .preview }
         )
 
         let sut = MainViewModel(
@@ -1118,8 +1118,8 @@ private extension MainViewModel {
     var authProductsViewModel: AuthProductsViewModel? {
         
         switch route.destination {
-        case let .openCard(authProductsViewModel):
-            return authProductsViewModel
+        case let .openCard(binder):
+            return .mockData
             
         default:
             return nil
@@ -1471,4 +1471,17 @@ private extension CurrencyWalletData {
 private extension OpenAccountProductData {
     
     static let test: Self = .init(currencyAccount: "", open: true, breakdownAccount: "", accountType: "", currencyCode: 810, currency: .rub, designMd5hash: "", designSmallMd5hash: "", detailedConditionUrl: "", detailedRatesUrl: nil, txtConditionList: [.init(name: "", description: "", type: .green)])
+}
+
+extension AuthProductsLandingDomain.Binder {
+    
+    static let preview: AuthProductsLandingDomain.Binder = .init(
+        content: .mockData,
+        flow: .init(
+            initialState: .init(),
+            reduce: { state,_ in (state, nil) },
+            handleEffect: { _,_ in }
+        ),
+        bind: { _,_ in .init() }
+    )
 }
