@@ -288,12 +288,13 @@ class ProductProfileViewModel: ObservableObject {
         bind(buttons: buttons)
         
         bind()
-        
-        updateSavingsAccountInfo()
     }
     
     func updateSavingsAccountInfo() {
-        if let productData {
+        if let productData = productData?.asAccount, productData.isSavingAccount == true {
+            
+            self.accountInfo = .init(status: .inflight)
+            
             productProfileServices.getSavingsAccountInfo(productData) { [weak self] accountInfo in
                 
                 DispatchQueue.main.async {
@@ -596,6 +597,8 @@ private extension ProductProfileViewModel {
             .debounce(for: .milliseconds(100), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] _ in
+                
+                updateSavingsAccountInfo()
                 
                 if let productType = productData?.productType {
                     model.action.send(ModelAction.Products.Update.ForProductType(productType: productType))
