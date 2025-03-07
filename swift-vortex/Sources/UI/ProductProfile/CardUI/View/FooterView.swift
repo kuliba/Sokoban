@@ -78,7 +78,7 @@ public struct FooterView: View {
             Text(text)
                 .font(config.fonts.rate)
                 .fontWeight(.regular)
-                .foregroundColor(config.colors.rateForeground)
+                .foregroundColor(config.appearance.colors.text)
         }
     }
 }

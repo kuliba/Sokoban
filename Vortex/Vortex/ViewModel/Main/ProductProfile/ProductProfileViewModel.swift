@@ -1702,7 +1702,12 @@ private extension ProductProfileViewModel {
                     self.success = payload.viewModel
                     
                 case let payload as CloseAccountSpinnerAction.Response.Failed:
-                    makeAlert(payload.message)
+                    if productData?.asAccount?.isSavingAccount == true {
+                        makeAlert(.tryLater, { [weak self] in self?.handleCloseLinkAction() })
+                    }
+                    else {
+                        makeAlert(payload.message)
+                    }
                     
                 default:
                     break
@@ -1845,12 +1850,19 @@ private extension ProductProfileViewModel {
     
     func makeAlert(_ message: String) {
         
+        makeAlert(message, { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert()) })
+    }
+    
+    func makeAlert(
+        _ message: String,
+        _ closeAction: @escaping () -> Void
+    ) {
+        
         let alertViewModel = Alert.ViewModel(
             title: "Ошибка",
             message: message,
-            primary: .init(type: .default, title: "ОК") { [weak self] in
-                self?.action.send(ProductProfileViewModelAction.Close.Alert())
-            })
+            primary: .init(type: .default, title: "ОК", action: closeAction)
+        )
         
         DispatchQueue.main.async { [weak self] in
             
