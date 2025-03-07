@@ -80,7 +80,7 @@ private extension OrderAccountView {
             .rounded(config.roundedConfig)
             
             income(income: "", true)
-            topUpView(.init(isOn: true))
+            topUpView(.init(isOn: false), true)
         }
     }
     
@@ -140,7 +140,7 @@ private extension OrderAccountView {
             
             productView(product(form))
             income(income: form.constants.income, false)
-            topUpView(topUp(form))
+            topUpView(topUp(form), false)
             
             if form.topUp.isOn {
                 productSelectView()
@@ -254,14 +254,15 @@ private extension OrderAccountView {
     }
 
     func topUpView(
-        _ topUp: TopUp
+        _ topUp: TopUp,
+        _ isLoading: Bool
     ) -> some View {
         
         TopUpView(
             state: topUp,
             event: { event(.setMessages($0)) },
             config: config.topUpConfig, 
-            isLoading: false
+            isLoading: isLoading
         )
         .rounded(config.roundedConfig)
     }
@@ -290,6 +291,8 @@ private extension OrderSavingsAccountConfig {
             spacing: padding,
             subtitle: topUp.subtitle,
             title: topUp.title,
-            toggle: topUp.toggle)
+            toggle: topUp.toggle, 
+            shimmering: shimmering
+        )
     }
 }
