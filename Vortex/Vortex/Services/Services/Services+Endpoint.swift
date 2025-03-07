@@ -102,13 +102,13 @@ extension Services {
             case getBannerCatalogList
             case getBannersMyProductList
             case getC2BSub
+            case getCardLanding
             case getCardOrderForm
             case getCardStatementForPeriod
             case getCardStatementForPeriod_V3
             case getClientConsentMe2MePull
             case getCollateralLanding = "getCollateralLanding"
             case getConsentsCollateralLoanLanding = "getConsents"
-            case getCardLanding
             case getInfoForRepeatPayment
             case getJsonAbroad
             case getNotAuthorizedZoneClientInformData
@@ -119,17 +119,18 @@ extension Services {
             case getPaymentTemplateList
             case getPINConfirmationCode
             case getPrintForm
+            case getPrintFormForSavingsAccount
             case getProcessingSessionCode
             case getProductDetails
             case getProductDynamicParamsList
             case getProductListByType
-            case getPrintFormForSavingsAccount
-            case getSavingLanding
             case getSavingAccountInfo
+            case getSavingLanding
             case getSberQRData
             case getScenarioQRData
             case getServiceCategoryList
             case getShowcaseCollateralLoanLanding = "getShowcase"
+            case getSplashScreenTimePeriods
             case getStickerPayment
             case getSVCardLimits
             case getSvgImageList
@@ -230,7 +231,7 @@ extension Services.Endpoint {
         version: .none,
         serviceName: .changeSVCardLimit
     )
-
+    
     static func createAnywayTransfer(
         version: Services.Endpoint.Version? = nil
     ) -> Self {
@@ -272,7 +273,7 @@ extension Services.Endpoint {
         version: .none,
         serviceName: .getSavingLanding
     )
-
+    
     static let getOpenAccountFormRequest: Self = .init(
         pathPrefix: .savingsAccount,
         version: .none,
@@ -296,13 +297,13 @@ extension Services.Endpoint {
         version: .v1,
         serviceName: .getPrintFormForSavingsAccount
     )
-
+    
     static let getSavingAccountInfo: Self = .init(
         pathPrefix: .rest,
         version: .v2,
         serviceName: .getSavingAccountInfo
     )
-
+    
     static let createC2GPayment: Self = .init(
         pathPrefix: .transfer,
         version: .none,
@@ -344,13 +345,13 @@ extension Services.Endpoint {
         version: .v2,
         serviceName: .getBannerCatalogList
     )
-
+    
     static let getBannersMyProductListV2: Self = .init(
         pathPrefix: .dict,
         version: .v2,
         serviceName: .getBannersMyProductList
     )
-
+    
     static let getC2BSub: Self = .init(
         pathPrefix: .binding,
         version: .v2,
@@ -440,7 +441,7 @@ extension Services.Endpoint {
         version: .v7,
         serviceName: .getProductListByType
     )
-
+    
     static let getSberQRData: Self = .init(
         pathPrefix: .binding,
         version: .v1,
@@ -477,6 +478,12 @@ extension Services.Endpoint {
         serviceName: .getJsonAbroad
     )
     
+    static let getSplashScreenTimePeriods: Self = .init(
+        pathPrefix: .dict,
+        version: .v1,
+        serviceName: .getSplashScreenTimePeriods
+    )
+    
     static let getServiceCategoryList: Self = .init(
         pathPrefix: .dict,
         version: nil,
@@ -488,7 +495,7 @@ extension Services.Endpoint {
         version: .none,
         serviceName: .getSVCardLimits
     )
-
+    
     static let getPaymentTemplateListV3: Self = .init(
         pathPrefix: .rest,
         version: .v3,
@@ -566,19 +573,19 @@ extension Services.Endpoint {
         version: .none,
         serviceName: .blockCard
     )
-
+    
     static let unblockCard: Self = .init(
         pathPrefix: .rest,
         version: .none,
         serviceName: .unblockCard
     )
-
+    
     static let userVisibilityProductsSettings: Self = .init(
         pathPrefix: .rest,
         version: .none,
         serviceName: .userVisibilityProductsSettings
     )
-
+    
     static let updateFastPaymentContract: Self = .init(
         pathPrefix: .rest,
         version: .none,
