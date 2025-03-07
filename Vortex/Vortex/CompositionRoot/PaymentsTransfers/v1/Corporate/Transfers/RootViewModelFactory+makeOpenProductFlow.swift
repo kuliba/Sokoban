@@ -64,7 +64,12 @@ extension RootViewModelFactory {
             )))
             
         case let .productType(openProductType):
-            getNavigation(openProductType: openProductType, notify: notify, completion: completion)
+            getNavigation(
+                orderCardFlag: featureFlags.orderCardFlag,
+                openProductType: openProductType,
+                notify: notify,
+                completion: completion
+            )
             
         case .orderSticker:
             completion(.alert("Данный функционал не доступен\nдля корпоративных карт.\nОткройте продукт как физ. лицо,\nчтобы использовать все\nвозможности приложения."))
@@ -73,6 +78,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func getNavigation(
+        orderCardFlag: OrderCardFlag,
         openProductType: OpenProductType,
         notify: @escaping OpenProductDomain.Notify,
         completion: @escaping (OpenProductDomain.Navigation) -> Void
@@ -82,7 +88,7 @@ extension RootViewModelFactory {
             completion(makeOpenAccountModel().map { .openAccount($0) } ?? .alert("Ошибка открытия счета."))
             
         case .card:
-            switch openCard(dismiss: { notify(.dismiss) }) {
+            switch openCard(orderCardFlag: orderCardFlag, dismiss: { notify(.dismiss) }) {
             case let .first(openCard):
                 completion(.openCard(openCard))
                 
@@ -168,15 +174,29 @@ extension RootViewModelFactory {
     
     @inlinable
     func openCard(
+        orderCardFlag: OrderCardFlag,
         dismiss: @escaping () -> Void
     ) -> Either<AuthProductsViewModel, URL> {
         
-        if model.onlyCorporateCards {
-            
+        guard !model.onlyCorporateCards else {
             return .second(model.productsOpenAccountURL)
+        }
+        
+        switch orderCardFlag.rawValue {
+        case .active:
+            let authProductsViewModel = AuthProductsViewModel(
+                model,
+                products: model.catalogProducts.value,
+                action: { _ in
+                
+                    fatalError()
+                },
+                dismissAction: dismiss
+            )
             
-        } else {
+            return .first(authProductsViewModel)
             
+        case .inactive:
             let authProductsViewModel = AuthProductsViewModel(
                 model,
                 products: model.catalogProducts.value,

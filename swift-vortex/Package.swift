@@ -94,7 +94,7 @@ let package = Package(
         .linkableText,
         .manageSubscriptionsUI,
         .orderCard,
-        .orderCardLanding,
+        .orderCardLandingComponent,
         .otpInputComponent,
         .pickerWithPreviewComponent,
         .pinCodeUI,
@@ -315,8 +315,8 @@ let package = Package(
         .operatorsListComponents,
         .operatorsListComponentsTests,
         .orderCard,
-        .orderCardLanding,
-        .orderCardLandingTests,
+        .orderCardLandingComponent,
+        .orderCardLandingComponentTests,
         .pickerWithPreviewComponent,
         .pickerWithPreviewComponentTests,
         .pinCodeUI,
@@ -666,10 +666,10 @@ private extension Product {
         ]
     )
     
-    static let orderCardLanding = library(
-        name: .orderCardLanding,
+    static let orderCardLandingComponent = library(
+        name: .orderCardLandingComponent,
         targets: [
-            .orderCardLanding
+            .orderCardLandingComponent
         ]
     )
     
@@ -3140,22 +3140,23 @@ private extension Target {
         path: "Sources/UI/\(String.orderCard)"
     )
     
-    static let orderCardLanding = target(
-        name: .orderCardLanding,
+    static let orderCardLandingComponent = target(
+        name: .orderCardLandingComponent,
         dependencies: [
+            .orderCard,
             // internal packages
         ],
-        path: "Sources/UI/\(String.orderCardLanding)"
+        path: "Sources/UI/\(String.orderCardLandingComponent)"
     )
     
-    static let orderCardLandingTests = testTarget(
-        name: .orderCardLandingTests,
+    static let orderCardLandingComponentTests = testTarget(
+        name: .orderCardLandingComponentTests,
         dependencies: [
-            .orderCardLanding,
+            .orderCardLandingComponent,
             .customDump,
             .uiPrimitives
         ],
-        path: "Tests/UI/\(String.orderCardLandingTests)"
+        path: "Tests/UI/\(String.orderCardLandingComponentTests)"
     )
     
     static let searchBarComponent = target(
@@ -3935,8 +3936,8 @@ private extension Target.Dependency {
         name: .orderCard
     )
     
-    static let orderCardLanding = byName(
-        name: .orderCardLanding
+    static let orderCardLandingComponent = byName(
+        name: .orderCardLandingComponent
     )
     
     // MARK: - UI Components
@@ -4386,8 +4387,8 @@ private extension String {
     
     static let orderCard = "OrderCard"
     
-    static let orderCardLanding = "OrderCardLanding"
-    static let orderCardLandingTests = "OrderCardLandingTests"
+    static let orderCardLandingComponent = "OrderCardLandingComponent"
+    static let orderCardLandingComponentTests = "OrderCardLandingComponentTests"
     
     static let paymentCompletionUI = "PaymentCompletionUI"
     

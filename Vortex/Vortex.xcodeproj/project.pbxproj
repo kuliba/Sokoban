@@ -3286,6 +3286,7 @@
 		C16DDBF02B2C9A67001BF988 /* Model+QRHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16DDBEF2B2C9A67001BF988 /* Model+QRHelpers.swift */; };
 		C16DDBF42B314E26001BF988 /* GetSberQRDataResult+emptySuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16DDBF32B314E26001BF988 /* GetSberQRDataResult+emptySuccess.swift */; };
 		C17094322D5A285B001E3094 /* StatefulButtonConfig+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17094312D5A285B001E3094 /* StatefulButtonConfig+iVortex.swift */; };
+		C170C78B2D79D69D00A7C480 /* AuthLandingDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = C170C78A2D79D69D00A7C480 /* AuthLandingDomain.swift */; };
 		C172098C2A9E28EC0020CE93 /* ProductDataFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C172098B2A9E28EC0020CE93 /* ProductDataFilterTests.swift */; };
 		C1722C312989454B00C503E3 /* GetCountriesWithServiceResponseGenericFromServer.json in Resources */ = {isa = PBXBuildFile; fileRef = C1722C302989454B00C503E3 /* GetCountriesWithServiceResponseGenericFromServer.json */; };
 		C1722C352989613E00C503E3 /* CountyWithServiceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1722C342989613E00C503E3 /* CountyWithServiceData.swift */; };
@@ -3307,6 +3308,9 @@
 		C18D25FA2A25B96100DF5643 /* TemplateButtonViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18D25F92A25B96100DF5643 /* TemplateButtonViewComponent.swift */; };
 		C18D25FC2A26389000DF5643 /* PaymentsSourceReducerTemplatesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18D25FB2A26389000DF5643 /* PaymentsSourceReducerTemplatesTests.swift */; };
 		C18FDF0E2B0A2D52003F5FC0 /* MakeOperationStateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18FDF0D2B0A2D52003F5FC0 /* MakeOperationStateViewModel.swift */; };
+		C19017AB2D7AC91B00044AFC /* OrderCardLandingComponent in Frameworks */ = {isa = PBXBuildFile; productRef = C19017AA2D7AC91B00044AFC /* OrderCardLandingComponent */; };
+		C19017AD2D7AD4F800044AFC /* RootViewModelFactory+makeCardPromoLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19017AC2D7AD4F800044AFC /* RootViewModelFactory+makeCardPromoLanding.swift */; };
+		C19017AF2D7ADA4600044AFC /* ViewComponents+makeCardPromoLandingFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19017AE2D7ADA4600044AFC /* ViewComponents+makeCardPromoLandingFlowView.swift */; };
 		C192C99A2D47916500518831 /* RequestFactory+createCardApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = C192C9992D47916500518831 /* RequestFactory+createCardApplication.swift */; };
 		C192C99C2D47966000518831 /* CreateCardApplication in Frameworks */ = {isa = PBXBuildFile; productRef = C192C99B2D47966000518831 /* CreateCardApplication */; };
 		C192D4292C23E87700A6B338 /* HistoryReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C192D4282C23E87700A6B338 /* HistoryReducer.swift */; };
@@ -7042,6 +7046,7 @@
 		C16DDBEF2B2C9A67001BF988 /* Model+QRHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+QRHelpers.swift"; sourceTree = "<group>"; };
 		C16DDBF32B314E26001BF988 /* GetSberQRDataResult+emptySuccess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "GetSberQRDataResult+emptySuccess.swift"; sourceTree = "<group>"; };
 		C17094312D5A285B001E3094 /* StatefulButtonConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StatefulButtonConfig+iVortex.swift"; sourceTree = "<group>"; };
+		C170C78A2D79D69D00A7C480 /* AuthLandingDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthLandingDomain.swift; sourceTree = "<group>"; };
 		C170C78C2D79DB2500A7C480 /* OrderCardLandingBackend.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = OrderCardLandingBackend.xctestplan; sourceTree = "<group>"; };
 		C172098B2A9E28EC0020CE93 /* ProductDataFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDataFilterTests.swift; sourceTree = "<group>"; };
 		C1722C302989454B00C503E3 /* GetCountriesWithServiceResponseGenericFromServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetCountriesWithServiceResponseGenericFromServer.json; sourceTree = "<group>"; };
@@ -7065,6 +7070,9 @@
 		C18D25F92A25B96100DF5643 /* TemplateButtonViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateButtonViewComponent.swift; sourceTree = "<group>"; };
 		C18D25FB2A26389000DF5643 /* PaymentsSourceReducerTemplatesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSourceReducerTemplatesTests.swift; sourceTree = "<group>"; };
 		C18FDF0D2B0A2D52003F5FC0 /* MakeOperationStateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeOperationStateViewModel.swift; sourceTree = "<group>"; };
+		C19017A92D7AC67B00044AFC /* OrderCardLandingComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = OrderCardLandingComponent.xctestplan; sourceTree = "<group>"; };
+		C19017AC2D7AD4F800044AFC /* RootViewModelFactory+makeCardPromoLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeCardPromoLanding.swift"; sourceTree = "<group>"; };
+		C19017AE2D7ADA4600044AFC /* ViewComponents+makeCardPromoLandingFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeCardPromoLandingFlowView.swift"; sourceTree = "<group>"; };
 		C192C9992D47916500518831 /* RequestFactory+createCardApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCardApplication.swift"; sourceTree = "<group>"; };
 		C192D4282C23E87700A6B338 /* HistoryReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryReducer.swift; sourceTree = "<group>"; };
 		C19738D82AF279E300101B1B /* ResponseMapper+getJsonAbroadDict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+getJsonAbroadDict.swift"; sourceTree = "<group>"; };
@@ -7896,6 +7904,7 @@
 				A70BE3F72CF71E0400083443 /* CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend in Frameworks */,
 				2A727A262A9381A700235EFF /* TransferPublicKey in Frameworks */,
 				2A4863D32BB1DF5700BBCC76 /* RemoteServices in Frameworks */,
+				C19017AB2D7AC91B00044AFC /* OrderCardLandingComponent in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10768,6 +10777,7 @@
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
+				C19017A92D7AC67B00044AFC /* OrderCardLandingComponent.xctestplan */,
 				C170C78C2D79DB2500A7C480 /* OrderCardLandingBackend.xctestplan */,
 				2AAB64E52D79615D00B40177 /* EphemeralCache.xctestplan */,
 				2AD090A42D788F290033012A /* OrderCardLandingBackend.xctestplan */,
@@ -10903,6 +10913,7 @@
 				2A9ACA582D54F66D00BF5D6E /* RootViewModelFactory+openProduct.swift */,
 				2A9ACA5A2D54FAF600BF5D6E /* RootViewModelFactory+openCardProduct.swift */,
 				830207432D38EBA70038EFA4 /* RootViewModelFactory+makeOpenNewProductsButtons.swift */,
+				C19017AC2D7AD4F800044AFC /* RootViewModelFactory+makeCardPromoLanding.swift */,
 			);
 			path = OpenProduct;
 			sourceTree = "<group>";
@@ -13141,6 +13152,7 @@
 				2AA09D5C2CF9AFF60062415C /* RootViewFactory+makePaymentsTransfersToolbarView.swift */,
 				2A5B483A2CFC56650052801D /* RootViewFactory+makeUserAccountButton.swift */,
 				2AA09D5E2CF9B0AF0062415C /* RootViewFactory+makePaymentsTransfersTransfersView.swift */,
+				C19017AE2D7ADA4600044AFC /* ViewComponents+makeCardPromoLandingFlowView.swift */,
 			);
 			path = RootViewFactory;
 			sourceTree = "<group>";
@@ -17508,6 +17520,14 @@
 			path = PaymentsMeToMe;
 			sourceTree = "<group>";
 		};
+		C119A1E42D75ABE400390F07 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				C127C5272D6E305200683F85 /* OrderCardLandingDomain.swift */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
 		C123110A2C4E0954002871A8 /* Calendar */ = {
 			isa = PBXGroup;
 			children = (
@@ -17528,8 +17548,9 @@
 		C127C5262D6E303500683F85 /* OrderCardLanding */ = {
 			isa = PBXGroup;
 			children = (
-				C127C5272D6E305200683F85 /* OrderCardLandingDomain.swift */,
+				C119A1E42D75ABE400390F07 /* Domain */,
 				C127C5292D6E34F000683F85 /* RootViewModelFactory+makeOrderCardLanding.swift */,
+				C170C78A2D79D69D00A7C480 /* AuthLandingDomain.swift */,
 			);
 			path = OrderCardLanding;
 			sourceTree = "<group>";
@@ -20333,6 +20354,7 @@
 				2A5AFD9D2D69080600BD15EC /* GetOperationDetailService */,
 				C127C51F2D6CA96C00683F85 /* HeaderLandingComponent */,
 				2A8DAD2E2D763B9E00AC7018 /* ResourceProviderComponent */,
+				C19017AA2D7AC91B00044AFC /* OrderCardLandingComponent */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* Vortex.app */;
@@ -21937,6 +21959,7 @@
 				0BA409342806440E001326CE /* SettingPhotoCell.swift in Sources */,
 				5043E55228847BDE002C7465 /* CurrencySelectorViewComponent.swift in Sources */,
 				2AFF32152D04386F006DD60C /* RootViewModelFactory+makePaymentsTransfersFlowManager.swift in Sources */,
+				C170C78B2D79D69D00A7C480 /* AuthLandingDomain.swift in Sources */,
 				504CEA0A292FBFEC00FDB2E9 /* TransfersSectionViewModel.swift in Sources */,
 				77DC126F2770F8C900C917B0 /* ServerCommands+PaymentTemplate.swift in Sources */,
 				EDDC5924288FE57C00C08D06 /* PhoneNumberViewModel.swift in Sources */,
@@ -22065,6 +22088,7 @@
 				774A8B4D2865FD3600B81140 /* MyProductsSectionView.swift in Sources */,
 				A781DF9D2D4BC4B500C8AE13 /* RootViewModelFactory+makeCollateralLoanLandingShowcaseBinder.swift in Sources */,
 				2AEF68582AE5490E00E0EBD7 /* ResponseMapper+mapFormSessionKeyResponse.swift in Sources */,
+				C19017AF2D7ADA4600044AFC /* ViewComponents+makeCardPromoLandingFlowView.swift in Sources */,
 				6820929B27AC04A4003DCAFD /* SuggestAddressData.swift in Sources */,
 				2A5D2FBF2BF33E0D00BC3092 /* UtilityPrepaymentFlowMicroServicesComposer.swift in Sources */,
 				A7C41FCA2CB5990600EFE68D /* RequestFactory+createGetShowcaseRequest.swift in Sources */,
@@ -22205,6 +22229,7 @@
 				6820928727AB0EC3003DCAFD /* MosParkingData.swift in Sources */,
 				C14F6E252924175C00D46C37 /* CloseProductTransferData.swift in Sources */,
 				687FB23026E8D41A004A479F /* OfferCard.swift in Sources */,
+				C19017AD2D7AD4F800044AFC /* RootViewModelFactory+makeCardPromoLanding.swift in Sources */,
 				EDFFCAF0268245EC004EE095 /* CardViewModel.swift in Sources */,
 				0CA1CDE12840720200021671 /* AddressBookContact.swift in Sources */,
 				2A1DE2C82C511EDD0091B99C /* PaymentProviderServicePickerWrapperView.swift in Sources */,
@@ -30851,6 +30876,10 @@
 		C15C4C762CFE72CD00A8C922 /* OrderCardLandingBackend */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = OrderCardLandingBackend;
+		};
+		C19017AA2D7AC91B00044AFC /* OrderCardLandingComponent */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OrderCardLandingComponent;
 		};
 		C192C99B2D47966000518831 /* CreateCardApplication */ = {
 			isa = XCSwiftPackageProductDependency;

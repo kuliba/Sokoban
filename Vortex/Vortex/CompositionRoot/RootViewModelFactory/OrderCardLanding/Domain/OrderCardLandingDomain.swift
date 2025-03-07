@@ -7,6 +7,7 @@
 
 import RxViewModel
 import OrderCard
+import OrderCardLandingComponent
 
 enum OrderCardLandingDomain {}
 
@@ -19,8 +20,16 @@ extension OrderCardLandingDomain {
     
     // MARK: - Content
     
-    typealias Content = OrderCardLanding
-    typealias Domain = OrderCardLandingDomain
+    typealias Landing = OrderCardLanding
+    
+    typealias State = LandingState<Landing>
+    typealias Event = LandingEvent<Landing>
+    typealias Effect = LandingEffect
+    
+    typealias Reducer = LandingReducer<Landing>
+    typealias EffectHandler = LandingEffectHandler<Landing>
+    
+    typealias Content = RxViewModel<State, Event, Effect>
     
     // MARK: - Flow
     

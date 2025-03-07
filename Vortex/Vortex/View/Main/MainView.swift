@@ -183,8 +183,9 @@ struct MainView<NavigationOperationView: View>: View {
         case let .openDeposit(depositListViewModel):
             OpenDepositDetailView(viewModel: depositListViewModel, getUImage: getUImage)
             
-        case let .openCard(authProductsViewModel):
-            AuthProductsView(viewModel: authProductsViewModel)
+        case let .openCard(binder):
+            AuthProductsView(viewModel: binder.content)
+                .background(viewFactory.components.makeCardPromoLandingFlowView(binder.flow))
             
         case let .openDepositsList(openDepositViewModel):
             OpenDepositListView(viewModel: openDepositViewModel, getUImage: getUImage)
