@@ -538,9 +538,12 @@ extension GetCollateralLandingConfig.Footer {
     static let `default` = Self(
         text: "Оформить заявку",
         font: .init(Font.system(size: 16).bold()),
-        foreground: .white,
-        background: .red,
-        disabledBackground: .unselected,
+        colors: .init(
+            buttonForeground: .white,
+            buttonBackground: .red,
+            disabledButtonBackground: .unselected,
+            background: .grayLightest
+        ),
         layouts: .init(
             height: 56,
             cornerRadius: 12,

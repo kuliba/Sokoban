@@ -37,12 +37,18 @@ extension CreateDraftCollateralLoanApplicationConfig {
             public let foreground: Color
             public let background: Color
             public let disabled: Color
+            public let fillBackground: Color
             
-            public init(foreground: Color, background: Color, disabled: Color) {
-                
+            public init(
+                foreground: Color,
+                background: Color,
+                disabled: Color,
+                fillBackground: Color
+            ) {
                 self.foreground = foreground
                 self.background = background
                 self.disabled = disabled
+                self.fillBackground = fillBackground
             }
         }
         
@@ -70,7 +76,8 @@ extension CreateDraftCollateralLoanApplicationConfig.Button {
         colors: .init(
             foreground: .white,
             background: .red,
-            disabled: .unselected
+            disabled: .unselected,
+            fillBackground: .grayLightest
         ),
         font: .init(Font.system(size: 16).bold()),
         layouts: .init(

@@ -30,7 +30,7 @@ struct CreateDraftCollateralLoanApplicationButtonView<Confirmation, InformerPayl
         }
         .disabled(!state.isButtonEnabled)
         .padding(config.elements.button.layouts.paddings)
-        .background(Color.white)
+        .background(config.elements.button.colors.fillBackground)
     }
         
     private var title: String {
