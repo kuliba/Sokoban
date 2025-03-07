@@ -133,6 +133,7 @@ extension Services {
             case getStickerPayment
             case getSplashScreenTimePeriods
             case getSplashScreenSettings
+            case getSplashScreenImage
             case getSVCardLimits
             case getSvgImageList
             case getUINData
@@ -477,6 +478,12 @@ extension Services.Endpoint {
         pathPrefix: .dict,
         version: .v2,
         serviceName: .getJsonAbroad
+    )
+    
+    static let getSplashScreenImage: Self = .init(
+        pathPrefix: .dict,
+        version: nil,
+        serviceName: .getSplashScreenImage
     )
     
     static let getSplashScreenSettings: Self = .init(
