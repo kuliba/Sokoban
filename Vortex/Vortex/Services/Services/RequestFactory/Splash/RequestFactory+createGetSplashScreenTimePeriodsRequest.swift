@@ -20,6 +20,6 @@ extension RequestFactory {
         let endpointURL = try! endpoint.url(withBase: base)
         let url = try endpointURL.appendingSerial(serial)
         
-        return RemoteServices.RequestFactory.createGetSplashScreenTimePeriodsRequest(url: url)
+        return RemoteServices.RequestFactory.createEmptyRequest(.get, with: url)
     }
 }
