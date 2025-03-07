@@ -102,13 +102,13 @@ extension Services {
             case getBannerCatalogList
             case getBannersMyProductList
             case getC2BSub
-            case getCardLanding
             case getCardOrderForm
             case getCardStatementForPeriod
             case getCardStatementForPeriod_V3
             case getClientConsentMe2MePull
             case getCollateralLanding = "getCollateralLanding"
             case getConsentsCollateralLoanLanding = "getConsents"
+            case getCardLanding
             case getInfoForRepeatPayment
             case getJsonAbroad
             case getNotAuthorizedZoneClientInformData
@@ -119,19 +119,20 @@ extension Services {
             case getPaymentTemplateList
             case getPINConfirmationCode
             case getPrintForm
-            case getPrintFormForSavingsAccount
             case getProcessingSessionCode
             case getProductDetails
             case getProductDynamicParamsList
             case getProductListByType
-            case getSavingAccountInfo
+            case getPrintFormForSavingsAccount
             case getSavingLanding
+            case getSavingAccountInfo
             case getSberQRData
             case getScenarioQRData
             case getServiceCategoryList
             case getShowcaseCollateralLoanLanding = "getShowcase"
-            case getSplashScreenTimePeriods
             case getStickerPayment
+            case getSplashScreenTimePeriods
+            case getSplashScreenSettings
             case getSVCardLimits
             case getSvgImageList
             case getUINData
@@ -476,6 +477,12 @@ extension Services.Endpoint {
         pathPrefix: .dict,
         version: .v2,
         serviceName: .getJsonAbroad
+    )
+    
+    static let getSplashScreenSettings: Self = .init(
+        pathPrefix: .dict,
+        version: .v1,
+        serviceName: .getSplashScreenSettings
     )
     
     static let getSplashScreenTimePeriods: Self = .init(
