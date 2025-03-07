@@ -74,6 +74,59 @@ final class TimedStrategyTests: XCTestCase {
         }
     }
     
+    func test_raceCondition_multipleRemoteCallbacks_triggeredConcurrently() {
+        
+        let iterations = 1_000
+        var failureCount = 0
+        let queue = DispatchQueue.global()
+        
+        for _ in 0..<iterations {
+            
+            let localValue = makeValue("Local")
+            let remoteValue = makeValue("Remote")
+            let remote = Remote()
+            let local = Local(stubs: [localValue])
+            
+            let sut = SUT(
+                interval: .milliseconds(1),
+                remote: remote.process,
+                local: local.call,
+                scheduler: DispatchQueue.global().eraseToAnyScheduler()
+            )
+            
+            let exp = expectation(description: "load completion")
+            exp.expectedFulfillmentCount = 1
+            var completionCount = 0
+            
+            sut.load { _ in
+                
+                completionCount += 1
+                exp.fulfill()
+            }
+            
+            let concurrentCalls = 10
+            let group = DispatchGroup()
+            
+            for _ in 0..<concurrentCalls {
+                
+                group.enter()
+                queue.async {
+                    remote.complete(with: remoteValue)
+                    group.leave()
+                }
+            }
+            
+            group.wait()
+            
+            wait(for: [exp], timeout: 0.1)
+            if completionCount != 1 {
+                failureCount += 1
+            }
+        }
+        
+        XCTAssertEqual(failureCount, 0, "Race condition detected in \(failureCount) out of \(iterations) iterations")
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = TimedStrategy<Value>

@@ -1,6 +1,6 @@
 //
 //  TimedStrategy.swift
-//  
+//
 //
 //  Created by Nikolay Pochekuev on 21.02.2025.
 //
@@ -34,32 +34,48 @@ final public class TimedStrategy<T> {
     public func load(
         completion: @escaping (T) -> Void
     ) {
-        
+        let lock = DispatchQueue(label: "com.vortex.TimedStrategy.hasResultLock")
         var hasResult = false
         
         scheduler.delay(for: interval) { [weak self] in
             
-            guard let self else { return }
+            guard let self = self else { return }
             
-            if !hasResult {
+            var localValue: T?
+            var shouldComplete = false
+            
+            lock.sync {
                 
-                hasResult = true
-                completion(local())
+                if !hasResult {
+                    hasResult = true
+                    shouldComplete = true
+                    localValue = self.local()
+                }
+            }
+            
+            if shouldComplete, let localValue {
+                completion(localValue)
             }
         }
         
-        remote { [weak self] in
+        remote { [weak self] result in
             
-            guard !hasResult, let self else { return }
+            guard let self = self else { return }
             
-            hasResult = true
+            var valueToComplete: T?
+            var shouldComplete = false
             
-            switch $0 {
-            case .none:
-                completion(local())
+            lock.sync {
                 
-            case let .some(value):
-                completion(value)
+                if !hasResult {
+                    hasResult = true
+                    shouldComplete = true
+                    valueToComplete = result ?? self.local()
+                }
+            }
+            
+            if shouldComplete, let valueToComplete {
+                completion(valueToComplete)
             }
         }
     }
