@@ -10,6 +10,11 @@ import OrderCard
 
 public final class LandingReducer<Landing> {
     
+    public init() {}
+}
+
+public extension LandingReducer {
+    
     func reduce(
         _ state: State,
         event: Event
@@ -41,14 +46,14 @@ public final class LandingReducer<Landing> {
     typealias Effect = LandingEffect
 }
 
-extension LandingReducer {
+private extension LandingReducer {
     
-    private func update(
+    func update(
         _ state: inout LandingState<Landing>,
         with result: (Result<Landing, LoadFailure>)
     ) {
         state.isLoading = false
-
+        
         switch result {
         case let .success(landing):
             state.status = .landing(landing)
@@ -70,7 +75,7 @@ extension LandingReducer {
         }
     }
     
-    private func dismissInformer(
+    func dismissInformer(
         _ state: inout LandingState<Landing>
     ) {
         switch state.status {

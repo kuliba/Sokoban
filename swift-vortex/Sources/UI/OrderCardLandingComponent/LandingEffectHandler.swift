@@ -9,14 +9,15 @@ import Foundation
 import OrderCard
 
 public final class LandingEffectHandler<Landing> {
- 
-    typealias Load = (@escaping (Result<Landing, LoadFailure>) -> Void) -> Void
     
     private let load: Load
     
-    init(load: @escaping Load) {
+    public init(load: @escaping Load) {
         self.load = load
     }
+}
+
+public extension LandingEffectHandler {
     
     func handleEffect(
         effect: Effect,
@@ -28,6 +29,7 @@ public final class LandingEffectHandler<Landing> {
         }
     }
     
+    typealias Load = (@escaping (Result<Landing, LoadFailure>) -> Void) -> Void
     typealias Event = LandingEvent<Landing>
     typealias Effect = LandingEffect
 }

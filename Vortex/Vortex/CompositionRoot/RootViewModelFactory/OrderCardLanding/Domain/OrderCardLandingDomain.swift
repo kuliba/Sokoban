@@ -20,12 +20,16 @@ extension OrderCardLandingDomain {
     
     // MARK: - Content
     
-    typealias State = LandingState<OrderCardLanding>
-    typealias Event = LandingEvent<OrderCardLanding>
+    typealias Landing = OrderCardLanding
+    
+    typealias State = LandingState<Landing>
+    typealias Event = LandingEvent<Landing>
     typealias Effect = LandingEffect
     
+    typealias Reducer = LandingReducer<Landing>
+    typealias EffectHandler = LandingEffectHandler<Landing>
+    
     typealias Content = RxViewModel<State, Event, Effect>
-    typealias Domain = OrderCardLandingDomain
     
     // MARK: - Flow
     

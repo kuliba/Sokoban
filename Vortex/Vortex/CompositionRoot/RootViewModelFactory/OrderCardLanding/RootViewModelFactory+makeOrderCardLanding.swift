@@ -12,6 +12,7 @@ import OrderCardLandingBackend
 import RemoteServices
 import DropDownTextListComponent
 import OrderCardLandingComponent
+import OrderCard
 
 extension RootViewModelFactory {
     
@@ -35,26 +36,11 @@ extension RootViewModelFactory {
         
         typealias Landing = OrderCardLanding
         
-        let reducer = OrderCardLanding.LandingReducer<Landing>()
-        let effectHandler = OrderCardLanding.LandingEffectHandler<Landing>(
-            load: { completion in
+        let reducer = OrderCardLandingDomain.Reducer()
+        let effectHandler = OrderCardLandingDomain.EffectHandler(
+            load: { [weak self] completion in
                 
-                self.createOrderCardLanding { result in
-                    
-                    switch result {
-                    case let .success(landing):
-                        completion(.success(landing))
-                    case let .failure(error):
-                        completion(
-                            .failure(
-                                .init(
-                                    message: error.message,
-                                    type: .informer
-                                )
-                            )
-                        )
-                    }
-                }
+                self?.createOrderCardLandingService { completion($0.loadResult) }
             }
         )
         
@@ -78,31 +64,10 @@ extension RootViewModelFactory {
             //TODO: add request and proccess
         }
     }
-    
-    @inlinable
-    func createOrderCardLanding(
-        completion: @escaping (ModelOrderPayloadResult) -> Void
-    ) {
-
-        createOrderCardLandingService() { [weak self] in
-            
-            guard let self else { return }
-            
-            switch $0 {
-            case let .failure(failure):
-                completion(.failure(failure))
-                
-            case let .success(payload):
-                completion(.success(payload))
-            }
-        }
-    }
-    
-    typealias ModelOrderPayloadResult = Result<OrderCardLanding, BackendFailure>
 
     @inlinable
     func createOrderCardLandingService(
-        completion: @escaping (ModelOrderPayloadResult) -> Void
+        completion: @escaping (Result<OrderCardLanding, BackendFailure>) -> Void
     ) {
         let service = onBackground(
             makeRequest: RequestFactory.createGetDigitalCardLandingRequest,
@@ -110,10 +75,8 @@ extension RootViewModelFactory {
             connectivityFailureMessage: .connectivity
         )
         
-        service(()) { [weak self] in
-            
-            guard let self else { return }
-            
+        service(()) {
+            //TODO: extract helper
             switch $0 {
             case let .failure(failure):
                 completion(.failure(failure))
@@ -288,4 +251,23 @@ private extension OrderCardLanding {
             ]
         )
     )
+}
+
+// MARK: Adapters
+
+private extension Result<OrderCardLanding, BackendFailure> {
+    
+    var loadResult: Result<OrderCardLanding, LoadFailure> {
+        
+        switch self {
+        case let .success(landing):
+            return .success(landing)
+            
+        case let .failure(error):
+            return .failure(.init(
+                message: error.message,
+                type: .informer
+            ))
+        }
+    }
 }
