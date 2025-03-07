@@ -138,15 +138,15 @@ extension ViewComponents {
                 SavingsAccountView(
                     state: .init($0?.list.first),
                     config: .iVortex,
-                    factory: makeImageViewFactory()
+                    factory: makeImageViewFactorySA()
                 )
             }
         )
     }
     
-    func makeImageViewFactory() -> ImageViewFactory {
+    func makeImageViewFactorySA() -> ImageViewFactory {
         
-        .init(makeIconView: makeIconView, makeBannerImageView: makeGeneralIconView(md5Hash:))
+        .init(makeIconView: { makeIconViewWithDefaultImage(defaultImage: Image("placeHolder"), md5Hash: $0)}, makeBannerImageView: makeGeneralIconView(md5Hash:))
     }
        
     func makeSpinnerRefreshView(
