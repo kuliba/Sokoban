@@ -167,7 +167,7 @@ extension RootViewModelFactory {
         let createDraftApplication = nanoServiceComposer.compose(
             createRequest: RequestFactory.createCreateDraftCollateralLoanApplicationRequest(with:),
             mapResponse: RemoteServices.ResponseMapper.mapCreateDraftCollateralLoanApplicationResponse(_:_:),
-            mapError: Domain.ContentError.init(error:)
+            mapError: { Domain.ContentError.init(error: $0, completionForm: false) }
         )
         
         let confirmation = self.makeTimedOTPInputViewModel(
@@ -194,7 +194,7 @@ extension RootViewModelFactory {
         let getVerificationCode = nanoServiceComposer.compose(
             createRequest: Vortex.RequestFactory.createGetVerificationCodeOrderCardVerifyRequest,
             mapResponse: AnywayPaymentBackend.ResponseMapper.mapGetVerificationCodeResponse,
-            mapError: Domain.ContentError.init(error:)
+            mapError: { Domain.ContentError.init(error: $0, completionForm: false) }
         )
                 
         getVerificationCode(()) { [getVerificationCode] in
@@ -231,7 +231,7 @@ extension RootViewModelFactory {
         let getConsents = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetConsentsRequest(with:),
             mapResponse: RemoteServices.ResponseMapper.mapGetConsentsResponse(_:_:),
-            mapError: Domain.ContentError.init(error:)
+            mapError: { Domain.ContentError.init(error: $0, completionForm: false) }
         )
         
         getConsents(payload) { [getConsents] in
@@ -345,18 +345,30 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
     typealias RemoteError = RemoteServiceError<Error, Error, RemoteServices.ResponseMapper.MappingError>
     
     init(
-        error: RemoteError
+        error: RemoteError,
+        completionForm: Bool = false
     ) {
         switch error {
         case let .performRequest(error):
             if error.isNotConnectedToInternetOrTimeout() {
-                self = .init(kind: .informer(.init(message: "Что-то пошло не так. Попробуйте позже", icon: .close)))
+                self = .init(kind: .informer(.init(
+                    message: "Что-то пошло не так. Попробуйте позже",
+                    icon: .close
+                )))
             } else {
-                self = .init(kind: .alert("Попробуйте позже."))
+                if completionForm {
+                    self = .init(kind: .complete)
+                } else {
+                    self = .init(kind: .alert("Попробуйте позже."))
+                }
             }
             
         default:
-            self = .init(kind: .alert("Попробуйте позже."))
+            if completionForm {
+                self = .init(kind: .complete)
+            } else {
+                self = .init(kind: .alert("Попробуйте позже."))
+            }
         }
     }
     
