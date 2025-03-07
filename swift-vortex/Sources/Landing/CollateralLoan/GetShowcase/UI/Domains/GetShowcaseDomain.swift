@@ -7,6 +7,6 @@
 
 public enum GetShowcaseDomain {
 
-    public typealias ShowCase = CollateralLoanLandingGetShowcaseData
-    public typealias Result<InformerPayload> = Swift.Result<ShowCase, BackendFailure<InformerPayload>>
+    public typealias Showcase = CollateralLoanLandingGetShowcaseData
+    public typealias Result<InformerPayload> = Swift.Result<Showcase, BackendFailure<InformerPayload>>
 }

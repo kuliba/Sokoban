@@ -19,20 +19,31 @@ extension GetShowcaseDomain {
             
             switch event {
             case .load:
-                guard !state.isLoading else { break }
-                        
-                state.isLoading = true
-                effect = .load
                 
-            case let .loaded(result):
-                state.isLoading = false
-                state.result = result
+                if !state.status.isLoading {
+                    let oldShowcase = state.status.oldShowcase
+                    state.status = .inflight(oldShowcase)
+                    effect = .load
+                }
+                
+            case let .loaded(showcase):
+                state.status = .loaded(showcase)
+                
+            case let .failure(failure):
+                switch failure {
+                case let .alert(message):
+                    let oldShowcase = state.status.oldShowcase
+                    state.status = .failure(.alert(message), oldShowcase)
+                    
+                case let .informer(informer):
+                    let oldShowcase = state.status.oldShowcase
+                    state.status = .failure(.informer(informer), oldShowcase)
+                }
                 
             case .dismissFailure:
-                state.isLoading = false
-                state.result = nil
+                state.backendFailure = nil
             }
-            
+                
             return (state, effect)
         }
     }

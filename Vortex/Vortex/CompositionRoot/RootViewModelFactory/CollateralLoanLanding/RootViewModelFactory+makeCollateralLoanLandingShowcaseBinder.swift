@@ -25,7 +25,7 @@ extension RootViewModelFactory {
             getNavigation: getNavigation,
             witnesses: .init(
                 emitting: { $0.$state
-                        .compactMap { $0.result?.failure }
+                        .compactMap { $0.failure }
                         .map { .select(.failure($0.navigationFailure)) }
                         .eraseToAnyPublisher()
                 },
@@ -42,7 +42,7 @@ extension RootViewModelFactory {
         let effectHandler = GetShowcaseDomain.EffectHandler<InformerPayload>(load: getShowcase)
         
         return .init(
-            initialState: .init(),
+            initialState: .init(status: .initiate),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:dispatch:),
             scheduler: schedulers.main
@@ -51,7 +51,7 @@ extension RootViewModelFactory {
     
     private func getShowcase(
         completion: @escaping(GetShowcaseDomain.Result<InformerPayload>) -> Void
-    ) {
+    ) {        
         let load = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetShowcaseRequest,
             mapResponse: RemoteServices.ResponseMapper.mapCreateGetShowcaseResponse(_:_:),
@@ -183,15 +183,18 @@ extension GetShowcaseDomain.ContentError {
             self = .init(kind: .alert("Попробуйте позже."))
         }
     }
+}
+
+extension GetShowcaseDomain.Status<InformerData>.Failure {
     
     var navigationFailure: GetShowcaseDomain.Failure {
         
-        switch self.kind {
+        switch self {
         case let .alert(message):
             return .alert(message)
-            
-        case let .informer(informerPayload):
-            return .informer(informerPayload)
+
+        case let .informer(message):
+            return .informer(message)
         }
     }
 }

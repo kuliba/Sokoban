@@ -9,29 +9,85 @@ extension GetShowcaseDomain {
     
     public struct State<InformerPayload> {
         
-        public var isLoading = false
-        public var result: Result<InformerPayload>?
+        public var status: Status<InformerPayload>
+
         var selectedLandingId: String?
+        var backendFailure: BackendFailure<InformerPayload>?
 
         public init(
-            isLoading: Bool = false,
-            result: Result<InformerPayload>? = nil,
-            selectedLandingId: String? = nil
+            status: Status<InformerPayload>,
+            selectedLandingId: String? = nil,
+            backendFailure: BackendFailure<InformerPayload>? = nil
         ) {
-            self.isLoading = isLoading
-            self.result = result
+            self.status = status
             self.selectedLandingId = selectedLandingId
+            self.backendFailure = backendFailure
+        }
+    }
+        
+    public enum Status<InformerPayload> {
+        
+        case initiate
+        case inflight(Showcase?)
+        case loaded(Showcase)
+        case failure(Failure, Showcase?)
+        
+        var isLoading: Bool {
+            
+            switch self {
+            case .inflight:
+                return true
+            case .initiate, .failure, .loaded:
+                return false
+            }
+        }
+        
+        var oldShowcase: Showcase? {
+            
+            switch self {
+            case let .loaded(showcase):
+                return showcase
+                
+            case let .failure(_, showcase):
+                return showcase
+                
+            case let .inflight(showcase):
+                return showcase
+
+            case .initiate:
+                return nil
+            }
+        }
+
+        public enum Failure {
+            
+            case alert(String)
+            case informer(InformerPayload)
         }
     }
 }
 
-public extension GetShowcaseDomain.State {
+extension GetShowcaseDomain.State {
     
-    var showcase: GetShowcaseDomain.ShowCase? {
+    public var failure: GetShowcaseDomain.Status<InformerPayload>.Failure? {
         
-        guard case let .success(showcase) = result
-        else { return nil }
+        if case let .failure(failure, _) = status {
+     
+                return failure
+        }
         
-        return showcase
+        return nil
     }
 }
+
+//
+//public extension GetShowcaseDomain.State {
+//    
+//    var showcase: GetShowcaseDomain.ShowCase? {
+//        
+//        guard case let .success(showcase) = result
+//        else { return nil }
+//        
+//        return showcase
+//    }
+//}

@@ -37,35 +37,69 @@ struct CollateralLoanShowcaseWrapperView: View {
                     destination: state.navigation?.destination,
                     content: destinationView
                 )
+                .onFirstAppear { binder.content.event(.load) }
         }
     }
     
+//    private func content() -> some View {
+//
+//        ZStack(alignment: .top) {
+//            
+//            binder.flow.state.navigation?.informer.map(informerView)
+//                .zIndex(1)
+//            
+//            RxWrapperView(model: binder.content) { state, event in
+//                
+//                Group {
+//                    
+//                    switch state.showcase {
+//                    case .none:
+//                        Color.clear
+//                            .loader(isLoading: state.showcase == nil, color: .clear)
+//                        
+//                    case let .some(showcase):
+//                        getShowcaseView(showcase)
+//                    }
+//                }
+//                .onFirstAppear { event(.load) }
+//            }
+//        }
+//    }
+        
     private func content() -> some View {
         
         ZStack(alignment: .top) {
             
             binder.flow.state.navigation?.informer.map(informerView)
                 .zIndex(1)
-            
-            RxWrapperView(model: binder.content) { state, event in
+
+            switch binder.content.state.status {
+            case .initiate:
+                Color.clear
+                    .frame(maxHeight: .infinity)
                 
-                Group {
+            case let .failure(_, oldShowcase):
+                if let oldShowcase {
                     
-                    switch state.showcase {
-                    case .none:
-                        Color.clear
-                            .loader(isLoading: state.showcase == nil, color: .clear)
-                        
-                    case let .some(showcase):
-                        getShowcaseView(showcase)
-                    }
+                    makeShowcaseView(oldShowcase)
+                } else {
+
+                    Color.clear
+                        .frame(maxHeight: .infinity)
                 }
-                .onFirstAppear { event(.load) }
+
+            case let .loaded(showcase):
+                makeShowcaseView(showcase)
+                
+            case let .inflight(oldShowcase):
+                oldShowcase.map {
+                    makeShowcaseView($0)
+                }
             }
         }
     }
-        
-    private func getShowcaseView(_ showcase: GetShowcaseDomain.ShowCase) -> some View {
+    
+    private func makeShowcaseView(_ showcase: GetShowcaseDomain.Showcase) -> some View {
         
         CollateralLoanLandingGetShowcaseView(
             data: showcase,
@@ -231,7 +265,7 @@ extension RxViewModel<
 > {
     
     static let preview = RxViewModel(
-        initialState: .init(),
+        initialState: .init(status: .initiate),
         reduce: { state ,_ in (state, nil) },
         handleEffect: {_,_ in }
     )
