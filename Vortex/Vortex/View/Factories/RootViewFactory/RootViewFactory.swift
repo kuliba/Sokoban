@@ -43,6 +43,7 @@ struct RootViewFactory {
     struct Infra {
         
         let imageCache: ImageCache
+        let imageCacheWithDefaultImage: (Image?) -> ImageCache
         let generalImageCache: ImageCache
         let getUImage: (Md5hash) -> UIImage?
     }

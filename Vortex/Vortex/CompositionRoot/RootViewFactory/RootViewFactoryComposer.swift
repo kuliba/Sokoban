@@ -42,6 +42,7 @@ final class RootViewFactoryComposer {
 
         self.infra = .init(
             imageCache: model.imageCache(),
+            imageCacheWithDefaultImage: { model.imageCache($0) },
             generalImageCache: model.generalImageCache(.defaultSavingsAccount),
             getUImage: { model.images.value[$0]?.uiImage }
         )
@@ -70,6 +71,13 @@ extension RootViewFactoryComposer {
     var makeIconView: MakeIconView {
         
         infra.imageCache.makeIconView(for:)
+    }
+    
+    func makeIconViewWithDefaultImage(
+        _ defaultImage: Image?
+    ) -> MakeIconView {
+        
+        infra.imageCacheWithDefaultImage(defaultImage).makeIconView(for:)
     }
     
     func makeIconView(
@@ -170,6 +178,7 @@ extension RootViewFactoryComposer {
             makeControlPanelWrapperView: makeControlPanelWrapperView,
             makeCurrencyWalletView: makeCurrencyWalletView,
             makeIconView: makeIconView,
+            makeIconViewWithDefaultImage: makeIconViewWithDefaultImage,
             makeGeneralIconView: makeGeneralIconView,
             makeMainSectionCurrencyMetalView: makeMainSectionCurrencyMetalView,
             makeMainSectionProductsView: makeMainSectionProductsView,

@@ -97,6 +97,7 @@ private extension OrderAccountView {
                 confirmationView(form.confirmation)
             }
         }
+        .padding(.vertical, config.padding)
         .coordinateSpace(name: coordinateSpace)
     }
     
