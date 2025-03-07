@@ -1,5 +1,5 @@
 //
-//  TimedStrategy.swift
+//  DeadlineDataLoader.swift
 //
 //
 //  Created by Igor Malyarov on 07.03.2025.
@@ -8,40 +8,43 @@
 import CombineSchedulers
 import Foundation
 
-final public class TimedStrategy<T> {
+/// Loads data using an asynchronous loader within a specified time limit.
+/// Falls back to synchronous loading if the asynchronous loader fails or exceeds the deadline.
+/// Late asynchronous results (after the deadline) are ignored.
+final public class DeadlineDataLoader<T> {
     
     private let interval: Interval
-    private let remote: Remote
-    private let local: Local
+    private let asyncLoader: AsyncLoader
+    private let syncLoader: SyncLoader
     private let scheduler: AnySchedulerOf<DispatchQueue>
     
     public init(
         interval: Interval,
-        remote: @escaping Remote,
-        local: @escaping Local,
+        asyncLoader: @escaping AsyncLoader,
+        syncLoader: @escaping SyncLoader,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.interval = interval
-        self.remote = remote
-        self.local = local
+        self.asyncLoader = asyncLoader
+        self.syncLoader = syncLoader
         self.scheduler = scheduler
     }
     
     public typealias Interval = DispatchQueue.SchedulerTimeType.Stride
-    public typealias Remote = (@escaping (T?) -> Void) -> Void
-    public typealias Local = () -> T
+    public typealias AsyncLoader = (@escaping (T?) -> Void) -> Void
+    public typealias SyncLoader = () -> T
     
     public func load(
         completion: @escaping (T) -> Void
     ) {
-        let lock = DispatchQueue(label: "com.vortex.TimedStrategy.hasResultLock")
+        let lock = DispatchQueue(label: "com.vortex.DeadlineDataLoader.hasResultLock")
         var hasResult = false
         
         scheduler.delay(for: interval) { [weak self] in
             
             guard let self = self else { return }
             
-            var localValue: T?
+            var syncValue: T?
             var shouldComplete = false
             
             lock.sync {
@@ -49,16 +52,16 @@ final public class TimedStrategy<T> {
                 if !hasResult {
                     hasResult = true
                     shouldComplete = true
-                    localValue = self.local()
+                    syncValue = self.syncLoader()
                 }
             }
             
-            if shouldComplete, let localValue {
-                completion(localValue)
+            if shouldComplete, let syncValue {
+                completion(syncValue)
             }
         }
         
-        remote { [weak self] result in
+        asyncLoader { [weak self] result in
             
             guard let self = self else { return }
             
@@ -70,7 +73,7 @@ final public class TimedStrategy<T> {
                 if !hasResult {
                     hasResult = true
                     shouldComplete = true
-                    valueToComplete = result ?? self.local()
+                    valueToComplete = result ?? self.syncLoader()
                 }
             }
             

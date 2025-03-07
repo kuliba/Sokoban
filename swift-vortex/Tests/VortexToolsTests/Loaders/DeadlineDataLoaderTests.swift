@@ -1,6 +1,6 @@
 //
-//  TimedStrategyTests.swift
-//  
+//  DeadlineDataLoaderTests.swift
+//
 //
 //  Created by Igor Malyarov on 07.03.2025.
 //
@@ -9,72 +9,72 @@ import CombineSchedulers
 import VortexTools
 import XCTest
 
-final class TimedStrategyTests: XCTestCase {
+final class DeadlineDataLoaderTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, remote, local, _) = makeSUT()
+        let (sut, asyncLoader, syncLoader, _) = makeSUT()
         
-        XCTAssertEqual(remote.callCount, 0)
-        XCTAssertEqual(local.callCount, 0)
+        XCTAssertEqual(asyncLoader.callCount, 0)
+        XCTAssertEqual(syncLoader.callCount, 0)
         XCTAssertNotNil(sut)
     }
     
-    func test_load_shouldCallRemote() {
+    func test_load_shouldCallAsyncLoader() {
         
-        let (sut, remote, _,_) = makeSUT()
+        let (sut, asyncLoader, _,_) = makeSUT()
         
         sut.load { _ in }
         
-        XCTAssertEqual(remote.callCount, 1)
+        XCTAssertEqual(asyncLoader.callCount, 1)
     }
     
-    func test_load_shouldDeliverLocal_onRemoteResponseOutsideOfInterval() {
+    func test_load_shouldDeliverLocal_onAsyncLoaderResponseOutsideOfInterval() {
         
-        let localValue = makeValue()
-        let (sut, remote, _, scheduler) = makeSUT(
+        let syncValue = makeValue()
+        let (sut, asyncLoader, _, scheduler) = makeSUT(
             interval: .milliseconds(100),
-            local: localValue
+            syncLoader: syncValue
         )
         
-        expect(sut: sut, toDeliver: localValue) {
+        expect(sut: sut, toDeliver: syncValue) {
             
             scheduler.advance(by: .milliseconds(101))
-            remote.complete(with: makeValue())
+            asyncLoader.complete(with: makeValue())
             XCTAssertNotNil(sut)
         }
     }
     
-    func test_load_shouldDeliverLocal_onRemoteFailureInsideInterval() {
+    func test_load_shouldDeliverLocal_onAsyncLoaderFailureInsideInterval() {
         
-        let localValue = makeValue()
-        let (sut, remote, _, scheduler) = makeSUT(
+        let syncValue = makeValue()
+        let (sut, asyncLoader, _, scheduler) = makeSUT(
             interval: .milliseconds(100),
-            local: localValue
+            syncLoader: syncValue
         )
         
-        expect(sut: sut, toDeliver: localValue) {
+        expect(sut: sut, toDeliver: syncValue) {
             
             scheduler.advance(by: .milliseconds(99))
-            remote.complete(with: nil)
+            asyncLoader.complete(with: nil)
         }
     }
     
-    func test_load_shouldDeliverRemote_onRemoteResponseInsideInterval() {
+    func test_load_shouldDeliverAsyncLoad_onAsyncLoaderResponseInsideInterval() {
         
-        let remoteValue = makeValue()
-        let (sut, remote, _, scheduler) = makeSUT(
+        let asyncValue = makeValue()
+        let (sut, asyncLoader, _, scheduler) = makeSUT(
             interval: .milliseconds(100)
         )
         
-        expect(sut: sut, toDeliver: remoteValue) {
+        expect(sut: sut, toDeliver: asyncValue) {
             
             scheduler.advance(by: .milliseconds(99))
-            remote.complete(with: remoteValue)
+            asyncLoader.complete(with: asyncValue)
         }
     }
     
-    func test_raceCondition_multipleRemoteCallbacks_triggeredConcurrently() {
+    func test_raceCondition_multipleAsyncLoaderCallbacks_triggeredConcurrently() {
         
         let iterations = 1_000
         var failureCount = 0
@@ -82,15 +82,16 @@ final class TimedStrategyTests: XCTestCase {
         
         for _ in 0..<iterations {
             
-            let localValue = makeValue("Local")
-            let remoteValue = makeValue("Remote")
-            let remote = Remote()
-            let local = Local(stubs: [localValue])
+            let syncValue = makeValue()
+            let syncLoader = SyncLoader(stubs: [syncValue])
+            
+            let asyncValue = makeValue()
+            let asyncLoader = AsyncLoader()
             
             let sut = SUT(
                 interval: .milliseconds(1),
-                remote: remote.process,
-                local: local.call,
+                asyncLoader: asyncLoader.process,
+                syncLoader: syncLoader.call,
                 scheduler: DispatchQueue.global().eraseToAnyScheduler()
             )
             
@@ -111,7 +112,7 @@ final class TimedStrategyTests: XCTestCase {
                 
                 group.enter()
                 queue.async {
-                    remote.complete(with: remoteValue)
+                    asyncLoader.complete(with: asyncValue)
                     group.leave()
                 }
             }
@@ -129,38 +130,38 @@ final class TimedStrategyTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = TimedStrategy<Value>
-    private typealias Remote = Spy<Void, Value?>
-    private typealias Local = CallSpy<Void, Value>
+    private typealias SUT = DeadlineDataLoader<Value>
+    private typealias AsyncLoader = Spy<Void, Value?>
+    private typealias SyncLoader = CallSpy<Void, Value>
     
     private func makeSUT(
         interval: SUT.Interval = .milliseconds(999),
-        local: Value? = nil,
+        syncLoader: Value? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        remote: Remote,
-        local: Local,
+        asyncLoader: AsyncLoader,
+        syncLoader: SyncLoader,
         scheduler: TestSchedulerOf<DispatchQueue>
     ) {
-        let remote = Remote()
-        let local = Local(stubs: [local ?? makeValue()])
+        let asyncLoader = AsyncLoader()
+        let syncLoader = SyncLoader(stubs: [syncLoader ?? makeValue()])
         let scheduler = DispatchQueue.test
         
         let sut = SUT(
             interval: interval,
-            remote: remote.process,
-            local: local.call,
+            asyncLoader: asyncLoader.process,
+            syncLoader: syncLoader.call,
             scheduler: scheduler.eraseToAnyScheduler()
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(remote, file: file, line: line)
-        trackForMemoryLeaks(local, file: file, line: line)
+        trackForMemoryLeaks(asyncLoader, file: file, line: line)
+        trackForMemoryLeaks(syncLoader, file: file, line: line)
         trackForMemoryLeaks(scheduler, file: file, line: line)
         
-        return (sut, remote, local, scheduler)
+        return (sut, asyncLoader, syncLoader, scheduler)
     }
     
     private struct Value: Equatable {
