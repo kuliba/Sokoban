@@ -33,6 +33,6 @@ extension AuthProductsLandingDomain {
     
     enum Navigation {
 
-        case `continue`
+        case productID(Int)
     }
 }

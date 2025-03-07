@@ -828,7 +828,8 @@ private extension RootViewModelFactory {
         let mainViewModelsFactory = MainViewModelsFactory(
             makeAuthFactory: makeAuthFactory,
             makeProductProfileViewModel: makeProductProfileViewModel,
-            makePromoProductViewModel: { [weak self] in
+            makePromoProductViewModel: {
+                [weak self] in
                 
                 self?.makePromoViewModel(
                     viewModel: $0,
@@ -839,23 +840,12 @@ private extension RootViewModelFactory {
             qrViewModelFactory: qrViewModelFactory,
             makeTrailingToolbarItems: makeTrailingToolbarItems,
             makeCreditCardMVP: { featureFlags.creditCardMVPFlag.isActive ? .creditCardMVPPreview : nil },
-            makeAuthProductsViewModel: { dismiss in
+            makeAuthProductsViewModel: {
                 
-                switch featureFlags.orderCardFlag.rawValue {
-                case .inactive:
-                    return .init(
-                        self.model,
-                        products: self.model.catalogProducts.value,
-                        dismissAction: dismiss
-                    )
-                case .active:
-                    return .init(
-                        self.model,
-                        products: self.model.catalogProducts.value,
-                        action: { _ in  fatalError() },
-                        dismissAction: dismiss
-                    )
-                }
+                self.makeCardPromoLanding(
+                    flag: featureFlags.orderCardFlag,
+                    dismiss: $0
+                )
             }
         )
                   
