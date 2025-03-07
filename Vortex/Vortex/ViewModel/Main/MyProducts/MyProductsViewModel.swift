@@ -38,7 +38,6 @@ class MyProductsViewModel: ObservableObject {
     var informerWasShown: Bool = false
     
     let openProductByType: (OpenProductType) -> Void
-    let openOrderSticker: () -> Void
     
     private lazy var settingsOnboarding = model.settingsMyProductsOnboarding
     private let model: Model
@@ -59,7 +58,6 @@ class MyProductsViewModel: ObservableObject {
          refreshingIndicator: RefreshingIndicatorView.ViewModel,
          showOnboarding: [Onboarding: Bool] = [:],
          openProductByType: @escaping (OpenProductType) -> Void,
-         openOrderSticker: @escaping () -> Void,
          makeMyProductsViewFactory: MyProductsViewFactory
     ) {
         self.model = model
@@ -72,7 +70,6 @@ class MyProductsViewModel: ObservableObject {
         self.sections = productSections
         self.refreshingIndicator = refreshingIndicator
         self.showOnboarding = showOnboarding
-        self.openOrderSticker = openOrderSticker
         self.openProductByType = openProductByType
         self.makeMyProductsViewFactory = makeMyProductsViewFactory
     }
@@ -82,7 +79,6 @@ class MyProductsViewModel: ObservableObject {
         cardAction: CardAction? = nil,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         openProductByType: @escaping (OpenProductType) -> Void,
-        openOrderSticker: @escaping () -> Void,
         makeMyProductsViewFactory: MyProductsViewFactory,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons
     ) {
@@ -98,7 +94,6 @@ class MyProductsViewModel: ObservableObject {
             refreshingIndicator: .init(isActive: false),
             showOnboarding: [:],
             openProductByType: openProductByType,
-            openOrderSticker: openOrderSticker,
             makeMyProductsViewFactory: makeMyProductsViewFactory
         )
         

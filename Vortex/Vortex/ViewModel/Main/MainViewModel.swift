@@ -759,15 +759,6 @@ private extension MainViewModel {
             model,
             makeProductProfileViewModel: viewModelsFactory.makeProductProfileViewModel,
             openProductByType: openProductByType,
-            openOrderSticker: { [weak self] in
-                
-                self?.route = .empty
-                
-                self?.delay(for: .milliseconds(700)) { [weak self] in
-                    
-                    self?.handleLandingAction(.sticker)
-                }
-            },
             makeMyProductsViewFactory: .init(
                 makeInformerDataUpdateFailure: { [weak self] in
                     

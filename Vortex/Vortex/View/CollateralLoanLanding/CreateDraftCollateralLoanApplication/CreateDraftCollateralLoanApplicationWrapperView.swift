@@ -24,7 +24,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     let config: Config
     let factory: Factory
     let goToMain: () -> Void
-    let makeOperationDetailInfoViewModel: MakeOperationDetailInfoViewModel
+    let operationDetailInfoViewModel: OperationDetailInfoViewModel
     
     var body: some View {
         
@@ -169,8 +169,14 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     
     func makeDetailButton(payload: CollateralLandingApplicationSaveConsentsResult) -> CollateralLoanLandingDetailsButton {
         
+        operationDetailInfoViewModel.cells = payload.makeCells(
+            config: config.elements.result,
+            makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
+            formatCurrency: factory.formatCurrency
+        )
+        
         return .init(
-            viewModel: makeOperationDetailInfoViewModel(payload),
+            viewModel: operationDetailInfoViewModel,
             payload: payload
         )
     }
@@ -255,7 +261,7 @@ extension CreateDraftCollateralLoanApplicationDomain.Navigation {
         switch self {
         case let .failure(kind):
             switch kind {
-            case .complete:
+            case .failureResultScreen:
                 return .failureComplete
             default:
                 return nil

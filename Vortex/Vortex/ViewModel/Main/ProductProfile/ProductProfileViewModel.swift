@@ -1081,7 +1081,6 @@ private extension ProductProfileViewModel {
                             cardAction: cardAction,
                             makeProductProfileViewModel: makeProductProfileViewModel,
                             openProductByType: { _ in },
-                            openOrderSticker: {}, 
                             makeMyProductsViewFactory: .init(
                                 makeInformerDataUpdateFailure: productProfileViewModelFactory.makeInformerDataUpdateFailure
                             ),

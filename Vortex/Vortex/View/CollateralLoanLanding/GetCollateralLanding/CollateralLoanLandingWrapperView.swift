@@ -21,7 +21,7 @@ struct CollateralLoanLandingWrapperView: View {
     let config: Config
     let factory: Factory
     let goToMain: () -> Void
-    let makeOperationDetailInfoViewModel: MakeOperationDetailInfoViewModel
+    let operationDetailInfoViewModel: OperationDetailInfoViewModel
 
     var body: some View {
         
@@ -129,7 +129,7 @@ struct CollateralLoanLandingWrapperView: View {
                     formatCurrency: factory.formatCurrency
                 ),
                 goToMain: goToMain,
-                makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel
+                operationDetailInfoViewModel: operationDetailInfoViewModel
             )
             .navigationBarWithBack(title: "Оформление заявки", dismiss: dissmiss)
         }

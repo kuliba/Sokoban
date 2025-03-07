@@ -16,8 +16,8 @@ import UIPrimitives
 extension ViewComponents {
     
     func makeCollateralLoanWrapperView(
-        model: Model,
         binder: GetCollateralLandingDomain.Binder,
+        operationDetailInfoViewModel: OperationDetailInfoViewModel,
         goToMain: @escaping () -> Void,
         getPDFDocument: @escaping GetPDFDocument,
         formatCurrency: @escaping FormatCurrency
@@ -31,19 +31,12 @@ extension ViewComponents {
                 formatCurrency: formatCurrency
             ),
             goToMain: goToMain,
-            makeOperationDetailInfoViewModel: {
-                
-                makeOperationDetailInfoViewModel(
-                    model: model,
-                    payload: $0,
-                    formatCurrency: formatCurrency
-                )
-            }
+            operationDetailInfoViewModel: operationDetailInfoViewModel
         )
     }
     
     func makeCollateralLoanShowcaseWrapperView(
-        model: Model,
+        operationDetailInfoViewModel: OperationDetailInfoViewModel,
         binder: GetShowcaseDomain.Binder,
         goToMain: @escaping () -> Void,
         getPDFDocument: @escaping GetPDFDocument,
@@ -58,14 +51,7 @@ extension ViewComponents {
             ),
             config: .default,
             goToMain: goToMain,
-            makeOperationDetailInfoViewModel: {
-                
-                makeOperationDetailInfoViewModel(
-                    model: model,
-                    payload: $0,
-                    formatCurrency: formatCurrency
-                )
-            }
+            operationDetailInfoViewModel: operationDetailInfoViewModel
         )
     }
     
@@ -75,28 +61,10 @@ extension ViewComponents {
     ) -> CollateralLoanLandingFactory {
 
         .init(
-            makeImageViewWithMD5Hash: { makeGeneralIconView(md5Hash: $0) },
-            makeImageViewWithURL: { makeIconView(.image($0.addingPercentEncoding())) },
+            makeImageViewWithMD5Hash: { makeIconView(md5Hash: $0) },
+            makeImageViewWithURL: { makeGeneralIconView(.image($0.addingPercentEncoding())) },
             getPDFDocument: getPDFDocument,
             formatCurrency: formatCurrency
-        )
-    }
-    
-    func makeOperationDetailInfoViewModel(
-        model: Model,
-        payload: CollateralLandingApplicationSaveConsentsResult,
-        formatCurrency: @escaping FormatCurrency
-    ) -> OperationDetailInfoViewModel {
-        
-        OperationDetailInfoViewModel(
-            model: model,
-            logo: nil,
-            cells: payload.makeCells(
-                config: .default,
-                makeImageViewWithMD5Hash: { makeGeneralIconView(md5Hash: $0) },
-                formatCurrency: formatCurrency
-            ),
-            dismissAction: {}
         )
     }
 

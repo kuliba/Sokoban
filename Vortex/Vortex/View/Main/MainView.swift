@@ -399,10 +399,20 @@ private extension MainView {
     
     private typealias Config = BannerPickerSectionStateItemViewConfig
     
+    private func makeOperationDetailInfoViewModel() -> OperationDetailInfoViewModel {
+
+        OperationDetailInfoViewModel(
+            model: viewModel.model,
+            logo: nil,
+            cells: [],
+            dismissAction: {}
+        )
+    }
+    
     private func makeCollateralLoanShowcaseWrapperView(binder: GetShowcaseDomain.Binder) -> some View {
         
-        return viewFactory.components.makeCollateralLoanShowcaseWrapperView(
-            model: viewModel.model,
+        viewFactory.components.makeCollateralLoanShowcaseWrapperView(
+            operationDetailInfoViewModel: makeOperationDetailInfoViewModel(),
             binder: binder,
             goToMain: viewModel.resetDestination,
             getPDFDocument: viewModel.getPDFDocument,
@@ -418,8 +428,8 @@ private extension MainView {
     private func makeCollateralLoanWrapperView(binder: GetCollateralLandingDomain.Binder) -> some View {
         
         return viewFactory.components.makeCollateralLoanWrapperView(
-            model: viewModel.model,
             binder: binder,
+            operationDetailInfoViewModel: makeOperationDetailInfoViewModel(),
             goToMain: viewModel.resetDestination,
             getPDFDocument: viewModel.getPDFDocument,
             formatCurrency: viewModel.formatCurrency
