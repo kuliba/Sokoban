@@ -11,6 +11,7 @@ import ListLandingComponent
 import RxViewModel
 import SwiftUI
 import UIPrimitives
+import OrderCardLandingComponent
 
 public struct OrderCardLanding {
     
@@ -174,7 +175,7 @@ struct DismissibleScrollView<Content: View>: View {
     }
 }
 
-extension OrderCardLandingDomain.LandingState<OrderCardLanding> {
+extension LandingState<OrderCardLanding> {
 
     var landing: OrderCardLanding? {
         

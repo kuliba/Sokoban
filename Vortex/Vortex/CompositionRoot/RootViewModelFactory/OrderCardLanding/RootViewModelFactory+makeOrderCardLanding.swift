@@ -11,6 +11,7 @@ import ListLandingComponent
 import OrderCardLandingBackend
 import RemoteServices
 import DropDownTextListComponent
+import OrderCardLandingComponent
 
 extension RootViewModelFactory {
     
@@ -34,8 +35,8 @@ extension RootViewModelFactory {
         
         typealias Landing = OrderCardLanding
         
-        let reducer = LandingReducer<Landing>()
-        let effectHandler = LandingEffectHandler<Landing>(
+        let reducer = OrderCardLanding.LandingReducer<Landing>()
+        let effectHandler = OrderCardLanding.LandingEffectHandler<Landing>(
             load: { completion in
                 
                 self.createOrderCardLanding { result in

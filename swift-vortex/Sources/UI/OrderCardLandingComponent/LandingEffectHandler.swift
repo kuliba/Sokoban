@@ -8,7 +8,7 @@
 import Foundation
 import OrderCard
 
-final class LandingEffectHandler<Landing> {
+public final class LandingEffectHandler<Landing> {
  
     typealias Load = (@escaping (Result<Landing, LoadFailure>) -> Void) -> Void
     
@@ -28,6 +28,6 @@ final class LandingEffectHandler<Landing> {
         }
     }
     
-    typealias Event = OrderCardLandingDomain.LandingEvent<Landing>
-    typealias Effect = OrderCardLandingDomain.LandingEffect
+    typealias Event = LandingEvent<Landing>
+    typealias Effect = LandingEffect
 }

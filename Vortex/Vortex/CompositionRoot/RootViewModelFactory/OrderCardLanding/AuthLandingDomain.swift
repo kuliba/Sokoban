@@ -15,23 +15,20 @@ extension AuthProductsLandingDomain {
     // MARK: - Binder
     
     typealias Binder = Vortex.Binder<Content, Flow>
-    typealias BinderComposer = Vortex.BinderComposer<Content, Select, Navigation>
     
     // MARK: - Content
     
     typealias Content = AuthProductsViewModel
-    typealias Domain = AuthProductsLandingDomain
     
     // MARK: - Flow
     
     typealias FlowDomain = Vortex.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
-    
-    typealias NotifyEvent = FlowDomain.NotifyEvent
-    typealias Notify = (NotifyEvent) -> Void
+    typealias Notify = FlowDomain.Notify
     
     enum Select: Equatable {
-        case `continue`
+        
+        case productID(Int)
     }
     
     enum Navigation {

@@ -7,6 +7,7 @@
 
 import RxViewModel
 import OrderCard
+import OrderCardLandingComponent
 
 enum OrderCardLandingDomain {}
 

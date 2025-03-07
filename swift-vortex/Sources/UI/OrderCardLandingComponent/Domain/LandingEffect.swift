@@ -7,10 +7,7 @@
 
 import Foundation
 
-extension OrderCardLandingDomain {
+public enum LandingEffect {
     
-    enum LandingEffect {
-        
-        case load
-    }
+    case load
 }

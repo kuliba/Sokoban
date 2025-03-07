@@ -8,7 +8,7 @@
 import Foundation
 import OrderCard
 
-final class LandingReducer<Landing> {
+public final class LandingReducer<Landing> {
     
     func reduce(
         _ state: State,
@@ -36,15 +36,15 @@ final class LandingReducer<Landing> {
         return (state, effect)
     }
     
-    typealias State = OrderCardLandingDomain.LandingState<Landing>
-    typealias Event = OrderCardLandingDomain.LandingEvent<Landing>
-    typealias Effect = OrderCardLandingDomain.LandingEffect
+    typealias State = LandingState<Landing>
+    typealias Event = LandingEvent<Landing>
+    typealias Effect = LandingEffect
 }
 
 extension LandingReducer {
     
     private func update(
-        _ state: inout OrderCardLandingDomain.LandingState<Landing>,
+        _ state: inout LandingState<Landing>,
         with result: (Result<Landing, LoadFailure>)
     ) {
         state.isLoading = false
@@ -71,7 +71,7 @@ extension LandingReducer {
     }
     
     private func dismissInformer(
-        _ state: inout OrderCardLandingDomain.LandingState<Landing>
+        _ state: inout LandingState<Landing>
     ) {
         switch state.status {
         case let .failure(failure):
