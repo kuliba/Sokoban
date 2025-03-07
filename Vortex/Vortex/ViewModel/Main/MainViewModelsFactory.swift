@@ -26,10 +26,13 @@ struct MainViewModelsFactory {
     let qrViewModelFactory: QRViewModelFactory
     let makeTrailingToolbarItems: MakeTrailingToolbarItems
     let makeCreditCardMVP: MakeCreditCardMVP
+    let makeAuthProductsViewModel: MakeAuthProductsViewModel // improve name typealias
     
     typealias MakeTrailingToolbarItems = (@escaping (MainViewModelAction.Toolbar) -> Void) -> [NavigationBarButtonViewModel]
     
     typealias MakeCreditCardMVP = () -> PromoItem?
+    
+    typealias MakeAuthProductsViewModel = (@escaping () -> Void) -> AuthProductsLandingDomain.Binder // improve name typealias
 }
 
 extension MainViewModelsFactory {
@@ -40,6 +43,20 @@ extension MainViewModelsFactory {
         makePromoProductViewModel: {_,_ in return nil },
         qrViewModelFactory: .preview(),
         makeTrailingToolbarItems: { _ in [] },
-        makeCreditCardMVP: { nil }
+        makeCreditCardMVP: { nil },
+        makeAuthProductsViewModel: { _ in .preview }
+    )
+}
+
+extension AuthProductsLandingDomain.Binder {
+    
+    static let preview: AuthProductsLandingDomain.Binder = .init(
+        content: .mockData,
+        flow: .init(
+            initialState: .init(),
+            reduce: { state,_ in (state, nil) },
+            handleEffect: { _,_ in }
+        ),
+        bind: { _,_ in .init() }
     )
 }

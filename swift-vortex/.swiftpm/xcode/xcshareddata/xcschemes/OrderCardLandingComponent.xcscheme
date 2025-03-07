@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "OrderCardLanding"
-               BuildableName = "OrderCardLanding"
-               BlueprintName = "OrderCardLanding"
+               BlueprintIdentifier = "OrderCardLandingComponent"
+               BuildableName = "OrderCardLandingComponent"
+               BlueprintName = "OrderCardLandingComponent"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -30,7 +30,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:../Vortex/TestPlans/OrderCardLanding.xctestplan"
+            reference = "container:../Vortex/TestPlans/OrderCardLandingComponent.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -55,9 +55,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "OrderCardLanding"
-            BuildableName = "OrderCardLanding"
-            BlueprintName = "OrderCardLanding"
+            BlueprintIdentifier = "OrderCardLandingComponent"
+            BuildableName = "OrderCardLandingComponent"
+            BlueprintName = "OrderCardLandingComponent"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>
