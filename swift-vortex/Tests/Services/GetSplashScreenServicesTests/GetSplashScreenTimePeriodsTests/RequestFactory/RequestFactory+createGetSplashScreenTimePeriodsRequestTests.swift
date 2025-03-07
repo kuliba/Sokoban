@@ -1,22 +1,22 @@
 //
-//  RequestFactory+createGetSplashScreenTimePeriodsTests.swift
+//  RequestFactory+createGetSplashScreenTimePeriodsRequestTests.swift
 //
 //
-//  Created by Nikolay Pochekuev on 04.03.2025.
+//  Created by Nikolay Pochekuev on 18.02.2025.
 //
 
 import GetSplashScreenServices
 import RemoteServices
 import XCTest
 
-final class RequestFactory_createGetSplashScreenImageRequest: XCTestCase {
+final class RequestFactory_createGetSplashScreenTimePeriodsRequestTests: XCTestCase {
     
-    func test_createRequest_shouldSetURLWithParameter() throws {
+    func test_createRequest_shouldSetURL() throws {
         
-        let (url, splash) = (anyURL(), anyMessage())
-        let request = try createRequest(url: url, splash: splash)
+        let url = anyURL()
+        let request = try createRequest(url: url)
         
-        XCTAssertNoDiff(request.url?.absoluteString, "\(url.absoluteString)?splash=\(splash)")
+        XCTAssertNoDiff(request.url, url)
     }
     
     func test_createRequest_shouldSetHTTPMethodToGet() throws {
@@ -41,13 +41,9 @@ final class RequestFactory_createGetSplashScreenImageRequest: XCTestCase {
     // MARK: - Helpers
     
     private func createRequest(
-        url: URL = anyURL(),
-        splash: String = UUID().uuidString
+        url: URL = anyURL()
     ) throws -> URLRequest {
         
-        return try RequestFactory.createGetSplashScreenImageRequest(
-            url: url,
-            splash: splash
-        )
+        RequestFactory.createGetSplashScreenTimePeriodsRequest(url: url)
     }
 }
