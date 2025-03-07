@@ -213,6 +213,7 @@ extension SavingsAccountDetailsConfig {
     
     static let preview: Self = .init(
         chevronDown: .init(systemName: "chevron.down"),
+        clock: .init(systemName: "clock"),
         colors: .init(
             background: .textSecondary,
             chevron: .gray,

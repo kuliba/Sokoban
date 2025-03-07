@@ -178,8 +178,11 @@ public struct SavingsAccountDetailsView: View {
             }
             
             if !needShimmering, !state.days.isEmpty {
-                config.info
+                config.clock
+                    .resizable()
                     .foregroundColor(config.colors.chevron)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: config.cornerRadius)
                 state.days
                     .text(withConfig: config.days)
             }
