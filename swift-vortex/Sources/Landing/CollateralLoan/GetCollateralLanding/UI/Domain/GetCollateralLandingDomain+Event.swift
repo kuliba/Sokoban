@@ -16,6 +16,7 @@ extension GetCollateralLandingDomain {
     public enum Event<InformerPayload> {
         
         case changeDesiredAmount(UInt)
+        case enterDesiredAmount(String)
         case load(String)
         case loaded(Result<InformerPayload>)
         case selectCaseList(String, String)

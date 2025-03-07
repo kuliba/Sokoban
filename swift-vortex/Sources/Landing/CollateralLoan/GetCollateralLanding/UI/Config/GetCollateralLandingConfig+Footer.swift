@@ -16,6 +16,7 @@ extension GetCollateralLandingConfig {
         public let font: FontConfig
         public let foreground: Color
         public let background: Color
+        public let disabledBackground: Color
         public let layouts: Layouts
         
         public init(
@@ -23,12 +24,14 @@ extension GetCollateralLandingConfig {
             font: FontConfig,
             foreground: Color,
             background: Color,
+            disabledBackground: Color,
             layouts: Layouts
         ) {
             self.text = text
             self.font = font
             self.foreground = foreground
             self.background = background
+            self.disabledBackground = disabledBackground
             self.layouts = layouts
         }
         
@@ -58,6 +61,7 @@ extension GetCollateralLandingConfig.Footer {
         font: .init(Font.system(size: 16).bold()),
         foreground: .white,
         background: .red,
+        disabledBackground: .unselected,
         layouts: .init(
             height: 56,
             cornerRadius: 12,

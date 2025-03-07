@@ -22,10 +22,11 @@ struct GetCollateralLandingFooterView<InformerPayload>: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: config.layouts.height)
                 .foregroundColor(config.foreground)
-                .background(config.background)
+                .background(state.isButtonDisabled ? config.disabledBackground : config.background)
                 .cornerRadius(12)
                 .font(config.font.font)
         }
+        .disabled(state.isButtonDisabled)
         .padding(config.layouts.paddings)
         .background(Color.white)
     }
