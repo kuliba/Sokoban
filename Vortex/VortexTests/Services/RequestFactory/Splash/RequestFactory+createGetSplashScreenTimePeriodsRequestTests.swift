@@ -11,30 +11,50 @@ import XCTest
 
 final class RequestFactory_createGetSplashScreenTimePeriodsRequestTests: XCTestCase {
     
-    func test_createRequest_shouldSetRequestURLWithoutSerialOnNilSerial() throws {
+    func test_createRequest_shouldSetRequestURL_onNilSerial() throws {
         
         try XCTAssertNoDiff(
-            createRequest(serial: nil).url?.absoluteString,
+            createRequest(serial: nil).url?.removingQueryItems?.absoluteString,
             "https://pl.\(Config.domen)/dbo/api/v3/dict/v1/getSplashScreenTimePeriods"
         )
     }
     
-    func test_createRequest_shouldSetRequestURLWithoutSerialOnEmptySerial() throws {
+    func test_createRequest_shouldSetRequestURL_onEmptySerial() throws {
         
         try XCTAssertNoDiff(
-            createRequest(serial: "").url?.absoluteString,
+            createRequest(serial: "").url?.removingQueryItems?.absoluteString,
             "https://pl.\(Config.domen)/dbo/api/v3/dict/v1/getSplashScreenTimePeriods"
         )
     }
     
-    func test_createRequest_shouldSetRequestURLWithSerial() throws {
+    func test_createRequest_shouldSetRequestURL_onNonEmptySerial() throws {
+        
+        try XCTAssertNoDiff(
+            createRequest(serial: anyMessage()).url?.removingQueryItems?.absoluteString,
+            "https://pl.\(Config.domen)/dbo/api/v3/dict/v1/getSplashScreenTimePeriods"
+        )
+    }
+    
+    func test_createRequest_shouldSetRequestURLWithoutSerial_onNilSerial() throws {
+        
+        try assert(createRequest(serial: nil), hasKeys: [])
+    }
+    
+    func test_createRequest_shouldSetRequestURLWithoutSerial_onEmptySerial() throws {
+        
+        try assert(createRequest(serial: ""), hasKeys: [])
+    }
+    
+    func test_createRequest_shouldSetRequestURLWithoutSerial_onNonEmptySerial() throws {
+        
+        try assert(createRequest(serial: anyMessage()), hasKeys: ["serial"])
+    }
+    
+    func test_createRequest_shouldSetRequestURLWithSerialAndPeriod() throws {
         
         let serial = anyMessage()
         
-        try XCTAssertNoDiff(
-            createRequest(serial: serial).url?.absoluteString,
-            "https://pl.\(Config.domen)/dbo/api/v3/dict/v1/getSplashScreenTimePeriods?serial=\(serial)"
-        )
+        try assert(createRequest(serial: serial), has: serial, forKey: "serial")
     }
     
     func test_createRequest_shouldSetHTTPMethodToGET() throws {
