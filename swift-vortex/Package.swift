@@ -4765,35 +4765,35 @@ private extension Product {
 private extension Array where Element == Target {
     
     static let features: Self = [
-        .getSplashScreenServices,
-        .getSplashScreenServicesTests,
-        .splashScreen,
+        .splashScreenBackend,
+        .splashScreenBackendTests,
+        .splashScreenUI,
     ]
 }
 
 private extension Target {
     
-    static let getSplashScreenServices = target(
-        name: .getSplashScreenServices,
+    static let splashScreenBackend = target(
+        name: .splashScreenBackend,
         dependencies: [
             .remoteServices,
             .vortexTools,
         ],
-        path: "Sources/Services/\(String.getSplashScreenServices)"
+        path: "Sources/Services/\(String.splashScreenBackend)"
     )
-    static let getSplashScreenServicesTests = testTarget(
-        name: .getSplashScreenServicesTests,
+    static let splashScreenBackendTests = testTarget(
+        name: .splashScreenBackendTests,
         dependencies: [
             // external packages
             .customDump,
             // internal modules
-            .getSplashScreenServices,
+            .splashScreenBackend,
             .remoteServices,
         ],
-        path: "Tests/Services/\(String.getSplashScreenServicesTests)"
+        path: "Tests/Services/\(String.splashScreenBackendTests)"
     )
     
-    static let splashScreen = target(
+    static let splashScreenUI = target(
         name: .splashScreen,
         dependencies: [
             .sharedConfigs,
@@ -4808,8 +4808,8 @@ private extension Target {
 
 private extension Target.Dependency {
     
-    static let getSplashScreenServices = byName(
-        name: .getSplashScreenServices
+    static let splashScreenBackend = byName(
+        name: .splashScreenBackend
     )
     
     static let splashScreen = byName(
@@ -4819,8 +4819,8 @@ private extension Target.Dependency {
 
 private extension String {
     
-    static let getSplashScreenServices = "GetSplashScreenServices"
-    static let getSplashScreenServicesTests = "GetSplashScreenServicesTests"
+    static let splashScreenBackend = "GetSplashScreenServices"
+    static let splashScreenBackendTests = "GetSplashScreenServicesTests"
     
     static let splashScreen = "SplashScreen"
 }
