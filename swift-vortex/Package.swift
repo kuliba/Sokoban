@@ -8,7 +8,7 @@ let package = Package(
         .iOS(.v15),
         .macOS(.v12),
     ],
-    products: [
+    products: .features + [
         .fastPaymentsSettings,
         .loadableModel,
         .loadableState,
@@ -81,7 +81,6 @@ let package = Package(
         .getProductListByTypeService,
         .getProductListByTypeV6Service,
         .getProductListByTypeV7Service,
-        .getSplashScreenServices,
         .getClientInformDataServices,
         .savingsServices,
         .getCardOrderFormService,
@@ -103,7 +102,6 @@ let package = Package(
         .rxViewModel,
         .savingsAccount,
         .searchBarComponent,
-        .splashScreen,
         .textFieldComponent,
         .uiKitHelpers,
         .uiPrimitives,
@@ -134,7 +132,7 @@ let package = Package(
         .shimmer,
         .svgKit,
     ],
-    targets: [
+    targets: .features + [
         .fastPaymentsSettings,
         .fastPaymentsSettingsTests,
         .loadableModel,
@@ -280,8 +278,6 @@ let package = Package(
         .getProductListByTypeV6ServiceTests,
         .getProductListByTypeV7Service,
         .getProductListByTypeV7ServiceTests,
-        .getSplashScreenServices,
-        .getSplashScreenServicesTests,
         .getClientInformDataServices,
         .getClientInformDataServicesTests,
         .savingsServices,
@@ -329,7 +325,6 @@ let package = Package(
         .savingsAccount,
         .savingsAccountTests,
         .searchBarComponent,
-        .splashScreen,
         .textFieldComponent,
         .textFieldComponentTests,
         .textFieldUI,
@@ -719,13 +714,6 @@ private extension Product {
         name: .searchBarComponent,
         targets: [
             .searchBarComponent,
-        ]
-    )
-    
-    static let splashScreen = library(
-        name: .splashScreen,
-        targets: [
-            .splashScreen,
         ]
     )
     
@@ -1181,13 +1169,6 @@ private extension Product {
         ]
     )
 
-    static let getSplashScreenServices = library(
-        name: .getSplashScreenServices,
-        targets: [
-            .getSplashScreenServices
-        ]
-    )
-    
     static let savingsServices = library(
         name: .savingsServices,
         targets: [
@@ -2690,27 +2671,6 @@ private extension Target {
 
         ]
     )
-
-    static let getSplashScreenServices = target(
-        name: .getSplashScreenServices,
-        dependencies: [
-            .remoteServices,
-            .vortexTools,
-        ],
-        path: "Sources/Services/\(String.getSplashScreenServices)"
-    )
-    
-    static let getSplashScreenServicesTests = testTarget(
-        name: .getSplashScreenServicesTests,
-        dependencies: [
-            // external packages
-            .customDump,
-            // internal modules
-            .getSplashScreenServices,
-            .remoteServices,
-        ],
-        path: "Tests/Services/\(String.getSplashScreenServicesTests)"
-    )
     
     static let savingsServices = target(
         name: .savingsServices,
@@ -3112,18 +3072,6 @@ private extension Target {
             .savingsAccount
         ],
         path: "Tests/UI/\(String.savingsAccountTests)"
-    )
-    
-    static let splashScreen = target(
-        name: .splashScreen,
-        dependencies: [
-            .sharedConfigs,
-            .uiPrimitives
-        ],
-        path: "Sources/UI/\(String.splashScreen)",
-        resources: [
-            .process("Resources")
-        ]
     )
 
     static let orderCard = target(
@@ -3904,10 +3852,6 @@ private extension Target.Dependency {
         name: .searchBarComponent
     )
 
-    static let splashScreen = byName(
-        name: .splashScreen
-    )
-    
     static let textFieldUI = byName(
         name: .textFieldUI
     )
@@ -4237,10 +4181,6 @@ private extension Target.Dependency {
     static let getClientInformDataServices = byName(
         name: .getClientInformDataServices
     )
-
-    static let getSplashScreenServices = byName(
-        name: .getSplashScreenServices
-    )
     
     static let savingsServices = byName(
         name: .savingsServices
@@ -4410,8 +4350,6 @@ private extension String {
     static let savingsAccountTests = "SavingsAccountTests"
 
     static let searchBarComponent = "SearchBarComponent"
-
-    static let splashScreen = "SplashScreen"
     
     static let textFieldUI = "TextFieldUI"
     static let textFieldUITests = "TextFieldUITests"
@@ -4642,9 +4580,6 @@ private extension String {
 
     static let getClientInformDataServices = "GetClientInformDataServices"
     static let getClientInformDataServicesTests = "GetClientInformDataServicesTests"
-
-    static let getSplashScreenServices = "GetSplashScreenServices"
-    static let getSplashScreenServicesTests = "GetSplashScreenServicesTests"
     
     static let savingsServices = "SavingsServices"
     static let savingsServicesTests = "SavingsServicesTests"
@@ -4806,4 +4741,96 @@ private extension String {
     
     static let phoneNumberKit = "PhoneNumberKit"
     static let phoneNumberKit_path = "https://github.com/marmelroy/PhoneNumberKit"
+}
+
+// MARK: - Feature
+
+private extension Array where Element == Product {
+    
+    static let features: Self = [
+        .getSplashScreenServices,
+        .splashScreen,
+    ]
+}
+
+private extension Product {
+    
+    static let getSplashScreenServices = library(
+        name: .getSplashScreenServices,
+        targets: [
+            .getSplashScreenServices
+        ]
+    )
+    
+    static let splashScreen = library(
+        name: .splashScreen,
+        targets: [
+            .splashScreen,
+        ]
+    )
+}
+
+// MARK: - Target
+
+private extension Array where Element == Target {
+    
+    static let features: Self = [
+        .getSplashScreenServices,
+        .getSplashScreenServicesTests,
+        .splashScreen,
+    ]
+}
+
+private extension Target {
+    
+    static let getSplashScreenServices = target(
+        name: .getSplashScreenServices,
+        dependencies: [
+            .remoteServices,
+            .vortexTools,
+        ],
+        path: "Sources/Services/\(String.getSplashScreenServices)"
+    )
+    static let getSplashScreenServicesTests = testTarget(
+        name: .getSplashScreenServicesTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .getSplashScreenServices,
+            .remoteServices,
+        ],
+        path: "Tests/Services/\(String.getSplashScreenServicesTests)"
+    )
+    
+    static let splashScreen = target(
+        name: .splashScreen,
+        dependencies: [
+            .sharedConfigs,
+            .uiPrimitives
+        ],
+        path: "Sources/UI/\(String.splashScreen)",
+        resources: [
+            .process("Resources")
+        ]
+    )
+}
+
+private extension Target.Dependency {
+    
+    static let getSplashScreenServices = byName(
+        name: .getSplashScreenServices
+    )
+    
+    static let splashScreen = byName(
+        name: .splashScreen
+    )
+}
+
+private extension String {
+    
+    static let getSplashScreenServices = "GetSplashScreenServices"
+    static let getSplashScreenServicesTests = "GetSplashScreenServicesTests"
+    
+    static let splashScreen = "SplashScreen"
 }
