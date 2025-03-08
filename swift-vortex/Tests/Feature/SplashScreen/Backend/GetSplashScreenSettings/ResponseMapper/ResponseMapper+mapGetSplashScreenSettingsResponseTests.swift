@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 06.03.2025.
 //
 
-import GetSplashScreenServices
+import SplashScreenBackend
 import RemoteServices
 import XCTest
 

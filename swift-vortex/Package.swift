@@ -4819,8 +4819,8 @@ private extension Target.Dependency {
 
 private extension String {
     
-    static let splashScreenBackend = "GetSplashScreenServices"
-    static let splashScreenBackendTests = "GetSplashScreenServicesTests"
+    static let splashScreenBackend = "SplashScreenBackend"
+    static let splashScreenBackendTests = "SplashScreenBackendTests"
     
     static let splashScreen = "SplashScreen"
 }

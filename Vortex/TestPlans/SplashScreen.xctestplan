@@ -1,7 +1,7 @@
 {
   "configurations" : [
     {
-      "id" : "30EB7927-669F-45D8-9B2B-F06DC9B95D64",
+      "id" : "C00340A4-3195-4A37-8630-5F7E2ACDC3CC",
       "name" : "Test Scheme Action",
       "options" : {
 
@@ -14,9 +14,9 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:",
-        "identifier" : "GetSplashScreenServicesTests",
-        "name" : "GetSplashScreenServicesTests"
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "SplashScreenBackendTests",
+        "name" : "SplashScreenBackendTests"
       }
     }
   ],

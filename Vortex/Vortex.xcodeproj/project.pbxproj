@@ -4747,6 +4747,7 @@
 		2A58FAB72AD72EC100BD1967 /* RequestFactory+makeProcessPublicKeyAuthenticationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+makeProcessPublicKeyAuthenticationRequest.swift"; sourceTree = "<group>"; };
 		2A58FABE2AD7355700BD1967 /* SessionID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionID.swift; sourceTree = "<group>"; };
 		2A58FAC02AD735DA00BD1967 /* makeSessionID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = makeSessionID.swift; sourceTree = "<group>"; };
+		2A590F4D2D7C472600A22BBE /* SplashScreen.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SplashScreen.xctestplan; sourceTree = "<group>"; };
 		2A5A19E229A0F76D00DFCDD3 /* ProductGroupViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductGroupViewModelTests.swift; sourceTree = "<group>"; };
 		2A5A20E02CF4557D0082A74D /* RootViewModelFactory+makeOperatorSearchNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeOperatorSearchNode.swift"; sourceTree = "<group>"; };
 		2A5AEF262B7A075900E935B6 /* OTPInputConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OTPInputConfig+iVortex.swift"; sourceTree = "<group>"; };
@@ -7200,7 +7201,6 @@
 		ECCFA40A2CC7D7200009099E /* ClientInformDataAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientInformDataAdapter.swift; sourceTree = "<group>"; };
 		ECCFA40C2CC7D8440009099E /* Model+performOrWaitForAuthorized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+performOrWaitForAuthorized.swift"; sourceTree = "<group>"; };
 		ECCFA40E2CC7D8FD0009099E /* GetAuthorizedZoneClientInformDataAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAuthorizedZoneClientInformDataAdapter.swift; sourceTree = "<group>"; };
-		ECE764ED2D63534F00FC38EE /* GetSplashScreenServices.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = GetSplashScreenServices.xctestplan; sourceTree = "<group>"; };
 		ECF246A72CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift"; sourceTree = "<group>"; };
 		ECF42BD52CD114C700020AB3 /* RequestFactory+createGetNotAuthorizedZoneClientInformDataRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetNotAuthorizedZoneClientInformDataRequest.swift"; sourceTree = "<group>"; };
 		ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMe2MeDebitConsentDecodableModel.swift; sourceTree = "<group>"; };
@@ -10775,6 +10775,7 @@
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
+				2A590F4D2D7C472600A22BBE /* SplashScreen.xctestplan */,
 				C19017A92D7AC67B00044AFC /* OrderCardLandingComponent.xctestplan */,
 				C170C78C2D79DB2500A7C480 /* OrderCardLandingBackend.xctestplan */,
 				2AAB64E52D79615D00B40177 /* EphemeralCache.xctestplan */,
@@ -10862,7 +10863,6 @@
 				839914752C6CB31E00E9D275 /* GetProductListByTypeV6Service.xctestplan */,
 				EC5994432CA5B0FF0050CA05 /* GetClientInformDataServices.xctestplan */,
 				836B81C92CCFAC86006FACE3 /* GetProductListByTypeV7Service.xctestplan */,
-				ECE764ED2D63534F00FC38EE /* GetSplashScreenServices.xctestplan */,
 			);
 			path = TestPlans;
 			sourceTree = "<group>";

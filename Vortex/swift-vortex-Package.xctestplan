@@ -673,13 +673,6 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "GetSplashScreenServicesTests",
-        "name" : "GetSplashScreenServicesTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
         "identifier" : "StateMachinesTests",
         "name" : "StateMachinesTests"
       }
@@ -710,6 +703,13 @@
         "containerPath" : "container:",
         "identifier" : "EphemeralCacheTests",
         "name" : "EphemeralCacheTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "SplashScreenBackendTests",
+        "name" : "SplashScreenBackendTests"
       }
     }
   ],
