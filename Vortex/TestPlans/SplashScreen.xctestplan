@@ -14,9 +14,16 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:..\/swift-vortex",
+        "containerPath" : "container:",
         "identifier" : "SplashScreenBackendTests",
         "name" : "SplashScreenBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SplashScreenCoreTests",
+        "name" : "SplashScreenCoreTests"
       }
     }
   ],

@@ -744,6 +744,13 @@
         "identifier" : "SplashScreenBackendTests",
         "name" : "SplashScreenBackendTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "SplashScreenCoreTests",
+        "name" : "SplashScreenCoreTests"
+      }
     }
   ],
   "version" : 1

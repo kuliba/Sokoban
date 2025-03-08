@@ -4757,8 +4757,9 @@ private extension Product {
     static let splashScreen = library(
         name: .splashScreen,
         targets: [
-            .splashScreenUI,
             .splashScreenBackend,
+            .splashScreenCore,
+            .splashScreenUI,
         ]
     )
 }
@@ -4768,6 +4769,8 @@ private extension Array where Element == Target {
     static let features: Self = [
         .splashScreenBackend,
         .splashScreenBackendTests,
+        .splashScreenCore,
+        .splashScreenCoreTests,
         .splashScreenUI,
     ]
 }
@@ -4794,6 +4797,26 @@ private extension Target {
         path: "Tests/Feature/\(String.splashScreen)/Backend"
     )
     
+    static let splashScreenCore = target(
+        name: .splashScreenCore,
+        dependencies: [
+            .remoteServices,
+            .vortexTools,
+        ],
+        path: "Sources/Feature/\(String.splashScreen)/Core"
+    )
+    static let splashScreenCoreTests = testTarget(
+        name: .splashScreenCoreTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .splashScreenCore,
+            .remoteServices,
+        ],
+        path: "Tests/Feature/\(String.splashScreen)/Core"
+    )
+    
     static let splashScreenUI = target(
         name: .splashScreenUI,
         dependencies: [
@@ -4813,6 +4836,10 @@ private extension Target.Dependency {
         name: .splashScreenBackend
     )
     
+    static let splashScreenCore = byName(
+        name: .splashScreenCore
+    )
+    
     static let splashScreen = byName(
         name: .splashScreen
     )
@@ -4824,6 +4851,9 @@ private extension String {
     
     static let splashScreenBackend = "SplashScreenBackend"
     static let splashScreenBackendTests = "SplashScreenBackendTests"
+    
+    static let splashScreenCore = "SplashScreenCore"
+    static let splashScreenCoreTests = "SplashScreenCoreTests"
     
     static let splashScreenUI = "SplashScreenUI"
 }
