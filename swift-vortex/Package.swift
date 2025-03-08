@@ -4779,7 +4779,7 @@ private extension Target {
             .remoteServices,
             .vortexTools,
         ],
-        path: "Sources/Services/\(String.splashScreenBackend)"
+        path: "Sources/Feature/\(String.splashScreen)/Backend"
     )
     static let splashScreenBackendTests = testTarget(
         name: .splashScreenBackendTests,
@@ -4790,7 +4790,7 @@ private extension Target {
             .splashScreenBackend,
             .remoteServices,
         ],
-        path: "Tests/Services/\(String.splashScreenBackendTests)"
+        path: "Tests/Feature/\(String.splashScreen)/Backend"
     )
     
     static let splashScreenUI = target(
