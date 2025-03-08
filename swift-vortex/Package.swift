@@ -4799,7 +4799,7 @@ private extension Target {
             .sharedConfigs,
             .uiPrimitives
         ],
-        path: "Sources/UI/\(String.splashScreen)",
+        path: "Sources/Feature/\(String.splashScreen)/UI",
         resources: [
             .process("Resources")
         ]
