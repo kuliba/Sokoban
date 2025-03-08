@@ -22,7 +22,7 @@ import PaymentComponents
 import PDFKit
 import RemoteServices
 import SavingsAccount
-import SplashScreen
+import SplashScreenUI
 import SwiftUI
 import UIKit
 import UIPrimitives
