@@ -4748,19 +4748,11 @@ private extension String {
 private extension Array where Element == Product {
     
     static let features: Self = [
-        .getSplashScreenServices,
         .splashScreen,
     ]
 }
 
 private extension Product {
-    
-    static let getSplashScreenServices = library(
-        name: .getSplashScreenServices,
-        targets: [
-            .getSplashScreenServices
-        ]
-    )
     
     static let splashScreen = library(
         name: .splashScreen,
@@ -4769,8 +4761,6 @@ private extension Product {
         ]
     )
 }
-
-// MARK: - Target
 
 private extension Array where Element == Target {
     
