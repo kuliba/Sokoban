@@ -5,42 +5,7 @@
 //  Created by Igor Malyarov on 08.03.2025.
 //
 
-public struct SplashScreenTimePeriod: Equatable {
-    
-    let timePeriod: String
-    let startTime: String
-    let endTime: String
-}
-
-public extension Array where Element == SplashScreenTimePeriod {
-    
-    @inlinable
-    func period(for timeString: String) -> Element? {
-        
-        first { $0.isMatch(for: timeString) }
-    }
-}
-
-extension SplashScreenTimePeriod {
-    
-    @usableFromInline
-    func isMatch(for timeString: String) -> Bool {
-        
-        (startTime...endTime).contains(timeString)
-    }
-}
-
-#warning("move to Composition Root")
-extension Array where Element == SplashScreenTimePeriod {
-    
-    static let `default`: Self = [
-        .init(timePeriod: "MORNING", startTime: "04:00", endTime: "11:59"),
-        .init(timePeriod: "DAY",     startTime: "12:00", endTime: "17:59"),
-        .init(timePeriod: "EVENING", startTime: "18:00", endTime: "23:59"),
-        .init(timePeriod: "NIGHT",   startTime: "00:00", endTime: "03:59"),
-    ]
-}
-
+import SplashScreenCore
 import XCTest
 
 final class SplashScreenTimePeriodTests: XCTestCase {
