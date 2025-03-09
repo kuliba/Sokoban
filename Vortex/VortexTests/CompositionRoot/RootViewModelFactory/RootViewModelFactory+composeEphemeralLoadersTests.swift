@@ -110,6 +110,52 @@ final class RootViewModelFactory_composeEphemeralLoadersTests: RootViewModelFact
         }
     }
     
+    // MARK: - load after reload
+    
+    func test_load_shouldDeliverNil_onBothRemoteLoadFailure() {
+        
+        let (load, reload, spy) = composeEphemeralLoaders()
+        
+        assert(load: reload, toDeliver: .none) {
+            
+            spy.complete(with: anyNSError())
+        }
+        
+        assert(load: load, toDeliver: .none) {
+            
+            spy.complete(with: anyNSError(), at: 1)
+        }
+    }
+    
+    func test_load_shouldDeliverValue_onFirstRemoteLoadFailure_secondSuccess() {
+        
+        let stamped = makeStamped(value: makeItem())
+        let (load, reload, spy) = composeEphemeralLoaders()
+        
+        assert(load: reload, toDeliver: .none) {
+            
+            spy.complete(with: anyNSError())
+        }
+        
+        assert(load: load, toDeliver: stamped.value) {
+            
+            spy.complete(with: stamped, at: 1)
+        }
+    }
+    
+    func test_load_shouldDeliverValue_onRemoteLoadSuccess() {
+        
+        let stamped = makeStamped(value: makeItem())
+        let (load, reload, spy) = composeEphemeralLoaders()
+        
+        assert(load: reload, toDeliver: stamped.value) {
+            
+            spy.complete(with: stamped)
+        }
+        
+        assert(load: load, toDeliver: stamped.value) {}
+    }
+    
     // MARK: - Helpers
     
     private typealias RemoteLoadSpy = Spy<String?, Stamped, Error>
