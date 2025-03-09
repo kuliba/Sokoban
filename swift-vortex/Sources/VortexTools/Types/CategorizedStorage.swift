@@ -25,6 +25,7 @@ where Category: Hashable,
     
     /// Creates a new instance from a specified dictionary of entries.
     public init(entries: [Category: Entry]) {
+        
         self.entries = entries
     }
     
@@ -123,6 +124,7 @@ public extension CategorizedStorage {
         for value: Value,
         in keyPath: KeyPath<T, Value>
     ) -> [T] {
+        
         return entries.values
             .flatMap { $0.items }
             .filter { $0[keyPath: keyPath] == value }
@@ -151,6 +153,7 @@ public extension CategorizedStorage {
         var changed = false
         
         for category in newStorage.categories {
+            
             guard let newSerial = newStorage.serial(for: category),
                   oldStorage.serial(for: category) != newSerial
             else { continue }
