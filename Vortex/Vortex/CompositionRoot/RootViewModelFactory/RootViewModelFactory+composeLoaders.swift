@@ -14,13 +14,14 @@ extension RootViewModelFactory {
     
     @inlinable
     func composeLoaders<T, Model>(
+        localAgent: (any LocalAgentProtocol)? = nil,
         remoteLoad: @escaping SerialLoaderComposer<T, Model>.RemoteLoad,
         fromModel: @escaping (Model) -> T,
         toModel: @escaping (T) -> Model
     ) -> (load: Load<[T]>, reload: Load<[T]>) {
         
         let composer = SerialLoaderComposer(
-            localAgent: model.localAgent,
+            localAgent: localAgent ?? model.localAgent,
             remoteLoad: remoteLoad,
             fromModel: fromModel,
             toModel: toModel
