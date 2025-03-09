@@ -1812,6 +1812,7 @@
 		2AEDD5A92D7D818E00CB5C3B /* NullLocalAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDD5A82D7D818E00CB5C3B /* NullLocalAgent.swift */; };
 		2AEDD5AB2D7D839D00CB5C3B /* RootViewModelFactory+composeEphemeralLoadersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDD5AA2D7D839D00CB5C3B /* RootViewModelFactory+composeEphemeralLoadersTests.swift */; };
 		2AEDD5AD2D7DDE0200CB5C3B /* RootViewModelFactory+composeEphemeralLoaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDD5AC2D7DDE0200CB5C3B /* RootViewModelFactory+composeEphemeralLoaders.swift */; };
+		2AEDD5AF2D7DE35700CB5C3B /* NullMonolithicStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDD5AE2D7DE35700CB5C3B /* NullMonolithicStore.swift */; };
 		2AEEC24B2C9480B900EBDD65 /* OperatorsListBackendV0 in Frameworks */ = {isa = PBXBuildFile; productRef = 2AEEC24A2C9480B900EBDD65 /* OperatorsListBackendV0 */; };
 		2AEF006D2D1E95440027687E /* InitiateAnywayPaymentDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF006C2D1E95440027687E /* InitiateAnywayPaymentDomain.swift */; };
 		2AEF006F2D1EA95B0027687E /* RootViewModelFactory+loadLatestPayments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF006E2D1EA95B0027687E /* RootViewModelFactory+loadLatestPayments.swift */; };
@@ -5619,6 +5620,7 @@
 		2AEDD5A82D7D818E00CB5C3B /* NullLocalAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NullLocalAgent.swift; sourceTree = "<group>"; };
 		2AEDD5AA2D7D839D00CB5C3B /* RootViewModelFactory+composeEphemeralLoadersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+composeEphemeralLoadersTests.swift"; sourceTree = "<group>"; };
 		2AEDD5AC2D7DDE0200CB5C3B /* RootViewModelFactory+composeEphemeralLoaders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+composeEphemeralLoaders.swift"; sourceTree = "<group>"; };
+		2AEDD5AE2D7DE35700CB5C3B /* NullMonolithicStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NullMonolithicStore.swift; sourceTree = "<group>"; };
 		2AEEC24C2C9480E100EBDD65 /* OperatorsListBackendV0.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = OperatorsListBackendV0.xctestplan; sourceTree = "<group>"; };
 		2AEF006C2D1E95440027687E /* InitiateAnywayPaymentDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitiateAnywayPaymentDomain.swift; sourceTree = "<group>"; };
 		2AEF006E2D1EA95B0027687E /* RootViewModelFactory+loadLatestPayments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+loadLatestPayments.swift"; sourceTree = "<group>"; };
@@ -13728,6 +13730,7 @@
 				2A94991E2B7362A700C67F05 /* NanoServices */,
 				2AC2ADBF2B2248140049EE9B /* RemoteService+ext.swift */,
 				2AEDD5A82D7D818E00CB5C3B /* NullLocalAgent.swift */,
+				2AEDD5AE2D7DE35700CB5C3B /* NullMonolithicStore.swift */,
 				2A6B8E5D2AFE04A100E533F4 /* RemoteService+Fetcher.swift */,
 				2A94991F2B7362DA00C67F05 /* RemoteServiceErrorOf.swift */,
 				2A7CA2192C92147500B900E9 /* SerialServices */,
@@ -23595,6 +23598,7 @@
 				684192EA2799B1B100B4E184 /* ServerCommands+Consent.swift in Sources */,
 				C113225A28CFAC0C00F90072 /* ContactsView.swift in Sources */,
 				506989262846604A00C3DEEE /* OpenAccountView.swift in Sources */,
+				2AEDD5AF2D7DE35700CB5C3B /* NullMonolithicStore.swift in Sources */,
 				2ACA3F022B7639A600FD920F /* RootViewModelFactory+makeSubscriptionsViewModel.swift in Sources */,
 				2A2EE9172CF0B4190019FC31 /* RootViewModelFactory+makeSegmentedPaymentProviderPickerFlowModel.swift in Sources */,
 				ED60A1E326DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift in Sources */,
