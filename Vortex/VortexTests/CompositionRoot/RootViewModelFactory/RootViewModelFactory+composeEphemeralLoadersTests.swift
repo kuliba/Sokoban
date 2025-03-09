@@ -20,6 +20,8 @@ final class RootViewModelFactory_composeEphemeralLoadersTests: RootViewModelFact
         XCTAssertNotNil(reload)
     }
     
+    // MARK: - load
+    
     func test_load_shouldDeliverNil_onColdCacheLoad_remoteLoadFailure() {
         
         let (load, _, spy) = composeEphemeralLoaders()
@@ -58,6 +60,51 @@ final class RootViewModelFactory_composeEphemeralLoadersTests: RootViewModelFact
         let (load, _, spy) = composeEphemeralLoaders()
         
         assert(load: load, toDeliver: stamped.value) {
+            
+            spy.complete(with: stamped)
+        }
+    }
+    
+    // MARK: - reload
+    
+    func test_reload_shouldDeliverNil_onRemoteLoadFailure_coldCache() {
+        
+        let (_, reload, spy) = composeEphemeralLoaders()
+        
+        assert(load: reload, toDeliver: .none) {
+            
+            spy.complete(with: anyError())
+        }
+    }
+    
+    func test_reload_shouldDeliverRemoteLoad_remoteLoadSuccessWithEmptyItems_coldCache() {
+        
+        let stamped = makeStamped()
+        let (_, reload, spy) = composeEphemeralLoaders()
+        
+        assert(load: reload, toDeliver: stamped.value) {
+            
+            spy.complete(with: stamped)
+        }
+    }
+    
+    func test_reload_shouldDeliverRemoteLoad_remoteLoadSuccessWithOneItem_coldCache() {
+        
+        let stamped = makeStamped(value: makeItem())
+        let (_, reload, spy) = composeEphemeralLoaders()
+        
+        assert(load: reload, toDeliver: stamped.value) {
+            
+            spy.complete(with: stamped)
+        }
+    }
+    
+    func test_reload_shouldDeliverRemoteLoad_remoteLoadSuccessWithTwoItem_coldCache() {
+        
+        let stamped = makeStamped(value: makeItem(), makeItem())
+        let (_, reload, spy) = composeEphemeralLoaders()
+        
+        assert(load: reload, toDeliver: stamped.value) {
             
             spy.complete(with: stamped)
         }
