@@ -1811,6 +1811,7 @@
 		2AEDAD5A29A6368C00017F73 /* ServerCommandsDaDataControllerGetPhoneInfoResponseHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDAD5929A6368C00017F73 /* ServerCommandsDaDataControllerGetPhoneInfoResponseHelpersTests.swift */; };
 		2AEDD5A92D7D818E00CB5C3B /* NullLocalAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDD5A82D7D818E00CB5C3B /* NullLocalAgent.swift */; };
 		2AEDD5AB2D7D839D00CB5C3B /* RootViewModelFactory+composeEphemeralLoadersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDD5AA2D7D839D00CB5C3B /* RootViewModelFactory+composeEphemeralLoadersTests.swift */; };
+		2AEDD5AD2D7DDE0200CB5C3B /* RootViewModelFactory+composeEphemeralLoaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDD5AC2D7DDE0200CB5C3B /* RootViewModelFactory+composeEphemeralLoaders.swift */; };
 		2AEEC24B2C9480B900EBDD65 /* OperatorsListBackendV0 in Frameworks */ = {isa = PBXBuildFile; productRef = 2AEEC24A2C9480B900EBDD65 /* OperatorsListBackendV0 */; };
 		2AEF006D2D1E95440027687E /* InitiateAnywayPaymentDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF006C2D1E95440027687E /* InitiateAnywayPaymentDomain.swift */; };
 		2AEF006F2D1EA95B0027687E /* RootViewModelFactory+loadLatestPayments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF006E2D1EA95B0027687E /* RootViewModelFactory+loadLatestPayments.swift */; };
@@ -5617,6 +5618,7 @@
 		2AEDAD5B29A640BC00017F73 /* CreateAnywayTransferHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAnywayTransferHelpersTests.swift; sourceTree = "<group>"; };
 		2AEDD5A82D7D818E00CB5C3B /* NullLocalAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NullLocalAgent.swift; sourceTree = "<group>"; };
 		2AEDD5AA2D7D839D00CB5C3B /* RootViewModelFactory+composeEphemeralLoadersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+composeEphemeralLoadersTests.swift"; sourceTree = "<group>"; };
+		2AEDD5AC2D7DDE0200CB5C3B /* RootViewModelFactory+composeEphemeralLoaders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+composeEphemeralLoaders.swift"; sourceTree = "<group>"; };
 		2AEEC24C2C9480E100EBDD65 /* OperatorsListBackendV0.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = OperatorsListBackendV0.xctestplan; sourceTree = "<group>"; };
 		2AEF006C2D1E95440027687E /* InitiateAnywayPaymentDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitiateAnywayPaymentDomain.swift; sourceTree = "<group>"; };
 		2AEF006E2D1EA95B0027687E /* RootViewModelFactory+loadLatestPayments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+loadLatestPayments.swift"; sourceTree = "<group>"; };
@@ -11555,6 +11557,7 @@
 				2AB529FC2D296F930016AA6E /* RootViewModelFactory+composeBinder.swift */,
 				2AB79B0E2D4F65B000968537 /* RootViewModelFactory+composeFlow.swift */,
 				2AC2F08F2CC44E97006FCFBC /* RootViewModelFactory+composeLoaders.swift */,
+				2AEDD5AC2D7DDE0200CB5C3B /* RootViewModelFactory+composeEphemeralLoaders.swift */,
 				EC554A432CC9291E002A8C3A /* RootViewModelFactory+Load.swift */,
 				EC554A412CC92919002A8C3A /* RootViewModelFactory+logging.swift */,
 				842C42312D11FB00006A307D /* RootViewModelFactory+runOnEachNextActiveSession.swift */,
@@ -23858,6 +23861,7 @@
 				68E76524278D5F1F005860FE /* AntifraudViewHostingController.swift in Sources */,
 				2A4300832C52181B002FF8C7 /* ServicePaymentFlowModel.swift in Sources */,
 				2A2AB2F82AF77E0E004023CD /* Services+cvvPINServicesClient.swift in Sources */,
+				2AEDD5AD2D7DDE0200CB5C3B /* RootViewModelFactory+composeEphemeralLoaders.swift in Sources */,
 				83CE89FD2BC43074008CA98C /* PanelView.swift in Sources */,
 				0B7A18C526852EFC0007CC75 /* MakeTransferDecodableModel.swift in Sources */,
 				A5B55E9E27E2626B00C0B695 /* СreateFastPaymentContractRequest.swift in Sources */,
