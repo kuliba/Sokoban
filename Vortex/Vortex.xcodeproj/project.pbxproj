@@ -1809,6 +1809,7 @@
 		2AEDAD5629A6359D00017F73 /* DaDataPhoneDataHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDAD5529A6359D00017F73 /* DaDataPhoneDataHelpersTests.swift */; };
 		2AEDAD5829A6361D00017F73 /* ServerCommandsTransferControllerCreateAnywayTransferResponseHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDAD5729A6361D00017F73 /* ServerCommandsTransferControllerCreateAnywayTransferResponseHelpersTests.swift */; };
 		2AEDAD5A29A6368C00017F73 /* ServerCommandsDaDataControllerGetPhoneInfoResponseHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDAD5929A6368C00017F73 /* ServerCommandsDaDataControllerGetPhoneInfoResponseHelpersTests.swift */; };
+		2AEDD5A92D7D818E00CB5C3B /* NullLocalAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDD5A82D7D818E00CB5C3B /* NullLocalAgent.swift */; };
 		2AEEC24B2C9480B900EBDD65 /* OperatorsListBackendV0 in Frameworks */ = {isa = PBXBuildFile; productRef = 2AEEC24A2C9480B900EBDD65 /* OperatorsListBackendV0 */; };
 		2AEF006D2D1E95440027687E /* InitiateAnywayPaymentDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF006C2D1E95440027687E /* InitiateAnywayPaymentDomain.swift */; };
 		2AEF006F2D1EA95B0027687E /* RootViewModelFactory+loadLatestPayments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF006E2D1EA95B0027687E /* RootViewModelFactory+loadLatestPayments.swift */; };
@@ -5613,6 +5614,7 @@
 		2AEDAD5729A6361D00017F73 /* ServerCommandsTransferControllerCreateAnywayTransferResponseHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsTransferControllerCreateAnywayTransferResponseHelpersTests.swift; sourceTree = "<group>"; };
 		2AEDAD5929A6368C00017F73 /* ServerCommandsDaDataControllerGetPhoneInfoResponseHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsDaDataControllerGetPhoneInfoResponseHelpersTests.swift; sourceTree = "<group>"; };
 		2AEDAD5B29A640BC00017F73 /* CreateAnywayTransferHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAnywayTransferHelpersTests.swift; sourceTree = "<group>"; };
+		2AEDD5A82D7D818E00CB5C3B /* NullLocalAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NullLocalAgent.swift; sourceTree = "<group>"; };
 		2AEEC24C2C9480E100EBDD65 /* OperatorsListBackendV0.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = OperatorsListBackendV0.xctestplan; sourceTree = "<group>"; };
 		2AEF006C2D1E95440027687E /* InitiateAnywayPaymentDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitiateAnywayPaymentDomain.swift; sourceTree = "<group>"; };
 		2AEF006E2D1EA95B0027687E /* RootViewModelFactory+loadLatestPayments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+loadLatestPayments.swift"; sourceTree = "<group>"; };
@@ -13719,6 +13721,7 @@
 				2AF9ACDB2AE6AFEB00AAB1DB /* Loader.swift */,
 				2A94991E2B7362A700C67F05 /* NanoServices */,
 				2AC2ADBF2B2248140049EE9B /* RemoteService+ext.swift */,
+				2AEDD5A82D7D818E00CB5C3B /* NullLocalAgent.swift */,
 				2A6B8E5D2AFE04A100E533F4 /* RemoteService+Fetcher.swift */,
 				2A94991F2B7362DA00C67F05 /* RemoteServiceErrorOf.swift */,
 				2A7CA2192C92147500B900E9 /* SerialServices */,
@@ -21845,6 +21848,7 @@
 				77C3828D27E0C98800B5246E /* FastPaymentFlag.swift in Sources */,
 				ED07DB9026EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift in Sources */,
 				2A840C032C373C2A00BA6887 /* TemplatesFlowEvent.swift in Sources */,
+				2AEDD5A92D7D818E00CB5C3B /* NullLocalAgent.swift in Sources */,
 				0CF3D71528368753001A1BEA /* PTSectionLatestPaymentsViewComponent.swift in Sources */,
 				2AA09D632CFA162A0062415C /* RootViewModelFactory+makeUserAccount.swift in Sources */,
 				774A8B4C2865FD3600B81140 /* MyProductsSectionItemView.swift in Sources */,
