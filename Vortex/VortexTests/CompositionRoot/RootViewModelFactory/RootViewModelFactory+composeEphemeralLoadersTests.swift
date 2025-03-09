@@ -20,75 +20,47 @@ final class RootViewModelFactory_composeEphemeralLoadersTests: RootViewModelFact
         XCTAssertNotNil(reload)
     }
     
-    func test_shouldDeliverNil_onColdCacheLoad_remoteLoadFailure() {
+    func test_load_shouldDeliverNil_onColdCacheLoad_remoteLoadFailure() {
         
         let (load, _, spy) = composeEphemeralLoaders()
-        let exp = expectation(description: "wait for load completion")
         
-        load {
+        assert(load: load, toDeliver: .none) {
             
-            XCTAssertNoDiff($0, .none)
-            exp.fulfill()
+            spy.complete(with: anyError())
         }
-        
-        wait(timeout: 0.05)
-        spy.complete(with: anyError())
-        
-        wait(for: [exp], timeout: 1.0)
     }
     
-    func test_shouldDeliverRemoteLoad_onColdCacheLoad_remoteLoadSuccessWithEmptyItems() {
+    func test_load_shouldDeliverRemoteLoad_onColdCacheLoad_remoteLoadSuccessWithEmptyItems() {
         
         let stamped = makeStamped()
         let (load, _, spy) = composeEphemeralLoaders()
-        let exp = expectation(description: "wait for load completion")
         
-        load {
+        assert(load: load, toDeliver: stamped.value) {
             
-            XCTAssertNoDiff($0, stamped.value)
-            exp.fulfill()
+            spy.complete(with: stamped)
         }
-        
-        wait(timeout: 0.05)
-        spy.complete(with: stamped)
-        
-        wait(for: [exp], timeout: 1.0)
     }
     
-    func test_shouldDeliverRemoteLoad_onColdCacheLoad_remoteLoadSuccessWithOneItem() {
+    func test_load_shouldDeliverRemoteLoad_onColdCacheLoad_remoteLoadSuccessWithOneItem() {
         
         let stamped = makeStamped(value: makeItem())
         let (load, _, spy) = composeEphemeralLoaders()
-        let exp = expectation(description: "wait for load completion")
         
-        load {
+        assert(load: load, toDeliver: stamped.value) {
             
-            XCTAssertNoDiff($0, stamped.value)
-            exp.fulfill()
+            spy.complete(with: stamped)
         }
-        
-        wait(timeout: 0.05)
-        spy.complete(with: stamped)
-        
-        wait(for: [exp], timeout: 1.0)
     }
     
-    func test_shouldDeliverRemoteLoad_onColdCacheLoad_remoteLoadSuccessWithTwoItem() {
+    func test_load_shouldDeliverRemoteLoad_onColdCacheLoad_remoteLoadSuccessWithTwoItem() {
         
         let stamped = makeStamped(value: makeItem(), makeItem())
         let (load, _, spy) = composeEphemeralLoaders()
-        let exp = expectation(description: "wait for load completion")
         
-        load {
+        assert(load: load, toDeliver: stamped.value) {
             
-            XCTAssertNoDiff($0, stamped.value)
-            exp.fulfill()
+            spy.complete(with: stamped)
         }
-        
-        wait(timeout: 0.05)
-        spy.complete(with: stamped)
-        
-        wait(for: [exp], timeout: 1.0)
     }
     
     // MARK: - Helpers
@@ -135,5 +107,27 @@ final class RootViewModelFactory_composeEphemeralLoadersTests: RootViewModelFact
     ) -> Item {
         
         return .init(value: value)
+    }
+    
+    private func assert(
+        load: @escaping SUT.Load<[Item]>,
+        toDeliver expected: [Item]?,
+        timeout: TimeInterval = 1.0,
+        on action: () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "wait for load completion")
+        
+        load {
+            
+            XCTAssertNoDiff($0, expected, "Expected \(String(describing: expected)), but got \(String(describing: $0)) instead.", file: file, line: line)
+            exp.fulfill()
+        }
+        
+        wait(timeout: 0.05)
+        action()
+        
+        wait(for: [exp], timeout: timeout)
     }
 }
