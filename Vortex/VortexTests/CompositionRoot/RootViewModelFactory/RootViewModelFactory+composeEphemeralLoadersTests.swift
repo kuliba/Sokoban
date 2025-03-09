@@ -172,11 +172,7 @@ final class RootViewModelFactory_composeEphemeralLoadersTests: RootViewModelFact
         let (sut, _,_) = makeSUT(file: file, line: line)
         let spy = RemoteLoadSpy()
         
-        let (load, reload) = sut.composeEphemeralLoaders(
-            remoteLoad: spy.process,
-            fromModel: { $0 },
-            toModel: { $0 }
-        )
+        let (load, reload) = sut.composeEphemeralLoaders(remoteLoad: spy.process)
         
         return (load, reload, spy)
     }

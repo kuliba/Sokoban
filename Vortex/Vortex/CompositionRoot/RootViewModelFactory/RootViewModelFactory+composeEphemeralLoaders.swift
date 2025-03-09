@@ -11,18 +11,21 @@ import SerialComponents
 
 extension RootViewModelFactory {
     
+    typealias SerialLoaderComposer<T> = SerialComponents.SerialLoaderComposer<String, T, T>
+    
     @inlinable
-    func composeEphemeralLoaders<T, Model: Codable>(
-        remoteLoad: @escaping SerialLoaderComposer<T, Model>.RemoteLoad,
-        fromModel: @escaping (Model) -> T,
-        toModel: @escaping (T) -> Model
+    func composeEphemeralLoaders<T>(
+        remoteLoad: @escaping SerialLoaderComposer<T>.RemoteLoad
     ) -> (load: Load<[T]>, reload: Load<[T]>) {
         
-        return composeLoaders(
-            localAgent: NullLocalAgent(),
+        let composer = SerialLoaderComposer(
+            ephemeral: EphemeralStores.InMemoryStore<[T]>(),
+            persistent: NullMonolithicStore<SerialComponents.SerialStamped<String, [T]>>(),
             remoteLoad: remoteLoad,
-            fromModel: fromModel,
-            toModel: toModel
+            fromModel: { $0 },
+            toModel: { $0 }
         )
+        
+        return composer.compose()
     }
 }
