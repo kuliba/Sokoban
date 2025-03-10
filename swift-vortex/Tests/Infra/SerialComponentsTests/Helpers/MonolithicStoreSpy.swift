@@ -11,6 +11,11 @@ final class MonolithicStoreSpy<Value>: MonolithicStore {
     
     private(set) var insertMessages = [InsertMessage]()
     private(set) var retrieveMessages = [RetrieveCompletion]()
+
+    var insertedValues: [Value] {
+        
+        insertMessages.map(\.value)
+    }
     
     func insert(
         _ value: Value,
