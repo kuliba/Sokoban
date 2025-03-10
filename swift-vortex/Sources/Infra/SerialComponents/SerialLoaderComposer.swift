@@ -66,7 +66,7 @@ public extension SerialLoaderComposer {
     /// Composes and returns the load and reload functions.
     /// - Returns: A tuple containing the `load` and `reload` functions.
     @inlinable
-    func compose() -> (load: Load<T>, reload: Load<T>) {
+    func compose() -> (load: Load<[T]?>, reload: Load<[T]?>) {
         
         let localLoad = makeLocalLoad()
         let reload = makeReload(localLoad: localLoad)
@@ -111,7 +111,7 @@ extension SerialLoaderComposer {
     /// and falls back to the persistent store if necessary.
     /// - Returns: A load function that retrieves data locally.
     @inlinable
-    func makeLocalLoad() -> Load<T> {
+    func makeLocalLoad() -> Load<[T]?> {
         
         let strategy = Strategy(
             primary: ephemeral.retrieve,
@@ -125,7 +125,7 @@ extension SerialLoaderComposer {
     /// - Parameter completion: Completion handler with the retrieved data or `nil`.
     @inlinable
     func decoratedPersistent(
-        completion: @escaping LoadCompletion<T>
+        completion: @escaping LoadCompletion<[T]?>
     ) {
         persistent.retrieve { value in
             
@@ -142,8 +142,8 @@ extension SerialLoaderComposer {
     /// - Returns: A reload function that updates the data.
     @inlinable
     func makeReload(
-        localLoad: @escaping Load<T>
-    ) -> Load<T> {
+        localLoad: @escaping Load<[T]?>
+    ) -> Load<[T]?> {
         
         let caching = SerialStampedCachingDecorator(
             decoratee: remoteLoad,
@@ -153,7 +153,7 @@ extension SerialLoaderComposer {
             primary: caching.decorated,
             secondary: localLoad
         )
-        let decoratedRemote: Load<T> = { completion in
+        let decoratedRemote: Load<[T]?> = { completion in
             
             self.getSerial { serial in
                 
