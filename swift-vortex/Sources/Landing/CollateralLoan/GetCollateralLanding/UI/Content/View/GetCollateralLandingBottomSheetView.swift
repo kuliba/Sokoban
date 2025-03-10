@@ -8,7 +8,7 @@
 import SwiftUI
 import CollateralLoanLandingGetShowcaseUI
 
-public struct GetCollateralLandingBottomSheetView<InformerPayload>: View {
+public struct GetCollateralLandingBottomSheetView<InformerPayload>: View where InformerPayload: Equatable {
     
     @SwiftUI.State var selected: Item? = nil
 
@@ -218,7 +218,8 @@ public extension GetCollateralLandingBottomSheetView {
 
 // MARK: - Previews
 
-struct GetCollateralLandingBottomSheetView_Previews<InformerPayload>: PreviewProvider {
+struct GetCollateralLandingBottomSheetView_Previews<InformerPayload>: PreviewProvider
+    where InformerPayload: Equatable{
     
     static var previews: some View {
         

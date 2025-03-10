@@ -12,11 +12,11 @@ extension GetCollateralLandingDomain {
     
     public struct State<InformerPayload> {
         
+        public var status: Status<InformerPayload>
         public let landingID: String
         public var bottomSheet: BottomSheet?
-        public var result: Result<InformerPayload>?
-
-        var isLoading = false
+        
+        var backendFailure: BackendFailure<InformerPayload>?
         var payrollClient = false
         var selectedCollateralType: String
         var selectedMonthPeriod: UInt
@@ -25,24 +25,74 @@ extension GetCollateralLandingDomain {
         let formatCurrency: FormatCurrency
         
         public init(
+            status: Status<InformerPayload> = .initiate,
             landingID: String,
             bottomSheet: BottomSheet? = nil,
+            backendFailure: BackendFailure<InformerPayload>? = nil,
             selectedCollateralType: String = "", // Calculator default value
             selectedMonthPeriod: UInt = 12, // Calculator default value
             desiredAmount: UInt = 3_000_000, // Calculator default value
             formatCurrency: @escaping FormatCurrency
         ) {
+            self.status = status
             self.landingID = landingID
             self.bottomSheet = bottomSheet
+            self.backendFailure = backendFailure
             self.selectedMonthPeriod = selectedMonthPeriod
             self.selectedCollateralType = selectedCollateralType
             self.desiredAmount = desiredAmount
             self.formatCurrency = formatCurrency
         }
     }
+    
+    public enum Status<InformerPayload> {
+        
+        case initiate
+        case inflight(Product?)
+        case loaded(Product)
+        case failure(Failure, Product?)
+        
+        var isLoading: Bool {
+            
+            switch self {
+            case .inflight:
+                return true
+            case .initiate, .failure, .loaded:
+                return false
+            }
+        }
+        
+        var oldProduct: Product? {
+            
+            switch self {
+            case let .loaded(product):
+                return product
+                
+            case let .failure(_, product):
+                return product
+                
+            case let .inflight(product):
+                return product
+
+            case .initiate:
+                return nil
+            }
+        }
+
+        public enum Failure {
+            
+            case alert(String)
+            case informer(InformerPayload)
+        }
+    }
 }
 
 extension GetCollateralLandingDomain.State {
+    
+    var product: Product? {
+        
+        if case .loaded(let product) = status { return product } else { return nil }
+    }
     
     var isButtonDisabled: Bool {
         
@@ -138,6 +188,19 @@ extension GetCollateralLandingDomain.State {
     }
 }
 
+extension GetCollateralLandingDomain.State {
+    
+    public var failure: GetCollateralLandingDomain.Status<InformerPayload>.Failure? {
+        
+        if case let .failure(failure, _) = status {
+     
+                return failure
+        }
+        
+        return nil
+    }
+}
+
 extension GetCollateralLandingDomain.State.BottomSheet.Item {
     
     static var preview: Self { Self(
@@ -149,11 +212,6 @@ extension GetCollateralLandingDomain.State.BottomSheet.Item {
 }
 
 extension GetCollateralLandingDomain.State {
-    
-    public var product: Product? {
-
-        try? result?.get()
-    }
     
     var bottomSheetItems: [BottomSheet.Item] {
         
@@ -202,7 +260,7 @@ extension GetCollateralLandingDomain.State {
 public extension GetCollateralLandingDomain.State {
     
     typealias Product = GetCollateralLandingProduct
-    typealias Period = GetCollateralLandingProduct.Calc.Rate
-    typealias Collateral = GetCollateralLandingProduct.Calc.Collateral
+    typealias Period = Product.Calc.Rate
+    typealias Collateral = Product.Calc.Collateral
     typealias FormatCurrency = (UInt) -> String?
 }

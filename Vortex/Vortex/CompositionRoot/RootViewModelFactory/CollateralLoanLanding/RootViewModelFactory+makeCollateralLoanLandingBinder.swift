@@ -24,7 +24,7 @@ extension RootViewModelFactory {
             getNavigation: getNavigation,
             witnesses: .init(
                 emitting: { $0.$state
-                        .compactMap { $0.result?.failure }
+                        .compactMap { $0.failure }
                         .map { .select(.failure($0.navigationFailure)) }
                         .eraseToAnyPublisher()
                 },
@@ -271,5 +271,19 @@ extension String {
     
     func addingPercentEncoding() -> Self {
         addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed) ?? ""
+    }
+}
+
+extension GetCollateralLandingDomain.Status<InformerData>.Failure {
+    
+    var navigationFailure: GetCollateralLandingDomain.Failure {
+        
+        switch self {
+        case let .alert(message):
+            return .alert(message)
+
+        case let .informer(message):
+            return .informer(message)
+        }
     }
 }

@@ -41,31 +41,6 @@ struct CollateralLoanShowcaseWrapperView: View {
         }
     }
     
-//    private func content() -> some View {
-//
-//        ZStack(alignment: .top) {
-//            
-//            binder.flow.state.navigation?.informer.map(informerView)
-//                .zIndex(1)
-//            
-//            RxWrapperView(model: binder.content) { state, event in
-//                
-//                Group {
-//                    
-//                    switch state.showcase {
-//                    case .none:
-//                        Color.clear
-//                            .loader(isLoading: state.showcase == nil, color: .clear)
-//                        
-//                    case let .some(showcase):
-//                        getShowcaseView(showcase)
-//                    }
-//                }
-//                .onFirstAppear { event(.load) }
-//            }
-//        }
-//    }
-        
     private func content() -> some View {
         
         ZStack(alignment: .top) {

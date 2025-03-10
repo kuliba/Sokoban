@@ -63,15 +63,34 @@ struct CollateralLoanLandingWrapperView: View {
         event: @escaping (Event) -> Void
     ) -> some View {
         
-        Group {
+        ZStack(alignment: .top) {
             
-            switch state.product {
-            case .none:
+            binder.flow.state.navigation?.informer.map(informerView)
+                .zIndex(1)
+
+            switch binder.content.state.status {
+            case .initiate:
                 Color.clear
-                    .loader(isLoading: state.product == nil, color: .clear)
+                    .frame(maxHeight: .infinity)
                 
-            case let .some(product):
+            case let .failure(_, oldProduct):
+                if let oldProduct {
+                    
+                    content(oldProduct, state, event)
+                } else {
+
+                    Color.clear
+                        .frame(maxHeight: .infinity)
+                }
+
+            case let .loaded(product):
                 content(product, state, event)
+
+            case let .inflight(oldProduct):
+                oldProduct.map {
+
+                    content($0, state, event)
+                }
             }
         }
         .onFirstAppear { event(.load(state.landingID)) }
@@ -85,6 +104,7 @@ struct CollateralLoanLandingWrapperView: View {
         
         GetCollateralLandingView(
             state: state,
+            product: product,
             domainEvent: event,
             externalEvent: {
                 switch $0 {

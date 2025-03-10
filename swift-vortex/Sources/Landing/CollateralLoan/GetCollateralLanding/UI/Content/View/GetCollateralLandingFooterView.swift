@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct GetCollateralLandingFooterView<InformerPayload>: View {
+struct GetCollateralLandingFooterView<InformerPayload>: View where InformerPayload: Equatable {
     
     let product: Product
     let config: Config.Footer
@@ -43,7 +43,8 @@ extension GetCollateralLandingFooterView {
 
 // MARK: - Previews
 
-struct GetCollateralLandingFooterView_Previews<InformerPayload>: PreviewProvider {
+struct GetCollateralLandingFooterView_Previews<InformerPayload>: PreviewProvider
+    where InformerPayload: Equatable {
     
     static var previews: some View {
         

@@ -7,7 +7,7 @@
 
 extension GetCollateralLandingDomain {
     
-    public final class Reducer<InformerPayload> {
+    public final class Reducer<InformerPayload> where InformerPayload: Equatable {
         
         public init() {}
         
@@ -18,25 +18,31 @@ extension GetCollateralLandingDomain {
             var effect: Effect?
             
             switch event {
-            case let .load(landingId):
-                guard !state.isLoading else { break }
-                        
-                state.isLoading = true
-                effect = .load(landingId)
+            case let .load(landingID):
                 
-            case let .loaded(result):
-                state.isLoading = false
-                state.result = result
-                
-                // set default value
-                if state.selectedCollateralType == "" {
-                    
-                    state.selectedCollateralType = state.product?.calc.collaterals.first?.type ?? ""
+                if !state.status.isLoading {
+                    let oldProduct = state.status.oldProduct
+                    state.status = .inflight(oldProduct)
+                    effect = .load(landingID)
                 }
                 
-            case .selectCaseList(_,_):
-                // TODO: need to realize
-                break
+            case let .loaded(product):
+                state.status = .loaded(product)
+                state.selectedCollateralType = product.calc.collaterals.first?.type ?? ""
+
+            case let .failure(failure):
+                switch failure {
+                case let .alert(message):
+                    let oldProduct = state.status.oldProduct
+                    state.status = .failure(.alert(message), oldProduct)
+                    
+                case let .informer(informer):
+                    let oldProduct = state.status.oldProduct
+                    state.status = .failure(.informer(informer), oldProduct)
+                }
+                
+            case .dismissFailure:
+                state.backendFailure = nil
 
             case let .changeDesiredAmount(newValue):
                 state.desiredAmount = newValue
@@ -51,8 +57,7 @@ extension GetCollateralLandingDomain {
                 state.payrollClient = payrollClient
                 
             case .dismissFailure:
-                state.isLoading = false
-                state.result = nil
+                state.backendFailure = nil
                 
             case let .enterDesiredAmount(newValue):
                 if

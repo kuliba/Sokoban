@@ -8,7 +8,7 @@
 import SwiftUI
 import CollateralLoanLandingGetShowcaseUI
 
-struct GetCollateralLandingDocumentsView<InformerPayload>: View {
+struct GetCollateralLandingDocumentsView<InformerPayload>: View where InformerPayload: Equatable {
 
     let product: Product
     let config: Config
@@ -82,7 +82,8 @@ extension GetCollateralLandingDocumentsView {
 
 // MARK: - Previews
 
-struct GetCollateralLandingDocumentsView_Previews<InformerPayload>: PreviewProvider {
+struct GetCollateralLandingDocumentsView_Previews<InformerPayload>: PreviewProvider
+    where InformerPayload: Equatable {
     
     static var previews: some View {
         

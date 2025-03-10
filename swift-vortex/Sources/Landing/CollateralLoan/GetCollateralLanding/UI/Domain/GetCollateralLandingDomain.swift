@@ -7,6 +7,5 @@
 
 public enum GetCollateralLandingDomain {
     
-    public typealias GetCollateralLanding = GetCollateralLandingProduct
-    public typealias Result<InformerPayload> = Swift.Result<GetCollateralLanding, BackendFailure<InformerPayload>>
+    public typealias Result<InformerPayload> = Swift.Result<Product, BackendFailure<InformerPayload>>
 }

@@ -167,7 +167,7 @@ extension RootViewModelFactory {
         let createDraftApplication = nanoServiceComposer.compose(
             createRequest: RequestFactory.createCreateDraftCollateralLoanApplicationRequest(with:),
             mapResponse: RemoteServices.ResponseMapper.mapCreateDraftCollateralLoanApplicationResponse(_:_:),
-            mapError: { Domain.ContentError.init(error: $0, completionForm: false) }
+            mapError: { Domain.ContentError.init(error: $0) }
         )
         
         let confirmation = self.makeTimedOTPInputViewModel(
@@ -194,7 +194,7 @@ extension RootViewModelFactory {
         let getVerificationCode = nanoServiceComposer.compose(
             createRequest: Vortex.RequestFactory.createGetVerificationCodeOrderCardVerifyRequest,
             mapResponse: AnywayPaymentBackend.ResponseMapper.mapGetVerificationCodeResponse,
-            mapError: { Domain.ContentError.init(error: $0, completionForm: false) }
+            mapError: { Domain.ContentError.init(error: $0) }
         )
                 
         getVerificationCode(()) { [getVerificationCode] in
@@ -211,7 +211,7 @@ extension RootViewModelFactory {
         let saveConsents = nanoServiceComposer.compose(
             createRequest: RequestFactory.createSaveConsentsRequest(with:),
             mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:),
-            mapError: { _ in Domain.ContentError.init(kind: .complete) }
+            mapError: { Domain.ContentError.init(error: $0, completionForm: true) }
         )
         
         let save = schedulers.background.scheduled(saveConsents)
@@ -231,7 +231,7 @@ extension RootViewModelFactory {
         let getConsents = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetConsentsRequest(with:),
             mapResponse: RemoteServices.ResponseMapper.mapGetConsentsResponse(_:_:),
-            mapError: { Domain.ContentError.init(error: $0, completionForm: false) }
+            mapError: { Domain.ContentError.init(error: $0) }
         )
         
         getConsents(payload) { [getConsents] in
