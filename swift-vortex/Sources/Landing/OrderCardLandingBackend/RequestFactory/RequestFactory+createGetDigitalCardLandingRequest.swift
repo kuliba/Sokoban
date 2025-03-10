@@ -1,5 +1,5 @@
 //
-//  RequestFactory+getDigitalCardLanding.swift
+//  RequestFactory+createGetDigitalCardLandingRequest.swift
 //
 //
 //  Created by Дмитрий Савушкин on 03.12.2024.
