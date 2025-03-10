@@ -50,27 +50,12 @@ final class MonolithicStore_UpdateCategorizedStorageTests: XCTestCase {
         let item = makeItem(category: category)
         let storage = makeStorage(items: [item])
         let sut = makeSUT()
-        let exp = expectation(description: "wait for completion")
         
-        sut.update(with: storage) { [weak sut] result in
+        assertUpdate(sut: sut, storage: storage, toDeliver: [storage]) {
             
-            switch result {
-            case let .failure(failure):
-                XCTFail("Expected success but got \(failure) instead.")
-                
-            case .success(()):
-                XCTAssertNoDiff(sut?.insertedValues, [storage])
-                XCTAssertNoDiff(sut?.insertedValues.flatMap(\.categories), [category])
-                XCTAssertNoDiff(sut?.insertedValues.first?.items(for: category), [item])
-            }
-            
-            exp.fulfill()
+            sut.completeRetrieve(with: nil)
+            sut.completeInsertSuccessfully()
         }
-        
-        sut.completeRetrieve(with: nil)
-        sut.completeInsertSuccessfully()
-        
-        wait(for: [exp], timeout: 1.0)
     }
     
     func test_update_shouldReplaceStorageWithSameCategory() {
@@ -83,25 +68,11 @@ final class MonolithicStore_UpdateCategorizedStorageTests: XCTestCase {
         let sut = makeSUT()
         insert(sut: sut, storage: storage)
         
-        let updateExp = expectation(description: "wait for update completion")
-        
-        sut.update(with: update) { [weak sut] result in
+        assertUpdate(sut: sut, storage: update, toDeliver: [storage, update]) {
             
-            switch result {
-            case let .failure(failure):
-                XCTFail("Expected success but got \(failure) instead.")
-                
-            case .success(()):
-                XCTAssertNoDiff(sut?.insertedValues, [storage, update])
-            }
-            
-            updateExp.fulfill()
+            sut.completeRetrieve(with: storage)
+            sut.completeInsertSuccessfully(at: 1)
         }
-        
-        sut.completeRetrieve(with: storage)
-        sut.completeInsertSuccessfully(at: 1)
-        
-        wait(for: [updateExp], timeout: 1.0)
     }
     
     // MARK: - Helpers
@@ -168,5 +139,34 @@ final class MonolithicStore_UpdateCategorizedStorageTests: XCTestCase {
         sut.insert(storage) { _ in insertExp.fulfill() }
         sut.completeInsertSuccessfully()
         wait(for: [insertExp], timeout: timeout)
+    }
+    
+    private func assertUpdate(
+        sut: SUT,
+        storage update: Storage,
+        toDeliver inserted: [Storage],
+        timeout: TimeInterval = 1.0,
+        on action: () -> Void,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let updateExp = expectation(description: "wait for update completion")
+        
+        sut.update(with: update) { [weak sut] result in
+            
+            switch result {
+            case let .failure(failure):
+                XCTFail("Expected success but got \(failure) instead.")
+                
+            case .success(()):
+                XCTAssertNoDiff(sut?.insertedValues, inserted, "Expected to have inserted \(inserted), but got \(String(describing: sut?.insertedValues)) instead.", file: file, line: line)
+            }
+            
+            updateExp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [updateExp], timeout: 1.0)
     }
 }
