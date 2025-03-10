@@ -1,6 +1,6 @@
 //
 //  CategorizedStorageTests.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 18.01.2025.
 //
@@ -216,6 +216,20 @@ final class CategorizedStorageTests: XCTestCase {
         XCTAssertNoDiff(updated.serial(for: "electronics"), "serial-electronics")
     }
     
+    func test_updatedWithCategory_shouldRemoveItemsWhenEmptyListProvided() {
+        
+        let storage = makeSingleItemStorage()
+        
+        let updated = storage.updated(
+            category: "fruits",
+            items: [],
+            serial: "serial-cleared"
+        )
+        
+        XCTAssertNoDiff(updated.items(for: "fruits")?.count, 0)
+        XCTAssertNoDiff(updated.serial(for: "fruits"), "serial-cleared")
+    }
+    
     // MARK: - updated(items:serial:)
     
     func test_updated_shouldNotUpdateOnEmptyForExistingCategory() {
@@ -397,6 +411,8 @@ final class CategorizedStorageTests: XCTestCase {
         XCTAssertNoDiff(storage.serial(for: "electronics"), "same-serial")
     }
     
+    // MARK: - merge
+    
     func test_merge_shouldSkipWhenSerialsMatchButMergeWhenDifferent() {
         
         let oldStorage = Storage(entries: [
@@ -417,7 +433,7 @@ final class CategorizedStorageTests: XCTestCase {
             )
         ])
         
-        let (merged, changed) = Storage.merge(oldStorage, newStorage)
+        let (merged, changed) = oldStorage.merged(with: newStorage)
         
         // "fruits" has matching serial, so remains unchanged
         let fruits = merged.items(for: "fruits") ?? []
@@ -434,6 +450,27 @@ final class CategorizedStorageTests: XCTestCase {
         // At least one category updated => changed is true
         XCTAssertNoDiff(changed, true)
     }
+    
+    func test_merge_shouldNotChangeStorageWhenAllSerialsMatch() {
+        
+        let storage = Storage(entries: [
+            "fruits": .init(
+                items: [.init(category: "fruits", name: "Apple")],
+                serial: "serial-fruits"
+            ),
+            "drinks": .init(
+                items: [.init(category: "drinks", name: "Water")],
+                serial: "serial-drinks"
+            )
+        ])
+        
+        let (merged, changed) = storage.merged(with: storage)
+        
+        XCTAssertNoDiff(merged, storage)
+        XCTAssertNoDiff(changed, false) // No updates occurred
+    }
+    
+    // MARK: - search
     
     func test_search_shouldFindItemsMatchingValue() {
         
