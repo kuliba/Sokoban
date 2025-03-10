@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import CollateralLoanLandingGetShowcaseUI
 
 public struct GetCollateralLandingBottomSheetView<InformerPayload>: View {
     
