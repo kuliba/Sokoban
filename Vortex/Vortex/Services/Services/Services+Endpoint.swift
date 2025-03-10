@@ -81,8 +81,8 @@ extension Services {
         
         enum ServiceName: String {
             
-            case bindPublicKeyWithEventId
             case blockCard
+            case bindPublicKeyWithEventId
             case changeClientConsentMe2MePull
             case changePIN
             case changeSVCardLimit
@@ -102,13 +102,14 @@ extension Services {
             case getBannerCatalogList
             case getBannersMyProductList
             case getC2BSub
+            case getCardLanding
             case getCardOrderForm
+            case getCardShowcase
             case getCardStatementForPeriod
             case getCardStatementForPeriod_V3
             case getClientConsentMe2MePull
             case getCollateralLanding = "getCollateralLanding"
             case getConsentsCollateralLoanLanding = "getConsents"
-            case getCardLanding
             case getInfoForRepeatPayment
             case getJsonAbroad
             case getNotAuthorizedZoneClientInformData
@@ -119,22 +120,21 @@ extension Services {
             case getPaymentTemplateList
             case getPINConfirmationCode
             case getPrintForm
+            case getPrintFormForSavingsAccount
             case getProcessingSessionCode
             case getProductDetails
             case getProductDynamicParamsList
             case getProductListByType
-            case getPrintFormForSavingsAccount
-            case getSavingLanding
             case getSavingAccountInfo
+            case getSavingLanding
             case getSberQRData
             case getScenarioQRData
             case getServiceCategoryList
             case getShowcaseCollateralLoanLanding = "getShowcase"
-            case getCardShowcase
-            case getStickerPayment
-            case getSplashScreenTimePeriods
-            case getSplashScreenSettings
             case getSplashScreenImage
+            case getSplashScreenSettings
+            case getSplashScreenTimePeriods
+            case getStickerPayment
             case getSVCardLimits
             case getSvgImageList
             case getUINData
@@ -649,16 +649,16 @@ extension Services.Endpoint {
         serviceName: .getCardLanding
     )
     
-    static let getShowcaseCollateralLoanLanding: Self = .init(
-        pathPrefix: .collateralLoanLanding,
-        version: nil,
-        serviceName: .getShowcaseCollateralLoanLanding
-    )
-    
     static let getCardShowcase: Self = .init(
         pathPrefix: .pages,
         version: nil,
         serviceName: .getCardShowcase
+    )
+    
+    static let getShowcaseCollateralLoanLanding: Self = .init(
+        pathPrefix: .collateralLoanLanding,
+        version: nil,
+        serviceName: .getShowcaseCollateralLoanLanding
     )
     
     static let getCollateralLanding: Self = .init(
