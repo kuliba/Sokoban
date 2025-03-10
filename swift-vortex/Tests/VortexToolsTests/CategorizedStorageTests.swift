@@ -473,6 +473,30 @@ final class CategorizedStorageTests: XCTestCase {
         XCTAssertNoDiff(nonExistentResults.count, 0)
     }
     
+    func test_search_shouldReturnMultipleMatchesAcrossCategories() {
+        
+        let storage = Storage(entries: [
+            "fruits": .init(
+                items: [
+                    .init(category: "fruits", name: "Apple"),
+                    .init(category: "fruits", name: "Apple")
+                ],
+                serial: "serial-fruits"
+            ),
+            "drinks": .init(
+                items: [
+                    .init(category: "drinks", name: "Apple Juice")
+                ],
+                serial: "serial-drinks"
+            )
+        ])
+        
+        let results = storage.search(for: "Apple", in: \.name)
+        
+        XCTAssertNoDiff(results.count, 2)
+        XCTAssertTrue(results.allSatisfy { $0.name == "Apple" })
+    }
+    
     // MARK: - Helpers
     
     private typealias Storage = CategorizedStorage<String, Item>

@@ -33,7 +33,7 @@ extension EphemeralStores.InMemoryStore: MonolithicStore {
     
     nonisolated public func insert(
         _ value: Value,
-        _ completion : @escaping InsertCompletion
+        _ completion : @escaping (Result<Void, Error>) -> Void
     ) {
         Task {
             
@@ -43,7 +43,7 @@ extension EphemeralStores.InMemoryStore: MonolithicStore {
     }
     
     nonisolated public func retrieve(
-        _ completion : @escaping RetrieveCompletion
+        _ completion : @escaping (Value?) -> Void
     ) {
         Task {
             

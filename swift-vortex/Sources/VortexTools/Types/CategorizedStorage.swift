@@ -25,6 +25,7 @@ where Category: Hashable,
     
     /// Creates a new instance from a specified dictionary of entries.
     public init(entries: [Category: Entry]) {
+        
         self.entries = entries
     }
     
@@ -100,10 +101,16 @@ public extension CategorizedStorage {
         return .init(entries: entries)
     }
     
-    /// Returns a copy of the storage in which the single category determined by
-    /// the first item is updated with a new `serial`.
+    /// Returns a copy of the storage where the first item's category is updated with new data.
     ///
-    /// - Note: Only items matching that first item’s category are included.
+    /// - Important: Only updates the category of the first item in the given list.
+    ///   If multiple categories exist in `items`, only the first category is affected.
+    ///
+    /// - Parameters:
+    ///   - items: The list of items to insert.
+    ///   - serial: The new serial value for the updated category.
+    /// - Returns: A new `CategorizedStorage` instance with the updated category,
+    ///   or the original storage if `items` is empty.
     func updated(items: [T], serial: String) -> Self {
         
         guard let firstCategory = items.first?.category
@@ -123,7 +130,9 @@ public extension CategorizedStorage {
         for value: Value,
         in keyPath: KeyPath<T, Value>
     ) -> [T] {
+        
         return entries.values
+            .lazy
             .flatMap { $0.items }
             .filter { $0[keyPath: keyPath] == value }
     }
@@ -131,17 +140,15 @@ public extension CategorizedStorage {
 
 public extension CategorizedStorage {
     
-    /// Merges `newStorage` into `oldStorage` by comparing their serial:
-    /// - If a category's serial in `oldStorage` matches the one in `newStorage`, that category remains unchanged.
-    /// - Otherwise, the new category data (items + serial) overwrites the old.
-    ///
-    /// Returns a tuple of `(updatedStorage, changed)`.
+    /// Merges `newStorage` into `oldStorage` based on serial comparison.
+    /// - If a category exists in both storages with the same serial, it remains unchanged.
+    /// - If a category's serial differs, its data is replaced.
+    /// - If a category exists only in `newStorage`, it is added.
     ///
     /// - Parameters:
-    ///   - oldStorage: The original storage to be updated.
-    ///   - newStorage: The storage providing new data.
-    /// - Returns: A tuple of `(mergedStorage, changed)` where `changed` is `true`
-    ///   if at least one category was updated, otherwise `false`.
+    ///   - oldStorage: The original storage.
+    ///   - newStorage: The storage with new data.
+    /// - Returns: A tuple of `(updatedStorage, changed)`, where `changed` is `true` if any update occurred.
     static func merge(
         _ oldStorage: Self,
         _ newStorage: Self
@@ -151,12 +158,16 @@ public extension CategorizedStorage {
         var changed = false
         
         for category in newStorage.categories {
-            guard let newSerial = newStorage.serial(for: category),
-                  oldStorage.serial(for: category) != newSerial
+            
+            guard let newEntry = newStorage.entries[category],
+                  oldStorage.serial(for: category) != newEntry.serial
             else { continue }
             
-            let items = newStorage.items(for: category) ?? []
-            merged = merged.updated(category: category, items: items, serial: newSerial)
+            merged = merged.updated(
+                category: category,
+                items: newEntry.items,
+                serial: newEntry.serial
+            )
             changed = true
         }
         
