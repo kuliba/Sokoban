@@ -79,9 +79,9 @@ private extension StatementDetailContent.Status {
     var title: String {
         
         switch self {
-        case .completed: return "Успешно!"
-        case .inflight: return "В обработке!"
-        case .rejected: return "Отказ!"
+        case .completed: return "Успешно"
+        case .inflight: return "В обработке"
+        case .rejected: return "Отказ"
         }
     }
 }
