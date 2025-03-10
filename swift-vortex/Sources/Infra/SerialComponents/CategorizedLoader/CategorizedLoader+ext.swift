@@ -9,8 +9,15 @@ import VortexTools
 
 public extension CategorizedLoader {
     
+    /// A function type that loads items for a category, optionally using a serial value.
     typealias StampedLoad<Payload, Serial, T> = (Payload, Serial?, @escaping (Result<SerialComponents.SerialStamped<Serial, T>, Error>) -> Void) -> Void
     
+    /// Convenience initializer that assembles the loader using the given behaviors.
+    ///
+    /// - Parameters:
+    ///   - initialStorage: The optional starting storage of categorized data.
+    ///   - loadCategories: The function to fetch the list of categories.
+    ///   - loadItems: The function to load items for a given category.
     convenience init(
         initialStorage: CategorizedStorage<Category, Item>?,
         loadCategories: @escaping Load<[Category]?>,
@@ -41,6 +48,7 @@ public extension CategorizedLoader {
 
 private extension Result {
     
+    /// Returns the error if the result represents a failure; otherwise, returns nil.
     var failure: Failure? {
         
         guard case let .failure(failure) = self else { return nil }
