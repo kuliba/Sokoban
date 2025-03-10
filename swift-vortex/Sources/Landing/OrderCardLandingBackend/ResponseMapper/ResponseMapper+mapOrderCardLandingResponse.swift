@@ -29,8 +29,6 @@ public extension ResponseMapper {
         
         try data.getOrderCardLanding()
     }
-    
-    private struct InvalidResponse: Error {}
 }
 
 private extension ResponseMapper._Data {
