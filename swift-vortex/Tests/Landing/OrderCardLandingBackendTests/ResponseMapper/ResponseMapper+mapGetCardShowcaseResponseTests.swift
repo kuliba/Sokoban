@@ -1,5 +1,5 @@
 //
-//  ResponseMapper_mapGetCardShowcaseResponseTests.swift
+//  ResponseMapper+mapGetCardShowcaseResponseTests.swift
 //
 //
 //  Created by Дмитрий Савушкин on 10.03.2025.

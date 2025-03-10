@@ -27,6 +27,8 @@ public extension ResponseMapper {
         
         try data.getCardShowcase()
     }
+    
+    struct InvalidResponse: Error {}
 }
 
 private extension ResponseMapper._Data {
@@ -34,22 +36,43 @@ private extension ResponseMapper._Data {
     func getCardShowcase() throws
     -> CardShowCaseResponse {
         
-        let products = products.map({
-            CardShowCaseResponse.Product(
-                theme: $0.theme,
-                name: $0.name.map({ .init(text: $0.text, isBold: $0.isBold) }),
-                features: .init(header: $0.features.header, list: $0.features.list.map({ .init(bullet: $0.bullet, text: $0.text) }) ),
-                image: $0.image,
-                terms: $0.terms,
+        guard let products else {
+            throw ResponseMapper.InvalidResponse()
+        }
+        
+        let mapProducts = try products.compactMap({
+            
+            guard let theme = $0.theme,
+                  let image = $0.image,
+                  let terms = $0.terms,
+                  let name = $0.name,
+                  let features = $0.features,
+                  let list = features.list,
+                  let cardShowcaseAction = $0.cardShowcaseAction,
+                  let type = cardShowcaseAction.type,
+                  let target = cardShowcaseAction.target
+            else {
+                throw ResponseMapper.InvalidResponse()
+            }
+            
+            return CardShowCaseResponse.Product(
+                theme: theme,
+                name: name.compactMap { try? .init(data: $0) },
+                features: .init(
+                    header: features.header,
+                    list: list.compactMap { try? .init(data: $0) }
+                ),
+                image: image,
+                terms: terms,
                 cardShowcaseAction: .init(
-                    type: $0.cardShowcaseAction.type,
-                    target: $0.cardShowcaseAction.target,
-                    fallbackUrl: $0.cardShowcaseAction.fallbackUrl
+                    type: type,
+                    target: target,
+                    fallbackUrl: cardShowcaseAction.fallbackUrl
                 )
             )
         })
         
-        return .init(products: products)
+        return .init(products: mapProducts)
     }
 }
 
@@ -57,41 +80,69 @@ private extension ResponseMapper {
     
     struct _Data: Decodable {
         
-        let products: [Product]
+        let products: [Product]?
         
         struct Product: Decodable {
             
-            let theme: String
-            let name: [Name]
-            let features: Features
-            let image: String
-            let terms: String
-            let cardShowcaseAction: Action
+            let theme: String?
+            let name: [Name]?
+            let features: Features?
+            let image: String?
+            let terms: String?
+            let cardShowcaseAction: Action?
             
             struct Action: Decodable {
                 
-                let type: String
-                let target: String
+                let type: String?
+                let target: String?
                 let fallbackUrl: String?
             }
             
             struct Features: Decodable {
                 
                 let header: String?
-                let list: [Item]
+                let list: [Item]?
                 
                 struct Item: Decodable {
                     
-                    let bullet: Bool
-                    let text: String
+                    let bullet: Bool?
+                    let text: String?
                 }
             }
             
             struct Name: Decodable {
                 
-                let text: String
-                let isBold: Bool
+                let text: String?
+                let isBold: Bool?
             }
         }
+    }
+}
+
+private extension CardShowCaseResponse.Product.Features.Item {
+    
+    init?(data: ResponseMapper._Data.Product.Features.Item?) throws {
+        
+        guard let text = data?.text,
+              let bullet = data?.bullet else {
+            throw ResponseMapper.InvalidResponse()
+        }
+        
+        self.bullet = bullet
+        self.text = text
+    }
+}
+
+private extension CardShowCaseResponse.Product.Name {
+    
+    init?(data: ResponseMapper._Data.Product.Name?) throws {
+        
+        guard let text = data?.text,
+              let isBold = data?.isBold else {
+            throw ResponseMapper.InvalidResponse()
+        }
+        
+        self.isBold = isBold
+        self.text = text
     }
 }
