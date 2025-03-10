@@ -16,7 +16,7 @@ extension RootViewModelFactory {
     @inlinable
     func composeEphemeralLoaders<T>(
         remoteLoad: @escaping SerialLoaderComposer<T>.RemoteLoad
-    ) -> (load: Load<[T]>, reload: Load<[T]>) {
+    ) -> (load: Load<[T]?>, reload: Load<[T]?>) {
         
         let composer = SerialLoaderComposer(
             ephemeral: EphemeralStores.InMemoryStore<[T]>(),

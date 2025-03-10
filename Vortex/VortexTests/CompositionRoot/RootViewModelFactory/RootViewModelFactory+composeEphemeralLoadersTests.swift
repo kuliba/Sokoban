@@ -165,8 +165,8 @@ final class RootViewModelFactory_composeEphemeralLoadersTests: RootViewModelFact
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
-        load: SUT.Load<[Item]>,
-        reload: SUT.Load<[Item]>,
+        load: SUT.Load<[Item]?>,
+        reload: SUT.Load<[Item]?>,
         spy: RemoteLoadSpy
     ) {
         let (sut, _,_) = makeSUT(file: file, line: line)
@@ -198,7 +198,7 @@ final class RootViewModelFactory_composeEphemeralLoadersTests: RootViewModelFact
     }
     
     private func assert(
-        load: @escaping SUT.Load<[Item]>,
+        load: @escaping SUT.Load<[Item]?>,
         toDeliver expected: [Item]?,
         timeout: TimeInterval = 1.0,
         on action: () -> Void,

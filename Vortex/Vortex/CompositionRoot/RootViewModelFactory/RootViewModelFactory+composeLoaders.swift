@@ -18,7 +18,7 @@ extension RootViewModelFactory {
         remoteLoad: @escaping CodableSerialLoaderComposer<T, Model>.RemoteLoad,
         fromModel: @escaping (Model) -> T,
         toModel: @escaping (T) -> Model
-    ) -> (load: Load<[T]>, reload: Load<[T]>) {
+    ) -> (load: Load<[T]?>, reload: Load<[T]?>) {
         
         let composer = CodableSerialLoaderComposer(
             localAgent: localAgent ?? model.localAgent,
