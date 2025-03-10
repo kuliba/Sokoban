@@ -13,7 +13,7 @@ import LoadableResourceComponent
 import MarketShowcase
 import RemoteServices
 import SberQR
-import SplashScreen
+import SplashScreenUI
 import SwiftUI
 
 typealias MakeActivateSliderView = (ProductData.ID, ActivateSliderViewModel, SliderConfig) -> ActivateSliderStateWrapperView

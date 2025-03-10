@@ -925,6 +925,7 @@
 		2A58FAB82AD72EC100BD1967 /* RequestFactory+makeProcessPublicKeyAuthenticationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A58FAB72AD72EC100BD1967 /* RequestFactory+makeProcessPublicKeyAuthenticationRequest.swift */; };
 		2A58FABF2AD7355700BD1967 /* SessionID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A58FABE2AD7355700BD1967 /* SessionID.swift */; };
 		2A58FAC12AD735DA00BD1967 /* makeSessionID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A58FAC02AD735DA00BD1967 /* makeSessionID.swift */; };
+		2A590F4F2D7C4AB300A22BBE /* SplashScreen in Frameworks */ = {isa = PBXBuildFile; productRef = 2A590F4E2D7C4AB300A22BBE /* SplashScreen */; };
 		2A5A19E329A0F76D00DFCDD3 /* ProductGroupViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5A19E229A0F76D00DFCDD3 /* ProductGroupViewModelTests.swift */; };
 		2A5A20E12CF4557D0082A74D /* RootViewModelFactory+makeOperatorSearchNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5A20E02CF4557D0082A74D /* RootViewModelFactory+makeOperatorSearchNode.swift */; };
 		2A5AEF272B7A075900E935B6 /* OTPInputConfig+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5AEF262B7A075900E935B6 /* OTPInputConfig+iVortex.swift */; };
@@ -3412,7 +3413,6 @@
 		D4BD60982B98A24E00909F43 /* StickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BD60972B98A24E00909F43 /* StickerView.swift */; };
 		DD9B05FBC9842381D93B344A /* Font+Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70B9838CDF23BDFFAC34257 /* Font+Assets.swift */; };
 		EC0575E32CFDA55E00A2D677 /* AlertManagerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0575E22CFDA55E00A2D677 /* AlertManagerSpy.swift */; };
-		EC0C39F92D634F1100AC79C4 /* GetSplashScreenServices in Frameworks */ = {isa = PBXBuildFile; productRef = EC0C39F82D634F1100AC79C4 /* GetSplashScreenServices */; };
 		EC432FC22D4A4A5C009A07E3 /* SplashScreenEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC432FC12D4A4A5C009A07E3 /* SplashScreenEffectHandler.swift */; };
 		EC432FC52D4A4B46009A07E3 /* SplashScreenReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC432FC42D4A4B46009A07E3 /* SplashScreenReducer.swift */; };
 		EC4374C82D1D7700009FB5B1 /* SplashScreenFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4374C72D1D7700009FB5B1 /* SplashScreenFlag.swift */; };
@@ -3449,7 +3449,6 @@
 		ECCFA40D2CC7D8440009099E /* Model+performOrWaitForAuthorized.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCFA40C2CC7D8440009099E /* Model+performOrWaitForAuthorized.swift */; };
 		ECCFA40F2CC7D8FD0009099E /* GetAuthorizedZoneClientInformDataAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCFA40E2CC7D8FD0009099E /* GetAuthorizedZoneClientInformDataAdapter.swift */; };
 		ECDE23272CCA633E001BB212 /* ClientInformList in Frameworks */ = {isa = PBXBuildFile; productRef = ECDE23262CCA633E001BB212 /* ClientInformList */; };
-		ECEDD2602D394AA400C1E61B /* SplashScreen in Frameworks */ = {isa = PBXBuildFile; productRef = ECEDD25F2D394AA400C1E61B /* SplashScreen */; };
 		ECF246A82CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF246A72CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift */; };
 		ECF42BD62CD114C700020AB3 /* RequestFactory+createGetNotAuthorizedZoneClientInformDataRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF42BD52CD114C700020AB3 /* RequestFactory+createGetNotAuthorizedZoneClientInformDataRequest.swift */; };
 		ED07DB9026EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */; };
@@ -4748,6 +4747,7 @@
 		2A58FAB72AD72EC100BD1967 /* RequestFactory+makeProcessPublicKeyAuthenticationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+makeProcessPublicKeyAuthenticationRequest.swift"; sourceTree = "<group>"; };
 		2A58FABE2AD7355700BD1967 /* SessionID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionID.swift; sourceTree = "<group>"; };
 		2A58FAC02AD735DA00BD1967 /* makeSessionID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = makeSessionID.swift; sourceTree = "<group>"; };
+		2A590F4D2D7C472600A22BBE /* SplashScreen.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = SplashScreen.xctestplan; sourceTree = "<group>"; };
 		2A5A19E229A0F76D00DFCDD3 /* ProductGroupViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductGroupViewModelTests.swift; sourceTree = "<group>"; };
 		2A5A20E02CF4557D0082A74D /* RootViewModelFactory+makeOperatorSearchNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeOperatorSearchNode.swift"; sourceTree = "<group>"; };
 		2A5AEF262B7A075900E935B6 /* OTPInputConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OTPInputConfig+iVortex.swift"; sourceTree = "<group>"; };
@@ -7201,7 +7201,6 @@
 		ECCFA40A2CC7D7200009099E /* ClientInformDataAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientInformDataAdapter.swift; sourceTree = "<group>"; };
 		ECCFA40C2CC7D8440009099E /* Model+performOrWaitForAuthorized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+performOrWaitForAuthorized.swift"; sourceTree = "<group>"; };
 		ECCFA40E2CC7D8FD0009099E /* GetAuthorizedZoneClientInformDataAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAuthorizedZoneClientInformDataAdapter.swift; sourceTree = "<group>"; };
-		ECE764ED2D63534F00FC38EE /* GetSplashScreenServices.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = GetSplashScreenServices.xctestplan; sourceTree = "<group>"; };
 		ECF246A72CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift"; sourceTree = "<group>"; };
 		ECF42BD52CD114C700020AB3 /* RequestFactory+createGetNotAuthorizedZoneClientInformDataRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetNotAuthorizedZoneClientInformDataRequest.swift"; sourceTree = "<group>"; };
 		ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMe2MeDebitConsentDecodableModel.swift; sourceTree = "<group>"; };
@@ -7800,7 +7799,6 @@
 				EC5994412CA5B0820050CA05 /* GetClientInformDataServices in Frameworks */,
 				68E6A28526A02C1800A1D9A1 /* AnyFormatKit in Frameworks */,
 				2A5AFD9E2D69080600BD15EC /* GetOperationDetailService in Frameworks */,
-				EC0C39F92D634F1100AC79C4 /* GetSplashScreenServices in Frameworks */,
 				83C918172C86D74C00037C11 /* GetBannerCatalogListAPI in Frameworks */,
 				779511A92A6AA15A00A570F8 /* SymmetricEncryption in Frameworks */,
 				2ABD782E2AF90AF4001B5860 /* Fetcher in Frameworks */,
@@ -7823,13 +7821,13 @@
 				836DE2EC2AC72A7C00D4C754 /* Tagged in Frameworks */,
 				83C6A1E92CFF43540076BC25 /* SavingsAccount in Frameworks */,
 				2A3E48732C8ABCF3002D035F /* PaymentTemplateBackendV3 in Frameworks */,
-				ECEDD2602D394AA400C1E61B /* SplashScreen in Frameworks */,
 				2AA7EDB92A783C8A00F5B00D /* SharedAPIInfra in Frameworks */,
 				2A04BFC52CBE61DA002490C5 /* SerialComponents in Frameworks */,
 				2A8142612A0B9237005CF83F /* SearchBarComponent in Frameworks */,
 				C192C99C2D47966000518831 /* CreateCardApplication in Frameworks */,
 				EDC8BA3426A5AA0E00EDB401 /* SDWebImagePDFCoder in Frameworks */,
 				2A12674829EFE53200461884 /* CombineSchedulers in Frameworks */,
+				2A590F4F2D7C4AB300A22BBE /* SplashScreen in Frameworks */,
 				2A1F08532A79057500C5B11B /* GetProcessingSessionCodeService in Frameworks */,
 				ED0B4892267B4CDD0037EA06 /* IQKeyboardManagerSwift in Frameworks */,
 				0B7A18AB2681CED70007CC75 /* SwiftEntryKit in Frameworks */,
@@ -10777,6 +10775,7 @@
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
+				2A590F4D2D7C472600A22BBE /* SplashScreen.xctestplan */,
 				C19017A92D7AC67B00044AFC /* OrderCardLandingComponent.xctestplan */,
 				C170C78C2D79DB2500A7C480 /* OrderCardLandingBackend.xctestplan */,
 				2AAB64E52D79615D00B40177 /* EphemeralCache.xctestplan */,
@@ -10864,7 +10863,6 @@
 				839914752C6CB31E00E9D275 /* GetProductListByTypeV6Service.xctestplan */,
 				EC5994432CA5B0FF0050CA05 /* GetClientInformDataServices.xctestplan */,
 				836B81C92CCFAC86006FACE3 /* GetProductListByTypeV7Service.xctestplan */,
-				ECE764ED2D63534F00FC38EE /* GetSplashScreenServices.xctestplan */,
 			);
 			path = TestPlans;
 			sourceTree = "<group>";
@@ -20340,13 +20338,11 @@
 				847321062D11A6740009C721 /* VortexTools */,
 				2A9EA5D82D26AC0700DEC45C /* FlowCore */,
 				A7930E6B2D355F10003D3BB8 /* CollateralLoanLandingGetCollateralLandingUI */,
-				ECEDD25F2D394AA400C1E61B /* SplashScreen */,
 				A7E314152D394E67009811EB /* CollateralLoanLandingCreateDraftCollateralLoanApplicationUI */,
 				8354294C2D43A1AB00963709 /* GetBannersMyProductListService */,
 				C19C234E2D562E210026FD0B /* GetCardOrderFormService */,
 				C192C99B2D47966000518831 /* CreateCardApplication */,
 				C10E0F232D5772ED008185D6 /* OrderCard */,
-				EC0C39F82D634F1100AC79C4 /* GetSplashScreenServices */,
 				2A2A46D22D61AB44009896F2 /* C2G */,
 				2AD073712D65B55200922062 /* StateMachines */,
 				C124C7E62D6C45CB00124721 /* ListLandingComponent */,
@@ -20355,6 +20351,7 @@
 				C127C51F2D6CA96C00683F85 /* HeaderLandingComponent */,
 				2A8DAD2E2D763B9E00AC7018 /* ResourceProviderComponent */,
 				C19017AA2D7AC91B00044AFC /* OrderCardLandingComponent */,
+				2A590F4E2D7C4AB300A22BBE /* SplashScreen */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* Vortex.app */;
@@ -30382,6 +30379,10 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = URLRequestFactory;
 		};
+		2A590F4E2D7C4AB300A22BBE /* SplashScreen */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SplashScreen;
+		};
 		2A5AFD9D2D69080600BD15EC /* GetOperationDetailService */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GetOperationDetailService;
@@ -30949,10 +30950,6 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = PinCodeUI;
 		};
-		EC0C39F82D634F1100AC79C4 /* GetSplashScreenServices */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = GetSplashScreenServices;
-		};
 		EC5994402CA5B0820050CA05 /* GetClientInformDataServices */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GetClientInformDataServices;
@@ -30960,10 +30957,6 @@
 		ECDE23262CCA633E001BB212 /* ClientInformList */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ClientInformList;
-		};
-		ECEDD25F2D394AA400C1E61B /* SplashScreen */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SplashScreen;
 		};
 		ED0AF884286B24DF00F86B68 /* AnyImageKit */ = {
 			isa = XCSwiftPackageProductDependency;
