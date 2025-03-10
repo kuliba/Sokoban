@@ -37,12 +37,11 @@ final class CategorizedLoaderTests: XCTestCase {
     func test_load_shouldNotCallLoadItems_onNilLoadCategories() {
         
         let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT()
-        let exp = expectation(description: "wait for load categories completions")
         
-        sut.load { _ in exp.fulfill() }
-        loadCategoriesSpy.complete(with: nil)
-        
-        wait(for: [exp], timeout: 1.0)
+        load(sut: sut) {
+            
+            loadCategoriesSpy.complete(with: nil)
+        }
         
         XCTAssertEqual(loadItemsSpy.callCount, 0)
     }
@@ -50,12 +49,11 @@ final class CategorizedLoaderTests: XCTestCase {
     func test_load_shouldNotCallLoadItems_onEmptyLoadCategories() {
         
         let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT()
-        let exp = expectation(description: "wait for load categories completions")
         
-        sut.load { _ in exp.fulfill() }
-        loadCategoriesSpy.complete(with: [])
-        
-        wait(for: [exp], timeout: 1.0)
+        load(sut: sut) {
+            
+            loadCategoriesSpy.complete(with: [])
+        }
         
         XCTAssertEqual(loadItemsSpy.callCount, 0)
     }
@@ -64,13 +62,12 @@ final class CategorizedLoaderTests: XCTestCase {
         
         let category = makeCategory()
         let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT()
-        let exp = expectation(description: "wait for load categories completions")
         
-        sut.load { _ in exp.fulfill() }
-        loadCategoriesSpy.complete(with: [category])
-        loadItemsSpy.complete(with: .failure(anyError()))
-        
-        wait(for: [exp], timeout: 1.0)
+        load(sut: sut) {
+            
+            loadCategoriesSpy.complete(with: [category])
+            loadItemsSpy.complete(with: .failure(anyError()))
+        }
         
         XCTAssertNoDiff(loadItemsSpy.payloads.map(\.0), [category])
     }
@@ -78,13 +75,12 @@ final class CategorizedLoaderTests: XCTestCase {
     func test_load_shouldCallLoadItemsWithoutSerial_onMissingInitialStorage() {
         
         let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT()
-        let exp = expectation(description: "wait for load categories completions")
         
-        sut.load { _ in exp.fulfill() }
-        loadCategoriesSpy.complete(with: [makeCategory()])
-        loadItemsSpy.complete(with: .failure(anyError()))
-        
-        wait(for: [exp], timeout: 1.0)
+        load(sut: sut) {
+            
+            loadCategoriesSpy.complete(with: [makeCategory()])
+            loadItemsSpy.complete(with: .failure(anyError()))
+        }
         
         XCTAssertNoDiff(loadItemsSpy.payloads.map(\.1), [nil])
     }
@@ -95,13 +91,12 @@ final class CategorizedLoaderTests: XCTestCase {
             makeCategory(): .init(items: [makeItem()], serial: anyMessage())
         ])
         let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT(with: initialStorage)
-        let exp = expectation(description: "wait for load categories completions")
         
-        sut.load { _ in exp.fulfill() }
-        loadCategoriesSpy.complete(with: [makeCategory()])
-        loadItemsSpy.complete(with: .failure(anyError()))
-        
-        wait(for: [exp], timeout: 1.0)
+        load(sut: sut) {
+            
+            loadCategoriesSpy.complete(with: [makeCategory()])
+            loadItemsSpy.complete(with: .failure(anyError()))
+        }
         
         XCTAssertNoDiff(loadItemsSpy.payloads.map(\.1), [nil])
     }
@@ -113,13 +108,12 @@ final class CategorizedLoaderTests: XCTestCase {
             category: .init(items: [makeItem()], serial: serial)
         ])
         let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT(with: initialStorage)
-        let exp = expectation(description: "wait for load categories completions")
         
-        sut.load { _ in exp.fulfill() }
-        loadCategoriesSpy.complete(with: [category])
-        loadItemsSpy.complete(with: .failure(anyError()))
-        
-        wait(for: [exp], timeout: 1.0)
+        load(sut: sut) {
+            
+            loadCategoriesSpy.complete(with: [category])
+            loadItemsSpy.complete(with: .failure(anyError()))
+        }
         
         XCTAssertNoDiff(loadItemsSpy.payloads.map(\.1), [serial])
     }
@@ -128,14 +122,13 @@ final class CategorizedLoaderTests: XCTestCase {
         
         let (firstCategory, secondCategory) = (makeCategory(), makeCategory())
         let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT()
-        let exp = expectation(description: "wait for load categories completions")
         
-        sut.load { _ in exp.fulfill() }
-        loadCategoriesSpy.complete(with: [firstCategory, secondCategory])
-        loadItemsSpy.complete(with: .failure(anyError()), at: 0)
-        loadItemsSpy.complete(with: .failure(anyError()), at: 1)
-        
-        wait(for: [exp], timeout: 1.0)
+        load(sut: sut) {
+            
+            loadCategoriesSpy.complete(with: [firstCategory, secondCategory])
+            loadItemsSpy.complete(with: .failure(anyError()), at: 0)
+            loadItemsSpy.complete(with: .failure(anyError()), at: 1)
+        }
         
         XCTAssertNoDiff(loadItemsSpy.payloads.map(\.0), [firstCategory, secondCategory])
     }
@@ -143,14 +136,13 @@ final class CategorizedLoaderTests: XCTestCase {
     func test_load_shouldCallLoadItemsWithoutSerial_onTwoLoadCategorie_onMissingInitialStorage() {
         
         let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT()
-        let exp = expectation(description: "wait for load categories completions")
         
-        sut.load { _ in exp.fulfill() }
-        loadCategoriesSpy.complete(with: [makeCategory(), makeCategory()])
-        loadItemsSpy.complete(with: .failure(anyError()), at: 0)
-        loadItemsSpy.complete(with: .failure(anyError()), at: 1)
-        
-        wait(for: [exp], timeout: 1.0)
+        load(sut: sut) {
+            
+            loadCategoriesSpy.complete(with: [makeCategory(), makeCategory()])
+            loadItemsSpy.complete(with: .failure(anyError()), at: 0)
+            loadItemsSpy.complete(with: .failure(anyError()), at: 1)
+        }
         
         XCTAssertNoDiff(loadItemsSpy.payloads.map(\.1), [nil, nil])
     }
@@ -161,14 +153,13 @@ final class CategorizedLoaderTests: XCTestCase {
             makeCategory(): .init(items: [makeItem()], serial: anyMessage())
         ])
         let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT(with: initialStorage)
-        let exp = expectation(description: "wait for load categories completions")
         
-        sut.load { _ in exp.fulfill() }
-        loadCategoriesSpy.complete(with: [makeCategory(), makeCategory()])
-        loadItemsSpy.complete(with: .failure(anyError()), at: 0)
-        loadItemsSpy.complete(with: .failure(anyError()), at: 1)
-        
-        wait(for: [exp], timeout: 1.0)
+        load(sut: sut) {
+            
+            loadCategoriesSpy.complete(with: [makeCategory(), makeCategory()])
+            loadItemsSpy.complete(with: .failure(anyError()), at: 0)
+            loadItemsSpy.complete(with: .failure(anyError()), at: 1)
+        }
         
         XCTAssertNoDiff(loadItemsSpy.payloads.map(\.1), [nil, nil])
     }
@@ -180,14 +171,13 @@ final class CategorizedLoaderTests: XCTestCase {
             category: .init(items: [makeItem()], serial: serial)
         ])
         let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT(with: initialStorage)
-        let exp = expectation(description: "wait for load categories completions")
         
-        sut.load { _ in exp.fulfill() }
-        loadCategoriesSpy.complete(with: [makeCategory(), category])
-        loadItemsSpy.complete(with: .failure(anyError()), at: 0)
-        loadItemsSpy.complete(with: .failure(anyError()), at: 1)
-        
-        wait(for: [exp], timeout: 1.0)
+        load(sut: sut) {
+            
+            loadCategoriesSpy.complete(with: [makeCategory(), category])
+            loadItemsSpy.complete(with: .failure(anyError()), at: 0)
+            loadItemsSpy.complete(with: .failure(anyError()), at: 1)
+        }
         
         XCTAssertNoDiff(loadItemsSpy.payloads.map(\.1), [nil, serial])
     }
@@ -256,5 +246,21 @@ final class CategorizedLoaderTests: XCTestCase {
     ) -> Item {
         
         return .init(category: category ?? makeCategory(), value: value)
+    }
+    
+    private func load(
+        sut: SUT,
+        on action: () -> Void,
+        timeout: TimeInterval = 1.0,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "wait for load categories completions")
+        
+        sut.load { _ in exp.fulfill() }
+        
+        action()
+        
+        wait(for: [exp], timeout: timeout)
     }
 }
