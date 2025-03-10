@@ -10,17 +10,18 @@ import SerialComponents
 
 extension RootViewModelFactory {
     
-    typealias SerialLoaderComposer<T, Model> = SerialComponents.SerialLoaderComposer<String, T, Model> where Model: Codable
+    typealias CodableSerialLoaderComposer<T, Model> = SerialComponents.SerialLoaderComposer<String, T, Model> where Model: Codable
     
     @inlinable
     func composeLoaders<T, Model>(
-        remoteLoad: @escaping SerialLoaderComposer<T, Model>.RemoteLoad,
+        localAgent: (any LocalAgentProtocol)? = nil,
+        remoteLoad: @escaping CodableSerialLoaderComposer<T, Model>.RemoteLoad,
         fromModel: @escaping (Model) -> T,
         toModel: @escaping (T) -> Model
     ) -> (load: Load<[T]>, reload: Load<[T]>) {
         
-        let composer = SerialLoaderComposer(
-            localAgent: model.localAgent,
+        let composer = CodableSerialLoaderComposer(
+            localAgent: localAgent ?? model.localAgent,
             remoteLoad: remoteLoad,
             fromModel: fromModel,
             toModel: toModel
