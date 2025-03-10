@@ -75,6 +75,28 @@ final class MonolithicStore_UpdateCategorizedStorageTests: XCTestCase {
         }
     }
     
+    func test_update_shouldUpdateStorageWithDifferentCategory() throws {
+        
+        let (item, newItem) = (makeItem(), makeItem())
+        let storage = makeStorage(items: [item])
+        let update = makeStorage(items: [newItem])
+        
+        let sut = makeSUT()
+        insert(sut: sut, storage: storage)
+        
+        assertUpdate(sut: sut, storage: update, toDeliver: [
+            storage,
+            .init(entries: [
+                item.category: .init(items: [item], serial: try XCTUnwrap(storage.serial(for: item.category))),
+                newItem.category: .init(items: [newItem], serial: try XCTUnwrap(update.serial(for: newItem.category))),
+            ])
+        ]) {
+            
+            sut.completeRetrieve(with: storage)
+            sut.completeInsertSuccessfully(at: 1)
+        }
+    }
+    
     // MARK: - Helpers
     
     private typealias Storage = CategorizedStorage<Category, Item>
