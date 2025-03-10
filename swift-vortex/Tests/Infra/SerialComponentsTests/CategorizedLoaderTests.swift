@@ -33,7 +33,7 @@ final class CategorizedLoaderTests: XCTestCase {
         
         XCTAssertEqual(loadCategoriesSpy.callCount, 1)
     }
-#warning("assert final result")
+    
     func test_load_shouldNotCallLoadItems_onNilLoadCategories() {
         
         let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT()
@@ -46,6 +46,17 @@ final class CategorizedLoaderTests: XCTestCase {
         XCTAssertEqual(loadItemsSpy.callCount, 0)
     }
     
+    func test_load_shouldDeliverEmpty_onNilLoadCategories() {
+        
+        let (sut, loadCategoriesSpy, _) = makeSUT()
+        
+        load(sut: sut) {
+            XCTAssertNoDiff($0, .init(storage: nil, failed: []))
+        } on: {
+            loadCategoriesSpy.complete(with: nil)
+        }
+    }
+    
     func test_load_shouldNotCallLoadItems_onEmptyLoadCategories() {
         
         let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT()
@@ -56,6 +67,17 @@ final class CategorizedLoaderTests: XCTestCase {
         }
         
         XCTAssertEqual(loadItemsSpy.callCount, 0)
+    }
+    
+    func test_load_shouldDeliverEmpty_onEmptyLoadCategories() {
+        
+        let (sut, loadCategoriesSpy, _) = makeSUT()
+        
+        load(sut: sut) {
+            XCTAssertNoDiff($0, .init(storage: nil, failed: []))
+        } on: {
+            loadCategoriesSpy.complete(with: [])
+        }
     }
     
     func test_load_shouldCallLoadItemsWithCategory_onOneLoadCategory() {
@@ -83,6 +105,19 @@ final class CategorizedLoaderTests: XCTestCase {
         }
         
         XCTAssertNoDiff(loadItemsSpy.payloads.map(\.1), [nil])
+    }
+    
+    func test_load_shouldDeliverFailed_onMissingInitialStorage() {
+        
+        let category = makeCategory()
+        let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT()
+        
+        load(sut: sut) {
+            XCTAssertNoDiff($0, .init(storage: nil, failed: [category]))
+        } on: {
+            loadCategoriesSpy.complete(with: [category])
+            loadItemsSpy.complete(with: .failure(anyError()))
+        }
     }
     
     func test_load_shouldCallLoadItemsWithoutSerial_onDifferentCategoryInInitialStorage() {
@@ -133,7 +168,7 @@ final class CategorizedLoaderTests: XCTestCase {
         XCTAssertNoDiff(loadItemsSpy.payloads.map(\.0), [firstCategory, secondCategory])
     }
     
-    func test_load_shouldCallLoadItemsWithoutSerial_onTwoLoadCategorie_onMissingInitialStorage() {
+    func test_load_shouldCallLoadItemsWithoutSerial_onTwoLoadCategories_onMissingInitialStorage() {
         
         let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT()
         
@@ -147,7 +182,21 @@ final class CategorizedLoaderTests: XCTestCase {
         XCTAssertNoDiff(loadItemsSpy.payloads.map(\.1), [nil, nil])
     }
     
-    func test_load_shouldCallLoadItemsWithoutSerial_onTwoLoadCategorie_onNonMatchingCategoryInInitialStorage() {
+    func test_load_shouldDeliverFailed_onTwoLoadCategories_onMissingInitialStorage() {
+        
+        let (firstCategory, secondCategory) = (makeCategory(), makeCategory())
+        let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT()
+        
+        load(sut: sut) {
+            XCTAssertNoDiff($0, .init(storage: nil, failed: [firstCategory, secondCategory]))
+        } on: {
+            loadCategoriesSpy.complete(with: [firstCategory, secondCategory])
+            loadItemsSpy.complete(with: .failure(anyError()), at: 0)
+            loadItemsSpy.complete(with: .failure(anyError()), at: 1)
+        }
+    }
+    
+    func test_load_shouldCallLoadItemsWithoutSerial_onTwoLoadCategories_onNonMatchingCategoryInInitialStorage() {
         
         let initialStorage = makeStorage(entries: [
             makeCategory(): .init(items: [makeItem()], serial: anyMessage())
@@ -164,7 +213,7 @@ final class CategorizedLoaderTests: XCTestCase {
         XCTAssertNoDiff(loadItemsSpy.payloads.map(\.1), [nil, nil])
     }
     
-    func test_load_shouldCallLoadItemsWithSerial_onTwoLoadCategorie_onMatchingCategoryInInitialStorage() {
+    func test_load_shouldCallLoadItemsWithSerial_onTwoLoadCategories_onMatchingCategoryInInitialStorage() {
         
         let (category, serial) = (makeCategory(), anyMessage())
         let initialStorage = makeStorage(entries: [
