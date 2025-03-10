@@ -13,7 +13,7 @@ struct GetCollateralLandingCalculatorView<InformerPayload>: View where InformerP
     
     @SwiftUI.State private var toggleIsOn = false
     @SwiftUI.State private var sliderCurrentValue: Double = .zero
-    @SwiftUI.State private var desiredAmount: String
+    @SwiftUI.State private var desiredAmount: String = ""
     
     let state: State
     let product: Product
