@@ -3300,6 +3300,7 @@
 		C179D4002CDC85D7006D8163 /* RequestFactory+ModifyC2B.swift in Sources */ = {isa = PBXBuildFile; fileRef = C179D3FF2CDC85D7006D8163 /* RequestFactory+ModifyC2B.swift */; };
 		C17F3C952BF2634700AE1EB4 /* RequestFactory+createGetAllLatestPaymentsV2RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17F3C942BF2634700AE1EB4 /* RequestFactory+createGetAllLatestPaymentsV2RequestTests.swift */; };
 		C181083928E3535E002FCC3A /* Model+DeepLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = C181083828E3535E002FCC3A /* Model+DeepLink.swift */; };
+		C1823D892D7ED92F003A54DB /* RequestFactory+createGetCardShowCaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1823D882D7ED92F003A54DB /* RequestFactory+createGetCardShowCaseRequest.swift */; };
 		C182A3682B16FB8E0087DC72 /* GetBannerCatalogLandingListResponseGenericFromServer.json in Resources */ = {isa = PBXBuildFile; fileRef = C182A3672B16FB8E0087DC72 /* GetBannerCatalogLandingListResponseGenericFromServer.json */; };
 		C182B00B2AAADC9400F0DEAB /* LatestPaymentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C182B00A2AAADC9400F0DEAB /* LatestPaymentsTests.swift */; };
 		C183EA512A14B494000FBCEC /* ProductDepositDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C183EA502A14B494000FBCEC /* ProductDepositDataTests.swift */; };
@@ -7061,6 +7062,7 @@
 		C179D3FF2CDC85D7006D8163 /* RequestFactory+ModifyC2B.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+ModifyC2B.swift"; sourceTree = "<group>"; };
 		C17F3C942BF2634700AE1EB4 /* RequestFactory+createGetAllLatestPaymentsV2RequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetAllLatestPaymentsV2RequestTests.swift"; sourceTree = "<group>"; };
 		C181083828E3535E002FCC3A /* Model+DeepLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+DeepLink.swift"; sourceTree = "<group>"; };
+		C1823D882D7ED92F003A54DB /* RequestFactory+createGetCardShowCaseRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetCardShowCaseRequest.swift"; sourceTree = "<group>"; };
 		C182A3672B16FB8E0087DC72 /* GetBannerCatalogLandingListResponseGenericFromServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetBannerCatalogLandingListResponseGenericFromServer.json; sourceTree = "<group>"; };
 		C182B00A2AAADC9400F0DEAB /* LatestPaymentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestPaymentsTests.swift; sourceTree = "<group>"; };
 		C183EA502A14B494000FBCEC /* ProductDepositDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDepositDataTests.swift; sourceTree = "<group>"; };
@@ -10649,6 +10651,7 @@
 		2A5190322A7E106D0014B0B7 /* RequestFactory */ = {
 			isa = PBXGroup;
 			children = (
+				C1823D872D7ED8FC003A54DB /* OrderCardLanding */,
 				2A8B17382A7B6FD4002EBC2E /* RequestFactory.swift */,
 				2A58FABE2AD7355700BD1967 /* SessionID.swift */,
 				2A2E3FC22BB2CB4D00730D37 /* AnywayPayment */,
@@ -17648,6 +17651,14 @@
 			path = LatestPayments;
 			sourceTree = "<group>";
 		};
+		C1823D872D7ED8FC003A54DB /* OrderCardLanding */ = {
+			isa = PBXGroup;
+			children = (
+				C1823D882D7ED92F003A54DB /* RequestFactory+createGetCardShowCaseRequest.swift */,
+			);
+			path = OrderCardLanding;
+			sourceTree = "<group>";
+		};
 		C18B57A52D35D8D900EE3DC4 /* OrderCardLanding */ = {
 			isa = PBXGroup;
 			children = (
@@ -23752,6 +23763,7 @@
 				68A07C45281ADEBC00797A54 /* OfferProductViewComponent.swift in Sources */,
 				EDCF89E226CACC7300DC9F54 /* MeToMeSetupSwitchView.swift in Sources */,
 				0CA79AE229131AB300B6C281 /* OpenNewProductsViewModelComponent.swift in Sources */,
+				C1823D892D7ED92F003A54DB /* RequestFactory+createGetCardShowCaseRequest.swift in Sources */,
 				2A5D6F532D5D251F0011C09E /* RequestFactory+createGetSavingLanding.swift in Sources */,
 				77BF27B128467AE6009624BB /* ButtonIconTextRectViewComponent.swift in Sources */,
 				774A8B3D2865FCDD00B81140 /* UserAccountView.swift in Sources */,
