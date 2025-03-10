@@ -151,9 +151,14 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
              
          case .failureComplete:
              PaymentCompleteView(
-                state: .rejected,
-                 goToMain: goToMain,
-                 repeat: {},
+                state: .init(
+                    formattedAmount: "",
+                    merchantIcon: nil,
+                    result: .failure(.init(hasExpired: false))
+                ),
+                goToMain: goToMain,
+                repeat: {
+                },
                  factory: makePaymentCompleteViewFactory(),
                  config: .collateralLoanLanding
              )
