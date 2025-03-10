@@ -24,7 +24,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     let config: Config
     let factory: Factory
     let goToMain: () -> Void
-    let operationDetailInfoViewModel: OperationDetailInfoViewModel
+    let makeOperationDetailInfoViewModel: ViewComponents.MakeOperationDetailInfoViewModel
     
     var body: some View {
         
@@ -167,16 +167,18 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         .init(getDocument: { getPDFDocument(payload, $0) })
     }
     
-    func makeDetailButton(payload: CollateralLandingApplicationSaveConsentsResult) -> CollateralLoanLandingDetailsButton {
+    func makeDetailButton(
+        payload: CollateralLandingApplicationSaveConsentsResult
+    ) -> CollateralLoanLandingDetailsButton {
         
-        operationDetailInfoViewModel.cells = payload.makeCells(
+        let cells = payload.makeCells(
             config: config.elements.result,
             makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
             formatCurrency: factory.formatCurrency
         )
         
         return .init(
-            viewModel: operationDetailInfoViewModel,
+            viewModel: makeOperationDetailInfoViewModel(cells, goToMain),
             payload: payload
         )
     }

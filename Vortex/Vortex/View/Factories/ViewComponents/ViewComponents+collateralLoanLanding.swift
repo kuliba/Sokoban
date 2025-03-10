@@ -15,9 +15,14 @@ import UIPrimitives
 
 extension ViewComponents {
     
+    typealias MakeOperationDetailInfoViewModel = (
+        [OperationDetailInfoViewModel.DefaultCellViewModel],
+        @escaping () -> Void
+    ) -> OperationDetailInfoViewModel
+    
     func makeCollateralLoanWrapperView(
         binder: GetCollateralLandingDomain.Binder,
-        operationDetailInfoViewModel: OperationDetailInfoViewModel,
+        makeOperationDetailInfoViewModel: @escaping MakeOperationDetailInfoViewModel,
         goToMain: @escaping () -> Void,
         getPDFDocument: @escaping GetPDFDocument,
         formatCurrency: @escaping FormatCurrency
@@ -31,12 +36,12 @@ extension ViewComponents {
                 formatCurrency: formatCurrency
             ),
             goToMain: goToMain,
-            operationDetailInfoViewModel: operationDetailInfoViewModel
+            makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel
         )
     }
     
     func makeCollateralLoanShowcaseWrapperView(
-        operationDetailInfoViewModel: OperationDetailInfoViewModel,
+        makeOperationDetailInfoViewModel: @escaping MakeOperationDetailInfoViewModel,
         binder: GetShowcaseDomain.Binder,
         goToMain: @escaping () -> Void,
         getPDFDocument: @escaping GetPDFDocument,
@@ -51,7 +56,7 @@ extension ViewComponents {
             ),
             config: .default,
             goToMain: goToMain,
-            operationDetailInfoViewModel: operationDetailInfoViewModel
+            makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel
         )
     }
     
