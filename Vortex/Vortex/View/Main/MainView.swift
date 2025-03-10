@@ -394,15 +394,14 @@ private extension MainView {
     private typealias Config = BannerPickerSectionStateItemViewConfig
     
     private func makeOperationDetailInfoViewModel(
-        _ cells: [OperationDetailInfoViewModel.DefaultCellViewModel],
-        _ dismiss: @escaping () -> Void
+        _ cells: [OperationDetailInfoViewModel.DefaultCellViewModel]
     ) -> OperationDetailInfoViewModel {
 
         OperationDetailInfoViewModel(
             model: viewModel.model,
             logo: nil,
             cells: cells,
-            dismissAction: dismiss
+            dismissAction: {}
         )
     }
     
@@ -411,7 +410,8 @@ private extension MainView {
         ) -> some View {
             
         viewFactory.components.makeCollateralLoanShowcaseWrapperView(
-            makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,            binder: binder,
+            makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,
+            binder: binder,
             goToMain: viewModel.resetDestination,
             getPDFDocument: viewModel.getPDFDocument,
             formatCurrency: viewModel.formatCurrency

@@ -16,8 +16,7 @@ import UIPrimitives
 extension ViewComponents {
     
     typealias MakeOperationDetailInfoViewModel = (
-        [OperationDetailInfoViewModel.DefaultCellViewModel],
-        @escaping () -> Void
+        [OperationDetailInfoViewModel.DefaultCellViewModel]
     ) -> OperationDetailInfoViewModel
     
     func makeCollateralLoanWrapperView(

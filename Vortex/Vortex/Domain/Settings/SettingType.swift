@@ -81,56 +81,7 @@ extension SettingType: CustomDebugStringConvertible {
     }
 }
 
-extension SettingType.Interface: RawRepresentable {
-    
-    typealias RawValue = String
-
-    init?(rawValue: String) {
-        
-        switch rawValue {
-        case .mainSections:
-            self = .mainSections
-            
-        case .inactiveProducts:
-            self = .inactiveProducts
-            
-        case .paymentTemplates:
-            self = .paymentTemplates
-            
-        case .productsHidden:
-            self = .productsHidden
-            
-        case .productsSections:
-            self = .productsSections
-            
-        case .productsMoney:
-            self = .productsMoney
-            
-        case .myProductsOnboarding:
-            self = .myProductsOnboarding
-            
-        case .sticker:
-            self = .sticker
-            
-        case .savingsAccount:
-            self = .savingsAccount
-            
-        case .profileOnboarding:
-            self = .profileOnboarding
-            
-        case .collateralLoanShowcase:
-            self = .collateralLoan(.showcase)
-            
-        case .collateralLoanCar:
-            self = .collateralLoan(.car)
-            
-        case .collateralLoanRealEstate:
-            self = .collateralLoan(.realEstate)
-            
-        default:
-            return nil
-        }
-    }
+extension SettingType.Interface {
     
     var rawValue: String {
         
@@ -178,7 +129,7 @@ extension SettingType.Interface: RawRepresentable {
             }
             
         case .creditCardMVP:
-                return .creditCardMVP
+            return .creditCardMVP
         }
     }
 }

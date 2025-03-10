@@ -178,7 +178,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         )
         
         return .init(
-            viewModel: makeOperationDetailInfoViewModel(cells, goToMain),
+            viewModel: makeOperationDetailInfoViewModel(cells),
             payload: payload
         )
     }

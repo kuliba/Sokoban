@@ -92,8 +92,4 @@ struct GetCollateralLandingDocumentsView_Previews<InformerPayload>: PreviewProvi
             factory: .preview
         )
     }
-    
-    static var carStub: GetCollateralLandingProduct { .carStub }
-    static var realEstateData: GetCollateralLandingProduct { .realEstateStub }
-    typealias Factory = GetCollateralLandingFactory
 }

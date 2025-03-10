@@ -185,12 +185,6 @@ struct CollateralLoanLandingWrapperView: View {
         }
     }
     
-    private func handleCollateralsDomainEvent(_ event: Event) {
-        
-        binder.content.event(event)
-        binder.flow.event(.dismiss)
-    }
-    
     private func makeAlert(
         alert: GetCollateralLandingDomain.Navigation.Alert
     ) -> SwiftUI.Alert {
