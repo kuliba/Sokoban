@@ -18,7 +18,8 @@ import UIPrimitives
 extension ViewComponents {
     
     typealias MakeOperationDetailInfoViewModel = (
-        [OperationDetailInfoViewModel.DefaultCellViewModel]
+        [OperationDetailInfoViewModel.DefaultCellViewModel],
+        @escaping () -> Void
     ) -> OperationDetailInfoViewModel
     
     func makeCollateralLoanWrapperView(
@@ -33,11 +34,11 @@ extension ViewComponents {
             binder: binder,
             config: .default,
             factory: makeCollateralLoanLandingFactory(
-                getPDFDocument: getPDFDocument,
                 formatCurrency: formatCurrency
             ),
             goToMain: goToMain,
-            makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel
+            makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,
+            getPDFDocument: getPDFDocument
         )
     }
     
@@ -52,24 +53,22 @@ extension ViewComponents {
         .init(
             binder: binder,
             factory: makeCollateralLoanLandingFactory(
-                getPDFDocument: getPDFDocument,
                 formatCurrency: formatCurrency
             ),
             config: .default,
             goToMain: goToMain,
-            makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel
+            makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,
+            getPDFDocument: getPDFDocument
         )
     }
     
     func makeCollateralLoanLandingFactory(
-        getPDFDocument: @escaping GetPDFDocument,
         formatCurrency: @escaping FormatCurrency
     ) -> CollateralLoanLandingFactory {
 
         .init(
             makeImageViewWithMD5Hash: { makeIconView(md5Hash: $0) },
             makeImageViewWithURL: { makeGeneralIconView(.image($0.addingPercentEncoding())) },
-            getPDFDocument: getPDFDocument,
             formatCurrency: formatCurrency
         )
     }

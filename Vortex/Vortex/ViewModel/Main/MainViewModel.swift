@@ -23,7 +23,6 @@ class MainViewModel: ObservableObject, Resetable {
     
     typealias Templates = PaymentsTransfersFactory.Templates
     typealias TemplatesNode = PaymentsTransfersFactory.TemplatesNode
-    typealias GetPDFDocument = CollateralLoanLandingFactory.GetPDFDocument
     
     let action: PassthroughSubject<Action, Never> = .init()
     let routeSubject = PassthroughSubject<Route, Never>()
@@ -76,7 +75,7 @@ class MainViewModel: ObservableObject, Resetable {
         bindersFactory: BindersFactory,
         viewModelsFactory: MainViewModelsFactory,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
-        getPDFDocument: @escaping CollateralLoanLandingFactory.GetPDFDocument,
+        getPDFDocument: @escaping GetPDFDocument,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.model = model

@@ -22,7 +22,8 @@ struct CollateralLoanLandingWrapperView: View {
     let factory: Factory
     let goToMain: () -> Void
     let makeOperationDetailInfoViewModel: ViewComponents.MakeOperationDetailInfoViewModel
-
+    let getPDFDocument: GetPDFDocument
+    
     var body: some View {
         
         RxWrapperView(model: binder.flow) { state, event in
@@ -124,11 +125,11 @@ struct CollateralLoanLandingWrapperView: View {
                 factory: .init(
                     makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
                     makeImageViewWithURL: factory.makeImageViewWithURL,
-                    getPDFDocument: factory.getPDFDocument,
                     formatCurrency: factory.formatCurrency
                 ),
                 goToMain: goToMain,
-                makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel
+                makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,
+                getPDFDocument: getPDFDocument
             )
             .navigationBarWithBack(title: "Оформление заявки", dismiss: dissmiss)
         }

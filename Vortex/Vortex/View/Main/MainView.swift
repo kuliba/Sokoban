@@ -394,14 +394,15 @@ private extension MainView {
     private typealias Config = BannerPickerSectionStateItemViewConfig
     
     private func makeOperationDetailInfoViewModel(
-        _ cells: [OperationDetailInfoViewModel.DefaultCellViewModel]
+        _ cells: [OperationDetailInfoViewModel.DefaultCellViewModel],
+        dismissAction: @escaping () -> Void
     ) -> OperationDetailInfoViewModel {
 
         OperationDetailInfoViewModel(
             model: viewModel.model,
             logo: nil,
             cells: cells,
-            dismissAction: {}
+            dismissAction: dismissAction
         )
     }
     

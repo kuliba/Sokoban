@@ -11,10 +11,11 @@ import CollateralLoanLandingGetConsentsBackend
 import CollateralLoanLandingGetShowcaseUI
 import InputComponent
 import OTPInputComponent
+import PaymentCompletionUI
+import PDFKit
 import RemoteServices
 import RxViewModel
 import SwiftUI
-import PaymentCompletionUI
 
 struct CreateDraftCollateralLoanApplicationWrapperView: View {
     
@@ -25,6 +26,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     let factory: Factory
     let goToMain: () -> Void
     let makeOperationDetailInfoViewModel: ViewComponents.MakeOperationDetailInfoViewModel
+    let getPDFDocument: GetPDFDocument
     
     var body: some View {
         
@@ -144,7 +146,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
                  makeIconView: factory.makeImageViewWithMD5Hash,
                  pdfDocumentButton: makePDFDocumentButton(
                      payload: saveConsentsResult.payload,
-                     getPDFDocument: factory.getPDFDocument
+                     getPDFDocument: getPDFDocument
                  ),
                  detailsButton: makeDetailButton(payload: saveConsentsResult)
              )
@@ -177,10 +179,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
             formatCurrency: factory.formatCurrency
         )
         
-        return .init(
-            viewModel: makeOperationDetailInfoViewModel(cells),
-            payload: payload
-        )
+        return .init(makeViewModel: makeOperationDetailInfoViewModel, details: cells)
     }
 
     private func makePaymentCompleteViewFactory() -> PaymentCompleteViewFactory {
@@ -229,6 +228,12 @@ extension CreateDraftCollateralLoanApplicationWrapperView {
     typealias SaveConsentsResult = Domain.SaveConsentsResult
     typealias MakeAnywayElementModelMapper = () -> AnywayElementModelMapper
     typealias Confirmation = CreateDraftCollateralLoanApplicationDomain.Confirmation
+    typealias GetPDFDocumentCompletion = (PDFDocument?) -> Void
+    typealias GetPDFDocument = (
+        RemoteServices.RequestFactory.GetConsentsPayload,
+        @escaping GetPDFDocumentCompletion
+    ) -> Void
+    
     public typealias Payload = CollateralLandingApplicationSaveConsentsResult
     public typealias MakeOperationDetailInfoViewModel = (Payload) -> OperationDetailInfoViewModel
 }
