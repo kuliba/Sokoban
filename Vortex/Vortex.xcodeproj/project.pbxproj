@@ -3301,6 +3301,7 @@
 		C17F3C952BF2634700AE1EB4 /* RequestFactory+createGetAllLatestPaymentsV2RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17F3C942BF2634700AE1EB4 /* RequestFactory+createGetAllLatestPaymentsV2RequestTests.swift */; };
 		C181083928E3535E002FCC3A /* Model+DeepLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = C181083828E3535E002FCC3A /* Model+DeepLink.swift */; };
 		C1823D892D7ED92F003A54DB /* RequestFactory+createGetCardShowCaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1823D882D7ED92F003A54DB /* RequestFactory+createGetCardShowCaseRequest.swift */; };
+		C1823D8C2D7EDAAE003A54DB /* RequestFactory+createGetCardShowRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1823D8B2D7EDAAE003A54DB /* RequestFactory+createGetCardShowRequestTests.swift */; };
 		C182A3682B16FB8E0087DC72 /* GetBannerCatalogLandingListResponseGenericFromServer.json in Resources */ = {isa = PBXBuildFile; fileRef = C182A3672B16FB8E0087DC72 /* GetBannerCatalogLandingListResponseGenericFromServer.json */; };
 		C182B00B2AAADC9400F0DEAB /* LatestPaymentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C182B00A2AAADC9400F0DEAB /* LatestPaymentsTests.swift */; };
 		C183EA512A14B494000FBCEC /* ProductDepositDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C183EA502A14B494000FBCEC /* ProductDepositDataTests.swift */; };
@@ -7063,6 +7064,7 @@
 		C17F3C942BF2634700AE1EB4 /* RequestFactory+createGetAllLatestPaymentsV2RequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetAllLatestPaymentsV2RequestTests.swift"; sourceTree = "<group>"; };
 		C181083828E3535E002FCC3A /* Model+DeepLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+DeepLink.swift"; sourceTree = "<group>"; };
 		C1823D882D7ED92F003A54DB /* RequestFactory+createGetCardShowCaseRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetCardShowCaseRequest.swift"; sourceTree = "<group>"; };
+		C1823D8B2D7EDAAE003A54DB /* RequestFactory+createGetCardShowRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetCardShowRequestTests.swift"; sourceTree = "<group>"; };
 		C182A3672B16FB8E0087DC72 /* GetBannerCatalogLandingListResponseGenericFromServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetBannerCatalogLandingListResponseGenericFromServer.json; sourceTree = "<group>"; };
 		C182B00A2AAADC9400F0DEAB /* LatestPaymentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestPaymentsTests.swift; sourceTree = "<group>"; };
 		C183EA502A14B494000FBCEC /* ProductDepositDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDepositDataTests.swift; sourceTree = "<group>"; };
@@ -9596,6 +9598,7 @@
 		2A2E3FBE2BB2C6D500730D37 /* RequestFactory */ = {
 			isa = PBXGroup;
 			children = (
+				C1823D8A2D7EDA86003A54DB /* OrderCardLanding */,
 				2A2E3FBF2BB2C6DF00730D37 /* AnywayPayment */,
 				2A5AFD9C2D6907A000BD15EC /* OperationDetail */,
 				C17F3C932BF2631800AE1EB4 /* LatestPayments */,
@@ -17659,6 +17662,14 @@
 			path = OrderCardLanding;
 			sourceTree = "<group>";
 		};
+		C1823D8A2D7EDA86003A54DB /* OrderCardLanding */ = {
+			isa = PBXGroup;
+			children = (
+				C1823D8B2D7EDAAE003A54DB /* RequestFactory+createGetCardShowRequestTests.swift */,
+			);
+			path = OrderCardLanding;
+			sourceTree = "<group>";
+		};
 		C18B57A52D35D8D900EE3DC4 /* OrderCardLanding */ = {
 			isa = PBXGroup;
 			children = (
@@ -24336,6 +24347,7 @@
 				2AB6BFE32AB6FEA000AAFFF7 /* ModelAuthLoginViewModelFactoryTests.swift in Sources */,
 				77CCEA6628EF034000C62215 /* PaymentsStepTests.swift in Sources */,
 				C13825472AB9D6E200AD2AF2 /* Model+RequisitesTests.swift in Sources */,
+				C1823D8C2D7EDAAE003A54DB /* RequestFactory+createGetCardShowRequestTests.swift in Sources */,
 				2A3BD6142B6D00AC009B16F7 /* RequestFactory+createGetBankDefaultRequestTests.swift in Sources */,
 				2A72B2682C05F16B00454F22 /* RequestFactory+createCreateAnywayTransferV2RequestTests.swift in Sources */,
 				684533752798532300104A8B /* CsrfDataTests.swift in Sources */,
