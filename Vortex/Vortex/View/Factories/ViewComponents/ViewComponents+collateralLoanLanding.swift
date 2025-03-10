@@ -10,6 +10,8 @@ import CollateralLoanLandingGetCollateralLandingUI
 import CollateralLoanLandingGetShowcaseUI
 import DropDownTextListComponent
 import Foundation
+import PDFKit
+import RemoteServices
 import SwiftUI
 import UIPrimitives
 
@@ -72,7 +74,12 @@ extension ViewComponents {
         )
     }
 
-    typealias GetPDFDocument = GetCollateralLandingFactory.GetPDFDocument
-    typealias MakeDetailsViewModel = CreateDraftCollateralLoanApplicationWrapperView.MakeOperationDetailInfoViewModel
+    typealias GetPDFDocumentCompletion = (PDFDocument?) -> Void
+    typealias GetPDFDocument = (
+        RemoteServices.RequestFactory.GetConsentsPayload,
+        @escaping GetPDFDocumentCompletion
+    ) -> Void
+    typealias MakeDetailsViewModel
+        = CreateDraftCollateralLoanApplicationWrapperView.MakeOperationDetailInfoViewModel
     typealias FormatCurrency = (UInt) -> String?
 }

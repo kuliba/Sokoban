@@ -219,12 +219,46 @@ public extension GetCollateralLandingBottomSheetView {
 
 struct GetCollateralLandingBottomSheetView_Previews<InformerPayload>: PreviewProvider {
     
+    static var periodSamples: [GetCollateralLandingDomain.Period] {
+        
+        [
+            .init(
+                rateBase: 9.5,
+                ratePayrollClient: 8.5,
+                termMonth: 12,
+                termStringValue: "12 месяцев"
+            ),
+            .init(
+                rateBase: 9.5,
+                ratePayrollClient: 8.5,
+                termMonth: 36,
+                termStringValue: "3 года"
+            )
+        ]
+    }
+        
+    static var collateralSamples: [GetCollateralLandingDomain.Collateral] {
+        
+        [
+            .init(
+                icon: "car",
+                name: "Car",
+                type: "CAR"
+            ),
+            .init(
+                icon: "home",
+                name: "Real estate",
+                type: "REAL_ESTATE"
+            )
+        ]
+    }
+        
     static var previews: some View {
         
         GetCollateralLandingBottomSheetView<InformerPayload>(
             state: .init(
                 landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
-                bottomSheet: .init(sheetType: .periods([])),
+                bottomSheet: .init(sheetType: .periods(periodSamples)),
                 formatCurrency: { _ in "" }
             ),
             event: { print($0) },
@@ -237,7 +271,7 @@ struct GetCollateralLandingBottomSheetView_Previews<InformerPayload>: PreviewPro
         GetCollateralLandingBottomSheetView<InformerPayload>(
             state: .init(
                 landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
-                bottomSheet: .init(sheetType: .periods([])),
+                bottomSheet: .init(sheetType: .collaterals(collateralSamples)),
                 formatCurrency: { _ in "" }
             ),
             event: { print($0) },
