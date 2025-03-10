@@ -130,6 +130,7 @@ extension Services {
             case getScenarioQRData
             case getServiceCategoryList
             case getShowcaseCollateralLoanLanding = "getShowcase"
+            case getCardShowCase
             case getStickerPayment
             case getSplashScreenTimePeriods
             case getSplashScreenSettings
@@ -652,6 +653,12 @@ extension Services.Endpoint {
         pathPrefix: .collateralLoanLanding,
         version: nil,
         serviceName: .getShowcaseCollateralLoanLanding
+    )
+    
+    static let getCardShowCase: Self = .init(
+        pathPrefix: .pages,
+        version: nil,
+        serviceName: .getCardShowCase
     )
     
     static let getCollateralLanding: Self = .init(
