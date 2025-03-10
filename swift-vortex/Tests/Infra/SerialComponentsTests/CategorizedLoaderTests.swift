@@ -60,6 +60,138 @@ final class CategorizedLoaderTests: XCTestCase {
         XCTAssertEqual(loadItemsSpy.callCount, 0)
     }
     
+    func test_load_shouldCallLoadItemsWithCategory_onOneLoadCategory() {
+        
+        let category = makeCategory()
+        let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT()
+        let exp = expectation(description: "wait for load categories completions")
+        
+        sut.load { _ in exp.fulfill() }
+        loadCategoriesSpy.complete(with: [category])
+        loadItemsSpy.complete(with: .failure(anyError()))
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(loadItemsSpy.payloads.map(\.0), [category])
+    }
+    
+    func test_load_shouldCallLoadItemsWithoutSerial_onMissingInitialStorage() {
+        
+        let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT()
+        let exp = expectation(description: "wait for load categories completions")
+        
+        sut.load { _ in exp.fulfill() }
+        loadCategoriesSpy.complete(with: [makeCategory()])
+        loadItemsSpy.complete(with: .failure(anyError()))
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(loadItemsSpy.payloads.map(\.1), [nil])
+    }
+    
+    func test_load_shouldCallLoadItemsWithoutSerial_onDifferentCategoryInInitialStorage() {
+        
+        let initialStorage = makeStorage(entries: [
+            makeCategory(): .init(items: [makeItem()], serial: anyMessage())
+        ])
+        let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT(with: initialStorage)
+        let exp = expectation(description: "wait for load categories completions")
+        
+        sut.load { _ in exp.fulfill() }
+        loadCategoriesSpy.complete(with: [makeCategory()])
+        loadItemsSpy.complete(with: .failure(anyError()))
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(loadItemsSpy.payloads.map(\.1), [nil])
+    }
+    
+    func test_load_shouldCallLoadItemsWithSerial_onMatchingCategoryInInitialStorage() {
+        
+        let (category, serial) = (makeCategory(), anyMessage())
+        let initialStorage = makeStorage(entries: [
+            category: .init(items: [makeItem()], serial: serial)
+        ])
+        let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT(with: initialStorage)
+        let exp = expectation(description: "wait for load categories completions")
+        
+        sut.load { _ in exp.fulfill() }
+        loadCategoriesSpy.complete(with: [category])
+        loadItemsSpy.complete(with: .failure(anyError()))
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(loadItemsSpy.payloads.map(\.1), [serial])
+    }
+    
+    func test_load_shouldCallLoadItemsWithCategories_onTwoLoadCategories() {
+        
+        let (firstCategory, secondCategory) = (makeCategory(), makeCategory())
+        let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT()
+        let exp = expectation(description: "wait for load categories completions")
+        
+        sut.load { _ in exp.fulfill() }
+        loadCategoriesSpy.complete(with: [firstCategory, secondCategory])
+        loadItemsSpy.complete(with: .failure(anyError()), at: 0)
+        loadItemsSpy.complete(with: .failure(anyError()), at: 1)
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(loadItemsSpy.payloads.map(\.0), [firstCategory, secondCategory])
+    }
+    
+    func test_load_shouldCallLoadItemsWithoutSerial_onTwoLoadCategorie_onMissingInitialStorage() {
+        
+        let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT()
+        let exp = expectation(description: "wait for load categories completions")
+        
+        sut.load { _ in exp.fulfill() }
+        loadCategoriesSpy.complete(with: [makeCategory(), makeCategory()])
+        loadItemsSpy.complete(with: .failure(anyError()), at: 0)
+        loadItemsSpy.complete(with: .failure(anyError()), at: 1)
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(loadItemsSpy.payloads.map(\.1), [nil, nil])
+    }
+    
+    func test_load_shouldCallLoadItemsWithoutSerial_onTwoLoadCategorie_onNonMatchingCategoryInInitialStorage() {
+        
+        let initialStorage = makeStorage(entries: [
+            makeCategory(): .init(items: [makeItem()], serial: anyMessage())
+        ])
+        let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT(with: initialStorage)
+        let exp = expectation(description: "wait for load categories completions")
+        
+        sut.load { _ in exp.fulfill() }
+        loadCategoriesSpy.complete(with: [makeCategory(), makeCategory()])
+        loadItemsSpy.complete(with: .failure(anyError()), at: 0)
+        loadItemsSpy.complete(with: .failure(anyError()), at: 1)
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(loadItemsSpy.payloads.map(\.1), [nil, nil])
+    }
+    
+    func test_load_shouldCallLoadItemsWithSerial_onTwoLoadCategorie_onMatchingCategoryInInitialStorage() {
+        
+        let (category, serial) = (makeCategory(), anyMessage())
+        let initialStorage = makeStorage(entries: [
+            category: .init(items: [makeItem()], serial: serial)
+        ])
+        let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT(with: initialStorage)
+        let exp = expectation(description: "wait for load categories completions")
+        
+        sut.load { _ in exp.fulfill() }
+        loadCategoriesSpy.complete(with: [makeCategory(), category])
+        loadItemsSpy.complete(with: .failure(anyError()), at: 0)
+        loadItemsSpy.complete(with: .failure(anyError()), at: 1)
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertNoDiff(loadItemsSpy.payloads.map(\.1), [nil, serial])
+    }
+    
     // MARK: - Helpers
     
     private typealias Serial = String
@@ -69,7 +201,7 @@ final class CategorizedLoaderTests: XCTestCase {
     private typealias LoadItemsSpy = Spy<(Category, Serial?), Result<SerialStamped<String, [Item]>, Error>>
     
     private func makeSUT(
-        initialStorage: Storage? = nil,
+        with initialStorage: Storage? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -94,11 +226,10 @@ final class CategorizedLoaderTests: XCTestCase {
     }
     
     private func makeStorage(
-        items: [Item]? = nil,
-        serial: String = anyMessage()
+        entries: [Category : CategorizedStorage<Category, Item>.Entry] = [:]
     ) -> Storage {
         
-        return .init(items: items ?? [makeItem()], serial: serial)
+        return .init(entries: entries)
     }
     
     private struct Category: Hashable {
