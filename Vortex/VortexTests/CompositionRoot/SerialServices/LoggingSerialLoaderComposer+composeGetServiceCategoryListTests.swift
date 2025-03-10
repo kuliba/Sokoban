@@ -173,13 +173,13 @@ final class LoggingSerialLoaderComposer_composeGetServiceCategoryListTests: Loca
     
     private func compose(
         _ sut: SUT
-    ) -> (load: Load<ServiceCategory>, reload: Load<ServiceCategory>) {
+    ) -> (load: Load<[ServiceCategory]?>, reload: Load<[ServiceCategory]?>) {
         
         return sut.composeGetServiceCategoryList()
     }
     
     private func expect<T>(
-        load: Load<T>,
+        load: Load<[T]?>,
         _ description: String = "wait for load completion",
         timeout: TimeInterval = 0.1,
         delivers assert: @escaping ([T]?) -> Void = { _ in },
