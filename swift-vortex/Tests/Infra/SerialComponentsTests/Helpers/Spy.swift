@@ -53,3 +53,16 @@ extension Spy where Response == Void {
         messages[index].completion(())
     }
 }
+
+extension Spy {
+    
+    func process<A, B>(
+        _ a: A,
+        _ b: B,
+        completion: @escaping Completion
+    ) where Payload == (A, B) {
+        
+        process((a, b), completion: completion)
+    }
+    
+}
