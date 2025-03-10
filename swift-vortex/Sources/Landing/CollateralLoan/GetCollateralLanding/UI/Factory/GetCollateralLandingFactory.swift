@@ -6,7 +6,6 @@
 //
 
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
-import CollateralLoanLandingGetShowcaseUI
 import CollateralLoanLandingGetConsentsBackend
 import Combine
 import PDFKit
