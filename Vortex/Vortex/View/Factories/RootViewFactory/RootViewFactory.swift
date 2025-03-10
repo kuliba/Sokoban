@@ -14,7 +14,7 @@ import MarketShowcase
 import PDFKit
 import RemoteServices
 import SberQR
-import SplashScreen
+import SplashScreenUI
 import SwiftUI
 
 typealias MakeActivateSliderView = (ProductData.ID, ActivateSliderViewModel, SliderConfig) -> ActivateSliderStateWrapperView
@@ -48,6 +48,7 @@ struct RootViewFactory {
     struct Infra {
         
         let imageCache: ImageCache
+        let imageCacheWithDefaultImage: (Image?) -> ImageCache
         let generalImageCache: ImageCache
         let getUImage: (Md5hash) -> UIImage?
     }

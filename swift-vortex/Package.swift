@@ -8,7 +8,7 @@ let package = Package(
         .iOS(.v15),
         .macOS(.v12),
     ],
-    products: [
+    products: .features + [
         .fastPaymentsSettings,
         .loadableModel,
         .loadableState,
@@ -81,7 +81,6 @@ let package = Package(
         .getProductListByTypeService,
         .getProductListByTypeV6Service,
         .getProductListByTypeV7Service,
-        .getSplashScreenServices,
         .getClientInformDataServices,
         .savingsServices,
         .getCardOrderFormService,
@@ -94,7 +93,7 @@ let package = Package(
         .linkableText,
         .manageSubscriptionsUI,
         .orderCard,
-        .orderCardLanding,
+        .orderCardLandingComponent,
         .otpInputComponent,
         .pickerWithPreviewComponent,
         .pinCodeUI,
@@ -103,7 +102,6 @@ let package = Package(
         .rxViewModel,
         .savingsAccount,
         .searchBarComponent,
-        .splashScreen,
         .textFieldComponent,
         .uiKitHelpers,
         .uiPrimitives,
@@ -134,7 +132,7 @@ let package = Package(
         .shimmer,
         .svgKit,
     ],
-    targets: [
+    targets: .features + [
         .fastPaymentsSettings,
         .fastPaymentsSettingsTests,
         .loadableModel,
@@ -280,8 +278,6 @@ let package = Package(
         .getProductListByTypeV6ServiceTests,
         .getProductListByTypeV7Service,
         .getProductListByTypeV7ServiceTests,
-        .getSplashScreenServices,
-        .getSplashScreenServicesTests,
         .getClientInformDataServices,
         .getClientInformDataServicesTests,
         .savingsServices,
@@ -315,8 +311,8 @@ let package = Package(
         .operatorsListComponents,
         .operatorsListComponentsTests,
         .orderCard,
-        .orderCardLanding,
-        .orderCardLandingTests,
+        .orderCardLandingComponent,
+        .orderCardLandingComponentTests,
         .pickerWithPreviewComponent,
         .pickerWithPreviewComponentTests,
         .pinCodeUI,
@@ -329,7 +325,6 @@ let package = Package(
         .savingsAccount,
         .savingsAccountTests,
         .searchBarComponent,
-        .splashScreen,
         .textFieldComponent,
         .textFieldComponentTests,
         .textFieldUI,
@@ -414,7 +409,7 @@ private extension Product {
             .loadableState,
         ]
     )
-
+    
     static let paymentSticker = library(
         name: .paymentSticker,
         targets: [
@@ -494,28 +489,28 @@ private extension Product {
             .collateralLoanLandingGetShowcaseBackend
         ]
     )
-
+    
     static let collateralLoanLandingGetShowcaseUI = library(
         name: .collateralLoanLandingGetShowcaseUI,
         targets: [
             .collateralLoanLandingGetShowcaseUI
         ]
     )
-
+    
     static let collateralLoanLandingGetConsentsBackend = library(
         name: .collateralLoanLandingGetConsentsBackend,
         targets: [
             .collateralLoanLandingGetConsentsBackend
         ]
     )
-
+    
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationBackend = library(
         name: .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend,
         targets: [
             .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend
         ]
     )
-
+    
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationUI = library(
         name: .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
         targets: [
@@ -529,7 +524,7 @@ private extension Product {
             .collateralLoanLandingGetCollateralLandingBackend
         ]
     )
-
+    
     static let collateralLoanLandingGetCollateralLandingUI = library(
         name: .collateralLoanLandingGetCollateralLandingUI,
         targets: [
@@ -543,7 +538,7 @@ private extension Product {
             .collateralLoanLandingSaveConsentsBackend
         ]
     )
-        
+    
     static let orderCardLandingBackend = library(
         name: .orderCardLandingBackend,
         targets: [
@@ -595,14 +590,14 @@ private extension Product {
             .clientInformList
         ]
     )
-
+    
     static let productDetailsUI = library(
         name: .productDetailsUI,
         targets: [
             .productDetailsUI
         ]
     )
-        
+    
     static let buttonWithSheet = library(
         name: .buttonWithSheet,
         targets: [
@@ -666,10 +661,10 @@ private extension Product {
         ]
     )
     
-    static let orderCardLanding = library(
-        name: .orderCardLanding,
+    static let orderCardLandingComponent = library(
+        name: .orderCardLandingComponent,
         targets: [
-            .orderCardLanding
+            .orderCardLandingComponent
         ]
     )
     
@@ -722,13 +717,6 @@ private extension Product {
         ]
     )
     
-    static let splashScreen = library(
-        name: .splashScreen,
-        targets: [
-            .splashScreen,
-        ]
-    )
-    
     static let textFieldComponent = library(
         name: .textFieldComponent,
         targets: [
@@ -763,14 +751,14 @@ private extension Product {
             .manageSubscriptionsUI
         ]
     )
-
+    
     static let listLandingComponent = library(
         name: .listLandingComponent,
         targets: [
             .listLandingComponent
         ]
     )
-
+    
     // MARK: - UI Components
     
     static let bottomSheetComponent = library(
@@ -823,7 +811,7 @@ private extension Product {
             .sharedConfigs,
         ]
     )
-        
+    
     static let productProfileComponents = library(
         name: .productProfileComponents,
         targets: [
@@ -1173,18 +1161,11 @@ private extension Product {
             .getProductListByTypeV7Service
         ]
     )
-
+    
     static let getClientInformDataServices = library(
         name: .getClientInformDataServices,
         targets: [
             .getClientInformDataServices
-        ]
-    )
-
-    static let getSplashScreenServices = library(
-        name: .getSplashScreenServices,
-        targets: [
-            .getSplashScreenServices
         ]
     )
     
@@ -1481,7 +1462,7 @@ private extension Target {
         ],
         path: "Tests/Landing/\(String.landingUIComponentTests)"
     )
-
+    
     static let collateralLoanLandingGetShowcaseBackend = target(
         name: .collateralLoanLandingGetShowcaseBackend,
         dependencies: [
@@ -1519,7 +1500,7 @@ private extension Target {
         ],
         path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingGetShowcaseName)Tests/UI"
     )
-
+    
     static let collateralLoanLandingGetConsentsBackend = target(
         name: .collateralLoanLandingGetConsentsBackend,
         dependencies: [
@@ -1558,7 +1539,7 @@ private extension Target {
         ],
         path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)Tests/Backend/V1"
     )
-
+    
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationUI = target(
         name: .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
         dependencies: [
@@ -1574,7 +1555,7 @@ private extension Target {
         ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/UI"
     )
-
+    
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationUITests = testTarget(
         name: .collateralLoanLandingCreateDraftCollateralLoanApplicationUITests,
         dependencies: [
@@ -1583,7 +1564,7 @@ private extension Target {
         ],
         path: "Tests/Landing/\(String.collateralLoanTests)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)Tests/UI"
     )
-
+    
     static let collateralLoanLandingGetCollateralLandingBackend = target(
         name: .collateralLoanLandingGetCollateralLandingBackend,
         dependencies: [
@@ -1601,7 +1582,7 @@ private extension Target {
         ],
         path: "Tests/Landing/\(String.collateralLoanTests)/\(String.GetCollateralLanding)Tests/Backend/V1"
     )
-
+    
     static let createCardApplicationBackend = target(
         name: .createCardApplicationBackend,
         dependencies: [
@@ -1636,7 +1617,7 @@ private extension Target {
             .rxViewModel,
             .sharedConfigs,
             .toggleComponent,
-            .uiPrimitives   
+            .uiPrimitives
         ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.GetCollateralLanding)/UI"
     )
@@ -1962,7 +1943,7 @@ private extension Target {
         ],
         path: "Tests/Payments/C2G/CoreTests"
     )
-
+    
     static let c2gUI = target(
         name: .c2gUI,
         dependencies: [
@@ -2248,7 +2229,7 @@ private extension Target {
         ],
         path: "Tests/\(String.marketShowcaseTests)"
     )
-
+    
     static let modifyC2BSubscriptionService = target(
         name: .modifyC2BSubscriptionService,
         dependencies: [
@@ -2326,7 +2307,7 @@ private extension Target {
         path: "Tests/Services/\(String.getBannerCatalogListAPITests)"
         //TODO: add resources
     )
-
+    
     static let getBannersMyProductListService = target(
         name: .getBannersMyProductListService,
         dependencies: [
@@ -2346,7 +2327,7 @@ private extension Target {
         ],
         path: "Tests/Services/\(String.getBannersMyProductListServiceTests)"
     )
-
+    
     static let cryptoSwaddler = target(
         name: .cryptoSwaddler,
         dependencies: [
@@ -2561,7 +2542,7 @@ private extension Target {
         ],
         path: "Sources/Services/\(String.transferPublicKey)"
     )
-
+    
     static let transferPublicKeyTests = testTarget(
         name: .transferPublicKeyTests,
         dependencies: [
@@ -2667,7 +2648,7 @@ private extension Target {
             .copy("Responses/GetProductListByType_Loan_Response.json")
         ]
     )
-
+    
     static let getClientInformDataServices = target(
         name: .getClientInformDataServices,
         dependencies: [
@@ -2675,7 +2656,7 @@ private extension Target {
         ],
         path: "Sources/Services/\(String.getClientInformDataServices)"
     )
-
+    
     static let getClientInformDataServicesTests = testTarget(
         name: .getClientInformDataServicesTests,
         dependencies: [
@@ -2686,29 +2667,8 @@ private extension Target {
         ],
         path: "Tests/Services/\(String.getClientInformDataServicesTests)",
         resources: [
-
+            
         ]
-    )
-
-    static let getSplashScreenServices = target(
-        name: .getSplashScreenServices,
-        dependencies: [
-            .remoteServices,
-            .vortexTools,
-        ],
-        path: "Sources/Services/\(String.getSplashScreenServices)"
-    )
-    
-    static let getSplashScreenServicesTests = testTarget(
-        name: .getSplashScreenServicesTests,
-        dependencies: [
-            // external packages
-            .customDump,
-            // internal modules
-            .getSplashScreenServices,
-            .remoteServices,
-        ],
-        path: "Tests/Services/\(String.getSplashScreenServicesTests)"
     )
     
     static let savingsServices = target(
@@ -2719,7 +2679,7 @@ private extension Target {
         ],
         path: "Sources/Services/\(String.savingsServices)"
     )
-
+    
     static let savingsServicesTests = testTarget(
         name: .savingsServicesTests,
         dependencies: [
@@ -2731,7 +2691,7 @@ private extension Target {
         ],
         path: "Tests/Services/\(String.savingsServicesTests)"
     )
-
+    
     static let getCardOrderFormService = target(
         name: .getCardOrderFormService,
         dependencies: [
@@ -2751,7 +2711,7 @@ private extension Target {
         ],
         path: "Tests/Services/\(String.getCardOrderFormServiceTests)",
         resources: [
-
+            
         ]
     )
     
@@ -2937,7 +2897,7 @@ private extension Target {
         ],
         path: "Tests/UI/\(String.clientInformListTests)"
     )
-
+    
     static let linkableText = target(
         name: .linkableText,
         path: "Sources/UI/\(String.linkableText)"
@@ -3113,18 +3073,6 @@ private extension Target {
         path: "Tests/UI/\(String.savingsAccountTests)"
     )
     
-    static let splashScreen = target(
-        name: .splashScreen,
-        dependencies: [
-            .sharedConfigs,
-            .uiPrimitives
-        ],
-        path: "Sources/UI/\(String.splashScreen)",
-        resources: [
-            .process("Resources")
-        ]
-    )
-
     static let orderCard = target(
         name: .orderCard,
         dependencies: [
@@ -3139,22 +3087,23 @@ private extension Target {
         path: "Sources/UI/\(String.orderCard)"
     )
     
-    static let orderCardLanding = target(
-        name: .orderCardLanding,
+    static let orderCardLandingComponent = target(
+        name: .orderCardLandingComponent,
         dependencies: [
+            .orderCard,
             // internal packages
         ],
-        path: "Sources/UI/\(String.orderCardLanding)"
+        path: "Sources/UI/\(String.orderCardLandingComponent)"
     )
     
-    static let orderCardLandingTests = testTarget(
-        name: .orderCardLandingTests,
+    static let orderCardLandingComponentTests = testTarget(
+        name: .orderCardLandingComponentTests,
         dependencies: [
-            .orderCardLanding,
+            .orderCardLandingComponent,
             .customDump,
             .uiPrimitives
         ],
-        path: "Tests/UI/\(String.orderCardLandingTests)"
+        path: "Tests/UI/\(String.orderCardLandingComponentTests)"
     )
     
     static let searchBarComponent = target(
@@ -3282,7 +3231,7 @@ private extension Target {
         ],
         path: "Sources/UI/Components/\(String.listLandingComponent)"
     )
-
+    
     // MARK: - UI Components
     
     static let amountComponent = target(
@@ -3541,7 +3490,7 @@ private extension Target {
         ],
         path: "Sources/UI/Components/\(String.bottomSheetComponent)"
     )
-
+    
     static let carouselComponent = target(
         name: .carouselComponent,
         dependencies: [
@@ -3723,7 +3672,7 @@ private extension Target.Dependency {
     static let loadableState = byName(
         name: .loadableState
     )
-
+    
     static let operatorsListComponents = byName(
         name: .operatorsListComponents
     )
@@ -3783,11 +3732,11 @@ private extension Target.Dependency {
     static let collateralLoanLandingGetShowcaseUI = byName(
         name: .collateralLoanLandingGetShowcaseUI
     )
-
+    
     static let collateralLoanLandingGetConsentsBackend = byName(
         name: .collateralLoanLandingGetConsentsBackend
     )
-
+    
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationBackend = byName(
         name: .collateralLoanLandingCreateDraftCollateralLoanApplicationBackend
     )
@@ -3803,7 +3752,7 @@ private extension Target.Dependency {
     static let collateralLoanLandingGetCollateralLandingBackend = byName(
         name: .collateralLoanLandingGetCollateralLandingBackend
     )
-
+    
     static let collateralLoanLandingSaveConsentsBackend = byName(
         name: .collateralLoanLandingSaveConsentsBackend
     )
@@ -3861,7 +3810,7 @@ private extension Target.Dependency {
     static let clientInformList = byName(
         name: .clientInformList
     )
-
+    
     static let linkableText = byName(
         name: .linkableText
     )
@@ -3897,13 +3846,9 @@ private extension Target.Dependency {
     static let savingsAccount = byName(
         name: .savingsAccount
     )
-
+    
     static let searchBarComponent = byName(
         name: .searchBarComponent
-    )
-
-    static let splashScreen = byName(
-        name: .splashScreen
     )
     
     static let textFieldUI = byName(
@@ -3925,7 +3870,7 @@ private extension Target.Dependency {
     static let userAccountNavigationComponent = byName(
         name: .userAccountNavigationComponent
     )
-
+    
     static let listLandingComponent = byName(
         name: .listLandingComponent
     )
@@ -3934,8 +3879,8 @@ private extension Target.Dependency {
         name: .orderCard
     )
     
-    static let orderCardLanding = byName(
-        name: .orderCardLanding
+    static let orderCardLandingComponent = byName(
+        name: .orderCardLandingComponent
     )
     
     // MARK: - UI Components
@@ -4149,7 +4094,7 @@ private extension Target.Dependency {
     static let modifyC2BSubscriptionService = byName(
         name: .modifyC2BSubscriptionService
     )
-
+    
     static let manageSubscriptionsUI = byName(
         name: .manageSubscriptionsUI
     )
@@ -4231,13 +4176,9 @@ private extension Target.Dependency {
     static let getProductListByTypeV7Service = byName(
         name: .getProductListByTypeV7Service
     )
-
+    
     static let getClientInformDataServices = byName(
         name: .getClientInformDataServices
-    )
-
-    static let getSplashScreenServices = byName(
-        name: .getSplashScreenServices
     )
     
     static let savingsServices = byName(
@@ -4247,7 +4188,7 @@ private extension Target.Dependency {
     static let getCardOrderFormService = byName(
         name: .getCardOrderFormService
     )
-
+    
     // MARK: - Tools
     
     static let vortexTools = byName(
@@ -4306,7 +4247,7 @@ private extension String {
     
     static let landingUIComponent = "LandingUIComponent"
     static let landingUIComponentTests = "LandingUIComponentTests"
-
+    
     // MARK: - Collateral loan landing
     
     static let collateralLoanLandingGetShowcaseName = "GetShowcase"
@@ -4315,11 +4256,11 @@ private extension String {
     
     static let collateralLoanLandingGetShowcaseUI = "CollateralLoanLandingGetShowcaseUI"
     static let collateralLoanLandingGetShowcaseUITests = "CollateralLoanLandingGetShowcaseUITests"
-
+    
     static let collateralLoanLandingGetConsentsBackend = "CollateralLoanLandingGetConsentsBackend"
     static let collateralLoanLandingGetConsentsName = "GetConsents"
     static let collateralLoanLandingGetConsentsBackendTests = "CollateralLoanLandingGetConsentsBackendTests"
-
+    
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationName = "CreateDraftCollateralLoanApplication"
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationBackend = "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackend"
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests = "CollateralLoanLandingCreateDraftCollateralLoanApplicationBackendTests"
@@ -4328,11 +4269,11 @@ private extension String {
     
     static let collateralLoan = "CollateralLoan"
     static let collateralLoanTests = "CollateralLoanTests"
-
+    
     static let GetCollateralLanding = "GetCollateralLanding"
     static let collateralLoanLandingGetCollateralLandingBackend = "CollateralLoanLandingGetCollateralLandingBackend"
     static let collateralLoanLandingGetCollateralLandingBackendTests = "CollateralLoanLandingGetCollateralLandingBackendTests"
-
+    
     static let collateralLoanLandingGetCollateralLandingUI = "CollateralLoanLandingGetCollateralLandingUI"
     static let collateralLoanLandingGetCollateralLandingUITests = "CollateralLoanLandingGetCollateralLandingUITests"
     
@@ -4361,7 +4302,7 @@ private extension String {
     
     static let clientInformList = "ClientInformList"
     static let clientInformListTests = "ClientInformListTests"
-
+    
     static let productDetailsUI = "ProductDetailsUI"
     static let productDetailsUITests = "ProductDetailsUITests"
     
@@ -4385,8 +4326,8 @@ private extension String {
     
     static let orderCard = "OrderCard"
     
-    static let orderCardLanding = "OrderCardLanding"
-    static let orderCardLandingTests = "OrderCardLandingTests"
+    static let orderCardLandingComponent = "OrderCardLandingComponent"
+    static let orderCardLandingComponentTests = "OrderCardLandingComponentTests"
     
     static let paymentCompletionUI = "PaymentCompletionUI"
     
@@ -4406,10 +4347,8 @@ private extension String {
     
     static let savingsAccount = "SavingsAccount"
     static let savingsAccountTests = "SavingsAccountTests"
-
+    
     static let searchBarComponent = "SearchBarComponent"
-
-    static let splashScreen = "SplashScreen"
     
     static let textFieldUI = "TextFieldUI"
     static let textFieldUITests = "TextFieldUITests"
@@ -4424,7 +4363,7 @@ private extension String {
     
     static let userAccountNavigationComponent = "UserAccountNavigationComponent"
     static let userAccountNavigationComponentTests = "UserAccountNavigationComponentTests"
-
+    
     static let listLandingComponent = "ListLandingComponent"
     // MARK: - UI Components
     
@@ -4438,7 +4377,7 @@ private extension String {
     static let infoComponent = "InfoComponent"
     
     static let checkBoxComponent = "CheckBoxComponent"
-
+    
     static let dropDownTextListComponent = "DropDownTextListComponent"
     static let headerLandingComponent = "HeaderLandingComponent"
     
@@ -4532,7 +4471,7 @@ private extension String {
     
     static let c2gCore = "C2GCore"
     static let c2gCoreTests = "C2GCoreTests"
-
+    
     static let c2gUI = "C2GUI"
     
     static let latestPaymentsBackendV2 = "LatestPaymentsBackendV2"
@@ -4573,9 +4512,9 @@ private extension String {
     
     static let marketShowcase = "MarketShowcase"
     static let marketShowcaseTests = "MarketShowcaseTests"
-
+    
     static let modifyC2BSubscriptionService = "ModifyC2BSubscriptionService"
-
+    
     // MARK: - Services
     
     static let cardStatementAPI = "CardStatementAPI"
@@ -4637,12 +4576,9 @@ private extension String {
     
     static let getProductListByTypeV7Service = "GetProductListByTypeV7Service"
     static let getProductListByTypeV7ServiceTests = "GetProductListByTypeV7ServiceTests"
-
+    
     static let getClientInformDataServices = "GetClientInformDataServices"
     static let getClientInformDataServicesTests = "GetClientInformDataServicesTests"
-
-    static let getSplashScreenServices = "GetSplashScreenServices"
-    static let getSplashScreenServicesTests = "GetSplashScreenServicesTests"
     
     static let savingsServices = "SavingsServices"
     static let savingsServicesTests = "SavingsServicesTests"
@@ -4804,4 +4740,119 @@ private extension String {
     
     static let phoneNumberKit = "PhoneNumberKit"
     static let phoneNumberKit_path = "https://github.com/marmelroy/PhoneNumberKit"
+}
+
+// MARK: - Feature
+
+private extension Array where Element == Product {
+    
+    static let features: Self = [
+        .splashScreen,
+    ]
+}
+
+private extension Product {
+    
+    static let splashScreen = library(
+        name: .splashScreen,
+        targets: [
+            .splashScreenBackend,
+            .splashScreenCore,
+            .splashScreenUI,
+        ]
+    )
+}
+
+private extension Array where Element == Target {
+    
+    static let features: Self = [
+        .splashScreenBackend,
+        .splashScreenBackendTests,
+        .splashScreenCore,
+        .splashScreenCoreTests,
+        .splashScreenUI,
+    ]
+}
+
+private extension Target {
+    
+    static let splashScreenBackend = target(
+        name: .splashScreenBackend,
+        dependencies: [
+            .remoteServices,
+            .vortexTools,
+        ],
+        path: "Sources/Feature/\(String.splashScreen)/Backend"
+    )
+    static let splashScreenBackendTests = testTarget(
+        name: .splashScreenBackendTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .splashScreenBackend,
+            .remoteServices,
+        ],
+        path: "Tests/Feature/\(String.splashScreen)/Backend"
+    )
+    
+    static let splashScreenCore = target(
+        name: .splashScreenCore,
+        dependencies: [
+            .remoteServices,
+            .vortexTools,
+        ],
+        path: "Sources/Feature/\(String.splashScreen)/Core"
+    )
+    static let splashScreenCoreTests = testTarget(
+        name: .splashScreenCoreTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .splashScreenCore,
+            .remoteServices,
+        ],
+        path: "Tests/Feature/\(String.splashScreen)/Core"
+    )
+    
+    static let splashScreenUI = target(
+        name: .splashScreenUI,
+        dependencies: [
+            .sharedConfigs,
+            .uiPrimitives
+        ],
+        path: "Sources/Feature/\(String.splashScreen)/UI",
+        resources: [
+            .process("Resources")
+        ]
+    )
+}
+
+private extension Target.Dependency {
+    
+    static let splashScreenBackend = byName(
+        name: .splashScreenBackend
+    )
+    
+    static let splashScreenCore = byName(
+        name: .splashScreenCore
+    )
+    
+    static let splashScreen = byName(
+        name: .splashScreen
+    )
+}
+
+private extension String {
+    
+    static let splashScreen = "SplashScreen"
+    
+    static let splashScreenBackend = "SplashScreenBackend"
+    static let splashScreenBackendTests = "SplashScreenBackendTests"
+    
+    static let splashScreenCore = "SplashScreenCore"
+    static let splashScreenCoreTests = "SplashScreenCoreTests"
+    
+    static let splashScreenUI = "SplashScreenUI"
 }

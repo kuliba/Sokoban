@@ -9,6 +9,7 @@ import Foundation
 import RemoteServices
 import SavingsAccount
 import SavingsServices
+import GenericRemoteService
 
 extension RootViewModelFactory {
     
@@ -27,14 +28,44 @@ extension RootViewModelFactory {
             mapResponse: RemoteServices.ResponseMapper.mapGetSavingsAccountInfoResponse
         )
         
-        service(.init(accountNumber: accountNumber)) {
+        service(.init(accountNumber: accountNumber)) { [weak self] in
             
-            completion(try? $0.map {
+            guard let self else { return }
+            
+            switch $0 {
+            case let .failure(failure):
+                handleFailure(failure, completion: completion)
                 
-                return .init(status: .result($0.details))
-                
-            }.get())
+            case let .success(result):
+                completion(.init(status: .result(result.details)))
+            }
             _ = service
+        }
+    }
+    
+    func handleFailure(
+        _ failure: Error,
+        completion: @escaping (SavingsAccountDetailsState?) -> Void
+    ) {
+        switch failure {
+        case let error as RemoteServiceError<Error, Error, RemoteServices.ResponseMapper.MappingError>:
+            switch error {
+            case .mapResponse:
+                return completion(.init(status: .failure(.alert)))
+                
+            case let .performRequest(error):
+                if error.isNotConnectedToInternetOrTimeout() {
+                    return completion(.init(status: .failure(.informer)))
+                } else {
+                    return completion(.init(status: .failure(.alert)))
+                }
+                
+            default:
+                return completion(.init(status: .failure(.alert)))
+            }
+            
+        default:
+            break
         }
     }
 }
@@ -45,10 +76,9 @@ private extension GetSavingsAccountInfoResponse {
     
     var details: SavingsAccountDetails {
         
-        let calendar = Calendar.current
-        let current: Double = Double(calendar.component(.day, from: Date()))
+        let current: Double = Double(daysLeft ?? 0)
         let next: Double = Double(dateNext?.suffix(2) ?? "1") ?? 1
-        let progress: Double = dateStart == dateNext ? 0 : current / next
+        let progress: Double = dateStart == dateNext ? 0 : 1 - current / next
         
         return .init(
             dateNext: dateNext,

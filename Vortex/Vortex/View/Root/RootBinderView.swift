@@ -6,7 +6,7 @@
 //
 
 import RxViewModel
-import SplashScreen
+import SplashScreenUI
 import SwiftUI
 
 struct RootBinderView: View {

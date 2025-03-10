@@ -94,7 +94,7 @@ extension RootViewModelFactory {
         let binder = composeBinder(
             content: content,
             getNavigation: getNavigation,
-            witnesses: witnesses()
+            witnesses: witnesses(notify)
         )
         
         return .init(model: binder, cancellables: [cancellable, goToMainCancellable])
@@ -151,11 +151,13 @@ extension RootViewModelFactory {
     // MARK: - Bind
     
     @inlinable
-    func witnesses() -> OpenSavingsAccountDomain.Witnesses {
+    func witnesses(
+        _ notify: @escaping RootViewDomain.Notify
+    ) -> OpenSavingsAccountDomain.Witnesses {
         
         return .init(
             emitting: { $0.$state.map(\.flowEvent) },
-            dismissing: { _ in {} } // TODO: add dismissing failure
+            dismissing: { _ in { notify(.dismiss) } }
         )
     }
     
@@ -327,33 +329,46 @@ private extension Error {
     var loadFailure: LoadableState.LoadFailure {
         
         switch self {
-        case let failure as LoadableState.LoadFailure:
-            return failure
-            
         case let failure as RemoteServiceError<Error, Error, LoadableState.LoadFailure>:
             
             switch failure {
             case let .mapResponse(failure):
-                return failure
-
+                switch failure.type {
+                case .otp:
+                    return .invalidCodeAlert
+                    
+                default:
+                    return .tryLaterAlert
+                }
+                
             case let .performRequest(error):
                 if error.isNotConnectedToInternetOrTimeout() {
-                    return .init(message: ._error, type: .informer)
+                    return .tryLaterInformer
                 } else {
-                    return .init(message: ._later, type: .alert)
+                    return .tryLaterAlert
                 }
             default:
-                return .init(message: ._later, type: .alert)
+                return .tryLaterAlert
             }
-
-        case let mappingError as RemoteServices.ResponseMapper.MappingError:
-            switch mappingError {
-            case let .server(_, errorMessage):
-                return .init(message: ._later, type: .alert)
+            
+        case let failure as RemoteServiceError<Error, Error, RemoteServices.ResponseMapper.MappingError>:
+            
+            switch failure {
+            case .mapResponse:
+                return .tryLaterAlert
                 
+            case let .performRequest(error):
+                if error.isNotConnectedToInternetOrTimeout() {
+                    return .tryLaterInformer
+                } else {
+                    return .tryLaterAlert
+                }
             default:
-                return .tryLaterInformer
+                return .tryLaterAlert
             }
+            
+        case let failure as LoadableState.LoadFailure:
+            return failure
             
         default:
             return .tryLaterInformer

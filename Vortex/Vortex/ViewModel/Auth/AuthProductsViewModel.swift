@@ -9,23 +9,20 @@ import Foundation
 import SwiftUI
 import Combine
 
-class AuthProductsViewModel: ObservableObject {
+final class AuthProductsViewModel: ObservableObject {
 
-    let navigationBar: NavigationBarViewModel
     @Published var productCards: [ProductCardViewModel]
+    
+    let navigationBar: NavigationBarViewModel
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
-
-    init(_ model: Model = .emptyMock, productCards: [ProductCardViewModel], dismissAction: @escaping () -> Void = {}) {
-
-        self.navigationBar = NavigationBarViewModel(title: "Выберите продукт", action: dismissAction)
-        self.productCards = productCards
-        self.model = model
-    }
     
-    init(_ model: Model, products: [CatalogProductData], dismissAction: @escaping () -> Void = {}) {
-
+    init(
+        _ model: Model,
+        products: [CatalogProductData],
+        dismissAction: @escaping () -> Void = {}
+    ) {
         self.navigationBar = NavigationBarViewModel(title: "Выберите продукт", action: dismissAction)
     
         self.productCards = products.enumerated().map({ product in
@@ -39,8 +36,12 @@ class AuthProductsViewModel: ObservableObject {
         requestImages(for: products)
     }
     
-    convenience init(_ model: Model, products: [CatalogProductData], action: @escaping (_ id: Int) -> Void, dismissAction: @escaping () -> Void) {
-        
+    init(
+        _ model: Model,
+        products: [CatalogProductData],
+        action: @escaping (Int) -> Void,
+        dismissAction: @escaping () -> Void
+    ) {
         let productCards = products.enumerated().map {
             
             ProductCardViewModel(
@@ -50,14 +51,19 @@ class AuthProductsViewModel: ObservableObject {
             )
         }
         
-        self.init(model, productCards: productCards, dismissAction: dismissAction)
+        self.navigationBar = NavigationBarViewModel(title: "Выберите продукт", action: dismissAction)
+        self.productCards = productCards
+        self.model = model
         
         bind()
         requestImages(for: products)
     }
     
-    init(_ model: Model, products: [DepositProductData], dismissAction: @escaping () -> Void = {}) {
-
+    init(
+        _ model: Model,
+        products: [DepositProductData],
+        dismissAction: @escaping () -> Void = {}
+    ) {
         self.navigationBar = NavigationBarViewModel(title: "Выберите продукт", action: dismissAction)
     
         self.productCards = products.enumerated().map({ product in

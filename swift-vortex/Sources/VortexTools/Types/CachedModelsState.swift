@@ -51,7 +51,7 @@ public extension CachedModelsState {
     
     /// An array of key-model pairs.
     var keyModelPairs: [(Key, Model)] {
-    
+        
         keys.compactMap { key in cache[key].map { (key, $0) }}
     }
     
@@ -66,10 +66,24 @@ public extension CachedModelsState {
         using makeModel: @escaping (Item) -> Model
     ) -> Self where Item: Identifiable, Key == Item.ID {
         
-        let items = items.uniqueValues()
-        let keys = items.map(\.id)
+        return updating(with: items.map { ($0.id, $0) }, using: makeModel)
+    }
+    
+    /// Updates the state with an array of identifiable items, using a given function to create models.
+    ///
+    /// - Parameters:
+    ///   - items: An array of items to update the state with.
+    ///   - makeModel: A function that creates a model from an item.
+    /// - Returns: A new `CachedModelsState` instance with the updated items.
+    func updating<Item>(
+        with pairs: [(key: Key, item: Item)],
+        using makeModel: @escaping (Item) -> Model
+    ) -> Self {
         
-        var cache = updateCache(with: items, using: makeModel)
+        let unique = pairs.uniqueValues(by: \.key)
+        let keys = unique.map(\.key)
+        
+        var cache = updateCache(with: unique, using: makeModel)
         cache = evictUnusedModels(from: cache, keys: keys)
         
         return .init(keys: keys, cache: cache)
@@ -84,13 +98,15 @@ private extension CachedModelsState {
     ///   - makeModel: A function that creates a model from an item.
     /// - Returns: An updated cache dictionary.
     func updateCache<Item>(
-        with items: [Item],
+        with pairs: [(key: Key, item: Item)],
         using makeModel: @escaping (Item) -> Model
-    ) -> [Key: Model] where Item: Identifiable, Key == Item.ID {
+    ) -> [Key: Model] {
         
         var updatedCache = cache
-        for item in items where updatedCache[item.id] == nil {
-            updatedCache[item.id] = makeModel(item)
+        
+        for pair in pairs where updatedCache[pair.key] == nil {
+            
+            updatedCache[pair.key] = makeModel(pair.item)
         }
         
         return updatedCache

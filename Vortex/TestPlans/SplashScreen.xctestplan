@@ -1,0 +1,31 @@
+{
+  "configurations" : [
+    {
+      "id" : "C00340A4-3195-4A37-8630-5F7E2ACDC3CC",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SplashScreenBackendTests",
+        "name" : "SplashScreenBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SplashScreenCoreTests",
+        "name" : "SplashScreenCoreTests"
+      }
+    }
+  ],
+  "version" : 1
+}
