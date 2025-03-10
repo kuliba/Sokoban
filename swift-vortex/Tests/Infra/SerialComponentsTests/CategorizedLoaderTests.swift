@@ -33,7 +33,7 @@ final class CategorizedLoaderTests: XCTestCase {
         
         XCTAssertEqual(loadCategoriesSpy.callCount, 1)
     }
-    
+#warning("assert final result")
     func test_load_shouldNotCallLoadItems_onNilLoadCategories() {
         
         let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT()
@@ -182,11 +182,56 @@ final class CategorizedLoaderTests: XCTestCase {
         XCTAssertNoDiff(loadItemsSpy.payloads.map(\.1), [nil, serial])
     }
     
+    func test_load_shouldDeliverOutcome_onLoadSuccess() {
+        
+        let (newCategory, newSerial) = (makeCategory(), anyMessage())
+        let newItem = makeItem(category: newCategory)
+        let stamped = makeStamped(items: [newItem], serial: newSerial)
+        let outcome = makeOutcome(storage: .init(entries: [
+            newCategory: .init(items: [newItem], serial: newSerial)
+        ]))
+        let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT()
+        
+        load(sut: sut) {
+            XCTAssertNoDiff($0, outcome)
+        } on: {
+            loadCategoriesSpy.complete(with: [newCategory])
+            loadItemsSpy.complete(with: .success(stamped))
+        }
+    }
+    
+    func test_load_shouldMergeStorage_onLoadSuccess() {
+        
+        let (category, serial) = (makeCategory(), anyMessage())
+        let item = makeItem(category: category)
+        let initialStorage = makeStorage(entries: [
+            category: .init(items: [item], serial: serial)
+        ])
+        
+        let (newCategory, newSerial) = (makeCategory(), anyMessage())
+        let newItem = makeItem(category: newCategory)
+        let stamped = makeStamped(items: [newItem], serial: newSerial)
+        let outcome = makeOutcome(storage: .init(entries: [
+            category: .init(items: [item], serial: serial),
+            newCategory: .init(items: [newItem], serial: newSerial)
+        ]))
+        let (sut, loadCategoriesSpy, loadItemsSpy) = makeSUT(with: initialStorage)
+        
+        load(sut: sut) {
+            XCTAssertNoDiff($0, outcome)
+        } on: {
+            loadCategoriesSpy.complete(with: [newCategory])
+            loadItemsSpy.complete(with: .success(stamped))
+        }
+    }
+    
     // MARK: - Helpers
     
     private typealias Serial = String
     private typealias SUT = CategorizedLoader<Category, Item>
     private typealias Storage = CategorizedStorage<Category, Item>
+    private typealias Stamped = SerialStamped<String, [Item]>
+    private typealias Outcome = CategorizedOutcome<Category, Item>
     private typealias LoadCategoriesSpy = Spy<Void, [Category]?>
     private typealias LoadItemsSpy = Spy<(Category, Serial?), Result<SerialStamped<String, [Item]>, Error>>
     
@@ -215,8 +260,24 @@ final class CategorizedLoaderTests: XCTestCase {
         return (sut, loadCategoriesSpy, loadItemsSpy)
     }
     
+    private func makeOutcome(
+        storage: Storage,
+        failed: [Category] = []
+    ) -> Outcome {
+        
+        return .init(storage: storage, failed: failed)
+    }
+    
+    private func makeStamped(
+        items: [Item]? = nil,
+        serial: String = anyMessage()
+    ) -> Stamped {
+        
+        return .init(value: items ?? [makeItem()], serial: serial)
+    }
+    
     private func makeStorage(
-        entries: [Category : CategorizedStorage<Category, Item>.Entry] = [:]
+        entries: [Category : Storage.Entry] = [:]
     ) -> Storage {
         
         return .init(entries: entries)
@@ -250,6 +311,7 @@ final class CategorizedLoaderTests: XCTestCase {
     
     private func load(
         sut: SUT,
+        assertOutcome: @escaping (Outcome) -> Void = { _ in },
         on action: () -> Void,
         timeout: TimeInterval = 1.0,
         file: StaticString = #file,
@@ -257,7 +319,11 @@ final class CategorizedLoaderTests: XCTestCase {
     ) {
         let exp = expectation(description: "wait for load categories completions")
         
-        sut.load { _ in exp.fulfill() }
+        sut.load {
+            
+            assertOutcome($0)
+            exp.fulfill()
+        }
         
         action()
         
