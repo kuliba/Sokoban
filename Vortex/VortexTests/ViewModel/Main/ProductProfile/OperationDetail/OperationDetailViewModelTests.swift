@@ -298,25 +298,25 @@ extension OperationDetailViewModelTests {
     func test_statusViewModel_rejectCase_shouldReturnCorrectName() {
         
         let statusViewModel = OperationDetailViewModel.StatusViewModel.reject
-        XCTAssertEqual(statusViewModel.name, "Отказ!")
+        XCTAssertEqual(statusViewModel.name, "Отказ")
     }
     
     func test_statusViewModel_successCase_shouldReturnCorrectName() {
         
         let statusViewModel = OperationDetailViewModel.StatusViewModel.success
-        XCTAssertEqual(statusViewModel.name, "Успешно!")
+        XCTAssertEqual(statusViewModel.name, "Успешно")
     }
     
     func test_statusViewModel_purchaseReturnCase_shouldReturnCorrectName() {
         
         let statusViewModel = OperationDetailViewModel.StatusViewModel.purchase_return
-        XCTAssertEqual(statusViewModel.name, "Возврат!")
+        XCTAssertEqual(statusViewModel.name, "Возврат")
     }
     
     func test_statusViewModel_processingCase_shouldReturnCorrectName() {
         
         let statusViewModel = OperationDetailViewModel.StatusViewModel.processing
-        XCTAssertEqual(statusViewModel.name, "В обработке!")
+        XCTAssertEqual(statusViewModel.name, "В обработке")
     }
 }
 

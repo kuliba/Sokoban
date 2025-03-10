@@ -1809,6 +1809,10 @@
 		2AEDAD5629A6359D00017F73 /* DaDataPhoneDataHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDAD5529A6359D00017F73 /* DaDataPhoneDataHelpersTests.swift */; };
 		2AEDAD5829A6361D00017F73 /* ServerCommandsTransferControllerCreateAnywayTransferResponseHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDAD5729A6361D00017F73 /* ServerCommandsTransferControllerCreateAnywayTransferResponseHelpersTests.swift */; };
 		2AEDAD5A29A6368C00017F73 /* ServerCommandsDaDataControllerGetPhoneInfoResponseHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDAD5929A6368C00017F73 /* ServerCommandsDaDataControllerGetPhoneInfoResponseHelpersTests.swift */; };
+		2AEDD5A92D7D818E00CB5C3B /* NullLocalAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDD5A82D7D818E00CB5C3B /* NullLocalAgent.swift */; };
+		2AEDD5AB2D7D839D00CB5C3B /* RootViewModelFactory+composeEphemeralLoadersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDD5AA2D7D839D00CB5C3B /* RootViewModelFactory+composeEphemeralLoadersTests.swift */; };
+		2AEDD5AD2D7DDE0200CB5C3B /* RootViewModelFactory+composeEphemeralLoaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDD5AC2D7DDE0200CB5C3B /* RootViewModelFactory+composeEphemeralLoaders.swift */; };
+		2AEDD5AF2D7DE35700CB5C3B /* NullMonolithicStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEDD5AE2D7DE35700CB5C3B /* NullMonolithicStore.swift */; };
 		2AEEC24B2C9480B900EBDD65 /* OperatorsListBackendV0 in Frameworks */ = {isa = PBXBuildFile; productRef = 2AEEC24A2C9480B900EBDD65 /* OperatorsListBackendV0 */; };
 		2AEF006D2D1E95440027687E /* InitiateAnywayPaymentDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF006C2D1E95440027687E /* InitiateAnywayPaymentDomain.swift */; };
 		2AEF006F2D1EA95B0027687E /* RootViewModelFactory+loadLatestPayments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEF006E2D1EA95B0027687E /* RootViewModelFactory+loadLatestPayments.swift */; };
@@ -5615,6 +5619,10 @@
 		2AEDAD5729A6361D00017F73 /* ServerCommandsTransferControllerCreateAnywayTransferResponseHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsTransferControllerCreateAnywayTransferResponseHelpersTests.swift; sourceTree = "<group>"; };
 		2AEDAD5929A6368C00017F73 /* ServerCommandsDaDataControllerGetPhoneInfoResponseHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsDaDataControllerGetPhoneInfoResponseHelpersTests.swift; sourceTree = "<group>"; };
 		2AEDAD5B29A640BC00017F73 /* CreateAnywayTransferHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAnywayTransferHelpersTests.swift; sourceTree = "<group>"; };
+		2AEDD5A82D7D818E00CB5C3B /* NullLocalAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NullLocalAgent.swift; sourceTree = "<group>"; };
+		2AEDD5AA2D7D839D00CB5C3B /* RootViewModelFactory+composeEphemeralLoadersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+composeEphemeralLoadersTests.swift"; sourceTree = "<group>"; };
+		2AEDD5AC2D7DDE0200CB5C3B /* RootViewModelFactory+composeEphemeralLoaders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+composeEphemeralLoaders.swift"; sourceTree = "<group>"; };
+		2AEDD5AE2D7DE35700CB5C3B /* NullMonolithicStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NullMonolithicStore.swift; sourceTree = "<group>"; };
 		2AEEC24C2C9480E100EBDD65 /* OperatorsListBackendV0.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = OperatorsListBackendV0.xctestplan; sourceTree = "<group>"; };
 		2AEF006C2D1E95440027687E /* InitiateAnywayPaymentDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitiateAnywayPaymentDomain.swift; sourceTree = "<group>"; };
 		2AEF006E2D1EA95B0027687E /* RootViewModelFactory+loadLatestPayments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+loadLatestPayments.swift"; sourceTree = "<group>"; };
@@ -11557,6 +11565,7 @@
 				2AB529FC2D296F930016AA6E /* RootViewModelFactory+composeBinder.swift */,
 				2AB79B0E2D4F65B000968537 /* RootViewModelFactory+composeFlow.swift */,
 				2AC2F08F2CC44E97006FCFBC /* RootViewModelFactory+composeLoaders.swift */,
+				2AEDD5AC2D7DDE0200CB5C3B /* RootViewModelFactory+composeEphemeralLoaders.swift */,
 				EC554A432CC9291E002A8C3A /* RootViewModelFactory+Load.swift */,
 				EC554A412CC92919002A8C3A /* RootViewModelFactory+logging.swift */,
 				842C42312D11FB00006A307D /* RootViewModelFactory+runOnEachNextActiveSession.swift */,
@@ -11584,6 +11593,7 @@
 				84E75DAD2D12D06500111E49 /* RootViewModelFactory+runOnEachNextActiveSessionTests.swift */,
 				2A8A1E7E2D3D41A3005AB29B /* RootViewModelFactory+decoratedReloadTests.swift */,
 				2AFF32042D030F18006DD60C /* RootViewModelFactory+logDecoratedLocalLoadTests.swift */,
+				2AEDD5AA2D7D839D00CB5C3B /* RootViewModelFactory+composeEphemeralLoadersTests.swift */,
 				2AFF321A2D048019006DD60C /* RootViewModelFactory+loadPageTests.swift */,
 				2AFF321C2D0480A0006DD60C /* RootViewModelFactoryLocalLoadTests.swift */,
 				2AFF32082D0328BB006DD60C /* RootViewModelFactory+loadCachedOperatorsTests.swift */,
@@ -13725,6 +13735,8 @@
 				2AF9ACDB2AE6AFEB00AAB1DB /* Loader.swift */,
 				2A94991E2B7362A700C67F05 /* NanoServices */,
 				2AC2ADBF2B2248140049EE9B /* RemoteService+ext.swift */,
+				2AEDD5A82D7D818E00CB5C3B /* NullLocalAgent.swift */,
+				2AEDD5AE2D7DE35700CB5C3B /* NullMonolithicStore.swift */,
 				2A6B8E5D2AFE04A100E533F4 /* RemoteService+Fetcher.swift */,
 				2A94991F2B7362DA00C67F05 /* RemoteServiceErrorOf.swift */,
 				2A7CA2192C92147500B900E9 /* SerialServices */,
@@ -21867,6 +21879,7 @@
 				77C3828D27E0C98800B5246E /* FastPaymentFlag.swift in Sources */,
 				ED07DB9026EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift in Sources */,
 				2A840C032C373C2A00BA6887 /* TemplatesFlowEvent.swift in Sources */,
+				2AEDD5A92D7D818E00CB5C3B /* NullLocalAgent.swift in Sources */,
 				0CF3D71528368753001A1BEA /* PTSectionLatestPaymentsViewComponent.swift in Sources */,
 				2AA09D632CFA162A0062415C /* RootViewModelFactory+makeUserAccount.swift in Sources */,
 				774A8B4C2865FD3600B81140 /* MyProductsSectionItemView.swift in Sources */,
@@ -23607,6 +23620,7 @@
 				684192EA2799B1B100B4E184 /* ServerCommands+Consent.swift in Sources */,
 				C113225A28CFAC0C00F90072 /* ContactsView.swift in Sources */,
 				506989262846604A00C3DEEE /* OpenAccountView.swift in Sources */,
+				2AEDD5AF2D7DE35700CB5C3B /* NullMonolithicStore.swift in Sources */,
 				2ACA3F022B7639A600FD920F /* RootViewModelFactory+makeSubscriptionsViewModel.swift in Sources */,
 				2A2EE9172CF0B4190019FC31 /* RootViewModelFactory+makeSegmentedPaymentProviderPickerFlowModel.swift in Sources */,
 				ED60A1E326DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift in Sources */,
@@ -23874,6 +23888,7 @@
 				68E76524278D5F1F005860FE /* AntifraudViewHostingController.swift in Sources */,
 				2A4300832C52181B002FF8C7 /* ServicePaymentFlowModel.swift in Sources */,
 				2A2AB2F82AF77E0E004023CD /* Services+cvvPINServicesClient.swift in Sources */,
+				2AEDD5AD2D7DDE0200CB5C3B /* RootViewModelFactory+composeEphemeralLoaders.swift in Sources */,
 				83CE89FD2BC43074008CA98C /* PanelView.swift in Sources */,
 				0B7A18C526852EFC0007CC75 /* MakeTransferDecodableModel.swift in Sources */,
 				A5B55E9E27E2626B00C0B695 /* СreateFastPaymentContractRequest.swift in Sources */,
@@ -24389,6 +24404,7 @@
 				2AF5E28929BB3F46004D69F3 /* ServerAgentStub.swift in Sources */,
 				2A3039312A17D2AC0008701D /* XCTAssertNoDiff.swift in Sources */,
 				2A01BB0329A8F5930021833F /* ServerAgentStubHelpersTests.swift in Sources */,
+				2AEDD5AB2D7D839D00CB5C3B /* RootViewModelFactory+composeEphemeralLoadersTests.swift in Sources */,
 				2AB766BE29EA82A600501DD2 /* StringUpdateMaskedTests.swift in Sources */,
 				C11389AB2A429595001E3021 /* PaymentsMeToMeViewModelTests.swift in Sources */,
 				2A887DDE2D168AD80094840E /* RootViewModelFactory+getPaymentsNavigationTests.swift in Sources */,

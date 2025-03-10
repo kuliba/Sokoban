@@ -7,5 +7,5 @@
 
 extension RootViewModelFactory {
     
-    typealias Load<T> = (@escaping (T?) -> Void) -> Void
+    typealias Load<T> = (@escaping (T) -> Void) -> Void
 }
