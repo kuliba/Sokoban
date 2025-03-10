@@ -60,7 +60,7 @@ final class MonolithicStore_UpdateCategorizedStorageTests: XCTestCase {
                 
             case .success(()):
                 XCTAssertNoDiff(sut?.insertedValues, [storage])
-                XCTAssertNoDiff(sut?.insertedValues.first?.categories, [category])
+                XCTAssertNoDiff(sut?.insertedValues.flatMap(\.categories), [category])
                 XCTAssertNoDiff(sut?.insertedValues.first?.items(for: category), [item])
             }
             
@@ -71,6 +71,37 @@ final class MonolithicStore_UpdateCategorizedStorageTests: XCTestCase {
         sut.completeInsertSuccessfully()
         
         wait(for: [exp], timeout: 1.0)
+    }
+    
+    func test_update_shouldReplaceStorageWithSameCategory() {
+        
+        let category = makeCategory()
+        let (item, newItem) = (makeItem(category: category), makeItem(category: category))
+        let storage = makeStorage(items: [item])
+        let update = makeStorage(items: [newItem])
+        
+        let sut = makeSUT()
+        insert(sut: sut, storage: storage)
+        
+        let updateExp = expectation(description: "wait for update completion")
+        
+        sut.update(with: update) { [weak sut] result in
+            
+            switch result {
+            case let .failure(failure):
+                XCTFail("Expected success but got \(failure) instead.")
+                
+            case .success(()):
+                XCTAssertNoDiff(sut?.insertedValues, [storage, update])
+            }
+            
+            updateExp.fulfill()
+        }
+        
+        sut.completeRetrieve(with: storage)
+        sut.completeInsertSuccessfully(at: 1)
+        
+        wait(for: [updateExp], timeout: 1.0)
     }
     
     // MARK: - Helpers
@@ -125,5 +156,17 @@ final class MonolithicStore_UpdateCategorizedStorageTests: XCTestCase {
             category: category ?? makeCategory(),
             value: value
         )
+    }
+    
+    private func insert(
+        sut: SUT,
+        storage: Storage,
+        timeout: TimeInterval = 1.0
+    ) {
+        let insertExp = expectation(description: "wait for insert completion")
+        
+        sut.insert(storage) { _ in insertExp.fulfill() }
+        sut.completeInsertSuccessfully()
+        wait(for: [insertExp], timeout: timeout)
     }
 }
