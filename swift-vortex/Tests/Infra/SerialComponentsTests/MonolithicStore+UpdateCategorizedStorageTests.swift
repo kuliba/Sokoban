@@ -5,34 +5,6 @@
 //  Created by Igor Malyarov on 10.03.2025.
 //
 
-import VortexTools
-
-extension MonolithicStore {
-    
-    // @inlinable
-    func update<T, V>(
-        with storage: CategorizedStorage<T, V>,
-        completion: @escaping (Result<Void, Error>) -> Void
-    ) where Value == CategorizedStorage<T, V>, Self: AnyObject {
-        
-        retrieve { [weak self] value in
-            
-            guard let self else { return }
-            
-            guard let value
-            else { return insert(storage, completion) }
-            
-            let (merged, isUpdated) = value.merged(with: storage)
-            
-            if isUpdated {
-                insert(merged, completion)
-            } else {
-                completion(.success(()))
-            }
-        }
-    }
-}
-
 import SerialComponents
 import VortexTools
 import XCTest
