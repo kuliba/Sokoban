@@ -37,60 +37,7 @@ extension RootViewModelFactory {
             
         case let .savingsAccount(orderAccountResponse):
             
-            let detailsService = nanoServiceComposer.compose(
-                createRequest: RequestFactory.createGetOperationDetailByPaymentIDRequest,
-                mapResponse: RemoteServices.ResponseMapper.mapGetOperationDetailByPaymentIDResponse
-            )
-            
-            let details: OperationDetailSADomain.Model = {
-                return makeDetailsButton { completion in
-                    if let paymentOperationDetailId = orderAccountResponse.paymentOperationDetailId {
-                        detailsService(.init(String(paymentOperationDetailId))) { response in
-                            
-                            switch response {
-                                
-                            case let .success(details):
-                                completion(.success(.init(product: orderAccountResponse.product, details, { self.format(amount: $0, currencyCode: $1, style: .fraction)})))
-                                
-                            case let .failure(error):
-                                completion(.failure(error))
-                            }
-                            _ = detailsService
-                        }
-                    }
-                }
-            }()
-            
-            if orderAccountResponse.paymentOperationDetailId != nil {
-                details.event(.load)
-            } else {
-                details.event(.loaded(.success(.init(orderAccountResponse))))
-            }
-            
-            let documentService = nanoServiceComposer.compose(
-                createRequest: RequestFactory.createGetPrintFormForSavingsAccountRequest,
-                mapResponse: RemoteServices.ResponseMapper.mapGetPrintFormForSavingsAccountResponse
-            )
-            
-            let document = makeDocumentButton { completion in
-                if let accountID = orderAccountResponse.accountId {
-                    documentService((accountID, orderAccountResponse.paymentOperationDetailId)) { response in
-                        
-                        completion(response)
-                        _ = documentService
-                    }
-                }
-            }
-            document.event(.load)
-            
-            completion(.savingsAccount(.init(
-                context: .init(formattedAmount: format(amount: orderAccountResponse.amount, currency: "RUB"), status: orderAccountResponse.status.status),
-                details: details,
-                document: document
-            ), { [weak model] in
-                
-                model?.handleProductsUpdateTotalAll()
-            }))
+            handleSavingsAccount(orderAccountResponse, completion)
 
         case let .openProduct(type):
             
@@ -266,6 +213,87 @@ extension RootViewModelFactory {
                         notify: notify
                     )
                     completion(.standardPayment(node))
+                }
+            }
+        }
+    }
+    
+    func handleSavingsAccount(
+        _ orderAccountResponse: OpenSavingsAccountDomain.OrderAccountResponse,
+        _ completion: @escaping (RootViewNavigation) -> Void
+    ) {
+        
+        let details = makeDetailsButtonSA(orderAccountResponse.paymentOperationDetailId, orderAccountResponse.product)
+        
+        if orderAccountResponse.paymentOperationDetailId != nil {
+            details.event(.load)
+        } else {
+            details.event(.loaded(.success(.init(orderAccountResponse))))
+        }
+                
+        let document = makeDocumentButtonSA(orderAccountResponse.accountId, orderAccountResponse.paymentOperationDetailId)
+        
+        document.event(.load)
+        
+        completion(
+            .savingsAccount(
+                .init(
+                    context: .init(
+                        formattedAmount: format(amount: orderAccountResponse.amount, currency: "RUB"),
+                        status: orderAccountResponse.status.status
+                    ),
+                    details: details,
+                    document: document
+                ),
+                model.handleProductsUpdateTotalAll
+            )
+        )
+    }
+    
+    func makeDetailsButtonSA(
+        _ paymentOperationDetailID: Int?,
+        _ product: ProductSelect.Product?
+    ) -> OperationDetailSADomain.Model {
+        
+        let detailsService = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetOperationDetailByPaymentIDRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapGetOperationDetailByPaymentIDResponse
+        )
+        
+        return makeDetailsButton { completion in
+            if let paymentOperationDetailID {
+                detailsService(.init(String(paymentOperationDetailID))) { response in
+                    
+                    switch response {
+                        
+                    case let .success(details):
+                        completion(.success(.init(product: product, details, { self.format(amount: $0, currencyCode: $1, style: .fraction)})))
+                        
+                    case let .failure(error):
+                        completion(.failure(error))
+                    }
+                    _ = detailsService
+                }
+            }
+        }
+    }
+    
+    func makeDocumentButtonSA(
+        _ accountID: Int?,
+        _ paymentOperationDetailID: Int?
+    ) -> DocumentButtonDomain.Model {
+        
+        let documentService = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetPrintFormForSavingsAccountRequest,
+            mapResponse: RemoteServices.ResponseMapper.mapGetPrintFormForSavingsAccountResponse
+        )
+        
+        return makeDocumentButton { completion in
+            if let accountID {
+                documentService((accountID, paymentOperationDetailID)) { response in
+                    
+                    completion(response)
+                    _ = documentService
                 }
             }
         }
