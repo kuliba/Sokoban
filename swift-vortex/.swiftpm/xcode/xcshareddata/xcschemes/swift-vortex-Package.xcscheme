@@ -1532,6 +1532,20 @@
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "OrderCardLandingComponent"
+               BuildableName = "OrderCardLandingComponent"
+               BlueprintName = "OrderCardLandingComponent"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -2493,6 +2507,16 @@
                BlueprintIdentifier = "EphemeralCacheTests"
                BuildableName = "EphemeralCacheTests"
                BlueprintName = "EphemeralCacheTests"
+               ReferencedContainer = "container:">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "OrderCardLandingComponentTests"
+               BuildableName = "OrderCardLandingComponentTests"
+               BlueprintName = "OrderCardLandingComponentTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

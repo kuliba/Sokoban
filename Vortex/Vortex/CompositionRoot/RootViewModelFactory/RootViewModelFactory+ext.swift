@@ -418,8 +418,16 @@ extension RootViewModelFactory {
             bannersBox?.requestUpdate()
         }
         
+        if featureFlags.splashScreenFlag.isActive {
+            
+            performOrWaitForAuthorized { [weak self] in
+                
+                self?.getSplashImages()
+            }
+        }
+        
         let rootViewModel = make(
-            featureFlags: featureFlags, 
+            featureFlags: featureFlags,
             bannersBox: bannersBox,
             splash: splash,
             makeProductProfileViewModel: makeProductProfileViewModel,
