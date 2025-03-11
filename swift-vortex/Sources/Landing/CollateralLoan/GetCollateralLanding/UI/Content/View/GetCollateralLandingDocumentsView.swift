@@ -81,11 +81,11 @@ extension GetCollateralLandingDocumentsView {
 
 // MARK: - Previews
 
-struct GetCollateralLandingDocumentsView_Previews<InformerPayload>: PreviewProvider {
+struct GetCollateralLandingDocumentsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        GetCollateralLandingDocumentsView<InformerPayload>(
+        GetCollateralLandingDocumentsView<PreviewInformerPayload>(
             product: .carStub,
             config: .preview,
             externalEvent: { print($0) },

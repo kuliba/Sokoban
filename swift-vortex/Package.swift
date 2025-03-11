@@ -1612,8 +1612,6 @@ private extension Target {
         dependencies: [
             .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
             .dropDownTextListComponent,
-            .rxViewModel,
-            .sharedConfigs,
             .toggleComponent,
             .uiPrimitives
         ],

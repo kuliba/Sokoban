@@ -115,8 +115,4 @@ struct CreateDraftCollateralLoanApplicationCityView_Previews<Confirmation, Infor
         )
         .previewDisplayName("Read only mode")
     }
-    
-    typealias Factory = CreateDraftCollateralLoanApplicationFactory
-    typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias Application = CreateDraftCollateralLoanApplication
 }

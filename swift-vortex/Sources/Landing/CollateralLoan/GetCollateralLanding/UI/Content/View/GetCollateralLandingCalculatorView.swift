@@ -369,11 +369,11 @@ extension GetCollateralLandingCalculatorView {
 
 // MARK: - Previews
 
-struct CollateralLoanLandingGetCollateralLandingCalculatorView_Previews<InformerPayload>: PreviewProvider {
+struct CollateralLoanLandingGetCollateralLandingCalculatorView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        GetCollateralLandingCalculatorView<InformerPayload>(
+        GetCollateralLandingCalculatorView<PreviewInformerPayload>(
             state: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE", formatCurrency: { _ in "" }),
             product: .carStub,
             config: .preview,

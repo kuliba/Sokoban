@@ -26,6 +26,7 @@ extension GetCollateralLandingDomain {
         public init(
             landingID: String,
             bottomSheet: BottomSheet? = nil,
+            result: Result<InformerPayload>? = nil,
             selectedCollateralType: String = "", // Calculator default value
             selectedMonthPeriod: UInt = 12, // Calculator default value
             desiredAmount: UInt = 3_000_000, // Calculator default value
@@ -33,6 +34,7 @@ extension GetCollateralLandingDomain {
         ) {
             self.landingID = landingID
             self.bottomSheet = bottomSheet
+            self.result = result
             self.selectedMonthPeriod = selectedMonthPeriod
             self.selectedCollateralType = selectedCollateralType
             self.desiredAmount = desiredAmount
