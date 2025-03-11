@@ -1,6 +1,6 @@
 //
 //  Spy.swift
-//  FastPaymentsSettingsPreviewTests
+//
 //
 //  Created by Igor Malyarov on 15.01.2024.
 //
@@ -64,5 +64,4 @@ extension Spy {
         
         process((a, b), completion: completion)
     }
-    
 }
