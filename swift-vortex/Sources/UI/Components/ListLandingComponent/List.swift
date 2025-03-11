@@ -33,7 +33,7 @@ public struct List: View {
                     .accessibilityIdentifier("ItemsTitle")
             }
             
-            ForEach(items.list, content: itemView)
+            ForEach(items.list, id: \.titleWithSubtitle, content: itemView)
                 .accessibilityIdentifier("Items")
         }
         .padding(.vertical, 12)
@@ -68,3 +68,9 @@ public struct List: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
+
+private extension Items.Item {
+    
+    var titleWithSubtitle: String { title + (subtitle ?? "") }
+}
+

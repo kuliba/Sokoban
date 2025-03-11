@@ -34,4 +34,4 @@ where Category: Hashable,
     public typealias Storage = CategorizedStorage<Category, Item>?
 }
 
-extension CategorizedOutcome: Equatable where Item: Equatable{}
+extension CategorizedOutcome: Equatable where Item: Equatable {}

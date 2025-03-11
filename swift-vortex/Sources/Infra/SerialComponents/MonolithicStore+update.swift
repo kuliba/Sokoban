@@ -43,4 +43,32 @@ public extension MonolithicStore {
             }
         }
     }
+    
+    /// Updates the store with a new value for the given key by merging it with the current stored dictionary.
+    ///
+    /// - Parameters:
+    ///   - key: The key whose associated value is to be updated.
+    ///   - valueForKey: The new value to merge into the store.
+    ///   - completion: A closure called with the result of the update operation.
+    ///
+    /// If the store is empty (i.e. no value is retrieved), this method inserts a new dictionary containing the key-value pair.
+    /// If a dictionary already exists, the new key-value pair is merged into it (overwriting any existing value for the key).
+    @inlinable
+    func update<Key, V>(
+        key: Key,
+        with valueForKey: V,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) where Value == [Key: V], Self: AnyObject {
+        
+        retrieve { [weak self] value in
+            
+            guard let self else { return }
+            
+            guard let value
+            else { return insert([key: valueForKey], completion) }
+            
+            let merged = value.merging([key: valueForKey], uniquingKeysWith: { _, last in last })
+            insert(merged, completion)
+        }
+    }
 }
