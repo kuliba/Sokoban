@@ -57,9 +57,9 @@ extension RootViewModelFactory {
     func splashScreenSettingsRemoteLoad(
         period: String,
         serial: String?,
-        completion: @escaping LoadCompletion<Result<SerialComponents.SerialStamped<String, [LinkSplashScreenSettings]>, Error>>
+        completion: @escaping LoadCompletion<Result<SerialComponents.SerialStamped<String, [SplashScreenSettings]>, Error>>
     ) {
-        let remoteLoad =  nanoServiceComposer.composeSerialResultLoad(
+        let remoteLoad = nanoServiceComposer.composeSerialResultLoad(
             createRequest: { serial in
                 
                 try RequestFactory.createGetSplashScreenSettingsRequest(
@@ -80,7 +80,7 @@ private extension ResponseMapper {
         _ period: String,
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> Result<SerialComponents.SerialStamped<String, [LinkSplashScreenSettings]>, any Error> {
+    ) -> Result<SerialComponents.SerialStamped<String, [SplashScreenSettings]>, any Error> {
         
         return RemoteServices.ResponseMapper
             .mapGetSplashScreenSettingsResponse(data, httpURLResponse)
@@ -96,47 +96,51 @@ private extension ResponseMapper {
     }
 }
 
-// MARK: - Codable (Caching)
-
-private extension RemoteServices.ResponseMapper.SplashScreenSettings {
-    
-    func settings(
-        period: String
-    ) -> LinkSplashScreenSettings? {
-        
-        return link.map { .init(link: $0, period: period) }
-    }
-}
-
-private extension LinkSplashScreenSettings {
-    
-    var codable: CodableSplashScreenSettings {
-        
-        return .init(link: link, period: category)
-    }
-    
-    init(codable: CodableSplashScreenSettings) {
-        
-        self.init(
-            link: codable.link,
-            period: codable.period
-        )
-    }
-}
-
-struct CodableSplashScreenSettings: Codable {
-    
-    let link: String
-    let period: String
-}
-
-// MARK: - Codable (Caching)
+// MARK: - Adapters
 
 private extension RemoteServices.ResponseMapper.SplashScreenTimePeriod {
     
     var period: SplashScreenCore.SplashScreenTimePeriod {
         
         return .init(timePeriod: timePeriod, startTime: startTime, endTime: endTime)
+    }
+}
+
+// MARK: - Codable (Caching)
+
+private extension RemoteServices.ResponseMapper.SplashScreenSettings {
+    
+    func settings(
+        period: String
+    ) -> SplashScreenSettings? {
+        
+        return link.map { .init(imageData: nil, link: $0, period: period) }
+    }
+}
+
+struct CodableSplashScreenSettings: Codable {
+    
+    let imageData: ImageData
+    let link: String
+    let period: String
+    
+    enum ImageData: Codable {
+        
+        case data(Data)
+        case failure
+        case none
+    }
+}
+
+extension CodableSplashScreenSettings {
+    
+    var imageDataResult: Result<Data, SplashScreenSettings.DataFailure>? {
+        
+        switch imageData {
+        case let .data(data): return .success(data)
+        case .failure:        return .failure(.init())
+        case .none:           return nil
+        }
     }
 }
 
