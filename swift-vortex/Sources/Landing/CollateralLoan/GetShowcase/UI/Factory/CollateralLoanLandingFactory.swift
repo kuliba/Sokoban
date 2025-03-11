@@ -5,11 +5,8 @@
 //  Created by Valentin Ozerov on 10.10.2024.
 //
 
-import CollateralLoanLandingGetConsentsBackend
 import Combine
 import OTPInputComponent
-import PDFKit
-import RemoteServices
 import SwiftUI
 import UIPrimitives
 

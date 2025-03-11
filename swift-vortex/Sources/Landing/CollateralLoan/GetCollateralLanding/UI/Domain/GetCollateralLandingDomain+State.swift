@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 
 extension GetCollateralLandingDomain {
     
@@ -15,12 +14,12 @@ extension GetCollateralLandingDomain {
         public let landingID: String
         public var bottomSheet: BottomSheet?
         public var result: Result<InformerPayload>?
+        public var desiredAmount: UInt
+        public var selectedMonthPeriod: UInt
+        public var payrollClient = false
+        public var selectedCollateralType: String
 
         var isLoading = false
-        var payrollClient = false
-        var selectedCollateralType: String
-        var selectedMonthPeriod: UInt
-        var desiredAmount: UInt
 
         let formatCurrency: FormatCurrency
         
@@ -54,7 +53,7 @@ extension GetCollateralLandingDomain.State {
         product?.calc.collaterals.first { $0.type == selectedCollateralType }?.name ?? ""
     }
     
-    var selectedPercentDouble: Double {
+    public var selectedPercentDouble: Double {
         
         payrollClient
             ? product?.calc.rates.first { $0.termMonth == selectedMonthPeriod }?.ratePayrollClient ?? .zero
@@ -160,33 +159,6 @@ extension GetCollateralLandingDomain.State {
         case .collaterals:
             return product.calc.collaterals.map { .init(collateral: $0) }
         }
-    }
-}
-
-extension GetCollateralLandingDomain.State {
-    
-    public func payload(_ product: GetCollateralLandingProduct) -> CreateDraftCollateralLoanApplication {
-        
-        return .init(
-            amount: desiredAmount,
-            cities: product.cities,
-            consents: product.consents.map { .init(name: $0.name, link: $0.link) },
-            icons: .init(
-                productName: product.icons.productName,
-                amount: product.icons.amount,
-                term: product.icons.term,
-                rate: product.icons.rate,
-                city: product.icons.city
-            ),
-            maxAmount: product.calc.amount.maxIntValue,
-            minAmount: product.calc.amount.minIntValue,
-            name: product.name,
-            percent: selectedPercentDouble,
-            periods: product.calc.rates.map { .init(title: $0.termStringValue, months: $0.termMonth) },
-            selectedMonths: selectedMonthPeriod,
-            payrollClient: payrollClient,
-            collateralType: selectedCollateralType
-        )
     }
 }
 

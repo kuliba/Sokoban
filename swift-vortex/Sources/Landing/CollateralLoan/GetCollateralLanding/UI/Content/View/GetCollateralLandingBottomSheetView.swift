@@ -254,7 +254,7 @@ struct GetCollateralLandingBottomSheetView_Previews<InformerPayload>: PreviewPro
     }
         
     static var previews: some View {
-        
+
         GetCollateralLandingBottomSheetView<InformerPayload>(
             state: .init(
                 landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
