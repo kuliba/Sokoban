@@ -3318,6 +3318,8 @@
 		C19017AB2D7AC91B00044AFC /* OrderCardLandingComponent in Frameworks */ = {isa = PBXBuildFile; productRef = C19017AA2D7AC91B00044AFC /* OrderCardLandingComponent */; };
 		C19017AD2D7AD4F800044AFC /* RootViewModelFactory+makeCardPromoLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19017AC2D7AD4F800044AFC /* RootViewModelFactory+makeCardPromoLanding.swift */; };
 		C19017AF2D7ADA4600044AFC /* ViewComponents+makeCardPromoLandingFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19017AE2D7ADA4600044AFC /* ViewComponents+makeCardPromoLandingFlowView.swift */; };
+		C1904BDB2D806D0100805475 /* ProductsLandingDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1904BDA2D806D0100805475 /* ProductsLandingDomain.swift */; };
+		C1904BDD2D806D3400805475 /* RootViewModelFactory+makeProductsLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1904BDC2D806D3400805475 /* RootViewModelFactory+makeProductsLanding.swift */; };
 		C192C99A2D47916500518831 /* RequestFactory+createCardApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = C192C9992D47916500518831 /* RequestFactory+createCardApplication.swift */; };
 		C192C99C2D47966000518831 /* CreateCardApplication in Frameworks */ = {isa = PBXBuildFile; productRef = C192C99B2D47966000518831 /* CreateCardApplication */; };
 		C192D4292C23E87700A6B338 /* HistoryReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C192D4282C23E87700A6B338 /* HistoryReducer.swift */; };
@@ -7085,6 +7087,8 @@
 		C19017A92D7AC67B00044AFC /* OrderCardLandingComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = OrderCardLandingComponent.xctestplan; sourceTree = "<group>"; };
 		C19017AC2D7AD4F800044AFC /* RootViewModelFactory+makeCardPromoLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeCardPromoLanding.swift"; sourceTree = "<group>"; };
 		C19017AE2D7ADA4600044AFC /* ViewComponents+makeCardPromoLandingFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeCardPromoLandingFlowView.swift"; sourceTree = "<group>"; };
+		C1904BDA2D806D0100805475 /* ProductsLandingDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsLandingDomain.swift; sourceTree = "<group>"; };
+		C1904BDC2D806D3400805475 /* RootViewModelFactory+makeProductsLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeProductsLanding.swift"; sourceTree = "<group>"; };
 		C192C9992D47916500518831 /* RequestFactory+createCardApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCardApplication.swift"; sourceTree = "<group>"; };
 		C192D4282C23E87700A6B338 /* HistoryReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryReducer.swift; sourceTree = "<group>"; };
 		C19738D82AF279E300101B1B /* ResponseMapper+getJsonAbroadDict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+getJsonAbroadDict.swift"; sourceTree = "<group>"; };
@@ -17540,6 +17544,7 @@
 			isa = PBXGroup;
 			children = (
 				C127C5272D6E305200683F85 /* OrderCardLandingDomain.swift */,
+				C1904BDA2D806D0100805475 /* ProductsLandingDomain.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -17567,6 +17572,7 @@
 				C119A1E42D75ABE400390F07 /* Domain */,
 				C127C5292D6E34F000683F85 /* RootViewModelFactory+makeOrderCardLanding.swift */,
 				C170C78A2D79D69D00A7C480 /* AuthLandingDomain.swift */,
+				C1904BDC2D806D3400805475 /* RootViewModelFactory+makeProductsLanding.swift */,
 			);
 			path = OrderCardLanding;
 			sourceTree = "<group>";
@@ -23058,6 +23064,7 @@
 				834E3F6A2AC2C77600E49C2B /* QRDataMapper.swift in Sources */,
 				68D099D2273A73CA0017D777 /* SettingViewCoordinator.swift in Sources */,
 				68F5E1242858F1B0003018E5 /* TransferByRequisitsView+Legacy.swift in Sources */,
+				C1904BDD2D806D3400805475 /* RootViewModelFactory+makeProductsLanding.swift in Sources */,
 				2A2E3FD72BB3FC0200730D37 /* RequestFactory+createCreateAnywayTransferRequest.swift in Sources */,
 				68D3F8D527CECB00002753BD /* ProductProfileButtonsViewComponent.swift in Sources */,
 				2A5B23292BEE391900270D50 /* PaymentCancelledView.swift in Sources */,
@@ -23207,6 +23214,7 @@
 				2A6724142ADB313A00FAD522 /* KeyTagKeyChainStore.swift in Sources */,
 				0BEC8939267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift in Sources */,
 				2A5D6F562D5DAE3A0011C09E /* ViewComponents+makeSearchByUINView.swift in Sources */,
+				C1904BDB2D806D0100805475 /* ProductsLandingDomain.swift in Sources */,
 				2A3B4F652CF368CE00076F05 /* RootViewModelFactory+makeProviderPickerNode.swift in Sources */,
 				2A01F9422AE512170064F15B /* Services+composedCVVPINService.swift in Sources */,
 				77A6A9CF27F46DC200CE7E28 /* PlacesMapViewModel.swift in Sources */,

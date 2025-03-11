@@ -20,7 +20,7 @@ extension RootViewModelFactory {
     func makeOrderCardLanding(
     ) -> OrderCardLandingDomain.Binder {
     
-        let content = makeOrderCardLandinContent()
+        let content = makeOrderCardLandingContent()
         content.event(.load)
         
         return composeBinder(
@@ -31,7 +31,7 @@ extension RootViewModelFactory {
     }
     
     @inlinable
-    func makeOrderCardLandinContent(
+    func makeOrderCardLandingContent(
     ) -> OrderCardLandingDomain.Content {
         
         typealias Landing = OrderCardLanding

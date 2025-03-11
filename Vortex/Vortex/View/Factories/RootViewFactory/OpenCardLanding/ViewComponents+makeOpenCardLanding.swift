@@ -155,7 +155,7 @@ struct DismissibleScrollView<Content: View>: View {
     }
 }
 
-extension LandingState<OrderCardLanding> {
+extension LandingState<OrderCardLandingComponent.OrderCardLanding> {
 
     var landing: OrderCardLanding? {
         

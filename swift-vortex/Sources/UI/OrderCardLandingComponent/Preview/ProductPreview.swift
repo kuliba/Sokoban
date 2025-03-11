@@ -1,6 +1,6 @@
 //
 //  ProductPreview.swift
-//  
+//
 //
 //  Created by Дмитрий Савушкин on 11.03.2025.
 //
@@ -10,7 +10,12 @@ import Foundation
 extension Product {
     
     static let product: Self = .init(
-        title: "Карта МИР «Все включено»",
+        action: .init(
+            fallbackURL: "",
+            target: "",
+            type: ""
+        ),
+        imageURL: "",
         items: [
             .init(
                 bullet: true,
@@ -33,12 +38,7 @@ extension Product {
                 title: "8% годовых при сумме остатка от 500 001 ₽ на карте"
             )
         ],
-        imageURL: "1",
-        terms: .init(fileURLWithPath: ""),
-        action: .init(
-            type: "",
-            target: "",
-            fallbackURL: .init(fileURLWithPath: "")
-        )
+        terms: "",
+        title: "Карта МИР «Все включено»"
     )
 }
