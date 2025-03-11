@@ -3093,6 +3093,8 @@ private extension Target {
         name: .orderCardLandingComponent,
         dependencies: [
             .orderCard,
+            .sharedConfigs,
+            .uiPrimitives
             // internal packages
         ],
         path: "Sources/UI/\(String.orderCardLandingComponent)"

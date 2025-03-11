@@ -13,26 +13,6 @@ import SwiftUI
 import UIPrimitives
 import OrderCardLandingComponent
 
-public struct OrderCardLanding {
-    
-    let header: Header
-    let conditions: ListLandingComponent.Items
-    let security: ListLandingComponent.Items
-    let dropDownList: DropDownTextList
-    
-    public init(
-        header: Header,
-        conditions: ListLandingComponent.Items,
-        security: ListLandingComponent.Items,
-        dropDownList: DropDownTextList
-    ) {
-        self.header = header
-        self.conditions = conditions
-        self.security = security
-        self.dropDownList = dropDownList
-    }
-}
-
 extension ViewComponents {
     
     @inlinable
