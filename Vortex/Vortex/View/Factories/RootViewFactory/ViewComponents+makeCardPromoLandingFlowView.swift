@@ -28,6 +28,11 @@ extension ViewComponents {
                         switch navigation {
                         case let .productID(productID):
                             Text("productID: \(productID)")
+                                .frame(maxHeight: .infinity, alignment: .top)
+                                .navigationBarWithBack(
+                                    title: "Заказать карту",
+                                    dismiss: { event(.dismiss) }
+                                )
                         }
                     }
                 )

@@ -13,6 +13,8 @@ final class NullMonolithicStore<T> {}
 
 extension NullMonolithicStore: MonolithicStore {
     
+    typealias Value = T
+    
     /// Attempts to insert an item but always fails with `InsertFailure`.
     /// - Parameters:
     ///   - _: The item to insert (ignored).

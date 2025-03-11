@@ -64,15 +64,38 @@ where Serial: Equatable {
 public extension SerialLoaderComposer {
     
     /// Composes and returns the load and reload functions.
-    /// - Returns: A tuple containing the `load` and `reload` functions.
+    ///
+    /// The returned tuple contains:
+    /// - `load`: A function that attempts to load data from the local caches (ephemeral and persistent).
+    ///   If no valid data is found locally, it automatically falls back to a remote load operation.
+    /// - `reload`: A function that explicitly triggers the remote load (with caching) to refresh the data.
+    ///   The remote operation is decorated with caching behavior, ensuring that freshly fetched data
+    ///   is stored in both caches.
+    ///
+    /// Use this composition when you want the local load to seamlessly recover by fetching and caching
+    /// fresh data from the remote source when necessary, while also having an explicit remote refresh option.
     @inlinable
-    func compose() -> (load: Load<T>, reload: Load<T>) {
+    func compose() -> (load: Load<[T]?>, reload: Load<[T]?>) {
         
-        let localLoad = makeLocalLoad()
         let reload = makeReload(localLoad: localLoad)
         let strategy = Strategy(primary: localLoad, fallback: reload)
         
         return (strategy.load(completion:), reload)
+    }
+    
+    /// Composes and returns the load and reload functions without a remote fallback on local loads.
+    ///
+    /// The returned tuple contains:
+    /// - `load`: A function that attempts to load data from the local caches (ephemeral and persistent)
+    ///   without automatically falling back to a remote fetch if local data is absent.
+    /// - `reload`: A function that triggers a remote load which is decorated with caching.
+    ///   This ensures that, when explicitly invoked, the remote operation both fetches new data and updates the local caches.
+    ///
+    /// Use this method when you want to keep local and remote data retrieval operations strictly separate.
+    @inlinable
+    func composeWithoutFallback() -> (load: Load<[T]?>, reload: Load<[T]?>) {
+        
+        return (localLoad, makeReload(localLoad: localLoad))
     }
 }
 
@@ -111,21 +134,22 @@ extension SerialLoaderComposer {
     /// and falls back to the persistent store if necessary.
     /// - Returns: A load function that retrieves data locally.
     @inlinable
-    func makeLocalLoad() -> Load<T> {
-        
+    func localLoad(
+        completion: @escaping ([T]?) -> Void
+    ) {
         let strategy = Strategy(
             primary: ephemeral.retrieve,
             fallback: decoratedPersistent
         )
         
-        return strategy.load(completion:)
+        return strategy.load { completion($0); _ = strategy }
     }
     
     /// Retrieves data from the persistent store and updates the ephemeral store.
     /// - Parameter completion: Completion handler with the retrieved data or `nil`.
     @inlinable
     func decoratedPersistent(
-        completion: @escaping LoadCompletion<T>
+        completion: @escaping LoadCompletion<[T]?>
     ) {
         persistent.retrieve { value in
             
@@ -142,8 +166,8 @@ extension SerialLoaderComposer {
     /// - Returns: A reload function that updates the data.
     @inlinable
     func makeReload(
-        localLoad: @escaping Load<T>
-    ) -> Load<T> {
+        localLoad: @escaping Load<[T]?>
+    ) -> Load<[T]?> {
         
         let caching = SerialStampedCachingDecorator(
             decoratee: remoteLoad,
@@ -153,7 +177,7 @@ extension SerialLoaderComposer {
             primary: caching.decorated,
             secondary: localLoad
         )
-        let decoratedRemote: Load<T> = { completion in
+        let decoratedRemote: Load<[T]?> = { completion in
             
             self.getSerial { serial in
                 

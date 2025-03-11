@@ -1746,6 +1746,7 @@ private extension Target {
     static let serialComponents = target(
         name: .serialComponents,
         dependencies: [
+            .ephemeralStores,
             .vortexTools,
         ],
         path: "Sources/Infra/\(String.serialComponents)"
