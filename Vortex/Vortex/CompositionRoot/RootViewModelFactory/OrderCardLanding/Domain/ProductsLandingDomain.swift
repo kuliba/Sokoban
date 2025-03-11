@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import OrderCardLandingComponent
 
 enum ProductsLandingDomain {}
 
@@ -18,7 +19,7 @@ extension ProductsLandingDomain {
     
     // MARK: - Content
     
-    typealias Content = ProductsLanding
+    typealias Content = OrderCardLandingComponent.Product
     
     // MARK: - Flow
     

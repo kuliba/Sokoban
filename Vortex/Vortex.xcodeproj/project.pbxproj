@@ -3319,7 +3319,6 @@
 		C19017AD2D7AD4F800044AFC /* RootViewModelFactory+makeCardPromoLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19017AC2D7AD4F800044AFC /* RootViewModelFactory+makeCardPromoLanding.swift */; };
 		C19017AF2D7ADA4600044AFC /* ViewComponents+makeCardPromoLandingFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19017AE2D7ADA4600044AFC /* ViewComponents+makeCardPromoLandingFlowView.swift */; };
 		C1904BD32D7F2D5800805475 /* OrderCardLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1904BD22D7F2D5800805475 /* OrderCardLanding.swift */; };
-		C1904BD52D7F2E3E00805475 /* ProductsLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1904BD42D7F2E3E00805475 /* ProductsLanding.swift */; };
 		C1904BD72D800C8500805475 /* ProductsLandingDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1904BD62D800C8500805475 /* ProductsLandingDomain.swift */; };
 		C192C99A2D47916500518831 /* RequestFactory+createCardApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = C192C9992D47916500518831 /* RequestFactory+createCardApplication.swift */; };
 		C192C99C2D47966000518831 /* CreateCardApplication in Frameworks */ = {isa = PBXBuildFile; productRef = C192C99B2D47966000518831 /* CreateCardApplication */; };
@@ -7089,7 +7088,6 @@
 		C19017AC2D7AD4F800044AFC /* RootViewModelFactory+makeCardPromoLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeCardPromoLanding.swift"; sourceTree = "<group>"; };
 		C19017AE2D7ADA4600044AFC /* ViewComponents+makeCardPromoLandingFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeCardPromoLandingFlowView.swift"; sourceTree = "<group>"; };
 		C1904BD22D7F2D5800805475 /* OrderCardLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCardLanding.swift; sourceTree = "<group>"; };
-		C1904BD42D7F2E3E00805475 /* ProductsLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsLanding.swift; sourceTree = "<group>"; };
 		C1904BD62D800C8500805475 /* ProductsLandingDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsLandingDomain.swift; sourceTree = "<group>"; };
 		C192C9992D47916500518831 /* RequestFactory+createCardApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCardApplication.swift"; sourceTree = "<group>"; };
 		C192D4282C23E87700A6B338 /* HistoryReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryReducer.swift; sourceTree = "<group>"; };
@@ -17721,7 +17719,6 @@
 			isa = PBXGroup;
 			children = (
 				C1904BD22D7F2D5800805475 /* OrderCardLanding.swift */,
-				C1904BD42D7F2E3E00805475 /* ProductsLanding.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -23361,7 +23358,6 @@
 				2AA3A93B2BFF8B1400AEBCC9 /* AnywayPaymentElementViewFactory.swift in Sources */,
 				0BAD466E27E7C04700569FE6 /* QRSearchDataViewController.swift in Sources */,
 				EDDFE3B52756D54800F57C71 /* CalculatorDepositCollectionViewCell.swift in Sources */,
-				C1904BD52D7F2E3E00805475 /* ProductsLanding.swift in Sources */,
 				0CA7D0BC29F7D66F00986C80 /* SwipeButtonViewModel.swift in Sources */,
 				C15CB8E42B7EF26B00718B49 /* Service+getOperatorsListByParam.swift in Sources */,
 				0B283FB826FB7DD300B5E925 /* ExtensionMobilePayNav.swift in Sources */,

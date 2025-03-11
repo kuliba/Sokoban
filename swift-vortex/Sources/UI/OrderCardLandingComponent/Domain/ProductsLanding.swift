@@ -8,7 +8,7 @@
 import SharedConfigs
 import Foundation
 
-struct Product {
+public struct Product {
     
     let title: String
     let items: [Item]
