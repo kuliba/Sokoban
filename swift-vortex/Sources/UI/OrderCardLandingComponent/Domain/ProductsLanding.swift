@@ -8,35 +8,24 @@
 import SharedConfigs
 import Foundation
 
-struct ProductsLanding {
-   
-    let products: [Product]
+struct Product {
     
-    struct Product {
+    let title: String
+    let items: [Item]
+    let imageURL: String
+    let terms: URL
+    let action: Action
+    
+    struct Action {
         
-        let title: String
-        let items: [Item]
-        let imageURL: URL
-        let terms: URL
-        let action: Action
-        
-        struct Action {
-            
-            let type: String
-            let target: String
-            let fallbackURL: URL
-        }
-        
-        struct Item {
-            
-            let bullet: Bool
-            let title: String
-        }
+        let type: String
+        let target: String
+        let fallbackURL: URL
     }
-}
-
-struct ProductLandingConfig {
     
-    let title: TextConfig
-    let item: TextConfig
+    struct Item {
+        
+        let bullet: Bool
+        let title: String
+    }
 }
