@@ -3320,6 +3320,7 @@
 		C19017AF2D7ADA4600044AFC /* ViewComponents+makeCardPromoLandingFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19017AE2D7ADA4600044AFC /* ViewComponents+makeCardPromoLandingFlowView.swift */; };
 		C1904BD32D7F2D5800805475 /* OrderCardLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1904BD22D7F2D5800805475 /* OrderCardLanding.swift */; };
 		C1904BD52D7F2E3E00805475 /* ProductsLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1904BD42D7F2E3E00805475 /* ProductsLanding.swift */; };
+		C1904BD72D800C8500805475 /* ProductsLandingDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1904BD62D800C8500805475 /* ProductsLandingDomain.swift */; };
 		C192C99A2D47916500518831 /* RequestFactory+createCardApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = C192C9992D47916500518831 /* RequestFactory+createCardApplication.swift */; };
 		C192C99C2D47966000518831 /* CreateCardApplication in Frameworks */ = {isa = PBXBuildFile; productRef = C192C99B2D47966000518831 /* CreateCardApplication */; };
 		C192D4292C23E87700A6B338 /* HistoryReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C192D4282C23E87700A6B338 /* HistoryReducer.swift */; };
@@ -7089,6 +7090,7 @@
 		C19017AE2D7ADA4600044AFC /* ViewComponents+makeCardPromoLandingFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeCardPromoLandingFlowView.swift"; sourceTree = "<group>"; };
 		C1904BD22D7F2D5800805475 /* OrderCardLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCardLanding.swift; sourceTree = "<group>"; };
 		C1904BD42D7F2E3E00805475 /* ProductsLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsLanding.swift; sourceTree = "<group>"; };
+		C1904BD62D800C8500805475 /* ProductsLandingDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsLandingDomain.swift; sourceTree = "<group>"; };
 		C192C9992D47916500518831 /* RequestFactory+createCardApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCardApplication.swift"; sourceTree = "<group>"; };
 		C192D4282C23E87700A6B338 /* HistoryReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryReducer.swift; sourceTree = "<group>"; };
 		C19738D82AF279E300101B1B /* ResponseMapper+getJsonAbroadDict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+getJsonAbroadDict.swift"; sourceTree = "<group>"; };
@@ -17544,6 +17546,7 @@
 			isa = PBXGroup;
 			children = (
 				C127C5272D6E305200683F85 /* OrderCardLandingDomain.swift */,
+				C1904BD62D800C8500805475 /* ProductsLandingDomain.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -23615,6 +23618,7 @@
 				77BF27B5284783C9009624BB /* Date+Extensions.swift in Sources */,
 				2A6481F92A1BC692005CC17A /* TextFieldState+makeTextFieldState.swift in Sources */,
 				6849887927BAD8B100E84E6B /* AuthConfirmView.swift in Sources */,
+				C1904BD72D800C8500805475 /* ProductsLandingDomain.swift in Sources */,
 				0BDE453826E53AEF00B64A0A /* AddAllUserCardtList.swift in Sources */,
 				77925575279AF54F00A85723 /* ECKeysProvider.swift in Sources */,
 				77DA2060284539BC00D7E005 /* ProductData+Legacy.swift in Sources */,
