@@ -17,9 +17,6 @@ where Category: Hashable,
     /// Batcher for processing categories.
     @usableFromInline
     let batcher: Batcher
-    /// Caching decorator that wraps the loadItems function.
-    @usableFromInline
-    let decorator: Decorator
     /// Closure to load an array of categories.
     @usableFromInline
     let loadCategories: Load<[Category]?>
@@ -31,17 +28,14 @@ where Category: Hashable,
     ///
     /// - Parameters:
     ///   - batcher: Coordinates the loading of items for each category.
-    ///   - decorator: Wraps the item loading with caching behavior.
     ///   - loadCategories: Fetches the list of categories.
     ///   - store: Caches the categorized data.
     public init(
         batcher: Batcher,
-        decorator: Decorator,
         loadCategories: @escaping Load<[Category]?>,
         store: Store
     ) {
         self.batcher = batcher
-        self.decorator = decorator
         self.loadCategories = loadCategories
         self.store = store
     }
@@ -49,8 +43,6 @@ where Category: Hashable,
     /// Type alias for the batcher, specialized to the Category type.
     public typealias Batcher = VortexTools.Batcher<Category>
     /// Type alias for the caching decorator with serial stamping.
-    public typealias Decorator = SerialStampedCachingDecorator<Category, String, [Item]>
-    /// Type alias for the in-memory store holding the categorized storage.
     public typealias Store = EphemeralStores.InMemoryStore<CategorizedStorage<Category, Item>>
 }
 

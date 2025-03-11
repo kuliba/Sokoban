@@ -24,7 +24,7 @@ public extension CategorizedLoader {
         loadItems: @escaping StampedLoad<Category, String, [Item]>
     ) {
         let store = Store(value: initialStorage)
-        let decorator = Decorator(
+        let decorator = SerialStampedCachingDecorator(
             initialStorage: initialStorage,
             loadItems: loadItems,
             update: { stamped, completion in
@@ -39,7 +39,6 @@ public extension CategorizedLoader {
         
         self.init(
             batcher: batcher,
-            decorator: decorator,
             loadCategories: loadCategories,
             store: store
         )
