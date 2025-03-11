@@ -19,8 +19,6 @@ extension MainSectionProductsView {
         
         override var type: MainSectionType { .products }
         
-        @Published private(set) var isChevronVisible: Bool
-        @Published var isCollapsedContent: Bool
         @Published private(set) var newProductButtonViewModel: NewProductButton.ViewModel?
         
         private let settings: MainProductsGroupSettings
@@ -41,10 +39,14 @@ extension MainSectionProductsView {
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        init(isContentEmpty: Bool, settings: MainProductsGroupSettings = .base, productCarouselViewModel: ProductCarouselView.ViewModel, model: Model = .emptyMock, isCollapsed: Bool) {
+        init(
+            isContentEmpty: Bool,
+            settings: MainProductsGroupSettings = .base,
+            productCarouselViewModel: ProductCarouselView.ViewModel,
+            model: Model = .emptyMock,
+            isCollapsed: Bool
+        ) {
             
-            self.isChevronVisible = isContentEmpty
-            self.isCollapsedContent = isCollapsed
             self.settings = settings
             self.productCarouselViewModel = productCarouselViewModel
             self.model = model
@@ -111,17 +113,7 @@ extension MainSectionProductsView {
                     self?.action.send(MainSectionViewModelAction.Products.PromoDidTapped(promo: $0.promo))
                 }
                 .store(in: &bindings)
-            
-            productCarouselViewModel.$content
-                .map(\.isEmpty)
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] isContentEmpty in
-                    
-                    self?.isChevronVisible = !isContentEmpty
-                    self?.isCollapsedContent = isContentEmpty
-                }
-                .store(in: &bindings)
-            
+                        
             model.products
                 .map { [unowned self] products in
                     
@@ -170,7 +162,7 @@ struct MainSectionProductsView: View {
         
         CollapsableSectionView(
             title: viewModel.title,
-            isShevronVisible: viewModel.isChevronVisible,
+            isShevronVisible: false,
             canCollapse: false,
             isCollapsed: .constant(false)
         ) {
