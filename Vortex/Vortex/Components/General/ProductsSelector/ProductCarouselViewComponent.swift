@@ -356,13 +356,15 @@ extension ProductCarouselView {
         
         func updatePromo(_ promo: [AdditionalProductViewModel]?) {
             
-            promoProducts = promo
-            selector = Self.makeSelector(
-                productTypes: Array(products.value.keys),
-                promoProducts: visiblePromoProductsType(promoProducts: promoProducts),
-                style: style.optionsSelectorStyle
-            )
-            bind()
+            if promoProducts?.allItems != promo?.allItems {
+                promoProducts = promo
+                selector = Self.makeSelector(
+                    productTypes: Array(products.value.keys),
+                    promoProducts: visiblePromoProductsType(promoProducts: promoProducts),
+                    style: style.optionsSelectorStyle
+                )
+                bind()
+            }
         }
         
         func visiblePromoProductsType(promoProducts: [AdditionalProductViewModel]?) -> [ProductType]? {
@@ -374,6 +376,13 @@ extension ProductCarouselView {
             
             return promoProducts?.filter { $0.productType == productType && shouldShowPromo($0.promoItem.promoProduct)}.count ?? 0
         }
+    }
+}
+
+extension Array where Element == AdditionalProductViewModel {
+    
+    var allItems: [PromoItem] {
+        map(\.promoItem)
     }
 }
 

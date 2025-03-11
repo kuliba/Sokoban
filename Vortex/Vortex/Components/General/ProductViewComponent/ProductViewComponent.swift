@@ -186,19 +186,32 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
     
     func update(with productData: ProductData, model: Model) {
         
-        cardInfo.name = Self.name(product: productData, style: appearance.style, creditProductName: .cardTitle)
-        cardInfo.owner = Self.owner(from: productData)
-        self.statusAction = makeStatusActionNode(productData)
-        header.updateIcon(productData.cloverImage)
-        footer.balance = Self.balanceFormatted(product: productData, style: appearance.style, model: model)
-        productData.asAccount?.interestRate.map {
-            if !$0.isEmpty {
-                footer.interestRate = $0 + "% /год."
+        let name = Self.name(product: productData, style: appearance.style, creditProductName: .cardTitle)
+        cardInfo.name != name ? { cardInfo.name = name }() : {}()
+        
+        let owner = Self.owner(from: productData)
+        cardInfo.owner != owner ? { cardInfo.owner = owner }() : {}()
+        
+        let icon = productData.cloverImage
+        header.icon != icon ? { header.updateIcon(icon) }() : {}()
+        
+        let balance = Self.balanceFormatted(product: productData, style: appearance.style, model: model)
+        footer.balance != balance ? { footer.balance = balance }() : {}()
+        
+        let interestRate: String? = {
+            if let value = productData.asAccount?.interestRate, !value.isEmpty {
+                return value + "% /год."
             }
-        }
+            return nil
+        }()
+        
+        footer.interestRate != interestRate ? { footer.interestRate = interestRate }() : {}()
+
         let backgroundImage = Self.backgroundImage(with: productData, size: appearance.size, getImage: { model.images.value[.init($0)]?.image })
-        appearance.background = .init(color: productData.backgroundColor, image: backgroundImage)
-        config = .config(appearance: appearance)
+        if appearance.background.image != backgroundImage {
+            appearance.background = .init(color: productData.backgroundColor, image: backgroundImage)
+            config = .config(appearance: appearance)
+        }
     }
     
     static func rateFormatted(product: ProductData) -> String? {
