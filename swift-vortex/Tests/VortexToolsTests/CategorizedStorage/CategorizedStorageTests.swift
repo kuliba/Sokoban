@@ -8,7 +8,7 @@
 import VortexTools
 import XCTest
 
-final class CategorizedStorageTests: XCTestCase {
+final class CategorizedStorageTests: CategorizedStorageHelpers {
     
     // MARK: - categories
     
@@ -532,51 +532,5 @@ final class CategorizedStorageTests: XCTestCase {
         
         XCTAssertNoDiff(results.count, 2)
         XCTAssertTrue(results.allSatisfy { $0.name == "Apple" })
-    }
-    
-    // MARK: - Helpers
-    
-    private typealias Storage = CategorizedStorage<String, Item>
-    
-    private func makeEmptyStorage() -> Storage {
-        
-        return .init(entries: [:])
-    }
-    
-    private func makeSingleItemStorage() -> Storage {
-        
-        let entry = Storage.Entry(
-            items: [.init(category: "fruits", name: "Apple")],
-            serial: "serial-1"
-        )
-        
-        return .init(entries: ["fruits": entry])
-    }
-    
-    private func makeTwoItemStorage() -> Storage {
-        
-        let entry = CategorizedStorage<String, Item>.Entry(
-            items: [
-                .init(category: "fruits", name: "Apple"),
-                .init(category: "fruits", name: "Banana")
-            ],
-            serial: "serial-2"
-        )
-        
-        return .init(entries: ["fruits": entry])
-    }
-    
-    private func makeItem(
-        category: String = anyMessage(),
-        name: String = anyMessage()
-    ) -> Item {
-        
-        return .init(category: category, name: name)
-    }
-    
-    private struct Item: Categorized, Equatable {
-        
-        let category: String
-        let name: String
     }
 }
