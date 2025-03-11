@@ -5,7 +5,6 @@
 //  Created by Дмитрий Савушкин on 10.03.2025.
 //
 
-import SharedConfigs
 import Foundation
 
 public struct Product {

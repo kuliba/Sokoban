@@ -3318,7 +3318,6 @@
 		C19017AB2D7AC91B00044AFC /* OrderCardLandingComponent in Frameworks */ = {isa = PBXBuildFile; productRef = C19017AA2D7AC91B00044AFC /* OrderCardLandingComponent */; };
 		C19017AD2D7AD4F800044AFC /* RootViewModelFactory+makeCardPromoLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19017AC2D7AD4F800044AFC /* RootViewModelFactory+makeCardPromoLanding.swift */; };
 		C19017AF2D7ADA4600044AFC /* ViewComponents+makeCardPromoLandingFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19017AE2D7ADA4600044AFC /* ViewComponents+makeCardPromoLandingFlowView.swift */; };
-		C1904BD32D7F2D5800805475 /* OrderCardLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1904BD22D7F2D5800805475 /* OrderCardLanding.swift */; };
 		C192C99A2D47916500518831 /* RequestFactory+createCardApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = C192C9992D47916500518831 /* RequestFactory+createCardApplication.swift */; };
 		C192C99C2D47966000518831 /* CreateCardApplication in Frameworks */ = {isa = PBXBuildFile; productRef = C192C99B2D47966000518831 /* CreateCardApplication */; };
 		C192D4292C23E87700A6B338 /* HistoryReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C192D4282C23E87700A6B338 /* HistoryReducer.swift */; };
@@ -7086,7 +7085,6 @@
 		C19017A92D7AC67B00044AFC /* OrderCardLandingComponent.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = OrderCardLandingComponent.xctestplan; sourceTree = "<group>"; };
 		C19017AC2D7AD4F800044AFC /* RootViewModelFactory+makeCardPromoLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeCardPromoLanding.swift"; sourceTree = "<group>"; };
 		C19017AE2D7ADA4600044AFC /* ViewComponents+makeCardPromoLandingFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeCardPromoLandingFlowView.swift"; sourceTree = "<group>"; };
-		C1904BD22D7F2D5800805475 /* OrderCardLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCardLanding.swift; sourceTree = "<group>"; };
 		C192C9992D47916500518831 /* RequestFactory+createCardApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCardApplication.swift"; sourceTree = "<group>"; };
 		C192D4282C23E87700A6B338 /* HistoryReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryReducer.swift; sourceTree = "<group>"; };
 		C19738D82AF279E300101B1B /* ResponseMapper+getJsonAbroadDict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+getJsonAbroadDict.swift"; sourceTree = "<group>"; };
@@ -17558,7 +17556,6 @@
 		C127C5212D6CB38700683F85 /* OpenCardLanding */ = {
 			isa = PBXGroup;
 			children = (
-				C1904BD12D7F2D4900805475 /* Domain */,
 				C127C5222D6CB3F300683F85 /* ViewComponents+makeOpenCardLanding.swift */,
 			);
 			path = OpenCardLanding;
@@ -17710,14 +17707,6 @@
 				C18FDF0D2B0A2D52003F5FC0 /* MakeOperationStateViewModel.swift */,
 			);
 			path = PaymentSticker;
-			sourceTree = "<group>";
-		};
-		C1904BD12D7F2D4900805475 /* Domain */ = {
-			isa = PBXGroup;
-			children = (
-				C1904BD22D7F2D5800805475 /* OrderCardLanding.swift */,
-			);
-			path = Domain;
 			sourceTree = "<group>";
 		};
 		C19738DA2AF2A2EE00101B1B /* PaymentSticker */ = {
@@ -23969,7 +23958,6 @@
 				0B8BE093266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift in Sources */,
 				774A8B2C2865FC6F00B81140 /* MyProductsViewModel.swift in Sources */,
 				ED374CE92863AEC000A97219 /* CardScannerView.swift in Sources */,
-				C1904BD32D7F2D5800805475 /* OrderCardLanding.swift in Sources */,
 				ED4FC60B266CD1020092B4AB /* СountryCell.swift in Sources */,
 				2AD8E54A2C11783E00C31E48 /* FeatureFlags.swift in Sources */,
 				2A4D9AD02CF1B2A90092908E /* RootViewModelFactory+getOutlineProduct.swift in Sources */,

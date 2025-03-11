@@ -6,7 +6,6 @@
 //
 
 import UIPrimitives
-import Combine
 import SwiftUI
 
 public struct ImageViewFactory {
@@ -23,29 +22,4 @@ public struct ImageViewFactory {
 public extension ImageViewFactory {
     
     typealias MakeBannerImageView = (String) -> UIPrimitives.AsyncImage
-}
-
-extension ImageViewFactory {
-    
-    static let `default`: Self = .init(
-        makeBannerImageView: {
-            switch $0 {
-            case "1":
-                return  .init(
-                    image: .bolt,
-                    publisher: Just(.bolt).eraseToAnyPublisher()
-                )
-            default:
-                return .init(
-                    image: .flag,
-                    publisher: Just(.flag).eraseToAnyPublisher()
-                )
-            }}
-    )
-}
-
-extension Image {
-    
-    static let bolt: Self = .init(systemName: "bolt")
-    static let flag: Self = .init(systemName: "flag")
 }

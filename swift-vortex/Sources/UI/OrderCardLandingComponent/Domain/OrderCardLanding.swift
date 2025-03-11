@@ -11,10 +11,10 @@ import DropDownTextListComponent
 
 public struct OrderCardLanding {
     
-    let header: Header
-    let conditions: ListLandingComponent.Items
-    let security: ListLandingComponent.Items
-    let dropDownList: DropDownTextList
+    public let header: Header
+    public let conditions: ListLandingComponent.Items
+    public let security: ListLandingComponent.Items
+    public let dropDownList: DropDownTextList
     
     public init(
         header: Header,
