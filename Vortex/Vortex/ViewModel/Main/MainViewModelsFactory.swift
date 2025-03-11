@@ -7,6 +7,7 @@
 
 import Foundation
 import CalendarUI
+import OrderCardLandingComponent
 
 typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
 typealias MakeModelAuthLoginViewModelFactory = (Model, RootViewModel.RootActions) -> ModelAuthLoginViewModelFactory
@@ -27,12 +28,15 @@ struct MainViewModelsFactory {
     let makeTrailingToolbarItems: MakeTrailingToolbarItems
     let makeCreditCardMVP: MakeCreditCardMVP
     let makeAuthProductsViewModel: MakeAuthProductsViewModel // improve name typealias
+    let makeProductsLandingViewModel: MakeProductsLandingViewModel
     
     typealias MakeTrailingToolbarItems = (@escaping (MainViewModelAction.Toolbar) -> Void) -> [NavigationBarButtonViewModel]
     
     typealias MakeCreditCardMVP = () -> PromoItem?
     
     typealias MakeAuthProductsViewModel = (@escaping () -> Void) -> AuthProductsLandingDomain.Binder // improve name typealias
+    
+    typealias MakeProductsLandingViewModel = (@escaping () -> Void) -> ProductsLandingDomain.Binder
 }
 
 extension MainViewModelsFactory {
@@ -44,7 +48,8 @@ extension MainViewModelsFactory {
         qrViewModelFactory: .preview(),
         makeTrailingToolbarItems: { _ in [] },
         makeCreditCardMVP: { nil },
-        makeAuthProductsViewModel: { _ in .preview }
+        makeAuthProductsViewModel: { _ in .preview },
+        makeProductsLandingViewModel: { _ in .preview }
     )
 }
 
@@ -58,5 +63,24 @@ extension AuthProductsLandingDomain.Binder {
             handleEffect: { _,_ in }
         ),
         bind: { _,_ in .init() }
+    )
+}
+
+extension ProductsLandingDomain.Binder {
+    
+    static let preview: ProductsLandingDomain.Binder = .init(
+        content: .init(
+            initialState: .init(),
+            reduce: { state,_ in (state, nil) },
+            handleEffect: { _,_ in }
+        ),
+        flow: .init(
+            initialState: .init(),
+            reduce: { state,_ in (state, nil) },
+            handleEffect: { _,_ in }
+        ),
+        bind: {
+            _,_ in .init()
+        }
     )
 }

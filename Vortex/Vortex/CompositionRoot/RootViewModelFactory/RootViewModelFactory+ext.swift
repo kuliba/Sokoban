@@ -854,6 +854,10 @@ private extension RootViewModelFactory {
                     flag: featureFlags.orderCardFlag,
                     dismiss: $0
                 )
+            }, 
+            makeProductsLandingViewModel: { _ in
+                
+                self.makeProductsLanding()
             }
         )
                   
