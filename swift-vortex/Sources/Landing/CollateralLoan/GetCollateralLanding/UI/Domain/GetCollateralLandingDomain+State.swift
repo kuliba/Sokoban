@@ -15,6 +15,7 @@ extension GetCollateralLandingDomain {
         public let landingID: String
         public var bottomSheet: BottomSheet?
         public var result: Result<InformerPayload>?
+        public var amountTextFieldViewModel: AmountTextFieldViewModel?
 
         var isLoading = false
         var payrollClient = false

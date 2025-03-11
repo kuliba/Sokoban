@@ -54,7 +54,10 @@ struct GetCollateralLandingFooterView_Previews<InformerPayload>: PreviewProvider
         GetCollateralLandingFooterView<InformerPayload>(
             product: GetCollateralLandingProduct.carStub,
             config: GetCollateralLandingConfig.preview.footer,
-            state: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE", formatCurrency: { _ in "" }),
+            state: .init(
+                landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
+                formatCurrency: { _ in "" }
+            ),
             externalEvent: { print($0) }
         )
     }

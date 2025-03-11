@@ -14,15 +14,18 @@ extension GetCollateralLandingDomain {
     }
 
     public enum Event<InformerPayload> {
-        
-        case changeDesiredAmount(UInt)
-        case enterDesiredAmount(String)
-        case load(String)
-        case loaded(Result<InformerPayload>)
+
+        // UI
         case selectCaseList(String, String)
         case selectCollateral(String)
         case selectMonthPeriod(UInt)
         case togglePayrollClient(Bool)
+        case toggleAmountResponder
+        case changeDesiredAmount(UInt)
+        case enterDesiredAmount(String)
+
+        case load(String)
+        case loaded(Result<InformerPayload>)
         case dismissFailure
     }
         

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import IQKeyboardManagerSwift
 import SwiftUI
 import ToggleComponent
 
@@ -14,13 +15,13 @@ struct GetCollateralLandingCalculatorView<InformerPayload>: View {
     @SwiftUI.State private var toggleIsOn = false
     @SwiftUI.State private var sliderCurrentValue: Double = .zero
     @SwiftUI.State private var desiredAmount: String
-    
+
     let state: State
     let product: Product
     let config: Config
     let domainEvent: (DomainEvent) -> Void
     let externalEvent: (ExternalEvent) -> Void
-
+    
     init(
         state: State,
         product: Product,
@@ -131,7 +132,7 @@ struct GetCollateralLandingCalculatorView<InformerPayload>: View {
     }
     
     private func calculatorBottomContentView(config: Config) -> some View {
-
+        
         VStack(spacing: 0) {
             
             monthlyPaymentTitleText(config: config)
@@ -219,6 +220,7 @@ struct GetCollateralLandingCalculatorView<InformerPayload>: View {
         }
         .contentShape(Rectangle())
         .onTapGesture {
+            
             externalEvent(.showCaseList(.collaterals(product.calc.collaterals)))
         }
     }
@@ -226,7 +228,7 @@ struct GetCollateralLandingCalculatorView<InformerPayload>: View {
     private func desiredAmountView(config: Config.Calculator) -> some View {
         
         Group {
-            
+                        
             desiredAmountTitleText(config: config)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, config.desiredAmount.titleTopPadding)
@@ -234,27 +236,42 @@ struct GetCollateralLandingCalculatorView<InformerPayload>: View {
                 .frame(minWidth: 0, maxWidth: .infinity)
             
             HStack {
+             
+                state.amountTextFieldViewModel.map { amountTextFild(viewModel: $0) }
 
-                AmountTextField()
-//                TextField("", text: $desiredAmount)
-//                    .padding(.leading, config.root.layouts.contentLeadingPadding)
-//                    .font(config.desiredAmount.fontValue.font)
-//                    .foregroundColor(.white)
-//                    .tint(.white)
-//                    .keyboardType(.numberPad)
-//                    .onChange(of: state.formattedDesiredAmount) {
-//                        
-//                        if let amount = $0 {
-//                            
-//                            desiredAmount = String(amount)
-//                        }
-//                    }
-//                    .onChange(of: desiredAmount) {
-//
-//                        domainEvent(.enterDesiredAmount($0))
-//                        sliderCurrentValue = Double(state.desiredAmount)
-//                    }
+                Button {
+                    
+                    domainEvent(.toggleAmountResponder)
+                } label: {
+                    
+                    Image(systemName: "pencil")
+                        .renderingMode(.template)
+                        .foregroundColor(Color.gray)
+                }
+                
+//                Image.ic16Edit2
+//                    .renderingMode(.template)
+//                    .foregroundColor(.mainColorsGray)
 
+                //                TextField("", text: $desiredAmount)
+                //                    .padding(.leading, config.root.layouts.contentLeadingPadding)
+                //                    .font(config.desiredAmount.fontValue.font)
+                //                    .foregroundColor(.white)
+                //                    .tint(.white)
+                //                    .keyboardType(.numberPad)
+                //                    .onChange(of: state.formattedDesiredAmount) {
+                //
+                //                        if let amount = $0 {
+                //
+                //                            desiredAmount = String(amount)
+                //                        }
+                //                    }
+                //                    .onChange(of: desiredAmount) {
+                //
+                //                        domainEvent(.enterDesiredAmount($0))
+                //                        sliderCurrentValue = Double(state.desiredAmount)
+                //                    }
+                
                 desiredAmountMaxText(config: config)
                     .padding(.trailing, config.root.layouts.contentTrailingPadding)
                     .frame(maxWidth: .infinity, alignment: .trailing)
@@ -264,6 +281,28 @@ struct GetCollateralLandingCalculatorView<InformerPayload>: View {
             
             sliderView(config: config)
         }
+    }
+    
+    private func amountTextFild(viewModel: AmountTextFieldViewModel) -> some View {
+        
+        AmountTextField(viewModel: viewModel)
+            .padding(.leading, config.calculator.root.layouts.contentLeadingPadding)
+            .fixedSize()
+            .onAppear {
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
+                    
+                    IQKeyboardManager.shared.enable = true
+                    IQKeyboardManager.shared.enableAutoToolbar = true
+                    IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+                    IQKeyboardManager.shared.keyboardDistanceFromTextField = 30
+                }
+            }
+            .onDisappear {
+                
+                IQKeyboardManager.shared.enable = false
+                IQKeyboardManager.shared.enableAutoToolbar = false
+            }
     }
     
     private func sliderView(config: Config.Calculator) -> some View {
@@ -392,10 +431,14 @@ struct CollateralLoanLandingGetCollateralLandingCalculatorView_Previews<Informer
     static var previews: some View {
         
         GetCollateralLandingCalculatorView<InformerPayload>(
-            state: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE", formatCurrency: { _ in "" }),
+            state: .init(
+                landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
+                formatCurrency: { _ in "" }
+            ),
             product: .carStub,
             config: .preview,
-            domainEvent: { print($0) },
+            domainEvent: { print($0)
+            },
             externalEvent: { print($0) }
         )
     }
