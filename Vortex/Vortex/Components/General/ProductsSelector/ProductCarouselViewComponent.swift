@@ -49,6 +49,7 @@ extension ProductCarouselView {
         private let model: Model
         
         private var bindings = Set<AnyCancellable>()
+        private let schedulers: Schedulers
         
         internal init(
             content: Content,
@@ -58,7 +59,8 @@ extension ProductCarouselView {
             mode: Mode,
             style: Style,
             model: Model = .emptyMock,
-            promoProducts: [AdditionalProductViewModel]?
+            promoProducts: [AdditionalProductViewModel]?,
+            schedulers: Schedulers = .init()
         ) {
             self.content = content
             self.selector = selector
@@ -68,6 +70,7 @@ extension ProductCarouselView {
             self.style = style
             self.model = model
             self.promoProducts = promoProducts
+            self.schedulers = schedulers
             
             LoggerAgent.shared.log(level: .debug, category: .ui, message: "ProductCarouselView.ViewModel initialized")
         }
@@ -83,7 +86,8 @@ extension ProductCarouselView {
             isScrollChangeSelectorEnable: Bool = true,
             style: Style,
             model: Model,
-            promoProducts: [AdditionalProductViewModel]? = nil
+            promoProducts: [AdditionalProductViewModel]? = nil,
+            schedulers: Schedulers = .init()
         ) {
             let selector = Self.makeSelector(
                 products: model.allProducts,
@@ -99,7 +103,8 @@ extension ProductCarouselView {
                 mode: mode,
                 style: style,
                 model: model,
-                promoProducts: promoProducts
+                promoProducts: promoProducts,
+                schedulers: schedulers
             )
             
             bind()
@@ -356,14 +361,26 @@ extension ProductCarouselView {
         
         func updatePromo(_ promo: [AdditionalProductViewModel]?) {
             
-            if promoProducts?.allItems != promo?.allItems {
-                promoProducts = promo
-                selector = Self.makeSelector(
-                    productTypes: Array(products.value.keys),
-                    promoProducts: visiblePromoProductsType(promoProducts: promoProducts),
-                    style: style.optionsSelectorStyle
-                )
-                bind()
+            schedulers.userInitiated.schedule { [weak self] in
+                
+                guard let self else { return }
+               
+                if promoProducts?.allItems != promo?.allItems {
+                    
+                    let newSelector = Self.makeSelector(
+                        productTypes: Array(products.value.keys),
+                        promoProducts: visiblePromoProductsType(promoProducts: promoProducts),
+                        style: style.optionsSelectorStyle
+                    )
+                    schedulers.main.schedule { [weak self] in
+                        
+                        guard let self else { return }
+                        
+                        promoProducts = promo
+                        selector = newSelector
+                        bind()
+                    }
+                }
             }
         }
         
