@@ -62,15 +62,15 @@ extension ListItems {
     static let advantages: Self = .init(
         title: "Преимущества",
         list: [
-            .init(id: .init(), md5hash: "1", title: "Снятие и пополнение без ограничений", subtitle: nil),
-            .init(id: .init(), md5hash: "2", title: "Бесплатный счет", subtitle: "0 руб за открытие счета")
+            .init(md5hash: "1", title: "Снятие и пополнение без ограничений", subtitle: nil),
+            .init(md5hash: "2", title: "Бесплатный счет", subtitle: "0 руб за открытие счета")
         ])
     
     static let basicConditions: Self = .init(
         title: "Основные условия",
         list: [
-            .init(id: .init(), md5hash: "2", title: "Счет только в рублях", subtitle: nil),
-            .init(id: .init(), md5hash: "3", title: "Выплата ежемесячно", subtitle: nil)
+            .init(md5hash: "2", title: "Счет только в рублях", subtitle: nil),
+            .init(md5hash: "3", title: "Выплата ежемесячно", subtitle: nil)
         ])
 }
 

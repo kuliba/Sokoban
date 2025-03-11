@@ -42,7 +42,7 @@ public struct DropDownTextListView: View {
                 }
             }
             
-            ForEach(list.items, content: itemView)
+            ForEach(list.items, id: \.titleWithSubtitle, content: itemView)
         }
         .modifier(BackgroundAndCornerRadiusModifier(
             background: config.colors.background,
@@ -106,6 +106,11 @@ public struct DropDownTextListView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .accessibilityIdentifier("SubTitle")
     }
+}
+
+private extension DropDownTextList.Item {
+    
+    var titleWithSubtitle: String { title + subTitle }
 }
 
 public extension DropDownTextListView {
