@@ -43,7 +43,4 @@ struct GetCollateralLandingFaqView_Previews: PreviewProvider {
             config: .preview
         )
     }
-    
-    static let carData = GetCollateralLandingProduct.carStub
-    static let realEstateData = GetCollateralLandingProduct.realEstateStub
 }

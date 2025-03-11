@@ -160,7 +160,7 @@ struct GetCollateralLandingView_Previews<InformerPayload>: PreviewProvider {
                 print($0)
             },
             config: .preview,
-            factory: Factory.preview
+            factory: .preview
         )
         .previewDisplayName("Product with calculator")
 
@@ -177,7 +177,7 @@ struct GetCollateralLandingView_Previews<InformerPayload>: PreviewProvider {
                 print($0)
             },
             config: .preview,
-            factory: Factory.preview
+            factory: .preview
         )
         .previewDisplayName("Product period selector")
         
@@ -194,13 +194,10 @@ struct GetCollateralLandingView_Previews<InformerPayload>: PreviewProvider {
             },
             externalEvent: { print($0) },
             config: .preview,
-            factory: Factory.preview
+            factory: .preview
         )
         .previewDisplayName("Product collateral selector")
     }
 
-    static var carStub: GetCollateralLandingProduct { .carStub }
-
     typealias State = GetCollateralLandingDomain.State<InformerPayload>
-    typealias Factory = GetCollateralLandingFactory
 }

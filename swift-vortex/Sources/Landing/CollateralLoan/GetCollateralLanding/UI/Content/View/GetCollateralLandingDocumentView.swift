@@ -69,8 +69,6 @@ struct GetCollateralLandingDocumentView_Previews<InformerPayload>: PreviewProvid
         .padding(.top, 300)
         .padding(.horizontal, 16)
     }
-
-    typealias Factory = GetCollateralLandingFactory
     typealias Product = GetCollateralLandingProduct
     typealias Config = GetCollateralLandingConfig
 }

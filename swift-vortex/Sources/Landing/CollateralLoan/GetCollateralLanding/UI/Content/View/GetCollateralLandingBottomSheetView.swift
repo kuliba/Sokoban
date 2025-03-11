@@ -236,7 +236,7 @@ struct GetCollateralLandingBottomSheetView_Previews<InformerPayload>: PreviewPro
             )
         ]
     }
-        
+    
     static var collateralSamples: [GetCollateralLandingDomain.Collateral] {
         
         [
@@ -252,9 +252,9 @@ struct GetCollateralLandingBottomSheetView_Previews<InformerPayload>: PreviewPro
             )
         ]
     }
-        
+    
     static var previews: some View {
-
+        
         GetCollateralLandingBottomSheetView<InformerPayload>(
             state: .init(
                 landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
@@ -281,7 +281,4 @@ struct GetCollateralLandingBottomSheetView_Previews<InformerPayload>: PreviewPro
         )
         .previewDisplayName("Product collateral selector")
     }
-    
-    typealias Factory = GetCollateralLandingFactory
-    typealias Item = GetCollateralLandingDomain.State<InformerPayload>.BottomSheet.Item
 }
