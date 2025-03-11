@@ -418,7 +418,13 @@ extension RootViewModelFactory {
             bannersBox?.requestUpdate()
         }
         
-        performOrWaitForAuthorized { [weak self] in self?.getSplashImages() }
+        if featureFlags.splashScreenFlag.isActive {
+            
+            performOrWaitForAuthorized { [weak self] in
+                
+                self?.getSplashImages()
+            }
+        }
         
         let rootViewModel = make(
             featureFlags: featureFlags,
