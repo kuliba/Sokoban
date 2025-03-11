@@ -709,7 +709,8 @@ final class MainViewModelTests: XCTestCase {
             qrViewModelFactory: qrViewModelFactory,
             makeTrailingToolbarItems: { _ in [] },
             makeCreditCardMVP: { nil }, 
-            makeAuthProductsViewModel: { _ in .preview }
+            makeAuthProductsViewModel: { _ in .preview }, 
+            makeProductsLandingViewModel: { _ in .preview }
         )
         
         let sut = MainViewModel(
@@ -783,7 +784,8 @@ final class MainViewModelTests: XCTestCase {
             qrViewModelFactory: .preview(),
             makeTrailingToolbarItems: { _ in [] },
             makeCreditCardMVP: { nil },
-            makeAuthProductsViewModel: { _ in .preview }
+            makeAuthProductsViewModel: { _ in .preview },
+            makeProductsLandingViewModel: { _ in .preview }
         )
 
         let sut = MainViewModel(
