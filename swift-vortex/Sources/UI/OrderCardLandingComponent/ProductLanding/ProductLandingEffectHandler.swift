@@ -29,6 +29,6 @@ public extension ProductLandingEffectHandler {
     }
     
     typealias Load = (@escaping (Result<Landing, LoadFailure>) -> Void) -> Void
-    typealias Event = ProductsLandingEvent<Landing>
-    typealias Effect = ProductLandingEffect
+    typealias Event = LandingEvent<Landing>
+    typealias Effect = LandingEffect
 }

@@ -10,10 +10,8 @@ import UIPrimitives
 
 struct ProductsLandingView: View {
     
-    typealias Event = ProductLandingEvent
-    
-    let event: (Event) -> Void
     let products: [Product]
+    let event: (ProductLandingEvent) -> Void
     let config: ProductLandingConfig
     let viewFactory: ImageViewFactory
     
@@ -117,8 +115,8 @@ extension ProductLandingConfig.ItemConfig {
     Group {
         
         ProductsLandingView(
-            event: { event in },
             products: [.product],
+            event: { event in },
             config: .preview,
             viewFactory: .default
         )

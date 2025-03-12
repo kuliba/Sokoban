@@ -22,9 +22,9 @@ extension ProductsLandingDomain {
     
     typealias Landing = [OrderCardLandingComponent.Product]
     
-    typealias State = ProductLandingState<Landing>
-    typealias Event = ProductsLandingEvent<Landing>
-    typealias Effect = ProductLandingEffect
+    typealias State = LandingState<Landing>
+    typealias Event = LandingEvent<Landing>
+    typealias Effect = LandingEffect
     
     typealias Reducer = ProductLandingReducer<Landing>
     typealias EffectHandler = ProductLandingEffectHandler<Landing>

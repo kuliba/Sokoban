@@ -40,15 +40,15 @@ public extension ProductLandingReducer {
         return (state, effect)
     }
     
-    typealias State = ProductLandingState<Landing>
-    typealias Event = ProductsLandingEvent<Landing>
-    typealias Effect = ProductLandingEffect
+    typealias State = LandingState<Landing>
+    typealias Event = LandingEvent<Landing>
+    typealias Effect = LandingEffect
 }
 
 private extension ProductLandingReducer {
     
     func update(
-        _ state: inout ProductLandingState<Landing>,
+        _ state: inout State,
         with result: (Result<Landing, LoadFailure>)
     ) {
         state.isLoading = false
@@ -75,7 +75,7 @@ private extension ProductLandingReducer {
     }
     
     func dismissInformer(
-        _ state: inout ProductLandingState<Landing>
+        _ state: inout State
     ) {
         switch state.status {
         case let .failure(failure):
