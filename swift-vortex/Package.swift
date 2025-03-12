@@ -3093,6 +3093,9 @@ private extension Target {
         name: .orderCardLandingComponent,
         dependencies: [
             .orderCard,
+            .headerLandingComponent,
+            .listLandingComponent,
+            .dropDownTextListComponent,
             .sharedConfigs,
             .uiPrimitives
             // internal packages
