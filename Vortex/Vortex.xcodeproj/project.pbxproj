@@ -2220,7 +2220,6 @@
 		68A07C45281ADEBC00797A54 /* OfferProductViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A07C44281ADEBB00797A54 /* OfferProductViewComponent.swift */; };
 		68A07C48281B18C900797A54 /* OpenDepositListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A07C47281B18C800797A54 /* OpenDepositListView.swift */; };
 		68A07C4B281B190800797A54 /* OpenDepositListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A07C4A281B190800797A54 /* OpenDepositListViewModel.swift */; };
-		68A40A132771E154007333EA /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 68A40A122771E154007333EA /* FirebaseAnalytics */; };
 		68AB32C728BF7CD6004DC481 /* GetPersonAgreementsDecodingGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68AB32C628BF7CD6004DC481 /* GetPersonAgreementsDecodingGeneric.json */; };
 		68AB32C928BF9014004DC481 /* PersonAgreement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68AB32C828BF9014004DC481 /* PersonAgreement.swift */; };
 		68AD33F1279858E900647665 /* CsrfDtoDecodingGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68AD33F0279858E900647665 /* CsrfDtoDecodingGeneric.json */; };
@@ -3097,6 +3096,9 @@
 		841138992AE9B37300B79DC0 /* StickerBannerInProductListData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841138982AE9B37300B79DC0 /* StickerBannerInProductListData.swift */; };
 		8411B6212D52263500A85791 /* SberQRConfirmPaymentWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8411B6202D52263500A85791 /* SberQRConfirmPaymentWrapperView.swift */; };
 		841C7A5E2D527D1E006D40A1 /* RootViewModelFactory+makeStickerLandingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841C7A5D2D527D1E006D40A1 /* RootViewModelFactory+makeStickerLandingViewModel.swift */; };
+		84211C6A2D808053007ABF46 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = EDF6821C266FC37F00FD5C07 /* FirebaseMessaging */; };
+		84211C6B2D808053007ABF46 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = ED147D4E26BC1237002F66C8 /* FirebaseCrashlytics */; };
+		84211C6C2D808053007ABF46 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 68A40A122771E154007333EA /* FirebaseAnalytics */; };
 		842C42322D11FB00006A307D /* RootViewModelFactory+runOnEachNextActiveSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842C42312D11FB00006A307D /* RootViewModelFactory+runOnEachNextActiveSession.swift */; };
 		842C42372D11FD2B006A307D /* RootViewModelFactory+makeSavingsAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842C42352D11FD2B006A307D /* RootViewModelFactory+makeSavingsAccount.swift */; };
 		842C42392D11FDD2006A307D /* RootViewModelFactory+makeServiceCategoryFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842C42382D11FDD2006A307D /* RootViewModelFactory+makeServiceCategoryFailure.swift */; };
@@ -3490,7 +3492,6 @@
 		ED0FE469281AE385000CF73F /* DetailCapitView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED0FE468281AE385000CF73F /* DetailCapitView.xib */; };
 		ED0FE46B281AE391000CF73F /* DetailCapitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0FE46A281AE391000CF73F /* DetailCapitView.swift */; };
 		ED147D4C26BAD7E0002F66C8 /* BottomInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED147D4B26BAD7E0002F66C8 /* BottomInputView.xib */; };
-		ED147D4F26BC1237002F66C8 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = ED147D4E26BC1237002F66C8 /* FirebaseCrashlytics */; };
 		ED15DAEF2812C33D00BF7E9F /* DocumentCellViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED15DAEE2812C33D00BF7E9F /* DocumentCellViewComponent.swift */; };
 		ED234CD2276BA08300B23985 /* JSONCodingKeyJSONAny.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED234CD1276BA08300B23985 /* JSONCodingKeyJSONAny.swift */; };
 		ED288CAA2874C95F00B9ABC6 /* AlertTextFieldComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED288CA92874C95F00B9ABC6 /* AlertTextFieldComponent.swift */; };
@@ -3723,7 +3724,6 @@
 		EDF68218266F9EC800FD5C07 /* RouterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF68209266F9EC800FD5C07 /* RouterManager.swift */; };
 		EDF68219266F9EC800FD5C07 /* RouterBaseUrlList.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF6820B266F9EC800FD5C07 /* RouterBaseUrlList.swift */; };
 		EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF6820C266F9EC800FD5C07 /* RouterUrlList.swift */; };
-		EDF6821D266FC37F00FD5C07 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = EDF6821C266FC37F00FD5C07 /* FirebaseMessaging */; };
 		EDFA7521277D15A000EEB4AE /* TermsDepositCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFA751F277D15A000EEB4AE /* TermsDepositCollectionViewCell.swift */; };
 		EDFA7522277D15A000EEB4AE /* TermsDepositCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDFA7520277D15A000EEB4AE /* TermsDepositCollectionViewCell.xib */; };
 		EDFA7525277D181500EEB4AE /* TermsDepositTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFA7523277D181500EEB4AE /* TermsDepositTableViewCell.swift */; };
@@ -7824,6 +7824,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84211C6C2D808053007ABF46 /* FirebaseAnalytics in Frameworks */,
+				84211C6B2D808053007ABF46 /* FirebaseCrashlytics in Frameworks */,
+				84211C6A2D808053007ABF46 /* FirebaseMessaging in Frameworks */,
 				C199807A2B7EB8F500D85C09 /* OperatorsListComponents in Frameworks */,
 				2A06DC2E2AFACAE30049709E /* URLRequestFactory in Frameworks */,
 				C15C4C772CFE72CD00A8C922 /* OrderCardLandingBackend in Frameworks */,
@@ -7886,7 +7889,6 @@
 				2AD073722D65B55200922062 /* StateMachines in Frameworks */,
 				2A6ECBAC2C8AC1F9007C44CB /* ServiceCategoriesBackendV0 in Frameworks */,
 				C19C234F2D562E210026FD0B /* GetCardOrderFormService in Frameworks */,
-				68A40A132771E154007333EA /* FirebaseAnalytics in Frameworks */,
 				832FB0AD2C215AB7001CE10F /* SVCardLimitAPI in Frameworks */,
 				A7E314162D394E67009811EB /* CollateralLoanLandingCreateDraftCollateralLoanApplicationUI in Frameworks */,
 				A7E8D03A2CF6E608008DF828 /* CollateralLoanLandingGetShowcaseUI in Frameworks */,
@@ -7897,14 +7899,12 @@
 				2A3011E62A6AB53B00560B98 /* CvvPin in Frameworks */,
 				830C91BB2AAF9051005EC90C /* CodableLanding in Frameworks */,
 				833325412B5AE955001920EB /* CardStatementAPI in Frameworks */,
-				EDF6821D266FC37F00FD5C07 /* FirebaseMessaging in Frameworks */,
 				84CA1BE52D06BAB50097BB93 /* VortexCrypto in Frameworks */,
 				83C6F1162B9601BE00EA892A /* ProductProfileComponents in Frameworks */,
 				2A3947182A19E84500EB9757 /* TextFieldComponent in Frameworks */,
 				2A9EA5D92D26AC0700DEC45C /* FlowCore in Frameworks */,
 				8330E12F2CEF405B00694AD0 /* SavingsServices in Frameworks */,
 				83E513392AA73CFC00F8183B /* LandingMapping in Frameworks */,
-				ED147D4F26BC1237002F66C8 /* FirebaseCrashlytics in Frameworks */,
 				83F775CB2CA2CE0700A05F69 /* MarketShowcase in Frameworks */,
 				C124C7E72D6C45CB00124721 /* ListLandingComponent in Frameworks */,
 				2A669EAC2AE50674009A2F12 /* CVVPIN_Services in Frameworks */,
@@ -27793,6 +27793,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 87;
+				CURRENT_PROJECT_VERSION = 100;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
@@ -27880,6 +27881,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 87;
+				CURRENT_PROJECT_VERSION = 100;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VortexPushServiceExtension/Info.plist;
@@ -28210,6 +28212,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 87;
+				CURRENT_PROJECT_VERSION = 100;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VortexPushServiceExtension/Info.plist;
@@ -28243,6 +28246,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 87;
+				CURRENT_PROJECT_VERSION = 100;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VortexPushServiceExtension/Info.plist;
@@ -28481,6 +28485,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 87;
+				CURRENT_PROJECT_VERSION = 100;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -28566,6 +28571,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 87;
+				CURRENT_PROJECT_VERSION = 100;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VortexPushServiceExtension/Info.plist;
@@ -29546,6 +29552,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 87;
+				CURRENT_PROJECT_VERSION = 100;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
@@ -29583,6 +29590,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 87;
+				CURRENT_PROJECT_VERSION = 100;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -30251,7 +30259,7 @@
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 8.1.0;
+				minimumVersion = 11.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
