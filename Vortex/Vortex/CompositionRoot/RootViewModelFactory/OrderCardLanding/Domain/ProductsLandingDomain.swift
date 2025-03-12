@@ -26,8 +26,8 @@ extension ProductsLandingDomain {
     typealias Event = LandingEvent<Landing>
     typealias Effect = LandingEffect
     
-    typealias Reducer = ProductLandingReducer<Landing>
-    typealias EffectHandler = ProductLandingEffectHandler<Landing>
+    typealias Reducer = LandingReducer<Landing>
+    typealias EffectHandler = LandingEffectHandler<Landing>
     
     typealias Content = RxViewModel<State, Event, Effect>
     
