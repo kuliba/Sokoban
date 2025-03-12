@@ -5,14 +5,14 @@
 //  Created by Дмитрий Савушкин on 25.02.2025.
 //
 
+import DropDownTextListComponent
 import Foundation
 import HeaderLandingComponent
 import ListLandingComponent
-import OrderCardLandingBackend
-import RemoteServices
-import DropDownTextListComponent
-import OrderCardLandingComponent
 import OrderCard
+import OrderCardLandingBackend
+import OrderCardLandingComponent
+import RemoteServices
 
 extension RootViewModelFactory {
     
@@ -257,7 +257,7 @@ private extension OrderCardLanding {
 
 private extension Result<OrderCardLanding, BackendFailure> {
     
-    var loadResult: Result<OrderCardLanding, LoadFailure> {
+    var loadResult: Result<OrderCardLanding, OrderCardLandingComponent.LoadFailure> {
         
         switch self {
         case let .success(landing):

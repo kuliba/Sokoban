@@ -40,6 +40,7 @@ extension OrderCardLandingDomain {
     typealias Notify = (NotifyEvent) -> Void
     
     enum Select: Equatable {
+        
         case `continue`
     }
     

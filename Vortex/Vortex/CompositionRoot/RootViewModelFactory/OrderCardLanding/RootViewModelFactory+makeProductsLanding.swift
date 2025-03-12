@@ -6,10 +6,10 @@
 //
 
 import Foundation
-import OrderCardLandingBackend
-import RemoteServices
-import OrderCardLandingComponent
 import OrderCard
+import OrderCardLandingBackend
+import OrderCardLandingComponent
+import RemoteServices
 
 extension RootViewModelFactory {
     
@@ -108,7 +108,7 @@ private extension String {
 
 private extension Result<[OrderCardLandingComponent.Product], BackendFailure> {
     
-    var loadResult: Result<[OrderCardLandingComponent.Product], LoadFailure> {
+    var loadResult: Result<[OrderCardLandingComponent.Product], OrderCardLandingComponent.LoadFailure> {
         
         switch self {
         case let .success(landing):

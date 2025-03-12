@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import OrderCard
 
 public final class LandingEffectHandler<Landing> {
     

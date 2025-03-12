@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import OrderCard
     
 public struct ProductLandingState<Landing> {
     
