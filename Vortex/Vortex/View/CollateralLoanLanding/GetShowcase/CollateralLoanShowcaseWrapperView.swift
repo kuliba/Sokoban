@@ -66,10 +66,11 @@ struct CollateralLoanShowcaseWrapperView: View {
             case let .loaded(showcase):
                 makeShowcaseView(showcase)
                 
-            case let .inflight(oldShowcase):
-                oldShowcase.map {
-                    makeShowcaseView($0)
-                }
+            case .inflight:
+  
+                Color.white
+                    .frame(maxHeight: .infinity)
+                    .loader(isLoading: true, color: .white)
             }
         }
     }
@@ -223,6 +224,32 @@ extension GetShowcaseDomain.Navigation.Alert: Identifiable {
         }
     }
 }
+
+//private extension GetShowcaseDomain.FlowDomain.State {
+//    
+//    var informer: Informer? {
+//        
+//        guard case let .failure(failure) = navigation,
+//              case let .informer(informerData) = failure
+//        else { return nil }
+//        
+//        return .failure(message: informerData.message)
+//    }
+//}
+
+//private struct Informer {
+//    
+//    let message: String
+//    let icon: Image
+//    let color: Color
+//    
+//    static func failure(
+//        message: String
+//    ) -> Self {
+//        
+//        return .init(message: message, icon: .ic24Close, color: .mainColorsBlackMedium)
+//    }
+//}
 
 extension GetShowcaseDomain.Binder {
     

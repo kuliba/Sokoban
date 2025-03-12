@@ -86,11 +86,10 @@ struct CollateralLoanLandingWrapperView: View {
             case let .loaded(product):
                 content(product, state, event)
 
-            case let .inflight(oldProduct):
-                oldProduct.map {
-
-                    content($0, state, event)
-                }
+            case .inflight:
+                Color.white
+                    .frame(maxHeight: .infinity)
+                    .loader(isLoading: true, color: .white)
             }
         }
         .onFirstAppear { event(.load(state.landingID)) }

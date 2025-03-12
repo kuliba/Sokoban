@@ -32,7 +32,7 @@ extension GetShowcaseDomain {
         case loaded(Showcase)
         case failure(Failure, Showcase?)
         
-        var isLoading: Bool {
+        public var isLoading: Bool {
             
             switch self {
             case .inflight:
