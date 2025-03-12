@@ -51,7 +51,7 @@ extension RootViewModelFactory {
     ) {
         loadSplashScreenTimePeriodsCache { [weak self] in
             
-            let periods = ["DAY"] ?? $0.map(\.timePeriod)
+            let periods = $0.map(\.timePeriod)
             
             self?.loadSplashScreenSettings(forPeriods: periods) { [weak self] in
                 
