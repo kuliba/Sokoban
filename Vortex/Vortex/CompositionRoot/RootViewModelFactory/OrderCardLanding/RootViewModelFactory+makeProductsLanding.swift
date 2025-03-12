@@ -129,14 +129,15 @@ private extension OrderCardLandingComponent.Product.Theme {
 private extension CardShowCaseResponse.Product {
     
     var color: Color {
-        
         switch theme {
         case "GRAY":
-            return Color.mainColorsGrayLightest
+            return .mainColorsGrayLightest
+            
         case "BLACK":
-            return Color.mainColorsBlack
+            return .mainColorsBlack
+            
         default:
-            return Color.mainColorsGrayLightest
+            return .mainColorsGrayLightest
         }
     }
 }
