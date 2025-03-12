@@ -22,7 +22,7 @@ public struct SavingsAccountConfig {
     public let offsetForDisplayHeader: CGFloat
     let paddings: Paddings
     public let spacing: CGFloat
-    let questionHeight: CGFloat
+    let questions: Questions
     
     public init(
         backImage: Image,
@@ -36,7 +36,7 @@ public struct SavingsAccountConfig {
         offsetForDisplayHeader: CGFloat,
         paddings: Paddings,
         spacing: CGFloat,
-        questionHeight: CGFloat
+        questions: Questions
     ) {
         self.backImage = backImage
         self.bannerHeight = bannerHeight
@@ -49,7 +49,7 @@ public struct SavingsAccountConfig {
         self.offsetForDisplayHeader = offsetForDisplayHeader
         self.paddings = paddings
         self.spacing = spacing
-        self.questionHeight = questionHeight
+        self.questions = questions
     }
        
     public struct ContinueButton {
@@ -132,6 +132,20 @@ public struct SavingsAccountConfig {
             self.title = title
         }
     }
+    
+    public struct Questions {
+        
+        let height: CGFloat
+        let title: TextConfig
+        
+        public init(
+            height: CGFloat,
+            title: TextConfig
+        ) {
+            self.height = height
+            self.title = title
+        }
+    }
 }
 
 extension SavingsAccountConfig {
@@ -151,7 +165,7 @@ extension SavingsAccountConfig {
             ),
             fonts: .init(
                 title: list.title,
-                itemTitle: list.item.title,
+                itemTitle: questions.title,
                 itemSubtitle: list.item.subtitle
             )
         )

@@ -68,7 +68,6 @@ public struct SavingsAccountView: View {
             config: config.list,
             factory: factory
         )
-        .modifier(PaddingsModifier(horizontal: config.paddings.list.horizontal, vertical: config.paddings.list.vertical))
         .modifier(BackgroundAndCornerRadiusModifier(background: config.list.background, cornerRadius: config.cornerRadius))
     }
     

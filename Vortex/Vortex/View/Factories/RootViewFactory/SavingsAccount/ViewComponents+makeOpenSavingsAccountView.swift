@@ -89,7 +89,9 @@ extension ViewComponents {
                         
                         makeProductSelectView(
                             state: state.productSelect,
-                            event: { event(.productSelect($0)) })
+                            event: { event(.productSelect($0)) },
+                            edgeInsets: .edgeInsets
+                        )
                     }
                 )
                 .onFirstAppear { binder.content.event(.load) }
@@ -107,8 +109,8 @@ extension ViewComponents {
             }
             .navigationBarBackButtonHidden(true)
             .safeAreaInset(edge: .bottom) {
-               
                 footer(state: state, event: event)
+                    .background(.white)
             }
             .opacity(state.isLoading ? 0.7 : 1)
             .disabled(state.isLoading)
@@ -195,7 +197,7 @@ extension ViewComponents {
                 event: { event(.continue) },
                 config: .iVortex(title: state.continueButtonTitle)
             )
-            .padding(.horizontal)
+            .padding()
             .conditionalBottomPadding()
         }
     }
@@ -336,4 +338,9 @@ private extension  StringAlert {
 private extension String {
     
     static let returnMessage: String = "При возврате назад потребуется повторный ввод данных"
+}
+
+private extension EdgeInsets {
+    
+    static let edgeInsets: Self = .init(top: 0, leading: 16, bottom: 0, trailing: 12)
 }
