@@ -3326,6 +3326,7 @@
 		C1904BDD2D806D3400805475 /* RootViewModelFactory+makeProductsLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1904BDC2D806D3400805475 /* RootViewModelFactory+makeProductsLanding.swift */; };
 		C1904BE12D81651D00805475 /* CardLandingContentDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1904BE02D81651D00805475 /* CardLandingContentDomain.swift */; };
 		C1904BE32D81688100805475 /* RootViewModelFactory+makeProductsLandingContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1904BE22D81688100805475 /* RootViewModelFactory+makeProductsLandingContent.swift */; };
+		C1904BE52D81769000805475 /* ViewComponents+makeCardLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1904BE42D81769000805475 /* ViewComponents+makeCardLanding.swift */; };
 		C192C99A2D47916500518831 /* RequestFactory+createCardApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = C192C9992D47916500518831 /* RequestFactory+createCardApplication.swift */; };
 		C192C99C2D47966000518831 /* CreateCardApplication in Frameworks */ = {isa = PBXBuildFile; productRef = C192C99B2D47966000518831 /* CreateCardApplication */; };
 		C192D4292C23E87700A6B338 /* HistoryReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C192D4282C23E87700A6B338 /* HistoryReducer.swift */; };
@@ -7101,6 +7102,7 @@
 		C1904BDC2D806D3400805475 /* RootViewModelFactory+makeProductsLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeProductsLanding.swift"; sourceTree = "<group>"; };
 		C1904BE02D81651D00805475 /* CardLandingContentDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardLandingContentDomain.swift; sourceTree = "<group>"; };
 		C1904BE22D81688100805475 /* RootViewModelFactory+makeProductsLandingContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeProductsLandingContent.swift"; sourceTree = "<group>"; };
+		C1904BE42D81769000805475 /* ViewComponents+makeCardLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeCardLanding.swift"; sourceTree = "<group>"; };
 		C192C9992D47916500518831 /* RequestFactory+createCardApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCardApplication.swift"; sourceTree = "<group>"; };
 		C192D4282C23E87700A6B338 /* HistoryReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryReducer.swift; sourceTree = "<group>"; };
 		C19738D82AF279E300101B1B /* ResponseMapper+getJsonAbroadDict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+getJsonAbroadDict.swift"; sourceTree = "<group>"; };
@@ -17588,6 +17590,7 @@
 			isa = PBXGroup;
 			children = (
 				C127C5222D6CB3F300683F85 /* ViewComponents+makeOpenCardLanding.swift */,
+				C1904BE42D81769000805475 /* ViewComponents+makeCardLanding.swift */,
 			);
 			path = OpenCardLanding;
 			sourceTree = "<group>";
@@ -23514,6 +23517,7 @@
 				EDB1658026694676007E6030 /* PaymentsViewControllerLayout.swift in Sources */,
 				0B931B4B26DE2E5F00CA8017 /* GKHHistoryCaruselModel.swift in Sources */,
 				7758754D27996DCB0080115D /* LocalAgent.swift in Sources */,
+				C1904BE52D81769000805475 /* ViewComponents+makeCardLanding.swift in Sources */,
 				2A61D07B2BECCCFC00802C95 /* PaymentsTransfersFlowManager+preview.swift in Sources */,
 				774A8B622865FDAF00B81140 /* PaymentsProductViewComponent.swift in Sources */,
 				0B66E8D826CC5EC400FD735D /* ExtensionDevice.swift in Sources */,

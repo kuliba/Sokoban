@@ -177,6 +177,7 @@ struct MainView<NavigationOperationView: View>: View {
             OpenDepositDetailView(viewModel: depositListViewModel, getUImage: getUImage)
             
         case let .openCard(binder):
+            viewFactory.components.makeOrderCardLandingView(binder: <#T##OrderCardLandingDomain.Binder#>, dismiss: <#T##() -> Void#>)
             AuthProductsView(viewModel: binder.content)
                 .background(viewFactory.components.makeCardPromoLandingFlowView(binder.flow))
             
