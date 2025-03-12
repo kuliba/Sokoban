@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ProductLandingEvent {
+public enum ProductLandingEvent {
     
     case order
     case info

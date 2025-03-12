@@ -9,11 +9,11 @@ import Foundation
 
 public struct Product {
     
-    let action: Action
-    let imageURL: String
-    let items: [Item]
-    let terms: String
-    let title: String
+    public let action: Action
+    public let imageURL: String
+    public let items: [Item]
+    public let terms: String
+    public let title: String
     
     public init(
         action: Action,
@@ -31,9 +31,9 @@ public struct Product {
     
     public struct Action {
         
-        let fallbackURL: String?
-        let target: String
-        let type: String
+        public let fallbackURL: String?
+        public let target: String
+        public let type: String
         
         public init(
             fallbackURL: String?,
@@ -48,8 +48,8 @@ public struct Product {
     
     public struct Item {
         
-        let bullet: Bool
-        let title: String
+        public let bullet: Bool
+        public let title: String
         
         public init(
             bullet: Bool,

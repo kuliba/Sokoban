@@ -8,14 +8,26 @@
 import SwiftUI
 import UIPrimitives
 
-struct ProductsLandingView: View {
+public struct ProductsLandingView: View {
     
     let products: [Product]
     let event: (ProductLandingEvent) -> Void
     let config: ProductLandingConfig
     let viewFactory: ImageViewFactory
     
-    var body: some View {
+    public init(
+        products: [Product],
+        event: @escaping (ProductLandingEvent) -> Void,
+        config: ProductLandingConfig,
+        viewFactory: ImageViewFactory
+    ) {
+        self.products = products
+        self.event = event
+        self.config = config
+        self.viewFactory = viewFactory
+    }
+    
+    public var body: some View {
         
         ForEach(products, id: \.title, content: productView)
     }
