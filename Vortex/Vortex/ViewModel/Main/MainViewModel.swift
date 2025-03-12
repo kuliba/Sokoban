@@ -1046,11 +1046,12 @@ private extension MainViewModel {
             Self.openLinkURL(model.productsOpenAccountURL)
         } else {
             
-            let authProductsViewModel = viewModelsFactory.makeAuthProductsViewModel { [weak self] in
+            let openCard = viewModelsFactory.makeOpenCardLanding { [weak self] in
+                
                 self?.action.send(MainViewModelAction.Close.Link())
             }
             
-            route.destination = .openCard(authProductsViewModel)
+            route.destination = .openCard(openCard)
         }
     }
     
@@ -1767,7 +1768,7 @@ extension MainViewModel {
         case serviceOperators(OperatorsViewModel)
         case failedView(QRFailedViewModelWrapper)
         case searchOperators(QRSearchOperatorViewModel)
-        case openCard(AuthProductsLandingDomain.Binder)
+        case openCard(OpenCard)
         case payments(Node<PaymentsViewModel>)
         case operatorView(InternetTVDetailsViewModel)
         case paymentsServices(PaymentsServicesViewModel)
@@ -1779,6 +1780,12 @@ extension MainViewModel {
         case providerServicePicker(Node<AnywayServicePickerFlowModel>)
         case collateralLoanLanding(GetShowcaseDomain.Binder)
         case orderCard
+        
+        enum OpenCard {
+            
+            case cardLanding(CardLandingDomain.Binder)
+            case legacy(AuthProductsLandingDomain.Binder)
+        }
         
         var id: Case {
             
@@ -2017,7 +2024,7 @@ extension MainViewModel {
             guard let self else { return }
 
             let productsCard = model.products(.card)
-            let makeAuthProductsViewModel = viewModelsFactory.makeAuthProductsViewModel
+            let makeOpenCardLanding = viewModelsFactory.makeOpenCardLanding
             
             if productsCard == nil ||
                 productsCard?.contains(where: {
@@ -2031,12 +2038,12 @@ extension MainViewModel {
                                 
                                 DispatchQueue.main.async {
                                     
-                                    let authProductsViewModel = makeAuthProductsViewModel { [weak self] in
+                                    let openCard = makeOpenCardLanding { [weak self] in
                                         
                                         self?.action.send(MyProductsViewModelAction.Close.Link())
                                     }
                                     
-                                    self.route.destination = .openCard(authProductsViewModel)
+                                    self.route.destination = .openCard(openCard)
                                 }
                             }
                         )))

@@ -848,16 +848,20 @@ private extension RootViewModelFactory {
             qrViewModelFactory: qrViewModelFactory,
             makeTrailingToolbarItems: makeTrailingToolbarItems,
             makeCreditCardMVP: { featureFlags.creditCardMVPFlag.isActive ? .creditCardMVPPreview : nil },
-            makeAuthProductsViewModel: {
+            makeOpenCardLanding: { dismiss in
                 
-                self.makeCardPromoLanding(
-                    flag: featureFlags.orderCardFlag,
-                    dismiss: $0
-                )
-            }, 
-            makeProductsLandingViewModel: { _ in
-                
-                self.makeProductsLanding()
+                switch featureFlags.orderCardFlag.rawValue {
+                case .active:
+                    return .cardLanding(self.makeProductsLanding())
+                    
+                case .inactive:
+                    return .legacy(
+                        self.makeCardPromoLanding(
+                            flag: featureFlags.orderCardFlag,
+                            dismiss: dismiss
+                        )
+                    )
+                }
             }
         )
                   
