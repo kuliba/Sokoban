@@ -176,10 +176,15 @@ struct MainView<NavigationOperationView: View>: View {
         case let .openDeposit(depositListViewModel):
             OpenDepositDetailView(viewModel: depositListViewModel, getUImage: getUImage)
             
-        case let .openCard(binder):
-            viewFactory.components.makeOrderCardLandingView(binder: <#T##OrderCardLandingDomain.Binder#>, dismiss: <#T##() -> Void#>)
-            AuthProductsView(viewModel: binder.content)
-                .background(viewFactory.components.makeCardPromoLandingFlowView(binder.flow))
+        case let .openCard(openCard):
+            switch openCard {
+            case let .cardLanding(binder):
+                viewFactory.components.makeCardLandingView(binder: binder, dismiss: { viewModel.resetDestination() })
+                
+            case let .legacy(binder):
+                AuthProductsView(viewModel: binder.content)
+                    .background(viewFactory.components.makeCardPromoLandingFlowView(binder.flow))
+            }
             
         case let .openDepositsList(openDepositViewModel):
             OpenDepositListView(viewModel: openDepositViewModel, getUImage: getUImage)
