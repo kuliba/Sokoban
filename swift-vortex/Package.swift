@@ -3092,7 +3092,6 @@ private extension Target {
     static let orderCardLandingComponent = target(
         name: .orderCardLandingComponent,
         dependencies: [
-            .orderCard,
             .headerLandingComponent,
             .listLandingComponent,
             .dropDownTextListComponent,

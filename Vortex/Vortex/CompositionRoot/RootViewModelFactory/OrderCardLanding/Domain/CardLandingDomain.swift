@@ -1,17 +1,17 @@
 //
-//  OrderCardLandingDomain.swift
+//  CardLandingDomain.swift
 //  Vortex
 //
-//  Created by Дмитрий Савушкин on 25.02.2025.
+//  Created by Дмитрий Савушкин on 11.03.2025.
 //
 
 import OrderCardLandingComponent
 import RxViewModel
 
-enum OrderCardLandingDomain {}
+enum CardLandingDomain {}
 
-extension OrderCardLandingDomain {
-
+extension CardLandingDomain {
+    
     // MARK: - Binder
     
     typealias Binder = Vortex.Binder<Content, Flow>
@@ -19,7 +19,7 @@ extension OrderCardLandingDomain {
     
     // MARK: - Content
     
-    typealias Landing = OrderCardLanding
+    typealias Landing = [OrderCardLandingComponent.Product]
     
     typealias ContentDomain = CardLandingContentDomain<Landing>
     typealias Content = ContentDomain.Content

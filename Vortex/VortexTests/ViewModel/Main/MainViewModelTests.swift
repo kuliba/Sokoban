@@ -708,8 +708,8 @@ final class MainViewModelTests: XCTestCase {
             makePromoProductViewModel: { $0.mapper(onTap: $1.show, onHide: $1.hide)},
             qrViewModelFactory: qrViewModelFactory,
             makeTrailingToolbarItems: { _ in [] },
-            makeCreditCardMVP: { nil }, 
-            makeAuthProductsViewModel: { _ in .preview }
+            makeCreditCardMVP: { nil },
+            makeOpenCardLanding: { _ in .cardLanding(.preview)}
         )
         
         let sut = MainViewModel(
@@ -783,7 +783,7 @@ final class MainViewModelTests: XCTestCase {
             qrViewModelFactory: .preview(),
             makeTrailingToolbarItems: { _ in [] },
             makeCreditCardMVP: { nil },
-            makeAuthProductsViewModel: { _ in .preview }
+            makeOpenCardLanding: { _ in .cardLanding(.preview)}
         )
 
         let sut = MainViewModel(

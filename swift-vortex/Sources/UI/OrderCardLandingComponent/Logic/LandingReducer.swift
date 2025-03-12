@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import OrderCard
 
 public final class LandingReducer<Landing> {
     
@@ -49,7 +48,7 @@ public extension LandingReducer {
 private extension LandingReducer {
     
     func update(
-        _ state: inout LandingState<Landing>,
+        _ state: inout State,
         with result: (Result<Landing, LoadFailure>)
     ) {
         state.isLoading = false
@@ -76,7 +75,7 @@ private extension LandingReducer {
     }
     
     func dismissInformer(
-        _ state: inout LandingState<Landing>
+        _ state: inout State
     ) {
         switch state.status {
         case let .failure(failure):

@@ -8,16 +8,26 @@
 import SwiftUI
 import UIPrimitives
 
-struct ProductsLandingView: View {
+public struct ProductsLandingView: View {
     
-    typealias Event = ProductLandingEvent
-    
-    let event: (Event) -> Void
     let products: [Product]
+    let event: (ProductLandingEvent) -> Void
     let config: ProductLandingConfig
     let viewFactory: ImageViewFactory
     
-    var body: some View {
+    public init(
+        products: [Product],
+        event: @escaping (ProductLandingEvent) -> Void,
+        config: ProductLandingConfig,
+        viewFactory: ImageViewFactory
+    ) {
+        self.products = products
+        self.event = event
+        self.config = config
+        self.viewFactory = viewFactory
+    }
+    
+    public var body: some View {
         
         ForEach(products, id: \.title, content: productView)
     }
@@ -117,8 +127,8 @@ extension ProductLandingConfig.ItemConfig {
     Group {
         
         ProductsLandingView(
-            event: { event in },
             products: [.product],
+            event: { event in },
             config: .preview,
             viewFactory: .default
         )
