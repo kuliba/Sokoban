@@ -10,14 +10,14 @@ import OrderCardLandingComponent
 extension ProductLandingConfig {
     
     static let iVortex: Self = .init(
-        background: .white,
+        background: .mainColorsGrayLightest,
         buttonsConfig: .init(
             buttonsPadding: 16,
             buttonsSpacing: 44,
             buttonsHeight: 56
         ),
         conditionButtonConfig: .init(
-            icon: .cardPlaceholder,
+            icon: .ic24Info,
             spacing: 12,
             frame: 20,
             title: .init(
@@ -43,7 +43,7 @@ extension ProductLandingConfig {
             verticalPadding: 12
         ),
         orderButtonConfig: .init(
-            background: .red,
+            background: .buttonPrimary,
             cornerRadius: 8,
             title: .init(
                 text: "Заказать",
