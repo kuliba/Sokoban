@@ -26,10 +26,14 @@ extension ViewComponents {
                 EmptyView()
                 
             case .presented:
-                Color.blue
+                Image("splash")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
                 
             case .warm:
-                Color.green
+                Image("splash")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
             }
         }
     }
