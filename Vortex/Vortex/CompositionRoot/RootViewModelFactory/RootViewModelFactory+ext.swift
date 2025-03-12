@@ -418,11 +418,18 @@ extension RootViewModelFactory {
             bannersBox?.requestUpdate()
         }
         
+        // MARK: - Splash Screen
+        
         if featureFlags.splashScreenFlag.isActive {
+            
+            performOrWaitForActive { [weak self] in
+                
+                self?.scheduleGetAndCacheSplashScreenTimePeriods()
+            }
             
             performOrWaitForAuthorized { [weak self] in
                 
-                self?.getSplashImages()
+                self?.scheduleGetAndCacheSplashImages()
             }
         }
         
