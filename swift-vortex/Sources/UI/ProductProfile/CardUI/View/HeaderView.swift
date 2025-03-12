@@ -11,7 +11,7 @@ public struct HeaderDetails {
     
     let number: String?
     let period: String?
-    var icon: Image?
+    public var icon: Image?
     
     public init(
         number: String?,

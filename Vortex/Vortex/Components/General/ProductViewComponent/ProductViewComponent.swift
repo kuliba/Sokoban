@@ -5,13 +5,13 @@
 //  Created by Дмитрий on 21.02.2022.
 //
 
-import Foundation
+import ActivateSlider
+import CardUI
 import Combine
+import Foundation
+import PinCodeUI
 import SwiftUI
 import Tagged
-import PinCodeUI
-import CardUI
-import ActivateSlider
 import UIKit
 
 //MARK: - ViewModel
@@ -42,7 +42,8 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
     private let pasteboard = UIPasteboard.general
     
     private let event: (Event) -> Void
-    
+    private let schedulers: Schedulers
+
     internal init(
         id: ProductData.ID,
         header: HeaderDetails,
@@ -55,7 +56,8 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
         productType: ProductType,
         cardAction: CardAction? = nil,
         cvvInfo: CvvInfo? = nil,
-        event: @escaping (Event) -> Void = { _ in }
+        event: @escaping (Event) -> Void = { _ in },
+        schedulers: Schedulers = .init()
     ) {
         self.id = id
         self.header = header
@@ -70,6 +72,7 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
         self.cvvInfo = cvvInfo
         self.config = .config(appearance: appearance)
         self.event = event
+        self.schedulers = schedulers
     }
     
     convenience init(
@@ -80,7 +83,8 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
         model: Model,
         cardAction: CardAction? = nil,
         cvvInfo: CvvInfo? = nil,
-        event: @escaping (Event) -> Void = { _ in }
+        event: @escaping (Event) -> Void = { _ in },
+        schedulers: Schedulers = .init()
     ) {
         let balance = Self.balanceFormatted(product: productData, style: style, model: model)
         let number = productData.displayNumber
@@ -128,7 +132,8 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
             productType: productType,
             cardAction: cardAction,
             cvvInfo: cvvInfo,
-            event: event
+            event: event,
+            schedulers: schedulers
         )
         
         bind()
@@ -186,19 +191,37 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
     
     func update(with productData: ProductData, model: Model) {
         
-        cardInfo.name = Self.name(product: productData, style: appearance.style, creditProductName: .cardTitle)
-        cardInfo.owner = Self.owner(from: productData)
-        self.statusAction = makeStatusActionNode(productData)
-        header.updateIcon(productData.cloverImage)
-        footer.balance = Self.balanceFormatted(product: productData, style: appearance.style, model: model)
-        productData.asAccount?.interestRate.map {
-            if !$0.isEmpty {
-                footer.interestRate = $0 + "% /год."
+        schedulers.userInitiated.schedule { [weak self] in
+            
+            guard let self else { return }
+            
+            let name = Self.name(product: productData, style: appearance.style, creditProductName: .cardTitle)
+            let owner = Self.owner(from: productData)
+            let icon = productData.cloverImage
+            let balance = Self.balanceFormatted(product: productData, style: appearance.style, model: model)
+            let interestRate: String? = {
+                if let value = productData.asAccount?.interestRate, !value.isEmpty {
+                    return value + "% /год."
+                }
+                return nil
+            }()
+            let backgroundImage = Self.backgroundImage(with: productData, size: appearance.size, getImage: { model.images.value[.init($0)]?.image })
+            
+            schedulers.main.schedule { [weak self] in
+                
+                guard let self else { return }
+                
+                if cardInfo.name != name { cardInfo.name = name }
+                if cardInfo.owner != owner { cardInfo.owner = owner }
+                if header.icon != icon { header.updateIcon(icon) }
+                if footer.balance != balance { footer.balance = balance }
+                if footer.interestRate != interestRate { footer.interestRate = interestRate }
+                if appearance.background.image != backgroundImage {
+                    appearance.background = .init(color: productData.backgroundColor, image: backgroundImage)
+                    config = .config(appearance: appearance)
+                }
             }
         }
-        let backgroundImage = Self.backgroundImage(with: productData, size: appearance.size, getImage: { model.images.value[.init($0)]?.image })
-        appearance.background = .init(color: productData.backgroundColor, image: backgroundImage)
-        config = .config(appearance: appearance)
     }
     
     static func rateFormatted(product: ProductData) -> String? {
