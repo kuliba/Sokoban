@@ -45,16 +45,16 @@ extension SplashScreenDynamicConfig {
     }
 }
 
-extension SplashScreenState {
-    
-    static let initialSplashData: SplashScreenState = .init(
-        data: .init(state: .noSplash,
-                    background: Image("splashPlaceholder"),
-                    logo: Image("grayLogo"),
-                    footer: "Vortex",
-                    greeting: "Good Morning!",
-                    message: "С наступающим Вас Новым годом! Это время ожидания чудес, и пусть оно будет наполнено теплом и любовью близких! Здоровья,  мира,  добра, счастья и финансового благополучия Вам и Вашим близких!",
-                    animation: .easeOut),
-        config: .prod()
-    )
-}
+//extension SplashScreenState {
+//    
+//    static let initialSplashData: SplashScreenState = .init(
+//        data: .init(state: .noSplash,
+//                    background: Image("splashPlaceholder"),
+//                    logo: Image("grayLogo"),
+//                    footer: "Vortex",
+//                    greeting: "Good Morning!",
+//                    message: "С наступающим Вас Новым годом! Это время ожидания чудес, и пусть оно будет наполнено теплом и любовью близких! Здоровья,  мира,  добра, счастья и финансового благополучия Вам и Вашим близких!",
+//                    animation: .easeOut),
+//        config: .prod()
+//    )
+//}

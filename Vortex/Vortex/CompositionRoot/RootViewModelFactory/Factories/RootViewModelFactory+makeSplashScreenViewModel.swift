@@ -13,33 +13,15 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeSplashScreenViewModel(
-        initialState: SplashScreenState,
-        phaseOneDuration: Delay,
-        phaseTwoDuration: Delay
+        initialState: SplashScreenState = .cover
     ) -> SplashScreenViewModel {
         
         let reducer = SplashScreenReducer()
-        let effectHandler = SplashScreenEffectHandler(
-            startFirstTimer: { [weak self] completion in
-                
-                self?.schedulers.interactive.delay(for: phaseOneDuration) {
-                    
-                    completion()
-                }
-            },
-            startSecondTimer: { [weak self] completion in
-                
-                self?.schedulers.interactive.delay(for: phaseTwoDuration) {
-                    
-                    completion()
-                }
-            }
-        )
         
         return .init(
             initialState: initialState,
             reduce: reducer.reduce,
-            handleEffect: effectHandler.handleEffect,
+            handleEffect: { _,_ in },
             scheduler: schedulers.main
         )
     }

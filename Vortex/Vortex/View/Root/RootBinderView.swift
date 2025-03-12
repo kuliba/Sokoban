@@ -16,10 +16,17 @@ struct RootBinderView: View {
     
     var body: some View {
         
-        RxWrapperView(model: binder.flow) { state, event in
+        ZStack {
             
-            rootViewInNavigationView(state: state, event: event)
-                .loader(isLoading: state.isLoading)
+            rootViewFactory.components.splashView(splash: binder.content.splash)
+                .ignoresSafeArea()
+                .zIndex(1.0)
+            
+            RxWrapperView(model: binder.flow) { state, event in
+                
+                rootViewInNavigationView(state: state, event: event)
+                    .loader(isLoading: state.isLoading)
+            }
         }
     }
 }

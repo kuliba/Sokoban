@@ -151,7 +151,6 @@ extension RootViewFactoryComposer {
             },
             makeReturnButtonView: makeReturnButtonView,
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeSplashScreenView: makeSplashScreenView,
             makeUserAccountView: makeUserAccountView,
             makeMarketShowcaseView: makeMarketShowcaseView,
             components: makeViewComponents(rootEvent: rootEvent),

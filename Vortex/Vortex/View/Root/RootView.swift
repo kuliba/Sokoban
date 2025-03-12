@@ -92,7 +92,7 @@ struct RootView: View {
                 
             case let .v1(switcher as PaymentsTransfersSwitcher):
                 rootViewFactory.components.makePaymentsTransfersSwitcherView(switcher)
-
+                
             default:
                 EmptyView()
             }
@@ -162,7 +162,7 @@ struct RootView: View {
                     .modifier(IgnoringSafeArea(needIgnoringSafeArea, .bottom))
             }
             .accentColor(.textSecondary)
-                        
+            
         case let .openCard(viewModel):
             NavigationView {
                 AuthProductsView(viewModel: viewModel)
@@ -382,15 +382,11 @@ struct RootView_Previews: PreviewProvider {
 private extension SplashScreenViewModel {
     
     static let preview: SplashScreenViewModel = .init(
-        initialState: .initialSplashData,
-        reduce: {
-            state,
-            _ in (state, nil)
-        },
+        initialState: .hidden,
+        reduce: { state, _ in (state, nil) },
         handleEffect: { _,_ in }
     )
 }
-
 
 private extension RootViewFactory {
     
@@ -405,15 +401,10 @@ private extension RootViewFactory {
             )
         }
         
-        let makeSplashScreenView: MakeSplashScreenView = { state, event in
-            
-            .init(splash: state, config: .prod())
-        }
-        
         return .init(
             rootEvent: { _ in },
             infra: .init(
-                imageCache: .preview, 
+                imageCache: .preview,
                 imageCacheWithDefaultImage: { _ in .preview },
                 generalImageCache: .preview,
                 getUImage: { _ in nil }
@@ -451,7 +442,6 @@ private extension RootViewFactory {
             },
             makeReturnButtonView: { _ in .init(action: {}) },
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeSplashScreenView: makeSplashScreenView,
             makeUserAccountView: {
                 
                 return .init(
