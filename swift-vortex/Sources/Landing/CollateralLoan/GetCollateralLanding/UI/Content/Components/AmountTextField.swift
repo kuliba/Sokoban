@@ -115,6 +115,12 @@ struct AmountTextField<InformerPayload>: UIViewRepresentable {
                 return true
             }
             
+            // cleaning the string when paste
+            var string = string.trimmingCharacters(in: .whitespacesAndNewlines)
+            if let index = string.firstIndex(of: ".") ?? string.firstIndex(of: ",") {
+                string.removeSubrange(index ..< string.endIndex)
+            }
+            
             var filtered = text.replacingCharacters(in: Range(range, in: text)!, with: string).filter { $0.isNumber }
             
             if filtered.count > 1 && filtered.first == "0" {
