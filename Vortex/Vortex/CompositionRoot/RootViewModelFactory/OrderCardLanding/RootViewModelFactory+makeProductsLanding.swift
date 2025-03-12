@@ -12,12 +12,15 @@ import OrderCardLandingComponent
 import RemoteServices
 
 extension RootViewModelFactory {
-    
+     
     @inlinable
     func makeProductsLanding(
-    ) -> ProductsLandingDomain.Binder {
+    ) -> CardLandingDomain.Binder {
     
-        let content = makeProductsLandingContent()
+        let content: CardLandingDomain.Content = makeProductsLandingContent { [weak self] completion in
+            
+            self?.createProductLandingService { completion($0.loadResult) }
+        }
         content.event(.load)
         
         return composeBinder(
@@ -28,32 +31,10 @@ extension RootViewModelFactory {
     }
     
     @inlinable
-    func makeProductsLandingContent(
-    ) -> ProductsLandingDomain.Content {
-        
-        typealias Landing = ProductsLandingDomain.Content
-        
-        let reducer = ProductsLandingDomain.Reducer()
-        let effectHandler = ProductsLandingDomain.EffectHandler(
-            load: { [weak self] completion in
-                
-                self?.createProductLandingService { completion($0.loadResult) }
-            }
-        )
-        
-        return .init(
-            initialState: .init(),
-            reduce: reducer.reduce(_:event:),
-            handleEffect: effectHandler.handleEffect(effect:dispatch:),
-            scheduler: schedulers.main
-        )
-    }
-    
-    @inlinable
     func getNavigation(
-        select: ProductsLandingDomain.Select,
-        notify: @escaping ProductsLandingDomain.Notify,
-        completion: @escaping (ProductsLandingDomain.Navigation) -> Void
+        select: CardLandingDomain.Select,
+        notify: @escaping CardLandingDomain.Notify,
+        completion: @escaping (CardLandingDomain.Navigation) -> Void
     ) {
         switch select {
         case .continue:

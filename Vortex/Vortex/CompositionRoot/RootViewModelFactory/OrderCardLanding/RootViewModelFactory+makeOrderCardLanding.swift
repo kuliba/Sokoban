@@ -20,35 +20,16 @@ extension RootViewModelFactory {
     func makeOrderCardLanding(
     ) -> OrderCardLandingDomain.Binder {
     
-        let content = makeOrderCardLandingContent()
+        let content: OrderCardLandingDomain.Content = makeProductsLandingContent { [weak self] completion in
+            
+            self?.createOrderCardLandingService { completion($0.loadResult) }
+        }
         content.event(.load)
         
         return composeBinder(
             content: content,
             getNavigation: getNavigation,
             selectWitnesses: .empty
-        )
-    }
-    
-    @inlinable
-    func makeOrderCardLandingContent(
-    ) -> OrderCardLandingDomain.Content {
-        
-        typealias Landing = OrderCardLanding
-        
-        let reducer = OrderCardLandingDomain.Reducer()
-        let effectHandler = OrderCardLandingDomain.EffectHandler(
-            load: { [weak self] completion in
-                
-                self?.createOrderCardLandingService { completion($0.loadResult) }
-            }
-        )
-        
-        return .init(
-            initialState: .init(),
-            reduce: reducer.reduce(_:event:),
-            handleEffect: effectHandler.handleEffect(effect:dispatch:),
-            scheduler: schedulers.main
         )
     }
     

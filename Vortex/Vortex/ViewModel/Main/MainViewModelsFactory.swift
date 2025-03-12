@@ -36,7 +36,7 @@ struct MainViewModelsFactory {
     
     typealias MakeAuthProductsViewModel = (@escaping () -> Void) -> AuthProductsLandingDomain.Binder // improve name typealias
     
-    typealias MakeProductsLandingViewModel = (@escaping () -> Void) -> ProductsLandingDomain.Binder
+    typealias MakeProductsLandingViewModel = (@escaping () -> Void) -> CardLandingDomain.Binder
 }
 
 extension MainViewModelsFactory {
@@ -66,9 +66,9 @@ extension AuthProductsLandingDomain.Binder {
     )
 }
 
-extension ProductsLandingDomain.Binder {
+extension CardLandingDomain.Binder {
     
-    static let preview: ProductsLandingDomain.Binder = .init(
+    static let preview: CardLandingDomain.Binder = .init(
         content: .init(
             initialState: .init(),
             reduce: { state,_ in (state, nil) },

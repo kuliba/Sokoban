@@ -1,17 +1,16 @@
 //
-//  ProductsLandingDomain.swift
+//  CardLandingDomain.swift
 //  Vortex
 //
 //  Created by Дмитрий Савушкин on 11.03.2025.
 //
 
-import RxViewModel
-import Foundation
 import OrderCardLandingComponent
+import RxViewModel
 
-enum ProductsLandingDomain {}
+enum CardLandingDomain {}
 
-extension ProductsLandingDomain {
+extension CardLandingDomain {
     
     // MARK: - Binder
     
@@ -22,14 +21,8 @@ extension ProductsLandingDomain {
     
     typealias Landing = [OrderCardLandingComponent.Product]
     
-    typealias State = LandingState<Landing>
-    typealias Event = LandingEvent<Landing>
-    typealias Effect = LandingEffect
-    
-    typealias Reducer = LandingReducer<Landing>
-    typealias EffectHandler = LandingEffectHandler<Landing>
-    
-    typealias Content = RxViewModel<State, Event, Effect>
+    typealias ContentDomain = CardLandingContentDomain<Landing>
+    typealias Content = ContentDomain.Content
     
     // MARK: - Flow
     
@@ -40,6 +33,7 @@ extension ProductsLandingDomain {
     typealias Notify = (NotifyEvent) -> Void
     
     enum Select: Equatable {
+        
         case `continue`
     }
     
