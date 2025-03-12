@@ -130,31 +130,6 @@ extension ViewComponents {
     }
 }
 
-//TODO: add swipe to refresh
-struct DismissibleScrollView<Content: View>: View {
-    
-    @State private var offset: CGPoint = .zero
-    
-    let title: (Double) -> String
-    let dismiss: () -> Void
-    @ViewBuilder let content: () -> Content
-    
-    var body: some View {
-        
-        OffsetObservingScrollView(
-            axes: .vertical,
-            showsIndicators: false,
-            offset: $offset,
-            coordinateSpaceName: "orderCardScroll",
-            content: content
-        )
-        .navigationBarWithBack(
-            title: title(offset.y),
-            dismiss: dismiss
-        )
-    }
-}
-
 extension LandingState<OrderCardLandingComponent.OrderCardLanding> {
 
     var landing: OrderCardLanding? {
