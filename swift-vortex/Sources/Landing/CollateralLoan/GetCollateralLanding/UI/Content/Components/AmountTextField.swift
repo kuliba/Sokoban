@@ -8,14 +8,11 @@
 import SwiftUI
 import UIKit
 
-struct AmountTextField: UIViewRepresentable {
-    
-    var viewModel: AmountTextFieldViewModel
-    
-    init(viewModel: AmountTextFieldViewModel) {
-        
-        self.viewModel = viewModel
-    }
+struct AmountTextField<InformerPayload>: UIViewRepresentable {
+
+    let state: State
+    let config: Config
+    let event: (DomainEvent) -> Void
 
     func makeUIView(context: Context) -> UITextField {
         
@@ -36,27 +33,35 @@ struct AmountTextField: UIViewRepresentable {
     
     func updateUIView(_ uiView: UITextField, context: Context) {
         
-        uiView.isUserInteractionEnabled = viewModel.isFirstResponder
-        uiView.text = viewModel.valueCurrencySymbol
+        uiView.isUserInteractionEnabled = state.isAmountTextFieldFirstResponder
+        uiView.text = state.formattedDesiredAmount
         uiView.updateCursorPosition()
         
-        switch viewModel.isFirstResponder {
+        switch state.isAmountTextFieldFirstResponder {
         case true: uiView.becomeFirstResponder()
         case false: uiView.resignFirstResponder()
         }
     }
-    
+        
     func makeCoordinator() -> Coordinator {
-        Coordinator(viewModel: viewModel)
+        
+        Coordinator(state: state, config: config, event: event)
     }
     
     class Coordinator: NSObject, UITextFieldDelegate {
         
-        let viewModel: AmountTextFieldViewModel
-        
-        init(viewModel: AmountTextFieldViewModel) {
-            
-            self.viewModel = viewModel
+        let state: State
+        let config: Config
+        let event: (DomainEvent) -> Void
+
+        public init(
+            state: State,
+            config: Config,
+            event: @escaping (DomainEvent) -> Void
+        ) {
+            self.state = state
+            self.config = config
+            self.event = event
             super.init()
         }
         
@@ -65,8 +70,29 @@ struct AmountTextField: UIViewRepresentable {
         }
         
         func textFieldDidEndEditing(_ textField: UITextField) {
-            viewModel.textFieldDidEndEditing(textField)
+            
+            guard let product = state.product else { return }
+            
+            let filtered = textField.text?.filter { $0.isNumber }
+            
+            guard let text = filtered, let value = UInt(text) else {
+                
+                textField.text = self.state.formattedDesiredAmount
+                return
+            }
+            
+            if value < product.calc.amount.minIntValue {
+                
+                event(.changeDesiredAmount(product.calc.amount.minIntValue))
+            } else {
+                
+                let value = min(state.desiredAmount, product.calc.amount.maxIntValue)
+                event(.changeDesiredAmount(value))
+            }
+            
+            event(.setAmountResponder(false))
         }
+
         
         func textField(
             _ textField: UITextField,
@@ -74,11 +100,42 @@ struct AmountTextField: UIViewRepresentable {
             replacementString string: String
         ) -> Bool {
             
-            textField.shouldChangeCharacters(
-                in: range,
-                replacementString: string,
-                viewModel: viewModel
-            )
+            guard
+                let text = textField.text,
+                let product = state.product
+            else { return false }
+            
+            var temporary = text.filter { $0.isNumber }
+            
+            if string.isEmpty {
+                if temporary.count > 0 {
+                    temporary.removeLast()
+                }
+                event(.changeDesiredAmount(UInt(temporary) ?? 0))
+                return true
+            }
+            
+            var filtered = "\(temporary)\(string)".filter { $0.isNumber }
+            
+            if filtered.count > 1 && filtered.first == "0" {
+                filtered.removeFirst()
+                event(.changeDesiredAmount(UInt(filtered) ?? 0))
+                return false
+            }
+            
+            guard let value = UInt(filtered), value <= product.calc.amount.maxIntValue else {
+                return false
+            }
+            
+            event(.changeDesiredAmount(value))
+            return false
         }
     }
+}
+
+extension AmountTextField {
+    
+    typealias Config = GetCollateralLandingConfig
+    typealias DomainEvent = GetCollateralLandingDomain.Event<InformerPayload>
+    typealias State = GetCollateralLandingDomain.State<InformerPayload>
 }

@@ -15,8 +15,8 @@ extension GetCollateralLandingDomain {
         public let landingID: String
         public var bottomSheet: BottomSheet?
         public var result: Result<InformerPayload>?
-        public var amountTextFieldViewModel: AmountTextFieldViewModel?
-
+        public var isAmountTextFieldFirstResponder: Bool
+        
         var isLoading = false
         var payrollClient = false
         var selectedCollateralType: String
@@ -31,6 +31,7 @@ extension GetCollateralLandingDomain {
             selectedCollateralType: String = "", // Calculator default value
             selectedMonthPeriod: UInt = 12, // Calculator default value
             desiredAmount: UInt = 3_000_000, // Calculator default value
+            isAmountTextFieldFirstResponder: Bool = false,
             formatCurrency: @escaping FormatCurrency
         ) {
             self.landingID = landingID
@@ -38,6 +39,7 @@ extension GetCollateralLandingDomain {
             self.selectedMonthPeriod = selectedMonthPeriod
             self.selectedCollateralType = selectedCollateralType
             self.desiredAmount = desiredAmount
+            self.isAmountTextFieldFirstResponder = isAmountTextFieldFirstResponder
             self.formatCurrency = formatCurrency
         }
     }

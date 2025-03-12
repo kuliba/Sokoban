@@ -33,14 +33,7 @@ extension GetCollateralLandingDomain {
                     
                     state.selectedCollateralType = state.product?.calc.collaterals.first?.type ?? ""
                 }
-                
-                if case let .success(product) = result {
-                    
-                    state.amountTextFieldViewModel = .init(
-                        value: Double(state.desiredAmount),
-                        bounds: Double(product.calc.amount.minIntValue)...Double(product.calc.amount.maxIntValue)
-                    )
-                }
+
             case .selectCaseList(_,_):
                 // TODO: need to realize
                 break
@@ -68,8 +61,8 @@ extension GetCollateralLandingDomain {
                     state.desiredAmount = newDesiredAmount
                 }
                 
-            case .toggleAmountResponder:
-                state.amountTextFieldViewModel?.isFirstResponder.toggle()
+            case let .setAmountResponder(value):
+                state.isAmountTextFieldFirstResponder = value
             }
             
             return (state, effect)

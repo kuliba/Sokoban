@@ -237,11 +237,11 @@ struct GetCollateralLandingCalculatorView<InformerPayload>: View {
             
             HStack {
              
-                state.amountTextFieldViewModel.map { amountTextFild(viewModel: $0) }
+                amountTextFild()
 
                 Button {
                     
-                    domainEvent(.toggleAmountResponder)
+                    domainEvent(.setAmountResponder(!state.isAmountTextFieldFirstResponder))
                 } label: {
                     
                     Image(systemName: "pencil")
@@ -283,9 +283,9 @@ struct GetCollateralLandingCalculatorView<InformerPayload>: View {
         }
     }
     
-    private func amountTextFild(viewModel: AmountTextFieldViewModel) -> some View {
+    private func amountTextFild() -> some View {
         
-        AmountTextField(viewModel: viewModel)
+        AmountTextField(state: state, config: config, event: domainEvent)
             .padding(.leading, config.calculator.root.layouts.contentLeadingPadding)
             .fixedSize()
             .onAppear {
@@ -302,6 +302,18 @@ struct GetCollateralLandingCalculatorView<InformerPayload>: View {
                 
                 IQKeyboardManager.shared.enable = false
                 IQKeyboardManager.shared.enableAutoToolbar = false
+            }
+            .onChange(of: state.formattedDesiredAmount) {
+                
+                if let amount = $0 {
+                    
+                    desiredAmount = String(amount)
+                }
+            }
+            .onChange(of: desiredAmount) {
+                
+                domainEvent(.enterDesiredAmount($0))
+                sliderCurrentValue = Double(state.desiredAmount)
             }
     }
     

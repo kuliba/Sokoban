@@ -20,7 +20,7 @@ extension GetCollateralLandingDomain {
         case selectCollateral(String)
         case selectMonthPeriod(UInt)
         case togglePayrollClient(Bool)
-        case toggleAmountResponder
+        case setAmountResponder(Bool)
         case changeDesiredAmount(UInt)
         case enterDesiredAmount(String)
 
