@@ -10,7 +10,7 @@ import SplashScreenUI
 
 typealias SplashScreenViewModel = RxViewModel<SplashScreenState, SplashScreenEvent, SplashScreenEffect>
 
-enum SplashScreenState {
+enum SplashScreenState: Equatable {
     
     case cover
     case warm

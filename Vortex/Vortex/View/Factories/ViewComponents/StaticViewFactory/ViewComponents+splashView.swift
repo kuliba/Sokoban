@@ -10,7 +10,6 @@ import SwiftUI
 
 extension ViewComponents {
     
-    // TODO: - add/extract config
     @inlinable
     func splashView(
         splash: SplashScreenViewModel
@@ -18,23 +17,69 @@ extension ViewComponents {
         
         RxWrapperView(model: splash) { state, _ in
             
-            switch state {
-            case .cover:
-                Color.white
-                
-            case .hidden:
-                EmptyView()
-                
-            case .presented:
-                Image("splash")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                
-            case .warm:
-                Image("splash")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            }
+            Image("splash")
+                .renderingMode(state.renderingMode)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .foregroundColor(state.foregroundColor)
+                .animation(nil, value: state.foregroundColor)
+                .scaleEffect(state.scaleEffect)
+                .opacity(state.opacity)
+                .blur(radius: state.blurRadius)
+                .animation(.easeOut(duration: 2), value: state)
+        }
+    }
+}
+
+// UI Mapping
+
+extension SplashScreenState {
+    
+    var renderingMode: Image.TemplateRenderingMode {
+        
+        switch self {
+        case .cover: return .template
+        default:     return .original
+        }
+    }
+    
+    var foregroundColor: Color {
+        
+        switch self {
+        case .cover: return .white
+        default:     return .clear
+        }
+    }
+    
+    var scaleEffect: CGFloat {
+        
+        switch self {
+        case .cover, .warm:
+            return 1
+        case .presented:
+            return 1.025
+        case .hidden:
+            return 1.05
+        }
+    }
+    
+    var opacity: Double {
+        
+        switch self {
+        case .cover, .warm, .presented:
+            return 2
+        case .hidden:
+            return 0
+        }
+    }
+    
+    var blurRadius: Double {
+        
+        switch self {
+        case .cover, .warm, .presented:
+            return -100
+        case .hidden:
+            return 20
         }
     }
 }

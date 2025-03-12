@@ -25,7 +25,7 @@ extension RootViewModelFactory {
             .handleEvents(
                 receiveOutput: { [weak splash] _ in splash?.event(.start) }
             )
-            .delay(for: .seconds(2), scheduler: schedulers.background)
+            .delay(for: .seconds(1), scheduler: schedulers.background)
             .sink { [weak splash] in splash?.event(.hide) }
             .store(in: &cancellables)
         
