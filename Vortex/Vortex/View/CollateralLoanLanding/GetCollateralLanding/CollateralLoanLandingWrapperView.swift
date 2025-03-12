@@ -467,7 +467,10 @@ extension GetCollateralLandingConfig.Calculator {
             maxText: "До 15 млн. ₽",
             titleTopPadding: 20,
             sliderBottomPadding: 12,
-            fontValue: .init(Font.system(size: 24).bold(), foreground: .white)
+            fontValue: .init(Font.system(size: 24).bold(), foreground: .white),
+            textFieldFont: UIFont(name: "Inter-SemiBold", size: 24)!,
+            editImage: .ic16Edit2,
+            iconColor: .mainColorsGray
         ),
         monthlyPayment: .init(
             titleText: "Ежемесячный платеж",

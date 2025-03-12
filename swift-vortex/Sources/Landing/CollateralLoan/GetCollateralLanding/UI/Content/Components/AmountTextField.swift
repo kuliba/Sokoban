@@ -18,10 +18,10 @@ struct AmountTextField<InformerPayload>: UIViewRepresentable {
         
         let textField = UITextField()
         textField.delegate = context.coordinator
-        textField.textColor = UIColor(Color.white) // TODO: Place on config
-        textField.tintColor = UIColor(Color.gray)  // TODO: Place on config
+        textField.textColor = UIColor(config.calculator.desiredAmount.fontValue.foreground)
+        textField.tintColor = UIColor(config.calculator.desiredAmount.fontValue.foreground)
         textField.backgroundColor = .clear
-        textField.font = UIFont(name: "Inter-SemiBold", size: 24)
+        textField.font = config.calculator.desiredAmount.textFieldFont
         textField.keyboardType = .numberPad
         
         textField.autocorrectionType = .no

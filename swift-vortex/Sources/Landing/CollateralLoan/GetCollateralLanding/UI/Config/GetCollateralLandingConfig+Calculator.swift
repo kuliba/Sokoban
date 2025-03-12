@@ -243,19 +243,28 @@ extension GetCollateralLandingConfig {
             public let titleTopPadding: CGFloat
             public let sliderBottomPadding: CGFloat
             public let fontValue: FontConfig
+            public let textFieldFont: UIFont
+            public let editImage: Image
+            public let iconColor: Color
 
             public init(
                 titleText: String,
                 maxText: String,
                 titleTopPadding: CGFloat,
                 sliderBottomPadding: CGFloat,
-                fontValue: FontConfig
+                fontValue: FontConfig,
+                textFieldFont: UIFont,
+                editImage: Image,
+                iconColor: Color
             ) {
                 self.titleText = titleText
                 self.maxText = maxText
                 self.titleTopPadding = titleTopPadding
                 self.sliderBottomPadding = sliderBottomPadding
                 self.fontValue = fontValue
+                self.textFieldFont = textFieldFont
+                self.editImage = editImage
+                self.iconColor = iconColor
             }
         }
         
@@ -353,7 +362,10 @@ extension GetCollateralLandingConfig.Calculator {
             maxText: "До 15 млн. ₽",
             titleTopPadding: 20,
             sliderBottomPadding: 12,
-            fontValue: .init(Font.system(size: 24).bold(), foreground: .white)
+            fontValue: .init(Font.system(size: 24).bold(), foreground: .white),
+            textFieldFont: UIFont(name: "Inter-SemiBold", size: 24)!,
+            editImage: Image(systemName: "pencil"),
+            iconColor: .gray
         ),
         monthlyPayment: .init(
             titleText: "Ежемесячный платеж",

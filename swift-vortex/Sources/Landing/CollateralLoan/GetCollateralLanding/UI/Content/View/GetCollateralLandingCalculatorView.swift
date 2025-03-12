@@ -244,33 +244,10 @@ struct GetCollateralLandingCalculatorView<InformerPayload>: View {
                     domainEvent(.setAmountResponder(!state.isAmountTextFieldFirstResponder))
                 } label: {
                     
-                    Image(systemName: "pencil")
+                    config.desiredAmount.editImage
                         .renderingMode(.template)
-                        .foregroundColor(Color.gray)
+                        .foregroundColor(config.desiredAmount.iconColor)
                 }
-                
-//                Image.ic16Edit2
-//                    .renderingMode(.template)
-//                    .foregroundColor(.mainColorsGray)
-
-                //                TextField("", text: $desiredAmount)
-                //                    .padding(.leading, config.root.layouts.contentLeadingPadding)
-                //                    .font(config.desiredAmount.fontValue.font)
-                //                    .foregroundColor(.white)
-                //                    .tint(.white)
-                //                    .keyboardType(.numberPad)
-                //                    .onChange(of: state.formattedDesiredAmount) {
-                //
-                //                        if let amount = $0 {
-                //
-                //                            desiredAmount = String(amount)
-                //                        }
-                //                    }
-                //                    .onChange(of: desiredAmount) {
-                //
-                //                        domainEvent(.enterDesiredAmount($0))
-                //                        sliderCurrentValue = Double(state.desiredAmount)
-                //                    }
                 
                 desiredAmountMaxText(config: config)
                     .padding(.trailing, config.root.layouts.contentTrailingPadding)
