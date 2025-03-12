@@ -14,7 +14,8 @@ extension Product {
             fallbackURL: "",
             target: "",
             type: ""
-        ),
+        ), 
+        backgroundColor: .gray,
         imageURL: "",
         items: [
             .init(
@@ -38,6 +39,7 @@ extension Product {
                 title: "8% годовых при сумме остатка от 500 001 ₽ на карте"
             )
         ],
+        theme: .dark,
         terms: "",
         title: "Карта МИР «Все включено»"
     )

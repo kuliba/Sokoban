@@ -53,7 +53,7 @@ extension ViewComponents {
             offset: offset,
             coordinateSpaceName: "coordinateSpaceName"
         ) {
-            VStack(spacing: 16) {
+            VStack {
                 
                 ProductsLandingView(
                     products: products,

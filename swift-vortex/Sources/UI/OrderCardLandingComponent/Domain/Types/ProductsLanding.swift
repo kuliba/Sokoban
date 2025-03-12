@@ -6,25 +6,32 @@
 //
 
 import Foundation
+import SwiftUI
 
 public struct Product {
     
     public let action: Action
+    public let backgroundColor: Color
     public let imageURL: String
     public let items: [Item]
+    public let theme: Theme
     public let terms: String
     public let title: String
     
     public init(
         action: Action,
+        backgroundColor: Color,
         imageURL: String,
         items: [Item],
+        theme: Theme,
         terms: String,
         title: String
     ) {
         self.action = action
+        self.backgroundColor = backgroundColor
         self.imageURL = imageURL
         self.items = items
+        self.theme = theme
         self.terms = terms
         self.title = title
     }
@@ -58,5 +65,11 @@ public struct Product {
             self.bullet = bullet
             self.title = title
         }
+    }
+    
+    public enum Theme {
+        
+        case dark
+        case light
     }
 }

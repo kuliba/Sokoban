@@ -36,7 +36,7 @@ public struct ProductsLandingView: View {
         product: Product
     ) -> some View {
         
-        VStack {
+       return VStack {
             
             product.title.text(withConfig: config.title)
             
@@ -52,67 +52,73 @@ public struct ProductsLandingView: View {
             buttonsView()
                 .padding(.horizontal, config.buttonsConfig.buttonsPadding)
         }
-        .background()
-    }
-    
-    func buttonsView(
-    ) -> some View {
+        .background(product.backgroundColor)
         
-        HStack(spacing: config.buttonsConfig.buttonsSpacing) {
+        func buttonsView() -> some View {
             
-            conditionButton()
-            
-            orderButton()
+            HStack(spacing: config.buttonsConfig.buttonsSpacing) {
+                
+                conditionButton()
+                
+                orderButton()
+            }
+            .frame(height: config.buttonsConfig.buttonsHeight)
         }
-        .frame(height: config.buttonsConfig.buttonsHeight)
-    }
-    
-    func orderButton() -> some View {
         
-        Button(action: { event(.order) }) {
+        func orderButton() -> some View {
             
-            ZStack {
+            Button(action: { event(.order) }) {
                 
-                RoundedRectangle(cornerRadius: config.orderButtonConfig.cornerRadius)
-                    .foregroundColor(config.orderButtonConfig.background)
-                
-                config.orderButtonConfig.title.render()
+                ZStack {
+                    
+                    RoundedRectangle(cornerRadius: config.orderButtonConfig.cornerRadius)
+                        .foregroundColor(config.orderButtonConfig.background)
+                    
+                    config.orderButtonConfig.title.render()
+                }
             }
         }
-    }
-    
-    func conditionButton() -> some View {
         
-        Button(action: { event(.info) }) {
+        
+        func conditionButton() -> some View {
             
-            HStack(spacing: config.conditionButtonConfig.spacing) {
+            Button(action: { event(.info) }) {
                 
-                config.conditionButtonConfig.icon
-                    .frame(
-                        width: config.conditionButtonConfig.frame,
-                        height: config.conditionButtonConfig.frame,
-                        alignment: .center
+                HStack(spacing: config.conditionButtonConfig.spacing) {
+                    
+                    config.conditionButtonConfig.icon
+                        .frame(
+                            width: config.conditionButtonConfig.frame,
+                            height: config.conditionButtonConfig.frame,
+                            alignment: .center
+                        )
+                        .foregroundStyle(product.theme == .dark ? config.conditionButtonConfig.foregroundColorLight : config.conditionButtonConfig.foregroundColorDark)
+                    
+                    config.conditionButtonConfig.title.text(
+                        withConfig: product.theme == .dark ? config.conditionButtonConfig.titleDark : config.conditionButtonConfig.titleLight
                     )
-                
-                config.conditionButtonConfig.title.render()
+                }
             }
         }
-    }
-    
-    func itemView(
-        item: Product.Item
-    ) -> some View {
         
-        HStack {
+        func itemView(
+            item: Product.Item
+        ) -> some View {
             
-            if item.bullet {
+            HStack {
                 
-                Circle()
-                    .frame(config.item.circleSize)
-            }
-            
-            item.title.text(withConfig: config.item.title)
+                if item.bullet {
+                    
+                    Circle()
+                        .frame(config.item.circleSize)
+                        .foregroundStyle(product.theme == .dark ? config.conditionButtonConfig.foregroundColorLight : config.conditionButtonConfig.foregroundColorDark)
+                }
+                
+                item.title.text(
+                    withConfig: product.theme == .dark ? config.item.titleDark : config.item.titleLight
+                )
                 .frame(maxWidth: .infinity, alignment: .leading)
+            }
         }
     }
 }

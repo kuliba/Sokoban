@@ -10,7 +10,6 @@ import Foundation
 extension ProductLandingConfig {
     
     static let preview: Self = .init(
-        background: .gray,
         buttonsConfig: .init(
             buttonsPadding: 16,
             buttonsSpacing: 44,
@@ -18,21 +17,29 @@ extension ProductLandingConfig {
         ),
         conditionButtonConfig: .init(
             icon: .bolt,
+            foregroundColorDark: .red,
+            foregroundColorLight: .green,
             spacing: 12,
             frame: 20,
-            title: .init(
-                text: "Подробные уcловия",
-                config: .init(
-                    textFont: .body,
-                    textColor: .black
-                )
+            title: "Подробные уcловия",
+            titleDark: .init(
+                textFont: .body,
+                textColor: .black
+            ),
+            titleLight: .init(
+                textFont: .body,
+                textColor: .white
             )
         ),
         item: .init(
             circle: 5,
-            title: .init(
+            titleDark: .init(
                 textFont: .body,
                 textColor: .black
+            ),
+            titleLight: .init(
+                textFont: .body,
+                textColor: .white
             ),
             itemPadding: 16
         ),
