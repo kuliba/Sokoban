@@ -238,6 +238,10 @@ struct GetCollateralLandingCalculatorView<InformerPayload>: View {
             HStack {
              
                 amountTextFild()
+                    .onTapGesture {
+                        
+                        domainEvent(.setAmountResponder(!state.isAmountTextFieldFirstResponder))
+                    }
 
                 Button {
                     

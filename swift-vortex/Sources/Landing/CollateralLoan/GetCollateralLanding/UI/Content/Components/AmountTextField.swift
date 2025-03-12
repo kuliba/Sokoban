@@ -115,7 +115,7 @@ struct AmountTextField<InformerPayload>: UIViewRepresentable {
                 return true
             }
             
-            var filtered = "\(temporary)\(string)".filter { $0.isNumber }
+            var filtered = text.replacingCharacters(in: Range(range, in: text)!, with: string).filter { $0.isNumber }
             
             if filtered.count > 1 && filtered.first == "0" {
                 filtered.removeFirst()
