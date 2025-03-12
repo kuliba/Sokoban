@@ -76,7 +76,7 @@ extension RootViewModelFactory {
                             },
                             theme: .init(theme: $0.theme),
                             terms: $0.terms,
-                            title: $0.name.first?.text ?? ""
+                            title: $0.name.map({ $0.text }).joined(separator: " ")
                         )
                     })
                 )

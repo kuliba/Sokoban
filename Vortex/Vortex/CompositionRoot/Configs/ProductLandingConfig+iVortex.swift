@@ -60,9 +60,13 @@ extension ProductLandingConfig {
                 )
             )
         ),
-        title: .init(
+        titleDark: .init(
             textFont: .marketingH0B40X480(),
             textColor: .textSecondary
+        ),
+        titleLight: .init(
+            textFont: .marketingH0B40X480(),
+            textColor: .textWhite
         )
     )
 }

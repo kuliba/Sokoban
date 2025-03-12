@@ -59,7 +59,7 @@ extension ViewComponents {
                     products: products,
                     event: { _ in },
                     config: .iVortex,
-                    viewFactory: .init(makeBannerImageView: makeIconView)
+                    viewFactory: .init(makeBannerImageView: makeGeneralIconView)
                 )
             }
         }

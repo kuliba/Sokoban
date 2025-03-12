@@ -38,7 +38,9 @@ public struct ProductsLandingView: View {
         
        return VStack {
             
-            product.title.text(withConfig: config.title)
+           product.title.text(
+            withConfig: product.theme == .dark ? config.titleLight : config.titleDark
+           )
             
             ForEach(product.items, id: \.title, content: itemView)
                 .padding(.horizontal, config.item.itemPadding)

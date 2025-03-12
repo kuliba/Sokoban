@@ -60,7 +60,11 @@ extension ProductLandingConfig {
                 )
             )
         ),
-        title: .init(
+        titleDark: .init(
+            textFont: .largeTitle,
+            textColor: .white
+        ),
+        titleLight: .init(
             textFont: .largeTitle,
             textColor: .black
         )

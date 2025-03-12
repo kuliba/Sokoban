@@ -15,7 +15,8 @@ public struct ProductLandingConfig {
     let imageCoverConfig: ImageCoverConfig
     let item: ItemConfig
     let orderButtonConfig: OrderButtonConfig
-    let title: TextConfig
+    let titleDark: TextConfig
+    let titleLight: TextConfig
     
     public init(
         buttonsConfig: ProductLandingConfig.ButtonsConfig,
@@ -23,14 +24,16 @@ public struct ProductLandingConfig {
         item: ProductLandingConfig.ItemConfig,
         imageCoverConfig: ProductLandingConfig.ImageCoverConfig,
         orderButtonConfig: ProductLandingConfig.OrderButtonConfig,
-        title: TextConfig
+        titleDark: TextConfig,
+        titleLight: TextConfig
     ) {
         self.buttonsConfig = buttonsConfig
         self.conditionButtonConfig = conditionButtonConfig
         self.item = item
         self.imageCoverConfig = imageCoverConfig
         self.orderButtonConfig = orderButtonConfig
-        self.title = title
+        self.titleDark = titleDark
+        self.titleLight = titleLight
     }
     
     public struct ButtonsConfig {
