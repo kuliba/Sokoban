@@ -24,13 +24,22 @@ struct SplashScreenSettings: Equatable {
     struct Text: Equatable {
         
         let color: Color
-        let size: CGFloat
+        let size: CGFloat // TODO: ???
         let value: String
         let shadow: Shadow
     }
+    
+    struct Shadow: Equatable {
+        
+        let color: Color
+        let opacity: Double
+        let radius: CGFloat
+        let x: CGFloat
+        let y: CGFloat
+    }
 }
 
-extension Shadow {
+extension SplashScreenSettings.Shadow {
     
     static let logo: Self = .init(color: .black, opacity: 1, radius: 12, x: 0, y: 4)
     static let name: Self = .init(color: .black, opacity: 1, radius: 12, x: 0, y: 4)
