@@ -132,14 +132,21 @@ struct CollateralLoanShowcaseWrapperView: View {
     
     private func informerView(
         _ informerData: InformerData
-    ) -> InformerView {
+    ) -> some View {
         
-        .init(
+        InformerView(
             viewModel: .init(
                 message: informerData.message,
                 icon: informerData.icon.image,
                 color: informerData.color)
         )
+        .onAppear {
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+
+                binder.flow.event(.navigation(.failure(.none)))
+            }
+        }
     }
 }
 
@@ -224,32 +231,6 @@ extension GetShowcaseDomain.Navigation.Alert: Identifiable {
         }
     }
 }
-
-//private extension GetShowcaseDomain.FlowDomain.State {
-//    
-//    var informer: Informer? {
-//        
-//        guard case let .failure(failure) = navigation,
-//              case let .informer(informerData) = failure
-//        else { return nil }
-//        
-//        return .failure(message: informerData.message)
-//    }
-//}
-
-//private struct Informer {
-//    
-//    let message: String
-//    let icon: Image
-//    let color: Color
-//    
-//    static func failure(
-//        message: String
-//    ) -> Self {
-//        
-//        return .init(message: message, icon: .ic24Close, color: .mainColorsBlackMedium)
-//    }
-//}
 
 extension GetShowcaseDomain.Binder {
     

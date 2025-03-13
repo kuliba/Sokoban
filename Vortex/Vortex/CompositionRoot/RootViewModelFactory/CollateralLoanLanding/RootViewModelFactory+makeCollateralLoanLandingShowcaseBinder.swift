@@ -51,7 +51,7 @@ extension RootViewModelFactory {
     
     private func getShowcase(
         completion: @escaping(GetShowcaseDomain.Result<InformerPayload>) -> Void
-    ) {        
+    ) {
         let load = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetShowcaseRequest,
             mapResponse: RemoteServices.ResponseMapper.mapCreateGetShowcaseResponse(_:_:),
@@ -94,6 +94,9 @@ extension RootViewModelFactory {
 
             case let .alert(message):
                 completion(.failure(.alert(message)))
+                
+            case .none:
+                completion(.failure(.none))
             }
         }
     }

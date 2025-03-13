@@ -37,10 +37,15 @@ extension GetShowcaseDomain {
                     
                 case let .informer(informer):
                     let oldShowcase = state.status.oldShowcase
-                    state.status = .failure(.informer(informer), oldShowcase)
+                    state.status = .failure(.informer(informer), oldShowcase)                    
                 }
                 
             case .dismissFailure:
+                if let showcase = state.status.oldShowcase {
+                    
+                    state.status = .loaded(showcase)
+                }
+                
                 state.backendFailure = nil
             }
                 

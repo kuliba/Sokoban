@@ -42,6 +42,9 @@ extension GetCollateralLandingDomain {
                 }
                 
             case .dismissFailure:
+                if let product = state.status.oldProduct {
+                    state.status = .loaded(product)
+                }
                 state.backendFailure = nil
 
             case let .changeDesiredAmount(newValue):
@@ -55,9 +58,6 @@ extension GetCollateralLandingDomain {
 
             case let .togglePayrollClient(payrollClient):
                 state.payrollClient = payrollClient
-                
-            case .dismissFailure:
-                state.backendFailure = nil
                 
             case let .enterDesiredAmount(newValue):
                 if

@@ -49,6 +49,7 @@ extension GetCollateralLandingDomain {
         
         case alert(String)
         case informer(InformerData)
+        case none
     }
 
     typealias DraftDomain = CreateDraftCollateralLoanApplicationDomain

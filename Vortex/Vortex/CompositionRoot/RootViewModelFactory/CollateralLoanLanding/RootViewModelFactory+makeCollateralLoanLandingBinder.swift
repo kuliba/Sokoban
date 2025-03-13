@@ -90,6 +90,9 @@ extension RootViewModelFactory {
 
             case let .alert(message):
                 completion(.failure(.alert(message)))
+                
+            case .none:
+                completion(.failure(.none))
             }
         }
     }

@@ -50,5 +50,6 @@ extension GetShowcaseDomain {
         
         case alert(String)
         case informer(InformerData)
+        case none
     }
 }

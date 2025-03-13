@@ -263,6 +263,9 @@ extension RootViewModelFactory {
 
                 case .complete:
                     completion(.failure(.complete))
+                    
+                case .none:
+                    completion(.failure(.none))
                 }
             }
         }

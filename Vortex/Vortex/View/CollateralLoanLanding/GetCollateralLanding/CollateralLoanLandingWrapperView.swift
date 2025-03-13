@@ -185,14 +185,21 @@ struct CollateralLoanLandingWrapperView: View {
 
     private func informerView(
         _ informerData: InformerData
-    ) -> InformerView {
+    ) -> some View {
         
-        .init(
+        InformerView(
             viewModel: .init(
                 message: informerData.message,
                 icon: informerData.icon.image,
                 color: informerData.color)
         )
+        .onAppear {
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+
+                binder.flow.event(.navigation(.failure(.none)))
+            }
+        }
     }
 
     private func handlePeriodsDomainEvent(_ event: Event) {
