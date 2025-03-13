@@ -1578,7 +1578,7 @@
 		2ACBA67D2CE9E99A00758D71 /* ElementIDs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACBA67C2CE9E99A00758D71 /* ElementIDs.swift */; };
 		2ACC42172D81BCB400FDED3C /* Model+splash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACC42162D81BCB400FDED3C /* Model+splash.swift */; };
 		2ACC42192D81BFAA00FDED3C /* RootViewModelFactory+splashEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACC42182D81BFAA00FDED3C /* RootViewModelFactory+splashEvents.swift */; };
-		2ACC421B2D81C1A900FDED3C /* ViewComponents+splashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACC421A2D81C1A900FDED3C /* ViewComponents+splashView.swift */; };
+		2ACC421B2D81C1A900FDED3C /* ViewComponents+splashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACC421A2D81C1A900FDED3C /* ViewComponents+splashScreenView.swift */; };
 		2ACE0A992B53E17D007AA2ED /* ConsentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE0A982B53E17D007AA2ED /* ConsentListViewModel.swift */; };
 		2ACE8ED82A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACE8ED72A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift */; };
 		2ACED4BC2D217B3600F35C5F /* RootViewModelFactory+getProviderServicePickerNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACED4BB2D217B3600F35C5F /* RootViewModelFactory+getProviderServicePickerNavigationTests.swift */; };
@@ -5400,7 +5400,7 @@
 		2ACBA67C2CE9E99A00758D71 /* ElementIDs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementIDs.swift; sourceTree = "<group>"; };
 		2ACC42162D81BCB400FDED3C /* Model+splash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+splash.swift"; sourceTree = "<group>"; };
 		2ACC42182D81BFAA00FDED3C /* RootViewModelFactory+splashEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+splashEvents.swift"; sourceTree = "<group>"; };
-		2ACC421A2D81C1A900FDED3C /* ViewComponents+splashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+splashView.swift"; sourceTree = "<group>"; };
+		2ACC421A2D81C1A900FDED3C /* ViewComponents+splashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+splashScreenView.swift"; sourceTree = "<group>"; };
 		2ACE0A982B53E17D007AA2ED /* ConsentListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentListViewModel.swift; sourceTree = "<group>"; };
 		2ACE0AB72B540697007AA2ED /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		2ACE8ED72A9FD51600B2371C /* RemoteStepAbroadParametersMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteStepAbroadParametersMapperTests.swift; sourceTree = "<group>"; };
@@ -12669,7 +12669,7 @@
 			isa = PBXGroup;
 			children = (
 				2ABC575A2D65E6C8001E94BC /* ViewComponents+makeCheckBoxView.swift */,
-				2ACC421A2D81C1A900FDED3C /* ViewComponents+splashView.swift */,
+				2ACC421A2D81C1A900FDED3C /* ViewComponents+splashScreenView.swift */,
 			);
 			path = StaticViewFactory;
 			sourceTree = "<group>";
@@ -23584,7 +23584,7 @@
 				2A3624622C5E6ABE00174C50 /* SegmentedPaymentProviderPickerViewConfig.swift in Sources */,
 				0BB24ABC26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift in Sources */,
 				2A72ACCA2CC6E22100B8BF5B /* RootViewModelFactory+makeOperationPicker.swift in Sources */,
-				2ACC421B2D81C1A900FDED3C /* ViewComponents+splashView.swift in Sources */,
+				2ACC421B2D81C1A900FDED3C /* ViewComponents+splashScreenView.swift in Sources */,
 				2A9ACA572D54F47700BF5D6E /* OpenCardDomain.swift in Sources */,
 				2A840C052C373E2D00BA6887 /* TemplatesFlowEffect.swift in Sources */,
 				EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */,

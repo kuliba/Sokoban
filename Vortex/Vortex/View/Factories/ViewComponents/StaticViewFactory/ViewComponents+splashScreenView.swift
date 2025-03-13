@@ -1,5 +1,5 @@
 //
-//  ViewComponents+splashView.swift
+//  ViewComponents+splashScreenView.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 12.03.2025.
@@ -12,7 +12,7 @@ import SwiftUI
 extension ViewComponents {
     
     @inlinable
-    func splashView(
+    func splashScreenView(
         splash: SplashScreenViewModel
     ) -> some View {
         
@@ -23,16 +23,16 @@ extension ViewComponents {
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .foregroundColor(state.foregroundColor)
-                .animation(nil, value: state.foregroundColor)
-                .scaleEffect(state.scaleEffect)
-                .opacity(state.opacity)
                 .blur(radius: state.blurRadius)
+                .opacity(state.opacity)
+                .scaleEffect(state.scaleEffect)
+                .animation(nil, value: state.foregroundColor)
                 .animation(.easeOut(duration: 2), value: state)
         }
     }
 }
 
-// UI Mapping
+// MARK: - UI Mapping
 
 extension SplashScreenState {
     
