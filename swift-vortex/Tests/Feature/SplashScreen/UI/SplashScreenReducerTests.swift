@@ -112,6 +112,57 @@ final class SplashScreenReducerTests: XCTestCase {
         assert(.hidden, event: .prepare, delivers: nil)
     }
 
+    // MARK: - start
+    
+    func test_start_shouldSetStateToPresented_onCover() {
+        
+        assert(.cover, event: .start) {
+            
+            $0 = .presented
+        }
+    }
+    
+    func test_start_shouldNotDeliverEffect_onCover() {
+        
+        assert(.cover, event: .start, delivers: nil)
+    }
+
+    func test_start_shouldSetStateToPresented_onWarm() {
+        
+        assert(.warm, event: .start) {
+            
+            $0 = .presented
+        }
+    }
+    
+    func test_start_shouldNotDeliverEffect_onWarm() {
+        
+        assert(.warm, event: .start, delivers: nil)
+    }
+
+    func test_start_shouldNotChangeState_onPresented() {
+        
+        assert(.presented, event: .start) 
+    }
+    
+    func test_start_shouldNotDeliverEffect_onPresented() {
+        
+        assert(.presented, event: .start, delivers: nil)
+    }
+
+    func test_start_shouldSetStateToPresented_onHidden() {
+        
+        assert(.hidden, event: .start) {
+            
+            $0 = .presented
+        }
+    }
+    
+    func test_start_shouldNotDeliverEffect_onHidden() {
+        
+        assert(.hidden, event: .start, delivers: nil)
+    }
+
     // MARK: - Helpers
     
     private typealias SUT = SplashScreenReducer
