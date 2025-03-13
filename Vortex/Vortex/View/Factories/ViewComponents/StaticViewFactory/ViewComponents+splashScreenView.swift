@@ -21,7 +21,7 @@ extension ViewComponents {
             ZStack {
                 
                 SplashScreenImageView(state: state)
-                SplashScreenContentView(state: state.phase)
+                SplashScreenContentView(state: state.phase, config: .prod)
             }
             .animation(.easeOut(duration: 2), value: state)
             .ignoresSafeArea()

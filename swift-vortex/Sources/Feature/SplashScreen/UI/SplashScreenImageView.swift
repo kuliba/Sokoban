@@ -110,28 +110,9 @@ struct SplashScreenView_Previews: PreviewProvider {
         SplashScreenImageView(
             state: .init(
                 phase: phase,
-                settings: .init(image: image())
+                settings: .init(image: .morning)
             )
         )
         .ignoresSafeArea()
-    }
-    
-    private static func image(
-        named name: String = "MORNING2",
-        withExtension ext: String = "jpg"
-    ) -> Image {
-        
-        // `Image(name, bundle: .module)` does not work in preview
-        guard
-            let url = Bundle.module.url(forResource: name, withExtension: ext),
-            let data = try? Data(contentsOf: url),
-            let uiImage = UIImage(data: data)
-        else {
-            
-            print("No image \"\(name).\(ext)\"")
-            return .init(systemName: "star")
-        }
-        
-        return Image(uiImage: uiImage)
     }
 }
