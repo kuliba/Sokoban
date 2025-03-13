@@ -4827,7 +4827,8 @@ private extension Target {
         name: .splashScreenUI,
         dependencies: [
             .sharedConfigs,
-            .uiPrimitives
+            .uiPrimitives,
+            .vortexTools,
         ],
         path: "Sources/Feature/\(String.splashScreen)/UI",
         resources: [

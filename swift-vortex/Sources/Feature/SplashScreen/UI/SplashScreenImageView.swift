@@ -1,5 +1,5 @@
 //
-//  SplashScreenView.swift
+//  SplashScreenImageView.swift
 //
 //
 //  Created by Igor Malyarov on 13.03.2025.
@@ -7,13 +7,12 @@
 
 import SwiftUI
 
-public struct SplashScreenView: View {
+public struct SplashScreenImageView: View {
     
     private let state: SplashScreenState
     
-    public init(
-        state: SplashScreenState
-    ) {
+    public init(state: SplashScreenState) {
+        
         self.state = state
     }
     
@@ -28,14 +27,8 @@ public struct SplashScreenView: View {
             .opacity(state.opacity)
             .scaleEffect(state.scaleEffect)
             .animation(nil, value: state.foregroundColor)
-            .animation(.easeOut(duration: 2), value: state)
     }
 }
-
-//#Preview {
-//    
-//    SplashScreenView()
-//}
 
 // MARK: - UI Mapping
 
@@ -57,15 +50,13 @@ private extension SplashScreenState {
         }
     }
     
-    var scaleEffect: CGFloat {
+    var blurRadius: Double {
         
         switch phase {
-        case .cover, .warm:
-            return 1
-        case .presented:
-            return 1.025
+        case .cover, .warm, .presented:
+            return -100
         case .hidden:
-            return 1.05
+            return 20
         }
     }
     
@@ -78,14 +69,50 @@ private extension SplashScreenState {
             return 0
         }
     }
-    
-    var blurRadius: Double {
+
+    var scaleEffect: CGFloat {
         
         switch phase {
-        case .cover, .warm, .presented:
-            return -100
+        case .cover, .warm:
+            return 1
+        case .presented:
+            return 1.025
         case .hidden:
-            return 20
+            return 1.05
         }
+    }
+}
+
+// MARK: - Previews
+
+struct SplashScreenView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        Group {
+            
+            splashScreenView(.presented)
+                .previewDisplayName("presented")
+            splashScreenView(.warm)
+                .previewDisplayName("warm")
+            splashScreenView(.cover)
+                .previewDisplayName("cover")
+            splashScreenView(.hidden)
+                .previewDisplayName("hidden")
+        }
+        .background(Color.blue)
+    }
+    
+    private static func splashScreenView(
+        _ phase: SplashScreenState.Phase
+    ) -> some View {
+        
+        SplashScreenImageView(
+            state: .init(
+                phase: phase,
+                settings: .init(image: .morning)
+            )
+        )
+        .ignoresSafeArea()
     }
 }
