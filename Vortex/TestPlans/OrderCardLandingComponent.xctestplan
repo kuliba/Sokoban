@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "7C6BFA5D-33B0-408C-A27B-EB60329C1CA1",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "OrderCardLandingComponentTests",
+        "name" : "OrderCardLandingComponentTests"
+      }
+    }
+  ],
+  "version" : 1
+}

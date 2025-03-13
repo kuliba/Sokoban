@@ -21,8 +21,9 @@ struct CollateralLoanLandingWrapperView: View {
     let config: Config
     let factory: Factory
     let goToMain: () -> Void
-    let operationDetailInfoViewModel: OperationDetailInfoViewModel
-
+    let makeOperationDetailInfoViewModel: ViewComponents.MakeOperationDetailInfoViewModel
+    let getPDFDocument: GetPDFDocument
+    
     var body: some View {
         
         RxWrapperView(model: binder.flow) { state, event in
@@ -63,15 +64,33 @@ struct CollateralLoanLandingWrapperView: View {
         event: @escaping (Event) -> Void
     ) -> some View {
         
-        Group {
+        ZStack(alignment: .top) {
             
-            switch state.product {
-            case .none:
+            binder.flow.state.navigation?.informer.map(informerView)
+                .zIndex(1)
+
+            switch binder.content.state.status {
+            case .initiate:
                 Color.clear
-                    .loader(isLoading: state.product == nil, color: .clear)
+                    .frame(maxHeight: .infinity)
                 
-            case let .some(product):
+            case let .failure(_, oldProduct):
+                if let oldProduct {
+                    
+                    content(oldProduct, state, event)
+                } else {
+
+                    Color.clear
+                        .frame(maxHeight: .infinity)
+                }
+
+            case let .loaded(product):
                 content(product, state, event)
+
+            case .inflight:
+                Color.white
+                    .frame(maxHeight: .infinity)
+                    .loader(isLoading: true, color: .white)
             }
         }
         .onFirstAppear { event(.load(state.landingID)) }
@@ -85,6 +104,7 @@ struct CollateralLoanLandingWrapperView: View {
         
         GetCollateralLandingView(
             state: state,
+            product: product,
             domainEvent: event,
             externalEvent: {
                 switch $0 {
@@ -105,7 +125,6 @@ struct CollateralLoanLandingWrapperView: View {
             factory: .init(
                 makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
                 makeImageViewWithURL: factory.makeImageViewWithURL,
-                getPDFDocument: factory.getPDFDocument,
                 formatCurrency: factory.formatCurrency
             )
         )
@@ -125,11 +144,11 @@ struct CollateralLoanLandingWrapperView: View {
                 factory: .init(
                     makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
                     makeImageViewWithURL: factory.makeImageViewWithURL,
-                    getPDFDocument: factory.getPDFDocument,
                     formatCurrency: factory.formatCurrency
                 ),
                 goToMain: goToMain,
-                operationDetailInfoViewModel: operationDetailInfoViewModel
+                makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,
+                getPDFDocument: getPDFDocument
             )
             .navigationBarWithBack(title: "Оформление заявки", dismiss: dissmiss)
         }
@@ -157,7 +176,6 @@ struct CollateralLoanLandingWrapperView: View {
                 factory: .init(
                     makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
                     makeImageViewWithURL: factory.makeImageViewWithURL,
-                    getPDFDocument: factory.getPDFDocument,
                     formatCurrency: factory.formatCurrency
                 ),
                 type: type
@@ -166,14 +184,21 @@ struct CollateralLoanLandingWrapperView: View {
 
     private func informerView(
         _ informerData: InformerData
-    ) -> InformerView {
+    ) -> some View {
         
-        .init(
+        InformerView(
             viewModel: .init(
                 message: informerData.message,
                 icon: informerData.icon.image,
                 color: informerData.color)
         )
+        .onAppear {
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+
+                binder.flow.event(.navigation(.failure(.none)))
+            }
+        }
     }
 
     private func handlePeriodsDomainEvent(_ event: Event) {
@@ -183,12 +208,6 @@ struct CollateralLoanLandingWrapperView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) { [binder] in
             binder.flow.event(.dismiss)
         }
-    }
-    
-    private func handleCollateralsDomainEvent(_ event: Event) {
-        
-        binder.content.event(event)
-        binder.flow.event(.dismiss)
     }
     
     private func makeAlert(

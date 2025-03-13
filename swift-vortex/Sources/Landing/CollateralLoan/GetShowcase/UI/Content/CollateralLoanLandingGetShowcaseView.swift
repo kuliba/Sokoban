@@ -31,6 +31,11 @@ public struct CollateralLoanLandingGetShowcaseView<InformerPayload>: View where 
     
     public var body: some View {
         
+        content()
+    }
+    
+    private func content() -> some View {
+
         ScrollView(showsIndicators: false) {
             
             VStack(spacing: 0) {

@@ -6,11 +6,11 @@
 //
 
 import RxViewModel
-import SplashScreen
+import SplashScreenUI
 
 typealias SplashScreenViewModel = RxViewModel<SplashScreenState, SplashScreenEvent, SplashScreenEffect>
 
-typealias SplashScreenState = SplashScreen.Splash
+typealias SplashScreenState = SplashScreenUI.Splash
 
 enum SplashScreenEvent {
     

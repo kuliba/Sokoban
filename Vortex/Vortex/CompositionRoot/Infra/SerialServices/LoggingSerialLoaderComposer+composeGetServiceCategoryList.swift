@@ -13,7 +13,7 @@ import SerialComponents
 extension LoggingSerialLoaderComposer {
     
     func composeGetServiceCategoryList(
-    ) -> (load: Load<ServiceCategory>, reload: Load<ServiceCategory>) {
+    ) -> (load: Load<[ServiceCategory]?>, reload: Load<[ServiceCategory]?>) {
         
         return compose(
             createRequest: RequestFactory.createGetServiceCategoryListRequest,

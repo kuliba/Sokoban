@@ -256,7 +256,7 @@ final class SerialLoaderComposer_extTests: XCTestCase {
     }
     
     private func expect(
-        _ load: Load<Value>,
+        _ load: Load<[Value]?>,
         _ description: String = "wait for load completion",
         assert: @escaping ([Value]?) -> Void = { _ in },
         on action: () -> Void

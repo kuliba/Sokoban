@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct GetCollateralLandingDocumentsView<InformerPayload>: View {
+struct GetCollateralLandingDocumentsView<InformerPayload>: View where InformerPayload: Equatable {
 
     let product: Product
     let config: Config
@@ -81,19 +81,16 @@ extension GetCollateralLandingDocumentsView {
 
 // MARK: - Previews
 
-struct GetCollateralLandingDocumentsView_Previews<InformerPayload>: PreviewProvider {
+struct GetCollateralLandingDocumentsView_Previews<InformerPayload>: PreviewProvider
+    where InformerPayload: Equatable {
     
     static var previews: some View {
         
-        GetCollateralLandingDocumentsView<InformerPayload>(
+        GetCollateralLandingDocumentsView<PreviewInformerPayload>(
             product: .carStub,
             config: .preview,
             externalEvent: { print($0) },
             factory: .preview
         )
     }
-    
-    static var carStub: GetCollateralLandingProduct { .carStub }
-    static var realEstateData: GetCollateralLandingProduct { .realEstateStub }
-    typealias Factory = GetCollateralLandingFactory
 }

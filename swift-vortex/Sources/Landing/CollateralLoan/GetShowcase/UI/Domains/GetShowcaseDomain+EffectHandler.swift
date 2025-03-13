@@ -21,7 +21,22 @@ extension GetShowcaseDomain {
             
             switch effect {
             case .load:
-                load { dispatch(.loaded($0)) }
+                load {
+                    switch $0 {
+                    case let .failure(backendFailure):
+                        switch backendFailure.kind {
+                        case let .alert(message):
+                            dispatch(.failure(.alert(message)))
+                            
+                        case let .informer(informerPayload):
+                            dispatch(.failure(.informer(informerPayload)))
+                        }
+                        
+                    case let .success(showcase):
+                       dispatch(.loaded(showcase))
+                    }
+
+                }
             }
         }
 

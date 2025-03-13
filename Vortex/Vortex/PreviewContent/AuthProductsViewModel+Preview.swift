@@ -9,7 +9,12 @@ import SwiftUI
 
 extension AuthProductsViewModel {
     
-    static let mockData: AuthProductsViewModel = AuthProductsViewModel(productCards: AuthProductsViewModel.sampleProducts)
+    static let mockData: AuthProductsViewModel = AuthProductsViewModel(
+        .emptyMock,
+        products: [],
+        action: { _ in },
+        dismissAction: { }
+    )
     
     static let sampleProducts: [ProductCardViewModel] = [
         

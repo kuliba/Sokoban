@@ -11,6 +11,7 @@ import SwiftUI
 public struct SavingsAccountDetailsConfig: Equatable {
     
     public let chevronDown: Image
+    public let clock: Image
     public let colors: Colors
     public let cornerRadius: CGFloat
     public let days: TextConfig
@@ -26,6 +27,7 @@ public struct SavingsAccountDetailsConfig: Equatable {
     
     public init(
         chevronDown: Image,
+        clock: Image,
         colors: Colors,
         cornerRadius: CGFloat,
         days: TextConfig,
@@ -40,6 +42,7 @@ public struct SavingsAccountDetailsConfig: Equatable {
         texts: Texts
     ) {
         self.chevronDown = chevronDown
+        self.clock = clock
         self.colors = colors
         self.cornerRadius = cornerRadius
         self.days = days

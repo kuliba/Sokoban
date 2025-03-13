@@ -22,7 +22,8 @@ struct CollateralLoanShowcaseWrapperView: View {
     let factory: Factory
     let config: Config
     let goToMain: () -> Void
-    let operationDetailInfoViewModel: OperationDetailInfoViewModel
+    let makeOperationDetailInfoViewModel: ViewComponents.MakeOperationDetailInfoViewModel
+    let getPDFDocument: GetPDFDocument
 
     var body: some View {
         
@@ -37,6 +38,7 @@ struct CollateralLoanShowcaseWrapperView: View {
                     destination: state.navigation?.destination,
                     content: destinationView
                 )
+                .onFirstAppear { binder.content.event(.load) }
         }
     }
     
@@ -46,26 +48,35 @@ struct CollateralLoanShowcaseWrapperView: View {
             
             binder.flow.state.navigation?.informer.map(informerView)
                 .zIndex(1)
-            
-            RxWrapperView(model: binder.content) { state, event in
+
+            switch binder.content.state.status {
+            case .initiate:
+                Color.clear
+                    .frame(maxHeight: .infinity)
                 
-                Group {
+            case let .failure(_, oldShowcase):
+                if let oldShowcase {
                     
-                    switch state.showcase {
-                    case .none:
-                        Color.clear
-                            .loader(isLoading: state.showcase == nil, color: .clear)
-                        
-                    case let .some(showcase):
-                        getShowcaseView(showcase)
-                    }
+                    makeShowcaseView(oldShowcase)
+                } else {
+
+                    Color.clear
+                        .frame(maxHeight: .infinity)
                 }
-                .onFirstAppear { event(.load) }
+
+            case let .loaded(showcase):
+                makeShowcaseView(showcase)
+                
+            case .inflight:
+  
+                Color.white
+                    .frame(maxHeight: .infinity)
+                    .loader(isLoading: true, color: .white)
             }
         }
     }
-        
-    private func getShowcaseView(_ showcase: GetShowcaseDomain.ShowCase) -> some View {
+    
+    private func makeShowcaseView(_ showcase: GetShowcaseDomain.Showcase) -> some View {
         
         CollateralLoanLandingGetShowcaseView(
             data: showcase,
@@ -99,7 +110,8 @@ struct CollateralLoanShowcaseWrapperView: View {
                 config: .default,
                 factory: factory,
                 goToMain: goToMain,
-                operationDetailInfoViewModel: operationDetailInfoViewModel
+                makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,
+                getPDFDocument: getPDFDocument
             )
             .navigationBarWithBack(title: "") { binder.flow.event(.dismiss) }
         }
@@ -122,14 +134,21 @@ struct CollateralLoanShowcaseWrapperView: View {
     
     private func informerView(
         _ informerData: InformerData
-    ) -> InformerView {
+    ) -> some View {
         
-        .init(
+        InformerView(
             viewModel: .init(
                 message: informerData.message,
                 icon: informerData.icon.image,
                 color: informerData.color)
         )
+        .onAppear {
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+
+                binder.flow.event(.navigation(.failure(.none)))
+            }
+        }
     }
 }
 
@@ -231,7 +250,7 @@ extension RxViewModel<
 > {
     
     static let preview = RxViewModel(
-        initialState: .init(),
+        initialState: .init(status: .initiate),
         reduce: { state ,_ in (state, nil) },
         handleEffect: {_,_ in }
     )
@@ -253,7 +272,6 @@ extension CollateralLoanLandingFactory {
     static let preview = Self(
         makeImageViewWithMD5Hash: { _ in .preview },
         makeImageViewWithURL: {_ in .preview },
-        getPDFDocument: { _,_ in },
         formatCurrency: { _ in "" }
     )
 }

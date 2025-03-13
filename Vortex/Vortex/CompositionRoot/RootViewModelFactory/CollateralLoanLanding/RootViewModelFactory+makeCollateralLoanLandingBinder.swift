@@ -24,7 +24,7 @@ extension RootViewModelFactory {
             getNavigation: getNavigation,
             witnesses: .init(
                 emitting: { $0.$state
-                        .compactMap { $0.result?.failure }
+                        .compactMap { $0.failure }
                         .map { .select(.failure($0.navigationFailure)) }
                         .eraseToAnyPublisher()
                 },
@@ -63,7 +63,7 @@ extension RootViewModelFactory {
             
         load((nil, landingId)) { [load] in
             
-            completion($0.map { $0.product })
+            completion($0.map { $0.product }.mapError { $0 })
             _ = load
         }
     }
@@ -90,6 +90,9 @@ extension RootViewModelFactory {
 
             case let .alert(message):
                 completion(.failure(.alert(message)))
+                
+            case .none:
+                completion(.failure(.none))
             }
         }
     }
@@ -245,7 +248,7 @@ private extension GetCollateralLandingDomain.ContentError {
         switch error {
         case let .performRequest(error):
             if error.isNotConnectedToInternetOrTimeout() {
-                self = .init(kind: .informer(.init(message: "Проверьте подключение к сети", icon: .close)))
+                self = .init(kind: .informer(.init(message: "Что-то пошло не так. Попробуйте позже", icon: .close)))
             } else {
                 self = .init(kind: .alert("Попробуйте позже."))
             }
@@ -271,5 +274,19 @@ extension String {
     
     func addingPercentEncoding() -> Self {
         addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed) ?? ""
+    }
+}
+
+extension GetCollateralLandingDomain.Status<InformerData>.Failure {
+    
+    var navigationFailure: GetCollateralLandingDomain.Failure {
+        
+        switch self {
+        case let .alert(message):
+            return .alert(message)
+
+        case let .informer(message):
+            return .informer(message)
+        }
     }
 }

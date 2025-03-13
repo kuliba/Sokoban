@@ -25,7 +25,7 @@ extension RootViewModelFactory {
             getNavigation: getNavigation,
             witnesses: .init(
                 emitting: { $0.$state
-                        .compactMap { $0.result?.failure }
+                        .compactMap { $0.failure }
                         .map { .select(.failure($0.navigationFailure)) }
                         .eraseToAnyPublisher()
                 },
@@ -42,7 +42,7 @@ extension RootViewModelFactory {
         let effectHandler = GetShowcaseDomain.EffectHandler<InformerPayload>(load: getShowcase)
         
         return .init(
-            initialState: .init(),
+            initialState: .init(status: .initiate),
             reduce: reducer.reduce(_:_:),
             handleEffect: effectHandler.handleEffect(_:dispatch:),
             scheduler: schedulers.main
@@ -60,7 +60,7 @@ extension RootViewModelFactory {
         
         load(nil) { [load] in
             
-            completion($0.map { .init(products: $0.products.map(\.product)) })
+            completion($0.map { .init(products: $0.products.map(\.product)) }.mapError { $0 })
             _ = load
         }
     }
@@ -94,6 +94,9 @@ extension RootViewModelFactory {
 
             case let .alert(message):
                 completion(.failure(.alert(message)))
+                
+            case .none:
+                completion(.failure(.none))
             }
         }
     }
@@ -174,7 +177,7 @@ extension GetShowcaseDomain.ContentError {
         switch error {
         case let .performRequest(error):
             if error.isNotConnectedToInternetOrTimeout() {
-                self = .init(kind: .informer(.init(message: "Проверьте подключение к сети", icon: .close)))
+                self = .init(kind: .informer(.init(message: "Что-то пошло не так. Попробуйте позже", icon: .close)))
             } else {
                 self = .init(kind: .alert("Попробуйте позже."))
             }
@@ -183,15 +186,18 @@ extension GetShowcaseDomain.ContentError {
             self = .init(kind: .alert("Попробуйте позже."))
         }
     }
+}
+
+extension GetShowcaseDomain.Status<InformerData>.Failure {
     
     var navigationFailure: GetShowcaseDomain.Failure {
         
-        switch self.kind {
+        switch self {
         case let .alert(message):
             return .alert(message)
-            
-        case let .informer(informerPayload):
-            return .informer(informerPayload)
+
+        case let .informer(message):
+            return .informer(message)
         }
     }
 }

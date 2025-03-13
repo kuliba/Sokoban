@@ -24,7 +24,13 @@ public extension SavingsAccountDetailsState {
     enum Status: Equatable {
         
         case inflight
+        case failure(Kind)
         case result(SavingsAccountDetails)
+    }
+    
+    enum Kind {
+        case alert
+        case informer
     }
 }
 
@@ -35,8 +41,29 @@ extension SavingsAccountDetailsState {
         case .inflight:
             return nil
             
+        case .failure:
+            return .empty
+            
         case let .result(result):
             return result
         }
     }
+}
+
+extension SavingsAccountDetails {
+    
+    static let empty: Self = .init(
+        dateNext: nil,
+        dateSettlement: nil,
+        dateStart: nil,
+        daysLeft: nil,
+        daysLeftText: nil,
+        interestAmount: nil,
+        interestPaid: nil,
+        isNeedTopUp: nil,
+        isPercentBurned: nil,
+        minRest: nil,
+        currencyCode: "RUB",
+        progress: 0
+    )
 }

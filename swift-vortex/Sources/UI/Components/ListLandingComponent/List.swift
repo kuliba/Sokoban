@@ -49,8 +49,9 @@ public struct List: View {
         HStack(spacing: config.spacing) {
             
             factory.makeIconView(item.md5hash)
-                .aspectRatio(contentMode: .fit)
+                .aspectRatio(contentMode: .fill)
                 .frame(width: 40, height: 40, alignment: .center)
+                .clipShape(Circle())
                 .accessibilityIdentifier("ItemIcon")
             
             VStack(alignment: .leading, spacing: 0) {

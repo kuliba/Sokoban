@@ -36,7 +36,7 @@ extension LoggingSerialLoaderComposer {
         mapResponse: @escaping (Data, HTTPURLResponse) -> StampedResult<T>,
         fromModel: @escaping (Model) -> T,
         toModel: @escaping (T) -> Model
-    ) -> (load: Load<T>, reload: Load<T>) {
+    ) -> (load: Load<[T]?>, reload: Load<[T]?>) {
         
         let nanoServiceComposer = LoggingRemoteNanoServiceComposer(
             httpClient: httpClient,

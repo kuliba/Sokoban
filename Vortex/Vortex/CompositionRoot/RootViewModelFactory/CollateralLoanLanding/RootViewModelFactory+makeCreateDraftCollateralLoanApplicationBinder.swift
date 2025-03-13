@@ -167,7 +167,7 @@ extension RootViewModelFactory {
         let createDraftApplication = nanoServiceComposer.compose(
             createRequest: RequestFactory.createCreateDraftCollateralLoanApplicationRequest(with:),
             mapResponse: RemoteServices.ResponseMapper.mapCreateDraftCollateralLoanApplicationResponse(_:_:),
-            mapError: Domain.ContentError.init(error:)
+            mapError: { Domain.ContentError.init(error: $0) }
         )
         
         let confirmation = self.makeTimedOTPInputViewModel(
@@ -194,7 +194,7 @@ extension RootViewModelFactory {
         let getVerificationCode = nanoServiceComposer.compose(
             createRequest: Vortex.RequestFactory.createGetVerificationCodeOrderCardVerifyRequest,
             mapResponse: AnywayPaymentBackend.ResponseMapper.mapGetVerificationCodeResponse,
-            mapError: Domain.ContentError.init(error:)
+            mapError: { Domain.ContentError.init(error: $0) }
         )
                 
         getVerificationCode(()) { [getVerificationCode] in
@@ -211,7 +211,7 @@ extension RootViewModelFactory {
         let saveConsents = nanoServiceComposer.compose(
             createRequest: RequestFactory.createSaveConsentsRequest(with:),
             mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:),
-            mapError: { _ in Domain.ContentError.init(kind: .failureResultScreen) }
+            mapError: { Domain.ContentError.init(error: $0, completionForm: true) }
         )
         
         let save = schedulers.background.scheduled(saveConsents)
@@ -231,7 +231,7 @@ extension RootViewModelFactory {
         let getConsents = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetConsentsRequest(with:),
             mapResponse: RemoteServices.ResponseMapper.mapGetConsentsResponse(_:_:),
-            mapError: Domain.ContentError.init(error:)
+            mapError: { Domain.ContentError.init(error: $0) }
         )
         
         getConsents(payload) { [getConsents] in
@@ -261,8 +261,11 @@ extension RootViewModelFactory {
                 case let .alert(message):
                     completion(.failure(.alert(message)))
 
-                case .failureResultScreen:
-                    completion(.failure(.failureResultScreen))
+                case .complete:
+                    completion(.failure(.complete))
+                    
+                case .none:
+                    completion(.failure(.none))
                 }
             }
         }
@@ -345,18 +348,30 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
     typealias RemoteError = RemoteServiceError<Error, Error, RemoteServices.ResponseMapper.MappingError>
     
     init(
-        error: RemoteError
+        error: RemoteError,
+        completionForm: Bool = false
     ) {
         switch error {
         case let .performRequest(error):
             if error.isNotConnectedToInternetOrTimeout() {
-                self = .init(kind: .informer(.init(message: "Проверьте подключение к сети", icon: .close)))
+                self = .init(kind: .informer(.init(
+                    message: "Что-то пошло не так. Попробуйте позже",
+                    icon: .close
+                )))
             } else {
-                self = .init(kind: .alert("Попробуйте позже."))
+                if completionForm {
+                    self = .init(kind: .failureResultScreen)
+                } else {
+                    self = .init(kind: .alert("Попробуйте позже."))
+                }
             }
             
         default:
-            self = .init(kind: .alert("Попробуйте позже."))
+            if completionForm {
+                self = .init(kind: .failureResultScreen)
+            } else {
+                self = .init(kind: .alert("Попробуйте позже."))
+            }
         }
     }
     
@@ -370,7 +385,7 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
             return .informer(informerPayload)
             
         case .failureResultScreen:
-            return .failureResultScreen
+            return .complete
         }
     }
 }

@@ -828,7 +828,8 @@ private extension RootViewModelFactory {
         let mainViewModelsFactory = MainViewModelsFactory(
             makeAuthFactory: makeAuthFactory,
             makeProductProfileViewModel: makeProductProfileViewModel,
-            makePromoProductViewModel: { [weak self] in
+            makePromoProductViewModel: {
+                [weak self] in
                 
                 self?.makePromoViewModel(
                     viewModel: $0,
@@ -838,7 +839,14 @@ private extension RootViewModelFactory {
             },
             qrViewModelFactory: qrViewModelFactory,
             makeTrailingToolbarItems: makeTrailingToolbarItems,
-            makeCreditCardMVP: { featureFlags.creditCardMVPFlag.isActive ? .creditCardMVPPreview : nil }
+            makeCreditCardMVP: { featureFlags.creditCardMVPFlag.isActive ? .creditCardMVPPreview : nil },
+            makeAuthProductsViewModel: {
+                
+                self.makeCardPromoLanding(
+                    flag: featureFlags.orderCardFlag,
+                    dismiss: $0
+                )
+            }
         )
                   
         let mainViewModel = MainViewModel(
@@ -964,7 +972,7 @@ extension Error {
         switch sessionError {
         case let .sessionError(error):
             let nsError = error as NSError
-            return nsError.code == NSURLErrorNotConnectedToInternet || nsError.code == NSURLErrorTimedOut
+            return nsError.code == NSURLErrorNotConnectedToInternet || nsError.code == NSURLErrorTimedOut || nsError.code == NSURLErrorNetworkConnectionLost
             
         default: return false
         }

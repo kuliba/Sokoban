@@ -290,8 +290,3 @@ struct CreateDraftCollateralLoanApplicationView_Previews<Confirmation, InformerP
     
     typealias Factory = CreateDraftCollateralLoanApplicationFactory
 }
-
-extension Color {
-    
-    static let grayLightest: Self = .init(red: 0.96, green: 0.96, blue: 0.97)
-}

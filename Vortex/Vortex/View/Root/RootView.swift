@@ -413,7 +413,8 @@ private extension RootViewFactory {
         return .init(
             rootEvent: { _ in },
             infra: .init(
-                imageCache: .preview,
+                imageCache: .preview, 
+                imageCacheWithDefaultImage: { _ in .preview },
                 generalImageCache: .preview,
                 getUImage: { _ in nil }
             ),

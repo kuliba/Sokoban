@@ -65,91 +65,42 @@ extension PaymentCompleteView.Config {
                     )
                 )
             ),
-            rejected: .init(
-                content: .init(
-                    logo: .ic48Close,
-                    title: "Заявка на кредит неуспешна!",
-                    subtitle: "Что-то пошло не так...\nПопробуйте позже."
-                ),
-                config: .init(
-                    amount: .init(
-                        textFont: .textH1Sb24322(),
-                        textColor: .backgroundBackground
-                    ),
-                    icon: .init(
-                        foregroundColor: .iconWhite,
-                        backgroundColor: .mainColorsRed,
-                        innerSize: .init(width: 44, height: 44),
-                        outerSize: .init(width: 88, height: 88)
-                    ),
-                    logoHeight: 0,
-                    title: .init(
-                        textFont: .textH3Sb18240(),
-                        textColor: .textSecondary
-                    ),
-                    subtitle: .init(
-                        textFont: .textBodyMR14200(),
-                        textColor: .textPlaceholder
-                    )
-                )
-            ),
-            fraudCancelled: .init(
-                content: .init(
-                    logo: .ic48Clock,
-                    title: "Перевод отменен!",
-                    subtitle: nil
-                ),
-                config: .init(
-                    amount: .init(
-                        textFont: .textH1Sb24322(),
-                        textColor: .textSecondary
-                    ),
-                    icon: .init(
-                        foregroundColor: .iconWhite,
-                        backgroundColor: .systemColorWarning,
-                        innerSize: .init(width: 44, height: 44),
-                        outerSize: .init(width: 88, height: 88)
-                    ),
-                    logoHeight: 44,
-                    title: .init(
-                        textFont: .textH3Sb18240(),
-                        textColor: .textRed
-                    ),
-                    subtitle: .init(
-                        textFont: .textH3Sb18240(),
-                        textColor: .textSecondary
-                    )
-                )
-            ),
-            fraudExpired: .init(
-                content: .init(
-                    logo: .ic48Clock,
-                    title: "Перевод отменен!",
-                    subtitle: "Время на подтверждение\nперевода вышло"
-                ),
-                config: .init(
-                    amount: .init(
-                        textFont: .textH1Sb24322(),
-                        textColor: .textSecondary
-                    ),
-                    icon: .init(
-                        foregroundColor: .iconWhite,
-                        backgroundColor: .systemColorWarning,
-                        innerSize: .init(width: 44, height: 44),
-                        outerSize: .init(width: 88, height: 88)
-                    ),
-                    logoHeight: 44,
-                    title: .init(
-                        textFont: .textH3Sb18240(),
-                        textColor: .textRed
-                    ),
-                    subtitle: .init(
-                        textFont: .textH3Sb18240(),
-                        textColor: .textSecondary
-                    )
-                )
-            ), 
+            rejected: .default,
+            fraudCancelled: .default,
+            fraudExpired: .default,
             suspend: .suspend()
+        )
+    )
+}
+
+extension PaymentCompleteView.Config.Statuses.Status {
+    
+    static let `default` = Self(
+        content: .init(
+            logo: .ic48Close,
+            title: "Заявка на кредит неуспешна!",
+            subtitle: "Что-то пошло не так...\nПопробуйте позже."
+        ),
+        config: .init(
+            amount: .init(
+                textFont: .textH1Sb24322(),
+                textColor: .backgroundBackground
+            ),
+            icon: .init(
+                foregroundColor: .iconWhite,
+                backgroundColor: .mainColorsRed,
+                innerSize: .init(width: 44, height: 44),
+                outerSize: .init(width: 88, height: 88)
+            ),
+            logoHeight: 0,
+            title: .init(
+                textFont: .textH3Sb18240(),
+                textColor: .textSecondary
+            ),
+            subtitle: .init(
+                textFont: .textBodyMR14200(),
+                textColor: .textPlaceholder
+            )
         )
     )
 }

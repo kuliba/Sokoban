@@ -10,12 +10,12 @@ import IQKeyboardManagerSwift
 import SwiftUI
 import ToggleComponent
 
-struct GetCollateralLandingCalculatorView<InformerPayload>: View {
+struct GetCollateralLandingCalculatorView<InformerPayload>: View where InformerPayload: Equatable {
     
     @SwiftUI.State private var toggleIsOn = false
     @SwiftUI.State private var sliderCurrentValue: Double = .zero
-    @SwiftUI.State private var desiredAmount: String
-
+    @SwiftUI.State private var desiredAmount: String = ""
+    
     let state: State
     let product: Product
     let config: Config
@@ -419,7 +419,8 @@ extension GetCollateralLandingCalculatorView {
 
 // MARK: - Previews
 
-struct CollateralLoanLandingGetCollateralLandingCalculatorView_Previews<InformerPayload>: PreviewProvider {
+struct CollateralLoanLandingGetCollateralLandingCalculatorView_Previews<InformerPayload>: PreviewProvider
+    where InformerPayload: Equatable {
     
     static var previews: some View {
         

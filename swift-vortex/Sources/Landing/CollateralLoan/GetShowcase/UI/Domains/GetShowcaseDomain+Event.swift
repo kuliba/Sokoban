@@ -12,7 +12,15 @@ extension GetShowcaseDomain {
     public enum Event<InformerPayload>: Equatable where InformerPayload: Equatable {
         
         case load
-        case loaded(Result<InformerPayload>)
+        case loaded(Showcase)
+        case failure(Failure)
+        
+        public enum Failure: Equatable {
+            
+            case alert(String)
+            case informer(InformerPayload)
+        }
+
         case dismissFailure
     }
 }

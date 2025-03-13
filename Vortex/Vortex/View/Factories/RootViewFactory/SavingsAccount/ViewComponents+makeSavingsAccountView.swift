@@ -44,7 +44,7 @@ extension ViewComponents {
                     )
                     .navigationDestination(
                         destination: flowState.navigation?.destination,
-                        content: { makeOpenSavingsAccountView(destination: $0, openAccountBinder: openAccountBinder) }
+                        content: { makeOpenSavingsAccountView(destination: $0, openAccountBinder: openAccountBinder, dismiss: dismiss) }
                     )
                 }
             }
@@ -118,13 +118,14 @@ extension ViewComponents {
     @ViewBuilder
     func makeOpenSavingsAccountView(
         destination: SavingsAccountDomain.Navigation.Destination,
-        openAccountBinder: OpenSavingsAccountDomain.Binder
+        openAccountBinder: OpenSavingsAccountDomain.Binder,
+        dismiss: @escaping () -> Void
     ) -> some View {
         
         switch destination {
         case .openSavingsAccount:
             
-            makeOpenSavingsAccountView(openAccountBinder, dismiss: {})
+            makeOpenSavingsAccountView(openAccountBinder, dismiss: dismiss)
         }
     }
 
@@ -137,15 +138,15 @@ extension ViewComponents {
                 SavingsAccountView(
                     state: .init($0?.list.first),
                     config: .iVortex,
-                    factory: makeImageViewFactory()
+                    factory: makeImageViewFactorySA()
                 )
             }
         )
     }
     
-    func makeImageViewFactory() -> ImageViewFactory {
+    func makeImageViewFactorySA() -> ImageViewFactory {
         
-        .init(makeIconView: makeIconView, makeBannerImageView: makeGeneralIconView(md5Hash:))
+        .init(makeIconView: { makeIconViewWithDefaultImage(defaultImage: Image("placeHolder"), md5Hash: $0)}, makeBannerImageView: makeGeneralIconView(md5Hash:))
     }
        
     func makeSpinnerRefreshView(

@@ -1,6 +1,6 @@
 //
 //  Spy.swift
-//  FastPaymentsSettingsPreviewTests
+//
 //
 //  Created by Igor Malyarov on 15.01.2024.
 //
@@ -51,5 +51,17 @@ extension Spy where Response == Void {
         at index: Int = 0
     ) {
         messages[index].completion(())
+    }
+}
+
+extension Spy {
+    
+    func process<A, B>(
+        _ a: A,
+        _ b: B,
+        completion: @escaping Completion
+    ) where Payload == (A, B) {
+        
+        process((a, b), completion: completion)
     }
 }

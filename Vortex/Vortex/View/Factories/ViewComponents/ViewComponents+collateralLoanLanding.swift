@@ -10,14 +10,21 @@ import CollateralLoanLandingGetCollateralLandingUI
 import CollateralLoanLandingGetShowcaseUI
 import DropDownTextListComponent
 import Foundation
+import PDFKit
+import RemoteServices
 import SwiftUI
 import UIPrimitives
 
 extension ViewComponents {
     
+    typealias MakeOperationDetailInfoViewModel = (
+        [OperationDetailInfoViewModel.DefaultCellViewModel],
+        @escaping () -> Void
+    ) -> OperationDetailInfoViewModel
+    
     func makeCollateralLoanWrapperView(
         binder: GetCollateralLandingDomain.Binder,
-        operationDetailInfoViewModel: OperationDetailInfoViewModel,
+        makeOperationDetailInfoViewModel: @escaping MakeOperationDetailInfoViewModel,
         goToMain: @escaping () -> Void,
         getPDFDocument: @escaping GetPDFDocument,
         formatCurrency: @escaping FormatCurrency
@@ -27,16 +34,16 @@ extension ViewComponents {
             binder: binder,
             config: .default,
             factory: makeCollateralLoanLandingFactory(
-                getPDFDocument: getPDFDocument,
                 formatCurrency: formatCurrency
             ),
             goToMain: goToMain,
-            operationDetailInfoViewModel: operationDetailInfoViewModel
+            makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,
+            getPDFDocument: getPDFDocument
         )
     }
     
     func makeCollateralLoanShowcaseWrapperView(
-        operationDetailInfoViewModel: OperationDetailInfoViewModel,
+        makeOperationDetailInfoViewModel: @escaping MakeOperationDetailInfoViewModel,
         binder: GetShowcaseDomain.Binder,
         goToMain: @escaping () -> Void,
         getPDFDocument: @escaping GetPDFDocument,
@@ -46,29 +53,32 @@ extension ViewComponents {
         .init(
             binder: binder,
             factory: makeCollateralLoanLandingFactory(
-                getPDFDocument: getPDFDocument,
                 formatCurrency: formatCurrency
             ),
             config: .default,
             goToMain: goToMain,
-            operationDetailInfoViewModel: operationDetailInfoViewModel
+            makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,
+            getPDFDocument: getPDFDocument
         )
     }
     
     func makeCollateralLoanLandingFactory(
-        getPDFDocument: @escaping GetPDFDocument,
         formatCurrency: @escaping FormatCurrency
     ) -> CollateralLoanLandingFactory {
 
         .init(
             makeImageViewWithMD5Hash: { makeIconView(md5Hash: $0) },
             makeImageViewWithURL: { makeGeneralIconView(.image($0.addingPercentEncoding())) },
-            getPDFDocument: getPDFDocument,
             formatCurrency: formatCurrency
         )
     }
 
-    typealias GetPDFDocument = GetCollateralLandingFactory.GetPDFDocument
-    typealias MakeDetailsViewModel = CreateDraftCollateralLoanApplicationWrapperView.MakeOperationDetailInfoViewModel
+    typealias GetPDFDocumentCompletion = (PDFDocument?) -> Void
+    typealias GetPDFDocument = (
+        RemoteServices.RequestFactory.GetConsentsPayload,
+        @escaping GetPDFDocumentCompletion
+    ) -> Void
+    typealias MakeDetailsViewModel
+        = CreateDraftCollateralLoanApplicationWrapperView.MakeOperationDetailInfoViewModel
     typealias FormatCurrency = (UInt) -> String?
 }
