@@ -274,6 +274,7 @@ extension SavingsAccountInfo {
 extension SavingsAccountInfoConfig {
     
     static let preview: Self = .init(
+        bottom: 1,
         disable: .init(color: .gray, text: .init(textFont: .body, textColor: .gray)),
         enable: .init(color: .green, text: .init(textFont: .body, textColor: .black)),
         imageSize: .init(width: 24, height: 24),

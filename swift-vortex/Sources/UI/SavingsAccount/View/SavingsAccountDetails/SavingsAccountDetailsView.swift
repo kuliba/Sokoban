@@ -5,7 +5,6 @@
 //  Created by Andryusina Nataly on 29.11.2024.
 //
 import SwiftUI
-import BottomSheetComponent
 
 private extension SavingsAccountDetailsState {
     

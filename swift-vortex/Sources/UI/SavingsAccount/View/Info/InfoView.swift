@@ -20,11 +20,12 @@ public struct InfoView: View {
     
     public var body: some View {
         
-        VStack {
+        VStack(spacing: config.paddings.top) {
             
             info.title.text(withConfig: config.title)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, config.paddings.leading)
+                .padding(.bottom, config.bottom)
 
             ForEach(info.list, id: \.title, content: item)
         }

@@ -339,6 +339,7 @@ struct ProductProfileView: View {
             
         case let .savingsAccountInfo(info):
             viewFactory.components.makeSavingsAccountInfo(info: info)
+                .padding(.top, 5)
         }
     }
         

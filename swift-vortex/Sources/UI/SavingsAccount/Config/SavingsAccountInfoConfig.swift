@@ -10,6 +10,7 @@ import SwiftUI
 
 public struct SavingsAccountInfoConfig {
     
+    let bottom: CGFloat
     let disable: Item
     let enable: Item
     let imageSize: CGSize
@@ -31,12 +32,14 @@ public struct SavingsAccountInfoConfig {
     }
     
     public init(
+        bottom: CGFloat,
         disable: Item,
         enable: Item,
         imageSize: CGSize,
         paddings: EdgeInsets,
         title: TextConfig
     ) {
+        self.bottom = bottom
         self.disable = disable
         self.enable = enable
         self.imageSize = imageSize
