@@ -50,3 +50,31 @@ extension SavingsAccountConfig {
         questions: .init(height: 64, title: .init(textFont: .textBodyMR14200(), textColor: .textSecondary))
     )
 }
+
+extension SavingsAccountInfoConfig {
+    
+    static let iVortex: Self = .init(
+        disable: .init(color: .textPlaceholder, text: .init(textFont: .textBodyMR14200(), textColor: .textPlaceholder)),
+        enable: .init(color: .systemColorActive, text: .init(textFont: .textBodyMR14200(), textColor: .textSecondary)),
+        imageSize: .init(width: 24, height: 24),
+        paddings: .init(top: 0, leading: 16, bottom: 40, trailing: 16),
+        title: .init(textFont: .textH3Sb18240(), textColor: .textSecondary)
+    )
+}
+
+extension SavingsAccountInfo {
+    
+    static let iVortex: Self = .init(
+        list: .iVortex,
+        title: "Тестовый заголовок"
+    )
+}
+
+extension Array where Element == SavingsAccountInfo.Item {
+    
+    static let iVortex: Self = [
+        .init(enable: true, image: .ic16Check, title: "• Расчёт процентов является предварительным"),
+        .init(enable: true, image: .ic16Check, title: "• Рассчитывается по состоянию на конец текущего месяца, исходя из фактического минимального остатка. При его изменении сумма к выплате по итогам месяца может измениться"),
+        .init(enable: true, image: .ic16Check, title: "• Максимальный остаток, на который начисляются проценты, не должен превышать 1 500 000 рублей")
+    ]
+}

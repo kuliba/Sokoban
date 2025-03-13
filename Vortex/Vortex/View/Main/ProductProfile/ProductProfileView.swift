@@ -11,7 +11,6 @@ import Combine
 import InfoComponent
 import PinCodeUI
 import RxViewModel
-import SavingsAccount
 import SberQR
 import SwiftUI
 import VortexTools
@@ -337,6 +336,9 @@ struct ProductProfileView: View {
             
         case let .placesMap(viewModel):
             PlacesView(viewModel: viewModel)
+            
+        case let .savingsAccountInfo(info):
+            viewFactory.components.makeSavingsAccountInfo(info: info)
         }
     }
         
@@ -595,24 +597,10 @@ private extension ProductProfileView {
                 
                 viewModel.accountInfo.map { accountInfo in
                     
-                    SavingsAccountDetailsView(
-                        amountToString: {
-                            
-                            viewModel.model.amountFormatted(
-                                amount: $0.doubleValue,
-                                currencyCode: $1,
-                                style: .normal
-                            ) ?? ""
-                        },
+                    viewFactory.components.makeSavingsAccountDetails(
+                        amountToString: viewModel.amountToString,
                         state: accountInfo,
-                        event: {
-                            
-                            switch $0 {
-                            case .expanded:
-                                viewModel.accountInfo?.isExpanded.toggle()
-                            }
-                        },
-                        config: .iVortex
+                        event: viewModel.event
                     )
                     .padding(.horizontal)
                     .animation(.easeInOut, value: accountInfo.isExpanded)

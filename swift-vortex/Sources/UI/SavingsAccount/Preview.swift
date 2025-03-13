@@ -259,3 +259,25 @@ extension SavingsAccountDetailsConfig {
         )
     )
 }
+
+extension SavingsAccountInfo {
+    static let preview: Self = .init(
+        list: [
+            .init(enable: true, image: .bolt, title: String(repeating:"Text", count: 15)),
+            .init(enable: true, image: .flag, title: String(repeating:"Text", count: 30)),
+            .init(enable: false, image: .percent, title: String(repeating:"Text", count: 5)),
+        ],
+        title: String(repeating:"Text", count: 3)
+    )
+}
+
+extension SavingsAccountInfoConfig {
+    
+    static let preview: Self = .init(
+        disable: .init(color: .gray, text: .init(textFont: .body, textColor: .gray)),
+        enable: .init(color: .green, text: .init(textFont: .body, textColor: .black)),
+        imageSize: .init(width: 24, height: 24),
+        paddings: .init(top: 0, leading: 16, bottom: 0, trailing: 16),
+        title: .init(textFont: .caption2, textColor: .black)
+    )
+}
