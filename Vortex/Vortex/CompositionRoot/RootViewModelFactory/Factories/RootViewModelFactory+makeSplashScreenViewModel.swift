@@ -13,9 +13,10 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeSplashScreenViewModel(
-        initialState: SplashScreenState = .cover
+        flag: SplashScreenFlag
     ) -> SplashScreenViewModel {
         
+        let initialState: SplashScreenState = flag.isActive ? .cover : .hidden
         let reducer = SplashScreenReducer()
         
         return .init(

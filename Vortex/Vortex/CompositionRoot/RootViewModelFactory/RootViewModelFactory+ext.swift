@@ -402,7 +402,7 @@ extension RootViewModelFactory {
         
         // MARK: - Splash Screen
         
-        let splash = makeSplashScreenViewModel()
+        let splash = makeSplashScreenViewModel(flag: featureFlags.splashScreenFlag)
         
         if featureFlags.splashScreenFlag.isActive {
             
