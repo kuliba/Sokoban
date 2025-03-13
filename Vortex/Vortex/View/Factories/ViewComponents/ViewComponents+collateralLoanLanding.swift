@@ -7,6 +7,7 @@
 
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 import CollateralLoanLandingGetCollateralLandingUI
+import CollateralLoanLandingGetConsentsBackend
 import CollateralLoanLandingGetShowcaseUI
 import DropDownTextListComponent
 import Foundation

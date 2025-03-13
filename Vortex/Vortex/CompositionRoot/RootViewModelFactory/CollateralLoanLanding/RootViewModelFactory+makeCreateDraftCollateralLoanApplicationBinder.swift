@@ -183,7 +183,7 @@ extension RootViewModelFactory {
                     applicationResult: .success(.init(applicationID: $0.applicationID)),
                     confirmation: confirmation
                 )
-            })
+            }.mapError { $0 })
             _ = createDraftApplication
         }
     }
@@ -199,7 +199,7 @@ extension RootViewModelFactory {
                 
         getVerificationCode(()) { [getVerificationCode] in
             
-            completion($0.map(\.resendOTPCount))
+            completion($0.map(\.resendOTPCount).mapError { $0 })
             _ = getVerificationCode
         }
     }
@@ -218,8 +218,25 @@ extension RootViewModelFactory {
 
         save(payload.payload) { [saveConsents] in
 
-            completion($0.map { $0.response(payload: payload) })
+            completion($0.map { $0.response(payload: payload) }.mapError { $0 })
             _ = saveConsents
+        }
+    }
+
+    func getConsents(
+        payload: RemoteServices.RequestFactory.GetConsentsPayload,
+        completion: @escaping (CreateDraftCollateralLoanApplicationDomain.GetConsentsResult<InformerData>) -> Void
+    ) {
+        let getConsents = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetConsentsRequest(with:),
+            mapResponse: RemoteServices.ResponseMapper.mapGetConsentsResponse(_:_:),
+            mapError: { Domain.ContentError.init(error: $0, offlineForm: true) }
+        )
+        
+        getConsents(payload) { [getConsents] in
+  
+            completion($0.map { $0 }.mapError { $0 })
+            _ = getConsents
         }
     }
 
@@ -227,20 +244,18 @@ extension RootViewModelFactory {
         payload: RemoteServices.RequestFactory.GetConsentsPayload,
         completion: @escaping (PDFDocument?) -> Void
     ) {
-        
-        let getConsents = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createGetConsentsRequest(with:),
-            mapResponse: RemoteServices.ResponseMapper.mapGetConsentsResponse(_:_:),
-            mapError: { Domain.ContentError.init(error: $0) }
-        )
-        
-        getConsents(payload) { [getConsents] in
+        getConsents(payload: payload) {
             
-            completion(try? $0.get())
-            _ = getConsents
+            switch $0 {
+            case let .success(pdfDocument):
+                completion(pdfDocument)
+                
+            case .failure:
+                completion(nil)
+            }
         }
     }
-
+    
     // MARK: - Flow
     
     private func getNavigation(
@@ -266,6 +281,9 @@ extension RootViewModelFactory {
                     
                 case .none:
                     completion(.failure(.none))
+                    
+                case .offline:
+                    completion(.failure(.offline))
                 }
             }
         }
@@ -349,7 +367,8 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
     
     init(
         error: RemoteError,
-        completionForm: Bool = false
+        completionForm: Bool = false,
+        offlineForm: Bool = false
     ) {
         switch error {
         case let .performRequest(error):
@@ -360,16 +379,26 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
                 )))
             } else {
                 if completionForm {
+
                     self = .init(kind: .failureResultScreen)
+                } else if offlineForm {
+
+                    self = .init(kind: .offlineForm)
                 } else {
+                    
                     self = .init(kind: .alert("Попробуйте позже."))
                 }
             }
             
         default:
             if completionForm {
+                
                 self = .init(kind: .failureResultScreen)
+            } else if offlineForm {
+                
+                self = .init(kind: .offlineForm)
             } else {
+                
                 self = .init(kind: .alert("Попробуйте позже."))
             }
         }
@@ -386,6 +415,9 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
             
         case .failureResultScreen:
             return .complete
+            
+        case .offlineForm:
+            return .offline
         }
     }
 }

@@ -25,7 +25,8 @@ extension GetCollateralLandingDomain {
         case selectCollateral(String)
         case selectMonthPeriod(UInt)
         case togglePayrollClient(Bool)
-
+        case setAmountResponder(Bool)
+        
         public enum Failure: Equatable {
             
             case alert(String)

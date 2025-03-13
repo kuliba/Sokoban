@@ -8,7 +8,7 @@
 import SwiftUI
 import UIKit
 
-struct AmountTextField<InformerPayload>: UIViewRepresentable {
+struct AmountTextField<InformerPayload>: UIViewRepresentable where InformerPayload: Equatable {
 
     let state: State
     let config: Config

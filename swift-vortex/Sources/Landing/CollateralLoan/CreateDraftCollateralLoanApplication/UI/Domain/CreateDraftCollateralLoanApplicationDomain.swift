@@ -5,6 +5,8 @@
 //  Created by Valentin Ozerov on 16.01.2025.
 //
 
+import PDFKit
+
 // Namespace
 public enum CreateDraftCollateralLoanApplicationDomain {}
 
@@ -22,6 +24,11 @@ public extension CreateDraftCollateralLoanApplicationDomain {
     
     typealias SaveConsentsResult<InformerPayload> = Swift.Result<
         CollateralLandingApplicationSaveConsentsResult,
+        BackendFailure<InformerPayload>
+    >
+    
+    typealias GetConsentsResult<InformerPayload> = Swift.Result<
+        PDFDocument,
         BackendFailure<InformerPayload>
     >
 }

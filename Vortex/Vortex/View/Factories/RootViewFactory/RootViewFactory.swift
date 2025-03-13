@@ -8,6 +8,7 @@
 import ActivateSlider
 import AnywayPaymentDomain
 import Banners
+import CollateralLoanLandingGetConsentsBackend
 import CollateralLoanLandingGetShowcaseUI
 import LoadableResourceComponent
 import MarketShowcase

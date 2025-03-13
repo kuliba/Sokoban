@@ -54,6 +54,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
         case informer(InformerPayload)
         case alert(String)
         case complete
+        case offline
         case none
     }
 }
