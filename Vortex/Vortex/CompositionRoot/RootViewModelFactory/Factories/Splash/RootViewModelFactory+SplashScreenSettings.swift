@@ -86,6 +86,26 @@ extension RootViewModelFactory {
         }
     }
     
+    @inlinable
+    func splashScreenSettingsRemoteLoad(
+        period: String,
+        serial: String?,
+        completion: @escaping LoadCompletion<Result<SerialComponents.SerialStamped<String, [SplashScreenSettings]>, Error>>
+    ) {
+        let remoteLoad = nanoServiceComposer.composeSerialResultLoad(
+            createRequest: { serial in
+                
+                try RequestFactory.createGetSplashScreenSettingsRequest(
+                    serial: serial,
+                    period: period
+                )
+            },
+            mapResponse: { ResponseMapper.map(period, $0, $1) }
+        )
+        
+        remoteLoad(serial) { completion($0); _ = remoteLoad }
+    }
+    
     typealias SplashScreenSettingsOutcome = CategorizedOutcome<String, SplashScreenSettings>
     
     /// - Warning: This method is not responsible for threading.
@@ -177,14 +197,29 @@ extension RootViewModelFactory {
     }
 }
 
-// MARK: - Images
-
-import Foundation
-import RemoteServices
-import SplashScreenBackend
-import SwiftUI
-
 // MARK: - Adapters, Helpers
+
+private extension ResponseMapper {
+    
+    static func map(
+        _ period: String,
+        _ data: Data,
+        _ httpURLResponse: HTTPURLResponse
+    ) -> Result<SerialComponents.SerialStamped<String, [SplashScreenSettings]>, any Error> {
+        
+        return RemoteServices.ResponseMapper
+            .mapGetSplashScreenSettingsResponse(data, httpURLResponse)
+            .map {
+                
+                return .init(
+                    value: $0.list.compactMap {
+                        $0.settings(period: period)
+                    },
+                    serial: $0.serial)
+            }
+            .mapError { $0 }
+    }
+}
 
 private extension CategorizedOutcome
 where Item == SplashScreenSettings {
@@ -243,6 +278,49 @@ extension CategorizedStorage: CustomStringConvertible {
 }
 
 // MARK: - Codable (Caching)
+
+private extension RemoteServices.ResponseMapper.SplashScreenSettings {
+    
+    func settings(
+        period: String
+    ) -> SplashScreenSettings? {
+        
+        return link.map { .init(imageData: nil, link: $0, period: period) }
+    }
+}
+
+struct CodableSplashScreenSettings: Codable {
+    
+    let imageData: ImageData
+    let link: String
+    let period: String
+    
+    enum ImageData: Codable {
+        
+        case data(Data)
+        case failure
+        case none
+    }
+}
+
+extension CodableSplashScreenSettings {
+    
+    var imageDataResult: Result<Data, SplashScreenSettings.DataFailure>? {
+        
+        switch imageData {
+        case let .data(data): return .success(data)
+        case .failure:        return .failure(.init())
+        case .none:           return nil
+        }
+    }
+}
+
+struct CodableSplashScreenTimePeriod: Codable {
+    
+    let timePeriod: String
+    let startTime: String
+    let endTime: String
+}
 
 private extension SplashScreenSettings {
     
