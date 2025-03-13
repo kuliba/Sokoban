@@ -4,8 +4,8 @@
   },
   "images" : [
     {
-      "filename" : "ic24Rabbit.svg",
-      "idiom" : "universal"
+      "idiom" : "universal",
+      "filename" : "ic24Rabbit.svg"
     }
   ],
   "info" : {

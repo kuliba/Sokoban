@@ -1,15 +1,15 @@
 {
+  "properties" : {
+    "template-rendering-intent" : "template"
+  },
   "images" : [
     {
-      "filename" : "ic24PaymentsInactive.svg",
-      "idiom" : "universal"
+      "idiom" : "universal",
+      "filename" : "ic24PaymentsInactive.svg"
     }
   ],
   "info" : {
-    "version" : 1,
-    "author" : "xcode"
-  },
-  "properties" : {
-    "template-rendering-intent" : "template"
+    "author" : "xcode",
+    "version" : 1
   }
 }
