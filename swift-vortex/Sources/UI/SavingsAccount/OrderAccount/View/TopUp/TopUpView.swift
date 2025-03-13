@@ -18,17 +18,18 @@ struct TopUpView: View {
     
     var body: some View {
         
-        HStack(alignment: .top, spacing: config.spacing) {
+        VStack(alignment: .leading, spacing: 6) {
             
-            iconView(isLoading)
-            
-            VStack(alignment: .leading, spacing: 6) {
+            HStack(alignment: .center, spacing: config.spacing) {
                 
+                iconView(isLoading)
                 messageWithToggle()
-                config.description.text.string(isLoading).text(withConfig: config.description.config)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .modifier(ShimmeringModifier(isLoading, config.shimmering))
             }
+            
+            config.description.text.string(isLoading).text(withConfig: config.description.config)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .modifier(ShimmeringModifier(isLoading, config.shimmering))
+                .padding(.leading, config.iconSize.width + config.spacing)
         }
     }
     
