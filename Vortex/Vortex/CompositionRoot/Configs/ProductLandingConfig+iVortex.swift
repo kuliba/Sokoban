@@ -10,7 +10,6 @@ import OrderCardLandingComponent
 extension ProductLandingConfig {
     
     static let iVortex: Self = .init(
-        background: .mainColorsGrayLightest,
         buttonsConfig: .init(
             buttonsPadding: 16,
             buttonsSpacing: 44,
@@ -18,19 +17,27 @@ extension ProductLandingConfig {
         ),
         conditionButtonConfig: .init(
             icon: .ic24Info,
+            foregroundColorDark: .textSecondary,
+            foregroundColorLight: .textWhite,
             spacing: 12,
             frame: 20,
-            title: .init(
-                text: "Подробные уcловия",
-                config: .init(
-                    textFont: .textBodyMR14200(),
-                    textColor: .textSecondary
-                )
+            title: "Подробные уcловия",
+            titleDark: .init(
+                textFont: .textBodyMR14200(),
+                textColor: .textWhite
+            ),
+            titleLight: .init(
+                textFont: .textBodyMR14200(),
+                textColor: .textSecondary
             )
         ),
         item: .init(
             circle: 5,
-            title: .init(
+            titleDark: .init(
+                textFont: .textBodyMR14200(),
+                textColor: .textWhite
+            ),
+            titleLight: .init(
                 textFont: .textBodyMR14200(),
                 textColor: .textSecondary
             ),
@@ -53,9 +60,13 @@ extension ProductLandingConfig {
                 )
             )
         ),
-        title: .init(
+        titleDark: .init(
             textFont: .marketingH0B40X480(),
             textColor: .textSecondary
+        ),
+        titleLight: .init(
+            textFont: .marketingH0B40X480(),
+            textColor: .textWhite
         )
     )
 }

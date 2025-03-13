@@ -10,5 +10,5 @@ import Foundation
 public enum ProductLandingEvent {
     
     case order
-    case info
+    case info(URL)
 }

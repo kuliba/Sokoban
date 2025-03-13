@@ -840,7 +840,7 @@ private extension RootViewModelFactory {
                 
                 switch featureFlags.orderCardFlag.rawValue {
                 case .active:
-                    return .cardLanding(self.makeProductsLanding())
+                    return .cardLanding(self.makeCardLanding())
                     
                 case .inactive:
                     return .legacy(

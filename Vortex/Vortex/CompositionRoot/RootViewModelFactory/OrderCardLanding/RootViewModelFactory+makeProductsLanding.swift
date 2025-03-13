@@ -10,11 +10,12 @@ import OrderCard
 import OrderCardLandingBackend
 import OrderCardLandingComponent
 import RemoteServices
+import SwiftUI
 
 extension RootViewModelFactory {
      
     @inlinable
-    func makeProductsLanding(
+    func makeCardLanding(
     ) -> CardLandingDomain.Binder {
     
         let content: CardLandingDomain.Content = makeProductsLandingContent { [weak self] completion in
@@ -38,8 +39,7 @@ extension RootViewModelFactory {
     ) {
         switch select {
         case .continue:
-            break
-            //TODO: add request and proccess
+            completion(.order(openCardProduct()))
         }
     }
 
@@ -68,10 +68,14 @@ extension RootViewModelFactory {
                                 target: $0.cardShowcaseAction.target,
                                 type: $0.cardShowcaseAction.type
                             ),
+                            backgroundColor: $0.color,
                             imageURL: $0.image,
-                            items: $0.features.list.map { .init(bullet: $0.bullet, title: $0.text)} ,
+                            items: $0.features.list.map {
+                                .init(bullet: $0.bullet, title: $0.text)
+                            },
+                            theme: .init(theme: $0.theme),
                             terms: $0.terms,
-                            title: $0.name.first?.text ?? ""
+                            title: $0.name.map({ $0.text }).joined(separator: " ")
                         )
                     })
                 )
@@ -100,6 +104,39 @@ private extension Result<[OrderCardLandingComponent.Product], BackendFailure> {
                 message: error.message,
                 type: .informer
             ))
+        }
+    }
+}
+
+private extension OrderCardLandingComponent.Product.Theme {
+    
+    init(theme: String) {
+        
+        switch theme {
+        case "GRAY":
+            self = .light
+            
+        case "BLACK":
+            self = .dark
+            
+        default:
+            self = .light
+        }
+    }
+}
+
+private extension CardShowCaseResponse.Product {
+    
+    var color: Color {
+        switch theme {
+        case "GRAY":
+            return .mainColorsGrayLightest
+            
+        case "BLACK":
+            return .mainColorsBlack
+            
+        default:
+            return .mainColorsGrayLightest
         }
     }
 }
