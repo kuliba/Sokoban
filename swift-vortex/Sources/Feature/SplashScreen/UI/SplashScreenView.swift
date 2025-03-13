@@ -10,19 +10,16 @@ import SwiftUI
 public struct SplashScreenView: View {
     
     private let state: SplashScreenState
-    private let image: Image
     
     public init(
-        state: SplashScreenState,
-        image: Image
+        state: SplashScreenState
     ) {
         self.state = state
-        self.image = image
     }
     
     public var body: some View {
         
-        image
+        state.settings.image
             .renderingMode(state.renderingMode)
             .resizable()
             .aspectRatio(contentMode: .fill)
@@ -42,11 +39,11 @@ public struct SplashScreenView: View {
 
 // MARK: - UI Mapping
 
-extension SplashScreenState {
+private extension SplashScreenState {
     
     var renderingMode: Image.TemplateRenderingMode {
         
-        switch self {
+        switch phase {
         case .cover: return .template
         default:     return .original
         }
@@ -54,7 +51,7 @@ extension SplashScreenState {
     
     var foregroundColor: Color {
         
-        switch self {
+        switch phase {
         case .cover: return .white
         default:     return .clear
         }
@@ -62,7 +59,7 @@ extension SplashScreenState {
     
     var scaleEffect: CGFloat {
         
-        switch self {
+        switch phase {
         case .cover, .warm:
             return 1
         case .presented:
@@ -74,7 +71,7 @@ extension SplashScreenState {
     
     var opacity: Double {
         
-        switch self {
+        switch phase {
         case .cover, .warm, .presented:
             return 2
         case .hidden:
@@ -84,7 +81,7 @@ extension SplashScreenState {
     
     var blurRadius: Double {
         
-        switch self {
+        switch phase {
         case .cover, .warm, .presented:
             return -100
         case .hidden:

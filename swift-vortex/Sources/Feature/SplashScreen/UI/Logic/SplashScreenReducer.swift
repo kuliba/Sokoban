@@ -22,13 +22,13 @@ public extension SplashScreenReducer {
         
         switch event {
         case .hide:
-            state = .hidden
+            state.phase = .hidden
             
         case .prepare:
-            state = .warm
+            state.phase = .warm
             
         case .start:
-            state = .presented
+            state.phase = .presented
         }
         
         return (state, effect)

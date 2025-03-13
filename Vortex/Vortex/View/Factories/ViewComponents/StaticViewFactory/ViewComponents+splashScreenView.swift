@@ -18,7 +18,7 @@ extension ViewComponents {
         
         RxWrapperView(model: splash) { state, _ in
             
-            SplashScreenView(state: state, image: .init("splash"))
+            SplashScreenView(state: state)
         }
     }
 }
