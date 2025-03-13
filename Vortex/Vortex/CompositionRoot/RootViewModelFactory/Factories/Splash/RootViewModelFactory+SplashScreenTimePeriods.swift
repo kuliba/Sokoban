@@ -90,6 +90,19 @@ extension RootViewModelFactory {
         
         loadTimePeriods { completion($0 ?? .default); _ = loadTimePeriods }
     }
+    
+    @inlinable
+    func getTimePeriodString() -> String {
+        
+        Calendar.current.timePeriod(for: loadSplashScreenTimePeriods())
+    }
+    
+    @inlinable
+    func loadSplashScreenTimePeriods() -> [SplashScreenTimePeriod]? {
+        
+        model.localAgent.load(type: [CodableSplashScreenTimePeriod].self)?
+            .map { .init(codable: $0) }
+    }
 }
 
 // MARK: - Helpers
