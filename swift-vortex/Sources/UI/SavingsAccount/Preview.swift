@@ -33,7 +33,8 @@ extension SavingsAccountConfig {
             title: .init(
                 textFont: .title3,
                 textColor: .green
-            ),
+            ), 
+            paddings: .init(horizontal: 16, vertical: 16),
             spacing: 18
         ),
         offsetForDisplayHeader: 100,
@@ -42,7 +43,13 @@ extension SavingsAccountConfig {
             vertical: 16,
             list: .init(horizontal: 16, vertical: 12)),
         spacing: 16,
-        questionHeight: 64
+        questions: .init(
+            height: 64,
+            title: .init(
+                textFont: .footnote,
+                textColor: .black
+            )
+        )
     )
 }
 

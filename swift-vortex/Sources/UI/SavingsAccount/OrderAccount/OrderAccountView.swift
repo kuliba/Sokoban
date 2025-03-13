@@ -89,16 +89,12 @@ private extension OrderAccountView {
         _ form: Form<Confirmation>
     ) -> some View {
         
-        ScrollView(showsIndicators: false) {
+        VStack(spacing: config.padding) {
             
-            VStack(spacing: config.padding) {
-                
-                coreFormView(form)
-                confirmationView(form.confirmation)
-            }
+            coreFormView(form)
+            confirmationView(form.confirmation)
         }
         .padding(.vertical, config.padding)
-        .coordinateSpace(name: coordinateSpace)
     }
     
     @ViewBuilder
