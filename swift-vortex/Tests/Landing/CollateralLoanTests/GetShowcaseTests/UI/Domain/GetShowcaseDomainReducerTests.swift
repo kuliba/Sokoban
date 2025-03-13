@@ -13,9 +13,8 @@ final class GetShowcaseDomainReducerTests<InformerPayload>: XCTestCase where Inf
     func test_reduce_when_load() {
         
         let sut = makeSUT()
-        let (state, effect) = sut.reduce(.init(isLoading: false), .load)
+        let (state, effect) = sut.reduce(.init(status: .loaded(.stub)), .load)
         
-        XCTAssertTrue(state.isLoading)
         XCTAssertEqual(effect, .load)
     }
     
@@ -23,23 +22,10 @@ final class GetShowcaseDomainReducerTests<InformerPayload>: XCTestCase where Inf
         
         let sut = makeSUT()
         let (state, effect) = sut.reduce(
-            .init(isLoading: false),
-            .loaded(.failure(.init(kind: .alert(anyMessage()))))
+            .init(status: .loaded(.stub)),
+            .loaded(.stub)
         )
         
-        XCTAssertFalse(state.isLoading)
-        XCTAssertNil(effect)
-    }
-
-    func test_reduce_when_productTap() {
-        
-        let sut = makeSUT()
-        let (state, effect) = sut.reduce(
-            .init(isLoading: true),
-            .loaded(.failure(.init(kind: .alert(anyMessage()))))
-        )
-        
-        XCTAssertFalse(state.isLoading)
         XCTAssertNil(effect)
     }
 

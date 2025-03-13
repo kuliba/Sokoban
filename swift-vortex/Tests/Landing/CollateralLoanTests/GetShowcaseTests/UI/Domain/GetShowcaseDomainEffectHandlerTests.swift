@@ -26,7 +26,7 @@ final class GetShowcaseDomainEffectHandlerTests<InformerPayload>: XCTestCase
         expect(
             sut,
             with: .load,
-            toDeliver: .loaded(.failure(.init(kind: .alert(message)))),
+            toDeliver: .failure(.alert(message)),
             on: {
                 
                 loadSpy.complete(with: .failure(.init(kind: .alert(message))))
@@ -41,7 +41,7 @@ final class GetShowcaseDomainEffectHandlerTests<InformerPayload>: XCTestCase
         expect(
             sut,
             with: .load,
-            toDeliver: .loaded(.success(.stub)),
+            toDeliver: .loaded(.stub),
             on: {
                 
                 loadSpy.complete(with: .success(.stub))

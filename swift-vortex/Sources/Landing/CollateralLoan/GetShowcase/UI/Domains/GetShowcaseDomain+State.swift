@@ -15,7 +15,7 @@ extension GetShowcaseDomain {
         var backendFailure: BackendFailure<InformerPayload>?
 
         public init(
-            status: Status<InformerPayload>,
+            status: Status<InformerPayload> = .initiate,
             selectedLandingId: String? = nil,
             backendFailure: BackendFailure<InformerPayload>? = nil
         ) {
