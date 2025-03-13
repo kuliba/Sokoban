@@ -17,6 +17,8 @@ public struct TopUpViewConfig {
     public let subtitle: TitleConfig
     public let title: TitleConfig
     public let toggle: SharedConfigs.ToggleConfig
+    public let shimmering: Color
+
     
     public init(
         description: TitleConfig,
@@ -25,7 +27,8 @@ public struct TopUpViewConfig {
         spacing: CGFloat,
         subtitle: TitleConfig,
         title: TitleConfig,
-        toggle: SharedConfigs.ToggleConfig
+        toggle: SharedConfigs.ToggleConfig,
+        shimmering: Color
     ) {
         self.description = description
         self.icon = icon
@@ -34,5 +37,6 @@ public struct TopUpViewConfig {
         self.subtitle = subtitle
         self.title = title
         self.toggle = toggle
+        self.shimmering = shimmering
     }
 }

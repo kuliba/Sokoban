@@ -95,21 +95,14 @@ struct MainView<NavigationOperationView: View>: View {
     }
     
     private func mainView() -> some View {
-       
-        OffsetObservingScrollWithModelView(refresh: { viewModel.action.send(MainViewModelAction.PullToRefresh()) }) { offset in
+        
+        RefreshableScrollView(action: { viewModel.action.send(MainViewModelAction.PullToRefresh()) }) {
             
-            OffsetObservingScrollView(
-                axes: .vertical,
-                showsIndicators: false,
-                offset: offset,
-                coordinateSpaceName: "coordinateSpaceName"
-            ) {
-                VStack(spacing: 0) {
-                    
-                    ForEach(viewModel.sections.map(\.model), content: sectionView)
-                }
-                .padding(.vertical, 20)
+            VStack(spacing: 0) {
+                
+                ForEach(viewModel.sections.map(\.model), content: sectionView)
             }
+            .padding(.vertical, 20)
         }
     }
     
@@ -183,8 +176,9 @@ struct MainView<NavigationOperationView: View>: View {
         case let .openDeposit(depositListViewModel):
             OpenDepositDetailView(viewModel: depositListViewModel, getUImage: getUImage)
             
-        case let .openCard(authProductsViewModel):
-            AuthProductsView(viewModel: authProductsViewModel)
+        case let .openCard(binder):
+            AuthProductsView(viewModel: binder.content)
+                .background(viewFactory.components.makeCardPromoLandingFlowView(binder.flow))
             
         case let .openDepositsList(openDepositViewModel):
             OpenDepositListView(viewModel: openDepositViewModel, getUImage: getUImage)
@@ -399,10 +393,25 @@ private extension MainView {
     
     private typealias Config = BannerPickerSectionStateItemViewConfig
     
-    private func makeCollateralLoanShowcaseWrapperView(binder: GetShowcaseDomain.Binder) -> some View {
-        
-        return viewFactory.components.makeCollateralLoanShowcaseWrapperView(
+    private func makeOperationDetailInfoViewModel(
+        _ cells: [OperationDetailInfoViewModel.DefaultCellViewModel],
+        dismissAction: @escaping () -> Void
+    ) -> OperationDetailInfoViewModel {
+
+        OperationDetailInfoViewModel(
             model: viewModel.model,
+            logo: nil,
+            cells: cells,
+            dismissAction: dismissAction
+        )
+    }
+    
+    private func makeCollateralLoanShowcaseWrapperView(
+            binder: GetShowcaseDomain.Binder
+        ) -> some View {
+            
+        viewFactory.components.makeCollateralLoanShowcaseWrapperView(
+            makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,
             binder: binder,
             goToMain: viewModel.resetDestination,
             getPDFDocument: viewModel.getPDFDocument,
@@ -418,8 +427,8 @@ private extension MainView {
     private func makeCollateralLoanWrapperView(binder: GetCollateralLandingDomain.Binder) -> some View {
         
         return viewFactory.components.makeCollateralLoanWrapperView(
-            model: viewModel.model,
             binder: binder,
+            makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,
             goToMain: viewModel.resetDestination,
             getPDFDocument: viewModel.getPDFDocument,
             formatCurrency: viewModel.formatCurrency

@@ -391,7 +391,7 @@ struct CollateralLoanLandingGetCollateralLandingCalculatorView_Previews<Informer
     
     static var previews: some View {
         
-        GetCollateralLandingCalculatorView<InformerPayload>(
+        GetCollateralLandingCalculatorView<PreviewInformerPayload>(
             state: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE", formatCurrency: { _ in "" }),
             product: .carStub,
             config: .preview,

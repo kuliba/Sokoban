@@ -288,13 +288,21 @@ class ProductProfileViewModel: ObservableObject {
         bind(buttons: buttons)
         
         bind()
-        
-        updateSavingsAccountInfo()
     }
     
     func updateSavingsAccountInfo() {
-        if let productData {
+        if let productData = productData?.asAccount, productData.isSavingAccount == true {
+            
+            self.accountInfo = .init(status: .inflight)
+            
             productProfileServices.getSavingsAccountInfo(productData) { [weak self] accountInfo in
+                
+                switch accountInfo?.status {
+                case .none, .inflight, .result:
+                    break
+                case let .failure(kind):
+                    self?.handleFailure(kind)
+                }
                 
                 DispatchQueue.main.async {
                     
@@ -303,6 +311,28 @@ class ProductProfileViewModel: ObservableObject {
             }
         } else {
             accountInfo = nil
+        }
+    }
+    
+    private func handleFailure(
+        _ kind: SavingsAccountDetailsState.Kind
+    ) {
+        switch kind {
+        case .alert:
+            let alertViewModel = Alert.ViewModel(
+                title: "Внимание",
+                message: "Что-то пошло не так.\nПопробуйте позже",
+                primary: .init(type: .default, title: "ОК") { [weak self] in
+                    self?.handleCloseLinkAction()
+                })
+            
+            DispatchQueue.main.async { [weak self] in
+                
+                self?.action.send(ProductProfileViewModelAction.Show.AlertShow(viewModel: alertViewModel))
+            }
+            
+        case .informer:
+            errorData()
         }
     }
 }
@@ -596,6 +626,8 @@ private extension ProductProfileViewModel {
             .debounce(for: .milliseconds(100), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] _ in
+                
+                updateSavingsAccountInfo()
                 
                 if let productType = productData?.productType {
                     model.action.send(ModelAction.Products.Update.ForProductType(productType: productType))
@@ -1081,7 +1113,6 @@ private extension ProductProfileViewModel {
                             cardAction: cardAction,
                             makeProductProfileViewModel: makeProductProfileViewModel,
                             openProductByType: { _ in },
-                            openOrderSticker: {}, 
                             makeMyProductsViewFactory: .init(
                                 makeInformerDataUpdateFailure: productProfileViewModelFactory.makeInformerDataUpdateFailure
                             ),
@@ -1671,7 +1702,12 @@ private extension ProductProfileViewModel {
                     self.success = payload.viewModel
                     
                 case let payload as CloseAccountSpinnerAction.Response.Failed:
-                    makeAlert(payload.message)
+                    if productData?.asAccount?.isSavingAccount == true {
+                        makeAlert(.tryLater, { [weak self] in self?.handleCloseLinkAction() })
+                    }
+                    else {
+                        makeAlert(payload.message)
+                    }
                     
                 default:
                     break
@@ -1814,12 +1850,19 @@ private extension ProductProfileViewModel {
     
     func makeAlert(_ message: String) {
         
+        makeAlert(message, { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert()) })
+    }
+    
+    func makeAlert(
+        _ message: String,
+        _ closeAction: @escaping () -> Void
+    ) {
+        
         let alertViewModel = Alert.ViewModel(
             title: "Ошибка",
             message: message,
-            primary: .init(type: .default, title: "ОК") { [weak self] in
-                self?.action.send(ProductProfileViewModelAction.Close.Alert())
-            })
+            primary: .init(type: .default, title: "ОК", action: closeAction)
+        )
         
         DispatchQueue.main.async { [weak self] in
             
@@ -3265,6 +3308,10 @@ extension ProductProfileViewModel {
         model.action.send(ModelAction.Informer.Show(informer: .init(message: "Не удалось повторить операцию. Попробуйте позже", icon: .close)))
     }
     
+    func errorData() {
+        model.action.send(ModelAction.Informer.Show(informer: .init(message: "Ошибка загрузки данных. Попробуйте позже", icon: .close)))
+    }
+
     func payment(
         operationID: Int?,
         productStatement: ProductStatementData

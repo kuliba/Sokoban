@@ -10,14 +10,22 @@ import SwiftUI
 extension Model {
     
     func imageCache() -> ImageCache {
-        
-        .init(
+        imageCache(nil)
+    }
+
+    func imageCache(_ defaultImage: Image?) -> ImageCache {
+                
+        return .init(
             requestImages: {
                 
                 self.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: $0.map(\.rawValue)))
             },
             imagesPublisher: images,
-            fallback: ImageCacheFallback.image(forKey:)
+            fallback: {
+                guard let defaultImage else { return ImageCacheFallback.image(forKey:$0) }
+                
+                return defaultImage
+            }
         )
     }
     

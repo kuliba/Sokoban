@@ -35,8 +35,10 @@ private extension SavingsAccountDetailsState {
         dateNext: String?
     ) -> String {
         
-        let day: Int = Int(dateStart?.suffix(2) ?? "1") ?? 1
-        return "Отчетный период \(day)-\(dateNext?.dateToString() ?? "")"
+        if let day = Int(dateStart?.suffix(2) ?? "") {
+            return "Отчетный период \(day)-\(dateNext?.dateToString() ?? "")"
+        }
+        return ""
     }
 }
 
@@ -178,8 +180,11 @@ public struct SavingsAccountDetailsView: View {
             }
             
             if !needShimmering, !state.days.isEmpty {
-                config.info
+                config.clock
+                    .resizable()
                     .foregroundColor(config.colors.chevron)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: config.cornerRadius)
                 state.days
                     .text(withConfig: config.days)
             }

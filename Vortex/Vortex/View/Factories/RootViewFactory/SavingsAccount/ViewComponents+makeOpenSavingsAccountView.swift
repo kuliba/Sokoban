@@ -80,10 +80,7 @@ extension ViewComponents {
                     state: state,
                     event: event,
                     config: config,
-                    factory: .init(
-                        makeIconView: makeIconView,
-                        makeBannerImageView: makeGeneralIconView
-                    ),
+                    factory: makeImageViewFactorySA(),
                     confirmationView: {
                         
                         confirmationView($0, state, event)

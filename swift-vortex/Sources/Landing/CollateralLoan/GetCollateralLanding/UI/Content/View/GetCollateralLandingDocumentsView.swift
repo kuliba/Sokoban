@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import CollateralLoanLandingGetShowcaseUI
 
 struct GetCollateralLandingDocumentsView<InformerPayload>: View where InformerPayload: Equatable {
 
@@ -87,15 +86,11 @@ struct GetCollateralLandingDocumentsView_Previews<InformerPayload>: PreviewProvi
     
     static var previews: some View {
         
-        GetCollateralLandingDocumentsView<InformerPayload>(
+        GetCollateralLandingDocumentsView<PreviewInformerPayload>(
             product: .carStub,
             config: .preview,
             externalEvent: { print($0) },
             factory: .preview
         )
     }
-    
-    static var carStub: GetCollateralLandingProduct { .carStub }
-    static var realEstateData: GetCollateralLandingProduct { .realEstateStub }
-    typealias Factory = GetCollateralLandingFactory
 }

@@ -60,7 +60,7 @@ extension RootViewModelFactory {
         
         load(nil) { [load] in
             
-            completion($0.map { .init(products: $0.products.map(\.product)) })
+            completion($0.map { .init(products: $0.products.map(\.product)) }.mapError { $0 })
             _ = load
         }
     }

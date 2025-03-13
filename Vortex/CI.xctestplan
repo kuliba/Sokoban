@@ -20,13 +20,6 @@
     {
       "target" : {
         "containerPath" : "container:..\/swift-vortex",
-        "identifier" : "GetSplashScreenServicesTests",
-        "name" : "GetSplashScreenServicesTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/swift-vortex",
         "identifier" : "TextFieldUITests",
         "name" : "TextFieldUITests"
       }
@@ -743,6 +736,20 @@
         "containerPath" : "container:..\/swift-vortex",
         "identifier" : "EphemeralCacheTests",
         "name" : "EphemeralCacheTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "SplashScreenBackendTests",
+        "name" : "SplashScreenBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "SplashScreenCoreTests",
+        "name" : "SplashScreenCoreTests"
       }
     }
   ],

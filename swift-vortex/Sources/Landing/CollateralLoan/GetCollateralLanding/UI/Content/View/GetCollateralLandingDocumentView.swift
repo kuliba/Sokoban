@@ -61,7 +61,7 @@ struct GetCollateralLandingDocumentView_Previews<InformerPayload>: PreviewProvid
     
     static var previews: some View {
         
-        GetCollateralLandingDocumentView<InformerPayload>(
+        GetCollateralLandingDocumentView<PreviewInformerPayload>(
             document: Product.carStub.documents.first!,
             config: Config.Documents.preview.list,
             externalEvent: { print($0) },
@@ -70,8 +70,6 @@ struct GetCollateralLandingDocumentView_Previews<InformerPayload>: PreviewProvid
         .padding(.top, 300)
         .padding(.horizontal, 16)
     }
-
-    typealias Factory = GetCollateralLandingFactory
     typealias Product = GetCollateralLandingProduct
     typealias Config = GetCollateralLandingConfig
 }

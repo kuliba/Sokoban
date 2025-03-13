@@ -27,7 +27,7 @@ public extension BackendFailure {
         
         case alert(String)
         case informer(InformerPayload)
-        case complete
+        case failureResultScreen
     }
 }
 

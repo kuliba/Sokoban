@@ -63,7 +63,7 @@ extension RootViewModelFactory {
             
         load((nil, landingId)) { [load] in
             
-            completion($0.map { $0.product })
+            completion($0.map { $0.product }.mapError { $0 })
             _ = load
         }
     }

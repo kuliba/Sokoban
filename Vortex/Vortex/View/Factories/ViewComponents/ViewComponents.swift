@@ -63,6 +63,7 @@ struct ViewComponents {
     let makeControlPanelWrapperView: MakeControlPanelWrapperView
     let makeCurrencyWalletView: MakeCurrencyWalletView
     let makeIconView: MakeIconView
+    let makeIconViewWithDefaultImage: (Image?) -> MakeIconView
     let makeGeneralIconView: MakeIconView
     let makeMainSectionCurrencyMetalView: MakeMainSectionCurrencyMetalView
     let makeMainSectionProductsView: MakeMainSectionProductsView
@@ -90,6 +91,14 @@ extension ViewComponents {
     ) -> IconDomain.IconView {
         
         makeIconView(md5Hash.map { .md5Hash(.init($0)) })
+    }
+    
+    func makeIconViewWithDefaultImage(
+        defaultImage: Image?,
+        md5Hash: String?
+    ) -> IconDomain.IconView {
+        
+       makeIconViewWithDefaultImage(defaultImage)(md5Hash.map { .md5Hash(.init($0)) })
     }
 }
 
@@ -136,6 +145,7 @@ extension ViewComponents {
         makeControlPanelWrapperView: makeControlPanelWrapperView,
         makeCurrencyWalletView: makeCurrencyWalletView,
         makeIconView: { _ in .init(image: .ic16IconMessage, publisher: Empty().eraseToAnyPublisher()) },
+        makeIconViewWithDefaultImage: { _ in { _ in .init(image: .ic16IconMessage, publisher: Empty().eraseToAnyPublisher()) }},
         makeGeneralIconView: { _ in .init(image: .ic16IconMessage, publisher: Empty().eraseToAnyPublisher()) },
         makeMainSectionCurrencyMetalView: makeMainSectionCurrencyMetalView,
         makeMainSectionProductsView: makeMainSectionProductsView,

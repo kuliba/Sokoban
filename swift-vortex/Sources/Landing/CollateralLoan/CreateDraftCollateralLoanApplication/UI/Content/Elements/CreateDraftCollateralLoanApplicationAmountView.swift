@@ -77,8 +77,4 @@ struct CreateDraftCollateralLoanApplicationAmountView_Previews<Confirmation, Inf
             factory: .preview
         )
     }
-    
-    typealias Factory = CreateDraftCollateralLoanApplicationFactory
-    typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias Applicaton = CreateDraftCollateralLoanApplication
 }

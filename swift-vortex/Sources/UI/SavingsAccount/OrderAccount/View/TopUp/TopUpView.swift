@@ -27,6 +27,7 @@ struct TopUpView: View {
                 messageWithToggle()
                 config.description.text.string(isLoading).text(withConfig: config.description.config)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .modifier(ShimmeringModifier(isLoading, config.shimmering))
             }
         }
     }
@@ -47,8 +48,11 @@ struct TopUpView: View {
             
             config.title.text.string(isLoading).text(withConfig: config.title.config)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .modifier(ShimmeringModifier(isLoading, config.shimmering))
+
             config.subtitle.text.string(isLoading).text(withConfig: config.subtitle.config)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .modifier(ShimmeringModifier(isLoading, config.shimmering))
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -94,7 +98,7 @@ struct TopUpView_Previews: PreviewProvider {
         
         var body: some View {
             
-            TopUpView(state: state, event: { state.isOn = $0 }, config: .preview, isLoading: false)
+            TopUpView(state: state, event: { state.isOn = $0 }, config: .preview, isLoading: true)
         }
     }
     
@@ -135,6 +139,7 @@ extension TopUpViewConfig {
                 on: .orange,
                 off: .blue
             )
-        )
+        ), 
+        shimmering: .gray
     )
 }

@@ -10,7 +10,7 @@ import SwiftUI
 public struct FooterDetails {
     
     public var balance: String
-    public let interestRate: String?
+    public var interestRate: String?
     public let paymentSystem: Image?
     
     public init(
@@ -78,7 +78,7 @@ public struct FooterView: View {
             Text(text)
                 .font(config.fonts.rate)
                 .fontWeight(.regular)
-                .foregroundColor(config.colors.rateForeground)
+                .foregroundColor(config.appearance.colors.text)
         }
     }
 }

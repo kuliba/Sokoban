@@ -85,6 +85,4 @@ struct CreateDraftCollateralLoanApplicationButtonView_Previews<Confirmation, Inf
             )
         }
     }
-    
-    typealias Factory = CreateDraftCollateralLoanApplicationFactory
 }

@@ -6,7 +6,9 @@
 //
 
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
+import CollateralLoanLandingGetConsentsBackend
 import OTPInputComponent
+import RemoteServices
 import RxViewModel
 
 extension CreateDraftCollateralLoanApplicationDomain {
@@ -53,5 +55,17 @@ extension CreateDraftCollateralLoanApplicationDomain {
         case alert(String)
         case complete
         case none
+    }
+}
+
+public extension CollateralLandingApplicationSaveConsentsResult {
+    
+    var payload: RemoteServices.RequestFactory.GetConsentsPayload {
+        
+        .init(
+            cryptoVersion: "1.0", // Constant, can be skipped in request
+            applicationId: applicationID,
+            verificationCode: verificationCode
+        )
     }
 }

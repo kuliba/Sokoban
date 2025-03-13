@@ -191,6 +191,11 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
         self.statusAction = makeStatusActionNode(productData)
         header.updateIcon(productData.cloverImage)
         footer.balance = Self.balanceFormatted(product: productData, style: appearance.style, model: model)
+        productData.asAccount?.interestRate.map {
+            if !$0.isEmpty {
+                footer.interestRate = $0 + "% /год."
+            }
+        }
         let backgroundImage = Self.backgroundImage(with: productData, size: appearance.size, getImage: { model.images.value[.init($0)]?.image })
         appearance.background = .init(color: productData.backgroundColor, image: backgroundImage)
         config = .config(appearance: appearance)

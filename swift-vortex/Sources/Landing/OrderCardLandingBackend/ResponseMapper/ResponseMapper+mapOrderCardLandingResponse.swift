@@ -29,8 +29,6 @@ public extension ResponseMapper {
         
         try data.getOrderCardLanding()
     }
-    
-    private struct InvalidResponse: Error {}
 }
 
 private extension ResponseMapper._Data {
@@ -69,7 +67,7 @@ private extension ResponseMapper {
             let product: Product?
             let conditions: Condition?
             let security: Security?
-            let frequentlyAskedQuestions: Question?
+            let frequentlyAskedQuestions: Questions?
             let cardLandingAction: CardLandingAction?
         }
         
@@ -84,10 +82,16 @@ private extension ResponseMapper {
             let title: String?
         }
         
-        struct Question: Decodable {
+        struct Questions: Decodable {
             
             let title: String?
-            let list: [Item]
+            let list: [Question]
+            
+            struct Question: Decodable {
+                
+                let title: String?
+                let description: String?
+            }
         }
         
         struct Security: Decodable {
@@ -107,7 +111,7 @@ private extension ResponseMapper {
             let title: String?
             let name: [Name]?
             let image: String?
-            let features: [String]
+            let features: [String]?
             let discounts: Discount?
             
             struct Name: Decodable {
@@ -126,15 +130,15 @@ private extension ResponseMapper {
         struct Item: Decodable {
             
             let title: String?
-            let subtitle: String?
+            let subTitle: String?
             let md5hash: String?
         }
     }
 }
 
-private extension ResponseMapper._Data.Question {
+private extension ResponseMapper._Data.Questions {
     
-    var question: OrderCardLandingResponse.Question? {
+    var question: OrderCardLandingResponse.Questions? {
         
         guard let title,
               !title.isEmpty,
@@ -144,7 +148,12 @@ private extension ResponseMapper._Data.Question {
         
         return .init(
             title: title,
-            list: list.compactMap(\.item)
+            list: list.map({
+                .init(
+                    title: $0.title ?? "",
+                    description: $0.description ?? ""
+                )
+            })
         )
     }
 }
@@ -153,22 +162,30 @@ private extension ResponseMapper._Data.Product {
     
     var product: OrderCardLandingResponse.Product? {
         
-//        guard let title,
-//              let image,
-//              !features.isEmpty,
-//              let discounts else {
-//            return nil
-//        }
+        guard let title,
+              let image,
+              let features,
+              let navTitle = name?.first?.text,
+              let navSubtitle = name?.last?.text,
+              let discounts else {
+            return nil
+        }
     
         return .init(
-            title: title ?? "",
-            navTitle: name?.first?.text ?? "",
-            navSubtitle: name?.first?.text ?? "",
-            image: image ?? "",
+            title: title,
+            navTitle: navTitle,
+            navSubtitle: navSubtitle,
+            image: image,
             features: features,
             discount: .init(
-                title: title ?? "",
-                list: []
+                title: discounts.title ?? "",
+                list: discounts.list.map({
+                    .init(
+                        title: $0.title ?? "",
+                        subtitle: $0.subTitle ?? "",
+                        md5hash: $0.md5hash ?? ""
+                    )
+                })
             )
         )
     }
@@ -233,7 +250,7 @@ private extension ResponseMapper._Data.Item {
         
         return .init(
             title: title,
-            subtitle: subtitle,
+            subtitle: subTitle,
             md5hash: md5hash
         )
     }

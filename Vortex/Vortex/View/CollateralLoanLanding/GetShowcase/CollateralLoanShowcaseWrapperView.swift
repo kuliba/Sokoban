@@ -22,7 +22,8 @@ struct CollateralLoanShowcaseWrapperView: View {
     let factory: Factory
     let config: Config
     let goToMain: () -> Void
-    let makeOperationDetailInfoViewModel: MakeOperationDetailInfoViewModel
+    let makeOperationDetailInfoViewModel: ViewComponents.MakeOperationDetailInfoViewModel
+    let getPDFDocument: GetPDFDocument
 
     var body: some View {
         
@@ -109,7 +110,8 @@ struct CollateralLoanShowcaseWrapperView: View {
                 config: .default,
                 factory: factory,
                 goToMain: goToMain,
-                makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel
+                makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,
+                getPDFDocument: getPDFDocument
             )
             .navigationBarWithBack(title: "") { binder.flow.event(.dismiss) }
         }
@@ -270,7 +272,6 @@ extension CollateralLoanLandingFactory {
     static let preview = Self(
         makeImageViewWithMD5Hash: { _ in .preview },
         makeImageViewWithURL: {_ in .preview },
-        getPDFDocument: { _,_ in },
         formatCurrency: { _ in "" }
     )
 }

@@ -384,8 +384,8 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
         case let .informer(informerPayload):
             return .informer(informerPayload)
             
-        case .complete:
-            return .complete
+        case .failureResultScreen:
+            return .failureResultScreen
         }
     }
 }

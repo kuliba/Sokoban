@@ -11,15 +11,20 @@ import ListLandingComponent
 import OrderCardLandingBackend
 import RemoteServices
 import DropDownTextListComponent
+import OrderCardLandingComponent
+import OrderCard
 
 extension RootViewModelFactory {
     
     @inlinable
     func makeOrderCardLanding(
     ) -> OrderCardLandingDomain.Binder {
+    
+        let content = makeOrderCardLandinContent()
+        content.event(.load)
         
-        composeBinder(
-            content: makeOrderCardLandinContent(),
+        return composeBinder(
+            content: content,
             getNavigation: getNavigation,
             selectWitnesses: .empty
         )
@@ -29,19 +34,22 @@ extension RootViewModelFactory {
     func makeOrderCardLandinContent(
     ) -> OrderCardLandingDomain.Content {
         
-        var orderCard: OrderCardLandingDomain.Content? = nil
+        typealias Landing = OrderCardLanding
         
-        createOrderCardLanding { result in
-        
-            switch result {
-            case let .success(landing):
-                orderCard = landing
-            case let .failure(error):
-                break
+        let reducer = OrderCardLandingDomain.Reducer()
+        let effectHandler = OrderCardLandingDomain.EffectHandler(
+            load: { [weak self] completion in
+                
+                self?.createOrderCardLandingService { completion($0.loadResult) }
             }
-        }
+        )
         
-        return orderCard ?? .stub
+        return .init(
+            initialState: .init(),
+            reduce: reducer.reduce(_:event:),
+            handleEffect: effectHandler.handleEffect(effect:dispatch:),
+            scheduler: schedulers.main
+        )
     }
     
     @inlinable
@@ -56,31 +64,10 @@ extension RootViewModelFactory {
             //TODO: add request and proccess
         }
     }
-    
-    @inlinable
-    func createOrderCardLanding(
-        completion: @escaping (ModelOrderPayloadResult) -> Void
-    ) {
-
-        createOrderCardLandingService() { [weak self] in
-            
-            guard let self else { return }
-            
-            switch $0 {
-            case let .failure(failure):
-                completion(.failure(failure))
-                
-            case let .success(payload):
-                completion(.success(payload))
-            }
-        }
-    }
-    
-    typealias ModelOrderPayloadResult = Result<OrderCardLanding, BackendFailure>
 
     @inlinable
     func createOrderCardLandingService(
-        completion: @escaping (ModelOrderPayloadResult) -> Void
+        completion: @escaping (Result<OrderCardLanding, BackendFailure>) -> Void
     ) {
         let service = onBackground(
             makeRequest: RequestFactory.createGetDigitalCardLandingRequest,
@@ -88,17 +75,14 @@ extension RootViewModelFactory {
             connectivityFailureMessage: .connectivity
         )
         
-        service(()) { [weak self] in
-            
-            guard let self else { return }
-            
+        service(()) {
+            //TODO: extract helper
             switch $0 {
             case let .failure(failure):
                 completion(.failure(failure))
                 
             case let .success(response):
-                completion(.success(.init(response))
-                )
+                completion(.success(.init(response)))
             }
         }
     }
@@ -118,13 +102,13 @@ private extension OrderCardLanding {
 
 private extension DropDownTextList {
 
-    init(questions: OrderCardLandingResponse.Question) {
+    init(questions: OrderCardLandingResponse.Questions) {
         self.init(
             title: questions.title,
             items: questions.list.compactMap({
                 .init(
                     title: $0.title,
-                    subTitle: $0.subtitle ?? ""
+                    subTitle: $0.description
                 )
             })
         )
@@ -182,7 +166,9 @@ private extension String {
     static let connectivity = "Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения"
 }
 
-private extension OrderCardLandingDomain.Content {
+// MARK: Stub
+
+private extension OrderCardLanding {
     
     static let stub: Self = .init(
         header: .init(
@@ -265,4 +251,23 @@ private extension OrderCardLandingDomain.Content {
             ]
         )
     )
+}
+
+// MARK: Adapters
+
+private extension Result<OrderCardLanding, BackendFailure> {
+    
+    var loadResult: Result<OrderCardLanding, LoadFailure> {
+        
+        switch self {
+        case let .success(landing):
+            return .success(landing)
+            
+        case let .failure(error):
+            return .failure(.init(
+                message: error.message,
+                type: .informer
+            ))
+        }
+    }
 }

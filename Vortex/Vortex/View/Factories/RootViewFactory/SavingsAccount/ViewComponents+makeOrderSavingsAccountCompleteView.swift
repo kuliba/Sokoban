@@ -41,7 +41,7 @@ extension ViewComponents {
         _ complete: OpenSavingsAccountCompleteDomain.Complete
     ) -> some View {
         
-        if complete.context.status.status != .suspend {
+        if complete.context.status.status == .completed {
             HStack {
                 RxWrapperView(model: complete.document) { state, _ in
                     

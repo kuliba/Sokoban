@@ -6,10 +6,12 @@
 //
 
 import DropDownTextListComponent
-import ListLandingComponent
 import HeaderLandingComponent
+import ListLandingComponent
+import RxViewModel
 import SwiftUI
 import UIPrimitives
+import OrderCardLandingComponent
 
 public struct OrderCardLanding {
     
@@ -40,79 +42,92 @@ extension ViewComponents {
     ) -> some View {
         
         OffsetObservingScrollWithModelView(refresh: {
-            //TODO: create binder.content.event(.load)
+            binder.content.event(.load)
         }) { offset in
             
-            makeOrderCardLandingContentView(
-                landing: binder.content,
-                offset: offset
-            )
-            .safeAreaInset(edge: .bottom) {
+            RxWrapperView(model: binder.content) { state, event in
                 
-                heroButton(action: { binder.flow.event(.select(.continue)) })
-                    .frame(maxWidth: .infinity)
-                    .background(.white)
+                makeOrderCardLandingContentView(
+                    landing: state.landing,
+                    offset: offset
+                )
+                .navigationBarWithBack(
+                    title: offset.wrappedValue.y > 0 ? (state.landing?.header.navTitle ?? "") : "",
+                    subtitle: offset.wrappedValue.y > 0 ? (state.landing?.header.navSubtitle ?? "") : "",
+                    subtitleForegroundColor: .textPlaceholder,
+                    dismiss: dismiss
+                )
             }
-            .conditionalBottomPadding()
-            .navigationBarWithBack(
-                title: offset.wrappedValue.y > 0 ?  binder.content.header.navTitle : "",
-                subtitle: offset.wrappedValue.y > 0 ?  binder.content.header.navSubtitle : "",
-                subtitleForegroundColor: .textPlaceholder,
-                dismiss: dismiss
-            )
+        }
+        .conditionalBottomPadding()
+        .safeAreaInset(edge: .bottom) {
+            
+            heroButton { binder.flow.event(.select(.continue)) }
+                .frame(maxWidth: .infinity)
+                .background(.white)
         }
     }
     
     @inlinable
     @ViewBuilder
     func makeOrderCardLandingContentView(
-        landing: OrderCardLanding,
+        landing: OrderCardLanding?,
         offset: Binding<CGPoint>
     ) -> some View {
         
-        OffsetObservingScrollView(
-            axes: .vertical,
-            showsIndicators: false,
-            offset: offset,
-            coordinateSpaceName: "coordinateSpaceName"
-        ) {
-            VStack(spacing: 16) {
-                
-                HeaderView(
-                    header: landing.header,
-                    config: .iVortex,
-                    imageFactory: .init(makeBannerImageView: makeGeneralIconView)
-                )
-                .edgesIgnoringSafeArea(.top)
-                
-                VStack {
+        if let landing {
+            
+            OffsetObservingScrollView(
+                axes: .vertical,
+                showsIndicators: false,
+                offset: offset,
+                coordinateSpaceName: "coordinateSpaceName"
+            ) {
+                VStack(spacing: 16) {
                     
-                    ListLandingComponent.List(
-                        items: landing.conditions,
+                    HeaderView(
+                        header: landing.header,
                         config: .iVortex,
-                        factory: .init(
-                            makeIconView: makeIconView,
-                            makeBannerImageView: makeGeneralIconView
-                        )
+                        imageFactory: .init(makeBannerImageView: makeGeneralIconView)
                     )
+                    .edgesIgnoringSafeArea(.top)
                     
-                    ListLandingComponent.List(
-                        items: landing.security,
-                        config: .iVortex,
-                        factory: .init(
-                            makeIconView: makeIconView,
-                            makeBannerImageView: makeGeneralIconView
+                    VStack {
+                        
+                        ListLandingComponent.List(
+                            items: landing.conditions,
+                            config: .iVortex,
+                            factory: .init(
+                                makeIconView: makeIconView,
+                                makeBannerImageView: makeGeneralIconView
+                            )
                         )
-                    )
-                    
-                    DropDownTextListView(
-                        config: .default,
-                        list: landing.dropDownList
-                    )
+                        
+                        ListLandingComponent.List(
+                            items: landing.security,
+                            config: .iVortex,
+                            factory: .init(
+                                makeIconView: makeIconView,
+                                makeBannerImageView: makeGeneralIconView
+                            )
+                        )
+                        
+                        DropDownTextListView(
+                            config: .default,
+                            list: landing.dropDownList
+                        )
+                    }
+                    .padding(.leading, 15)
+                    .padding(.trailing, 16)
                 }
-                .padding(.leading, 15)
-                .padding(.trailing, 16)
             }
+        } else {
+            
+            Rectangle()
+                .fill(.gray.opacity(0.6))
+                .frame(height: UIScreen.main.bounds.height)
+                .frame(maxWidth: .infinity)
+                .shimmering()
         }
     }
     
@@ -157,5 +172,22 @@ struct DismissibleScrollView<Content: View>: View {
             title: title(offset.y),
             dismiss: dismiss
         )
+    }
+}
+
+extension LandingState<OrderCardLanding> {
+
+    var landing: OrderCardLanding? {
+        
+        guard !isLoading else { return nil }
+        
+        switch status {
+        case let .landing(landing),
+             let .mix(landing, _):
+            return landing
+            
+        default:
+            return nil
+        }
     }
 }
