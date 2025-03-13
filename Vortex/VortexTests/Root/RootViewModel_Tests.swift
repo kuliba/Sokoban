@@ -215,7 +215,10 @@ private extension GetShowcaseDomain.Content {
 private extension SplashScreenViewModel {
     
     static let preview: SplashScreenViewModel = .init(
-        initialState: .hidden,
+        initialState: .init(
+            phase: .cover,
+            settings: .init(image: .init("splash"))
+        ),
         reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }
     )

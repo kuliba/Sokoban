@@ -6,134 +6,135 @@
 //
 
 import SplashScreenUI
+import SwiftUI
 import XCTest
 
 final class SplashScreenReducerTests: XCTestCase {
     
     // MARK: - hide
     
-    func test_hide_shouldSetStateToHidden_onCover() {
+    func test_hide_shouldChangePhaseToHidden_onCover() {
         
-        assert(.cover, event: .hide) { $0 = .hidden }
+        assert(cover(), event: .hide) { $0.phase = .hidden }
     }
     
     func test_hide_shouldNotDeliverEffect_onCover() {
         
-        assert(.cover, event: .hide, delivers: nil)
+        assert(cover(), event: .hide, delivers: nil)
     }
     
-    func test_hide_shouldSetStateToHidden_onWarm() {
+    func test_hide_shouldChangePhaseToHidden_onWarm() {
         
-        assert(.warm, event: .hide) { $0 = .hidden }
+        assert(warm(), event: .hide) { $0.phase = .hidden }
     }
     
     func test_hide_shouldNotDeliverEffect_onWarm() {
         
-        assert(.warm, event: .hide, delivers: nil)
+        assert(warm(), event: .hide, delivers: nil)
     }
     
-    func test_hide_shouldSetStateToHidden_onPresented() {
+    func test_hide_shouldChangePhaseToHidden_onPresented() {
         
-        assert(.presented, event: .hide) { $0 = .hidden }
+        assert(presented(), event: .hide) { $0.phase = .hidden }
     }
     
     func test_hide_shouldNotDeliverEffect_onPresented() {
         
-        assert(.presented, event: .hide, delivers: nil)
+        assert(presented(), event: .hide, delivers: nil)
     }
     
     func test_hide_shouldNotChangeState_onHidden() {
         
-        assert(.hidden, event: .hide)
+        assert(hidden(), event: .hide)
     }
     
     func test_hide_shouldNotDeliverEffect_onHidden() {
         
-        assert(.hidden, event: .hide, delivers: nil)
+        assert(hidden(), event: .hide, delivers: nil)
     }
     
     // MARK: - prepare
     
-    func test_prepare_shouldSetStateToWarm_onCover() {
+    func test_prepare_shouldChangePhaseToWarm_onCover() {
         
-        assert(.cover, event: .prepare) { $0 = .warm }
+        assert(cover(), event: .prepare) { $0.phase = .warm }
     }
     
     func test_prepare_shouldNotDeliverEffect_onCover() {
         
-        assert(.cover, event: .prepare, delivers: nil)
+        assert(cover(), event: .prepare, delivers: nil)
     }
 
     func test_prepare_shouldNotChangeState_onWarm() {
         
-        assert(.warm, event: .prepare)
+        assert(warm(), event: .prepare)
     }
     
     func test_prepare_shouldNotDeliverEffect_onWarm() {
         
-        assert(.warm, event: .prepare, delivers: nil)
+        assert(warm(), event: .prepare, delivers: nil)
     }
 
-    func test_prepare_shouldSetStateToWarm_onPresented() {
+    func test_prepare_shouldChangePhaseToWarm_onPresented() {
         
-        assert(.presented, event: .prepare) { $0 = .warm }
+        assert(presented(), event: .prepare) { $0.phase = .warm }
     }
     
     func test_prepare_shouldNotDeliverEffect_onPresented() {
         
-        assert(.presented, event: .prepare, delivers: nil)
+        assert(presented(), event: .prepare, delivers: nil)
     }
 
-    func test_prepare_shouldSetStateToWarm_onHidden() {
+    func test_prepare_shouldChangePhaseToWarm_onHidden() {
         
-        assert(.hidden, event: .prepare) { $0 = .warm }
+        assert(hidden(), event: .prepare) { $0.phase = .warm }
     }
     
     func test_prepare_shouldNotDeliverEffect_onHidden() {
         
-        assert(.hidden, event: .prepare, delivers: nil)
+        assert(hidden(), event: .prepare, delivers: nil)
     }
 
     // MARK: - start
     
-    func test_start_shouldSetStateToPresented_onCover() {
+    func test_start_shouldChangePhaseToPresented_onCover() {
         
-        assert(.cover, event: .start) { $0 = .presented }
+        assert(cover(), event: .start) { $0.phase = .presented }
     }
     
     func test_start_shouldNotDeliverEffect_onCover() {
         
-        assert(.cover, event: .start, delivers: nil)
+        assert(cover(), event: .start, delivers: nil)
     }
 
-    func test_start_shouldSetStateToPresented_onWarm() {
+    func test_start_shouldChangePhaseToPresented_onWarm() {
         
-        assert(.warm, event: .start) { $0 = .presented }
+        assert(warm(), event: .start) { $0.phase = .presented }
     }
     
     func test_start_shouldNotDeliverEffect_onWarm() {
         
-        assert(.warm, event: .start, delivers: nil)
+        assert(warm(), event: .start, delivers: nil)
     }
 
     func test_start_shouldNotChangeState_onPresented() {
         
-        assert(.presented, event: .start)
+        assert(presented(), event: .start)
     }
     
     func test_start_shouldNotDeliverEffect_onPresented() {
         
-        assert(.presented, event: .start, delivers: nil)
+        assert(presented(), event: .start, delivers: nil)
     }
 
-    func test_start_shouldSetStateToPresented_onHidden() {
+    func test_start_shouldChangePhaseToPresented_onHidden() {
         
-        assert(.hidden, event: .start) { $0 = .presented }
+        assert(hidden(), event: .start) { $0.phase = .presented }
     }
     
     func test_start_shouldNotDeliverEffect_onHidden() {
         
-        assert(.hidden, event: .start, delivers: nil)
+        assert(hidden(), event: .start, delivers: nil)
     }
 
     // MARK: - Helpers
@@ -150,6 +151,49 @@ final class SplashScreenReducerTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
+    }
+    
+    private func makeState(
+        phase: SplashScreenState.Phase,
+        settings: SplashScreenState.Settings? = nil
+    ) -> SUT.State {
+        
+        return .init(phase: phase, settings: settings ?? makeSettings())
+    }
+    
+    private func cover(
+        settings: SplashScreenState.Settings? = nil
+    ) -> SUT.State {
+        
+        return makeState(phase: .cover, settings: settings)
+    }
+    
+    private func warm(
+        settings: SplashScreenState.Settings? = nil
+    ) -> SUT.State {
+        
+        return makeState(phase: .warm, settings: settings)
+    }
+    
+    private func presented(
+        settings: SplashScreenState.Settings? = nil
+    ) -> SUT.State {
+        
+        return makeState(phase: .presented, settings: settings)
+    }
+    
+    private func hidden(
+        settings: SplashScreenState.Settings? = nil
+    ) -> SUT.State {
+        
+        return makeState(phase: .hidden, settings: settings)
+    }
+    
+    private func makeSettings(
+        image: Image = .init(systemName: "star")
+    ) -> SUT.State.Settings {
+        
+        return .init(image: image)
     }
     
     @discardableResult

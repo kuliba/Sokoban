@@ -11,14 +11,24 @@ import SwiftUI
 
 struct RootBinderView: View {
     
-    let binder: RootViewDomain.Binder
-    let rootViewFactory: RootViewFactory
+    private let binder: RootViewDomain.Binder
+    private let rootViewFactory: RootViewFactory
+    private let components: ViewComponents
+    
+    init(
+        binder: RootViewDomain.Binder,
+        rootViewFactory: RootViewFactory
+    ) {
+        self.binder = binder
+        self.rootViewFactory = rootViewFactory
+        self.components = rootViewFactory.components
+    }
     
     var body: some View {
         
         ZStack {
             
-            rootViewFactory.components.splashScreenView(splash: binder.content.splash)
+            components.splashScreenView(splash: binder.content.splash)
                 .ignoresSafeArea()
                 .zIndex(1.0)
             
@@ -89,10 +99,10 @@ private extension RootBinderView {
         
         switch destination {
         case let .makeStandardPaymentFailure(binder):
-            rootViewFactory.components.serviceCategoryFailureView(binder: binder)
+            components.serviceCategoryFailureView(binder: binder)
             
         case let .openProduct(openProduct):
-            rootViewFactory.components.makeOpenProductView(
+            components.makeOpenProductView(
                 for: openProduct,
                 dismiss: { binder.flow.event(.dismiss) }
             )
@@ -115,14 +125,14 @@ private extension RootBinderView {
         _ viewModel: ProductProfileViewModel
     ) -> some View {
         
-        rootViewFactory.components.makeProductProfileView(viewModel)
+        components.makeProductProfileView(viewModel)
     }
     
     private func standardPaymentView(
         _ picker: PaymentProviderPickerDomain.Binder
     ) -> some View {
         
-        rootViewFactory.components.makePaymentProviderPickerView(
+        components.makePaymentProviderPickerView(
             binder: picker,
             dismiss: { binder.flow.event(.dismiss) }
         )
@@ -133,7 +143,7 @@ private extension RootBinderView {
         _ templates: RootViewNavigation.TemplatesNode
     ) -> some View {
         
-        rootViewFactory.components.makeTemplatesListFlowView(templates)
+        components.makeTemplatesListFlowView(templates)
             .accessibilityIdentifier(ElementIDs.rootView(.destination(.templates)).rawValue)
     }
     
@@ -141,7 +151,7 @@ private extension RootBinderView {
         _ searchByUIN: SearchByUINDomain.Binder
     ) -> some View {
         
-        rootViewFactory.components.makeSearchByUINView(
+        components.makeSearchByUINView(
             binder: searchByUIN,
             dismiss: { binder.flow.event(.dismiss) },
             scanQR: { binder.flow.event(.select(.scanQR)) }
@@ -164,13 +174,13 @@ private extension RootBinderView {
         
         switch fullScreenCover {
         case let .orderCardResponse(response):
-            rootViewFactory.components.makeOrderCardCompleteView(response) {
+            components.makeOrderCardCompleteView(response) {
                 
                 binder.flow.event(.dismiss)
             }
           
         case let .savingsAccount(response, updateFastAll):
-            rootViewFactory.components.makeOrderSavingsAccountCompleteView(response, action: updateFastAll)
+            components.makeOrderSavingsAccountCompleteView(response, action: updateFastAll)
 
         case let .scanQR(qrScanner):
             qrScannerView(qrScanner)
