@@ -132,6 +132,13 @@ private extension RemoteServices.ResponseMapper.SplashScreenTimePeriod {
 
 // MARK: - Codable (Caching)
 
+private struct CodableSplashScreenTimePeriod: Codable {
+    
+    let timePeriod: String
+    let startTime: String
+    let endTime: String
+}
+
 private extension SplashScreenCore.SplashScreenTimePeriod {
     
     var codable: CodableSplashScreenTimePeriod {

@@ -72,18 +72,15 @@ extension RootViewModelFactory {
         forPeriods periods: [String],
         completion: @escaping (SplashScreenSettingsOutcome) -> Void
     ) {
-        loadSplashImagesCache { [weak self] in
-            
-            guard let self else { return }
-            
-            let loader = CategorizedLoader(
-                initialStorage: $0,
-                loadCategories: { $0(periods) },
-                loadItems: splashScreenSettingsRemoteLoad
-            )
-            
-            loader.load { completion($0); _ = loader }
-        }
+        let initialStorage = loadSplashImagesCache()
+        
+        let loader = CategorizedLoader(
+            initialStorage: initialStorage,
+            loadCategories: { $0(periods) },
+            loadItems: splashScreenSettingsRemoteLoad
+        )
+        
+        loader.load { completion($0); _ = loader }
     }
     
     @inlinable
@@ -156,17 +153,16 @@ extension RootViewModelFactory {
     
     /// - Warning: This method is not responsible for threading.
     @inlinable
-    func loadSplashImagesCache(
-        completion: @escaping (SplashScreenStorage?) -> Void
-    ) {
+    func loadSplashImagesCache() -> SplashScreenStorage? {
+        
         guard let storage = model.localAgent.load(type: CodableSplashScreenStorage.self)
         else {
             cacheDebugLog(message: "No SplashScreenSettings.")
-            return completion(nil)
+            return nil
         }
         
         cacheDebugLog(message: "Loaded SplashScreenSettings: \(String(describing: storage))")
-        completion(storage.map { .init(codable: $0) })
+        return storage.map { .init(codable: $0) }
     }
     
     /// - Warning: This method is not responsible for threading.
@@ -313,13 +309,6 @@ extension CodableSplashScreenSettings {
         case .none:           return nil
         }
     }
-}
-
-struct CodableSplashScreenTimePeriod: Codable {
-    
-    let timePeriod: String
-    let startTime: String
-    let endTime: String
 }
 
 private extension SplashScreenSettings {
