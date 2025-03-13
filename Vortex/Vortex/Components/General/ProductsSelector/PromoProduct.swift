@@ -70,8 +70,5 @@ private extension String {
     static let collateralLoanShowcase = "collateralLoanShowcase"
     static let collateralLoanCar = "collateralLoanCar"
     static let collateralLoanRealEstate = "collateralLoanRealEstate"
-    static let carLanding = "CAR_LANDING"
-    static let realEstateLanding = "REAL_ESTATE_LANDING"
-    static let showcase = "showcase"
     static let creditCardMVP = "creditCardMVP"
 }

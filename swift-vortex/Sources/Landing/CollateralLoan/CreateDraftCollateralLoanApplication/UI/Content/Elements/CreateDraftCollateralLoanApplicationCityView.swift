@@ -52,6 +52,7 @@ struct CreateDraftCollateralLoanApplicationCityView<Confirmation, InformerPayloa
             ),
             config: config.elements.city.cityConfig.selector
         )
+        .keyboardType(.asciiCapable)
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
     

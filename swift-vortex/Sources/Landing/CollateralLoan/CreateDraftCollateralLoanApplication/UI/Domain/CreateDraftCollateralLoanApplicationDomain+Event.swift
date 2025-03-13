@@ -27,10 +27,11 @@ extension CreateDraftCollateralLoanApplicationDomain {
         case applicationCreated(CreateDraftApplicationCreatedResult<Confirmation, InformerPayload>)
         case confirmed(Confirmation)
         case failure(BackendFailure<InformerPayload>)
-        // case failure(Failure)
         case gettedVerificationCode(GetVerificationCodeResult<InformerPayload>)
         case showSaveConsentsResult(SaveConsentsResult<InformerPayload>)
+        case showGetConsentsResult(GetConsentsResult<InformerPayload>)
         case otpEvent(OTPEvent)
+        case getConsents(GetConsentsPayload)
         
         public enum Failure {
             case alert(String)

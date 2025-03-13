@@ -29,6 +29,7 @@ extension GetCollateralLandingDomain {
             case let .loaded(product):
                 state.status = .loaded(product)
                 state.selectedCollateralType = product.calc.collaterals.first?.type ?? ""
+                state.desiredAmount = product.calc.amount.minIntValue
 
             case let .failure(failure):
                 switch failure {

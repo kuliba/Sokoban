@@ -860,9 +860,20 @@ private extension MainViewModel {
             openContactTransfer(payload)
             
         case let payload as BannerActionLanding:
-            if payload.target == .abroadSticker {
+            switch payload.target {
+            case .abroadSticker:
                 handleLandingAction(.sticker)
-            } else {
+
+            case .carLanding:
+                openProductByType(.collateralLoan(.car))
+
+            case .realEstateLanding:
+                openProductByType(.collateralLoan(.realEstate))
+
+            case .showcase:
+                openProductByType(.collateralLoan(.showcase))
+                
+            default:
                 handleLandingAction(payload.target)
             }
             
@@ -2170,4 +2181,7 @@ extension Array where Element == MainSectionViewModel {
 extension String {
     
     static let abroadSticker: Self = "abroadSticker"
+    static let carLanding = "CAR_LANDING"
+    static let realEstateLanding = "REAL_ESTATE_LANDING"
+    static let showcase = "SHOWCASE"
 }

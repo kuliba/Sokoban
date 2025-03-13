@@ -294,7 +294,10 @@ struct GetCollateralLandingCalculatorView<InformerPayload>: View where InformerP
             .onChange(of: desiredAmount) {
                 
                 domainEvent(.enterDesiredAmount($0))
-                sliderCurrentValue = Double(state.desiredAmount)
+                
+                withAnimation {
+                    sliderCurrentValue = Double(state.desiredAmount)
+                }
             }
     }
     

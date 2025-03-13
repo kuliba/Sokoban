@@ -261,7 +261,8 @@ extension CreateDraftCollateralLoanApplicationDomain.Navigation {
             switch kind {
             case let .alert(message):
                 return .failure(message)
-                
+            case .offline:
+                return .failure("Offline!!!")
             default:
                 return nil
             }
