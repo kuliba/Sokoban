@@ -197,17 +197,7 @@ private extension ResponseMapper.SplashScreenSettings {
         background: .init(
             hasBackground: false
         ),
-        subtext: .init(
-            color: "#FFFFFF",
-            size: 18,
-            shadow: .init(
-                x: 0,
-                y: 4,
-                blur: 12,
-                color: "#1C1C1C",
-                opacity: 25
-            )
-        ),
+        subtext: nil,
         bankName: .init(
             color: "#FFFFFF",
             shadow: .init(
@@ -248,17 +238,7 @@ private extension ResponseMapper.SplashScreenSettings {
         background: .init(
             hasBackground: false
         ),
-        subtext: .init(
-            color: "#FFFFFF",
-            size: 18,
-            shadow: .init(
-                x: 0,
-                y: 4,
-                blur: 12,
-                color: "#1C1C1C",
-                opacity: 25
-            )
-        ),
+        subtext: nil,
         bankName: .init(
             color: "#FFFFFF",
             shadow: .init(
@@ -299,17 +279,7 @@ private extension ResponseMapper.SplashScreenSettings {
         background: .init(
             hasBackground: false
         ),
-        subtext: .init(
-            color: "#FFFFFF",
-            size: 18,
-            shadow: .init(
-                x: 0,
-                y: 4,
-                blur: 12,
-                color: "#1C1C1C",
-                opacity: 25
-            )
-        ),
+        subtext: nil,
         bankName: .init(
             color: "#FFFFFF",
             shadow: .init(
