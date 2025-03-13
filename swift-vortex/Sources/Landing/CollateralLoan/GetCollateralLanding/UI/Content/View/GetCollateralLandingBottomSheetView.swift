@@ -260,7 +260,6 @@ struct GetCollateralLandingBottomSheetView_Previews<InformerPayload>: PreviewPro
             state: .init(
                 landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
                 bottomSheet: .init(sheetType: .periods(periodSamples)),
-                result: .success(.carStub),
                 formatCurrency: { _ in "" }
             ),
             event: { print($0) },
@@ -274,7 +273,6 @@ struct GetCollateralLandingBottomSheetView_Previews<InformerPayload>: PreviewPro
             state: .init(
                 landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
                 bottomSheet: .init(sheetType: .collaterals(collateralSamples)),
-                result: .success(.carStub),
                 formatCurrency: { _ in "" }
             ),
             event: { print($0) },

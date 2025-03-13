@@ -14,12 +14,12 @@ extension GetCollateralLandingDomain {
         public var status: Status<InformerPayload>
         public let landingID: String
         public var bottomSheet: BottomSheet?
-        
+        public var payrollClient = false
+        public var selectedCollateralType: String
+        public var selectedMonthPeriod: UInt
+        public var desiredAmount: UInt
+
         var backendFailure: BackendFailure<InformerPayload>?
-        var payrollClient = false
-        var selectedCollateralType: String
-        var selectedMonthPeriod: UInt
-        var desiredAmount: UInt
 
         let formatCurrency: FormatCurrency
         

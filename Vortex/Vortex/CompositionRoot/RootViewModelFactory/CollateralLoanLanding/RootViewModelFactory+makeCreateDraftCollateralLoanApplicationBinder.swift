@@ -360,7 +360,7 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
                 )))
             } else {
                 if completionForm {
-                    self = .init(kind: .complete)
+                    self = .init(kind: .failureResultScreen)
                 } else {
                     self = .init(kind: .alert("Попробуйте позже."))
                 }
@@ -368,7 +368,7 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
             
         default:
             if completionForm {
-                self = .init(kind: .complete)
+                self = .init(kind: .failureResultScreen)
             } else {
                 self = .init(kind: .alert("Попробуйте позже."))
             }
@@ -385,7 +385,7 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
             return .informer(informerPayload)
             
         case .failureResultScreen:
-            return .failureResultScreen
+            return .complete
         }
     }
 }

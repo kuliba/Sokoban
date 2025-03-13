@@ -280,7 +280,7 @@ extension CreateDraftCollateralLoanApplicationDomain.Navigation {
         switch self {
         case let .failure(kind):
             switch kind {
-            case .failureResultScreen:
+            case .complete:
                 return .failureComplete
             default:
                 return nil
