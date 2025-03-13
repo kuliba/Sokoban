@@ -92,7 +92,7 @@ extension RootViewModelFactory {
     }
     
     @inlinable
-    func getTimePeriodString() -> String {
+    func getTimePeriodString() -> SplashScreenTimePeriod {
         
         Calendar.current.timePeriod(for: loadSplashScreenTimePeriods())
     }
@@ -112,25 +112,13 @@ private extension Calendar {
     func timePeriod(
         for periods: [SplashScreenTimePeriod]?,
         with currentDate: @escaping () -> Date = Date.init
-    ) -> String {
+    ) -> SplashScreenTimePeriod {
         
         let timeString = currentTimeString(currentDate: currentDate)
         let period = (periods ?? .default).period(for: timeString ?? "")
         
-        return period?.timePeriod ?? "DAY"
+        return period ?? .day
     }
-}
-
-// MARK: - Defaults
-
-private extension Array where Element == SplashScreenTimePeriod {
-    
-    static let `default`: Self = [
-        .init(timePeriod: "MORNING", startTime: "04:00", endTime: "11:59"),
-        .init(timePeriod: "DAY",     startTime: "12:00", endTime: "17:59"),
-        .init(timePeriod: "EVENING", startTime: "18:00", endTime: "23:59"),
-        .init(timePeriod: "NIGHT",   startTime: "00:00", endTime: "03:59"),
-    ]
 }
 
 // MARK: - Adapters
@@ -167,4 +155,19 @@ private extension SplashScreenCore.SplashScreenTimePeriod {
             endTime: codable.endTime
         )
     }
+}
+
+// MARK: - Defaults
+
+private extension Array where Element == SplashScreenTimePeriod {
+    
+    static let `default`: Self = [.morning, .day, .evening, .night,]
+}
+
+private extension SplashScreenTimePeriod {
+    
+    static let morning: Self = .init(timePeriod: "MORNING", startTime: "04:00", endTime: "11:59")
+    static let day:     Self = .init(timePeriod: "DAY",     startTime: "12:00", endTime: "17:59")
+    static let evening: Self = .init(timePeriod: "EVENING", startTime: "18:00", endTime: "23:59")
+    static let night:   Self = .init(timePeriod: "NIGHT",   startTime: "00:00", endTime: "03:59")
 }

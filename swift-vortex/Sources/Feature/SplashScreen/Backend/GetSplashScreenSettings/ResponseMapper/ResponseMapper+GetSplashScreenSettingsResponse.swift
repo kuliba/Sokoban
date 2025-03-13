@@ -61,13 +61,13 @@ extension ResponseMapper {
     public struct Text: Equatable {
         
         public let color: String
-        public let size: Int
+        public let size: Double
         public let value: String
         public let shadow: Shadow
         
         public init(
             color: String,
-            size: Int,
+            size: Double,
             value: String,
             shadow: Shadow
         ) {
@@ -82,12 +82,12 @@ extension ResponseMapper {
         
         public let hasBackground: Bool
         public let color: String?
-        public let opacity: Int?
+        public let opacity: Double?
         
         public init(
             hasBackground: Bool,
             color: String? = nil,
-            opacity: Int? = nil
+            opacity: Double? = nil
         ) {
             self.hasBackground = hasBackground
             self.color = color
@@ -97,18 +97,18 @@ extension ResponseMapper {
     
     public struct Shadow: Equatable {
         
-        public let x: Int
-        public let y: Int
-        public let blur: Int
+        public let x: Double
+        public let y: Double
+        public let blur: Double
         public let color: String
-        public let opacity: Int
+        public let opacity: Double
         
         public init(
-            x: Int,
-            y: Int,
-            blur: Int,
+            x: Double,
+            y: Double,
+            blur: Double,
             color: String,
-            opacity: Int
+            opacity: Double
         ) {
             self.x = x
             self.y = y

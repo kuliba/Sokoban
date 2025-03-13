@@ -10,7 +10,9 @@ import SwiftUI
 // TODO: - move to UIPrimitives??
 extension View {
     
-    func shadow(_ shadow: SplashScreenSettings.Shadow) -> some View {
+    func shadow(
+        _ shadow: SplashScreenState.Settings.Shadow
+    ) -> some View {
         
         self.shadow(
             color: shadow.color.opacity(shadow.opacity),

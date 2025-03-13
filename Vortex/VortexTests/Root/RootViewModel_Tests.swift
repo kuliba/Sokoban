@@ -6,13 +6,14 @@
 //
 
 @testable import Vortex
-import PayHub
-import XCTest
-import CollateralLoanLandingGetShowcaseUI
-import CollateralLoanLandingGetCollateralLandingUI
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
-import UIPrimitives
+import CollateralLoanLandingGetCollateralLandingUI
+import CollateralLoanLandingGetShowcaseUI
 import Combine
+import PayHub
+import SplashScreenUI
+import UIPrimitives
+import XCTest
 
 class RootViewModel_Tests: XCTestCase {
     
@@ -215,13 +216,30 @@ private extension GetShowcaseDomain.Content {
 private extension SplashScreenViewModel {
     
     static let preview: SplashScreenViewModel = .init(
-        initialState: .init(
-            phase: .cover,
-            settings: .init(image: .init("splash"))
-        ),
+        initialState: .init(phase: .cover, settings: .preview),
         reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }
     )
+}
+
+extension SplashScreenState.Settings {
+    
+    static let preview: Self = .init(image: .init("splash"), bank: .preview, name: .preview, text: .preview, subtext: nil)
+}
+
+extension SplashScreenState.Settings.Logo {
+    
+    static let preview: Self = .init(color: .primary, shadow: .preview)
+}
+
+extension SplashScreenState.Settings.Text {
+    
+    static let preview: Self = .init(color: .primary, size: 1, value: anyMessage(), shadow: .preview)
+}
+
+extension SplashScreenState.Settings.Shadow {
+    
+    static let preview: Self = .init(color: .primary, opacity: 1, radius: 1, x: 0, y: 0)
 }
 
 // MARK: - CreateDraftCollateralLoanApplicationDomain.Binder preview
