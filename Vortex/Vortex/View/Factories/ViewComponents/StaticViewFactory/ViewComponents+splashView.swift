@@ -6,6 +6,7 @@
 //
 
 import RxViewModel
+import SplashScreenUI
 import SwiftUI
 
 extension ViewComponents {
