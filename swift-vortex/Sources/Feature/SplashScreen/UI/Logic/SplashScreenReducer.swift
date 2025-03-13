@@ -1,13 +1,16 @@
 //
 //  SplashScreenReducer.swift
-//  Vortex
 //
-//  Created by Nikolay Pochekuev on 29.01.2025.
+//
+//  Created by Igor Malyarov on 13.03.2025.
 //
 
-import Foundation
+public final class SplashScreenReducer {
+    
+    public init() {}
+}
 
-final class SplashScreenReducer {
+public extension SplashScreenReducer {
     
     func reduce(
         _ state: State,
@@ -15,24 +18,24 @@ final class SplashScreenReducer {
     ) -> (State, Effect?) {
         
         var state = state
-        var effect: Effect?
+        let effect: Effect? = nil
         
         switch event {
         case .hide:
-            state = .hidden
-    
+            state.phase = .hidden
+            
         case .prepare:
-            state = .warm
-        
+            state.phase = .warm
+            
         case .start:
-            state = .presented
+            state.phase = .presented
         }
         
         return (state, effect)
     }
 }
 
-extension SplashScreenReducer {
+public extension SplashScreenReducer {
     
     typealias State = SplashScreenState
     typealias Event = SplashScreenEvent

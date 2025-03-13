@@ -4777,6 +4777,7 @@ private extension Array where Element == Target {
         .splashScreenCore,
         .splashScreenCoreTests,
         .splashScreenUI,
+        .splashScreenUITests,
     ]
 }
 
@@ -4833,6 +4834,16 @@ private extension Target {
             .process("Resources")
         ]
     )
+    static let splashScreenUITests = testTarget(
+        name: .splashScreenUITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .splashScreenUI,
+        ],
+        path: "Tests/Feature/\(String.splashScreen)/UI"
+    )
 }
 
 private extension Target.Dependency {
@@ -4845,8 +4856,8 @@ private extension Target.Dependency {
         name: .splashScreenCore
     )
     
-    static let splashScreen = byName(
-        name: .splashScreen
+    static let splashScreenUI = byName(
+        name: .splashScreenUI
     )
 }
 
@@ -4861,4 +4872,5 @@ private extension String {
     static let splashScreenCoreTests = "SplashScreenCoreTests"
     
     static let splashScreenUI = "SplashScreenUI"
+    static let splashScreenUITests = "SplashScreenUITests"
 }

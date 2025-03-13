@@ -382,7 +382,10 @@ struct RootView_Previews: PreviewProvider {
 private extension SplashScreenViewModel {
     
     static let preview: SplashScreenViewModel = .init(
-        initialState: .hidden,
+        initialState: .init(
+            phase: .hidden,
+            settings: .init(image: .init(systemName: "star"))
+        ),
         reduce: { state, _ in (state, nil) },
         handleEffect: { _,_ in }
     )

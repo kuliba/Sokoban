@@ -16,7 +16,10 @@ extension RootViewModelFactory {
         flag: SplashScreenFlag
     ) -> SplashScreenViewModel {
         
-        let initialState: SplashScreenState = flag.isActive ? .cover : .hidden
+        let initialState = SplashScreenState(
+            phase: flag.isActive ? .cover : .hidden,
+            settings: .init(image: .init("splash"))
+        )
         let reducer = SplashScreenReducer()
         
         return .init(
