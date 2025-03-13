@@ -18,7 +18,7 @@ struct RootBinderView: View {
         
         ZStack {
             
-            rootViewFactory.components.splashView(splash: binder.content.splash)
+            rootViewFactory.components.splashScreenView(splash: binder.content.splash)
                 .ignoresSafeArea()
                 .zIndex(1.0)
             
