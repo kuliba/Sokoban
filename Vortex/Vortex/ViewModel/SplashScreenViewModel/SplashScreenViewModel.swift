@@ -10,17 +10,19 @@ import SplashScreenUI
 
 typealias SplashScreenViewModel = RxViewModel<SplashScreenState, SplashScreenEvent, SplashScreenEffect>
 
-typealias SplashScreenState = SplashScreenUI.Splash
+enum SplashScreenState: Equatable {
+    
+    case cover
+    case warm
+    case presented
+    case hidden
+}
 
 enum SplashScreenEvent {
     
+    case prepare
     case start
-    case splash
-    case noSplash
+    case hide
 }
 
-enum SplashScreenEffect {
-    
-    case startFirstTimer
-    case startSecondTimer
-}
+enum SplashScreenEffect {}

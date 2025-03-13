@@ -383,24 +383,6 @@ extension RootViewModelFactory {
         
         let savingsAccount = makeSavingsAccount()
         
-        // MARK: - Splash
-        
-        let splash = makeSplashScreenViewModel(
-            initialState: .initialSplashData,
-            phaseOneDuration: settings.splash.phaseOneDuration,
-            phaseTwoDuration: settings.splash.phaseTwoDuration
-        )
-        
-        model.auth
-            .sink { auth in
-                
-                if auth == .authorized, featureFlags.splashScreenFlag == .active {
-                    
-                    splash.event(.start)
-                }
-            }
-            .store(in: &bindings)
-
         // MARK: - Notifications Authorized
         
         performOrWaitForAuthorized { [weak self] in
@@ -420,6 +402,8 @@ extension RootViewModelFactory {
         
         // MARK: - Splash Screen
         
+        let splash = makeSplashScreenViewModel(flag: featureFlags.splashScreenFlag)
+        
         if featureFlags.splashScreenFlag.isActive {
             
             performOrWaitForActive { [weak self] in
@@ -427,10 +411,7 @@ extension RootViewModelFactory {
                 self?.scheduleGetAndCacheSplashScreenTimePeriods()
             }
             
-            performOrWaitForAuthorized { [weak self] in
-                
-                self?.scheduleGetAndCacheSplashImages()
-            }
+            bindings.formUnion(splashEvents(splash: splash))
         }
         
         let rootViewModel = make(
