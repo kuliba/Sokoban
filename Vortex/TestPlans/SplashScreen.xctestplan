@@ -25,6 +25,13 @@
         "identifier" : "SplashScreenCoreTests",
         "name" : "SplashScreenCoreTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SplashScreenUITests",
+        "name" : "SplashScreenUITests"
+      }
     }
   ],
   "version" : 1
