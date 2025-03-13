@@ -161,6 +161,7 @@ public struct SavingsAccountDetailsView: View {
                 config.info
                     .foregroundColor(config.colors.chevron)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .onTapGesture { event(.showSheet) }
             }
         }
     }
@@ -369,6 +370,8 @@ struct SavingsAccountDetailsView_Previews: PreviewProvider {
                         switch event {
                         case .expanded:
                             state.isExpanded.toggle()
+                        case .showSheet:
+                            print("showSheet")
                         }
                         
                         return (state, .none)
