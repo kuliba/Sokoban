@@ -11,9 +11,8 @@ public struct SplashScreenView: View {
     
     private let state: SplashScreenState
     
-    public init(
-        state: SplashScreenState
-    ) {
+    public init(state: SplashScreenState) {
+        
         self.state = state
     }
     
@@ -31,11 +30,6 @@ public struct SplashScreenView: View {
             .animation(.easeOut(duration: 2), value: state)
     }
 }
-
-//#Preview {
-//    
-//    SplashScreenView()
-//}
 
 // MARK: - UI Mapping
 
@@ -87,5 +81,58 @@ private extension SplashScreenState {
         case .hidden:
             return 20
         }
+    }
+}
+
+// MARK: - Previews
+
+struct SplashScreenView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        Group {
+            
+            splashScreenView(.presented)
+                .previewDisplayName("presented")
+            splashScreenView(.warm)
+                .previewDisplayName("warm")
+            splashScreenView(.cover)
+                .previewDisplayName("cover")
+            splashScreenView(.hidden)
+                .previewDisplayName("hidden")
+        }
+        .background(Color.blue)
+    }
+    
+    private static func splashScreenView(
+        _ phase: SplashScreenState.Phase
+    ) -> some View {
+        
+        SplashScreenView(
+            state: .init(
+                phase: phase,
+                settings: .init(image: image())
+            )
+        )
+        .ignoresSafeArea()
+    }
+    
+    private static func image(
+        named name: String = "MORNING2",
+        withExtension ext: String = "jpg"
+    ) -> Image {
+        
+        // `Image(name, bundle: .module)` does not work in preview
+        guard
+            let url = Bundle.module.url(forResource: name, withExtension: ext),
+            let data = try? Data(contentsOf: url),
+            let uiImage = UIImage(data: data)
+        else {
+            
+            print("No image \"\(name).\(ext)\"")
+            return .init(systemName: "star")
+        }
+        
+        return Image(uiImage: uiImage)
     }
 }
