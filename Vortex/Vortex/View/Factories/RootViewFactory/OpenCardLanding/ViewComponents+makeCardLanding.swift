@@ -22,16 +22,24 @@ extension ViewComponents {
             binder.content.event(.load)
         }) { offset in
             
-            RxWrapperView(model: binder.content) {state, event in
+            RxWrapperView(model: binder.content) { state, event in
                 
                 switch state.status {
                 case let .landing(landing):
                     let products = landing.map { $0 }
                     
-                    makeCardLandingContentView(
-                        products: products,
-                        offset: offset
+                    CardLandingView(
+                        continue: { binder.flow.event(.select(.continue)) },
+                        makeContentView: {
+                            
+                            makeCardLandingContentView(
+                                products: products,
+                                offset: offset,
+                                event: $0
+                            )
+                        }
                     )
+
                 default:
                     //TODO: add other cases
                     EmptyView()
@@ -44,7 +52,8 @@ extension ViewComponents {
     @ViewBuilder
     func makeCardLandingContentView(
         products: [Product],
-        offset: Binding<CGPoint>
+        offset: Binding<CGPoint>, //TODO: remove offset
+        event: @escaping (ProductLandingEvent) -> Void
     ) -> some View {
         
         OffsetObservingScrollView(
@@ -57,7 +66,7 @@ extension ViewComponents {
                 
                 ProductsLandingView(
                     products: products,
-                    event: { _ in },
+                    event: event,
                     config: .iVortex,
                     viewFactory: .init(makeBannerImageView: makeGeneralIconView)
                 )
