@@ -280,14 +280,6 @@ private extension RootViewFactoryComposer {
         )
     }
     
-    func makeSplashScreenView(
-        state: Splash,
-        eventHandler: @escaping (SplashScreenEvent) -> ()
-    ) -> SplashScreenView {
-        
-        .init(splash: state, config: .prod())
-    }
-    
     func makeOptionSelectorViewFactory() -> OptionSelectorViewFactory {
         .init(makeOptionButtonView: makeOptionButtonView)
     }
