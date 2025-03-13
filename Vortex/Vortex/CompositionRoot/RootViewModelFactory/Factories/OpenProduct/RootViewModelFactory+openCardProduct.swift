@@ -17,23 +17,29 @@ import RemoteServices
 extension RootViewModelFactory {
     
     @inlinable
-    func openCardProduct(
-        notify: @escaping (OpenCardDomain.OrderCardResponse) -> Void
-    ) -> OpenProduct.OpenCardType.Form {
+    func openCardProduct() -> OpenCardDomain.Binder {
         
         let content: OpenCardDomain.Content = makeContent()
         content.event(.load)
         
-        let cancellable = content.$state
-            .compactMap(\.form?.orderCardResponse)
-            .sink { notify($0) }
-        
-        let binder = composeBinder(
+        return composeBinder(
             content: content,
             delayProvider: delayProvider,
             getNavigation: getNavigation,
             witnesses: witnesses()
         )
+    }
+    
+    @inlinable
+    func openCardProduct(
+        notify: @escaping (OpenCardDomain.OrderCardResponse) -> Void
+    ) -> OpenProduct.OpenCardType.Form {
+        
+        let binder = openCardProduct()
+        
+        let cancellable = binder.content.$state
+            .compactMap(\.form?.orderCardResponse)
+            .sink { notify($0) }
         
         return .init(model: binder, cancellable: cancellable)
     }

@@ -15,7 +15,7 @@ import SwiftUI
 extension RootViewModelFactory {
      
     @inlinable
-    func makeProductsLanding(
+    func makeCardLanding(
     ) -> CardLandingDomain.Binder {
     
         let content: CardLandingDomain.Content = makeProductsLandingContent { [weak self] completion in
@@ -39,8 +39,7 @@ extension RootViewModelFactory {
     ) {
         switch select {
         case .continue:
-            break
-            //TODO: add request and proccess
+            completion(.order(openCardProduct()))
         }
     }
 

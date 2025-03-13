@@ -8,39 +8,63 @@
 import SwiftUI
 import UIPrimitives
 
-public struct ProductsLandingView: View {
+public struct ProductsLandingView<ProductView: View>: View {
     
-    let products: [Product]
-    let event: (ProductLandingEvent) -> Void
-    let config: ProductLandingConfig
-    let viewFactory: ImageViewFactory
+    private let products: [Product]
+    private let productView: (Product) -> ProductView
     
     public init(
         products: [Product],
-        event: @escaping (ProductLandingEvent) -> Void,
-        config: ProductLandingConfig,
-        viewFactory: ImageViewFactory
+        productView: @escaping (Product) -> ProductView
     ) {
         self.products = products
-        self.event = event
-        self.config = config
-        self.viewFactory = viewFactory
+        self.productView = productView
     }
     
     public var body: some View {
         
         ForEach(products, id: \.title, content: productView)
     }
+}
+
+public extension ProductsLandingView 
+where ProductView == OrderCardLandingComponent.ProductView {
     
-    func productView(
-        product: Product
-    ) -> some View {
-        
-       return VStack {
+    init(
+        products: [Product],
+        event: @escaping (ProductLandingEvent) -> Void,
+        config: ProductLandingConfig,
+        viewFactory: ImageViewFactory
+    ) {
+        self.init(
+            products: products,
+            productView: {
             
-           product.title.text(
-            withConfig: product.theme == .dark ? config.titleLight : config.titleDark
-           )
+                ProductView(
+                    product: $0,
+                    event: event,
+                    config: config,
+                    viewFactory: viewFactory
+                )
+            }
+        )
+    }
+}
+
+public struct ProductView: View {
+    
+    let product: Product
+    let event: (ProductLandingEvent) -> Void
+    let config: ProductLandingConfig
+    let viewFactory: ImageViewFactory
+    
+    public var body: some View {
+        
+        VStack {
+            
+            product.title.text(
+                withConfig: product.theme == .dark ? config.titleLight : config.titleDark
+            )
             
             ForEach(product.items, id: \.title, content: itemView)
                 .padding(.horizontal, config.item.itemPadding)
@@ -55,72 +79,73 @@ public struct ProductsLandingView: View {
                 .padding(.horizontal, config.buttonsConfig.buttonsPadding)
         }
         .background(product.backgroundColor)
+    }
+    
+    func buttonsView() -> some View {
         
-        func buttonsView() -> some View {
+        HStack(spacing: config.buttonsConfig.buttonsSpacing) {
             
-            HStack(spacing: config.buttonsConfig.buttonsSpacing) {
-                
-                conditionButton()
-                
-                orderButton()
-            }
-            .frame(height: config.buttonsConfig.buttonsHeight)
+            conditionButton(config: config.conditionButtonConfig)
+            
+            orderButton()
         }
+        .frame(height: config.buttonsConfig.buttonsHeight)
+    }
+    
+    func orderButton() -> some View {
         
-        func orderButton() -> some View {
+        Button(action: { event(.order) }) {
             
-            Button(action: { event(.order) }) {
+            ZStack {
                 
-                ZStack {
-                    
-                    RoundedRectangle(cornerRadius: config.orderButtonConfig.cornerRadius)
-                        .foregroundColor(config.orderButtonConfig.background)
-                    
-                    config.orderButtonConfig.title.render()
-                }
+                RoundedRectangle(cornerRadius: config.orderButtonConfig.cornerRadius)
+                    .foregroundColor(config.orderButtonConfig.background)
+                
+                config.orderButtonConfig.title.render()
             }
         }
+    }
+    
+    @ViewBuilder
+    func conditionButton(
+        config: ProductLandingConfig.ConditionButtonConfig
+    ) -> some View {
         
-        
-        func conditionButton() -> some View {
+        if let url = URL(string: product.terms) {
             
-            Button(action: { event(.info) }) {
+            Button(action: { event(.info(url)) }) {
                 
-                HStack(spacing: config.conditionButtonConfig.spacing) {
+                HStack(spacing: config.spacing) {
                     
-                    config.conditionButtonConfig.icon
-                        .frame(
-                            width: config.conditionButtonConfig.frame,
-                            height: config.conditionButtonConfig.frame,
-                            alignment: .center
-                        )
-                        .foregroundStyle(product.theme == .dark ? config.conditionButtonConfig.foregroundColorLight : config.conditionButtonConfig.foregroundColorDark)
+                    config.icon
+                        .frame(width: config.frame, height: config.frame)
+                        .foregroundStyle(product.theme == .dark ? config.foregroundColorLight : config.foregroundColorDark)
                     
-                    config.conditionButtonConfig.title.text(
-                        withConfig: product.theme == .dark ? config.conditionButtonConfig.titleDark : config.conditionButtonConfig.titleLight
+                    config.title.text(
+                        withConfig: product.theme == .dark ? config.titleDark : config.titleLight
                     )
                 }
             }
         }
+    }
+    
+    func itemView(
+        item: Product.Item
+    ) -> some View {
         
-        func itemView(
-            item: Product.Item
-        ) -> some View {
+        HStack {
             
-            HStack {
+            if item.bullet {
                 
-                if item.bullet {
-                    
-                    Circle()
-                        .frame(config.item.circleSize)
-                        .foregroundStyle(product.theme == .dark ? config.conditionButtonConfig.foregroundColorLight : config.conditionButtonConfig.foregroundColorDark)
-                }
-                
-                item.title.text(
-                    withConfig: product.theme == .dark ? config.item.titleDark : config.item.titleLight
-                )
-                .frame(maxWidth: .infinity, alignment: .leading)
+                Circle()
+                    .frame(config.item.circleSize)
+                    .foregroundStyle(product.theme == .dark ? config.conditionButtonConfig.foregroundColorLight : config.conditionButtonConfig.foregroundColorDark)
             }
+            
+            item.title.text(
+                withConfig: product.theme == .dark ? config.item.titleDark : config.item.titleLight
+            )
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 }

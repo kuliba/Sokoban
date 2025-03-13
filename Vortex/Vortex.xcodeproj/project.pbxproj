@@ -3330,6 +3330,7 @@
 		C1904BE32D81688100805475 /* RootViewModelFactory+makeProductsLandingContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1904BE22D81688100805475 /* RootViewModelFactory+makeProductsLandingContent.swift */; };
 		C1904BE52D81769000805475 /* ViewComponents+makeCardLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1904BE42D81769000805475 /* ViewComponents+makeCardLanding.swift */; };
 		C1904BE72D817D0600805475 /* ProductLandingConfig+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1904BE62D817D0600805475 /* ProductLandingConfig+iVortex.swift */; };
+		C1904BE92D82AE8C00805475 /* CardLandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1904BE82D82AE8C00805475 /* CardLandingView.swift */; };
 		C192C99A2D47916500518831 /* RequestFactory+createCardApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = C192C9992D47916500518831 /* RequestFactory+createCardApplication.swift */; };
 		C192C99C2D47966000518831 /* CreateCardApplication in Frameworks */ = {isa = PBXBuildFile; productRef = C192C99B2D47966000518831 /* CreateCardApplication */; };
 		C192D4292C23E87700A6B338 /* HistoryReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C192D4282C23E87700A6B338 /* HistoryReducer.swift */; };
@@ -7105,6 +7106,7 @@
 		C1904BE22D81688100805475 /* RootViewModelFactory+makeProductsLandingContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeProductsLandingContent.swift"; sourceTree = "<group>"; };
 		C1904BE42D81769000805475 /* ViewComponents+makeCardLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeCardLanding.swift"; sourceTree = "<group>"; };
 		C1904BE62D817D0600805475 /* ProductLandingConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductLandingConfig+iVortex.swift"; sourceTree = "<group>"; };
+		C1904BE82D82AE8C00805475 /* CardLandingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardLandingView.swift; sourceTree = "<group>"; };
 		C192C9992D47916500518831 /* RequestFactory+createCardApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createCardApplication.swift"; sourceTree = "<group>"; };
 		C192D4282C23E87700A6B338 /* HistoryReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryReducer.swift; sourceTree = "<group>"; };
 		C19738D82AF279E300101B1B /* ResponseMapper+getJsonAbroadDict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ResponseMapper+getJsonAbroadDict.swift"; sourceTree = "<group>"; };
@@ -17602,6 +17604,7 @@
 			children = (
 				C127C5222D6CB3F300683F85 /* ViewComponents+makeOpenCardLanding.swift */,
 				C1904BE42D81769000805475 /* ViewComponents+makeCardLanding.swift */,
+				C1904BE82D82AE8C00805475 /* CardLandingView.swift */,
 			);
 			path = OpenCardLanding;
 			sourceTree = "<group>";
@@ -22154,6 +22157,7 @@
 				2AF9ACDE2AE6B0AA00AAB1DB /* LoggingLoaderDecorator.swift in Sources */,
 				0B22AEAA26CE77F100B11E7F /* GKHDataCase.swift in Sources */,
 				83C8F4452A444777008203E3 /* ItemsViewOld.swift in Sources */,
+				C1904BE92D82AE8C00805475 /* CardLandingView.swift in Sources */,
 				839331952C8EEC7C00D15379 /* RootViewModelFactory+makeBanners.swift in Sources */,
 				C12C18CD2924AC7E00A9C4F1 /* InfoViewComponent.swift in Sources */,
 				EDF68216266F9EC800FD5C07 /* RouterError.swift in Sources */,

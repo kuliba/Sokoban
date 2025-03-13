@@ -180,6 +180,7 @@ struct MainView<NavigationOperationView: View>: View {
             switch openCard {
             case let .cardLanding(binder):
                 viewFactory.components.makeCardLandingView(binder: binder, dismiss: { viewModel.resetDestination() })
+                    .background(viewFactory.components.makeCardPromoLandingFlowView1(binder.flow))
                 
             case let .legacy(binder):
                 AuthProductsView(viewModel: binder.content)

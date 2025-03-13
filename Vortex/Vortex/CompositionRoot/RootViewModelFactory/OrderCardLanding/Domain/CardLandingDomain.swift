@@ -39,6 +39,6 @@ extension CardLandingDomain {
     
     enum Navigation {
 
-        case `continue`
+        case order(OpenCardDomain.Binder)
     }
 }
