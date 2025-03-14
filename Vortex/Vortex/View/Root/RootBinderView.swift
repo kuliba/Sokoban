@@ -26,16 +26,15 @@ struct RootBinderView: View {
     
     var body: some View {
         
-        ZStack {
+        RxWrapperView(model: binder.flow) { state, event in
+            
+            rootViewInNavigationView(state: state, event: event)
+                .loader(isLoading: state.isLoading)
+        }
+        .overlay {
             
             components.splashScreenView(splash: binder.content.splash)
-                .zIndex(1.0)
-            
-            RxWrapperView(model: binder.flow) { state, event in
-                
-                rootViewInNavigationView(state: state, event: event)
-                    .loader(isLoading: state.isLoading)
-            }
+                .ignoresSafeArea()
         }
     }
 }

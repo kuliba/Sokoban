@@ -25,7 +25,7 @@ public struct SplashScreenContentView: View {
         
         VStack(spacing: config.spacing) {
             
-            logo(state.settings.bank)
+            logo(state.settings.logo)
             text(state.settings.text)
             state.settings.subtext.map(subtext)
             Spacer()
@@ -57,8 +57,8 @@ private extension SplashScreenContentView {
         
         config.footer
             .renderingMode(.template)
-            .foregroundColor(state.settings.name.color)
-            .shadow(state.settings.name.shadow)
+            .foregroundColor(state.settings.footer.color)
+            .shadow(state.settings.footer.shadow)
             .padding(.vertical, config.footerVPadding)
     }
     

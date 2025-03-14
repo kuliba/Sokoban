@@ -246,10 +246,10 @@ where Category == String,
             let imageData = outcome.storage[setting.link].imageData
             
             return .init(
-                bank: setting.bank,
-                name: setting.name,
+                logo: setting.logo,
                 text: setting.text,
                 subtext: setting.subtext,
+                footer: setting.footer,
                 imageData: imageData,
                 link: setting.link,
                 period: setting.period
@@ -287,24 +287,19 @@ private extension RemoteServices.ResponseMapper.SplashScreenSettings {
     ) -> SplashScreenSettings? {
         
         return .init(
-            bank: _bank,
-            name: _name,
+            logo: _logo,
             text: _text,
             subtext: _subtext,
+            footer: _footer,
             imageData: nil,
             link: link,
             period: period
         )
     }
     
-    var _bank: SplashScreenSettings.Logo {
+    var _logo: SplashScreenSettings.Logo {
         
         return .init(color: bankLogo.color, shadow: bankLogo.shadow._shadow)
-    }
-    
-    var _name: SplashScreenSettings.Logo {
-        
-        return .init(color: bankName.color, shadow: bankName.shadow._shadow)
     }
     
     var _text: SplashScreenSettings.Text {
@@ -317,7 +312,12 @@ private extension RemoteServices.ResponseMapper.SplashScreenSettings {
         guard let subtext else { return nil }
         
         return .init(color: subtext.color, size: subtext.size, value: subtext.value, shadow: subtext.shadow._shadow)
-
+        
+    }
+    
+    var _footer: SplashScreenSettings.Logo {
+        
+        return .init(color: bankName.color, shadow: bankName.shadow._shadow)
     }
 }
 
@@ -331,11 +331,11 @@ private extension RemoteServices.ResponseMapper.Shadow {
 
 struct CodableSplashScreenSettings: Codable {
     
-    let bank: Logo
-    let name: Logo
+    let logo: Logo
     let text: Text
     let subtext: Text?
-
+    let footer: Logo
+    
     let imageData: ImageData
     let link: String
     let period: String
@@ -349,7 +349,7 @@ struct CodableSplashScreenSettings: Codable {
 }
 
 extension CodableSplashScreenSettings {
-        
+    
     struct Logo: Codable {
         
         let color: String
@@ -390,10 +390,10 @@ private extension SplashScreenSettings {
     init(codable: CodableSplashScreenSettings) {
         
         self.init(
-            bank: codable._bank,
-            name: codable._name,
+            logo: codable._logo,
             text: codable._text,
             subtext: codable._subtext,
+            footer: codable._footer,
             imageData: codable.imageDataResult,
             link: codable.link,
             period: codable.period
@@ -406,10 +406,10 @@ private extension CodableSplashScreenSettings {
     init(_ settings: SplashScreenSettings) {
         
         self.init(
-            bank: settings._bank,
-            name: settings._name,
+            logo: settings._logo,
             text: settings._text,
             subtext: settings._subtext,
+            footer: settings._footer,
             imageData: settings._imageData,
             link: settings.link,
             period: settings.period
@@ -422,24 +422,19 @@ private extension SplashScreenSettings {
     var codable: CodableSplashScreenSettings {
         
         return .init(
-            bank: _bank,
-            name: _name,
+            logo: _logo,
             text: _text,
             subtext: _subtext,
+            footer: _footer,
             imageData: _imageData,
             link: link,
             period: category
         )
     }
     
-    var _bank: CodableSplashScreenSettings.Logo {
+    var _logo: CodableSplashScreenSettings.Logo {
         
-        return .init(color: bank.color, shadow: bank.shadow._shadow)
-    }
-    
-    var _name: CodableSplashScreenSettings.Logo {
-        
-        return .init(color: name.color, shadow: name.shadow._shadow)
+        return .init(color: logo.color, shadow: logo.shadow._shadow)
     }
     
     var _text: CodableSplashScreenSettings.Text {
@@ -454,6 +449,11 @@ private extension SplashScreenSettings {
         return .init(color: subtext.color, size: subtext.size, value: subtext.value, shadow: subtext.shadow._shadow)
     }
     
+    var _footer: CodableSplashScreenSettings.Logo {
+        
+        return .init(color: footer.color, shadow: footer.shadow._shadow)
+    }
+    
     var _imageData: CodableSplashScreenSettings.ImageData {
         
         switch imageData {
@@ -465,7 +465,7 @@ private extension SplashScreenSettings {
 }
 
 private extension SplashScreenSettings.Shadow {
- 
+    
     var _shadow: CodableSplashScreenSettings.Shadow {
         
         return .init(color: color, opacity: opacity, radius: radius, x: x, y: y)
@@ -477,24 +477,19 @@ private extension CodableSplashScreenSettings {
     var settings: SplashScreenSettings {
         
         return .init(
-            bank: _bank,
-            name: _name,
+            logo: _logo,
             text: _text,
             subtext: _subtext,
+            footer: _footer,
             imageData: imageDataResult,
             link: link,
             period: category
         )
     }
     
-    var _bank: SplashScreenSettings.Logo {
+    var _logo: SplashScreenSettings.Logo {
         
-        return .init(color: bank.color, shadow: bank.shadow._shadow)
-    }
-    
-    var _name: SplashScreenSettings.Logo {
-        
-        return .init(color: name.color, shadow: name.shadow._shadow)
+        return .init(color: logo.color, shadow: logo.shadow._shadow)
     }
     
     var _text: SplashScreenSettings.Text {
@@ -507,6 +502,11 @@ private extension CodableSplashScreenSettings {
         guard let subtext else { return nil }
         
         return .init(color: subtext.color, size: subtext.size, value: subtext.value, shadow: subtext.shadow._shadow)
+    }
+    
+    var _footer: SplashScreenSettings.Logo {
+        
+        return .init(color: footer.color, shadow: footer.shadow._shadow)
     }
 }
 
