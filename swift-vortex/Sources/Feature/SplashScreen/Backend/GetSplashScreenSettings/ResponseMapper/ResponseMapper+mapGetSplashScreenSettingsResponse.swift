@@ -137,7 +137,7 @@ private extension ResponseMapper {
         struct _Text: Decodable {
             
             let color: String?
-            let size: Int?
+            let size: Double?
             let value: String?
             let shadow: _Shadow?
         }
@@ -146,16 +146,16 @@ private extension ResponseMapper {
             
             let hasBackground: Bool?
             let color: String?
-            let opacity: Int?
+            let opacity: Double?
         }
         
         struct _Shadow: Decodable {
             
-            let x: Int?
-            let y: Int?
-            let blur: Int?
+            let x: Double?
+            let y: Double?
+            let blur: Double?
             let color: String?
-            let opacity: Int?
+            let opacity: Double?
         }
     }
 }

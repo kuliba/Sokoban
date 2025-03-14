@@ -8,63 +8,13 @@
 import SwiftUI
 import UIPrimitives
 
-struct SplashScreenSettings: Equatable {
-    
-    let bank: Logo
-    let name: Logo
-    let text: Text
-    let subtext: Text?
-    
-    struct Logo: Equatable {
-        
-        let color: Color
-        let shadow: Shadow
-    }
-    
-    struct Text: Equatable {
-        
-        let color: Color
-        let size: CGFloat // TODO: ???
-        let value: String
-        let shadow: Shadow
-    }
-    
-    struct Shadow: Equatable {
-        
-        let color: Color
-        let opacity: Double
-        let radius: CGFloat
-        let x: CGFloat
-        let y: CGFloat
-    }
-}
-
-extension SplashScreenSettings.Shadow {
-    
-    static let logo: Self = .init(color: .black, opacity: 1, radius: 12, x: 0, y: 4)
-    static let name: Self = .init(color: .black, opacity: 1, radius: 12, x: 0, y: 4)
-    static let text: Self = .init(color: .black, opacity: 1, radius: 12, x: 0, y: 4)
-    static let subtext: Self = .init(color: .black, opacity: 1, radius: 12, x: 0, y: 4)
-}
-
-extension SplashScreenSettings {
-    
-    static let preview: Self = .init(
-        bank: .init(color: .blue, shadow: .logo),
-        name: .init(color: .pink, shadow: .name),
-        text: .init(color: .green, size: 24, value: "Hello, world!", shadow: .text),
-        subtext: .init(color: .blue, size: 16, value: "A long quite boring subtext to kill user attention.", shadow: .subtext)
-    )
-}
-
 public struct SplashScreenContentView: View {
     
-    private let state: SplashScreenState.Phase
-    private let settings: SplashScreenSettings = .preview
+    private let state: SplashScreenState
     private let config: SplashScreenContentViewConfig
     
     public init(
-        state: SplashScreenState.Phase,
+        state: SplashScreenState,
         config: SplashScreenContentViewConfig
     ) {
         self.state = state
@@ -75,27 +25,23 @@ public struct SplashScreenContentView: View {
         
         VStack(spacing: config.spacing) {
             
-            logo(settings.bank)
-            
-            text(settings.text)
-            
-            settings.subtext.map(subtext)
-            
+            logo(state.settings.bank)
+            text(state.settings.text)
+            state.settings.subtext.map(subtext)
             Spacer()
-            
-            name()
+            footer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(config.edges)
-        .blur(radius: state.blurRadius)
-        .opacity(state.opacity)
+        .blur(radius: state.phase.blurRadius)
+        .opacity(state.phase.opacity)
     }
 }
 
 private extension SplashScreenContentView {
     
     func logo(
-        _ settings: SplashScreenSettings.Logo
+        _ settings: SplashScreenState.Settings.Logo
     ) -> some View {
         
         config.logo
@@ -107,17 +53,17 @@ private extension SplashScreenContentView {
             .shadow(settings.shadow)
     }
     
-    func name() -> some View {
+    func footer() -> some View {
         
-        config.name
+        config.footer
             .renderingMode(.template)
-            .foregroundColor(config.nameColor)
-            .shadow(settings.name.shadow)
-            .padding(.vertical, config.nameVPadding)
+            .foregroundColor(state.settings.name.color)
+            .shadow(state.settings.name.shadow)
+            .padding(.vertical, config.footerVPadding)
     }
     
     func text(
-        _ settings: SplashScreenSettings.Text
+        _ settings: SplashScreenState.Settings.Text
     ) -> some View {
         
         settings.value.text(
@@ -127,7 +73,7 @@ private extension SplashScreenContentView {
     }
     
     func subtext(
-        _ settings: SplashScreenSettings.Text
+        _ settings: SplashScreenState.Settings.Text
     ) -> some View {
         
         settings.value.text(
@@ -186,6 +132,9 @@ struct SplashScreenContentView_Previews: PreviewProvider {
         _ phase: SplashScreenState.Phase
     ) -> some View {
         
-        SplashScreenContentView(state: phase, config: .preview)
+        SplashScreenContentView(
+            state: .init(phase: phase, settings: .preview),
+            config: .preview
+        )
     }
 }
