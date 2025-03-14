@@ -3080,6 +3080,7 @@ private extension Target {
         dependencies: [
             // internal packages
             .amountComponent,
+            .selectorComponent,
             .linkableText,
             .paymentComponents,
             .toggleComponent,
