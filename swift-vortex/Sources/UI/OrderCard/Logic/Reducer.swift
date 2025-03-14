@@ -69,6 +69,24 @@ public extension Reducer {
             if !state.loadableForm.isLoading && state.hasConfirmation {
                 state.form?.consent = consent
             }
+            
+        case let .selectorEvents(events):
+            
+            switch events {
+            case .toggleOptions:
+                state.form?.selector.isShowingOptions.toggle()
+                
+            case let .selectOption(option):
+                if let form = state.form,
+                   form.selector.options.contains(option) {
+                    
+                    state.form?.selector.selected = option
+                    state.form?.selector.isShowingOptions = false
+                }
+                
+            case let .setSearchQuery(query):
+                state.form?.selector.searchQuery = query
+            }
         }
         
         return (state, effect)
