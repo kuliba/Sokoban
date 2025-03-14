@@ -26,14 +26,10 @@ public struct SplashScreenContentView: View {
         VStack(spacing: config.spacing) {
             
             logo(state.settings.bank)
-            
             text(state.settings.text)
-            
             state.settings.subtext.map(subtext)
-            
             Spacer()
-            
-            name()
+            footer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(config.edges)
@@ -57,13 +53,13 @@ private extension SplashScreenContentView {
             .shadow(settings.shadow)
     }
     
-    func name() -> some View {
+    func footer() -> some View {
         
-        config.name
+        config.footer
             .renderingMode(.template)
-            .foregroundColor(config.nameColor)
+            .foregroundColor(state.settings.name.color)
             .shadow(state.settings.name.shadow)
-            .padding(.vertical, config.nameVPadding)
+            .padding(.vertical, config.footerVPadding)
     }
     
     func text(

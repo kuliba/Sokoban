@@ -17,7 +17,8 @@ extension RootViewModelFactory {
         flag: SplashScreenFlag
     ) -> SplashScreenViewModel {
         
-        let composed = composeSplashScreenSettings()
+        let userName = getUserName()
+        let composed = composeSplashScreenSettings().insert(userName: userName)
         
         let initialState = SplashScreenState(
             phase: flag.isActive ? .cover : .hidden,
@@ -31,6 +32,15 @@ extension RootViewModelFactory {
             handleEffect: { _,_ in },
             scheduler: schedulers.main
         )
+    }
+    
+    @inlinable
+    func getUserName() -> String? {
+        
+        guard let info = model.localAgent.load(type: ClientInfoData.self)
+        else { return nil }
+        
+        return info.customName ?? info.firstName
     }
     
     @inlinable
@@ -48,6 +58,39 @@ extension RootViewModelFactory {
 }
 
 // MARK: - Adapters
+
+extension SplashScreenState.Settings {
+    
+    func insert(userName: String?) -> Self {
+        
+        guard text.value.contains("_") else { return self }
+        
+        return .init(
+            image: image,
+            bank: bank,
+            name: name,
+            text: .init(
+                color: text.color,
+                size: text.size,
+                value: text.value.replacingUnderscores(with: userName),
+                shadow: text.shadow
+            ),
+            subtext: subtext
+        )
+    }
+}
+
+private extension String {
+    
+    func replacingUnderscores(with replacement: String?) -> String {
+        
+        if let replacement  {
+            return replacingOccurrences(of: "_", with: replacement)
+        } else {
+            return replacingOccurrences(of: ",\n_!", with: "!")
+        }
+    }
+}
 
 private extension Array where Element == SplashScreenSettings {
     
