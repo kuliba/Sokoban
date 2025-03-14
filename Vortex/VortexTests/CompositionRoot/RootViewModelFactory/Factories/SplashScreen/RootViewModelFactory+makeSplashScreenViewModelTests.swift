@@ -191,7 +191,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         
         return .init(
             image: .init("splash"),
-            bank: .init(
+            logo: .init(
                 color: .init(hex: "FFFFFF"),
                 shadow: .init(color: .init(hex: "000000"), opacity: 0.25, radius: 64, x: 0, y: 4)
             ),

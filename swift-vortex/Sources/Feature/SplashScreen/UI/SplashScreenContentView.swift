@@ -25,7 +25,7 @@ public struct SplashScreenContentView: View {
         
         VStack(spacing: config.spacing) {
             
-            logo(state.settings.bank)
+            logo(state.settings.logo)
             text(state.settings.text)
             state.settings.subtext.map(subtext)
             Spacer()

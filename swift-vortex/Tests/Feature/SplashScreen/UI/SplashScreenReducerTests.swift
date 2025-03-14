@@ -191,7 +191,7 @@ final class SplashScreenReducerTests: XCTestCase {
     
     private func makeSettings(
         image: Image = .init(systemName: "star"),
-        bank: SUT.State.Settings.Logo? = nil,
+        logo: SUT.State.Settings.Logo? = nil,
         text: SUT.State.Settings.Text? = nil,
         subtext: SUT.State.Settings.Text? = nil,
         footer: SUT.State.Settings.Logo? = nil
@@ -199,22 +199,14 @@ final class SplashScreenReducerTests: XCTestCase {
         
         return .init(
             image: image,
-            bank: bank ?? makeBank(),
+            logo: logo ?? makeLogo(),
             text: text ?? makeText(),
             subtext: subtext,
-            footer: footer ?? makeFooter()
+            footer: footer ?? makeLogo()
         )
     }
     
-    private func makeBank(
-        color: Color = .red,
-        shadow: SplashScreenState.Settings.Shadow? = nil
-    ) -> SUT.State.Settings.Logo {
-        
-        return .init(color: color, shadow: shadow ?? makeShadow())
-    }
-    
-    private func makeFooter(
+    private func makeLogo(
         color: Color = .red,
         shadow: SplashScreenState.Settings.Shadow? = nil
     ) -> SUT.State.Settings.Logo {

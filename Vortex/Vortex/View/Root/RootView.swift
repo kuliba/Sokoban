@@ -393,7 +393,7 @@ private extension SplashScreenState.Settings {
     
     static let preview: Self = .init(
         image: .init("splash"),
-        bank: .init(color: .blue, shadow: .logo),
+        logo: .init(color: .blue, shadow: .logo),
         text: .init(color: .green, size: 24, value: "Hello, world!", shadow: .text),
         subtext: .init(color: .blue, size: 16, value: "A long quite boring subtext to kill user attention.", shadow: .subtext),
         footer: .init(color: .pink, shadow: .name)

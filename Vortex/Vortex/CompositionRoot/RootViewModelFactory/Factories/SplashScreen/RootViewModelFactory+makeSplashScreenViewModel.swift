@@ -67,7 +67,7 @@ extension SplashScreenState.Settings {
         
         return .init(
             image: image,
-            bank: bank,
+            logo: logo,
             text: .init(
                 color: text.color,
                 size: text.size,
@@ -104,7 +104,7 @@ private extension Array where Element == SplashScreenSettings {
             
             return .init(
                 image: image,
-                bank: $0._bank,
+                logo: $0._logo,
                 text: $0._text,
                 subtext: $0._subtext,
                 footer: $0._footer
@@ -115,7 +115,7 @@ private extension Array where Element == SplashScreenSettings {
 
 private extension SplashScreenSettings {
     
-    var _bank: SplashScreenState.Settings.Logo {
+    var _logo: SplashScreenState.Settings.Logo {
         
         return .init(color: .init(hex: bank.color), shadow: bank.shadow._shadow)
     }
@@ -169,7 +169,7 @@ private extension SplashScreenState.Settings {
         
         return .init(
             image: .init("splash"),
-            bank: .bank,
+            logo: .logo,
             text: .default(for: timePeriod),
             subtext: nil,
             footer: .footer
@@ -179,7 +179,7 @@ private extension SplashScreenState.Settings {
 
 private extension SplashScreenState.Settings.Logo {
     
-    static let bank: Self = .init(color: .init(hex: "FFFFFF"), shadow: .bank)
+    static let logo: Self = .init(color: .init(hex: "FFFFFF"), shadow: .bank)
     static let footer: Self = .init(color: .init(hex: "FFFFFF"), shadow: .name)
 }
 
