@@ -7,7 +7,6 @@
 
 import PDFKit
 import RemoteServices
-import CollateralLoanLandingGetConsentsBackend
 
 // Namespace
 public enum CreateDraftCollateralLoanApplicationDomain {}
@@ -28,16 +27,6 @@ public extension CreateDraftCollateralLoanApplicationDomain {
         CollateralLandingApplicationSaveConsentsResult,
         BackendFailure<InformerPayload>
     >
-    
-    typealias GetConsentsResult<InformerPayload> = Swift.Result<
-        PDFDocument,
-        BackendFailure<InformerPayload>
-    >
-    
-    typealias GetConsentsPayload = RemoteServices.RequestFactory.GetConsentsPayload
-    typealias GetConsentsCompletion<InformerPayload> = (GetConsentsResult<InformerPayload>) -> Void
-    typealias GetConsents<InformerPayload> =
-        (GetConsentsPayload, @escaping GetConsentsCompletion<InformerPayload>) -> Void
 }
 
 public extension CreateDraftCollateralLoanApplicationDomain {

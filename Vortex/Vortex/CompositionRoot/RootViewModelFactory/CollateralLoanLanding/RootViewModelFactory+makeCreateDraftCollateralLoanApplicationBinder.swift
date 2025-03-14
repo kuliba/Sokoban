@@ -91,8 +91,7 @@ extension RootViewModelFactory {
         let effectHandler = Domain.ContentEffectHandler(
             createDraft: createDraft(payload:otpEvent:completion:),
             getVerificationCode: getVerificationCode(completion:),
-            saveConsents: saveConsents,
-            getConsents: getConsents
+            saveConsents: saveConsents
         )
 
         return .init(

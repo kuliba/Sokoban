@@ -22,7 +22,6 @@ extension CreateDraftCollateralLoanApplicationDomain {
         public var isLoading: Bool
         public var otp: String
         public var saveConsentsResult: CollateralLandingApplicationSaveConsentsResult?
-        public var getConsentsResult: GetConsentsResult<InformerPayload>?
         public var failure: BackendFailure<InformerPayload>?
 
         // MARK: UI parameters

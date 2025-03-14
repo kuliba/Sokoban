@@ -135,12 +135,6 @@ extension CreateDraftCollateralLoanApplicationDomain {
             case .dismissFailure:
                 state.failure = nil
                 state.isLoading = false
-                
-            case let .getConsents(payload):
-                effect = .getConsents(payload)
-
-            case let .showGetConsentsResult(result):
-                state.getConsentsResult = result
             }
             
             return (state, effect)

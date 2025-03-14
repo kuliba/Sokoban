@@ -12,18 +12,15 @@ extension CreateDraftCollateralLoanApplicationDomain {
         private let createDraft: CreateDraft
         private let getVerificationCode: GetVerificationCode
         private let saveConsents: SaveConsents
-        private var getConsents: Domain.GetConsents<InformerPayload>
 
         public init(
             createDraft: @escaping CreateDraft,
             getVerificationCode: @escaping GetVerificationCode,
-            saveConsents: @escaping SaveConsents,
-            getConsents: @escaping Domain.GetConsents<InformerPayload>
+            saveConsents: @escaping SaveConsents
         ) {
             self.createDraft = createDraft
             self.getVerificationCode = getVerificationCode
             self.saveConsents = saveConsents
-            self.getConsents = getConsents
         }
         
         public func handleEffect(_ effect: Effect, dispatch: @escaping Dispatch) {
@@ -43,11 +40,6 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 
             case .getVerificationCode:
                 getVerificationCode { dispatch(.gettedVerificationCode($0)) }
-                
-            case let .getConsents(payload):
-                getConsents(payload) {
-                    dispatch(.showGetConsentsResult($0))
-                }
             }
         }
     }
