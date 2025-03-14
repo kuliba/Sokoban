@@ -16,7 +16,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
     func test_shouldSetSplashPhaseToHidden_onInactiveFlag() {
         
         let (sut, _,_) = makeSUT()
-        let splash = sut.makeSplashScreenViewModel(flag: .init(.inactive))
+        let splash = sut.makeSplashScreenViewModel(flag: .inactive)
         
         XCTAssertNoDiff(splash.state.phase, .hidden)
     }
@@ -24,7 +24,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
     func test_shouldSetSplashPhaseToCover_onActiveFlag() {
         
         let (sut, _,_) = makeSUT()
-        let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
+        let splash = makeSplashScreenViewModel(sut)
         
         XCTAssertNoDiff(splash.state.phase, .cover)
     }
@@ -34,7 +34,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
     func test_shouldSetSplashTextToMorning_onActiveFlag_Tokyo() throws {
         
         let sut = try makeSUT(calendar: .tokyo, hour: 10, minute: 15)
-        let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
+        let splash = makeSplashScreenViewModel(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Доброе утро!")
     }
@@ -42,7 +42,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
     func test_shouldSetSplashTextToDay_onActiveFlag_Tokyo() throws {
         
         let sut = try makeSUT(calendar: .tokyo, hour: 13, minute: 33)
-        let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
+        let splash = makeSplashScreenViewModel(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Добрый день!")
     }
@@ -50,7 +50,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
     func test_shouldSetSplashTextToEvening_onActiveFlag_Tokyo() throws {
         
         let sut = try makeSUT(calendar: .tokyo, hour: 19, minute: 45)
-        let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
+        let splash = makeSplashScreenViewModel(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Добрый вечер!")
     }
@@ -58,7 +58,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
     func test_shouldSetSplashTextToNight_onActiveFlag_Tokyo() throws {
         
         let sut = try makeSUT(calendar: .tokyo, hour: 1, minute: 20)
-        let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
+        let splash = makeSplashScreenViewModel(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Доброй ночи!")
     }
@@ -66,7 +66,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
     func test_shouldSetSplashTextToMorning_onActiveFlag_Paris() throws {
         
         let sut = try makeSUT(calendar: .paris, hour: 10, minute: 5)
-        let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
+        let splash = makeSplashScreenViewModel(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Доброе утро!")
     }
@@ -74,7 +74,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
     func test_shouldSetSplashTextToDay_onActiveFlag_Paris() throws {
         
         let sut = try makeSUT(calendar: .paris, hour: 13, minute: 45)
-        let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
+        let splash = makeSplashScreenViewModel(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Добрый день!")
     }
@@ -82,7 +82,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
     func test_shouldSetSplashTextToEvening_onActiveFlag_Paris() throws {
         
         let sut = try makeSUT(calendar: .paris, hour: 19, minute: 33)
-        let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
+        let splash = makeSplashScreenViewModel(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Добрый вечер!")
     }
@@ -90,7 +90,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
     func test_shouldSetSplashTextToNight_onActiveFlag_Paris() throws {
         
         let sut = try makeSUT(calendar: .paris, hour: 1, minute: 33)
-        let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
+        let splash = makeSplashScreenViewModel(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Доброй ночи!")
     }
@@ -102,7 +102,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         let (firstName, customName) = (anyMessage(), anyMessage())
         let model = try withClientInfo(firstName: firstName, customName: customName)
         let sut = try makeSUT(calendar: .paris, hour: 10, minute: 20, model: model)
-        let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
+        let splash = makeSplashScreenViewModel(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Доброе утро,\n\(customName)!")
     }
@@ -112,7 +112,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         let (firstName, customName) = (anyMessage(), anyMessage())
         let model = try withClientInfo(firstName: firstName, customName: customName)
         let sut = try makeSUT(calendar: .tokyo, hour: 2, minute: 15, model: model)
-        let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
+        let splash = makeSplashScreenViewModel(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Доброй ночи,\n\(customName)!")
     }
@@ -122,7 +122,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         let firstName = anyMessage()
         let model = try withClientInfo(firstName: firstName, customName: nil)
         let sut = try makeSUT(calendar: .paris, hour: 10, minute: 20, model: model)
-        let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
+        let splash = makeSplashScreenViewModel(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Доброе утро,\n\(firstName)!")
     }
@@ -132,7 +132,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         let firstName = anyMessage()
         let model = try withClientInfo(firstName: firstName, customName: nil)
         let sut = try makeSUT(calendar: .tokyo, hour: 20, minute: 45, model: model)
-        let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
+        let splash = makeSplashScreenViewModel(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Добрый вечер,\n\(firstName)!")
     }
@@ -142,9 +142,34 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
     func test_shouldDeliverDefaultSettings_onEmptyCache_onActiveFlag() throws {
         
         let sut = try makeSUT(calendar: .tokyo, hour: 20, minute: 45)
-        let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
+        let splash = makeSplashScreenViewModel(sut)
         
         XCTAssertNoDiff(splash.state.settings, defaultSettings())
+    }
+    
+    func test_shouldDeliverCachedSettings_onActiveFlag() throws {
+        
+        let period = "EVENING"
+        let text = anyMessage()
+        let cached = try makeCodableSplashScreenSettings(
+            logo: makeLogo(color: "123456"),
+            text: makeText(color: "345678", value: text),
+            footer: makeLogo(color: "234567"),
+            period: period
+        )
+        let storage = makeCodableSplashScreenStorage(
+            entries: [period: makeEntry(items: [cached])]
+        )
+        let localAgent = try LocalAgentStub(value: storage)
+        let model: Model = .mockWithEmptyExcept(localAgent: localAgent)
+        let sut = try makeSUT(calendar: .tokyo, hour: 20, minute: 45, model: model)
+        let splash = makeSplashScreenViewModel(sut)
+        let settings = splash.state.settings
+        
+        XCTAssertNoDiff(settings.text.value, text)
+        XCTAssertNoDiff(settings.logo.color, .init(hex: "123456"))
+        XCTAssertNoDiff(settings.text.color, .init(hex: "345678"))
+        XCTAssertNoDiff(settings.footer.color, .init(hex: "234567"))
     }
     
     // MARK: - Helpers Tests
@@ -160,6 +185,8 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
     
     // MARK: - Helpers
     
+    private typealias Splash = SplashScreenViewModel
+    
     private func makeSUT(
         calendar: Calendar,
         hour: Int,
@@ -173,6 +200,14 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         let sut = makeSUT(calendar: calendar, currentDate: { date }, model: model, file: file, line: line).sut
         
         return sut
+    }
+    
+    private func makeSplashScreenViewModel(
+        _ sut: SUT,
+        flag: SplashScreenFlag = .active
+    ) -> Splash {
+        
+        sut.makeSplashScreenViewModel(flag: flag)
     }
     
     private func withClientInfo(
@@ -229,20 +264,31 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         text: CodableSplashScreenSettings.Text? = nil,
         subtext: CodableSplashScreenSettings.Text? = nil,
         footer: CodableSplashScreenSettings.Logo? = nil,
-        imageData: CodableSplashScreenSettings.ImageData = .none,
+        imageData: CodableSplashScreenSettings.ImageData? = nil,
         link: String = anyMessage(),
         period: String = anyMessage()
-    ) -> CodableSplashScreenSettings {
+    ) throws -> CodableSplashScreenSettings {
+        
+        let data = try sampleImageData()
         
         return .init(
             logo: logo ?? makeLogo(),
             text: text ?? makeText(),
             subtext: subtext,
             footer: footer ?? makeLogo(),
-            imageData: imageData,
+            imageData: imageData ?? .data(data),
             link: link,
             period: period
         )
+    }
+    
+    private func sampleImageData(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> Data {
+        
+        let image = UIImage.make(withColor: .red)
+        return try XCTUnwrap(image.pngData())
     }
     
     private func makeLogo(

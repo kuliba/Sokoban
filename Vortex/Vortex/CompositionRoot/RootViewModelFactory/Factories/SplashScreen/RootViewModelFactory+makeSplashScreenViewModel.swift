@@ -179,8 +179,8 @@ private extension SplashScreenState.Settings {
 
 private extension SplashScreenState.Settings.Logo {
     
-    static let logo: Self = .init(color: .init(hex: "FFFFFF"), shadow: .bank)
-    static let footer: Self = .init(color: .init(hex: "FFFFFF"), shadow: .name)
+    static let logo:   Self = .init(color: .init(hex: "FFFFFF"), shadow: .logo)
+    static let footer: Self = .init(color: .init(hex: "FFFFFF"), shadow: .footer)
 }
 
 private extension SplashScreenState.Settings.Text {
@@ -210,7 +210,7 @@ private extension String {
 
 private extension SplashScreenState.Settings.Shadow {
     
-    static let bank: Self = .init(color: .init(hex: "000000"), opacity: 0.25, radius: 64, x: 0, y: 4)
-    static let name: Self = .init(color: .init(hex: "000000"), opacity: 0.25, radius: 4, x: 0, y: 4)
-    static let text: Self = .init(color: .init(hex: "000000"), opacity: 0.25, radius: 12, x: 0, y: 4)
+    static let logo:   Self = .init(color: .init(hex: "000000"), opacity: 0.25, radius: 64, x: 0, y: 4)
+    static let text:   Self = .init(color: .init(hex: "000000"), opacity: 0.25, radius: 12, x: 0, y: 4)
+    static let footer: Self = .init(color: .init(hex: "000000"), opacity: 0.25, radius:  4, x: 0, y: 4)
 }
