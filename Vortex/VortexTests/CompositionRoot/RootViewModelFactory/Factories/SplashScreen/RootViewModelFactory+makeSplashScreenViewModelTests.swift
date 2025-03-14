@@ -195,17 +195,17 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
                 color: .init(hex: "FFFFFF"),
                 shadow: .init(color: .init(hex: "000000"), opacity: 0.25, radius: 64, x: 0, y: 4)
             ),
-            name: .init(
-                color: .init(hex: "FFFFFF"),
-                shadow: .init(color: .init(hex: "000000"), opacity: 0.25, radius: 4, x: 0, y: 4)
-            ),
             text: .init(
                 color: .init(hex: "FFFFFF"),
                 size: 24,
                 value: "Добрый вечер!",
                 shadow: .init(color: .init(hex: "000000"), opacity: 0.25, radius: 12, x: 0, y: 4)
             ),
-            subtext: nil
+            subtext: nil,
+            footer: .init(
+                color: .init(hex: "FFFFFF"),
+                shadow: .init(color: .init(hex: "000000"), opacity: 0.25, radius: 4, x: 0, y: 4)
+            )
         )
     }
     

@@ -35,22 +35,22 @@ extension SplashScreenState {
         
         public let image: Image
         public let bank: Logo
-        public let name: Logo
         public let text: Text
         public let subtext: Text?
+        public let footer: Logo
         
         public init(
             image: Image,
             bank: Logo,
-            name: Logo,
             text: Text,
-            subtext: Text?
+            subtext: Text?,
+            footer: Logo
         ) {
             self.image = image
             self.bank = bank
-            self.name = name
             self.text = text
             self.subtext = subtext
+            self.footer = footer
         }
     }
 }

@@ -224,7 +224,7 @@ private extension SplashScreenViewModel {
 
 extension SplashScreenState.Settings {
     
-    static let preview: Self = .init(image: .init("splash"), bank: .preview, name: .preview, text: .preview, subtext: nil)
+    static let preview: Self = .init(image: .init("splash"), bank: .preview, text: .preview, subtext: nil, footer: .preview)
 }
 
 extension SplashScreenState.Settings.Logo {

@@ -57,8 +57,8 @@ private extension SplashScreenContentView {
         
         config.footer
             .renderingMode(.template)
-            .foregroundColor(state.settings.name.color)
-            .shadow(state.settings.name.shadow)
+            .foregroundColor(state.settings.footer.color)
+            .shadow(state.settings.footer.shadow)
             .padding(.vertical, config.footerVPadding)
     }
     

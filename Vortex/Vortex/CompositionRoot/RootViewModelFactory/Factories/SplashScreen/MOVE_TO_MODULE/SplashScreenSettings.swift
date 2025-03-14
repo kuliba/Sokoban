@@ -39,6 +39,7 @@ extension SplashScreenSettings {
         let value: String
         let shadow: Shadow
     }
+    
     struct Shadow: Equatable {
         
         let color: String
