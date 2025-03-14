@@ -61,7 +61,7 @@ private extension SplashScreenContentView {
         
         config.name
             .renderingMode(.template)
-            .foregroundColor(config.nameColor)
+            .foregroundColor(state.settings.name.color)
             .shadow(state.settings.name.shadow)
             .padding(.vertical, config.nameVPadding)
     }

@@ -12,7 +12,6 @@ public struct SplashScreenContentViewConfig: Equatable {
     public let logo: Image
     public let logoSize: CGFloat
     public let name: Image
-    public let nameColor: Color
     public let nameVPadding: CGFloat
     public let spacing: CGFloat
     public let textFont: Font
@@ -23,7 +22,6 @@ public struct SplashScreenContentViewConfig: Equatable {
         logo: Image,
         logoSize: CGFloat,
         name: Image,
-        nameColor: Color,
         nameVPadding: CGFloat,
         spacing: CGFloat,
         textFont: Font,
@@ -33,7 +31,6 @@ public struct SplashScreenContentViewConfig: Equatable {
         self.logo = logo
         self.logoSize = logoSize
         self.name = name
-        self.nameColor = nameColor
         self.nameVPadding = nameVPadding
         self.spacing = spacing
         self.textFont = textFont

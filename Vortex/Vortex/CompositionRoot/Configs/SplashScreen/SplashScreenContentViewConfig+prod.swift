@@ -14,7 +14,6 @@ extension SplashScreenContentViewConfig {
         logo: .splashScreenLogo,
         logoSize: 64,
         name: .splashScreenName,
-        nameColor: .pink,
         nameVPadding: 48,
         spacing: 32,
         textFont: .textH1Sb24322(),
