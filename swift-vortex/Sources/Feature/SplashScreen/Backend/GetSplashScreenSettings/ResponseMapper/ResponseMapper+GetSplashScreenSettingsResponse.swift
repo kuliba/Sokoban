@@ -14,24 +14,24 @@ extension ResponseMapper {
     
     public struct SplashScreenSettings: Equatable {
         
-        public let link: String?
+        public let link: String
         public let viewDuration: Int?
         public let hasAnimation: Bool
-        public let bankLogo: Logo?
-        public let text: Text?
+        public let bankLogo: Logo
+        public let text: Text
         public let background: Background?
         public let subtext: Text?
-        public let bankName: Logo?
+        public let bankName: Logo
         
         public init(
-            link: String?,
+            link: String,
             viewDuration: Int?,
             hasAnimation: Bool,
-            bankLogo: Logo?,
-            text: Text?,
+            bankLogo: Logo,
+            text: Text,
             background: Background?,
             subtext: Text?,
-            bankName: Logo?
+            bankName: Logo
         ) {
             self.link = link
             self.viewDuration = viewDuration
@@ -46,12 +46,12 @@ extension ResponseMapper {
     
     public struct Logo: Equatable {
         
-        public let color: String?
-        public let shadow: Shadow?
+        public let color: String
+        public let shadow: Shadow
         
         public init(
-            color: String? = nil,
-            shadow: Shadow? = nil
+            color: String,
+            shadow: Shadow
         ) {
             self.color = color
             self.shadow = shadow
@@ -60,16 +60,16 @@ extension ResponseMapper {
     
     public struct Text: Equatable {
         
-        public let color: String?
-        public let size: Int?
-        public let value: String?
-        public let shadow: Shadow?
+        public let color: String
+        public let size: Double
+        public let value: String
+        public let shadow: Shadow
         
         public init(
-            color: String? = nil,
-            size: Int? = nil,
-            value: String? = nil,
-            shadow: Shadow?
+            color: String,
+            size: Double,
+            value: String,
+            shadow: Shadow
         ) {
             self.color = color
             self.size = size
@@ -82,12 +82,12 @@ extension ResponseMapper {
         
         public let hasBackground: Bool
         public let color: String?
-        public let opacity: Int?
+        public let opacity: Double?
         
         public init(
             hasBackground: Bool,
             color: String? = nil,
-            opacity: Int? = nil
+            opacity: Double? = nil
         ) {
             self.hasBackground = hasBackground
             self.color = color
@@ -97,18 +97,18 @@ extension ResponseMapper {
     
     public struct Shadow: Equatable {
         
-        public let x: Int?
-        public let y: Int?
-        public let blur: Int?
-        public let color: String?
-        public let opacity: Int?
+        public let x: Double
+        public let y: Double
+        public let blur: Double
+        public let color: String
+        public let opacity: Double
         
         public init(
-            x: Int?,
-            y: Int?,
-            blur: Int?,
-            color: String?,
-            opacity: Int?
+            x: Double,
+            y: Double,
+            blur: Double,
+            color: String,
+            opacity: Double
         ) {
             self.x = x
             self.y = y

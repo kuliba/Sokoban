@@ -7,10 +7,12 @@
 
 import SwiftUI
 
-// TODO: - move to UIPrimitives
+// TODO: - move to UIPrimitives??
 extension View {
     
-    func shadow(_ shadow: Shadow) -> some View {
+    func shadow(
+        _ shadow: SplashScreenState.Settings.Shadow
+    ) -> some View {
         
         self.shadow(
             color: shadow.color.opacity(shadow.opacity),
@@ -19,13 +21,4 @@ extension View {
             y: shadow.y
         )
     }
-}
-
-struct Shadow: Equatable {
-    
-    let color: Color
-    let opacity: Double
-    let radius: CGFloat
-    let x: CGFloat
-    let y: CGFloat
 }

@@ -69,7 +69,7 @@ private extension SplashScreenState {
             return 0
         }
     }
-
+    
     var scaleEffect: CGFloat {
         
         switch phase {
@@ -108,10 +108,7 @@ struct SplashScreenView_Previews: PreviewProvider {
     ) -> some View {
         
         SplashScreenImageView(
-            state: .init(
-                phase: phase,
-                settings: .init(image: .morning)
-            )
+            state: .init(phase: phase, settings: .preview)
         )
         .ignoresSafeArea()
     }

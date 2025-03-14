@@ -190,10 +190,62 @@ final class SplashScreenReducerTests: XCTestCase {
     }
     
     private func makeSettings(
-        image: Image = .init(systemName: "star")
+        image: Image = .init(systemName: "star"),
+        bank: SUT.State.Settings.Logo? = nil,
+        name: SUT.State.Settings.Logo? = nil,
+        text: SUT.State.Settings.Text? = nil,
+        subtext: SUT.State.Settings.Text? = nil
     ) -> SUT.State.Settings {
         
-        return .init(image: image)
+        return .init(
+            image: image,
+            bank: bank ?? makeBank(),
+            name: name ?? makeName(),
+            text: text ?? makeText(),
+            subtext: subtext
+        )
+    }
+    
+    private func makeBank(
+        color: Color = .red,
+        shadow: SplashScreenState.Settings.Shadow? = nil
+    ) -> SUT.State.Settings.Logo {
+        
+        return .init(color: color, shadow: shadow ?? makeShadow())
+    }
+    
+    private func makeName(
+        color: Color = .red,
+        shadow: SplashScreenState.Settings.Shadow? = nil
+    ) -> SUT.State.Settings.Logo {
+        
+        return .init(color: color, shadow: shadow ?? makeShadow())
+    }
+    
+    private func makeText(
+        color: Color = .primary,
+        size: CGFloat = .random(in: 1..<100),
+        value: String = anyMessage(),
+        shadow: SplashScreenState.Settings.Shadow? = nil
+    ) -> SUT.State.Settings.Text {
+        
+        return .init(
+            color: color,
+            size: size,
+            value: value,
+            shadow: shadow ?? makeShadow()
+        )
+    }
+    
+    private func makeShadow(
+        color: Color = .primary,
+        opacity: Double = .random(in: 1..<100),
+        radius: CGFloat = .random(in: 1..<100),
+        x: CGFloat = .random(in: 1..<100),
+        y: CGFloat = .random(in: 1..<100)
+    ) -> SUT.State.Settings.Shadow {
+     
+        return .init(color: color, opacity: opacity, radius: radius, x: x, y: y)
     }
     
     @discardableResult

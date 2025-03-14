@@ -24,10 +24,11 @@ private extension ResponseMapper.GetSplashScreenSettingsResponse {
     init(_ data: ResponseMapper._Data) throws {
         
         guard let splashSettings = data.splash,
-              let serial = data.serial else { throw ResponseFailure() }
+              let serial = data.serial
+        else { throw ResponseFailure() }
         
         self.init(
-            list: splashSettings.map(ResponseMapper.SplashScreenSettings.init),
+            list: splashSettings.compactMap(\.settings),
             serial: serial
         )
     }
@@ -35,43 +36,52 @@ private extension ResponseMapper.GetSplashScreenSettingsResponse {
     struct ResponseFailure: Error {}
 }
 
-private extension ResponseMapper.SplashScreenSettings {
+private extension ResponseMapper._Data._SplashSettings {
     
-    init(_ data: ResponseMapper._Data._SplashSettings) {
+    var settings: ResponseMapper.SplashScreenSettings? {
         
-        self.init(
-            link: data.link,
-            viewDuration: data.viewDuration,
-            hasAnimation: data.hasAnimation ?? false,
-            bankLogo: data.bankLogo.flatMap(ResponseMapper.Logo.init),
-            text: data.text.flatMap(ResponseMapper.Text.init),
-            background: data.background.flatMap(ResponseMapper.Background.init),
-            subtext: data.subtext.flatMap(ResponseMapper.Text.init),
-            bankName: data.bankName.flatMap(ResponseMapper.Logo.init)
+        guard let link,
+              let bankLogo = bankLogo?.logo,
+              let text = text?.text,
+              let bankName = bankName?.logo
+        else { return nil }
+        
+        return .init(
+            link: link,
+            viewDuration: viewDuration,
+            hasAnimation: hasAnimation ?? false,
+            bankLogo: bankLogo,
+            text: text,
+            background: background.flatMap(ResponseMapper.Background.init),
+            subtext: subtext?.text,
+            bankName: bankName
         )
     }
 }
 
-private extension ResponseMapper.Logo {
+private extension ResponseMapper._Data._Logo {
     
-    init(_ data: ResponseMapper._Data._Logo) {
+    var logo: ResponseMapper.Logo? {
         
-        self.init(
-            color: data.color,
-            shadow: data.shadow.flatMap(ResponseMapper.Shadow.init)
-        )
+        guard let color, let shadow = shadow?.shadow
+        else { return nil }
+        
+        return .init(color: color, shadow: shadow)
     }
 }
 
-private extension ResponseMapper.Text {
+private extension ResponseMapper._Data._Text {
     
-    init(_ data: ResponseMapper._Data._Text) {
+    var text: ResponseMapper.Text? {
         
-        self.init(
-            color: data.color,
-            size: data.size,
-            value: data.value,
-            shadow: data.shadow.flatMap(ResponseMapper.Shadow.init)
+        guard let color, let size, let value, let shadow = shadow?.shadow
+        else { return nil }
+        
+        return .init(
+            color: color,
+            size: size,
+            value: value,
+            shadow: shadow
         )
     }
 }
@@ -88,17 +98,14 @@ private extension ResponseMapper.Background {
     }
 }
 
-private extension ResponseMapper.Shadow {
+private extension ResponseMapper._Data._Shadow {
     
-    init?(_ data: ResponseMapper._Data._Shadow) {
+    var shadow: ResponseMapper.Shadow? {
         
-        self.init(
-            x: data.x,
-            y: data.y,
-            blur: data.blur,
-            color: data.color,
-            opacity: data.opacity
-        )
+        guard let x, let y, let blur, let color, let opacity
+        else { return nil }
+        
+        return .init(x: x, y: y, blur: blur, color: color, opacity: opacity)
     }
 }
 
@@ -130,7 +137,7 @@ private extension ResponseMapper {
         struct _Text: Decodable {
             
             let color: String?
-            let size: Int?
+            let size: Double?
             let value: String?
             let shadow: _Shadow?
         }
@@ -139,16 +146,16 @@ private extension ResponseMapper {
             
             let hasBackground: Bool?
             let color: String?
-            let opacity: Int?
+            let opacity: Double?
         }
         
         struct _Shadow: Decodable {
             
-            let x: Int?
-            let y: Int?
-            let blur: Int?
+            let x: Double?
+            let y: Double?
+            let blur: Double?
             let color: String?
-            let opacity: Int?
+            let opacity: Double?
         }
     }
 }
