@@ -29,7 +29,6 @@ struct RootBinderView: View {
         ZStack {
             
             components.splashScreenView(splash: binder.content.splash)
-                .ignoresSafeArea()
                 .zIndex(1.0)
             
             RxWrapperView(model: binder.flow) { state, event in

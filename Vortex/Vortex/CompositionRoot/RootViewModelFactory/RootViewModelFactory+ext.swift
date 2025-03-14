@@ -411,6 +411,11 @@ extension RootViewModelFactory {
                 self?.scheduleGetAndCacheSplashScreenTimePeriods()
             }
             
+            performOrWaitForAuthorized { [weak self] in
+                
+                self?.scheduleGetAndCacheSplashImages()
+            }
+            
             bindings.formUnion(splashEvents(splash: splash))
         }
         

@@ -1752,7 +1752,6 @@
 		2AE2662B2C18994E0054C274 /* FraudPaymentCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE2662A2C18994E0054C274 /* FraudPaymentCompleteView.swift */; };
 		2AE2662D2C18999B0054C274 /* FraudPaymentCompleteViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE2662C2C18999B0054C274 /* FraudPaymentCompleteViewConfig.swift */; };
 		2AE2662F2C195A850054C274 /* TransactionDetailButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE2662E2C195A850054C274 /* TransactionDetailButton.swift */; };
-		2AE296632D7C67EE007DCE85 /* RootViewModelFactory+makeSplashScreenTimePeriodsLoaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE296622D7C67EE007DCE85 /* RootViewModelFactory+makeSplashScreenTimePeriodsLoaders.swift */; };
 		2AE296652D7C6871007DCE85 /* RootViewModelFactory+SplashScreenTimePeriods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE296642D7C6871007DCE85 /* RootViewModelFactory+SplashScreenTimePeriods.swift */; };
 		2AE2B9AE2B8DE40400B86D56 /* PaymentsTransfersNavigationStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE2B9AD2B8DE40400B86D56 /* PaymentsTransfersNavigationStateManager.swift */; };
 		2AE2B9B02B8DFF7B00B86D56 /* PaymentsTransfersEffectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE2B9AF2B8DFF7B00B86D56 /* PaymentsTransfersEffectHandler.swift */; };
@@ -1877,6 +1876,7 @@
 		2AFA3B152CB78DC10019AFBA /* Refreshable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFA3B142CB78DC10019AFBA /* Refreshable.swift */; };
 		2AFA4BD52A9F546000D8CBA9 /* Model+AbroadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFA4BD42A9F546000D8CBA9 /* Model+AbroadTests.swift */; };
 		2AFB97782CFE4066007B1506 /* RootViewModelFactory+makePaymentsTransfersPersonalContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFB97772CFE4066007B1506 /* RootViewModelFactory+makePaymentsTransfersPersonalContent.swift */; };
+		2AFC34A42D830EC3000C6FBA /* SplashScreenContentViewConfig+prod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFC34A32D830EC3000C6FBA /* SplashScreenContentViewConfig+prod.swift */; };
 		2AFC3A932C53C721000252A1 /* PaymentProviderServicePickerFlowModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFC3A922C53C721000252A1 /* PaymentProviderServicePickerFlowModelFactory.swift */; };
 		2AFD59DB2B6F703800C86FBF /* RequestFactory+createGetC2BSubRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD59DA2B6F703800C86FBF /* RequestFactory+createGetC2BSubRequest.swift */; };
 		2AFD59DD2B6F70F300C86FBF /* RequestFactory+createGetC2BSubRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD59DC2B6F70F300C86FBF /* RequestFactory+createGetC2BSubRequestTests.swift */; };
@@ -3085,6 +3085,8 @@
 		83F775DE2CA48B4F00A05F69 /* MarketShowcaseWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F775DD2CA48B4F00A05F69 /* MarketShowcaseWrapperView.swift */; };
 		83F775E22CA5374400A05F69 /* MarketShowcaseComposerNanoServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F775E12CA5374400A05F69 /* MarketShowcaseComposerNanoServices.swift */; };
 		83F775E42CA53A3600A05F69 /* String+openLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F775E32CA53A3600A05F69 /* String+openLink.swift */; };
+		83F7C2112D82D89B002EBE6A /* ViewComponents+makeSavingsAccountDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F7C2102D82D89B002EBE6A /* ViewComponents+makeSavingsAccountDetails.swift */; };
+		83F7C2132D82E1D7002EBE6A /* ViewComponents+makeSavingsAccountInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F7C2122D82E1D7002EBE6A /* ViewComponents+makeSavingsAccountInfo.swift */; };
 		83FAD88529CD98F400474B06 /* PaymentsServicesItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FAD88429CD98F400474B06 /* PaymentsServicesItemViewModel.swift */; };
 		83FAD88729CD993700474B06 /* PaymentsServicesSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FAD88629CD993700474B06 /* PaymentsServicesSectionViewModel.swift */; };
 		83FAD88B29CD9D6100474B06 /* PaymentsServicesLatestPaymentsSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FAD88A29CD9D6100474B06 /* PaymentsServicesLatestPaymentsSectionViewModel.swift */; };
@@ -5567,7 +5569,6 @@
 		2AE2662A2C18994E0054C274 /* FraudPaymentCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FraudPaymentCompleteView.swift; sourceTree = "<group>"; };
 		2AE2662C2C18999B0054C274 /* FraudPaymentCompleteViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FraudPaymentCompleteViewConfig.swift; sourceTree = "<group>"; };
 		2AE2662E2C195A850054C274 /* TransactionDetailButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionDetailButton.swift; sourceTree = "<group>"; };
-		2AE296622D7C67EE007DCE85 /* RootViewModelFactory+makeSplashScreenTimePeriodsLoaders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeSplashScreenTimePeriodsLoaders.swift"; sourceTree = "<group>"; };
 		2AE296642D7C6871007DCE85 /* RootViewModelFactory+SplashScreenTimePeriods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+SplashScreenTimePeriods.swift"; sourceTree = "<group>"; };
 		2AE2B9AD2B8DE40400B86D56 /* PaymentsTransfersNavigationStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersNavigationStateManager.swift; sourceTree = "<group>"; };
 		2AE2B9AF2B8DFF7B00B86D56 /* PaymentsTransfersEffectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersEffectHandler.swift; sourceTree = "<group>"; };
@@ -5682,6 +5683,7 @@
 		2AFA3B142CB78DC10019AFBA /* Refreshable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Refreshable.swift; sourceTree = "<group>"; };
 		2AFA4BD42A9F546000D8CBA9 /* Model+AbroadTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+AbroadTests.swift"; sourceTree = "<group>"; };
 		2AFB97772CFE4066007B1506 /* RootViewModelFactory+makePaymentsTransfersPersonalContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makePaymentsTransfersPersonalContent.swift"; sourceTree = "<group>"; };
+		2AFC34A32D830EC3000C6FBA /* SplashScreenContentViewConfig+prod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SplashScreenContentViewConfig+prod.swift"; sourceTree = "<group>"; };
 		2AFC3A922C53C721000252A1 /* PaymentProviderServicePickerFlowModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProviderServicePickerFlowModelFactory.swift; sourceTree = "<group>"; };
 		2AFD59DA2B6F703800C86FBF /* RequestFactory+createGetC2BSubRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetC2BSubRequest.swift"; sourceTree = "<group>"; };
 		2AFD59DC2B6F70F300C86FBF /* RequestFactory+createGetC2BSubRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetC2BSubRequestTests.swift"; sourceTree = "<group>"; };
@@ -6875,6 +6877,8 @@
 		83F775DD2CA48B4F00A05F69 /* MarketShowcaseWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseWrapperView.swift; sourceTree = "<group>"; };
 		83F775E12CA5374400A05F69 /* MarketShowcaseComposerNanoServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseComposerNanoServices.swift; sourceTree = "<group>"; };
 		83F775E32CA53A3600A05F69 /* String+openLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+openLink.swift"; sourceTree = "<group>"; };
+		83F7C2102D82D89B002EBE6A /* ViewComponents+makeSavingsAccountDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeSavingsAccountDetails.swift"; sourceTree = "<group>"; };
+		83F7C2122D82E1D7002EBE6A /* ViewComponents+makeSavingsAccountInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeSavingsAccountInfo.swift"; sourceTree = "<group>"; };
 		83FAD88429CD98F400474B06 /* PaymentsServicesItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesItemViewModel.swift; sourceTree = "<group>"; };
 		83FAD88629CD993700474B06 /* PaymentsServicesSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesSectionViewModel.swift; sourceTree = "<group>"; };
 		83FAD88A29CD9D6100474B06 /* PaymentsServicesLatestPaymentsSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesLatestPaymentsSectionViewModel.swift; sourceTree = "<group>"; };
@@ -9247,6 +9251,7 @@
 		2A1F5E802C26E9FF002B3F65 /* Configs */ = {
 			isa = PBXGroup;
 			children = (
+				2AFC34A22D830EA0000C6FBA /* SplashScreen */,
 				83A3F5B02C9432B800CE8B3B /* BannerPickerSectionStateItemViewConfig+iVortex.swift */,
 				2A5AEF282B7A191B00E935B6 /* ButtonConfig+iVortex.swift */,
 				C17094312D5A285B001E3094 /* StatefulButtonConfig+iVortex.swift */,
@@ -11098,11 +11103,11 @@
 		2A5F09922D7AFAF500776F7C /* Splash */ = {
 			isa = PBXGroup;
 			children = (
+				2A234FC32D47AB3E00EE97BF /* RootViewModelFactory+makeSplashScreenViewModel.swift */,
 				2ACC42162D81BCB400FDED3C /* Model+splash.swift */,
 				2ACC42182D81BFAA00FDED3C /* RootViewModelFactory+splashEvents.swift */,
 				2AE296642D7C6871007DCE85 /* RootViewModelFactory+SplashScreenTimePeriods.swift */,
 				2A5F09932D7AFAFF00776F7C /* RootViewModelFactory+SplashScreenSettings.swift */,
-				2AE296622D7C67EE007DCE85 /* RootViewModelFactory+makeSplashScreenTimePeriodsLoaders.swift */,
 				2ACC42152D81754E00FDED3C /* MOVE_TO_MODULE */,
 			);
 			path = Splash;
@@ -12266,7 +12271,6 @@
 				2A61C50A2CEC577700EA9BB7 /* RootViewModelFactory+makeQRScannerBinder.swift */,
 				2AA09D622CFA162A0062415C /* RootViewModelFactory+makeUserAccount.swift */,
 				2A73BD142CFA281300075DC8 /* RootViewModelFactory+makeUserAccountNavigationStateManager.swift */,
-				2A234FC32D47AB3E00EE97BF /* RootViewModelFactory+makeSplashScreenViewModel.swift */,
 				2A3C2CF32D4BC1C5003FEEFE /* RootViewModelFactory+makeMeToMeNode.swift */,
 				8372A8AF2D685F5F00CD1CFB /* RootViewModelFactory+openSavingsAccountProduct.swift */,
 			);
@@ -13757,6 +13761,14 @@
 				2AF7202E2C749B8200919CAF /* CategorySet.swift */,
 			);
 			path = LoadLatestOperations;
+			sourceTree = "<group>";
+		};
+		2AFC34A22D830EA0000C6FBA /* SplashScreen */ = {
+			isa = PBXGroup;
+			children = (
+				2AFC34A32D830EC3000C6FBA /* SplashScreenContentViewConfig+prod.swift */,
+			);
+			path = SplashScreen;
 			sourceTree = "<group>";
 		};
 		2AFD59EA2B6F98FE00C86FBF /* Infra */ = {
@@ -16980,6 +16992,8 @@
 				8383E8862D708B9900128DE2 /* SavingsAccountNavTitle.swift */,
 				83996F872D67935E00F31950 /* ViewComponents+makeOpenSavingsAccountView.swift */,
 				8372A8AB2D6855A400CD1CFB /* ViewComponents+makeOrderSavingsAccountCompleteView.swift */,
+				83F7C2102D82D89B002EBE6A /* ViewComponents+makeSavingsAccountDetails.swift */,
+				83F7C2122D82E1D7002EBE6A /* ViewComponents+makeSavingsAccountInfo.swift */,
 			);
 			path = SavingsAccount;
 			sourceTree = "<group>";
@@ -22468,6 +22482,7 @@
 				2AE221632C0C3A0000618E7C /* UtilityServiceLabel.swift in Sources */,
 				0C4245782846200600899EB2 /* PaymentPhoneData.swift in Sources */,
 				774A8B652865FDAF00B81140 /* PaymentsSpoilerButtonViewComponent.swift in Sources */,
+				83F7C2132D82E1D7002EBE6A /* ViewComponents+makeSavingsAccountInfo.swift in Sources */,
 				2A3BD6162B6D00DA009B16F7 /* RequestFactory+createGetBankDefaultRequest.swift in Sources */,
 				2A80C6C62B6E216400293FE5 /* MicroServices.Facade+stub.swift in Sources */,
 				C139D9142AFC40B9008B5F5E /* MakeTransferResponse.swift in Sources */,
@@ -22519,7 +22534,6 @@
 				68FFA5282682AF2C002DADFA /* ContactsViewController.swift in Sources */,
 				77333DA3283F75EF00C3036F /* Model+ClientInfo.swift in Sources */,
 				777460F52922D1C900D3FF46 /* ContactsLatestPaymentsSectionView.swift in Sources */,
-				2AE296632D7C67EE007DCE85 /* RootViewModelFactory+makeSplashScreenTimePeriodsLoaders.swift in Sources */,
 				2A3624A92C5F888700174C50 /* AnywayServicePickerFlowModelComposer.swift in Sources */,
 				83F5AD462CB8FD5B0076CC0D /* LandingServices.swift in Sources */,
 				0B66E8DA26CC5F1E00FD735D /* SquareView.swift in Sources */,
@@ -22966,6 +22980,8 @@
 				ED4B5444270345D400C87A1A /* CardsScrollCell.swift in Sources */,
 				2A2E32F929A3A5C6008B9626 /* Model+PaymentsMobileConnection.swift in Sources */,
 				C18D25F82A25AC5A00DF5643 /* StarShape.swift in Sources */,
+				2AFC34A42D830EC3000C6FBA /* SplashScreenContentViewConfig+prod.swift in Sources */,
+				83F7C2112D82D89B002EBE6A /* ViewComponents+makeSavingsAccountDetails.swift in Sources */,
 				0B66E8DC26CC5F4D00FD735D /* QRScannerCodeDelegate.swift in Sources */,
 				77D03869298841E400FBE5AB /* ServerCommands+Subscription.swift in Sources */,
 				C154986C29075D5200D00670 /* ContactsBanksPrefferedSectionViewModel.swift in Sources */,
@@ -27780,7 +27796,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/Vortex.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 100;
+				CURRENT_PROJECT_VERSION = 108;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
@@ -27867,7 +27883,7 @@
 				CODE_SIGN_ENTITLEMENTS = VortexPushServiceExtension/VortexPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 100;
+				CURRENT_PROJECT_VERSION = 108;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VortexPushServiceExtension/Info.plist;
@@ -28197,7 +28213,7 @@
 				CODE_SIGN_ENTITLEMENTS = VortexPushServiceExtension/VortexPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 100;
+				CURRENT_PROJECT_VERSION = 108;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VortexPushServiceExtension/Info.plist;
@@ -28230,7 +28246,7 @@
 				CODE_SIGN_ENTITLEMENTS = VortexPushServiceExtension/VortexPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 100;
+				CURRENT_PROJECT_VERSION = 108;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VortexPushServiceExtension/Info.plist;
@@ -28468,7 +28484,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/VortexRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 100;
+				CURRENT_PROJECT_VERSION = 108;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;
@@ -28553,7 +28569,7 @@
 				CODE_SIGN_ENTITLEMENTS = VortexPushServiceExtension/VortexPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 100;
+				CURRENT_PROJECT_VERSION = 108;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VortexPushServiceExtension/Info.plist;
@@ -29533,7 +29549,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/Vortex.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 100;
+				CURRENT_PROJECT_VERSION = 108;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
@@ -29570,7 +29586,7 @@
 				CODE_SIGN_ENTITLEMENTS = Vortex/VortexRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 100;
+				CURRENT_PROJECT_VERSION = 108;
 				DEVELOPMENT_TEAM = 7YWKFT4W94;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = NO;

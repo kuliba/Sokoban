@@ -10,4 +10,5 @@ import Foundation
 public enum SavingsAccountDetailsEvent: Equatable {
     
     case expanded
+    case showSheet
 }

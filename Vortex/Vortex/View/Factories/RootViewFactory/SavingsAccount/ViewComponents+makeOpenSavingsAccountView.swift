@@ -114,6 +114,7 @@ extension ViewComponents {
             }
             .opacity(state.isLoading ? 0.7 : 1)
             .disabled(state.isLoading)
+            .navigationBarTitleDisplayMode(.inline)
             .loaderOverlay(isLoading: state.isLoading)
         }
     }
@@ -342,5 +343,5 @@ private extension String {
 
 private extension EdgeInsets {
     
-    static let edgeInsets: Self = .init(top: 0, leading: 16, bottom: 0, trailing: 12)
+    static let edgeInsets: Self = .init(top: 0, leading: 2, bottom: 0, trailing: 12)
 }
