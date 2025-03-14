@@ -94,7 +94,10 @@ extension RootViewModelFactory {
     @inlinable
     func getTimePeriodString() -> SplashScreenTimePeriod {
         
-        Calendar.current.timePeriod(for: loadSplashScreenTimePeriods())
+        infra.calendar.timePeriod(
+            for: loadSplashScreenTimePeriods(),
+            with: infra.currentDate
+        )
     }
     
     @inlinable
@@ -111,7 +114,7 @@ private extension Calendar {
     
     func timePeriod(
         for periods: [SplashScreenTimePeriod]?,
-        with currentDate: @escaping () -> Date = Date.init
+        with currentDate: @escaping () -> Date
     ) -> SplashScreenTimePeriod {
         
         let timeString = currentTimeString(currentDate: currentDate)
