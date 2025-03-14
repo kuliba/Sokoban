@@ -17,8 +17,8 @@ extension SplashScreenContentViewConfig {
         nameColor: .pink,
         nameVPadding: 48,
         spacing: 32,
-        textFont: .title,
-        subtextFont: .headline,
+        textFont: .textH1Sb24322(),
+        subtextFont: .textH3R18240(),
         edges: .init(top: 132, leading: 16, bottom: 0, trailing: 16)
     )
 }
