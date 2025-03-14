@@ -147,6 +147,31 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         XCTAssertNoDiff(splash.state.settings, defaultSettings())
     }
     
+    func test_shouldDeliverCachedSettings_onActiveFlag() throws {
+        
+        let period = "EVENING"
+        let text = anyMessage()
+        let cached = try makeCodableSplashScreenSettings(
+            logo: makeLogo(color: "123456"),
+            text: makeText(color: "345678", value: text),
+            footer: makeLogo(color: "234567"),
+            period: period
+        )
+        let storage = makeCodableSplashScreenStorage(
+            entries: [period: makeEntry(items: [cached])]
+        )
+        let localAgent = try LocalAgentStub(value: storage)
+        let model: Model = .mockWithEmptyExcept(localAgent: localAgent)
+        let sut = try makeSUT(calendar: .tokyo, hour: 20, minute: 45, model: model)
+        let splash = makeSplashScreenViewModel(sut)
+        let settings = splash.state.settings
+        
+        XCTAssertNoDiff(settings.text.value, text)
+        XCTAssertNoDiff(settings.logo.color, .init(hex: "123456"))
+        XCTAssertNoDiff(settings.text.color, .init(hex: "345678"))
+        XCTAssertNoDiff(settings.footer.color, .init(hex: "234567"))
+    }
+    
     // MARK: - Helpers Tests
     
     func test_makeTime() throws {
@@ -239,20 +264,31 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         text: CodableSplashScreenSettings.Text? = nil,
         subtext: CodableSplashScreenSettings.Text? = nil,
         footer: CodableSplashScreenSettings.Logo? = nil,
-        imageData: CodableSplashScreenSettings.ImageData = .none,
+        imageData: CodableSplashScreenSettings.ImageData? = nil,
         link: String = anyMessage(),
         period: String = anyMessage()
-    ) -> CodableSplashScreenSettings {
+    ) throws -> CodableSplashScreenSettings {
+        
+        let data = try sampleImageData()
         
         return .init(
             logo: logo ?? makeLogo(),
             text: text ?? makeText(),
             subtext: subtext,
             footer: footer ?? makeLogo(),
-            imageData: imageData,
+            imageData: imageData ?? .data(data),
             link: link,
             period: period
         )
+    }
+    
+    private func sampleImageData(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> Data {
+        
+        let image = UIImage.make(withColor: .red)
+        return try XCTUnwrap(image.pngData())
     }
     
     private func makeLogo(
