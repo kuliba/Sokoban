@@ -32,10 +32,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
     
     func test_shouldSetSplashTextToMorning_onActiveFlag_Tokyo() throws {
         
-        let calendar = calendarTokyo()
-        let date = try makeTime(hour: 10, minute: 20, calendar: calendar)
-        
-        let (sut, _,_) = makeSUT(calendar: calendar, currentDate: { date })
+        let sut = try makeSUT(calendar: calendarTokyo(), hour: 10, minute: 15)
         let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Доброе утро!")
@@ -43,10 +40,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
     
     func test_shouldSetSplashTextToDay_onActiveFlag_Tokyo() throws {
         
-        let calendar = calendarTokyo()
-        let date = try makeTime(hour: 13, minute: 20, calendar: calendar)
-        
-        let (sut, _,_) = makeSUT(calendar: calendar, currentDate: { date })
+        let sut = try makeSUT(calendar: calendarTokyo(), hour: 13, minute: 33)
         let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Добрый день!")
@@ -54,10 +48,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
     
     func test_shouldSetSplashTextToEvening_onActiveFlag_Tokyo() throws {
         
-        let calendar = calendarTokyo()
-        let date = try makeTime(hour: 19, minute: 20, calendar: calendar)
-        
-        let (sut, _,_) = makeSUT(calendar: calendar, currentDate: { date })
+        let sut = try makeSUT(calendar: calendarTokyo(), hour: 19, minute: 45)
         let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Добрый вечер!")
@@ -65,10 +56,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
     
     func test_shouldSetSplashTextToNight_onActiveFlag_Tokyo() throws {
         
-        let calendar = calendarTokyo()
-        let date = try makeTime(hour: 01, minute: 20, calendar: calendar)
-        
-        let (sut, _,_) = makeSUT(calendar: calendar, currentDate: { date })
+        let sut = try makeSUT(calendar: calendarTokyo(), hour: 1, minute: 20)
         let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Доброй ночи!")
@@ -76,10 +64,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
     
     func test_shouldSetSplashTextToMorning_onActiveFlag_Paris() throws {
         
-        let calendar = calendarParis()
-        let date = try makeTime(hour: 10, minute: 20, calendar: calendar)
-        
-        let (sut, _,_) = makeSUT(calendar: calendar, currentDate: { date })
+        let sut = try makeSUT(calendar: calendarParis(), hour: 10, minute: 5)
         let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Доброе утро!")
@@ -87,10 +72,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
     
     func test_shouldSetSplashTextToDay_onActiveFlag_Paris() throws {
         
-        let calendar = calendarParis()
-        let date = try makeTime(hour: 13, minute: 20, calendar: calendar)
-        
-        let (sut, _,_) = makeSUT(calendar: calendar, currentDate: { date })
+        let sut = try makeSUT(calendar: calendarParis(), hour: 13, minute: 45)
         let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Добрый день!")
@@ -98,10 +80,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
     
     func test_shouldSetSplashTextToEvening_onActiveFlag_Paris() throws {
         
-        let calendar = calendarParis()
-        let date = try makeTime(hour: 19, minute: 20, calendar: calendar)
-        
-        let (sut, _,_) = makeSUT(calendar: calendar, currentDate: { date })
+        let sut = try makeSUT(calendar: calendarParis(), hour: 19, minute: 33)
         let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Добрый вечер!")
@@ -109,10 +88,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
     
     func test_shouldSetSplashTextToNight_onActiveFlag_Paris() throws {
         
-        let calendar = calendarParis()
-        let date = try makeTime(hour: 01, minute: 20, calendar: calendar)
-        
-        let (sut, _,_) = makeSUT(calendar: calendar, currentDate: { date })
+        let sut = try makeSUT(calendar: calendarParis(), hour: 1, minute: 33)
         let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Доброй ночи!")
@@ -123,27 +99,41 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
     func test_shouldSetSplashTextWithCustomName_onActiveFlag_Paris() throws {
         
         let (firstName, customName) = (anyMessage(), anyMessage())
-        let calendar = calendarParis()
-        let date = try makeTime(hour: 10, minute: 20, calendar: calendar)
-        
-        let model = try makeModelWithClientInfo(firstName: firstName, customName: customName)
-        let (sut, _,_) = makeSUT(calendar: calendar, currentDate: { date }, model: model)
+        let model = try withClientInfo(firstName: firstName, customName: customName)
+        let sut = try makeSUT(calendar: calendarParis(), hour: 10, minute: 20, model: model)
         let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Доброе утро,\n\(customName)!")
     }
     
+    func test_shouldSetSplashTextWithCustomName_onActiveFlag_Tokyo() throws {
+        
+        let (firstName, customName) = (anyMessage(), anyMessage())
+        let model = try withClientInfo(firstName: firstName, customName: customName)
+        let sut = try makeSUT(calendar: calendarTokyo(), hour: 2, minute: 15, model: model)
+        let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
+        
+        XCTAssertNoDiff(splash.state.settings.text.value, "Доброй ночи,\n\(customName)!")
+    }
+    
     func test_shouldSetSplashTextWithFirstName_onNilCustomName_onActiveFlag_Paris() throws {
         
         let firstName = anyMessage()
-        let calendar = calendarParis()
-        let date = try makeTime(hour: 10, minute: 20, calendar: calendar)
-        
-        let model = try makeModelWithClientInfo(firstName: firstName, customName: nil)
-        let (sut, _,_) = makeSUT(calendar: calendar, currentDate: { date }, model: model)
+        let model = try withClientInfo(firstName: firstName, customName: nil)
+        let sut = try makeSUT(calendar: calendarParis(), hour: 10, minute: 20, model: model)
         let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Доброе утро,\n\(firstName)!")
+    }
+
+    func test_shouldSetSplashTextWithFirstName_onNilCustomName_onActiveFlag_Tokyo() throws {
+        
+        let firstName = anyMessage()
+        let model = try withClientInfo(firstName: firstName, customName: nil)
+        let sut = try makeSUT(calendar: calendarTokyo(), hour: 20, minute: 45, model: model)
+        let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
+        
+        XCTAssertNoDiff(splash.state.settings.text.value, "Добрый вечер,\n\(firstName)!")
     }
 
     // MARK: - Helpers Tests
@@ -159,7 +149,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
     
     // MARK: - Helpers
     
-    private func makeModelWithClientInfo(
+    private func withClientInfo(
         firstName: String,
         customName: String? = nil
     ) throws -> Model {
@@ -169,6 +159,21 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         let model: Model = .mockWithEmptyExcept(localAgent: localAgent)
 
         return model
+    }
+    
+    private func makeSUT(
+        calendar: Calendar,
+        hour: Int,
+        minute: Int,
+        model: Model = .mockWithEmptyExcept(),
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> SUT {
+        
+        let date = try makeTime(hour: hour, minute: minute, calendar: calendar)
+        let sut = makeSUT(calendar: calendar, currentDate: { date }, model: model, file: file, line: line).sut
+        
+        return sut
     }
 }
 
