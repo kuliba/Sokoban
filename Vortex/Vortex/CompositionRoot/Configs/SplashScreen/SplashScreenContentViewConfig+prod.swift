@@ -11,14 +11,14 @@ import SwiftUI
 extension SplashScreenContentViewConfig {
     
     static let prod: Self = .init(
+        edges: .init(top: 132, leading: 16, bottom: 0, trailing: 16),
+        footer: .splashScreenName,
+        footerVPadding: 48,
         logo: .splashScreenLogo,
         logoSize: 64,
-        name: .splashScreenName,
-        nameVPadding: 48,
         spacing: 32,
-        textFont: .textH1Sb24322(),
         subtextFont: .textH3R18240(),
-        edges: .init(top: 132, leading: 16, bottom: 0, trailing: 16)
+        textFont: .textH1Sb24322()
     )
 }
 
@@ -26,7 +26,7 @@ private extension Image {
     
     static let splashScreenLogo = svg(svgString: .logo)
     static let splashScreenName = svg(svgString: .name)
-
+    
     static func svg(
         svgString: String
     ) -> Image {
