@@ -6,9 +6,10 @@
 //
 
 import SwiftUI
+import SelectorComponent
 
 public struct OrderCardView<Confirmation, ConfirmationView>: View
-where ConfirmationView: View{
+where ConfirmationView: View {
     
     let state: State
     let event: (Event) -> Void
@@ -115,19 +116,6 @@ private extension OrderCardView {
         case let .loaded(.success(confirmation)):
             confirmationView(confirmation)
         }
-        //
-        //        private let coordinateSpace: String = "orderScroll"
-        //
-        //        var _body: some View {
-        //            ScrollView(showsIndicators: false) {
-        //#warning("USE SCROLLVIEW")
-        //
-        //                //                orderProcessCardView(state.orderProduct)
-        //                Text("TBD: Form")
-        //            }
-        //            .coordinateSpace(name: coordinateSpace)
-        //        }
-        
     }
     
     func coreFormView(
@@ -156,13 +144,40 @@ private extension OrderCardView {
         .rounded(config.roundedConfig)
     }
     
+    @ViewBuilder
     func cardTypeView(
         _ type: CardType
     ) -> some View {
         
-        CardTypeView(
-            select: type,
-            config: config.cardType
+        SelectorView(
+            state: state.form!.selector,
+            event: {
+                event(.selectorEvents($0))
+            },
+            factory: .init(
+                makeIconView: {
+                    EmptyView()
+                },
+                makeOptionLabel: {
+                    title in  Text(
+                        title.typeText
+                    )
+                },
+                makeSelectedOptionLabel: { title in
+                    Text(title.typeText)
+                },
+                makeToggleLabel: { toggle in
+                    Image.flag
+                        .frame(width: 20, height: 20)
+                }
+            ),
+            config: .init(
+                title: .init(
+                    text: config.cardType.subtitle.text,
+                    config: config.cardType.subtitle.config
+                ),
+                search: config.cardType.subtitle.config
+            )
         )
         .rounded(config.roundedConfig)
     }
@@ -183,5 +198,12 @@ private extension OrderCardView {
 
 private extension Product {
     
-    static let sample: Self = .init(image: "", header: ("", ""), orderOption: ("", ""))
+    static let sample: Self = .init(
+        image: "image", 
+        typeText: "typeText",
+        header: "header",
+        subtitle: "subtitle",
+        orderTitle: "orderTitle",
+        serviceTitle: "serviceTitle"
+    )
 }

@@ -6,6 +6,7 @@
 //
 
 import Combine
+import SelectorComponent
 import SwiftUI
 
 struct OrderCardView_Previews: PreviewProvider {
@@ -137,11 +138,11 @@ where Confirmation == PreviewConfirmation {
         consent: Bool = true,
         messages: Messages = .preview(),
         otp: String? = nil,
-        orderCardResponse: OrderCardResponse? = nil
+        orderCardResponse: OrderCardResponse? = nil,
+        selector: SelectorComponent.Selector<Product> = .preview
     ) -> Self {
         
         return .init(
-            product: .preview,
             type: .preview,
             conditions: conditions,
             tariffs: tariff,
@@ -153,7 +154,8 @@ where Confirmation == PreviewConfirmation {
             consent: consent,
             messages: messages,
             otp: otp,
-            orderCardResponse: orderCardResponse
+            orderCardResponse: orderCardResponse,
+            selector: selector
         )
     }
 }
@@ -174,7 +176,14 @@ where State == PreviewConfirmation {
 
 private extension Product {
     
-    static let preview: Self = .init(image: "", header: ("String", "String"), orderOption: (open: "String", service: "String"))
+    static let preview: Self = .init(
+        image: "image",
+        typeText: "typeText",
+        header: "header",
+        subtitle: "subtitle",
+        orderTitle: "orderTitle",
+        serviceTitle: "serviceTitle"
+    )
 }
 
 private extension CardType {
@@ -260,6 +269,22 @@ private extension ProductConfig {
         cornerRadius: 24,
         background: .blue.opacity(0.1)
     )
+}
+
+private extension SelectorComponent.Selector<Product> {
+
+    static let preview: Self = try! .init(
+        options: [.init(
+        image: "image",
+        typeText: "typeText",
+        header: "header",
+        subtitle: "subtitle",
+        orderTitle: "orderTitle",
+        serviceTitle: "serviceTitle"
+        )],
+        filterPredicate: {_,_ in
+            return false
+        })
 }
 
 private extension ImageViewFactory {
