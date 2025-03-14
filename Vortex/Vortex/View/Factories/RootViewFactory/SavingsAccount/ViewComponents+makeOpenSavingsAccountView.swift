@@ -114,6 +114,7 @@ extension ViewComponents {
             }
             .opacity(state.isLoading ? 0.7 : 1)
             .disabled(state.isLoading)
+            .navigationBarTitleDisplayMode(.inline)
             .loaderOverlay(isLoading: state.isLoading)
         }
     }
