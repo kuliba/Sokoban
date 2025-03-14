@@ -24,7 +24,6 @@ extension ViewComponents {
                 SplashScreenContentView(state: state, config: .prod)
             }
             .animation(.easeOut(duration: 2), value: state)
-            .ignoresSafeArea()
         }
     }
 }
