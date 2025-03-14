@@ -126,9 +126,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         let calendar = calendarParis()
         let date = try makeTime(hour: 10, minute: 20, calendar: calendar)
         
-        let info = makeClientInfoData(firstName: firstName, customName: customName)
-        let localAgent = try LocalAgentStub(value: info)
-        let model: Model = .mockWithEmptyExcept(localAgent: localAgent)
+        let model = try makeModelWithClientInfo(firstName: firstName, customName: customName)
         let (sut, _,_) = makeSUT(calendar: calendar, currentDate: { date }, model: model)
         let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
         
@@ -141,9 +139,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         let calendar = calendarParis()
         let date = try makeTime(hour: 10, minute: 20, calendar: calendar)
         
-        let info = makeClientInfoData(firstName: firstName, customName: nil)
-        let localAgent = try LocalAgentStub(value: info)
-        let model: Model = .mockWithEmptyExcept(localAgent: localAgent)
+        let model = try makeModelWithClientInfo(firstName: firstName, customName: nil)
         let (sut, _,_) = makeSUT(calendar: calendar, currentDate: { date }, model: model)
         let splash = sut.makeSplashScreenViewModel(flag: .init(.active))
         
@@ -159,6 +155,20 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         let timeString = calendar.currentTimeString { date }
         
         XCTAssertNoDiff(timeString, "10:20")
+    }
+    
+    // MARK: - Helpers
+    
+    private func makeModelWithClientInfo(
+        firstName: String,
+        customName: String? = nil
+    ) throws -> Model {
+        
+        let info = makeClientInfoData(firstName: firstName, customName: customName)
+        let localAgent = try LocalAgentStub(value: info)
+        let model: Model = .mockWithEmptyExcept(localAgent: localAgent)
+
+        return model
     }
 }
 
