@@ -223,36 +223,21 @@ extension RootViewModelFactory {
         }
     }
 
-    func getConsents(
-        payload: RemoteServices.RequestFactory.GetConsentsPayload,
-        completion: @escaping (CreateDraftCollateralLoanApplicationDomain.GetConsentsResult<InformerData>) -> Void
-    ) {
-        let getConsents = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createGetConsentsRequest(with:),
-            mapResponse: RemoteServices.ResponseMapper.mapGetConsentsResponse(_:_:),
-            mapError: { Domain.ContentError.init(error: $0, offlineForm: true) }
-        )
-        
-        getConsents(payload) { [getConsents] in
-  
-            completion($0.map { $0 }.mapError { $0 })
-            _ = getConsents
-        }
-    }
-
     func getPDFDocument(
         payload: RemoteServices.RequestFactory.GetConsentsPayload,
         completion: @escaping (PDFDocument?) -> Void
     ) {
-        getConsents(payload: payload) {
+        
+        let getConsents = nanoServiceComposer.compose(
+            createRequest: RequestFactory.createGetConsentsRequest(with:),
+            mapResponse: RemoteServices.ResponseMapper.mapGetConsentsResponse(_:_:),
+            mapError: { Domain.ContentError.init(error: $0) }
+        )
+        
+        getConsents(payload) { [getConsents] in
             
-            switch $0 {
-            case let .success(pdfDocument):
-                completion(pdfDocument)
-                
-            case .failure:
-                completion(nil)
-            }
+            completion(try? $0.get())
+            _ = getConsents
         }
     }
     
