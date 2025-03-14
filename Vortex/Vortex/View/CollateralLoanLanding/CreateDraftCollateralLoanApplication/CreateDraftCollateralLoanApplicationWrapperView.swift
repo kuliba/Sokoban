@@ -95,6 +95,26 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         }
     }
     
+    func getDocumentButton(
+        payload: RemoteServices.RequestFactory.GetConsentsPayload
+    ) -> DocumentButton {
+       
+        var state: DocumentButtonDomain.State = .loading(nil)
+
+        getPDFDocument(payload) {
+            
+            switch $0 {
+            case .none:
+                state = .failure(NSError(domain: "", code: -1))
+
+            case let .some(pdfDocument):
+                state = .completed(pdfDocument)
+            }
+        }
+        
+        return .init(state: state)
+    }
+    
     func buttonBack(event: @escaping (Event) -> Void) -> some View {
         
         Button(action: { event(.back) }) {
@@ -139,20 +159,17 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
     ) -> some View {
         
         switch cover {
-         case let .success(saveConsentsResult):
-             CreateDraftCollateralLoanApplicationCompleteView(
-                 state: PaymentCompletion.Status.completed,
-                 action: goToMain,
-                 makeIconView: factory.makeImageViewWithMD5Hash,
-                 pdfDocumentButton: makePDFDocumentButton(
-                     payload: saveConsentsResult.payload,
-                     getPDFDocument: getPDFDocument
-                 ),
-                 detailsButton: makeDetailButton(payload: saveConsentsResult)
-             )
-             
-         case .failureComplete:
-             PaymentCompleteView(
+        case let .success(saveConsentsResult):
+            CreateDraftCollateralLoanApplicationCompleteView(
+                state: PaymentCompletion.Status.completed,
+                action: goToMain,
+                makeIconView: factory.makeImageViewWithMD5Hash,
+                documentButton: getDocumentButton(payload: saveConsentsResult.payload),
+                detailsButton: makeDetailButton(payload: saveConsentsResult)
+            )
+            
+        case .failureComplete:
+            PaymentCompleteView(
                 state: .init(
                     formattedAmount: "",
                     merchantIcon: nil,
@@ -161,17 +178,10 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
                 goToMain: goToMain,
                 repeat: {
                 },
-                 factory: makePaymentCompleteViewFactory(),
-                 config: .collateralLoanLanding
-             )
-         }    }
-    
-    private func makePDFDocumentButton(
-        payload: RemoteServices.RequestFactory.GetConsentsPayload,
-        getPDFDocument: @escaping PDFDocumentButton.GetPDFDocument
-    ) -> PDFDocumentButton {
-        
-        .init(getDocument: { getPDFDocument(payload, $0) })
+                factory: makePaymentCompleteViewFactory(),
+                config: .collateralLoanLanding
+            )
+        }
     }
     
     func makeDetailButton(
