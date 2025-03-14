@@ -3044,6 +3044,7 @@
 		83CFA29F2C2D7C51003B5E49 /* PanelButtonDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CFA29E2C2D7C51003B5E49 /* PanelButtonDetails.swift */; };
 		83CFA2A12C2D7D9D003B5E49 /* HorizontalPanelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CFA2A02C2D7D9D003B5E49 /* HorizontalPanelButton.swift */; };
 		83CFA91F2D84104D003C2D54 /* LatestPlaceholderConfig+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A556B4D2C7CEB08002050C2 /* LatestPlaceholderConfig+iVortex.swift */; };
+		83CFA9212D846840003C2D54 /* NewInProgressFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CFA9202D846840003C2D54 /* NewInProgressFlag.swift */; };
 		83D6447F2AA0E0C0002D5301 /* LandingMapping in Frameworks */ = {isa = PBXBuildFile; productRef = 83D6447E2AA0E0C0002D5301 /* LandingMapping */; };
 		83D644832AA0F0AC002D5301 /* JsonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D644822AA0F0AC002D5301 /* JsonView.swift */; };
 		83D962B12B63C3570092C61C /* GetProductDynamicParamsListFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D962B02B63C3570092C61C /* GetProductDynamicParamsListFactory.swift */; };
@@ -6836,6 +6837,7 @@
 		83CFA29A2C2D7302003B5E49 /* ControlPanelViewConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPanelViewConfig.swift; sourceTree = "<group>"; };
 		83CFA29E2C2D7C51003B5E49 /* PanelButtonDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelButtonDetails.swift; sourceTree = "<group>"; };
 		83CFA2A02C2D7D9D003B5E49 /* HorizontalPanelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalPanelButton.swift; sourceTree = "<group>"; };
+		83CFA9202D846840003C2D54 /* NewInProgressFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewInProgressFlag.swift; sourceTree = "<group>"; };
 		83D644822AA0F0AC002D5301 /* JsonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonView.swift; sourceTree = "<group>"; };
 		83D962B02B63C3570092C61C /* GetProductDynamicParamsListFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetProductDynamicParamsListFactory.swift; sourceTree = "<group>"; };
 		83DB5BF629A4B8D5005CBD87 /* VerifyCodeResponseError.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = VerifyCodeResponseError.json; sourceTree = "<group>"; };
@@ -11185,6 +11187,7 @@
 				EC4374C72D1D7700009FB5B1 /* SplashScreenFlag.swift */,
 				2A6167302D5BDED90026B036 /* C2GFlag.swift */,
 				2AA9EC3E2D70B67C0056E6D0 /* СreditCardMVPFlag.swift */,
+				83CFA9202D846840003C2D54 /* NewInProgressFlag.swift */,
 			);
 			path = Flags;
 			sourceTree = "<group>";
@@ -23039,6 +23042,7 @@
 				842C42392D11FDD2006A307D /* RootViewModelFactory+makeServiceCategoryFailure.swift in Sources */,
 				A7E314182D3953EA009811EB /* CreateDraftCollateralLoanApplicationWrapperView.swift in Sources */,
 				0B7A18B226836A400007CC75 /* NetworkPDFManager.swift in Sources */,
+				83CFA9212D846840003C2D54 /* NewInProgressFlag.swift in Sources */,
 				ED0AF88F286B68B900F86B68 /* UIImage+Extensions.swift in Sources */,
 				83172A1A2D422E3000722619 /* RootViewModelFactory+makePromoViewModel.swift in Sources */,
 				0B7A18CE2689C4ED0007CC75 /* AddHeaderImageViewController.swift in Sources */,
