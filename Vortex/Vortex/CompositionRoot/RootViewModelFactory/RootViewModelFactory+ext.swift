@@ -40,7 +40,6 @@ extension RootViewModelFactory {
         let featureFlags = FeatureFlags(
             c2gFlag: featureFlags.c2gFlag,
             creditCardMVPFlag: featureFlags.creditCardMVPFlag,
-            getProductListByTypeV6Flag: .active,
             paymentsTransfersFlag: .active,
             collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
             splashScreenFlag: featureFlags.splashScreenFlag,
