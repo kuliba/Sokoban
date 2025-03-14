@@ -86,7 +86,7 @@ struct AmountTextField<InformerPayload>: UIViewRepresentable where InformerPaylo
                 event(.changeDesiredAmount(product.calc.amount.minIntValue))
             } else {
                 
-                let value = min(state.desiredAmount, product.calc.amount.maxIntValue)
+                let value = min(value, product.calc.amount.maxIntValue)
                 event(.changeDesiredAmount(value))
             }
             
