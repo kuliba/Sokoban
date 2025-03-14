@@ -389,7 +389,9 @@ class Model {
         
         auth
             .receive(on: queue)
-            .sink { [unowned self] auth in
+            .sink { [weak self] auth in
+                
+                guard let self else { return }
                 
                 switch auth {
                 case .authorized:
