@@ -39,7 +39,7 @@ extension Model {
     var hideCoverStartSplash: some Publisher<Void, Never> {
         
         auth.compactMap {
-        
+            
             switch $0 {
             case .authorized: return ()
             default:          return nil

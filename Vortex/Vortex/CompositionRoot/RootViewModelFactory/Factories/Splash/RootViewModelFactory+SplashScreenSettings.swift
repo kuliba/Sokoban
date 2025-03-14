@@ -72,18 +72,35 @@ extension RootViewModelFactory {
         forPeriods periods: [String],
         completion: @escaping (SplashScreenSettingsOutcome) -> Void
     ) {
-        loadSplashImagesCache { [weak self] in
-            
-            guard let self else { return }
-            
-            let loader = CategorizedLoader(
-                initialStorage: $0,
-                loadCategories: { $0(periods) },
-                loadItems: splashScreenSettingsRemoteLoad
-            )
-            
-            loader.load { completion($0); _ = loader }
-        }
+        let initialStorage = loadSplashImagesCache()
+        
+        let loader = CategorizedLoader(
+            initialStorage: initialStorage,
+            loadCategories: { $0(periods) },
+            loadItems: splashScreenSettingsRemoteLoad
+        )
+        
+        loader.load { completion($0); _ = loader }
+    }
+    
+    @inlinable
+    func splashScreenSettingsRemoteLoad(
+        period: String,
+        serial: String?,
+        completion: @escaping LoadCompletion<Result<SerialComponents.SerialStamped<String, [SplashScreenSettings]>, Error>>
+    ) {
+        let remoteLoad = nanoServiceComposer.composeSerialResultLoad(
+            createRequest: { serial in
+                
+                try RequestFactory.createGetSplashScreenSettingsRequest(
+                    serial: serial,
+                    period: period
+                )
+            },
+            mapResponse: { ResponseMapper.map(period, $0, $1) }
+        )
+        
+        remoteLoad(serial) { completion($0); _ = remoteLoad }
     }
     
     typealias SplashScreenSettingsOutcome = CategorizedOutcome<String, SplashScreenSettings>
@@ -136,17 +153,16 @@ extension RootViewModelFactory {
     
     /// - Warning: This method is not responsible for threading.
     @inlinable
-    func loadSplashImagesCache(
-        completion: @escaping (SplashScreenStorage?) -> Void
-    ) {
+    func loadSplashImagesCache() -> SplashScreenStorage? {
+        
         guard let storage = model.localAgent.load(type: CodableSplashScreenStorage.self)
         else {
             cacheDebugLog(message: "No SplashScreenSettings.")
-            return completion(nil)
+            return nil
         }
         
         cacheDebugLog(message: "Loaded SplashScreenSettings: \(String(describing: storage))")
-        completion(storage.map { .init(codable: $0) })
+        return storage.map { .init(codable: $0) }
     }
     
     /// - Warning: This method is not responsible for threading.
@@ -177,14 +193,29 @@ extension RootViewModelFactory {
     }
 }
 
-// MARK: - Images
-
-import Foundation
-import RemoteServices
-import SplashScreenBackend
-import SwiftUI
-
 // MARK: - Adapters, Helpers
+
+private extension ResponseMapper {
+    
+    static func map(
+        _ period: String,
+        _ data: Data,
+        _ httpURLResponse: HTTPURLResponse
+    ) -> Result<SerialComponents.SerialStamped<String, [SplashScreenSettings]>, any Error> {
+        
+        return RemoteServices.ResponseMapper
+            .mapGetSplashScreenSettingsResponse(data, httpURLResponse)
+            .map {
+                
+                return .init(
+                    value: $0.list.compactMap {
+                        $0.settings(period: period)
+                    },
+                    serial: $0.serial)
+            }
+            .mapError { $0 }
+    }
+}
 
 private extension CategorizedOutcome
 where Item == SplashScreenSettings {
@@ -243,6 +274,42 @@ extension CategorizedStorage: CustomStringConvertible {
 }
 
 // MARK: - Codable (Caching)
+
+private extension RemoteServices.ResponseMapper.SplashScreenSettings {
+    
+    func settings(
+        period: String
+    ) -> SplashScreenSettings? {
+        
+        return link.map { .init(imageData: nil, link: $0, period: period) }
+    }
+}
+
+struct CodableSplashScreenSettings: Codable {
+    
+    let imageData: ImageData
+    let link: String
+    let period: String
+    
+    enum ImageData: Codable {
+        
+        case data(Data)
+        case failure
+        case none
+    }
+}
+
+extension CodableSplashScreenSettings {
+    
+    var imageDataResult: Result<Data, SplashScreenSettings.DataFailure>? {
+        
+        switch imageData {
+        case let .data(data): return .success(data)
+        case .failure:        return .failure(.init())
+        case .none:           return nil
+        }
+    }
+}
 
 private extension SplashScreenSettings {
     

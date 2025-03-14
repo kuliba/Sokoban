@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import RemoteServices
+import SerialComponents
 import SplashScreenCore
 import VortexTools
 
@@ -43,6 +45,41 @@ extension RootViewModelFactory {
         }
     }
     
+    typealias SplashScreenTimePeriods = SplashScreenCore.SplashScreenTimePeriod
+    
+    @inlinable
+    func makeNoFallbackSplashScreenTimePeriodsLoaders(
+    ) -> (load: Load<[SplashScreenTimePeriods]?>, reload: Load<[SplashScreenTimePeriods]?>) {
+        
+        return composeLoadersWithoutFallback(
+            remoteLoad: getSplashScreenTimePeriods,
+            fromModel: { .init(codable: $0) },
+            toModel: { $0.codable }
+        )
+    }
+    
+    typealias StampedSplashScreenPeriods = SerialComponents.SerialStamped<String, [SplashScreenTimePeriod]>
+    
+    /// Remote.
+    @inlinable
+    func getSplashScreenTimePeriods(
+        serial: String?,
+        completion: @escaping (Result<StampedSplashScreenPeriods, Error>) -> Void
+    ) {
+        let remoteLoad = nanoServiceComposer.composeSerialResultLoad(
+            createRequest: RequestFactory.createGetSplashScreenTimePeriodsRequest,
+            mapResponse: {
+                
+                RemoteServices.ResponseMapper
+                    .mapGetSplashScreenTimePeriodsResponse($0, $1)
+                    .map { .init(value: $0.list.map(\.period), serial: $0.serial) }
+                    .mapError { $0 }
+            }
+        )
+        
+        remoteLoad(serial) { completion($0); _ = remoteLoad }
+    }
+    
     /// Loads cached splash screen time periods with fallback to hardcoded default.
     /// - Warning: This method is not responsible for threading.
     @inlinable
@@ -52,6 +89,19 @@ extension RootViewModelFactory {
         let (loadTimePeriods, _) = makeNoFallbackSplashScreenTimePeriodsLoaders()
         
         loadTimePeriods { completion($0 ?? .default); _ = loadTimePeriods }
+    }
+    
+    @inlinable
+    func getTimePeriodString() -> String {
+        
+        Calendar.current.timePeriod(for: loadSplashScreenTimePeriods())
+    }
+    
+    @inlinable
+    func loadSplashScreenTimePeriods() -> [SplashScreenTimePeriod]? {
+        
+        model.localAgent.load(type: [CodableSplashScreenTimePeriod].self)?
+            .map { .init(codable: $0) }
     }
 }
 
@@ -73,7 +123,7 @@ private extension Calendar {
 
 // MARK: - Defaults
 
-extension Array where Element == SplashScreenTimePeriod {
+private extension Array where Element == SplashScreenTimePeriod {
     
     static let `default`: Self = [
         .init(timePeriod: "MORNING", startTime: "04:00", endTime: "11:59"),
@@ -81,4 +131,40 @@ extension Array where Element == SplashScreenTimePeriod {
         .init(timePeriod: "EVENING", startTime: "18:00", endTime: "23:59"),
         .init(timePeriod: "NIGHT",   startTime: "00:00", endTime: "03:59"),
     ]
+}
+
+// MARK: - Adapters
+
+private extension RemoteServices.ResponseMapper.SplashScreenTimePeriod {
+    
+    var period: SplashScreenCore.SplashScreenTimePeriod {
+        
+        return .init(timePeriod: timePeriod, startTime: startTime, endTime: endTime)
+    }
+}
+
+// MARK: - Codable (Caching)
+
+private struct CodableSplashScreenTimePeriod: Codable {
+    
+    let timePeriod: String
+    let startTime: String
+    let endTime: String
+}
+
+private extension SplashScreenCore.SplashScreenTimePeriod {
+    
+    var codable: CodableSplashScreenTimePeriod {
+        
+        return .init(timePeriod: timePeriod, startTime: startTime, endTime: endTime)
+    }
+    
+    init(codable: CodableSplashScreenTimePeriod) {
+        
+        self.init(
+            timePeriod: codable.timePeriod,
+            startTime: codable.startTime,
+            endTime: codable.endTime
+        )
+    }
 }
