@@ -281,7 +281,7 @@ private extension RemoteServices.ResponseMapper.SplashScreenSettings {
         period: String
     ) -> SplashScreenSettings? {
         
-        return link.map { .init(imageData: nil, link: $0, period: period) }
+        return .init(imageData: nil, link: link, period: period)
     }
 }
 
