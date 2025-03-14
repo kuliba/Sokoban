@@ -117,15 +117,7 @@ private extension SplashScreenSettings {
     
     var _logo: SplashScreenState.Settings.Logo {
         
-        return .init(color: .init(hex: bank.color), shadow: bank.shadow._shadow)
-    }
-    
-    var _footer: SplashScreenState.Settings.Logo {
-        
-        return .init(
-            color: .init(hex: name.color),
-            shadow: name.shadow._shadow
-        )
+        return .init(color: .init(hex: logo.color), shadow: logo.shadow._shadow)
     }
     
     var _text: SplashScreenState.Settings.Text {
@@ -147,6 +139,14 @@ private extension SplashScreenSettings {
             size: subtext.size,
             value: subtext.value,
             shadow: subtext.shadow._shadow
+        )
+    }
+    
+    var _footer: SplashScreenState.Settings.Logo {
+        
+        return .init(
+            color: .init(hex: footer.color),
+            shadow: footer.shadow._shadow
         )
     }
 }

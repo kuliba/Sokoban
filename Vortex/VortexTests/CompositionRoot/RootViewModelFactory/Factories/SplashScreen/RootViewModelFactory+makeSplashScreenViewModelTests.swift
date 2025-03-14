@@ -225,20 +225,20 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
     }
     
     private func makeCodableSplashScreenSettings(
-        bank: CodableSplashScreenSettings.Logo? = nil,
-        name: CodableSplashScreenSettings.Logo? = nil,
+        logo: CodableSplashScreenSettings.Logo? = nil,
         text: CodableSplashScreenSettings.Text? = nil,
         subtext: CodableSplashScreenSettings.Text? = nil,
+        footer: CodableSplashScreenSettings.Logo? = nil,
         imageData: CodableSplashScreenSettings.ImageData = .none,
         link: String = anyMessage(),
         period: String = anyMessage()
     ) -> CodableSplashScreenSettings {
         
         return .init(
-            bank: bank ?? makeLogo(),
-            name: name ?? makeLogo(),
+            logo: logo ?? makeLogo(),
             text: text ?? makeText(),
             subtext: subtext,
+            footer: footer ?? makeLogo(),
             imageData: imageData,
             link: link,
             period: period

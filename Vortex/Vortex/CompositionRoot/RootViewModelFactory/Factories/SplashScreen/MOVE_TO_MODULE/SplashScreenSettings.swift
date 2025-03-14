@@ -12,10 +12,10 @@ import VortexTools
 #warning("move to SplashScreenCore")
 struct SplashScreenSettings: Equatable {
     
-    let bank: Logo
-    let name: Logo
+    let logo: Logo
     let text: Text
     let subtext: Text?
+    let footer: Logo
     
     let imageData: Result<Data, DataFailure>?
     let link: String
