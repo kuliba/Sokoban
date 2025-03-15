@@ -393,7 +393,7 @@ extension RootViewModelFactory {
         updateClientInformAlerts()
             .store(in: &bindings)
         
-        let bannersBox = makeBannersBox(flags: featureFlags)
+        let bannersBox = makeBannersBox()
         
         performOrWaitForAuthorized { [weak bannersBox] in
             
