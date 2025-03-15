@@ -211,7 +211,15 @@ private extension GetShowcaseDomain.Content {
     )
 }
 
-// MARK: - SplashScreenViewModel preview
+// MARK: - SplashScreen preview
+
+extension SplashScreenBinder {
+    
+    static let preview: SplashScreenBinder = .init(
+        content: .preview,
+        flow: .preview
+    ) { _,_ in [] }
+}
 
 private extension SplashScreenViewModel {
     
@@ -220,6 +228,11 @@ private extension SplashScreenViewModel {
         reduce: { state,_ in (state, nil) },
         handleEffect: { _,_ in }
     )
+}
+
+private extension SplashEventsHandler {
+    
+    static let preview: SplashEventsHandler = .init(authOKPublisher: Empty().eraseToAnyPublisher(), startPublisher: Empty().eraseToAnyPublisher(), event: { _ in })
 }
 
 extension SplashScreenState.Settings {

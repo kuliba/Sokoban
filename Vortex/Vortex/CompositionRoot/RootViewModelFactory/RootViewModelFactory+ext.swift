@@ -402,7 +402,7 @@ extension RootViewModelFactory {
         
         // MARK: - Splash Screen
         
-        let splash = makeSplashScreenViewModel(flag: featureFlags.splashScreenFlag)
+        let splash = makeSplashScreenBinder(flag: featureFlags.splashScreenFlag)
         
         if featureFlags.splashScreenFlag.isActive {
             
@@ -415,8 +415,6 @@ extension RootViewModelFactory {
                 
                 self?.scheduleGetAndCacheSplashImages()
             }
-            
-            bindings.formUnion(splashEvents(splash: splash))
         }
         
         let rootViewModel = make(
@@ -773,7 +771,7 @@ private extension RootViewModelFactory {
     func make(
         featureFlags: FeatureFlags,
         bannersBox: any BannersBoxInterface<BannerList>,
-        splash: SplashScreenViewModel,
+        splash: SplashScreenBinder,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeTemplates: @escaping PaymentsTransfersFactory.MakeTemplates,
         fastPaymentsFactory: FastPaymentsFactory,

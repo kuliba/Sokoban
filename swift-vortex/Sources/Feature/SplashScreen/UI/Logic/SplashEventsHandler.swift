@@ -33,7 +33,7 @@ public extension SplashEventsHandler {
     typealias Delay = DispatchQueue.SchedulerTimeType.Stride
     
     func bind(
-        delay: Delay = .seconds(1),
+        delay: Delay,
         on scheduler: AnySchedulerOf<DispatchQueue>
     ) -> Set<AnyCancellable> {
         

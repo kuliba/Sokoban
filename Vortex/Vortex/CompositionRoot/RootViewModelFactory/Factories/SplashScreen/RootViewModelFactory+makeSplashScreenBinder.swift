@@ -1,29 +1,50 @@
 //
-//  RootViewModelFactory+makeSplashScreenViewModel.swift
+//  RootViewModelFactory+makeSplashScreenBinder.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 27.01.2025.
 //
 
+import Combine
 import RxViewModel
 import SplashScreenCore
 import SplashScreenUI
 import SwiftUI
 
+/// This is not a typical `Binder` - `flow` is not intended to be used, but to prevent deallocation.
+typealias SplashScreenBinder = Binder<SplashScreenViewModel, SplashEventsHandler>
+
 extension RootViewModelFactory {
     
     @inlinable
+    func makeSplashScreenBinder(
+        flag: SplashScreenFlag,
+        delay: Delay = .seconds(1)
+    ) -> SplashScreenBinder {
+        
+        let splash = makeSplashScreenViewModel(
+            phase: flag.isActive ? .cover : .hidden
+        )
+        let handler = SplashEventsHandler(
+            authOKPublisher: model.pinOrSensorAuthOK.eraseToAnyPublisher(),
+            startPublisher: model.hideCoverStartSplash.eraseToAnyPublisher(),
+            event: { [weak splash] in splash?.event($0) }
+        )
+        
+        let cancellables = flag.isActive ? handler.bind(delay: delay, on: schedulers.background) : []
+        
+        return .init(content: splash, flow: handler) { _,_ in cancellables }
+    }
+    
+    @inlinable
     func makeSplashScreenViewModel(
-        flag: SplashScreenFlag
+        phase: SplashScreenState.Phase
     ) -> SplashScreenViewModel {
         
         let userName = getUserName()
         let composed = composeSplashScreenSettings().insert(userName: userName)
         
-        let initialState = SplashScreenState(
-            phase: flag.isActive ? .cover : .hidden,
-            settings: composed
-        )
+        let initialState = SplashScreenState(phase: phase, settings: composed)
         let reducer = SplashScreenReducer()
         
         return .init(

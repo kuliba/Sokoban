@@ -33,7 +33,7 @@ struct RootBinderView: View {
         }
         .overlay {
             
-            components.splashScreenView(splash: binder.content.splash)
+            components.splashScreenView(splash: binder.content.splash.content)
                 .ignoresSafeArea()
         }
     }

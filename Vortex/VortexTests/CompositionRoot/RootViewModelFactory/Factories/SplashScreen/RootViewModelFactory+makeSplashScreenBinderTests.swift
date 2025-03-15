@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makeSplashScreenViewModelTests.swift
+//  RootViewModelFactory+makeSplashScreenBinderTests.swift
 //  VortexTests
 //
 //  Created by Igor Malyarov on 14.03.2025.
@@ -9,22 +9,22 @@ import SplashScreenUI
 @testable import Vortex
 import XCTest
 
-final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFactoryTests {
+final class RootViewModelFactory_makeSplashScreenBinderTests: RootViewModelFactoryTests {
     
     // MARK: - phase
     
     func test_shouldSetSplashPhaseToHidden_onInactiveFlag() {
         
         let (sut, _,_) = makeSUT()
-        let splash = sut.makeSplashScreenViewModel(flag: .inactive)
+        let splash = sut.makeSplashScreenBinder(flag: .inactive)
         
-        XCTAssertNoDiff(splash.state.phase, .hidden)
+        XCTAssertNoDiff(splash.content.state.phase, .hidden)
     }
     
     func test_shouldSetSplashPhaseToCover_onActiveFlag() {
         
         let (sut, _,_) = makeSUT()
-        let splash = makeSplashScreenViewModel(sut)
+        let splash = makeSplashScreenBinder(sut)
         
         XCTAssertNoDiff(splash.state.phase, .cover)
     }
@@ -35,7 +35,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         
         let (_, hour, minute) = morning()
         let sut = try makeSUT(calendar: .tokyo, hour: hour, minute: minute)
-        let splash = makeSplashScreenViewModel(sut)
+        let splash = makeSplashScreenBinder(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Доброе утро!")
     }
@@ -44,7 +44,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         
         let (_, hour, minute) = day()
         let sut = try makeSUT(calendar: .tokyo, hour: hour, minute: minute)
-        let splash = makeSplashScreenViewModel(sut)
+        let splash = makeSplashScreenBinder(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Добрый день!")
     }
@@ -53,7 +53,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         
         let (_, hour, minute) = evening()
         let sut = try makeSUT(calendar: .tokyo, hour: hour, minute: minute)
-        let splash = makeSplashScreenViewModel(sut)
+        let splash = makeSplashScreenBinder(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Добрый вечер!")
     }
@@ -62,7 +62,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         
         let (_, hour, minute) = night()
         let sut = try makeSUT(calendar: .tokyo, hour: hour, minute: minute)
-        let splash = makeSplashScreenViewModel(sut)
+        let splash = makeSplashScreenBinder(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Доброй ночи!")
     }
@@ -71,7 +71,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         
         let (_, hour, minute) = morning()
         let sut = try makeSUT(calendar: .paris, hour: hour, minute: minute)
-        let splash = makeSplashScreenViewModel(sut)
+        let splash = makeSplashScreenBinder(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Доброе утро!")
     }
@@ -80,7 +80,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         
         let (_, hour, minute) = day()
         let sut = try makeSUT(calendar: .paris, hour: hour, minute: minute)
-        let splash = makeSplashScreenViewModel(sut)
+        let splash = makeSplashScreenBinder(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Добрый день!")
     }
@@ -89,7 +89,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         
         let (_, hour, minute) = evening()
         let sut = try makeSUT(calendar: .paris, hour: hour, minute: minute)
-        let splash = makeSplashScreenViewModel(sut)
+        let splash = makeSplashScreenBinder(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Добрый вечер!")
     }
@@ -98,7 +98,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         
         let (_, hour, minute) = night()
         let sut = try makeSUT(calendar: .paris, hour: hour, minute: minute)
-        let splash = makeSplashScreenViewModel(sut)
+        let splash = makeSplashScreenBinder(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Доброй ночи!")
     }
@@ -111,7 +111,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         let (firstName, customName) = (anyMessage(), anyMessage())
         let model = try withClientInfo(firstName: firstName, customName: customName)
         let sut = try makeSUT(calendar: .paris, hour: hour, minute: minute, model: model)
-        let splash = makeSplashScreenViewModel(sut)
+        let splash = makeSplashScreenBinder(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Доброе утро,\n\(customName)!")
     }
@@ -122,7 +122,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         let (firstName, customName) = (anyMessage(), anyMessage())
         let model = try withClientInfo(firstName: firstName, customName: customName)
         let sut = try makeSUT(calendar: .tokyo, hour: hour, minute: minute, model: model)
-        let splash = makeSplashScreenViewModel(sut)
+        let splash = makeSplashScreenBinder(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Доброй ночи,\n\(customName)!")
     }
@@ -133,7 +133,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         let firstName = anyMessage()
         let model = try withClientInfo(firstName: firstName, customName: nil)
         let sut = try makeSUT(calendar: .paris, hour: hour, minute: minute, model: model)
-        let splash = makeSplashScreenViewModel(sut)
+        let splash = makeSplashScreenBinder(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Доброе утро,\n\(firstName)!")
     }
@@ -144,7 +144,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         let firstName = anyMessage()
         let model = try withClientInfo(firstName: firstName, customName: nil)
         let sut = try makeSUT(calendar: .tokyo, hour: hour, minute: minute, model: model)
-        let splash = makeSplashScreenViewModel(sut)
+        let splash = makeSplashScreenBinder(sut)
         
         XCTAssertNoDiff(splash.state.settings.text.value, "Добрый вечер,\n\(firstName)!")
     }
@@ -155,7 +155,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         
         let (_, hour, minute) = morning()
         let sut = try makeSUT(calendar: .tokyo, hour: hour, minute: minute)
-        let splash = makeSplashScreenViewModel(sut)
+        let splash = makeSplashScreenBinder(sut)
         
         XCTAssertNoDiff(splash.state.settings, defaultSettings(with: "Доброе утро!"))
     }
@@ -164,7 +164,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         
         let (_, hour, minute) = evening()
         let sut = try makeSUT(calendar: .tokyo, hour: hour, minute: minute)
-        let splash = makeSplashScreenViewModel(sut)
+        let splash = makeSplashScreenBinder(sut)
         
         XCTAssertNoDiff(splash.state.settings, defaultSettings(with: "Добрый вечер!"))
     }
@@ -181,7 +181,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         let model: Model = .mockWithEmptyExcept(localAgent: localAgent)
         // evening
         let sut = try makeSUT(calendar: .tokyo, hour: hour, minute: minute, model: model)
-        let splash = makeSplashScreenViewModel(sut)
+        let splash = makeSplashScreenBinder(sut)
         
         XCTAssertNoDiff(splash.state.settings, defaultSettings())
     }
@@ -199,7 +199,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         let localAgent = try LocalAgentStub(value: storage)
         let model: Model = .mockWithEmptyExcept(localAgent: localAgent)
         let sut = try makeSUT(calendar: .tokyo, hour: hour, minute: minute, model: model)
-        let splash = makeSplashScreenViewModel(sut)
+        let splash = makeSplashScreenBinder(sut)
         
         XCTAssertNoDiff(splash.state.settings, defaultSettings())
     }
@@ -217,7 +217,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         let localAgent = try LocalAgentStub(value: storage)
         let model: Model = .mockWithEmptyExcept(localAgent: localAgent)
         let sut = try makeSUT(calendar: .tokyo, hour: hour, minute: minute, model: model)
-        let splash = makeSplashScreenViewModel(sut)
+        let splash = makeSplashScreenBinder(sut)
         
         XCTAssertNoDiff(splash.state.settings, defaultSettings())
     }
@@ -238,7 +238,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         let localAgent = try LocalAgentStub(value: storage)
         let model: Model = .mockWithEmptyExcept(localAgent: localAgent)
         let sut = try makeSUT(calendar: .tokyo, hour: hour, minute: minute, model: model)
-        let splash = makeSplashScreenViewModel(sut)
+        let splash = makeSplashScreenBinder(sut)
         let settings = splash.state.settings
         
         XCTAssertNoDiff(settings.text.value, text)
@@ -261,7 +261,7 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         let localAgent = try LocalAgentStub(value: storage)
         let model: Model = .mockWithEmptyExcept(localAgent: localAgent)
         let sut = try makeSUT(calendar: .tokyo, hour: hour, minute: minute, model: model)
-        let splash = makeSplashScreenViewModel(sut)
+        let splash = makeSplashScreenBinder(sut)
         let settings = splash.state.settings
         
         XCTAssertNoDiff(settings.subtext?.color, .init(hex: "456789"))
@@ -297,12 +297,12 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         return sut
     }
     
-    private func makeSplashScreenViewModel(
+    private func makeSplashScreenBinder(
         _ sut: SUT,
         flag: SplashScreenFlag = .active
     ) -> Splash {
         
-        sut.makeSplashScreenViewModel(flag: flag)
+        sut.makeSplashScreenBinder(flag: flag).content
     }
     
     private func morning() -> (period: String, hour: Int, minute: Int) {
