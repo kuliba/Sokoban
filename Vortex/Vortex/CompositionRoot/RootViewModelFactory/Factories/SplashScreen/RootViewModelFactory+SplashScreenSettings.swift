@@ -344,7 +344,7 @@ struct CodableSplashScreenSettings: Codable {
         
         case data(Data)
         case failure
-        case none
+        case missing
     }
 }
 
@@ -380,7 +380,7 @@ extension CodableSplashScreenSettings {
         switch imageData {
         case let .data(data): return .success(data)
         case .failure:        return .failure(.init())
-        case .none:           return nil
+        case .missing:        return nil
         }
     }
 }
@@ -457,7 +457,7 @@ private extension SplashScreenSettings {
     var _imageData: CodableSplashScreenSettings.ImageData {
         
         switch imageData {
-        case .none:              return .none
+        case .none:              return .missing
         case .failure:           return .failure
         case let .success(data): return .data(data)
         }

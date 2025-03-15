@@ -147,6 +147,24 @@ final class RootViewModelFactory_makeSplashScreenViewModelTests: RootViewModelFa
         XCTAssertNoDiff(splash.state.settings, defaultSettings())
     }
     
+    func test_shouldDeliverDefaultSettings_onCacheWithMissingImageData_onActiveFlag() throws {
+        
+        let period = "DAY"
+        let cached = try makeCodableSplashScreenSettings(
+            imageData: .missing,
+            period: period
+        )
+        let storage = makeCodableSplashScreenStorage(
+            entries: [period: makeEntry(items: [cached])]
+        )
+        let localAgent = try LocalAgentStub(value: storage)
+        let model: Model = .mockWithEmptyExcept(localAgent: localAgent)
+        let sut = try makeSUT(calendar: .tokyo, hour: 20, minute: 45, model: model)
+        let splash = makeSplashScreenViewModel(sut)
+        
+        XCTAssertNoDiff(splash.state.settings, defaultSettings())
+    }
+    
     func test_shouldDeliverCachedSettings_onActiveFlag() throws {
         
         let period = "EVENING"
