@@ -24,6 +24,31 @@ final class RootViewModelFactory_getAndCacheSplashScreenTimePeriodsTest: SplashS
         ])
     }
     
+    func test_scheduleGetAndCacheSplashScreenTimePeriods_shouldNotClearSplashImagesCache_onMissingCacheAndRemoteFailure() {
+        
+        let (sut, httpClient, logger) = makeSUT()
+        
+        sut.scheduleGetAndCacheSplashScreenTimePeriods()
+        
+        self.awaitActorThreadHop()
+        httpClient.complete(with: anyError())
+        
+        XCTAssertNoDiff(logger.cacheEvent, [])
+    }
+    
+    func test_scheduleGetAndCacheSplashScreenTimePeriods_shouldClearSplashImagesCache_onMissingCacheAndRemoteSuccess() {
+        
+        let (sut, httpClient, logger) = makeSUT()
+        
+        sut.scheduleGetAndCacheSplashScreenTimePeriods()
+        
+        self.awaitActorThreadHop()
+        try? httpClient.complete(with: periods())
+        self.awaitActorThreadHop()
+
+        XCTAssertNoDiff(logger.cacheEvent.map(\.message), ["Cleared SplashImages cache."])
+    }
+    
     // MARK: - getAndCacheSplashScreenTimePeriods
     
     func test_getAndCacheSplashScreenTimePeriods_shouldCallHTTPClient() {
