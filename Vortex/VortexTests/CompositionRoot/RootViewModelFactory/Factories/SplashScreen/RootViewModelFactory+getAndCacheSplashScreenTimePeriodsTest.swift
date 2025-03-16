@@ -8,7 +8,7 @@
 @testable import Vortex
 import XCTest
 
-final class RootViewModelFactory_getAndCacheSplashScreenTimePeriodsTest: RootViewModelFactoryTests {
+final class RootViewModelFactory_getAndCacheSplashScreenTimePeriodsTest: SplashScreenRootViewModelFactoryTests {
     
     func test_scheduleGetAndCacheSplashScreenTimePeriods_shouldCallHTTPClient() {
         
@@ -50,10 +50,65 @@ final class RootViewModelFactory_getAndCacheSplashScreenTimePeriodsTest: RootVie
             self.awaitActorThreadHop()
             httpClient.complete(with: anyError())
         }
+    }
+    
+    func test_getAndCacheSplashScreenTimePeriods_shouldCompleteWithFalse_onEmptyCacheAndRemoteFailure() {
         
-        httpClient.expectRequests(withLastPathComponents: [
-            "getSplashScreenTimePeriods"
-        ])
+        let (sut, httpClient, _) = makeSUT(
+            model: .mockWithEmptyExcept(localAgent: LocalAgentMock(values: []))
+        )
+        
+        getAndCacheSplashScreenTimePeriods(sut: sut, assert: { XCTAssertFalse($0) }) {
+            
+            self.awaitActorThreadHop()
+            httpClient.complete(with: anyError())
+        }
+    }
+    
+    func test_getAndCacheSplashScreenTimePeriods_shouldCompleteWithFalse_onNonEmptyCacheAndRemoteFailure() throws {
+        
+        let (sut, httpClient, _) = makeSUT(model: modelWithCachedPeriods())
+        
+        getAndCacheSplashScreenTimePeriods(sut: sut, assert: { XCTAssertFalse($0) }) {
+            
+            self.awaitActorThreadHop()
+            httpClient.complete(with: anyError())
+        }
+    }
+    
+    func test_getAndCacheSplashScreenTimePeriods_shouldCompleteWithTrue_onMissingCacheAndRemoteSuccess() {
+        
+        let (sut, httpClient, _) = makeSUT()
+        
+        getAndCacheSplashScreenTimePeriods(sut: sut, assert: { XCTAssertTrue($0) }) {
+            
+            self.awaitActorThreadHop()
+            try? httpClient.complete(with: periods())
+        }
+    }
+    
+    func test_getAndCacheSplashScreenTimePeriods_shouldCompleteWithTrue_onNonEmptyCacheAndRemoteSuccessWithDifferentSerial() throws {
+        
+        let (sut, httpClient, _) = makeSUT(model: modelWithCachedPeriods())
+        
+        getAndCacheSplashScreenTimePeriods(sut: sut, assert: { XCTAssertTrue($0) }) {
+            
+            self.awaitActorThreadHop()
+            try? httpClient.complete(with: periods())
+        }
+    }
+    
+    func test_getAndCacheSplashScreenTimePeriods_shouldCompleteWithFalse_onNonEmptyCacheAndRemoteSuccessWithSameSerial() throws {
+        
+        let (sut, httpClient, _) = makeSUT(model: modelWithCachedPeriods(
+            serial: "4bc2481fb8b6661e210b85462b954d05"
+        ))
+        
+        getAndCacheSplashScreenTimePeriods(sut: sut, assert: { XCTAssertFalse($0) }) {
+            
+            self.awaitActorThreadHop()
+            try? httpClient.complete(with: periods())
+        }
     }
     
     // MARK: - Helpers
@@ -76,4 +131,49 @@ final class RootViewModelFactory_getAndCacheSplashScreenTimePeriodsTest: RootVie
         
         wait(for: [exp], timeout: 1.0)
     }
+    
+    private func periods() throws -> Data {
+        
+        return try XCTUnwrap(Data(String.periodsResponse.utf8))
+    }
+    
+    private func modelWithCachedPeriods(
+        period: CodableSplashScreenTimePeriod? = nil,
+        serial: String? = nil
+    ) -> Model {
+        
+        let periods = period ?? makeCodableSplashScreenTimePeriod()
+        let localAgent = LocalAgentMock(stubs: [([periods], serial)])
+        
+        return .mockWithEmptyExcept(localAgent: localAgent)
+    }
+    
+    private func makeCodableSplashScreenTimePeriod(
+        timePeriod: String = anyMessage(),
+        startTime: String = anyMessage(),
+        endTime: String = anyMessage()
+    ) -> CodableSplashScreenTimePeriod {
+        
+        return .init(timePeriod: timePeriod, startTime: startTime, endTime: endTime)
+    }
+}
+
+private extension String {
+    
+    static let periodsResponse = """
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": {
+    "serial": "4bc2481fb8b6661e210b85462b954d05",
+    "splashScreenTimePeriods": [
+      {
+        "timePeriod": "NIGHT",
+        "startTime": "00:00",
+        "endTime": "03:59"
+      }
+    ]
+  }
+}
+"""
 }
