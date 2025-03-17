@@ -227,7 +227,7 @@ private extension OpenSavingsAccountCompleteDomain.Complete.Context {
     ) -> PaymentCompletion {
         
         .init(
-            formattedAmount: formattedAmount,
+            formattedAmount: status == .rejected ? nil : formattedAmount,
             merchantIcon: nil,
             status: status.newStatus(needNewInProgress)
         )
