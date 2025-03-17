@@ -8,15 +8,16 @@
 import SwiftUI
 import SelectorComponent
 
-public struct OrderCardView<Confirmation, ConfirmationView>: View
-where ConfirmationView: View {
+public struct OrderCardView<Confirmation, ConfirmationView, SelectorView>: View
+where ConfirmationView: View,
+      SelectorView: View {
     
-    let state: State
-    let event: (Event) -> Void
-    let config: Config
-    let factory: ImageViewFactory
-    // TODO: move to factory, rename factory
-    let confirmationView: (Confirmation) -> ConfirmationView
+    public typealias Factory = ViewFactory<Confirmation, ConfirmationView, SelectorView>
+    
+    private let state: State
+    private let event: (Event) -> Void
+    private let config: Config
+    private let factory: Factory
     
     private let coordinateSpace: String
     
@@ -24,15 +25,13 @@ where ConfirmationView: View {
         state: State,
         event: @escaping (Event) -> Void,
         config: Config,
-        factory: ImageViewFactory,
-        @ViewBuilder confirmationView: @escaping (Confirmation) -> ConfirmationView,
+        factory: Factory,
         coordinateSpace: String = "orderScroll"
     ) {
         self.state = state
         self.event = event
         self.config = config
         self.factory = factory
-        self.confirmationView = confirmationView
         self.coordinateSpace = coordinateSpace
     }
     
@@ -114,7 +113,7 @@ private extension OrderCardView {
             }
             
         case let .loaded(.success(confirmation)):
-            confirmationView(confirmation)
+            factory.makeConfirmationView(confirmation)
         }
     }
     
@@ -125,7 +124,7 @@ private extension OrderCardView {
         VStack(spacing: config.formSpacing) {
             
             productView(form.product)
-            cardTypeView(form.type)
+            (state.form?.selector).map(selectorView)
             messageView(form.messages)
         }
         .disabled(state.hasConfirmation)
@@ -144,40 +143,12 @@ private extension OrderCardView {
         .rounded(config.roundedConfig)
     }
     
-    @ViewBuilder
-    func cardTypeView(
-        _ type: CardType
+    func selectorView(
+        selector: SelectorComponent.Selector<Product>
     ) -> some View {
         
-        SelectorView(
-            state: state.form!.selector, //TODO:  remove force unwrapped
-            event: { event(.selector($0)) },
-            factory: .init(
-                makeIconView: {
-                    EmptyView()
-                },
-                makeOptionLabel: {
-                    title in  Text(
-                        title.typeText
-                    )
-                },
-                makeSelectedOptionLabel: { title in
-                    Text(title.typeText)
-                },
-                makeToggleLabel: { toggle in
-                    Image.flag
-                        .frame(width: 20, height: 20)
-                }
-            ),
-            config: .init(
-                title: .init(
-                    text: config.cardType.subtitle.text,
-                    config: config.cardType.subtitle.config
-                ),
-                search: config.cardType.subtitle.config
-            )
-        )
-        .rounded(config.roundedConfig)
+        factory.makeSelectorView(selector) { event(.selector($0)) }
+            .rounded(config.roundedConfig)
     }
     
     func messageView(

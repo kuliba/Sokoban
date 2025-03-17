@@ -52,17 +52,7 @@ struct OrderCardView_Previews: PreviewProvider {
             event: { print($0) },
             config: .preview,
             factory: .default
-        ) { confirmation in
-            
-            Color.green
-                .frame(height: 400)
-                .overlay {
-                
-                    Text(String(describing: confirmation))
-                        .foregroundStyle(.white)
-                        .font(.title3)
-                }
-        }
+        )
     }
 }
 
@@ -287,50 +277,33 @@ private extension SelectorComponent.Selector<Product> {
         })
 }
 
-private extension ImageViewFactory {
+private extension ViewFactory where ConfirmationView == Text, SelectorView == Text {
     
-    static let `default`: Self = .init(
-        makeIconView: {
-            switch $0 {
-            case "1":
-                return  .init(
-                    image: .bolt,
-                    publisher: Just(.bolt).eraseToAnyPublisher()
-                )
-                
-            case "2":
-                return  .init(
-                    image: .shield,
-                    publisher: Just(.shield).eraseToAnyPublisher()
-                )
-                
-            default:
-                return .init(
-                    image: .flag,
-                    publisher: Just(.flag).eraseToAnyPublisher()
-                )
-            }
-        },
-        makeBannerImageView: {
-            switch $0 {
-            case "1":
-                return  .init(
-                    image: .shield,
-                    publisher: Just(.shield).eraseToAnyPublisher()
-                )
-                
-            case "2":
-                return  .init(
-                    image: .bolt,
-                    publisher: Just(.bolt).eraseToAnyPublisher()
-                )
-                
-            default:
-                return .init(
-                    image: .percent,
-                    publisher: Just(.percent).eraseToAnyPublisher()
-                )
-            }
-        }
-    )
+    static var `default`: Self {
+        .init(
+            makeConfirmationView: { Text(String(describing: $0)) },
+            makeIconView: {
+                switch $0 {
+                case "1":
+                    return  .init(
+                        image: .shield,
+                        publisher: Just(.shield).eraseToAnyPublisher()
+                    )
+                    
+                case "2":
+                    return  .init(
+                        image: .bolt,
+                        publisher: Just(.bolt).eraseToAnyPublisher()
+                    )
+                    
+                default:
+                    return .init(
+                        image: .percent,
+                        publisher: Just(.percent).eraseToAnyPublisher()
+                    )
+                }
+            },
+            makeSelectorView: { _,_ in Text("Selector") }
+        )
+    }
 }
