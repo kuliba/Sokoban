@@ -468,8 +468,7 @@ extension RootViewModelFactory {
         let getRootNavigation = { select, notify, completion in
             
             self.getRootNavigation(
-                c2gFlag: featureFlags.c2gFlag,
-                orderCardFlag: featureFlags.orderCardFlag, 
+                rootFlags: featureFlags.rootFlags, 
                 makeProductProfileByID: makeProductProfileByID,
                 select: select,
                 notify: notify,
@@ -511,6 +510,18 @@ extension RootViewModelFactory {
         )
         
         return composer.compose(with: rootViewModel)
+    }
+}
+
+extension FeatureFlags {
+    
+    var rootFlags: RootViewModelFactory.RootFlags {
+        
+        .init(
+            c2gFlag: c2gFlag,
+            orderCardFlag: orderCardFlag,
+            newInProgressFlag: newInProgressFlag
+        )
     }
 }
 

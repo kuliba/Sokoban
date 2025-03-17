@@ -14,25 +14,41 @@ extension ViewComponents {
     
     @inlinable
     func makeOrderSavingsAccountCompleteView(
+        newInProgress: NewInProgressFlag,
         _ complete: OpenSavingsAccountCompleteDomain.Complete,
         action: @escaping () -> Void
     ) -> some View {
        
-        makePaymentCompletionLayoutView(
-            state: .init(formattedAmount: complete.context.formattedAmount, merchantIcon: nil, status: complete.context.status.status),
-            statusConfig: .orderSavingsAccount(
-                title: complete.context.formattedAmount != nil
-                ? "Накопительный счет открыт\nи пополнен на сумму"
-                : "Накопительный счет открыт")
-        ) {
-            makeButtons(complete)
-        } details: {
-            EmptyView()
-        } footer: {
-            heroButton(title: "На главный") {
-                action()
-                goToMain()
+        let needNewInProgress: Bool = complete.context.status.status == .inflight && newInProgress.isActive
+        let title: String = complete.context.formattedAmount != nil ? .titleWithTopUp : .titleWithOutTopUp
+        let config: PaymentCompletionConfig = .orderSavingsAccount(title: title)
+        
+        return makePaymentCompletionLayoutView(
+            state: complete.context.state(needNewInProgress),
+            statusConfig: config,
+            buttons: { makeButtons(complete) },
+            details: { details(needNewInProgress) },
+            footer: {
+                heroButton(title: "На главный") {
+                    action()
+                    goToMain()
+                }
             }
+        )
+    }
+    
+    @ViewBuilder
+    func details(
+        _ withDetails: Bool
+    ) -> some View {
+        
+        if withDetails {
+            Text("Баланс обновится после\nобработки операции")
+                .font(.textBodyMR14180())
+                .foregroundColor(.textPlaceholder)
+                .frame(maxHeight: .infinity, alignment: .center)
+        } else {
+            EmptyView()
         }
     }
     
@@ -171,5 +187,40 @@ extension OpenSavingsAccountCompleteDomain.Complete.Context.Status {
         case .suspend:
             return .suspend
         }
+    }
+}
+
+private extension String {
+    
+    static let titleWithTopUp: Self = "Накопительный счет открыт\nи пополнен на сумму"
+    static let titleWithOutTopUp: Self = "Накопительный счет открыт"
+}
+
+private extension OpenSavingsAccountCompleteDomain.Complete.Context.Status {
+    
+    func newStatus(
+        _ newInProgress: Bool
+    ) -> PaymentCompletion.Status {
+        
+        switch self.status {
+        case .inflight:
+            newInProgress ? .completed : .inflight
+            
+        default: self.status
+        }
+    }
+}
+
+private extension OpenSavingsAccountCompleteDomain.Complete.Context {
+    
+    func state(
+        _ needNewInProgress: Bool
+    ) -> PaymentCompletion {
+        
+        .init(
+            formattedAmount: formattedAmount,
+            merchantIcon: nil,
+            status: status.newStatus(needNewInProgress)
+        )
     }
 }

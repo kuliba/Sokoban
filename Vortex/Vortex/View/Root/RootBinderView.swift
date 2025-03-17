@@ -177,8 +177,12 @@ private extension RootBinderView {
                 binder.flow.event(.dismiss)
             }
           
-        case let .savingsAccount(response, updateFastAll):
-            components.makeOrderSavingsAccountCompleteView(response, action: updateFastAll)
+        case let .savingsAccount(response, updateFastAll, flag):
+            components.makeOrderSavingsAccountCompleteView(
+                newInProgress: flag,
+                response,
+                action: updateFastAll
+            )
 
         case let .scanQR(qrScanner):
             qrScannerView(qrScanner)
@@ -340,8 +344,8 @@ extension RootViewNavigation {
         case let .orderCardResponse(orderCardResponse):
             return .orderCardResponse(orderCardResponse)
             
-        case let .savingsAccount(response, updateFastAll):
-            return .savingsAccount(response, updateFastAll)
+        case let .savingsAccount(response, updateFastAll, flag):
+            return .savingsAccount(response, updateFastAll, flag)
             
         case let .scanQR(node):
             return .scanQR(node.model)
@@ -358,7 +362,7 @@ extension RootViewNavigation {
     enum FullScreenCover {
         
         case orderCardResponse(OpenCardDomain.OrderCardResponse)
-        case savingsAccount(OpenSavingsAccountCompleteDomain.Complete, OpenSavingsAccountCompleteDomain.UpdateFastAll)
+        case savingsAccount(OpenSavingsAccountCompleteDomain.Complete, OpenSavingsAccountCompleteDomain.UpdateFastAll, NewInProgressFlag)
         case scanQR(QRScannerDomain.Binder)
         case templates(TemplatesNode)
     }
