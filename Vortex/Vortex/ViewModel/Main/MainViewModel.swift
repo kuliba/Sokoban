@@ -441,6 +441,11 @@ private extension MainViewModel {
         model.products
             .receive(on: scheduler)
             .sink { [unowned self] products in
+                
+                if let accounts = products[.account], !accounts.isEmpty {
+                    handleBanners(sections.map(\.model).productsSection?.productCarouselViewModel.promoProducts)
+                }
+                
                 guard let deposits = products[.deposit], !deposits.isEmpty else { return }
                 
                 let filteredDeposits = deposits.filter { deposit in
@@ -468,8 +473,6 @@ private extension MainViewModel {
                         })
                     ))
                 }
-                
-                handleBanners(sections.map(\.model).productsSection?.productCarouselViewModel.promoProducts)
             }
             .store(in: &bindings)
         
@@ -693,8 +696,6 @@ private extension MainViewModel {
             var newPromo = promoItems
             newPromo?.removeAll(where: { $0.promoItem.promoProduct == .savingsAccount })
             sections.map(\.model).productsSection?.productCarouselViewModel.updatePromo(newPromo)
-        } else {
-            bannersBox.requestUpdate()
         }
     }
 
