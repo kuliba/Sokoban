@@ -19,7 +19,7 @@ public enum Event<Confirmation> {
     case orderCardResult(OrderCardResult)
     case otp(String)
     case setConsent(Bool)
-    case selectorEvents(SelectorEvent<Product>)
+    case selector(SelectorEvent<Product>)
     
     public typealias OrderCardResult = Result<OrderCardResponse, LoadFailure>
 }

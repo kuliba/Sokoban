@@ -52,10 +52,15 @@ extension RootViewModelFactory {
         initialState: OpenCardDomain.State = .init(loadableForm: .loaded(nil))
     ) -> OpenCardDomain.Content {
         
-        let reducer = OpenCardDomain.Reducer { confirmation in
-            
-            { confirmation.otp.event(.otpField(.failure(.serverError($0)))) }
-        }
+        let selectorReducer = SelectorComponent.SelectorReducer<OrderCard.Product>()
+        let reducer = OpenCardDomain.Reducer(
+            otpWitness: { confirmation in
+                
+                { confirmation.otp.event(.otpField(.failure(.serverError($0)))) }
+            },
+            selectorReduce: selectorReducer.reduce(_:_:)
+        )
+
         let effectHandler = OpenCardDomain.EffectHandler(
             load: load,
             loadConfirmation: loadConfirmation,

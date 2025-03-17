@@ -6,16 +6,23 @@
 //
 
 import Foundation
+import SelectorComponent
 
 public final class Reducer<Confirmation> {
     
     private let otpWitness: OTPWitness
+    private let selectorReduce: SelectorReduce
+    
     public typealias OTPWitness = (Confirmation) -> (String) -> Void
+    public typealias SelectorState = SelectorComponent.Selector<Product>
+    public typealias SelectorReduce = (SelectorState, SelectorEvent<Product>) -> (SelectorState, Never?)
     
     public init(
-        otpWitness: @escaping OTPWitness
+        otpWitness: @escaping OTPWitness,
+        selectorReduce: @escaping SelectorReduce
     ) {
         self.otpWitness = otpWitness
+        self.selectorReduce = selectorReduce
     }
 }
 
@@ -70,23 +77,11 @@ public extension Reducer {
                 state.form?.consent = consent
             }
             
-        case let .selectorEvents(events):
+        case let .selector(event):
+            guard let form = state.form
+            else { break }
             
-            switch events {
-            case .toggleOptions:
-                state.form?.selector.isShowingOptions.toggle()
-                
-            case let .selectOption(option):
-                if let form = state.form,
-                   form.selector.options.contains(option) {
-                    
-                    state.form?.selector.selected = option
-                    state.form?.selector.isShowingOptions = false
-                }
-                
-            case let .setSearchQuery(query):
-                state.form?.selector.searchQuery = query
-            }
+            state.form?.selector = selectorReduce(form.selector, event).0
         }
         
         return (state, effect)

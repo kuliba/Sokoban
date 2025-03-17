@@ -150,10 +150,8 @@ private extension OrderCardView {
     ) -> some View {
         
         SelectorView(
-            state: state.form!.selector,
-            event: {
-                event(.selectorEvents($0))
-            },
+            state: state.form!.selector, //TODO:  remove force unwrapped
+            event: { event(.selector($0)) },
             factory: .init(
                 makeIconView: {
                     EmptyView()
