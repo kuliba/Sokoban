@@ -16,6 +16,12 @@ extension RootViewModelFactory {
     
     typealias MakeProductProfileByID = (ProductData.ID, @escaping () -> Void) -> ProductProfileViewModel?
     
+    struct RootFlags {
+        let c2gFlag: C2GFlag
+        let orderCardFlag: OrderCardFlag
+        let newInProgressFlag: NewInProgressFlag
+    }
+    
     @inlinable
     func isUserPersonal() -> Bool {
         
@@ -24,8 +30,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func getRootNavigation(
-        c2gFlag: C2GFlag,
-        orderCardFlag: OrderCardFlag,
+        rootFlags: RootFlags,
         makeProductProfileByID: MakeProductProfileByID,
         select: RootViewSelect,
         notify: @escaping RootViewDomain.Notify,
@@ -37,13 +42,13 @@ extension RootViewModelFactory {
             
         case let .savingsAccount(orderAccountResponse):
             
-            handleSavingsAccount(orderAccountResponse, completion)
+            handleSavingsAccount(orderAccountResponse, rootFlags.newInProgressFlag, completion)
 
         case let .openProduct(type):
             
             switch type {
             case let .card(kind):
-                if orderCardFlag == .active {
+                if rootFlags.orderCardFlag == .active {
                     
                     switch kind {
                     case .form:
@@ -104,7 +109,7 @@ extension RootViewModelFactory {
             
         case .searchByUIN:
             if isUserPersonal() {
-                if c2gFlag.isActive {
+                if rootFlags.c2gFlag.isActive {
                     completion(.searchByUIN(makeSearchByUIN()))
                 } else {
                     completion(.updateForNewPaymentFlow)
@@ -119,7 +124,7 @@ extension RootViewModelFactory {
         
         func makeScanQR() {
             
-            let qrScanner = makeQRScannerBinder(c2gFlag: c2gFlag)
+            let qrScanner = makeQRScannerBinder(c2gFlag: rootFlags.c2gFlag)
             let cancellables = bind(qrScanner)
             
             completion(.scanQR(.init(
@@ -220,6 +225,7 @@ extension RootViewModelFactory {
     
     func handleSavingsAccount(
         _ orderAccountResponse: OpenSavingsAccountDomain.OrderAccountResponse,
+        _ newInProgress: NewInProgressFlag,
         _ completion: @escaping (RootViewNavigation) -> Void
     ) {
         
@@ -245,7 +251,8 @@ extension RootViewModelFactory {
                     details: details,
                     document: document
                 ),
-                model.handleProductsUpdateTotalAll
+                model.handleProductsUpdateTotalAll,
+                newInProgress
             )
         )
     }
