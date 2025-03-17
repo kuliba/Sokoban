@@ -70,6 +70,7 @@ private extension SplashScreenContentView {
             withConfig: .init(textFont: config.textFont, textColor: settings.color),
             alignment: .center
         )
+        .shadow(settings.shadow)
     }
     
     func subtext(
@@ -80,6 +81,7 @@ private extension SplashScreenContentView {
             withConfig: .init(textFont: config.subtextFont, textColor: settings.color),
             alignment: .center
         )
+        .shadow(settings.shadow)
     }
 }
 
