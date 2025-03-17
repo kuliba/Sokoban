@@ -52,7 +52,7 @@ extension RootViewModelFactory {
         initialState: OpenCardDomain.State = .init(loadableForm: .loaded(nil))
     ) -> OpenCardDomain.Content {
         
-        let selectorReducer = SelectorComponent.SelectorReducer<OrderCard.Product>()
+        let selectorReducer = OpenCardDomain.SelectorReduce()
         let reducer = OpenCardDomain.Reducer(
             otpWitness: { confirmation in
                 
