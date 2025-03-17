@@ -78,7 +78,7 @@ extension ViewComponents {
         switch state {
         case let .completed(details):
             WithFullScreenCoverView {
-                circleButton(image: .ic24File, title: "Детали", action: $0)
+                circleButton(image: .ic24Info, title: "Детали", action: $0)
             } sheet: {
                 saTransactionDetails(details: details, dismiss: $0)
             }
