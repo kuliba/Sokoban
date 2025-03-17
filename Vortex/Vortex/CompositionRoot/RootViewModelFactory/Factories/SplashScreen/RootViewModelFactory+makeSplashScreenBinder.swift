@@ -28,12 +28,24 @@ extension RootViewModelFactory {
         let handler = SplashEventsHandler(
             authOKPublisher: model.pinOrSensorAuthOK.eraseToAnyPublisher(),
             startPublisher: model.hideCoverStartSplash.eraseToAnyPublisher(),
-            event: { [weak splash] in splash?.event($0) }
+            event: { [weak self, weak splash] in
+                
+                splash?.event($0)
+                if $0 == .hide { self?.generateFeedback(style: .light) }
+            }
         )
         
         let cancellables = flag.isActive ? handler.bind(delay: delay, on: schedulers.background) : []
         
         return .init(content: splash, flow: handler) { _,_ in cancellables }
+    }
+    
+    @inlinable
+    func generateFeedback(
+        style: UIImpactFeedbackGenerator.FeedbackStyle = .light
+    ) {
+        let generator = UIImpactFeedbackGenerator(style: style)
+        generator.impactOccurred()
     }
     
     @inlinable
