@@ -1,29 +1,50 @@
 //
-//  RootViewModelFactory+makeSplashScreenViewModel.swift
+//  RootViewModelFactory+makeSplashScreenBinder.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 27.01.2025.
 //
 
+import Combine
 import RxViewModel
 import SplashScreenCore
 import SplashScreenUI
 import SwiftUI
 
+/// This is not a typical `Binder` - `flow` is not intended to be used, but to prevent deallocation.
+typealias SplashScreenBinder = Binder<SplashScreenViewModel, SplashEventsHandler>
+
 extension RootViewModelFactory {
     
     @inlinable
+    func makeSplashScreenBinder(
+        flag: SplashScreenFlag,
+        delay: Delay = .seconds(1)
+    ) -> SplashScreenBinder {
+        
+        let splash = makeSplashScreenViewModel(
+            phase: flag.isActive ? .cover : .hidden
+        )
+        let handler = SplashEventsHandler(
+            authOKPublisher: model.pinOrSensorAuthOK.eraseToAnyPublisher(),
+            startPublisher: model.hideCoverStartSplash.eraseToAnyPublisher(),
+            event: { [weak splash] in splash?.event($0) }
+        )
+        
+        let cancellables = flag.isActive ? handler.bind(delay: delay, on: schedulers.background) : []
+        
+        return .init(content: splash, flow: handler) { _,_ in cancellables }
+    }
+    
+    @inlinable
     func makeSplashScreenViewModel(
-        flag: SplashScreenFlag
+        phase: SplashScreenState.Phase
     ) -> SplashScreenViewModel {
         
         let userName = getUserName()
         let composed = composeSplashScreenSettings().insert(userName: userName)
         
-        let initialState = SplashScreenState(
-            phase: flag.isActive ? .cover : .hidden,
-            settings: composed
-        )
+        let initialState = SplashScreenState(phase: phase, settings: composed)
         let reducer = SplashScreenReducer()
         
         return .init(
@@ -179,8 +200,8 @@ private extension SplashScreenState.Settings {
 
 private extension SplashScreenState.Settings.Logo {
     
-    static let logo: Self = .init(color: .init(hex: "FFFFFF"), shadow: .bank)
-    static let footer: Self = .init(color: .init(hex: "FFFFFF"), shadow: .name)
+    static let logo:   Self = .init(color: .init(hex: "FFFFFF"), shadow: .logo)
+    static let footer: Self = .init(color: .init(hex: "FFFFFF"), shadow: .footer)
 }
 
 private extension SplashScreenState.Settings.Text {
@@ -210,7 +231,7 @@ private extension String {
 
 private extension SplashScreenState.Settings.Shadow {
     
-    static let bank: Self = .init(color: .init(hex: "000000"), opacity: 0.25, radius: 64, x: 0, y: 4)
-    static let name: Self = .init(color: .init(hex: "000000"), opacity: 0.25, radius: 4, x: 0, y: 4)
-    static let text: Self = .init(color: .init(hex: "000000"), opacity: 0.25, radius: 12, x: 0, y: 4)
+    static let logo:   Self = .init(color: .init(hex: "000000"), opacity: 0.25, radius: 64, x: 0, y: 4)
+    static let text:   Self = .init(color: .init(hex: "000000"), opacity: 0.25, radius: 12, x: 0, y: 4)
+    static let footer: Self = .init(color: .init(hex: "000000"), opacity: 0.25, radius:  4, x: 0, y: 4)
 }

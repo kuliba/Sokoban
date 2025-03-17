@@ -7,6 +7,7 @@
 
 import Combine
 import PaymentCompletionUI
+import SharedConfigs
 import SwiftUI
 
 extension PaymentCompletionConfig {
@@ -61,11 +62,19 @@ extension PaymentCompletionConfig {
     )
     
     static func orderSavingsAccount(
-        title: String
+        title: String,
+        subtitle: String?
     ) -> Self {
         .init(
             statuses: .init(
-                completed: .completed(title: title),
+                completed: .completed(
+                    title: title,
+                    subtitle: subtitle,
+                    subtitleConfig:  .init(
+                        textFont: .textBodyMR14180(),
+                        textColor: .textPlaceholder
+                    )
+                ),
                 inflight: .inflight(
                     title: "Операция в обработке"
                 ),
@@ -84,7 +93,8 @@ extension PaymentCompletionConfig.Statuses.Status {
     
     static func completed(
         title: String = "Успешный перевод",
-        subtitle: String? = nil
+        subtitle: String? = nil,
+        subtitleConfig: TextConfig = .subtitle
     ) -> Self {
         
         return .init(
@@ -109,10 +119,7 @@ extension PaymentCompletionConfig.Statuses.Status {
                     textFont: .textH3Sb18240(),
                     textColor: .textSecondary
                 ),
-                subtitle: .init(
-                    textFont: .textH3Sb18240(),
-                    textColor: .textSecondary
-                )
+                subtitle: subtitleConfig
             )
         )
     }
@@ -230,6 +237,14 @@ extension PaymentCompletionConfig.Statuses.Status {
             config: .fraud()
         )
     }
+}
+
+extension TextConfig {
+    
+    static let subtitle: Self =  .init(
+        textFont: .textH3Sb18240(),
+        textColor: .textSecondary
+    )
 }
 
 extension PaymentCompletionConfig.Statuses.Status.Config {

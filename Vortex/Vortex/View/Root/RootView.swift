@@ -380,6 +380,19 @@ struct RootView_Previews: PreviewProvider {
     }
 }
 
+private extension SplashScreenBinder {
+    
+    static let preview: SplashScreenBinder = .init(
+        content: .preview,
+        flow: .preview
+    ) { _,_ in [] }
+}
+
+private extension SplashEventsHandler {
+    
+    static let preview: SplashEventsHandler = .init(authOKPublisher: Empty().eraseToAnyPublisher(), startPublisher: Empty().eraseToAnyPublisher(), event: { _ in })
+}
+
 private extension SplashScreenViewModel {
     
     static let preview: SplashScreenViewModel = .init(

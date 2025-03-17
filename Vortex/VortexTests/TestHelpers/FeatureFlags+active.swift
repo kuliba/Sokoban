@@ -14,6 +14,7 @@ extension FeatureFlags {
     static func activeExcept(
         c2gFlag: C2GFlag = .inactive,
         creditCardMVPFlag: СreditCardMVPFlag = .active,
+        newInProgressFlag: NewInProgressFlag = .inactive,
         paymentsTransfersFlag: PaymentsTransfersFlag = .active,
         collateralLoanLandingFlag: CollateralLoanLandingFlag = .active,
         splashScreenFlag: SplashScreenFlag = .inactive,
@@ -23,6 +24,7 @@ extension FeatureFlags {
         return .init(
             c2gFlag: c2gFlag,
             creditCardMVPFlag: creditCardMVPFlag,
+            newInProgressFlag: newInProgressFlag,
             paymentsTransfersFlag: paymentsTransfersFlag,
             collateralLoanLandingFlag: collateralLoanLandingFlag,
             splashScreenFlag: splashScreenFlag,
