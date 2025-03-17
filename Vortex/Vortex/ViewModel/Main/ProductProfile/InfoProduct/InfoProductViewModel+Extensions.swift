@@ -19,6 +19,7 @@ extension InfoProductViewModel {
             
             case accountNumber
             case bic
+            case bankName
             case corrAccount
             case inn
             case kpp
@@ -40,6 +41,8 @@ extension InfoProductViewModel {
                 return "Номер счета"
             case .bic:
                 return "БИК"
+            case .bankName:
+                return "Наименование банка"
             case .corrAccount:
                 return "Корреспондентский счет"
             case .inn:
@@ -172,6 +175,11 @@ extension InfoProductViewModel {
                 id: .accountNumber,
                 subtitle: data.accountNumber,
                 valueForCopy: data.accountNumber
+            ),
+            .init(
+                id: .bankName,
+                subtitle: data.bankName,
+                valueForCopy: data.bankName
             ),
             .init(
                 id: .bic,

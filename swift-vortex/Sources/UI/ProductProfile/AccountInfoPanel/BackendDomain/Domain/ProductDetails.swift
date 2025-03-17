@@ -52,6 +52,18 @@ public extension ProductDetails {
         }
     }
 
+    var bankName: String {
+        
+        switch self {
+        case let .accountDetails(details):
+            return details.bankName
+        case let .cardDetails(details):
+            return details.bankName
+        case let .depositDetails(details):
+            return details.bankName
+        }
+    }
+
     var corrAccount: String {
         
         switch self {

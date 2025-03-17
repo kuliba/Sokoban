@@ -45,6 +45,14 @@ final class DocumentItemModelTests: XCTestCase {
         XCTAssertNoDiff(sut.valueForCopy, "some valueForCopy")
     }
     
+    func test_init_documentItemModel_shouldSetValuesForBankName() {
+        
+        let sut = makeSUT(id: .bankName)
+        
+        XCTAssertNoDiff(sut.title, "Наименование банка")
+        XCTAssertNoDiff(sut.titleForInformer, "Наименование банка")
+    }
+
     func test_init_documentItemModel_shouldSetValuesForСorrAccount() {
         
         let sut = makeSUT(id: .corrAccount)

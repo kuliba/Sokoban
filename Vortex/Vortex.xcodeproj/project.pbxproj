@@ -3487,6 +3487,7 @@
 		ECCFA40B2CC7D7200009099E /* ClientInformDataAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCFA40A2CC7D7200009099E /* ClientInformDataAdapter.swift */; };
 		ECCFA40D2CC7D8440009099E /* Model+performOrWaitForAuthorized.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCFA40C2CC7D8440009099E /* Model+performOrWaitForAuthorized.swift */; };
 		ECCFA40F2CC7D8FD0009099E /* GetAuthorizedZoneClientInformDataAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCFA40E2CC7D8FD0009099E /* GetAuthorizedZoneClientInformDataAdapter.swift */; };
+		ECD488412D8D8103000C0B02 /* RequestFactory+createGetProductDetailsRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD488402D8D8102000C0B02 /* RequestFactory+createGetProductDetailsRequestTests.swift */; };
 		ECDE23272CCA633E001BB212 /* ClientInformList in Frameworks */ = {isa = PBXBuildFile; productRef = ECDE23262CCA633E001BB212 /* ClientInformList */; };
 		ECF246A82CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF246A72CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift */; };
 		ECF42BD62CD114C700020AB3 /* RequestFactory+createGetNotAuthorizedZoneClientInformDataRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF42BD52CD114C700020AB3 /* RequestFactory+createGetNotAuthorizedZoneClientInformDataRequest.swift */; };
@@ -7274,6 +7275,7 @@
 		ECCFA40A2CC7D7200009099E /* ClientInformDataAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientInformDataAdapter.swift; sourceTree = "<group>"; };
 		ECCFA40C2CC7D8440009099E /* Model+performOrWaitForAuthorized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+performOrWaitForAuthorized.swift"; sourceTree = "<group>"; };
 		ECCFA40E2CC7D8FD0009099E /* GetAuthorizedZoneClientInformDataAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAuthorizedZoneClientInformDataAdapter.swift; sourceTree = "<group>"; };
+		ECD488402D8D8102000C0B02 /* RequestFactory+createGetProductDetailsRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetProductDetailsRequestTests.swift"; sourceTree = "<group>"; };
 		ECF246A72CC782E500F10F39 /* RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetAuthorizedZoneClientInformDataRequest.swift"; sourceTree = "<group>"; };
 		ECF42BD52CD114C700020AB3 /* RequestFactory+createGetNotAuthorizedZoneClientInformDataRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetNotAuthorizedZoneClientInformDataRequest.swift"; sourceTree = "<group>"; };
 		ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMe2MeDebitConsentDecodableModel.swift; sourceTree = "<group>"; };
@@ -10825,6 +10827,7 @@
 				833104A52D637CBF00177E2B /* RequestFactory+createGetBannersMyProductListV2RequestTests.swift */,
 				A7E8D03B2CF6F46D008DF828 /* RequestFactory+createGetShowcaseRequestTests.swift */,
 				A7B5BD6B2CF766680094D7C6 /* RequestFactory+createCreateDraftCollateralLoanApplicationRequestTests.swift */,
+				ECD488402D8D8102000C0B02 /* RequestFactory+createGetProductDetailsRequestTests.swift */,
 			);
 			path = RequestFactory;
 			sourceTree = "<group>";
@@ -24411,6 +24414,7 @@
 				83660CF02AD940EC0001B786 /* CvvPInErrorMapperTests.swift in Sources */,
 				2A3834AD2C4EB8E700A5DF8C /* SegmentTests.swift in Sources */,
 				83518DDC2B062E9E001772FA /* Model+PaymentsProcessSourceReducerSFPTests.swift in Sources */,
+				ECD488412D8D8103000C0B02 /* RequestFactory+createGetProductDetailsRequestTests.swift in Sources */,
 				2AEDAD4229A4EA4A00017F73 /* ModelMemoryLeaksTests.swift in Sources */,
 				2A80D8192AAA4A1C0054A121 /* Services+publicKeyTransferServiceTests.swift in Sources */,
 				2A08888E2CE09B0A009005EB /* SceneDelegateTests.swift in Sources */,

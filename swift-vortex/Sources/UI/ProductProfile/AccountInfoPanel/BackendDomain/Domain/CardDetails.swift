@@ -10,6 +10,7 @@ import Foundation
 public struct CardDetails: Equatable {
     
     let accountNumber: String
+    let bankName: String
     let bic: String
     let cardNumber: String
     let corrAccount: String
@@ -24,6 +25,7 @@ public struct CardDetails: Equatable {
     
     public init(
         accountNumber: String,
+        bankName: String,
         bic: String,
         cardNumber: String,
         corrAccount: String,
@@ -37,6 +39,7 @@ public struct CardDetails: Equatable {
         md5hash: String
     ) {
         self.accountNumber = accountNumber
+        self.bankName = bankName
         self.bic = bic
         self.cardNumber = cardNumber
         self.corrAccount = corrAccount

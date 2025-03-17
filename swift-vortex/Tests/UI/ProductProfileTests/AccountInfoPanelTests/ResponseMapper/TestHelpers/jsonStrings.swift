@@ -31,6 +31,7 @@ let jsonStringCardDetails = """
       "payeeName": "Иванов Иван Иванович",
       "kpp": "770401001",
       "bic": "044525341",
+      "bankName": "bankName",
       "inn": "7704113772",
       "cardNumber": "4444555566661122",
       "maskCardNumber": "4444 55** **** 1122",
@@ -52,6 +53,7 @@ let jsonStringCardDetailsWithNull = """
       "payeeName": null,
       "kpp": null,
       "bic": null,
+      "bankName": null,
       "inn": null,
       "cardNumber": "4444555566661122",
       "maskCardNumber": "4444 55** **** 1122",
@@ -70,6 +72,7 @@ let jsonStringAccountDetails = """
     "data": {
         "accountNumber": "4081781000000000001",
         "bic": "044525341",
+        "bankName": "bankName",
         "corrAccount": "30101810300000000341",
         "inn": "7704113772",
         "kpp": "770401001",
@@ -85,6 +88,7 @@ let jsonStringDepositDetails = """
     "data": {
         "accountNumber": "4081781000000000001",
         "bic": "044525341",
+        "bankName": "bankName",
         "corrAccount": "30101810300000000341",
         "inn": "7704113772",
         "kpp": "770401001",

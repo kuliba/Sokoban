@@ -88,6 +88,7 @@ private extension ResponseMapper {
     struct _AccountDetails: Decodable {
         
         let accountNumber: String
+        let bankName: String?
         let bic: String
         let corrAccount: String
         let inn: String
@@ -97,6 +98,7 @@ private extension ResponseMapper {
         var data: AccountDetails {
             .init(
                 accountNumber: accountNumber,
+                bankName: bankName ?? "",
                 bic: bic,
                 corrAccount: corrAccount,
                 inn: inn,
@@ -109,6 +111,7 @@ private extension ResponseMapper {
     struct _CardDetails: Decodable {
         
         let accountNumber: String?
+        let bankName: String?
         let bic: String?
         let cardNumber: String
         let corrAccount: String?
@@ -124,6 +127,7 @@ private extension ResponseMapper {
         var data: CardDetails {
             .init(
                 accountNumber: accountNumber ?? "",
+                bankName: bankName ?? "",
                 bic: bic ?? "",
                 cardNumber: cardNumber,
                 corrAccount: corrAccount ?? "",
@@ -142,6 +146,7 @@ private extension ResponseMapper {
     struct _DepositDetails: Decodable {
         
         let accountNumber: String
+        let bankName: String?
         let bic: String
         let corrAccount: String
         let expireDate: String
@@ -152,6 +157,7 @@ private extension ResponseMapper {
         var data: DepositDetails {
             .init(
                 accountNumber: accountNumber,
+                bankName: bankName ?? "",
                 bic: bic,
                 corrAccount: corrAccount,
                 expireDate: expireDate,

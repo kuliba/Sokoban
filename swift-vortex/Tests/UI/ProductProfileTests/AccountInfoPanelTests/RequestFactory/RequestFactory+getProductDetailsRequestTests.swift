@@ -5,7 +5,7 @@
 //  Created by Andryusina Nataly on 05.03.2024.
 //
 
-@testable import AccountInfoPanel
+import AccountInfoPanel
 import XCTest
 import RemoteServices
 

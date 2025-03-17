@@ -1038,6 +1038,11 @@ private extension InfoProductViewModel.DocumentItemModel {
         subtitle: info.bic,
         valueForCopy: "valueForCopy"
     )
+    static let bankName: Self = .init(
+        id: .bankName,
+        subtitle: info.bankName,
+        valueForCopy: "valueForCopy"
+    )
     static let corrAccount: Self = .init(
         id: .corrAccount,
         subtitle: info.corrAccount,
@@ -1097,6 +1102,7 @@ private extension AccountInfoPanel.ProductDetails {
     
     static let productDetailsData: Self = .accountDetails(.init(
         accountNumber: "4081781000000000001",
+        bankName: "bankName",
         bic: "044525341",
         corrAccount: "30101810300000000341",
         inn: "7704113772",
@@ -1106,6 +1112,7 @@ private extension AccountInfoPanel.ProductDetails {
             
     static let productDetailsDataFull: Self = .cardDetails(.init(
         accountNumber: productDetailsData.accountNumber,
+        bankName: "bankName",
         bic: productDetailsData.bic,
         cardNumber: "4444 5555 6666 1122",
         corrAccount: productDetailsData.corrAccount,
@@ -1237,6 +1244,8 @@ extension Array where Element == InfoProductViewModel.DocumentItemModel {
     static let documentItemsSingle: Self = [
         .accountNumber,
         .bic,
+        .bankName,
+        .accountNumber,
         .corrAccount,
         .payeeName
     ]
@@ -1356,6 +1365,7 @@ private extension AccountInfoPanel.ProductDetails {
     
     static let data: Self = .accountDetails(.init(
         accountNumber: "accountNumber",
+        bankName: "bankName",
         bic: "bic",
         corrAccount: "corrAccount",
         inn: "inn",
@@ -1382,6 +1392,7 @@ extension Array where Element == String {
     static let cardInfo = [
         "Получатель: payeeName",
         "Номер счета: accountNumber",
+        "Наименование банка: bankName",
         "БИК: bic",
         "Корреспондентский счет: corrAccount",
         "ИНН: inn\nКПП: kpp"
