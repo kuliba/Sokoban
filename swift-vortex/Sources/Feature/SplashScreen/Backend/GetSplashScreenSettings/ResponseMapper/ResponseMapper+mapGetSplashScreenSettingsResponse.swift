@@ -93,7 +93,7 @@ private extension ResponseMapper.Background {
         self.init(
             hasBackground: data.hasBackground ?? false,
             color: data.color,
-            opacity: data.opacity
+            opacity: data.opacity.map { $0 / 100 }
         )
     }
 }
@@ -105,7 +105,7 @@ private extension ResponseMapper._Data._Shadow {
         guard let x, let y, let blur, let color, let opacity
         else { return nil }
         
-        return .init(x: x, y: y, blur: blur, color: color, opacity: opacity)
+        return .init(x: x, y: y, blur: blur, color: color, opacity: opacity / 100)
     }
 }
 
