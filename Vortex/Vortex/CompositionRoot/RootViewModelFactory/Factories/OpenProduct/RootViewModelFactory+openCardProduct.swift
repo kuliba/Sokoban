@@ -373,7 +373,7 @@ private extension Array where Element == CardProduct {
         selected: CardProduct
     ) -> SelectorComponent.Selector<Product>? {
         
-        let product = Product(product: selected) //TODO: extension product
+        let product = Product(product: selected)
         let products = map { Product(product: $0) }
         
         guard let first = products.first,
@@ -381,10 +381,7 @@ private extension Array where Element == CardProduct {
                 selected: product,
                 firstOption: first,
                 otherOptions: .init(products.dropFirst()),
-                filterPredicate: { product, search in
-                    
-                    product.typeText.contains(search) //TODO: correct search
-                }
+                filterPredicate: { $0.typeText.contains($1) }
               )
         else { return nil }
         

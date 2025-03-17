@@ -84,12 +84,11 @@ extension ViewComponents {
         )
     }
     
-    
     @ViewBuilder
     private func makeToggleLabel(
         isToggleUp: Bool
     ) -> some View {
-        isToggleUp == true ? Image.ic24ChevronUp : Image.ic24ChevronDown
+        isToggleUp ? Image.ic24ChevronUp : Image.ic24ChevronDown
     }
     
     @ViewBuilder
