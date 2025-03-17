@@ -125,7 +125,7 @@ private extension ResponseMapper.SplashScreenSettings {
                 y: 0,
                 blur: 10,
                 color: "#FFFFFF",
-                opacity: 50
+                opacity: 50 / 100
             )
         ),
         text: .init(
@@ -137,13 +137,13 @@ private extension ResponseMapper.SplashScreenSettings {
                 y: 4,
                 blur: 12,
                 color: "#FFFFFF",
-                opacity: 25
+                opacity: 25 / 100
             )
         ),
         background: .init(
             hasBackground: true,
             color: "#000000",
-            opacity: 25
+            opacity: 25 / 100
         ),
         subtext: .init(
             color: "#00000",
@@ -154,7 +154,7 @@ private extension ResponseMapper.SplashScreenSettings {
                 y: 4,
                 blur: 12,
                 color: "#1C1C1C",
-                opacity: 25
+                opacity: 25 / 100
             )
         ),
         bankName: .init(
@@ -164,7 +164,7 @@ private extension ResponseMapper.SplashScreenSettings {
                 y: 25,
                 blur: 0,
                 color: "#FFFFFF",
-                opacity: 25
+                opacity: 25 / 100
             )
         )
     )
@@ -179,7 +179,7 @@ private extension ResponseMapper.SplashScreenSettings {
                 y: 4,
                 blur: 64,
                 color: "#000000",
-                opacity: 25
+                opacity: 25 / 100
             )
         ),
         text: .init(
@@ -191,7 +191,7 @@ private extension ResponseMapper.SplashScreenSettings {
                 y: 4,
                 blur: 12,
                 color: "#000000",
-                opacity: 25
+                opacity: 25 / 100
             )
         ),
         background: .init(
@@ -205,7 +205,7 @@ private extension ResponseMapper.SplashScreenSettings {
                 y: 4,
                 blur: 4,
                 color: "#000000",
-                opacity: 25
+                opacity: 25 / 100
             )
         )
     )
@@ -220,7 +220,7 @@ private extension ResponseMapper.SplashScreenSettings {
                 y: 4,
                 blur: 64,
                 color: "#000000",
-                opacity: 25
+                opacity: 25 / 100
             )
         ),
         text: .init(
@@ -232,7 +232,7 @@ private extension ResponseMapper.SplashScreenSettings {
                 y: 4,
                 blur: 12,
                 color: "#000000",
-                opacity: 25
+                opacity: 25 / 100
             )
         ),
         background: .init(
@@ -246,7 +246,7 @@ private extension ResponseMapper.SplashScreenSettings {
                 y: 4,
                 blur: 4,
                 color: "#000000",
-                opacity: 25
+                opacity: 25 / 100
             )
         )
     )
@@ -261,7 +261,7 @@ private extension ResponseMapper.SplashScreenSettings {
                 y: 4,
                 blur: 64,
                 color: "#000000",
-                opacity: 25
+                opacity: 25 / 100
             )
         ),
         text: .init(
@@ -273,7 +273,7 @@ private extension ResponseMapper.SplashScreenSettings {
                 y: 4,
                 blur: 12,
                 color: "#000000",
-                opacity: 25
+                opacity: 25 / 100
             )
         ),
         background: .init(
@@ -287,7 +287,7 @@ private extension ResponseMapper.SplashScreenSettings {
                 y: 4,
                 blur: 4,
                 color: "#000000",
-                opacity: 25
+                opacity: 25 / 100
             )
         )
     )
