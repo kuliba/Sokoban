@@ -20,14 +20,16 @@ extension ViewComponents {
     ) -> some View {
        
         let needNewInProgress: Bool = complete.context.status.status == .inflight && newInProgress.isActive
-        let title: String = complete.context.formattedAmount != nil ? .titleWithTopUp : .titleWithOutTopUp
-        let config: PaymentCompletionConfig = .orderSavingsAccount(title: title)
+        let title: String = .savingsAccountTitle(needNewInProgress, complete.context.formattedAmount != nil)
+        let subtitle: String? = needNewInProgress ? .subtitle : nil
+
+        let config: PaymentCompletionConfig = .orderSavingsAccount(title: title, subtitle: subtitle)
         
         return makePaymentCompletionLayoutView(
             state: complete.context.state(needNewInProgress),
             statusConfig: config,
-            buttons: { makeButtons(complete) },
-            details: { details(needNewInProgress) },
+            buttons: { makeButtons(needNewInProgress, complete) },
+            details: { EmptyView() },
             footer: {
                 heroButton(title: "На главный") {
                     action()
@@ -36,28 +38,21 @@ extension ViewComponents {
             }
         )
     }
-    
-    @ViewBuilder
-    func details(
-        _ withDetails: Bool
-    ) -> some View {
-        
-        if withDetails {
-            Text("Баланс обновится после\nобработки операции")
-                .font(.textBodyMR14180())
-                .foregroundColor(.textPlaceholder)
-                .frame(maxHeight: .infinity, alignment: .center)
-        } else {
-            EmptyView()
-        }
-    }
-    
+
     @ViewBuilder
     func makeButtons(
+        _ needNewInProgress: Bool,
         _ complete: OpenSavingsAccountCompleteDomain.Complete
     ) -> some View {
         
-        if complete.context.status.status == .completed {
+        switch (needNewInProgress, complete.context.status.status) {
+        case (true, _):
+            RxWrapperView(model: complete.details) { state, _ in
+                
+                makeDetailsButton(state: state)
+            }
+            
+        case (false, .completed):
             HStack {
                 RxWrapperView(model: complete.document) { state, _ in
                     
@@ -69,7 +64,8 @@ extension ViewComponents {
                     makeDetailsButton(state: state)
                 }
             }
-        } else {
+            
+        default:
             EmptyView()
         }
     }
@@ -194,6 +190,19 @@ private extension String {
     
     static let titleWithTopUp: Self = "Накопительный счет открыт\nи пополнен на сумму"
     static let titleWithOutTopUp: Self = "Накопительный счет открыт"
+    static let newInProgressTitle: Self = "Платеж успешно принят в обработку"
+    static let subtitle: Self =  "Баланс обновится после\nобработки операции"
+    
+    static func savingsAccountTitle(
+        _ newInProgress: Bool,
+        _ withTopUp: Bool
+    ) -> Self {
+        newInProgress
+        ? newInProgressTitle
+        : {
+            withTopUp ? titleWithTopUp : titleWithOutTopUp
+        }()
+    }
 }
 
 private extension OpenSavingsAccountCompleteDomain.Complete.Context.Status {
