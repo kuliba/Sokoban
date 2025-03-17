@@ -4826,6 +4826,9 @@ private extension Target {
     static let splashScreenUI = target(
         name: .splashScreenUI,
         dependencies: [
+            // external packages
+            .combineSchedulers,
+            // internal modules
             .sharedConfigs,
             .uiPrimitives,
             .vortexTools,

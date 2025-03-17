@@ -29,7 +29,7 @@ class RootViewModel: ObservableObject, Resetable {
     
     let tabsViewModel: TabsViewModel
     let informerViewModel: InformerView.ViewModel
-    let splash: SplashScreenViewModel
+    let splash: SplashScreenBinder
     
     @Published private(set) var isShowingSplash = false
         
@@ -58,7 +58,7 @@ class RootViewModel: ObservableObject, Resetable {
         productNavigationStateManager: ProductProfileFlowManager,
         tabsViewModel: TabsViewModel,
         informerViewModel: InformerView.ViewModel,
-        splash: SplashScreenViewModel,
+        splash: SplashScreenBinder,
         infoDictionary: [String : Any]? = Bundle.main.infoDictionary,
         _ model: Model,
         settings: RootViewModelFactorySettings = .prod,
