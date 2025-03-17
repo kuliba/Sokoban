@@ -19,9 +19,9 @@ extension SplashScreenState.Settings {
 extension SplashScreenState.Settings.Shadow {
     
     static let logo:    Self = .init(color: .init(hex: "FF0000"), opacity: 0.5, radius: 10, x: 10, y: 0)
-    static let text:    Self = .init(color: .black, opacity: 1, radius: 12, x: 0, y: 4)
-    static let subtext: Self = .init(color: .black, opacity: 1, radius: 12, x: 0, y: 4)
-    static let footer:  Self = .init(color: .black, opacity: 1, radius: 0, x: 20, y: 20)
+    static let text:    Self = .init(color: .red, opacity: 1, radius: 12, x: 0, y: 4)
+    static let subtext: Self = .init(color: .red, opacity: 1, radius: 12, x: 0, y: 4)
+    static let footer:  Self = .init(color: .red, opacity: 1, radius: 0, x: 20, y: 20)
 }
 
 import SwiftUI

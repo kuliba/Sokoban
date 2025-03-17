@@ -18,12 +18,10 @@ extension ViewComponents {
         
         RxWrapperView(model: splash) { state, _ in
             
-            ZStack {
-                
-                SplashScreenImageView(state: state)
-                SplashScreenContentView(state: state, config: .prod)
-            }
-            .animation(.easeOut(duration: 2), value: state)
+            Color.clear
+                .overlay { SplashScreenImageView(state: state) }
+                .overlay { SplashScreenContentView(state: state, config: .prod) }
+                .animation(.easeOut(duration: 2), value: state)
         }
     }
 }
