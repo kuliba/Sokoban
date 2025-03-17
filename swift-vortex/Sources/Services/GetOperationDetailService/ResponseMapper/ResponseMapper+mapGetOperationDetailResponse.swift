@@ -83,7 +83,7 @@ private extension ResponseMapper {
         let payerAccountId: Int?
         let payerAccountNumber: String?
         let payerAddress: String?
-        let payerAmount: Int?
+        let payerAmount: Decimal?
         let payerCardId: Int?
         let payerCardNumber: String?
         let payerCurrency: String?
