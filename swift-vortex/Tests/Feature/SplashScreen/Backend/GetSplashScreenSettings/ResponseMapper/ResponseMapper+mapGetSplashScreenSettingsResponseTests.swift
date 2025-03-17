@@ -146,7 +146,7 @@ private extension ResponseMapper.SplashScreenSettings {
             opacity: 25 / 100
         ),
         subtext: .init(
-            color: "#00000",
+            color: "#FFFFFF",
             size: 18,
             value: "Test test test",
             shadow: .init(
