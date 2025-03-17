@@ -63,7 +63,8 @@ private extension ResponseMapper._Data._Logo {
     
     var logo: ResponseMapper.Logo? {
         
-        guard let color, let shadow = shadow?.shadow
+        guard let color = color.map(valid(color:)),
+              let shadow = shadow?.shadow
         else { return nil }
         
         return .init(color: color, shadow: shadow)
@@ -74,7 +75,8 @@ private extension ResponseMapper._Data._Text {
     
     var text: ResponseMapper.Text? {
         
-        guard let color, let size, let value, let shadow = shadow?.shadow
+        guard let size, let value, let shadow = shadow?.shadow,
+              let color = color.map(valid(color:))
         else { return nil }
         
         return .init(
@@ -92,7 +94,7 @@ private extension ResponseMapper.Background {
         
         self.init(
             hasBackground: data.hasBackground ?? false,
-            color: data.color,
+            color: data.color.map(valid(color:)),
             opacity: data.opacity.map { $0 / 100 }
         )
     }
@@ -102,7 +104,8 @@ private extension ResponseMapper._Data._Shadow {
     
     var shadow: ResponseMapper.Shadow? {
         
-        guard let x, let y, let blur, let color, let opacity
+        guard let x, let y, let blur, let opacity,
+              let color = color.map(valid(color:))
         else { return nil }
         
         return .init(x: x, y: y, blur: blur, color: color, opacity: opacity / 100)
@@ -157,5 +160,20 @@ private extension ResponseMapper {
             let color: String?
             let opacity: Double?
         }
+    }
+}
+
+private func valid(color: String) -> String {
+    
+    color.isValidHexColor ? color : "#FFFFFF"
+}
+
+extension String {
+    
+    /// Checks if the string is a valid hex color in `#RGB`, `#RRGGBB`, or `#AARRGGBB` format.
+    var isValidHexColor: Bool {
+        
+        let hexPattern = "^#?([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$"
+        return range(of: hexPattern, options: .regularExpression) != nil
     }
 }
