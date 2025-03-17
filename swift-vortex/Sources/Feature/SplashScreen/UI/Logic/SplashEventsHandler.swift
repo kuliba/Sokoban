@@ -40,7 +40,7 @@ public extension SplashEventsHandler {
         var cancellables = Set<AnyCancellable>()
         
         authOKPublisher
-            .sink { [weak self] in  self?.event(.prepare) }
+            .sink { [weak self] in self?.event(.prepare) }
             .store(in: &cancellables)
         
         startPublisher

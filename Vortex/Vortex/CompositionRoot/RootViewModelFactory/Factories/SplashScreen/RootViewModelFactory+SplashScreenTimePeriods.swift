@@ -13,6 +13,7 @@ import VortexTools
 
 extension RootViewModelFactory {
     
+    /// - Warning: This method has side-effect of clearing splash images cache on new time periods.
     @inlinable
     func scheduleGetAndCacheSplashScreenTimePeriods() {
         
@@ -26,7 +27,6 @@ extension RootViewModelFactory {
     }
     
     /// - Warning: This method is not responsible for threading.
-    /// - Warning: This method has side-effect of clearing splash images cache on new time periods.
     @inlinable
     func getAndCacheSplashScreenTimePeriods(
         completion: @escaping (Bool) -> Void
@@ -136,7 +136,7 @@ private extension RemoteServices.ResponseMapper.SplashScreenTimePeriod {
 
 // MARK: - Codable (Caching)
 
-private struct CodableSplashScreenTimePeriod: Codable {
+struct CodableSplashScreenTimePeriod: Codable {
     
     let timePeriod: String
     let startTime: String
