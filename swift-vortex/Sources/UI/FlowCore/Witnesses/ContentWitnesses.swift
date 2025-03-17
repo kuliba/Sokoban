@@ -99,7 +99,8 @@ public extension ContentWitnesses {
                 }
             }
         )
-    }}
+    }
+}
 
 public extension ContentWitnesses {
     
