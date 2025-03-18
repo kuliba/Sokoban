@@ -54,7 +54,7 @@ class MainViewModel: ObservableObject, Resetable {
     let bindersFactory: BindersFactory
     let viewModelsFactory: MainViewModelsFactory
     let makeOpenNewProductButtons: OpenNewProductsViewModel.MakeNewProductButtons
-    let getPDFDocument: GetPDFDocument
+    let getPDFDocument: CreateDraftCollateralLoanApplicationDomain.GetPDFDocument
 
     let bannersBox: any BannersBoxInterface<BannerList>
     
@@ -75,7 +75,7 @@ class MainViewModel: ObservableObject, Resetable {
         bindersFactory: BindersFactory,
         viewModelsFactory: MainViewModelsFactory,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
-        getPDFDocument: @escaping GetPDFDocument,
+        getPDFDocument: @escaping CreateDraftCollateralLoanApplicationDomain.GetPDFDocument,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.model = model

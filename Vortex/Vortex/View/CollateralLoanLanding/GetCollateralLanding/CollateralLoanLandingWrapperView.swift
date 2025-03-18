@@ -649,6 +649,7 @@ extension CollateralLoanLandingWrapperView {
     typealias Event = GetCollateralLandingDomain.Event<InformerData>
     typealias State = GetCollateralLandingDomain.State<InformerData>
     typealias Informer = GetCollateralLandingDomain.InformerPayload
+    typealias GetPDFDocument = Domain.GetPDFDocument
 
     public typealias makeImageViewWithMD5Hash = (String) -> UIPrimitives.AsyncImage
     public typealias makeImageViewWithURL = (String) -> UIPrimitives.AsyncImage

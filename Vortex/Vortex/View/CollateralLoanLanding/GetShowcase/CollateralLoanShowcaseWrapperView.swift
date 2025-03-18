@@ -299,4 +299,5 @@ extension CollateralLoanShowcaseWrapperView {
     typealias Factory = CollateralLoanLandingFactory
     typealias Payload = CollateralLandingApplicationSaveConsentsResult
     typealias MakeOperationDetailInfoViewModel = (Payload) -> OperationDetailInfoViewModel
+    typealias GetPDFDocument = Domain.GetPDFDocument
 }
