@@ -6,10 +6,10 @@
 //
 
 import Foundation
+import SelectorComponent
 
 public struct Form<Confirmation> {
     
-    public let product: Product
     public let type: CardType
     
     public let conditions: URL
@@ -23,11 +23,11 @@ public struct Form<Confirmation> {
     public var confirmation: Loadable<Confirmation>
     public var consent = true
     public var messages: Messages
-    public var otp: String?
     public var orderCardResponse: OrderCardResponse?
+    public var otp: String?
+    public var selector: SelectorComponent.Selector<Product>
     
     public init(
-        product: Product,
         type: CardType,
         conditions: URL,
         tariffs: URL,
@@ -39,9 +39,9 @@ public struct Form<Confirmation> {
         consent: Bool = true,
         messages: Messages,
         otp: String? = nil,
-        orderCardResponse: OrderCardResponse? = nil
+        orderCardResponse: OrderCardResponse? = nil,
+        selector: SelectorComponent.Selector<Product>
     ) {
-        self.product = product
         self.type = type
         self.conditions = conditions
         self.tariffs = tariffs
@@ -54,5 +54,14 @@ public struct Form<Confirmation> {
         self.messages = messages
         self.otp = otp
         self.orderCardResponse = orderCardResponse
+        self.selector = selector
+    }
+}
+
+extension Form {
+    
+    var product: Product {
+        
+        selector.selected
     }
 }

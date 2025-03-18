@@ -11,6 +11,7 @@ import OrderCard
 import OTPInputComponent
 import PayHub
 import RxViewModel
+import SelectorComponent
 
 /// A namespace.
 enum OpenCardDomain {
@@ -27,6 +28,7 @@ enum OpenCardDomain {
     typealias Event = OrderCard.Event<Confirmation>
     typealias Effect = OrderCard.Effect
     
+    typealias SelectorReduce = SelectorComponent.SelectorReducer<OrderCard.Product>
     typealias Reducer = OrderCard.Reducer<Confirmation>
     typealias EffectHandler = OrderCard.EffectHandler<Confirmation>
     
