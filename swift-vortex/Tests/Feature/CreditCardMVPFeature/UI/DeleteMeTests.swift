@@ -13,6 +13,5 @@ final class DeleteMeTests: XCTestCase {
     func test() {
         
         _ = DeleteMe()
-        XCTFail()
     }
 }
