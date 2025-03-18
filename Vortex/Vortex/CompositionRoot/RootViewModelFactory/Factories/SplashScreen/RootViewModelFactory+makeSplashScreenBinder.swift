@@ -19,7 +19,7 @@ extension RootViewModelFactory {
     @inlinable
     func makeSplashScreenBinder(
         flag: SplashScreenFlag,
-        delay: Delay = .seconds(1)
+        fadeout: Delay = .milliseconds(300)
     ) -> SplashScreenBinder {
         
         let splash = makeSplashScreenViewModel(
@@ -34,6 +34,8 @@ extension RootViewModelFactory {
                 if $0 == .hide { self?.generateFeedback(style: .light) }
             }
         )
+        
+        let delay: Delay = .seconds(splash.state.settings.duration) - fadeout
         
         let cancellables = flag.isActive ? handler.bind(delay: delay, on: schedulers.background) : []
         
