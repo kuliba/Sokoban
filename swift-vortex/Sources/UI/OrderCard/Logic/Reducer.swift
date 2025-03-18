@@ -6,16 +6,23 @@
 //
 
 import Foundation
+import SelectorComponent
 
 public final class Reducer<Confirmation> {
     
     private let otpWitness: OTPWitness
+    private let selectorReduce: SelectorReduce
+    
     public typealias OTPWitness = (Confirmation) -> (String) -> Void
+    public typealias SelectorState = SelectorComponent.Selector<Product>
+    public typealias SelectorReduce = (SelectorState, SelectorEvent<Product>) -> (SelectorState, Never?)
     
     public init(
-        otpWitness: @escaping OTPWitness
+        otpWitness: @escaping OTPWitness,
+        selectorReduce: @escaping SelectorReduce
     ) {
         self.otpWitness = otpWitness
+        self.selectorReduce = selectorReduce
     }
 }
 
@@ -69,6 +76,12 @@ public extension Reducer {
             if !state.loadableForm.isLoading && state.hasConfirmation {
                 state.form?.consent = consent
             }
+            
+        case let .selector(event):
+            guard let form = state.form
+            else { break }
+            
+            state.form?.selector = selectorReduce(form.selector, event).0
         }
         
         return (state, effect)

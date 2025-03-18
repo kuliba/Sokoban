@@ -14,6 +14,8 @@ class RootViewModelFactoryTests: QRNavigationTests {
     typealias SUT = RootViewModelFactory
     
     func makeSUT(
+        calendar: Calendar = .current,
+        currentDate: @escaping () -> Date = Date.init,
         scanResult: Vortex.QRModelResult = .unknown,
         model: Model = .mockWithEmptyExcept(),
         scanner: QRScannerViewModel = QRScannerViewModelSpy(),
@@ -30,6 +32,8 @@ class RootViewModelFactoryTests: QRNavigationTests {
         let logger = LoggerSpy() // TODO: add logging tests
         let sut = SUT(
             model: model,
+            calendar: calendar,
+            currentDate: currentDate,
             httpClient: httpClient,
             logger: logger,
             mapScanResult: { _, completion in completion(scanResult) },

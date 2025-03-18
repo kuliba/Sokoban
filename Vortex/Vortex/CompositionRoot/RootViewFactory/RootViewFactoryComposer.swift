@@ -151,7 +151,6 @@ extension RootViewFactoryComposer {
             },
             makeReturnButtonView: makeReturnButtonView,
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
-            makeSplashScreenView: makeSplashScreenView,
             makeUserAccountView: makeUserAccountView,
             makeMarketShowcaseView: makeMarketShowcaseView,
             components: makeViewComponents(rootEvent: rootEvent),
@@ -277,14 +276,6 @@ private extension RootViewFactoryComposer {
             },
             config: .iVortex
         )
-    }
-    
-    func makeSplashScreenView(
-        state: Splash,
-        eventHandler: @escaping (SplashScreenEvent) -> ()
-    ) -> SplashScreenView {
-        
-        .init(splash: state, config: .prod())
     }
     
     func makeOptionSelectorViewFactory() -> OptionSelectorViewFactory {

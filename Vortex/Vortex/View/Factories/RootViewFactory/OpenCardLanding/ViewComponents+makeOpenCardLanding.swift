@@ -13,26 +13,6 @@ import SwiftUI
 import UIPrimitives
 import OrderCardLandingComponent
 
-public struct OrderCardLanding {
-    
-    let header: Header
-    let conditions: ListLandingComponent.Items
-    let security: ListLandingComponent.Items
-    let dropDownList: DropDownTextList
-    
-    public init(
-        header: Header,
-        conditions: ListLandingComponent.Items,
-        security: ListLandingComponent.Items,
-        dropDownList: DropDownTextList
-    ) {
-        self.header = header
-        self.conditions = conditions
-        self.security = security
-        self.dropDownList = dropDownList
-    }
-}
-
 extension ViewComponents {
     
     @inlinable
@@ -150,32 +130,7 @@ extension ViewComponents {
     }
 }
 
-//TODO: add swipe to refresh
-struct DismissibleScrollView<Content: View>: View {
-    
-    @State private var offset: CGPoint = .zero
-    
-    let title: (Double) -> String
-    let dismiss: () -> Void
-    @ViewBuilder let content: () -> Content
-    
-    var body: some View {
-        
-        OffsetObservingScrollView(
-            axes: .vertical,
-            showsIndicators: false,
-            offset: $offset,
-            coordinateSpaceName: "orderCardScroll",
-            content: content
-        )
-        .navigationBarWithBack(
-            title: title(offset.y),
-            dismiss: dismiss
-        )
-    }
-}
-
-extension LandingState<OrderCardLanding> {
+extension LandingState<OrderCardLandingComponent.OrderCardLanding> {
 
     var landing: OrderCardLanding? {
         

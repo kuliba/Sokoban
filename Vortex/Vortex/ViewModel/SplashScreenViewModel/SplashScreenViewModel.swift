@@ -9,18 +9,3 @@ import RxViewModel
 import SplashScreenUI
 
 typealias SplashScreenViewModel = RxViewModel<SplashScreenState, SplashScreenEvent, SplashScreenEffect>
-
-typealias SplashScreenState = SplashScreenUI.Splash
-
-enum SplashScreenEvent {
-    
-    case start
-    case splash
-    case noSplash
-}
-
-enum SplashScreenEffect {
-    
-    case startFirstTimer
-    case startSecondTimer
-}

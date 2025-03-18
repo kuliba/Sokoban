@@ -95,6 +95,8 @@ extension RootViewModelFactory {
     
     convenience init(
         model: Model,
+        calendar: Calendar = .current,
+        currentDate: @escaping () -> Date = Date.init,
         httpClient: HTTPClient,
         logger: LoggerAgentProtocol,
         mapScanResult: @escaping MapScanResult,
@@ -105,6 +107,8 @@ extension RootViewModelFactory {
     ) {
         self.init(
             infra: .init(
+                calendar: calendar,
+                currentDate: currentDate,
                 httpClient: httpClient,
                 imageCache: model.imageCache(),
                 logger: logger

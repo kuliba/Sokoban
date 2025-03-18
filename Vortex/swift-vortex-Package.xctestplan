@@ -694,13 +694,6 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "OrderCardLandingTests",
-        "name" : "OrderCardLandingTests"
-      }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:",
         "identifier" : "EphemeralCacheTests",
         "name" : "EphemeralCacheTests"
       }
@@ -717,6 +710,20 @@
         "containerPath" : "container:",
         "identifier" : "SplashScreenCoreTests",
         "name" : "SplashScreenCoreTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "OrderCardLandingComponentTests",
+        "name" : "OrderCardLandingComponentTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "SplashScreenUITests",
+        "name" : "SplashScreenUITests"
       }
     }
   ],

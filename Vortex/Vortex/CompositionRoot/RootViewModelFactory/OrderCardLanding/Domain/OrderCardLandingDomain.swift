@@ -5,9 +5,8 @@
 //  Created by Дмитрий Савушкин on 25.02.2025.
 //
 
-import RxViewModel
-import OrderCard
 import OrderCardLandingComponent
+import RxViewModel
 
 enum OrderCardLandingDomain {}
 
@@ -22,14 +21,8 @@ extension OrderCardLandingDomain {
     
     typealias Landing = OrderCardLanding
     
-    typealias State = LandingState<Landing>
-    typealias Event = LandingEvent<Landing>
-    typealias Effect = LandingEffect
-    
-    typealias Reducer = LandingReducer<Landing>
-    typealias EffectHandler = LandingEffectHandler<Landing>
-    
-    typealias Content = RxViewModel<State, Event, Effect>
+    typealias ContentDomain = CardLandingContentDomain<Landing>
+    typealias Content = ContentDomain.Content
     
     // MARK: - Flow
     
@@ -40,6 +33,7 @@ extension OrderCardLandingDomain {
     typealias Notify = (NotifyEvent) -> Void
     
     enum Select: Equatable {
+        
         case `continue`
     }
     

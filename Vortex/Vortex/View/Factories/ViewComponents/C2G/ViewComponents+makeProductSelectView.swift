@@ -14,7 +14,8 @@ extension ViewComponents {
     func makeProductSelectView(
         state: ProductSelect,
         event: @escaping (ProductSelectEvent) -> Void,
-        config: ProductSelectConfig = .iVortex
+        config: ProductSelectConfig = .iVortex,
+        edgeInsets: EdgeInsets = .init(top: 13, leading: 16, bottom: 13, trailing: 12)
     ) -> some View {
         
         ProductSelectView(
@@ -23,6 +24,6 @@ extension ViewComponents {
             config: config,
             cardConfig: config.card.productCardConfig
         )
-        .paddedRoundedBackground()
+        .paddedRoundedBackground(edgeInsets: edgeInsets)
     }
 }
