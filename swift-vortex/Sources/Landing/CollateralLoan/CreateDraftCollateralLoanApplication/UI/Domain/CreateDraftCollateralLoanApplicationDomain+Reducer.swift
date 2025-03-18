@@ -95,6 +95,8 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 }
                 
             case let .showSaveConsentsResult(result):
+                state.isLoading = false
+                
                 switch result {
                 case let .success(success):
                     state.saveConsentsResult = success

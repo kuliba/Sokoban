@@ -252,6 +252,7 @@ extension RootViewModelFactory {
             switch result {
             case let .success(success):
                 completion(.saveConsents(success))
+                
             case let .failure(failure):
                 switch failure.navigationFailure {
                 case let .informer(informerPayload):

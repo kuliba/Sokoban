@@ -51,6 +51,7 @@ struct DocumentButton: View {
                     case let .informer(informerData):
                         
                         InformerView(viewModel: .init(message: informerData.message, icon: informerData.icon.image))
+                        
                     default:
                         Color.white
                     }
