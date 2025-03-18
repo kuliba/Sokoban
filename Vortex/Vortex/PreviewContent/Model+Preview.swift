@@ -22,7 +22,7 @@ extension Model {
            let json = try? Data(contentsOf: url),
            let productsData = try? JSONDecoder.serverDate.decode([ProductData].self, from: json)  {
             
-            model.products.value = Model.reduce(products: [:], with: productsData, for: .card)
+            model.products.value = ProductsData().update(with: productsData, for: .card)
         }
         return model
     }()

@@ -565,8 +565,9 @@ extension Model {
         _ command: ServerCommands.ProductController.GetProductListByType,
         _ productType: ProductType
     ) {
-        
-        getProducts(productType) { response in
+        getProducts(productType) { [weak self] response in
+            
+            guard let self else { return }
             
             if let response {
                 
@@ -576,7 +577,7 @@ extension Model {
                 self.productsUpdating.value.removeAll(where: { $0 == productType })
                 
                 // update products
-                let updatedProducts = Self.reduce(products: self.products.value, with: result.productList, for: productType)
+                let updatedProducts = products.value.update(with: result.productList, for: productType)
                 self.products.value = updatedProducts
                 
                 self.updateInfo.value.setValue(true, for: productType)
@@ -641,7 +642,10 @@ extension Model {
             updateInfo(false, productType)
             
         case let .some(result):
-            let updatedProducts = Self.reduce(products: products.value, with: result.productList, for: productType)
+            let updatedProducts = products.value.update(
+                with: result.productList,
+                for: productType
+            )
             products.value = updatedProducts
             updateInfo(true, productType)
             
@@ -1222,47 +1226,45 @@ extension Model {
     }
 }
 
-//MARK: - Reducers
+// MARK: - Reducers
 
-extension Model {
+extension ProductsData {
     
-    /// Products data
-    static func reduce(products: ProductsData, with productsList: [ProductData], for type: ProductType) -> ProductsData {
+    func update(
+        with productsList: [ProductData],
+        for type: ProductType
+    ) -> Self {
         
-        func isCorrect(type: ProductType, for productsList: [ProductData]) -> Bool {
-            
-            switch type {
-            case .card:
-                return productsList is [ProductCardData]
-                
-            case .account:
-                return productsList is [ProductAccountData]
-                
-            case .deposit:
-                return productsList is [ProductDepositData]
-                
-            case .loan:
-                return productsList is [ProductLoanData]
-            }
-        }
+        guard productsList.isOfType(type) else { return self }
         
-        var result = products
-        
-        if productsList.isEmpty == false {
-            
-            guard isCorrect(type: type, for: productsList) else {
-                return products
-            }
-            
-            result[type] = productsList
-            
-        } else {
-            
-            result[type] = nil
-        }
+        var result = self
+        result[type] = productsList.isEmpty ? nil : productsList
         
         return result
     }
+}
+
+extension Array where Element == ProductData {
+    
+    func isOfType(_ type: ProductType) -> Bool {
+        
+        switch type {
+        case .card:
+            return self is [ProductCardData]
+            
+        case .account:
+            return self is [ProductAccountData]
+            
+        case .deposit:
+            return self is [ProductDepositData]
+            
+        case .loan:
+            return self is [ProductLoanData]
+        }
+    }
+}
+
+extension Model {
     
     /// Dynamic parameter
     static func reduce(products: ProductsData, with params: ProductDynamicParamsData, productId: Int) -> ProductsData {
