@@ -503,34 +503,28 @@ extension Model {
 
     func handleProductsUpdateTotalAll() {
         
-        guard self.productsUpdating.value.isEmpty == true else {
-            return
-        }
+        guard productsUpdating.value.isEmpty else { return }
         
-        guard let token = token else {
-            handledUnauthorizedCommandAttempt()
-            return
-        }
+        guard let token else { return handledUnauthorizedCommandAttempt() }
         
-        Task {
+        let allowedProducts = ProductType.allCases.filter(productsAllowed.contains)
+        
+        productsUpdating.value = Array(allowedProducts)
+        
+        let queue = DispatchQueue.global()
+        let interval: Int = 1 // seconds
+        
+        allowedProducts.enumerated().forEach { index, productType in
             
-            self.productsUpdating.value = Array(productsAllowed)
+            let command = ServerCommands.ProductController.GetProductListByType(token: token, productType: productType)
             
-            let queue = DispatchQueue.global()
-            let interval: Int = 1 // seconds
-            
-            ProductType.allCases.enumerated().forEach { index, productType in
-                
-                if productsAllowed.contains(productType) {
-                    let command = ServerCommands.ProductController.GetProductListByType(token: token, productType: productType)
-                    queue.delay(
-                        for: .seconds((1 + index) * interval),
-                        execute: {
-                            self.updateProduct(command, productType: productType)
-                        })
-                  
+            queue.delay(
+                for: .seconds((1 + index) * interval),
+                execute: { [weak self] in
+                    
+                    self?.updateProduct(command, productType: productType)
                 }
-            }
+            )
         }
     }
     
@@ -629,8 +623,9 @@ extension Model {
         _ command: ServerCommands.ProductController.GetProductListByType,
         _ productType: ProductType
     ) {
-        getProductsV7(productType) { response in
-            self.handleGetProductListByTypeResponse(productType, command, response)
+        getProductsV7(productType) { [weak self] response in
+            
+            self?.handleGetProductListByTypeResponse(productType, command, response)
         }
     }
     
@@ -639,18 +634,16 @@ extension Model {
         _ command: ServerCommands.ProductController.GetProductListByType,
         _ response: Services.GetProductsResponse?
     ) {
+        updateStatus(productType)
+
         switch response {
         case .none:
-            updateStatus(productType)
             updateInfo(false, productType)
             
         case let .some(result):
-            
-            updateStatus(productType)
-            let updatedProducts = updateProducts(
-                productsData: products.value,
-                with: result.productList,
-                for: productType)
+            let updatedProducts = Self.reduce(products: products.value, with: result.productList, for: productType)
+            products.value = updatedProducts
+            updateInfo(true, productType)
             
             loadImages(result.productList)
             productsCacheStore(command, updatedProducts)
@@ -659,20 +652,8 @@ extension Model {
     }
 
     func updateStatus(_ productType: ProductType) {
+        
         productsUpdating.value.removeAll(where: { $0 == productType })
-    }
-    
-    func updateProducts(
-        productsData: ProductsData,
-        with productsList: [ProductData],
-        for productType: ProductType
-    ) -> ProductsData {
-        
-        let updatedProducts = Self.reduce(products: productsData, with: productsList, for: productType)
-        products.value = updatedProducts
-        updateInfo(true, productType)
-        
-        return updatedProducts
     }
     
     func updateInfo (
@@ -696,6 +677,7 @@ extension Model {
         
         let md5ToUpload = Array(md5Products.subtracting(images.value.keys))
         if !md5ToUpload.isEmpty {
+            
             action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: md5ToUpload ))
         }
     }
