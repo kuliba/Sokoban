@@ -27,6 +27,7 @@ class SplashScreenRootViewModelFactoryTests: RootViewModelFactoryTests {
     }
     
     func makeCodableSplashScreenSettings(
+        duration: TimeInterval = 2.0,
         logo: CodableSplashScreenSettings.Logo? = nil,
         text: CodableSplashScreenSettings.Text? = nil,
         subtext: CodableSplashScreenSettings.Text? = nil,
@@ -39,6 +40,7 @@ class SplashScreenRootViewModelFactoryTests: RootViewModelFactoryTests {
         let data = try sampleImageData()
         
         return .init(
+            duration: duration,
             logo: logo ?? makeLogo(),
             text: text ?? makeText(),
             subtext: subtext,

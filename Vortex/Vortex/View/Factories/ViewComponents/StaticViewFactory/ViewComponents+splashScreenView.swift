@@ -21,7 +21,7 @@ extension ViewComponents {
             Color.clear
                 .overlay { SplashScreenImageView(state: state) }
                 .overlay { SplashScreenContentView(state: state, config: .prod) }
-                .animation(.easeOut(duration: 2), value: state)
+                .animation(.easeOut(duration: state.settings.duration), value: state)
         }
     }
 }

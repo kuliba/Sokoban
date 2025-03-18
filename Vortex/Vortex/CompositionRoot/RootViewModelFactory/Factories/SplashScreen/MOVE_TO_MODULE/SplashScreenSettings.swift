@@ -12,6 +12,7 @@ import VortexTools
 #warning("move to SplashScreenCore")
 struct SplashScreenSettings: Equatable {
     
+    let duration: TimeInterval
     let logo: Logo
     let text: Text
     let subtext: Text?
