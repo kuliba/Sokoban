@@ -4160,6 +4160,7 @@
 		2A01F9392AE50F340064F15B /* ComposedCVVPINService+ActivateCVVPINClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ComposedCVVPINService+ActivateCVVPINClient.swift"; sourceTree = "<group>"; };
 		2A01F93A2AE50F340064F15B /* ComposedCVVPINService+ChangePINClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ComposedCVVPINService+ChangePINClient.swift"; sourceTree = "<group>"; };
 		2A01F9412AE512170064F15B /* Services+composedCVVPINService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services+composedCVVPINService.swift"; sourceTree = "<group>"; };
+		2A0345342D89C476006E8275 /* CreditCardMVPFeature.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CreditCardMVPFeature.xctestplan; sourceTree = "<group>"; };
 		2A03E5502C098AF700E070AD /* Model+loggingCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+loggingCache.swift"; sourceTree = "<group>"; };
 		2A0439C62BB4062C0063B7AB /* NanoServices+makeMakeTransferTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NanoServices+makeMakeTransferTests.swift"; sourceTree = "<group>"; };
 		2A0439C82BB420040063B7AB /* NanoServicesTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NanoServicesTestHelpers.swift; sourceTree = "<group>"; };
@@ -10821,6 +10822,7 @@
 		2A566EA62B67C08200359E05 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
+				2A0345342D89C476006E8275 /* CreditCardMVPFeature.xctestplan */,
 				2A590F4D2D7C472600A22BBE /* SplashScreen.xctestplan */,
 				C19017A92D7AC67B00044AFC /* OrderCardLandingComponent.xctestplan */,
 				C170C78C2D79DB2500A7C480 /* OrderCardLandingBackend.xctestplan */,
