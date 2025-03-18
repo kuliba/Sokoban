@@ -342,6 +342,7 @@ final class RootViewModelFactory_makeSplashScreenBinderTests: SplashScreenRootVi
     ) -> SplashScreenState.Settings {
         
         return .init(
+            duration: 2.0,
             image: .init("splash"),
             logo: .init(
                 color: .init(hex: "FFFFFF"),

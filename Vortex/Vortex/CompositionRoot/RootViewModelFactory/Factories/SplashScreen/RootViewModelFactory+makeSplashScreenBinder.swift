@@ -99,6 +99,7 @@ extension SplashScreenState.Settings {
         guard text.value.contains("_") else { return self }
         
         return .init(
+            duration: duration,
             image: image,
             logo: logo,
             text: .init(
@@ -136,6 +137,7 @@ private extension Array where Element == SplashScreenSettings {
             else { return nil }
             
             return .init(
+                duration: $0.duration,
                 image: image,
                 logo: $0._logo,
                 text: $0._text,
@@ -201,6 +203,7 @@ private extension SplashScreenState.Settings {
     ) -> Self {
         
         return .init(
+            duration: 2.0,
             image: .init("splash"),
             logo: .logo,
             text: .default(for: timePeriod),
