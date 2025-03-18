@@ -40,7 +40,7 @@ extension RootViewModelFactory {
         let featureFlags = FeatureFlags(
             c2gFlag: featureFlags.c2gFlag,
             creditCardMVPFlag: featureFlags.creditCardMVPFlag,
-            getProductListByTypeV6Flag: .active,
+            newInProgressFlag: featureFlags.newInProgressFlag,
             paymentsTransfersFlag: .active,
             collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
             splashScreenFlag: featureFlags.splashScreenFlag,
@@ -383,24 +383,6 @@ extension RootViewModelFactory {
         
         let savingsAccount = makeSavingsAccount()
         
-        // MARK: - Splash
-        
-        let splash = makeSplashScreenViewModel(
-            initialState: .initialSplashData,
-            phaseOneDuration: settings.splash.phaseOneDuration,
-            phaseTwoDuration: settings.splash.phaseTwoDuration
-        )
-        
-        model.auth
-            .sink { auth in
-                
-                if auth == .authorized, featureFlags.splashScreenFlag == .active {
-                    
-                    splash.event(.start)
-                }
-            }
-            .store(in: &bindings)
-
         // MARK: - Notifications Authorized
         
         performOrWaitForAuthorized { [weak self] in
@@ -411,15 +393,32 @@ extension RootViewModelFactory {
         updateClientInformAlerts()
             .store(in: &bindings)
         
-        let bannersBox = makeBannersBox(flags: featureFlags)
+        let bannersBox = makeBannersBox()
         
         performOrWaitForAuthorized { [weak bannersBox] in
             
             bannersBox?.requestUpdate()
         }
         
+        // MARK: - Splash Screen
+        
+        let splash = makeSplashScreenBinder(flag: featureFlags.splashScreenFlag)
+        
+        if featureFlags.splashScreenFlag.isActive {
+            
+            performOrWaitForActive { [weak self] in
+                
+                self?.scheduleGetAndCacheSplashScreenTimePeriods()
+            }
+            
+            performOrWaitForAuthorized { [weak self] in
+                
+                self?.scheduleGetAndCacheSplashImages()
+            }
+        }
+        
         let rootViewModel = make(
-            featureFlags: featureFlags, 
+            featureFlags: featureFlags,
             bannersBox: bannersBox,
             splash: splash,
             makeProductProfileViewModel: makeProductProfileViewModel,
@@ -467,8 +466,7 @@ extension RootViewModelFactory {
         let getRootNavigation = { select, notify, completion in
             
             self.getRootNavigation(
-                c2gFlag: featureFlags.c2gFlag,
-                orderCardFlag: featureFlags.orderCardFlag, 
+                rootFlags: featureFlags.rootFlags, 
                 makeProductProfileByID: makeProductProfileByID,
                 select: select,
                 notify: notify,
@@ -510,6 +508,18 @@ extension RootViewModelFactory {
         )
         
         return composer.compose(with: rootViewModel)
+    }
+}
+
+extension FeatureFlags {
+    
+    var rootFlags: RootViewModelFactory.RootFlags {
+        
+        .init(
+            c2gFlag: c2gFlag,
+            orderCardFlag: orderCardFlag,
+            newInProgressFlag: newInProgressFlag
+        )
     }
 }
 
@@ -772,7 +782,7 @@ private extension RootViewModelFactory {
     func make(
         featureFlags: FeatureFlags,
         bannersBox: any BannersBoxInterface<BannerList>,
-        splash: SplashScreenViewModel,
+        splash: SplashScreenBinder,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeTemplates: @escaping PaymentsTransfersFactory.MakeTemplates,
         fastPaymentsFactory: FastPaymentsFactory,
@@ -840,12 +850,20 @@ private extension RootViewModelFactory {
             qrViewModelFactory: qrViewModelFactory,
             makeTrailingToolbarItems: makeTrailingToolbarItems,
             makeCreditCardMVP: { featureFlags.creditCardMVPFlag.isActive ? .creditCardMVPPreview : nil },
-            makeAuthProductsViewModel: {
+            makeOpenCardLanding: { dismiss in
                 
-                self.makeCardPromoLanding(
-                    flag: featureFlags.orderCardFlag,
-                    dismiss: $0
-                )
+                switch featureFlags.orderCardFlag.rawValue {
+                case .active:
+                    return .cardLanding(self.makeCardLanding())
+                    
+                case .inactive:
+                    return .legacy(
+                        self.makeCardPromoLanding(
+                            flag: featureFlags.orderCardFlag,
+                            dismiss: dismiss
+                        )
+                    )
+                }
             }
         )
                   

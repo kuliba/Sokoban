@@ -33,7 +33,8 @@ extension SavingsAccountConfig {
             title: .init(
                 textFont: .title3,
                 textColor: .green
-            ),
+            ), 
+            paddings: .init(horizontal: 16, vertical: 16),
             spacing: 18
         ),
         offsetForDisplayHeader: 100,
@@ -42,7 +43,13 @@ extension SavingsAccountConfig {
             vertical: 16,
             list: .init(horizontal: 16, vertical: 12)),
         spacing: 16,
-        questionHeight: 64
+        questions: .init(
+            height: 64,
+            title: .init(
+                textFont: .footnote,
+                textColor: .black
+            )
+        )
     )
 }
 
@@ -62,15 +69,15 @@ extension ListItems {
     static let advantages: Self = .init(
         title: "Преимущества",
         list: [
-            .init(id: .init(), md5hash: "1", title: "Снятие и пополнение без ограничений", subtitle: nil),
-            .init(id: .init(), md5hash: "2", title: "Бесплатный счет", subtitle: "0 руб за открытие счета")
+            .init(md5hash: "1", title: "Снятие и пополнение без ограничений", subtitle: nil),
+            .init(md5hash: "2", title: "Бесплатный счет", subtitle: "0 руб за открытие счета")
         ])
     
     static let basicConditions: Self = .init(
         title: "Основные условия",
         list: [
-            .init(id: .init(), md5hash: "2", title: "Счет только в рублях", subtitle: nil),
-            .init(id: .init(), md5hash: "3", title: "Выплата ежемесячно", subtitle: nil)
+            .init(md5hash: "2", title: "Счет только в рублях", subtitle: nil),
+            .init(md5hash: "3", title: "Выплата ежемесячно", subtitle: nil)
         ])
 }
 
@@ -250,5 +257,28 @@ extension SavingsAccountDetailsConfig {
             interestDate: "Дата выплаты % - 31 мая",
             period: "Отчетный период 1 мая - 31 мая"
         )
+    )
+}
+
+extension SavingsAccountInfo {
+    static let preview: Self = .init(
+        list: [
+            .init(enable: true, image: .bolt, title: String(repeating:"Text", count: 15)),
+            .init(enable: true, image: .flag, title: String(repeating:"Text", count: 30)),
+            .init(enable: false, image: .percent, title: String(repeating:"Text", count: 5)),
+        ],
+        title: String(repeating:"Text", count: 3)
+    )
+}
+
+extension SavingsAccountInfoConfig {
+    
+    static let preview: Self = .init(
+        bottom: 1,
+        disable: .init(color: .gray, text: .init(textFont: .body, textColor: .gray)),
+        enable: .init(color: .green, text: .init(textFont: .body, textColor: .black)),
+        imageSize: .init(width: 24, height: 24),
+        paddings: .init(top: 0, leading: 16, bottom: 0, trailing: 16),
+        title: .init(textFont: .caption2, textColor: .black)
     )
 }

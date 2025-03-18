@@ -450,6 +450,11 @@ private extension MainViewModel {
         model.products
             .receive(on: scheduler)
             .sink { [unowned self] products in
+                
+                if let accounts = products[.account], !accounts.isEmpty {
+                    handleBanners(sections.map(\.model).productsSection?.productCarouselViewModel.promoProducts)
+                }
+                
                 guard let deposits = products[.deposit], !deposits.isEmpty else { return }
                 
                 let filteredDeposits = deposits.filter { deposit in
@@ -477,8 +482,6 @@ private extension MainViewModel {
                         })
                     ))
                 }
-                
-                handleBanners(sections.map(\.model).productsSection?.productCarouselViewModel.promoProducts)
             }
             .store(in: &bindings)
         
@@ -713,8 +716,6 @@ private extension MainViewModel {
             var newPromo = promoItems
             newPromo?.removeAll(where: { $0.promoItem.promoProduct == .savingsAccount })
             sections.map(\.model).productsSection?.productCarouselViewModel.updatePromo(newPromo)
-        } else {
-            bannersBox.requestUpdate()
         }
     }
 
@@ -1073,11 +1074,12 @@ private extension MainViewModel {
             Self.openLinkURL(model.productsOpenAccountURL)
         } else {
             
-            let authProductsViewModel = viewModelsFactory.makeAuthProductsViewModel { [weak self] in
+            let openCard = viewModelsFactory.makeOpenCardLanding { [weak self] in
+                
                 self?.action.send(MainViewModelAction.Close.Link())
             }
             
-            route.destination = .openCard(authProductsViewModel)
+            route.destination = .openCard(openCard)
         }
     }
     
@@ -1794,7 +1796,7 @@ extension MainViewModel {
         case serviceOperators(OperatorsViewModel)
         case failedView(QRFailedViewModelWrapper)
         case searchOperators(QRSearchOperatorViewModel)
-        case openCard(AuthProductsLandingDomain.Binder)
+        case openCard(OpenCard)
         case payments(Node<PaymentsViewModel>)
         case operatorView(InternetTVDetailsViewModel)
         case paymentsServices(PaymentsServicesViewModel)
@@ -1807,6 +1809,12 @@ extension MainViewModel {
         case collateralLoanLanding(GetShowcaseDomain.Binder)
         case collateralLoanLandingProduct(GetCollateralLandingDomain.Binder)
         case orderCard
+        
+        enum OpenCard {
+            
+            case cardLanding(CardLandingDomain.Binder)
+            case legacy(AuthProductsLandingDomain.Binder)
+        }
         
         var id: Case {
             
@@ -2051,7 +2059,7 @@ extension MainViewModel {
             guard let self else { return }
 
             let productsCard = model.products(.card)
-            let makeAuthProductsViewModel = viewModelsFactory.makeAuthProductsViewModel
+            let makeOpenCardLanding = viewModelsFactory.makeOpenCardLanding
             
             if productsCard == nil ||
                 productsCard?.contains(where: {
@@ -2065,12 +2073,12 @@ extension MainViewModel {
                                 
                                 DispatchQueue.main.async {
                                     
-                                    let authProductsViewModel = makeAuthProductsViewModel { [weak self] in
+                                    let openCard = makeOpenCardLanding { [weak self] in
                                         
                                         self?.action.send(MyProductsViewModelAction.Close.Link())
                                     }
                                     
-                                    self.route.destination = .openCard(authProductsViewModel)
+                                    self.route.destination = .openCard(openCard)
                                 }
                             }
                         )))

@@ -214,3 +214,41 @@ public extension CategorizedStorage {
         return (merged, changed)
     }
 }
+
+public extension CategorizedStorage {
+    
+    /// Transforms all items in the storage using the provided closure.
+    ///
+    /// - Parameter transform: A closure that maps each `T` to a new type `V`.
+    /// - Returns: A new `CategorizedStorage` with transformed items.
+    func map<V>(
+        _ transform: (T) -> V
+    ) -> CategorizedStorage<Category, V>
+    where V: Categorized<Category> {
+        
+        return .init(entries: entries.mapValues { entry in
+            
+            return .init(
+                items: entry.items.map(transform),
+                serial: entry.serial
+            )
+        })
+    }
+    
+    /// Transforms all items in the storage using the provided closure, filtering out `nil` results.
+    ///
+    /// - Parameter transform: A closure that attempts to map each `T` to a new type `V?`.
+    /// - Returns: A new `CategorizedStorage` with non-nil transformed items.
+    func compactMap<V>(
+        _ transform: (T) -> V?
+    ) -> CategorizedStorage<Category, V>
+    where V: Categorized<Category> {
+        
+        return .init(entries: entries.compactMapValues { entry in
+            
+            let newItems = entry.items.compactMap(transform)
+            
+            return newItems.isEmpty ? nil : .init(items: newItems, serial: entry.serial)
+        })
+    }
+}

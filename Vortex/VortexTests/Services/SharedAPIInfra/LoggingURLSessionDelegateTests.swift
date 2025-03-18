@@ -96,7 +96,10 @@ final class LoggerSpy: LoggerAgentProtocol {
     }
     
     private(set) var events = [Event]()
+    
     var callCount: Int { events.count }
+    var cacheEvent: [Event] { events.filter { $0.category == .cache }}
+    var networkEvent: [Event] { events.filter { $0.category == .network }}
     
     func log(level: LoggerAgentLevel, category: LoggerAgentCategory, message: String, file: StaticString, line: UInt) {
         

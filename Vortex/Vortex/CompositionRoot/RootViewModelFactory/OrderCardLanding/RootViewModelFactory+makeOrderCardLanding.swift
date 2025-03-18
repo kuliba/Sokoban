@@ -5,14 +5,14 @@
 //  Created by Дмитрий Савушкин on 25.02.2025.
 //
 
+import DropDownTextListComponent
 import Foundation
 import HeaderLandingComponent
 import ListLandingComponent
-import OrderCardLandingBackend
-import RemoteServices
-import DropDownTextListComponent
-import OrderCardLandingComponent
 import OrderCard
+import OrderCardLandingBackend
+import OrderCardLandingComponent
+import RemoteServices
 
 extension RootViewModelFactory {
     
@@ -20,35 +20,16 @@ extension RootViewModelFactory {
     func makeOrderCardLanding(
     ) -> OrderCardLandingDomain.Binder {
     
-        let content = makeOrderCardLandinContent()
+        let content: OrderCardLandingDomain.Content = makeProductsLandingContent { [weak self] completion in
+            
+            self?.createOrderCardLandingService { completion($0.loadResult) }
+        }
         content.event(.load)
         
         return composeBinder(
             content: content,
             getNavigation: getNavigation,
             selectWitnesses: .empty
-        )
-    }
-    
-    @inlinable
-    func makeOrderCardLandinContent(
-    ) -> OrderCardLandingDomain.Content {
-        
-        typealias Landing = OrderCardLanding
-        
-        let reducer = OrderCardLandingDomain.Reducer()
-        let effectHandler = OrderCardLandingDomain.EffectHandler(
-            load: { [weak self] completion in
-                
-                self?.createOrderCardLandingService { completion($0.loadResult) }
-            }
-        )
-        
-        return .init(
-            initialState: .init(),
-            reduce: reducer.reduce(_:event:),
-            handleEffect: effectHandler.handleEffect(effect:dispatch:),
-            scheduler: schedulers.main
         )
     }
     
@@ -257,7 +238,7 @@ private extension OrderCardLanding {
 
 private extension Result<OrderCardLanding, BackendFailure> {
     
-    var loadResult: Result<OrderCardLanding, LoadFailure> {
+    var loadResult: Result<OrderCardLanding, OrderCardLandingComponent.LoadFailure> {
         
         switch self {
         case let .success(landing):

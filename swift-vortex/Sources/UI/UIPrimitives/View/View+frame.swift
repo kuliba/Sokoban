@@ -9,6 +9,7 @@ import SwiftUI
 
 public extension View {
     
+    @inlinable
     func frame(_ size: CGSize) -> some View {
         
         self.frame(width: size.width, height: size.height)
