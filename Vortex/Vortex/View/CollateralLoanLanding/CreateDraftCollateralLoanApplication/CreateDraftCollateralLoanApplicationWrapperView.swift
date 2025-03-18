@@ -17,13 +17,31 @@ import RemoteServices
 import RxViewModel
 import SwiftUI
 
+enum DocumentButtonState {
+    
+    case pending
+    case completed(PDFDocument)
+    case loading
+    case failure(Failure)
+    
+    enum Failure: Equatable {
+        
+        case informer(InformerData)
+        case alert(String)
+        case offline
+    }
+}
+
 struct CreateDraftCollateralLoanApplicationWrapperView: View {
     
     @Environment(\.openURL) var openURL
     
+    @SwiftUI.State var documentButtonState: DocumentButtonState = .pending
+    
     let binder: Domain.Binder
     let config: Config
     let factory: Factory
+    let goToPlaces: () -> Void
     let goToMain: () -> Void
     let makeOperationDetailInfoViewModel: ViewComponents.MakeOperationDetailInfoViewModel
     let getPDFDocument: GetPDFDocument
@@ -94,25 +112,40 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
             }
         }
     }
-    
+        
     func getDocumentButton(
         payload: RemoteServices.RequestFactory.GetConsentsPayload
     ) -> DocumentButton {
        
-        var state: DocumentButtonDomain.State = .loading(nil)
+        return .init(
+            state: $documentButtonState,
+            goToPlaces: goToPlaces,
+            goToMain: goToMain
+        ) {
+       
+            getPDFDocument(payload) {
+                
+                switch $0 {
+                case let .success(pdfDocument):
+                    documentButtonState = .completed(pdfDocument)
+                    
+                case let .failure(failure):
+                    switch failure.kind {
+                    case let .alert(message):
+                        documentButtonState = .failure(.alert(message))
 
-        getPDFDocument(payload) {
-            
-            switch $0 {
-            case .none:
-                state = .failure(NSError(domain: "", code: -1))
+                    case let .informer(informerData):
+                        documentButtonState = .failure(.informer(informerData))
 
-            case let .some(pdfDocument):
-                state = .completed(pdfDocument)
+                    case .failureResultScreen:
+                        break
+
+                    case .offline:
+                        documentButtonState = .failure(.offline)
+                    }
+                }
             }
         }
-        
-        return .init(state: state)
     }
     
     func buttonBack(event: @escaping (Event) -> Void) -> some View {
@@ -250,11 +283,7 @@ extension CreateDraftCollateralLoanApplicationWrapperView {
     typealias SaveConsentsResult = Domain.SaveConsentsResult
     typealias MakeAnywayElementModelMapper = () -> AnywayElementModelMapper
     typealias Confirmation = CreateDraftCollateralLoanApplicationDomain.Confirmation
-    typealias GetPDFDocumentCompletion = (PDFDocument?) -> Void
-    typealias GetPDFDocument = (
-        RemoteServices.RequestFactory.GetConsentsPayload,
-        @escaping GetPDFDocumentCompletion
-    ) -> Void
+    typealias GetPDFDocument = Domain.GetPDFDocument
     
     public typealias Payload = CollateralLandingApplicationSaveConsentsResult
     public typealias MakeOperationDetailInfoViewModel = (Payload) -> OperationDetailInfoViewModel
@@ -271,8 +300,6 @@ extension CreateDraftCollateralLoanApplicationDomain.Navigation {
             switch kind {
             case let .alert(message):
                 return .failure(message)
-            case .offline:
-                return .failure("Offline!!!")
             default:
                 return nil
             }

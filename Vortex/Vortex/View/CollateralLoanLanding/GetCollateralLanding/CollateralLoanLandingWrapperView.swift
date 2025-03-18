@@ -20,6 +20,7 @@ struct CollateralLoanLandingWrapperView: View {
     let binder: GetCollateralLandingDomain.Binder
     let config: Config
     let factory: Factory
+    let goToPlaces: () -> Void
     let goToMain: () -> Void
     let makeOperationDetailInfoViewModel: ViewComponents.MakeOperationDetailInfoViewModel
     let getPDFDocument: GetPDFDocument
@@ -146,6 +147,7 @@ struct CollateralLoanLandingWrapperView: View {
                     makeImageViewWithURL: factory.makeImageViewWithURL,
                     formatCurrency: factory.formatCurrency
                 ),
+                goToPlaces: goToPlaces,
                 goToMain: goToMain,
                 makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,
                 getPDFDocument: getPDFDocument

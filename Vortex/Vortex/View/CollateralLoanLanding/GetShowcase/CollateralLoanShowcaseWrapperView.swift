@@ -21,6 +21,7 @@ struct CollateralLoanShowcaseWrapperView: View {
     let binder: GetShowcaseDomain.Binder
     let factory: Factory
     let config: Config
+    let goToPlaces: () -> Void
     let goToMain: () -> Void
     let makeOperationDetailInfoViewModel: ViewComponents.MakeOperationDetailInfoViewModel
     let getPDFDocument: GetPDFDocument
@@ -109,6 +110,7 @@ struct CollateralLoanShowcaseWrapperView: View {
                 binder: landing,
                 config: .default,
                 factory: factory,
+                goToPlaces: goToPlaces,
                 goToMain: goToMain,
                 makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,
                 getPDFDocument: getPDFDocument

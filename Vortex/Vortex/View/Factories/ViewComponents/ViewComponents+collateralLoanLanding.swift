@@ -26,6 +26,7 @@ extension ViewComponents {
     func makeCollateralLoanWrapperView(
         binder: GetCollateralLandingDomain.Binder,
         makeOperationDetailInfoViewModel: @escaping MakeOperationDetailInfoViewModel,
+        goToPlaces: @escaping () -> Void,
         goToMain: @escaping () -> Void,
         getPDFDocument: @escaping GetPDFDocument,
         formatCurrency: @escaping FormatCurrency
@@ -37,6 +38,7 @@ extension ViewComponents {
             factory: makeCollateralLoanLandingFactory(
                 formatCurrency: formatCurrency
             ),
+            goToPlaces: goToPlaces,
             goToMain: goToMain,
             makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,
             getPDFDocument: getPDFDocument
@@ -46,6 +48,7 @@ extension ViewComponents {
     func makeCollateralLoanShowcaseWrapperView(
         makeOperationDetailInfoViewModel: @escaping MakeOperationDetailInfoViewModel,
         binder: GetShowcaseDomain.Binder,
+        goToPlaces: @escaping () -> Void,
         goToMain: @escaping () -> Void,
         getPDFDocument: @escaping GetPDFDocument,
         formatCurrency: @escaping FormatCurrency
@@ -57,6 +60,7 @@ extension ViewComponents {
                 formatCurrency: formatCurrency
             ),
             config: .default,
+            goToPlaces: goToPlaces,
             goToMain: goToMain,
             makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,
             getPDFDocument: getPDFDocument
@@ -74,11 +78,7 @@ extension ViewComponents {
         )
     }
 
-    typealias GetPDFDocumentCompletion = (PDFDocument?) -> Void
-    typealias GetPDFDocument = (
-        RemoteServices.RequestFactory.GetConsentsPayload,
-        @escaping GetPDFDocumentCompletion
-    ) -> Void
+    typealias GetPDFDocument = CreateDraftCollateralLoanApplicationDomain.GetPDFDocument
     typealias MakeDetailsViewModel
         = CreateDraftCollateralLoanApplicationWrapperView.MakeOperationDetailInfoViewModel
     typealias FormatCurrency = (UInt) -> String?

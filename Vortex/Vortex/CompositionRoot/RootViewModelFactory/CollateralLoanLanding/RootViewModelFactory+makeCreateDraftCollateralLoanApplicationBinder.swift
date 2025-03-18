@@ -225,18 +225,17 @@ extension RootViewModelFactory {
 
     func getPDFDocument(
         payload: RemoteServices.RequestFactory.GetConsentsPayload,
-        completion: @escaping (PDFDocument?) -> Void
-    ) {
-        
+        completion: @escaping (CreateDraftCollateralLoanApplicationDomain.GetConsentsResult<InformerData>) -> Void
+    ) {        
         let getConsents = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetConsentsRequest(with:),
             mapResponse: RemoteServices.ResponseMapper.mapGetConsentsResponse(_:_:),
-            mapError: { Domain.ContentError.init(error: $0) }
+            mapError: { Domain.ContentError.init(error: $0, offlineForm: true) }
         )
         
         getConsents(payload) { [getConsents] in
-            
-            completion(try? $0.get())
+  
+            completion($0.map { $0 }.mapError { $0 })
             _ = getConsents
         }
     }
@@ -368,7 +367,7 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
                     self = .init(kind: .failureResultScreen)
                 } else if offlineForm {
 
-                    self = .init(kind: .offlineForm)
+                    self = .init(kind: .offline)
                 } else {
                     
                     self = .init(kind: .alert("Попробуйте позже."))
@@ -381,7 +380,7 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
                 self = .init(kind: .failureResultScreen)
             } else if offlineForm {
                 
-                self = .init(kind: .offlineForm)
+                self = .init(kind: .offline)
             } else {
                 
                 self = .init(kind: .alert("Попробуйте позже."))
@@ -401,7 +400,7 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
         case .failureResultScreen:
             return .complete
             
-        case .offlineForm:
+        case .offline:
             return .offline
         }
     }
