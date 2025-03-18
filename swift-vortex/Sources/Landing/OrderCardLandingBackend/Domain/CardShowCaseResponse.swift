@@ -17,12 +17,12 @@ public struct CardShowCaseResponse: Equatable {
     
     public struct Product: Equatable {
         
-        let theme: String
-        let name: [Name]
-        let features: Features
-        let image: String
-        let terms: String
-        let cardShowcaseAction: Action
+        public let theme: String
+        public let name: [Name]
+        public let features: Features
+        public let image: String
+        public let terms: String
+        public let cardShowcaseAction: Action
         
         public init(
             theme: String,
@@ -42,9 +42,9 @@ public struct CardShowCaseResponse: Equatable {
         
         public struct Action: Equatable {
             
-            let type: String
-            let target: String
-            let fallbackUrl: String?
+            public let type: String
+            public let target: String
+            public let fallbackUrl: String?
             
             public init(
                 type: String,
@@ -59,8 +59,8 @@ public struct CardShowCaseResponse: Equatable {
         
         public struct Features: Equatable {
             
-            let header: String?
-            let list: [Item]
+            public let header: String?
+            public let list: [Item]
             
             public init(
                 header: String? = nil,
@@ -72,8 +72,8 @@ public struct CardShowCaseResponse: Equatable {
             
             public struct Item: Equatable {
                 
-                let bullet: Bool
-                let text: String
+                public let bullet: Bool
+                public let text: String
                 
                 public init(
                     bullet: Bool,
@@ -87,8 +87,8 @@ public struct CardShowCaseResponse: Equatable {
         
         public struct Name: Equatable {
             
-            let text: String
-            let isBold: Bool
+            public let text: String
+            public let isBold: Bool
             
             public init(
                 text: String,

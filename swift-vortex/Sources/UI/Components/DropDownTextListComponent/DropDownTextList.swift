@@ -17,14 +17,12 @@ public struct DropDownTextList {
         self.items = items
     }
     
-    public struct Item: Equatable, Identifiable {
+    public struct Item: Equatable {
         
-        public let id: UUID
         public let title: String
         public let subTitle: String
         
-        public init(id: UUID = .init(), title: String, subTitle: String) {
-            self.id = id
+        public init(title: String, subTitle: String) {
             self.title = title
             self.subTitle = subTitle
         }

@@ -52,6 +52,7 @@ where IconView: View {
         VStack {
             
             orderHeader(title: header.title, subtitle: header.subtitle, needShimmering: needShimmering)
+                .padding(.bottom, config.padding)
             
             HStack(alignment:.top, spacing: config.padding) {
                 

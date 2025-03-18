@@ -13,27 +13,34 @@ import GetCardOrderFormService
 import OrderCard
 import OTPInputComponent
 import RemoteServices
+import SelectorComponent
 
 extension RootViewModelFactory {
+    
+    @inlinable
+    func openCardProduct() -> OpenCardDomain.Binder {
+        
+        let content: OpenCardDomain.Content = makeContent()
+        content.event(.load)
+        
+        return composeBinder(
+            content: content,
+            delayProvider: delayProvider,
+            getNavigation: getNavigation,
+            witnesses: witnesses()
+        )
+    }
     
     @inlinable
     func openCardProduct(
         notify: @escaping (OpenCardDomain.OrderCardResponse) -> Void
     ) -> OpenProduct.OpenCardType.Form {
         
-        let content: OpenCardDomain.Content = makeContent()
-        content.event(.load)
+        let binder = openCardProduct()
         
-        let cancellable = content.$state
+        let cancellable = binder.content.$state
             .compactMap(\.form?.orderCardResponse)
             .sink { notify($0) }
-        
-        let binder = composeBinder(
-            content: content,
-            delayProvider: delayProvider,
-            getNavigation: getNavigation,
-            witnesses: witnesses()
-        )
         
         return .init(model: binder, cancellable: cancellable)
     }
@@ -45,10 +52,15 @@ extension RootViewModelFactory {
         initialState: OpenCardDomain.State = .init(loadableForm: .loaded(nil))
     ) -> OpenCardDomain.Content {
         
-        let reducer = OpenCardDomain.Reducer { confirmation in
-            
-            { confirmation.otp.event(.otpField(.failure(.serverError($0)))) }
-        }
+        let selectorReducer = OpenCardDomain.SelectorReduce()
+        let reducer = OpenCardDomain.Reducer(
+            otpWitness: { confirmation in
+                
+                { confirmation.otp.event(.otpField(.failure(.serverError($0)))) }
+            },
+            selectorReduce: selectorReducer.reduce(_:_:)
+        )
+
         let effectHandler = OpenCardDomain.EffectHandler(
             load: load,
             loadConfirmation: loadConfirmation,
@@ -346,37 +358,55 @@ where Success == RemoteServices.ResponseMapper.GetCardOrderFormDataResponse {
             return .failure(failure.loadFailure)
             
         case let .success(response):
-            if let digital = response.digital {
-                
-                return .success(digital.form())
-            } else {
-            
-                return .failure(.tryLaterAlert)
-            }
+            guard let first = response.digital ?? response.cardProducts.first,
+                  let form = response.cardProducts.form(selected: first)
+            else { return .failure(.tryLaterAlert) }
+               
+            return .success(form)
         }
     }
 }
 
-private extension CardProduct {
+private extension Array where Element == CardProduct {
     
-    func form() -> OrderCard.Form<OpenCardDomain.Confirmation> {
+    func selector(
+        selected: CardProduct
+    ) -> SelectorComponent.Selector<Product>? {
         
+        let product = Product(product: selected)
+        let products = map { Product(product: $0) }
+        
+        guard let first = products.first,
+              let selector = try? SelectorComponent.Selector<Product>(
+                selected: product,
+                firstOption: first,
+                otherOptions: .init(products.dropFirst()),
+                filterPredicate: { $0.typeText.contains($1) }
+              )
+        else { return nil }
+        
+        return selector
+    }
+    
+    func form(
+        selected: CardProduct
+    ) -> OrderCard.Form<OpenCardDomain.Confirmation>? {
+        
+        guard let selector = selector(selected: selected)
+        else { return nil }
+
         return .init(
-            product: .init(
-                image: item.design,
-                header: (item.title, item.description),
-                orderOption: ("\(item.fee.free)", ("\(String(item.fee.maintenance.value)) \(item.currency.symbol)"))
-            ),
             type: .init(
-                title: item.typeText
+                title: selected.item.typeText
             ),
-            conditions: conditions,
-            tariffs: tariffs,
+            conditions: selected.conditions,
+            tariffs: selected.tariffs,
             requestID: UUID().uuidString.lowercased(),
-            cardApplicationCardType: item.type,
-            cardProductExtID: item.id,
-            cardProductName: item.title,
-            messages: .default(tariffs)
+            cardApplicationCardType: selected.item.type,
+            cardProductExtID: selected.item.id,
+            cardProductName: selected.item.title,
+            messages: .default(selected.tariffs),
+            selector: selector
         )
     }
 }
@@ -448,7 +478,7 @@ private extension RemoteServices.ResponseMapper.GetCardOrderFormDataResponse {
     }
 }
 
-private struct CardProduct {
+private struct CardProduct: Equatable {
     
     let conditions: URL
     let tariffs: URL
@@ -492,4 +522,19 @@ private extension String {
     
     static let _invalidCode = "Введен некорректный код. Попробуйте еще раз."
     static let _tryLater = "Что-то пошло не так.\nПопробуйте позже."
+}
+
+private extension Product {
+    
+    init(product: CardProduct) {
+        
+        self.init(
+            image: product.item.design,
+            typeText: product.item.typeText,
+            header: product.item.title,
+            subtitle: product.item.description,
+            orderTitle: product.item.fee.free,
+            serviceTitle: product.item.fee.open
+        )
+    }
 }

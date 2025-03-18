@@ -12,9 +12,7 @@ import GetBannersMyProductListService
 extension RootViewModelFactory {
     
     @inlinable
-    func makeBannersBox(
-        flags: FeatureFlags
-    ) -> BannersBox<BannerList> {
+    func makeBannersBox() -> BannersBox<BannerList> {
 
         let bannersRemoteLoad = nanoServiceComposer.composeSerialResultLoad(
             createRequest: { try RequestFactory.createGetBannersMyProductListV2Request($0) },

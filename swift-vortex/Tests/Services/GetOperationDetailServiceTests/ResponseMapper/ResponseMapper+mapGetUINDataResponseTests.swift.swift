@@ -315,7 +315,7 @@ final class ResponseMapper_mapGetOperationDetailResponseTests_swift: XCTestCase 
         payerAccountID: Int? = nil,
         payerAccountNumber: String? = nil,
         payerAddress: String? = nil,
-        payerAmount: Int? = nil,
+        payerAmount: Decimal? = nil,
         payerCardID: Int? = nil,
         payerCardNumber: String? = nil,
         payerCurrency: String? = nil,

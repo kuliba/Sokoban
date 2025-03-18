@@ -55,6 +55,15 @@ extension RootViewModelFactory {
     }
     
     @inlinable
+    func cacheDebugLog(
+        message: String,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        log(level: .debug, category: .cache, message: message, file: file, line: line)
+    }
+    
+    @inlinable
     func debugLog(pageCount: Int, of total: Int) {
         
         debugLog(category: .cache, message: "Page with \(pageCount) item(s) of \(total) total.")

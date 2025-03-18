@@ -7,6 +7,7 @@
 
 import Foundation
 import CalendarUI
+import OrderCardLandingComponent
 
 typealias MakeProductProfileViewModel = (ProductData, String, FilterState, @escaping () -> Void) -> ProductProfileViewModel?
 typealias MakeModelAuthLoginViewModelFactory = (Model, RootViewModel.RootActions) -> ModelAuthLoginViewModelFactory
@@ -26,13 +27,13 @@ struct MainViewModelsFactory {
     let qrViewModelFactory: QRViewModelFactory
     let makeTrailingToolbarItems: MakeTrailingToolbarItems
     let makeCreditCardMVP: MakeCreditCardMVP
-    let makeAuthProductsViewModel: MakeAuthProductsViewModel // improve name typealias
+    let makeOpenCardLanding: MakeOpenCardLanding
     
     typealias MakeTrailingToolbarItems = (@escaping (MainViewModelAction.Toolbar) -> Void) -> [NavigationBarButtonViewModel]
     
     typealias MakeCreditCardMVP = () -> PromoItem?
     
-    typealias MakeAuthProductsViewModel = (@escaping () -> Void) -> AuthProductsLandingDomain.Binder // improve name typealias
+    typealias MakeOpenCardLanding = (@escaping () -> Void) -> MainViewModel.Link.OpenCard
 }
 
 extension MainViewModelsFactory {
@@ -44,7 +45,7 @@ extension MainViewModelsFactory {
         qrViewModelFactory: .preview(),
         makeTrailingToolbarItems: { _ in [] },
         makeCreditCardMVP: { nil },
-        makeAuthProductsViewModel: { _ in .preview }
+        makeOpenCardLanding: { _ in .cardLanding(.preview) }
     )
 }
 
@@ -58,5 +59,24 @@ extension AuthProductsLandingDomain.Binder {
             handleEffect: { _,_ in }
         ),
         bind: { _,_ in .init() }
+    )
+}
+
+extension CardLandingDomain.Binder {
+    
+    static let preview: CardLandingDomain.Binder = .init(
+        content: .init(
+            initialState: .init(),
+            reduce: { state,_ in (state, nil) },
+            handleEffect: { _,_ in }
+        ),
+        flow: .init(
+            initialState: .init(),
+            reduce: { state,_ in (state, nil) },
+            handleEffect: { _,_ in }
+        ),
+        bind: {
+            _,_ in .init()
+        }
     )
 }

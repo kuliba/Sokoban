@@ -60,8 +60,31 @@ extension OpenSavingsAccountCompleteDomain.Details: TransactionDetailsProviding 
         
         formattedFee.map {
             
-            .init(image: OperationDetailInfoViewModel.PropertyIconType.commission.icon, title: .formattedFee, value: $0)
+            .init(image: percent(), title: .formattedFee, value: $0)
         }
+    }
+    
+    private func percent() -> Image {
+        
+        coloredImage(named: "ic24PercentCommission", color: .textPlaceholder)
+    }
+    
+    func coloredImage(named imageName: String, color: Color) -> Image {
+        
+        guard let uiImage = UIImage(named: imageName) else { return Image(imageName) }
+
+        let uiColor = UIColor(color)
+        let renderer = UIGraphicsImageRenderer(size: uiImage.size)
+        let newUIImage = renderer.image { context in
+            let rect = CGRect(origin: .zero, size: uiImage.size)
+            
+            uiColor.setFill()
+            context.fill(rect)
+            
+            uiImage.draw(in: rect, blendMode: .destinationIn, alpha: 1.0)
+        }
+        
+        return Image(uiImage: newUIImage)
     }
 }
 
