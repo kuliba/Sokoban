@@ -33,11 +33,11 @@ public struct List: View {
                     .accessibilityIdentifier("ItemsTitle")
             }
             
-            ForEach(items.list, content: itemView)
+            ForEach(items.list, id: \.titleWithSubtitle, content: itemView)
                 .accessibilityIdentifier("Items")
         }
-        .padding(.vertical, 12)
-        .padding(.horizontal, 16)
+        .padding(.vertical, config.paddings.vertical)
+        .padding(.horizontal, config.paddings.horizontal)
         .background(config.background)
         .cornerRadius(12)
     }
@@ -46,7 +46,7 @@ public struct List: View {
         item: Items.Item
     ) -> some View {
         
-        HStack(spacing: config.spacing) {
+        HStack(alignment: .center, spacing: config.spacing) {
             
             factory.makeIconView(item.md5hash)
                 .aspectRatio(contentMode: .fill)
@@ -54,17 +54,31 @@ public struct List: View {
                 .clipShape(Circle())
                 .accessibilityIdentifier("ItemIcon")
             
-            VStack(alignment: .leading, spacing: 0) {
-                
-                item.title.text(withConfig: config.item.title)
-                    .accessibilityIdentifier("ItemTitle")
-                
-                item.subtitle.map {
-                    $0.text(withConfig: config.item.subtitle)
-                        .accessibilityIdentifier("ItemSubtitle")
-                }
-            }
+            titleWithSubtitle(item)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
+    
+    @ViewBuilder
+    private func titleWithSubtitle(
+        _ item: Items.Item
+    ) -> some View {
+        
+        VStack(alignment: .leading, spacing: 0) {
+            
+            item.title.text(withConfig: config.item.title)
+                .accessibilityIdentifier("ItemTitle")
+            
+            if let subtitle = item.subtitle, !subtitle.isEmpty {
+                subtitle.text(withConfig: config.item.subtitle)
+                    .accessibilityIdentifier("ItemSubtitle")
+            }
+        }
+    }
 }
+
+private extension Items.Item {
+    
+    var titleWithSubtitle: String { title + (subtitle ?? "") }
+}
+

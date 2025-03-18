@@ -38,4 +38,31 @@ extension ViewComponents {
                 )
         }
     }
+    
+    @inlinable
+    func makeCardPromoLandingFlowView1(
+        _ flow: CardLandingDomain.Flow
+    ) -> some View {
+        
+        RxWrapperView(model: flow) { state, event in
+            
+            Color.clear
+                .navigationLink(
+                    value: .init(
+                        get: { state.navigation },
+                        set: { if $0 == nil { event(.dismiss) }}
+                    ),
+                    content: { navigation in
+                        
+                        switch navigation {
+                        case let .order(binder):
+                            makeOpenCardProductView(
+                                binder,
+                                dismiss: { flow.event(.dismiss) }
+                            )
+                        }
+                    }
+                )
+        }
+    }
 }

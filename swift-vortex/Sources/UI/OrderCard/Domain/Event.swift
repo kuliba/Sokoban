@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SelectorComponent
 
 public enum Event<Confirmation> {
     
@@ -18,6 +19,7 @@ public enum Event<Confirmation> {
     case orderCardResult(OrderCardResult)
     case otp(String)
     case setConsent(Bool)
+    case selector(SelectorEvent<Product>)
     
     public typealias OrderCardResult = Result<OrderCardResponse, LoadFailure>
 }

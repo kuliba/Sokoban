@@ -3075,6 +3075,7 @@ private extension Target {
         dependencies: [
             // internal packages
             .amountComponent,
+            .selectorComponent,
             .linkableText,
             .paymentComponents,
             .toggleComponent,
@@ -3087,7 +3088,11 @@ private extension Target {
     static let orderCardLandingComponent = target(
         name: .orderCardLandingComponent,
         dependencies: [
-            .orderCard,
+            .headerLandingComponent,
+            .listLandingComponent,
+            .dropDownTextListComponent,
+            .sharedConfigs,
+            .uiPrimitives
             // internal packages
         ],
         path: "Sources/UI/\(String.orderCardLandingComponent)"
@@ -4768,6 +4773,7 @@ private extension Array where Element == Target {
         .splashScreenCore,
         .splashScreenCoreTests,
         .splashScreenUI,
+        .splashScreenUITests,
     ]
 }
 
@@ -4816,13 +4822,27 @@ private extension Target {
     static let splashScreenUI = target(
         name: .splashScreenUI,
         dependencies: [
+            // external packages
+            .combineSchedulers,
+            // internal modules
             .sharedConfigs,
-            .uiPrimitives
+            .uiPrimitives,
+            .vortexTools,
         ],
         path: "Sources/Feature/\(String.splashScreen)/UI",
         resources: [
             .process("Resources")
         ]
+    )
+    static let splashScreenUITests = testTarget(
+        name: .splashScreenUITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .splashScreenUI,
+        ],
+        path: "Tests/Feature/\(String.splashScreen)/UI"
     )
 }
 
@@ -4836,8 +4856,8 @@ private extension Target.Dependency {
         name: .splashScreenCore
     )
     
-    static let splashScreen = byName(
-        name: .splashScreen
+    static let splashScreenUI = byName(
+        name: .splashScreenUI
     )
 }
 
@@ -4852,4 +4872,5 @@ private extension String {
     static let splashScreenCoreTests = "SplashScreenCoreTests"
     
     static let splashScreenUI = "SplashScreenUI"
+    static let splashScreenUITests = "SplashScreenUITests"
 }

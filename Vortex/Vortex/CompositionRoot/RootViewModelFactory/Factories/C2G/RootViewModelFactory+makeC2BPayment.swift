@@ -67,11 +67,13 @@ extension RootViewModelFactory {
                 let details = makeOperationDetailByPaymentID(payload)
                 details.event(.load)
                 
-                let document = makeC2GDocumentButton()
+                let document = makeC2GDocumentButton(
+                    paymentOperationDetailID: payload.paymentOperationDetailID
+                )
                 document.event(.load)
                 
                 completion(.success(.init(
-                    context: .init(payload), 
+                    context: .init(payload),
                     details: details,
                     document: document
                 )))
@@ -113,15 +115,16 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeC2GDocumentButton(
+        paymentOperationDetailID id: Int
     ) -> DocumentButtonDomain.Model {
         
         return makeDocumentButton { [weak self] completion in
             
-            // TODO: replace stub with real service when API is ready
-            self?.schedulers.background.delay(for: .seconds(2)) {
-                
-                completion(.failure(NSError(domain: "Load print form error", code: -1)))
-            }
+            self?.getPrintForm(
+                paymentOperationDetailID: id,
+                printFormType: "c2g",
+                completion: completion
+            )
         }
     }
     
@@ -151,7 +154,7 @@ extension RootViewModelFactory {
                 let details = makeOperationDetailByPaymentID(basicDetails)
                 details.event(.load)
                 
-                let document = makeC2GDocumentButton()
+                let document = makeC2GDocumentButton(paymentOperationDetailID: 0)
                 document.event(.load)
                 
                 completion(.success(.init(

@@ -6,6 +6,7 @@
 //
 
 import Combine
+import SelectorComponent
 import SwiftUI
 
 struct OrderCardView_Previews: PreviewProvider {
@@ -51,17 +52,7 @@ struct OrderCardView_Previews: PreviewProvider {
             event: { print($0) },
             config: .preview,
             factory: .default
-        ) { confirmation in
-            
-            Color.green
-                .frame(height: 400)
-                .overlay {
-                
-                    Text(String(describing: confirmation))
-                        .foregroundStyle(.white)
-                        .font(.title3)
-                }
-        }
+        )
     }
 }
 
@@ -137,11 +128,11 @@ where Confirmation == PreviewConfirmation {
         consent: Bool = true,
         messages: Messages = .preview(),
         otp: String? = nil,
-        orderCardResponse: OrderCardResponse? = nil
+        orderCardResponse: OrderCardResponse? = nil,
+        selector: SelectorComponent.Selector<Product> = .preview
     ) -> Self {
         
         return .init(
-            product: .preview,
             type: .preview,
             conditions: conditions,
             tariffs: tariff,
@@ -153,7 +144,8 @@ where Confirmation == PreviewConfirmation {
             consent: consent,
             messages: messages,
             otp: otp,
-            orderCardResponse: orderCardResponse
+            orderCardResponse: orderCardResponse,
+            selector: selector
         )
     }
 }
@@ -174,7 +166,14 @@ where State == PreviewConfirmation {
 
 private extension Product {
     
-    static let preview: Self = .init(image: "", header: ("String", "String"), orderOption: (open: "String", service: "String"))
+    static let preview: Self = .init(
+        image: "image",
+        typeText: "typeText",
+        header: "header",
+        subtitle: "subtitle",
+        orderTitle: "orderTitle",
+        serviceTitle: "serviceTitle"
+    )
 }
 
 private extension CardType {
@@ -262,50 +261,49 @@ private extension ProductConfig {
     )
 }
 
-private extension ImageViewFactory {
+private extension SelectorComponent.Selector<Product> {
+
+    static let preview: Self = try! .init(
+        options: [.init(
+        image: "image",
+        typeText: "typeText",
+        header: "header",
+        subtitle: "subtitle",
+        orderTitle: "orderTitle",
+        serviceTitle: "serviceTitle"
+        )],
+        filterPredicate: {_,_ in
+            return false
+        })
+}
+
+private extension ViewFactory where ConfirmationView == Text, SelectorView == Text {
     
-    static let `default`: Self = .init(
-        makeIconView: {
-            switch $0 {
-            case "1":
-                return  .init(
-                    image: .bolt,
-                    publisher: Just(.bolt).eraseToAnyPublisher()
-                )
-                
-            case "2":
-                return  .init(
-                    image: .shield,
-                    publisher: Just(.shield).eraseToAnyPublisher()
-                )
-                
-            default:
-                return .init(
-                    image: .flag,
-                    publisher: Just(.flag).eraseToAnyPublisher()
-                )
-            }
-        },
-        makeBannerImageView: {
-            switch $0 {
-            case "1":
-                return  .init(
-                    image: .shield,
-                    publisher: Just(.shield).eraseToAnyPublisher()
-                )
-                
-            case "2":
-                return  .init(
-                    image: .bolt,
-                    publisher: Just(.bolt).eraseToAnyPublisher()
-                )
-                
-            default:
-                return .init(
-                    image: .percent,
-                    publisher: Just(.percent).eraseToAnyPublisher()
-                )
-            }
-        }
-    )
+    static var `default`: Self {
+        .init(
+            makeConfirmationView: { Text(String(describing: $0)) },
+            makeIconView: {
+                switch $0 {
+                case "1":
+                    return  .init(
+                        image: .shield,
+                        publisher: Just(.shield).eraseToAnyPublisher()
+                    )
+                    
+                case "2":
+                    return  .init(
+                        image: .bolt,
+                        publisher: Just(.bolt).eraseToAnyPublisher()
+                    )
+                    
+                default:
+                    return .init(
+                        image: .percent,
+                        publisher: Just(.percent).eraseToAnyPublisher()
+                    )
+                }
+            },
+            makeSelectorView: { _,_ in Text("Selector") }
+        )
+    }
 }

@@ -37,7 +37,9 @@ extension RootViewModelFactory {
                 name: statement.fastPayment?.foreignName
             )
             
-            let document = makeC2GDocumentButton()
+            let document = makeC2GDocumentButton(
+                paymentOperationDetailID: statement.documentId ?? 0
+            )
             document.event(.load)
             
             return .v3(.init(

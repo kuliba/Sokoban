@@ -10,6 +10,7 @@ import OTPInputComponent
 import PaymentComponents
 import RxViewModel
 import SwiftUI
+import SelectorComponent
 
 extension ViewComponents {
     
@@ -50,13 +51,10 @@ extension ViewComponents {
                 event: event,
                 config: .iVortex,
                 factory: .init(
+                    makeConfirmationView: { confirmationView($0, state, event) },
                     makeIconView: makeIconView,
-                    makeBannerImageView: makeGeneralIconView
-                ),
-                confirmationView: {
-                    
-                    confirmationView($0, state, event)
-                }
+                    makeSelectorView: makeSelectorView
+                )
             )
             .safeAreaInset(edge: .bottom) {
                 
@@ -64,6 +62,76 @@ extension ViewComponents {
             }
             .opacity(state.isLoading ? 0.7 : 1)
             .disabled(state.isLoading)
+        }
+    }
+    
+    @inlinable
+    func makeSelectorView(
+        state: Selector<Product>,
+        event: @escaping (SelectorEvent<Product>) -> Void
+    ) -> some View {
+        
+        SelectorView(
+            state: state,
+            event: event,
+            factory: .init(
+                makeIconView: iconView,
+                makeOptionLabel: optionLabelView,
+                makeSelectedOptionLabel: makeSelectedOptionLabel,
+                makeToggleLabel: makeToggleLabel
+            ),
+            config: .iVortex(title: "Тип носителя")
+        )
+    }
+    
+    @ViewBuilder
+    private func makeToggleLabel(
+        isToggleUp: Bool
+    ) -> some View {
+        isToggleUp ? Image.ic24ChevronUp : Image.ic24ChevronDown
+    }
+    
+    @ViewBuilder
+    private func makeSelectedOptionLabel(
+        product: Product
+    ) -> some View {
+        
+        Text(product.typeText)
+            .font(.textH4M16240())
+            .foregroundStyle(.textSecondary)
+    }
+    
+    @ViewBuilder
+    private func iconView(
+    ) -> some View {
+        
+        Image.ic24User
+            .frame(width: 24, height: 24)
+            .foregroundStyle(.iconGray)
+    }
+    
+    @ViewBuilder
+    private func optionLabelView(
+        product: Product
+    ) -> some View {
+        
+        HStack(spacing: 12) {
+            
+            ZStack {
+                
+                Circle()
+                    .frame(width: 32, height: 32)
+                    .foregroundStyle(product.iconColor)
+                
+                Image.ic24CreditCard
+                    .resizable()
+                    .frame(width: 19.2, height: 19.2)
+                    .foregroundStyle(.white)
+            }
+            
+            Text(product.typeText)
+                .font(.textH4M16240())
+                .foregroundStyle(.textSecondary)
         }
     }
     
@@ -232,5 +300,18 @@ private extension InformerInternalView {
             icon: informer.icon,
             color: informer.color
         )
+    }
+}
+
+private extension OrderCard.Product {
+    
+    var iconColor: Color {
+        
+        switch self.typeText {
+        case "Цифровая":
+                .bgIconDeepPurpleMedium
+        default:
+                .bgIconDeepBlueLight
+        }
     }
 }

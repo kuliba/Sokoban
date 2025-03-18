@@ -25,6 +25,7 @@ extension ListLandingComponent.Config {
             textFont: .textH3Sb18240(),
             textColor: .mainColorsBlack
         ),
+        paddings: .init(horizontal: 16, vertical: 12),
         spacing: 18
     )
 }

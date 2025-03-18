@@ -20,8 +20,8 @@ where IconView: View {
         
         productView(
             designMd5hash: product.image,
-            header: product.header,
-            orderOption: product.orderOption,
+            header: (title: product.header, subtitle: product.subtitle),
+            orderOption: (open: product.orderTitle, service: product.serviceTitle),
             needShimmering: isLoading
         )
     }
@@ -148,9 +148,12 @@ struct ProductView_Previews: PreviewProvider {
         
         ProductView(
             product: .init(
-                image: "",
-                header: ("Все включено", "Кешбэк до 10 000 ₽ в месяц"),
-                orderOption: (open: "Бесплатно", service: "0 ₽")
+                image: "image", 
+                typeText: "typeText",
+                header: "Все включено",
+                subtitle: "Кешбэк до 10 000 ₽ в месяц",
+                orderTitle: "Бесплатно",
+                serviceTitle: "0 ₽"
             ),
             isLoading: isLoading,
             config: .init(
@@ -164,7 +167,9 @@ struct ProductView_Previews: PreviewProvider {
                 cornerRadius: 12,
                 background: .red.opacity(0.2)
             ),
-            makeIconView: { _ in EmptyView() }
+            makeIconView: {
+                _ in EmptyView()
+            }
         )
     }
 }

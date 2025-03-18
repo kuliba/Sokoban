@@ -2601,7 +2601,8 @@ extension ProductProfileViewModel {
             case meToMe(PaymentsMeToMeViewModel)
             case meToMeLegacy(MeToMeViewModel)
             case placesMap(PlacesViewModel)
-            
+            case savingsAccountInfo(SavingsAccountInfo)
+
             typealias OperationDetail = OperationDetailFactory.OperationDetail
         }
     }
@@ -3371,6 +3372,31 @@ extension ProductProfileViewModel {
         
         scheduler.delay(for: .milliseconds(0)) { [weak self] in
             self?.bottomSheet = nil
+        }
+    }
+}
+
+extension ProductProfileViewModel {
+    
+    func amountToString(
+        amount: Decimal,
+        currencyCode: String
+    ) -> String{
+        model.amountFormatted(
+            amount: amount.doubleValue,
+            currencyCode: currencyCode,
+            style: .normal
+        ) ?? ""
+    }
+    
+    func event(_ event: SavingsAccountDetailsEvent) {
+        
+        switch event {
+        case .expanded:
+            accountInfo?.isExpanded.toggle()
+
+        case .showSheet:
+            bottomSheetSubject.send(.init(type: .savingsAccountInfo(.iVortex)))
         }
     }
 }
