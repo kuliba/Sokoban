@@ -565,7 +565,7 @@ extension Payments.ParameterSuccessText {
         case .suspended:
             return .init(
                 id: paramId,
-                value: "Операция временно приостановлена в целях безопасности",
+                value: "Операция приостановлена в целях безопасности.",
                 style: .warning
             )
         }
@@ -598,7 +598,7 @@ extension Payments.ParameterSuccessText {
             case .suspended:
                 return .init(
                     id: paramId,
-                    value: "Операция временно приостановлена в целях безопасности",
+                    value: "Операция приостановлена в целях безопасности.",
                     style: .warning
                 )
             }
@@ -621,7 +621,7 @@ extension Payments.ParameterSuccessText {
                     return .init(id: paramId, value: "Операция неуспешна!", style: .title)
                 }
             case .suspended:
-                return .init(id: paramId, value: "Операция временно приостановлена в целях безопасности", style: .warning)
+                return .init(id: paramId, value: "Операция приостановлена в целях безопасности.", style: .warning)
             }
         }
     }
