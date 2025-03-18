@@ -251,7 +251,10 @@ extension RootViewModelFactory {
                     details: details,
                     document: document
                 ),
-                model.handleProductsUpdateTotalAll,
+                { [weak model] in 
+                    
+                    model?.action.send(ModelAction.Products.Update.Total.All())
+                },
                 newInProgress
             )
         )
