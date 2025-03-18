@@ -240,7 +240,7 @@ struct GetCollateralLandingCalculatorView<InformerPayload>: View where InformerP
                 amountTextFild()
                     .onTapGesture {
                         
-                        domainEvent(.setAmountResponder(!state.isAmountTextFieldFirstResponder))
+                        domainEvent(.setAmountResponder(true))
                     }
 
                 Button {
