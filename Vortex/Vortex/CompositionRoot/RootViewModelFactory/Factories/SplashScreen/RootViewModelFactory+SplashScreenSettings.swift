@@ -288,7 +288,7 @@ private extension RemoteServices.ResponseMapper.SplashScreenSettings {
     ) -> SplashScreenSettings? {
         
         return .init(
-            duration: .init(viewDuration ?? .defaultDuration),
+            duration: .init(viewDuration ?? .defaultDurationInMS) / 1_000,
             logo: _logo,
             text: _text,
             subtext: _subtext,
@@ -529,5 +529,5 @@ private extension CodableSplashScreenSettings.Shadow {
 
 private extension Int {
     
-    static let defaultDuration = 4
+    static let defaultDurationInMS = 4_000
 }
