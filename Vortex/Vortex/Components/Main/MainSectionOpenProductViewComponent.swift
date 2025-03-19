@@ -39,13 +39,10 @@ extension MainSectionOpenProductView {
             
             model.products
                 .map(\.hasSavingsAccount)
+                .removeDuplicates()
                 .receive(on: DispatchQueue.main)
-                .sink { [weak self] _ in
-                    
-                    guard let self else { return }
-                    
-                    newProducts = .init(model, makeOpenNewProductButtons: makeButtons)
-                }.store(in: &bindings)
+                .sink { [weak self] _ in self?.updateButtons() }
+                .store(in: &bindings)
 
             newProducts.action
                 .receive(on: DispatchQueue.main)
@@ -62,6 +59,10 @@ extension MainSectionOpenProductView {
                 }.store(in: &bindings)
         }
         
+        private func updateButtons() {
+            
+            newProducts = .init(model, makeOpenNewProductButtons: makeButtons)
+        }
     }
 }
 

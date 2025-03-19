@@ -111,13 +111,10 @@ class MyProductsViewModel: ObservableObject {
         
         model.products
             .map(\.hasSavingsAccount)
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                
-                guard let self, let makeOpenNewProductButtons else { return }
-                openProductVM = .init(model, makeOpenNewProductButtons: makeOpenNewProductButtons)
-                
-            }.store(in: &bindings)
+            .sink { [weak self] _ in self?.updateButtons() }
+            .store(in: &bindings)
 
         action
             .receive(on: DispatchQueue.main)
@@ -308,6 +305,12 @@ class MyProductsViewModel: ObservableObject {
             }
         
             .store(in: &bindings)
+    }
+    
+    private func updateButtons() {
+        
+        guard let makeOpenNewProductButtons else { return }
+        openProductVM = .init(model, makeOpenNewProductButtons: makeOpenNewProductButtons)
     }
     
     func openCard() {
