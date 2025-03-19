@@ -39,14 +39,7 @@ extension ViewComponents {
         
         HStack(alignment: .top, spacing: 8) {
             
-            document.map { document in
-                
-                circleButton(image: .ic24File, title: "Документ") {
-                    
-                    document.flow.event(.select(.tap(document.content)))
-                }
-                .background(makeC2GDocumentButtonFlowView(document.flow))
-            }
+            document.map(makeC2GDocumentButtonDomainBinderView)
             
             RxWrapperView(model: details) { state, _ in
                 
