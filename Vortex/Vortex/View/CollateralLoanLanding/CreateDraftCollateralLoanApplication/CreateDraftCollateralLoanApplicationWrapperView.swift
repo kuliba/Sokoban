@@ -153,19 +153,6 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
             }
         }
     }
-//    
-//    func buttonBack(event: @escaping (Event) -> Void) -> some View {
-//        
-//        Button(action: { event(.back) }) {
-//            
-//            HStack {
-//                
-//                Image.ic16ChevronLeft
-//                    .aspectRatio(contentMode: .fit)
-//                Text("Оформление заявки")
-//            }
-//        }
-//    }
     
     private func handleExternalEvent(events: Domain.ExternalEvent) {
         

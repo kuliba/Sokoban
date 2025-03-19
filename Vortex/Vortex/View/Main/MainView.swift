@@ -420,12 +420,7 @@ private extension MainView {
         viewFactory.components.makeCollateralLoanShowcaseWrapperView(
             makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,
             binder: binder,
-            goToPlaces: {
-
-                guard let placesViewModel = PlacesViewModel(viewModel.model) else { return }
-                viewModel.resetDestination()
-                viewModel.route.modal = .sheet(.init(type: .places(placesViewModel)))
-            },
+            goToPlaces: goToPlaces,
             goToMain: viewModel.resetDestination,
             getPDFDocument: viewModel.getPDFDocument,
             formatCurrency: viewModel.formatCurrency
@@ -442,15 +437,7 @@ private extension MainView {
         return viewFactory.components.makeCollateralLoanWrapperView(
             binder: binder,
             makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,
-            goToPlaces: {
-
-                viewModel.resetDestination()
-                guard let placesViewModel = PlacesViewModel(viewModel.model) else { return }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-
-                    viewModel.route.modal = .sheet(.init(type: .places(placesViewModel)))
-                }
-            },
+            goToPlaces: goToPlaces,
             goToMain: viewModel.resetDestination,
             getPDFDocument: viewModel.getPDFDocument,
             formatCurrency: viewModel.formatCurrency
@@ -459,6 +446,16 @@ private extension MainView {
             title: "",
             dismiss: viewModel.resetDestination
         )
+    }
+    
+    private func goToPlaces() {
+
+        viewModel.reset()
+        guard let placesViewModel = PlacesViewModel(viewModel.model) else { return }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+
+            viewModel.route.modal = .sheet(.init(type: .places(placesViewModel)))
+        }
     }
 }
 

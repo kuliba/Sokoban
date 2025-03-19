@@ -7,6 +7,7 @@
 
 import Foundation
 import InputComponent
+import LandingUIComponent
 import OptionalSelectorComponent
 import OTPInputComponent
 import TextFieldComponent
@@ -49,7 +50,6 @@ extension CreateDraftCollateralLoanApplicationDomain {
                     
                     state.amount.message = nil
                 }
-
             case let .period(periodEvent):
                 state.period = periodSelectReduce(state.period, periodEvent)
                 
@@ -166,12 +166,13 @@ public extension CreateDraftCollateralLoanApplicationDomain.Reducer {
         application: CreateDraftCollateralLoanApplication,
         placeholderText: String = "Введите значение",
         warningText: String = "Некорректная сумма",
-        hintText: String
+        hintText: String,
+        maxAmount: Decimal
     ) {
         let decimalFormatter = DecimalFormatter(currencySymbol: "₽")
         
-        let textFieldReducer = ChangingReducer.decimal(formatter: decimalFormatter)
-        
+        let textFieldReducer = ChangingReducer.decimal(formatter: decimalFormatter, maxValue: maxAmount)
+
         let textInputValidator = TextInputValidator(
             hintText: hintText,
             warningText: warningText,

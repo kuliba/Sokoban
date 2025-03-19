@@ -9,11 +9,11 @@ import SwiftUI
 import UIPrimitives
 
 struct DocumentButton: View {
-
+    
     @State private var isSheetPresented: Bool = false
     
     @Binding private var state: DocumentButtonState
-
+    
     let getDocument: () -> Void
     let goToPlaces: () -> Void
     let goToMain: () -> Void
@@ -41,19 +41,24 @@ struct DocumentButton: View {
                         .navigationBarWithClose(title: "", dismiss: { isSheetPresented = false })
 
                 case let .failure(failure):
-                    Color.white
-                        .alert(
-                            item: alert,
-                            content: makeAlert
-                        )
-                    
                     switch failure {
                     case let .informer(informerData):
                         
-                        InformerView(viewModel: .init(message: informerData.message, icon: informerData.icon.image))
-                        
+                        InformerView(
+                            viewModel: .init(
+                                message: informerData.message,
+                                icon: informerData.icon.image
+                            )
+                        )
+                        .padding(.top, 30)
+                        .padding(.bottom, .infinity)
+
                     default:
                         Color.white
+                            .alert(
+                                item: alert,
+                                content: makeAlert
+                            )
                     }
                     
                 default:
@@ -73,11 +78,11 @@ struct DocumentButton: View {
                 
             case let .alert(message):
                 return .failure(message)
-
+                
             case .offline:
                 return .offline
             }
-
+            
         default:
             return nil
         }
@@ -88,9 +93,9 @@ struct DocumentButton: View {
         case failure(String)
         case offline
     }
-
+    
     private func startDownload() {
-
+        
         isSheetPresented = true
         
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
@@ -132,8 +137,8 @@ struct DocumentButton: View {
                 title: "Форма временно недоступна",
                 message: "Для получения Заявления-анкеты по вкладу обратитесь в отделение банка",
                 primary: .init(type: .cancel, title: "Наши офисы", action: { goToPlaces() }),
-                secondary: .init(type: .default, title: "ОК", action: { goToMain() }))
-
+                secondary: .init(type: .default, title: "ОК", action: { isSheetPresented = false }))
+            
             return .init(with: alertViewModel)
         }
     }

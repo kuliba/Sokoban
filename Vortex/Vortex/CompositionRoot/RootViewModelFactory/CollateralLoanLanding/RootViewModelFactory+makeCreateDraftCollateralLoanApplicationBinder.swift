@@ -87,7 +87,11 @@ extension RootViewModelFactory {
             return "Мин. - \(minAmount), Макс. - \(maxAmount)"
         }
 
-        let reducer = Domain.ContentReducer(application: application, hintText: hintText)
+        let reducer = Domain.ContentReducer(
+            application: application,
+            hintText: hintText,
+            maxAmount: Decimal(application.maxAmount)
+        )
         let effectHandler = Domain.ContentEffectHandler(
             createDraft: createDraft(payload:otpEvent:completion:),
             getVerificationCode: getVerificationCode(completion:),
@@ -226,7 +230,7 @@ extension RootViewModelFactory {
     func getPDFDocument(
         payload: RemoteServices.RequestFactory.GetConsentsPayload,
         completion: @escaping (CreateDraftCollateralLoanApplicationDomain.GetConsentsResult<InformerData>) -> Void
-    ) {        
+    ) {
         let getConsents = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetConsentsRequest(with:),
             mapResponse: RemoteServices.ResponseMapper.mapGetConsentsResponse(_:_:),
