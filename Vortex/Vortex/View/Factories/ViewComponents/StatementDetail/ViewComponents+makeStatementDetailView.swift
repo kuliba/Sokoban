@@ -19,7 +19,7 @@ extension ViewComponents {
         
         StatementDetailLayoutView(config: .iVortex) {
             
-            makeC2GPaymentCompleteButtonsView(
+            makeC2GPaymentStatementDetailButtonsView(
                 details: details.details,
                 document: details.document
             )
@@ -29,6 +29,49 @@ extension ViewComponents {
             makeStatementDetailContentView(details: details)
         }
         .padding(.horizontal)
+    }
+    
+    @inlinable
+    func makeC2GPaymentStatementDetailButtonsView(
+        details: OperationDetailDomain.Model,
+        document: C2GDocumentButtonDomain.Binder?
+    ) -> some View {
+        
+        HStack(alignment: .top, spacing: 8) {
+            
+            document.map { document in
+                
+                circleButton(image: .ic24File, title: "Документ") {
+                    
+                    document.flow.event(.select(.tap(document.content)))
+                }
+                .background(makeC2GDocumentButtonFlowView(document.flow))
+            }
+            
+            RxWrapperView(model: details) { state, _ in
+                
+                makeC2GPaymentCompleteDetailsAndRequisitesButtonsView(state: state)
+            }
+        }
+    }
+    
+    @inlinable
+    func makeC2GDocumentButtonFlowView(
+        _ flow: C2GDocumentButtonDomain.Flow
+    ) -> some View {
+        
+        RxWrapperView(model: flow) { state, event in
+            
+            Color.clear
+                .fullScreenCover(
+                    cover: state.navigation,
+                    dismiss: { event(.dismiss) },
+                    content: {
+                        
+                        Button(String(describing: $0)) { event(.dismiss) }
+                    }
+                )
+        }
     }
     
     @inlinable
@@ -70,6 +113,22 @@ extension ViewComponents {
             config: .iVortex,
             makeLogoView: makeIconView
         )
+    }
+}
+
+extension C2GDocumentButtonDomain.Navigation: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case .destination:
+            return .destination
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case destination // TODO: improve with ObjectIdentifier
     }
 }
 
@@ -127,7 +186,10 @@ struct MakeStatementDetailView_Previews: PreviewProvider {
         Group {
             
             view(.completed(.preview))
-                .previewDisplayName("completed")
+                .previewDisplayName("completed no doc")
+            
+            view(.completed(.preview), .preview)
+                .previewDisplayName("completed with doc")
             
             view(.failure(NSError(domain: "Load Failure", code: -1)))
                 .previewDisplayName("failure")
@@ -141,7 +203,8 @@ struct MakeStatementDetailView_Previews: PreviewProvider {
     }
     
     private static func view(
-        _ fullDetails: OperationDetailDomain.State.ExtendedDetailsState
+        _ fullDetails: OperationDetailDomain.State.ExtendedDetailsState,
+        _ document: C2GDocumentButtonDomain.Binder? = nil
     ) -> some View {
         
         ViewComponents.preview.makeStatementDetailView(.init(
@@ -150,7 +213,20 @@ struct MakeStatementDetailView_Previews: PreviewProvider {
                 basicDetails: .preview,
                 fullDetails: fullDetails
             ),
-            document: .preview
+            document: document
         ))
     }
+}
+
+private extension C2GDocumentButtonDomain.Binder {
+    
+    static let preview: C2GDocumentButtonDomain.Binder = .init(
+        content: 0,
+        flow: .init(
+            initialState: .init(),
+            reduce: { state, _ in (state, nil) },
+            handleEffect: { _,_ in }
+        ),
+        bind: { _,_ in [] }
+    )
 }
