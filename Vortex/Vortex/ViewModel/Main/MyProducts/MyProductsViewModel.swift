@@ -30,7 +30,7 @@ class MyProductsViewModel: ObservableObject {
     
     var navigationBar: NavigationBarView.ViewModel
     let totalMoneyVM: MyProductsMoneyViewModel
-    let openProductVM: MyProductsOpenProductView.ViewModel
+    var openProductVM: MyProductsOpenProductView.ViewModel
     var refreshingIndicator: RefreshingIndicatorView.ViewModel
     let openProductTitle = "Открыть продукт"
     var rootActions: RootViewModel.RootActions?
@@ -45,6 +45,8 @@ class MyProductsViewModel: ObservableObject {
     private let makeProductProfileViewModel: MakeProductProfileViewModel
     private let makeMyProductsViewFactory: MyProductsViewFactory
     
+    private var makeOpenNewProductButtons: OpenNewProductsViewModel.MakeNewProductButtons?
+    
     private var bindings = Set<AnyCancellable>()
     
     init(navigationBar: NavigationBarView.ViewModel,
@@ -58,7 +60,8 @@ class MyProductsViewModel: ObservableObject {
          refreshingIndicator: RefreshingIndicatorView.ViewModel,
          showOnboarding: [Onboarding: Bool] = [:],
          openProductByType: @escaping (OpenProductType) -> Void,
-         makeMyProductsViewFactory: MyProductsViewFactory
+         makeMyProductsViewFactory: MyProductsViewFactory,
+         makeOpenNewProductButtons: OpenNewProductsViewModel.MakeNewProductButtons? = nil
     ) {
         self.model = model
         self.cardAction = cardAction
@@ -72,6 +75,7 @@ class MyProductsViewModel: ObservableObject {
         self.showOnboarding = showOnboarding
         self.openProductByType = openProductByType
         self.makeMyProductsViewFactory = makeMyProductsViewFactory
+        self.makeOpenNewProductButtons = makeOpenNewProductButtons
     }
     
     convenience init(
@@ -105,6 +109,16 @@ class MyProductsViewModel: ObservableObject {
     
     private func bind() {
         
+        model.products
+            .map(\.hasSavingsAccount)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                
+                guard let self, let makeOpenNewProductButtons else { return }
+                openProductVM = .init(model, makeOpenNewProductButtons: makeOpenNewProductButtons)
+                
+            }.store(in: &bindings)
+
         action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
