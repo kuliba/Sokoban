@@ -255,6 +255,19 @@ private extension C2GCompleteCover {
     }
 }
 
+private extension C2GDocumentButtonDomain.Binder {
+    
+    static let preview: C2GDocumentButtonDomain.Binder = .init(
+        content: 0,
+        flow: .init(
+            initialState: .init(),
+            reduce: { state, _ in (state, nil) },
+            handleEffect: { _,_ in }
+        ),
+        bind: { _,_ in [] }
+    )
+}
+
 extension DocumentButtonDomain.Model {
     
     static let preview: DocumentButtonDomain.Model = .init(
@@ -293,7 +306,7 @@ private extension C2GPaymentDomain.Complete {
     static func preview(
         fields: Context,
         details: OperationDetailDomain.Model,
-        document: DocumentButtonDomain.Model = .preview
+        document: C2GDocumentButtonDomain.Binder = .preview
     ) -> Self {
         
         return .init(context: fields, details: details, document: document)
