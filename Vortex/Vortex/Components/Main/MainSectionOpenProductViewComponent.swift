@@ -20,12 +20,14 @@ extension MainSectionOpenProductView {
         @Published var newProducts: OpenNewProductsViewModel
         
         private let model: Model
+        private let makeButtons: OpenNewProductsViewModel.MakeNewProductButtons
         private var bindings = Set<AnyCancellable>()
         
         init(
             _ model: Model,
             makeButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons
         ) {
+            self.makeButtons = makeButtons
             self.newProducts = .init(model, makeOpenNewProductButtons: makeButtons)
             self.model = model
             super.init(isCollapsed: false)
@@ -35,6 +37,13 @@ extension MainSectionOpenProductView {
         
         func bind() {
             
+            model.products
+                .map(\.hasSavingsAccount)
+                .removeDuplicates()
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in self?.updateButtons() }
+                .store(in: &bindings)
+
             newProducts.action
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] action in
@@ -50,6 +59,10 @@ extension MainSectionOpenProductView {
                 }.store(in: &bindings)
         }
         
+        private func updateButtons() {
+            
+            newProducts = .init(model, makeOpenNewProductButtons: makeButtons)
+        }
     }
 }
 
@@ -67,7 +80,7 @@ struct MainSectionOpenProductView: View {
                 
                 HStack(spacing: 8) {
                     
-                    ForEach($viewModel.newProducts.items, id: \.type) { $itemViewModel in
+                    ForEach(viewModel.newProducts.items, id: \.type) { itemViewModel in
                         
                         NewProductButton(viewModel: itemViewModel)
                             .frame(width: 112, height: 124)
