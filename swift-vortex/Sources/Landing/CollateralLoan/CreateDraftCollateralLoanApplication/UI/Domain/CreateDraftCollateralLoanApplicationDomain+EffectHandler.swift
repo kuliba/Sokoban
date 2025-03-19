@@ -5,6 +5,8 @@
 //  Created by Valentin Ozerov on 16.01.2025.
 //
 
+import Tagged
+
 extension CreateDraftCollateralLoanApplicationDomain {
     
     public final class EffectHandler<Confirmation, InformerPayload> {
@@ -64,5 +66,5 @@ public extension CreateDraftCollateralLoanApplicationDomain.EffectHandler {
 
     typealias SaveConsentsCompletion = (Domain.SaveConsentsResult<InformerPayload>) -> Void
     typealias SaveConsentsPayload = CollateralLandingApplicationSaveConsentsPayload
-    typealias SaveConsents = (SaveConsentsPayload, @escaping SaveConsentsCompletion) -> Void    
+    typealias SaveConsents = (SaveConsentsPayload, @escaping SaveConsentsCompletion) -> Void
 }

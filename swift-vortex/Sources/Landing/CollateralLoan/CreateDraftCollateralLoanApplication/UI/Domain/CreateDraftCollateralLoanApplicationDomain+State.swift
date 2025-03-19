@@ -118,7 +118,7 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
     
     public var formattedAmount: String? {
         
-        formatCurrency(application.amount)
+        formatCurrency(selectedAmount)
     }
 
     public var hintText: String {

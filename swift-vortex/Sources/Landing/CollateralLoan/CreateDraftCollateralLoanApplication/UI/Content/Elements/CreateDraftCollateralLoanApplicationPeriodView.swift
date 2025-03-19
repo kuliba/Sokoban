@@ -61,7 +61,7 @@ struct CreateDraftCollateralLoanApplicationPeriodView<Confirmation, InformerPayl
             info: .init(
                 id: .other(State.FieldID.period.id),
                 title: config.elements.period.title,
-                value: state.application.selectedPeriodTitle,
+                value: state.period.selected?.title ?? state.application.selectedPeriodTitle,
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),

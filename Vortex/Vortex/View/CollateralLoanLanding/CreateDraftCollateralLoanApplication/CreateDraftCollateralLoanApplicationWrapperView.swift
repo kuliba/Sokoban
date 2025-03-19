@@ -105,11 +105,17 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
                 config: .default,
                 factory: factory
             )
-            .if(state.stage == .confirm) {
-                
-                $0.navigationBarBackButtonHidden(true)
-                    .navigationBarItems(leading: buttonBack(event: event))
-            }
+//            .if(state.stage == .confirm) {
+//                
+//                $0.toolbar {
+//                    
+//                    ToolbarItem(placement: .navigationBarLeading) {
+//                        buttonBack(event: event)
+//                    }
+//                }
+//                .navigationBarBackButtonHidden()
+//
+//            }
         }
     }
         
@@ -147,18 +153,19 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
             }
         }
     }
-    
-    func buttonBack(event: @escaping (Event) -> Void) -> some View {
-        
-        Button(action: { event(.back) }) {
-            
-            HStack {
-                Image.ic16ChevronLeft
-                    .aspectRatio(contentMode: .fit)
-                Text("Оформление заявки")
-            }
-        }
-    }
+//    
+//    func buttonBack(event: @escaping (Event) -> Void) -> some View {
+//        
+//        Button(action: { event(.back) }) {
+//            
+//            HStack {
+//                
+//                Image.ic16ChevronLeft
+//                    .aspectRatio(contentMode: .fit)
+//                Text("Оформление заявки")
+//            }
+//        }
+//    }
     
     private func handleExternalEvent(events: Domain.ExternalEvent) {
         

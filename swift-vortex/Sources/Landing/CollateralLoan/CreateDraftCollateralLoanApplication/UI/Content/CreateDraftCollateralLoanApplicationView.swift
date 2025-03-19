@@ -62,7 +62,6 @@ public struct CreateDraftCollateralLoanApplicationView<Confirmation, InformerPay
                     percentView()
                     cityView()
                 }
-                .disabled(state.confirmation != nil)
                 
                 confirmationView()
             }
@@ -85,7 +84,10 @@ extension CreateDraftCollateralLoanApplicationView {
                 }
             } else {
                 
-                state.confirmation.map { confirmView(otpViewModel: $0) }
+                if state.stage == .confirm {
+                 
+                    state.confirmation.map { confirmView(otpViewModel: $0) }
+                }
             }
         }
         .onReceive(timer) { _ in shimmeringEnabled = state.confirmation == nil }

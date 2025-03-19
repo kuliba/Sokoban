@@ -152,19 +152,29 @@ struct CollateralLoanLandingWrapperView: View {
                 makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,
                 getPDFDocument: getPDFDocument
             )
-            .navigationBarWithBack(title: "Оформление заявки") {
-                
-                if binder.content.state.stage == .confirm {
-                 
-                    binder.content.event(.back)
-                } else {
+            .navigationTitle("Оформление заявки")
+            .navigationBarItems(leading: buttonBack(action: {
+
+                if (binder.content.state.stage == .confirm) {
                     
-                    dissmiss()
-                }
+                    binder.content.event(.back)
+                } else { dissmiss() }}))
+                .navigationBarBackButtonHidden()
+            }
+    }
+    
+    func buttonBack(action: @escaping () -> Void) -> some View {
+        
+        Button(action: action) {
+            
+            HStack {
+                
+                Image.ic16ChevronLeft
+                    .aspectRatio(contentMode: .fit)
             }
         }
     }
-    
+
     @ViewBuilder
     private func bottomSheetView(
         bottomSheet: GetCollateralLandingDomain.Navigation.BottomSheet
