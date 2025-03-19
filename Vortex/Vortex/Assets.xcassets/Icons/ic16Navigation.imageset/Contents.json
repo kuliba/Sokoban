@@ -2,14 +2,14 @@
   "properties" : {
     "template-rendering-intent" : "template"
   },
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
   "images" : [
     {
       "filename" : "ic16Navigation.svg",
       "idiom" : "universal"
     }
-  ],
-  "info" : {
-    "author" : "xcode",
-    "version" : 1
-  }
+  ]
 }

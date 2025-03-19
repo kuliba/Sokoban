@@ -3,13 +3,13 @@
     "version" : 1,
     "author" : "xcode"
   },
-  "properties" : {
-    "template-rendering-intent" : "template"
-  },
   "images" : [
     {
-      "filename" : "ic24Tariff.svg",
-      "idiom" : "universal"
+      "idiom" : "universal",
+      "filename" : "ic24Tariff.svg"
     }
-  ]
+  ],
+  "properties" : {
+    "template-rendering-intent" : "template"
+  }
 }

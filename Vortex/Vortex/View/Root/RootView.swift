@@ -338,7 +338,7 @@ extension RootViewModel.TabType {
         
         switch self {
         case .main:
-            return isSelected ? .ic24LogoVortexColor : .ic24LogoVortexLine
+            return isSelected ? .ic24LogoColor : .ic24LogoLine
             
         case .payments:
             return isSelected ? .ic24PaymentsActive : .ic24PaymentsInactive

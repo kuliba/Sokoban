@@ -4,8 +4,8 @@
   },
   "images" : [
     {
-      "filename" : "ic12Coins.svg",
-      "idiom" : "universal"
+      "idiom" : "universal",
+      "filename" : "ic12Coins.svg"
     }
   ],
   "info" : {
