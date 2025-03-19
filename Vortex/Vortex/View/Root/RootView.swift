@@ -338,7 +338,7 @@ extension RootViewModel.TabType {
         
         switch self {
         case .main:
-            return isSelected ? .ic24LogoVortexColor : .ic24LogoVortexLine
+            return isSelected ? .ic24LogoColor : .ic24LogoLine
             
         case .payments:
             return isSelected ? .ic24PaymentsActive : .ic24PaymentsInactive
@@ -405,6 +405,7 @@ private extension SplashScreenViewModel {
 private extension SplashScreenState.Settings {
     
     static let preview: Self = .init(
+        duration: 2.0,
         image: .init("splash"),
         logo: .init(color: .blue, shadow: .logo),
         text: .init(color: .green, size: 24, value: "Hello, world!", shadow: .text),

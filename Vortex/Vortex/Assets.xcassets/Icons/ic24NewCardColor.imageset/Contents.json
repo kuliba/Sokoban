@@ -1,17 +1,11 @@
 {
+  "properties" : {
+    "template-rendering-intent" : "template"
+  },
   "images" : [
     {
-      "filename" : "ic24NewCardColor.svg",
       "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "idiom" : "universal",
-      "scale" : "3x"
+      "filename" : "ic24NewCardColor.svg"
     }
   ],
   "info" : {

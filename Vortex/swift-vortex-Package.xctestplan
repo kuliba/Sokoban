@@ -714,16 +714,37 @@
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-vortex",
+        "containerPath" : "container:",
         "identifier" : "OrderCardLandingComponentTests",
         "name" : "OrderCardLandingComponentTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:..\/swift-vortex",
+        "containerPath" : "container:",
         "identifier" : "SplashScreenUITests",
         "name" : "SplashScreenUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "CreditCardMVPBackendTests",
+        "name" : "CreditCardMVPBackendTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "CreditCardMVPCoreTests",
+        "name" : "CreditCardMVPCoreTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/swift-vortex",
+        "identifier" : "CreditCardMVPUITests",
+        "name" : "CreditCardMVPUITests"
       }
     }
   ],

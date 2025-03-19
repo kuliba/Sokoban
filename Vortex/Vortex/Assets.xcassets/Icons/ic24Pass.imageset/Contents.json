@@ -4,8 +4,8 @@
   },
   "images" : [
     {
-      "filename" : "ic24Pass.svg",
-      "idiom" : "universal"
+      "idiom" : "universal",
+      "filename" : "ic24Pass.svg"
     }
   ],
   "info" : {

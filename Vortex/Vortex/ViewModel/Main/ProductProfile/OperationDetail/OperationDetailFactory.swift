@@ -11,21 +11,20 @@ struct OperationDetailFactory {
     
     let makeOperationDetailViewModel: MakeOperationDetailViewModel
     
+    typealias MakeOperationDetailViewModel = (ProductData.ID, ProductStatementData.ID) -> OperationDetail?
+    
     enum OperationDetail {
         
         case legacy(OperationDetailViewModel)
         case v3(StatementDetails)
     }
-    
-    typealias MakeOperationDetailViewModel = (ProductData.ID, ProductStatementData.ID) -> OperationDetail?
 }
 
-// TODO: move top OperationDetailsDomain(?)
 struct StatementDetails {
     
     let content: Content
     let details: OperationDetailDomain.Model
-    let document: DocumentButtonDomain.Model
+    let document: C2GDocumentButtonDomain.Binder?
     
     struct Content: Equatable {
         

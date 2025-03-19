@@ -190,6 +190,7 @@ final class SplashScreenReducerTests: XCTestCase {
     }
     
     private func makeSettings(
+        duration: TimeInterval = .random(in: 1...100),
         image: Image = .init(systemName: "star"),
         logo: SUT.State.Settings.Logo? = nil,
         text: SUT.State.Settings.Text? = nil,
@@ -198,6 +199,7 @@ final class SplashScreenReducerTests: XCTestCase {
     ) -> SUT.State.Settings {
         
         return .init(
+            duration: duration,
             image: image,
             logo: logo ?? makeLogo(),
             text: text ?? makeText(),

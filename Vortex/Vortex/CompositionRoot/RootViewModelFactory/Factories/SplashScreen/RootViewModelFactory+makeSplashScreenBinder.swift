@@ -19,7 +19,7 @@ extension RootViewModelFactory {
     @inlinable
     func makeSplashScreenBinder(
         flag: SplashScreenFlag,
-        delay: Delay = .seconds(1)
+        fadeout: Delay = .milliseconds(300)
     ) -> SplashScreenBinder {
         
         let splash = makeSplashScreenViewModel(
@@ -34,6 +34,8 @@ extension RootViewModelFactory {
                 if $0 == .hide { self?.generateFeedback(style: .light) }
             }
         )
+        
+        let delay: Delay = .seconds(splash.state.settings.duration) - fadeout
         
         let cancellables = flag.isActive ? handler.bind(delay: delay, on: schedulers.background) : []
         
@@ -99,6 +101,7 @@ extension SplashScreenState.Settings {
         guard text.value.contains("_") else { return self }
         
         return .init(
+            duration: duration,
             image: image,
             logo: logo,
             text: .init(
@@ -136,6 +139,7 @@ private extension Array where Element == SplashScreenSettings {
             else { return nil }
             
             return .init(
+                duration: $0.duration,
                 image: image,
                 logo: $0._logo,
                 text: $0._text,
@@ -201,6 +205,7 @@ private extension SplashScreenState.Settings {
     ) -> Self {
         
         return .init(
+            duration: 2.0,
             image: .init("splash"),
             logo: .logo,
             text: .default(for: timePeriod),
