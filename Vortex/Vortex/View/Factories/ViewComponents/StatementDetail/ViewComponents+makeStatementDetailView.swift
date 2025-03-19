@@ -121,14 +121,14 @@ extension C2GDocumentButtonDomain.Navigation: Identifiable {
     var id: ID {
         
         switch self {
-        case .destination:
-            return .destination
+        case let .destination(binder):
+            return .destination(.init(binder))
         }
     }
     
     enum ID: Hashable {
         
-        case destination // TODO: improve with ObjectIdentifier
+        case destination(ObjectIdentifier)
     }
 }
 

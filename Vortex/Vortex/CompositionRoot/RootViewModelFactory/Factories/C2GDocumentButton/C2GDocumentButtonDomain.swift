@@ -31,6 +31,6 @@ extension C2GDocumentButtonDomain {
     
     enum Navigation {
         
-        case destination
+        case destination(PDFDocumentDomain.Binder)
     }
 }

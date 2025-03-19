@@ -11,7 +11,7 @@ extension RootViewModelFactory {
     func makeC2GDocumentButtonDomainBinder(
         operationID: Int
     ) -> C2GDocumentButtonDomain.Binder {
-      
+        
         return composeBinder(content: operationID, getNavigation: getNavigation, witnesses: .empty)
     }
     
@@ -22,8 +22,11 @@ extension RootViewModelFactory {
         completion: @escaping (C2GDocumentButtonDomain.Navigation) -> Void
     ) {
         switch select {
-        case .tap:
-            completion(.destination)
+        case let .tap(id):
+            let binder = makePDFDocumentDomainBinder(paymentOperationDetailID: id)
+            binder.content.event(.load)
+            
+            completion(.destination(binder))
         }
     }
 }
