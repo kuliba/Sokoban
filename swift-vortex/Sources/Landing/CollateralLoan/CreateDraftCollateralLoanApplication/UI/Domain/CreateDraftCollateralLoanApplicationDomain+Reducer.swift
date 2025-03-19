@@ -45,8 +45,11 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 if !state.isAmountVaild {
                     
                     state.amount.message = .hint(state.hintText)
+                } else {
+                    
+                    state.amount.message = nil
                 }
-                
+
             case let .period(periodEvent):
                 state.period = periodSelectReduce(state.period, periodEvent)
                 
