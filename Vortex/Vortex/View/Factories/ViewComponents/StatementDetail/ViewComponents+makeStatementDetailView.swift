@@ -68,9 +68,78 @@ extension ViewComponents {
                     dismiss: { event(.dismiss) },
                     content: {
                         
-                        Button(String(describing: $0)) { event(.dismiss) }
+                        makeC2GDocumentButtonDomainNavigationView(
+                            navigation: $0,
+                            dismiss: { flow.event(.dismiss) }
+                        )
                     }
                 )
+        }
+    }
+    
+    @inlinable
+    @ViewBuilder
+    func makeC2GDocumentButtonDomainNavigationView(
+        navigation: C2GDocumentButtonDomain.Navigation,
+        dismiss: @escaping () -> Void
+    ) -> some View {
+        
+        switch navigation {
+        case let .destination(binder):
+            makePDFDocumentDomainContentView(binder.content, dismiss: dismiss)
+                .background(makePDFDocumentDomainFlowView(binder.flow, dismiss: dismiss))
+        }
+    }
+    
+    @inlinable
+    @ViewBuilder
+    func makePDFDocumentDomainContentView(
+        _ content: PDFDocumentDomain.Content,
+        dismiss: @escaping () -> Void
+    ) -> some View {
+        
+        RxWrapperView(model: content) { state, event in
+            
+            switch state {
+            case let .completed(pdfDocument):
+                PDFDocumentWrapperView(
+                    pdfDocument: pdfDocument, 
+                    dismissAction: dismiss
+                )
+                .navigationBarWithClose(
+                    title: "Сохранить или отправить ", 
+                    dismiss: dismiss
+                )
+                
+            case .failure, .pending:
+                EmptyView()
+                
+            case .loading:
+                SpinnerView(viewModel: .init())
+            }
+        }
+    }
+    
+    @inlinable
+    @ViewBuilder
+    func makePDFDocumentDomainFlowView(
+        _ flow: PDFDocumentDomain.Flow,
+        dismiss: @escaping () -> Void
+    ) -> some View {
+        
+        RxWrapperView(model: flow) { state, _ in
+            
+            Color.clear
+                .alert(item: state.navigation) {
+                    
+                    switch $0 {
+                    case let .alert(message):
+                        return .init(with: .techError(
+                            message: message,
+                            primaryAction: dismiss
+                        ))
+                    }
+                }
         }
     }
     
@@ -129,6 +198,16 @@ extension C2GDocumentButtonDomain.Navigation: Identifiable {
     enum ID: Hashable {
         
         case destination(ObjectIdentifier)
+    }
+}
+
+extension PDFDocumentDomain.Navigation: Identifiable {
+    
+    var id: String {
+        
+        switch self {
+        case let .alert(string): return string
+        }
     }
 }
 

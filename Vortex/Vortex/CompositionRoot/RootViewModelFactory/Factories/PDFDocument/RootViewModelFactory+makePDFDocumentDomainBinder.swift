@@ -7,6 +7,7 @@
 
 import Foundation
 import PDFKit
+import StateMachines
 
 extension RootViewModelFactory {
     
@@ -20,7 +21,19 @@ extension RootViewModelFactory {
             scheduler: schedulers.main
         )
         
-        return composeBinder(content: content, getNavigation: getNavigation, witnesses: .empty)
+        return composeBinder(
+            content: content,
+            getNavigation: getNavigation,
+            witnesses: .init(
+                emitting: {
+                    
+                    $0.$state
+                        .compactMap(\.failure)
+                        .map { _ in .select(.alert(String.errorMessage)) }
+                },
+                dismissing: { _ in {}}
+            )
+        )
     }
     
     @inlinable
@@ -42,4 +55,21 @@ extension RootViewModelFactory {
             completion(.alert(message))
         }
     }
+}
+
+// MARK: - Adapters
+
+private extension StateMachines.LoadState {
+    
+    var failure: Failure? {
+        
+        guard case let .failure(failure) = self else { return nil }
+        
+        return failure
+    }
+}
+
+private extension String {
+    
+    static let errorMessage = "Возникла техническая ошибка.\nСвяжитесь с поддержкой банка для уточнения"
 }
