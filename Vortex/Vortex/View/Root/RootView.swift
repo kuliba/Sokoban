@@ -16,6 +16,7 @@ import PayHubUI
 import PaymentSticker
 import RxViewModel
 import SberQR
+import SplashScreenUI
 import SwiftUI
 import UIPrimitives
 import UtilityServicePrepaymentUI
@@ -379,16 +380,46 @@ struct RootView_Previews: PreviewProvider {
     }
 }
 
+private extension SplashScreenBinder {
+    
+    static let preview: SplashScreenBinder = .init(
+        content: .preview,
+        flow: .preview
+    ) { _,_ in [] }
+}
+
+private extension SplashEventsHandler {
+    
+    static let preview: SplashEventsHandler = .init(authOKPublisher: Empty().eraseToAnyPublisher(), startPublisher: Empty().eraseToAnyPublisher(), event: { _ in })
+}
+
 private extension SplashScreenViewModel {
     
     static let preview: SplashScreenViewModel = .init(
-        initialState: .init(
-            phase: .hidden,
-            settings: .init(image: .init(systemName: "star"))
-        ),
+        initialState: .init(phase: .hidden, settings: .preview),
         reduce: { state, _ in (state, nil) },
         handleEffect: { _,_ in }
     )
+}
+
+private extension SplashScreenState.Settings {
+    
+    static let preview: Self = .init(
+        duration: 2.0,
+        image: .init("splash"),
+        logo: .init(color: .blue, shadow: .logo),
+        text: .init(color: .green, size: 24, value: "Hello, world!", shadow: .text),
+        subtext: .init(color: .blue, size: 16, value: "A long quite boring subtext to kill user attention.", shadow: .subtext),
+        footer: .init(color: .pink, shadow: .name)
+    )
+}
+
+private extension SplashScreenState.Settings.Shadow {
+    
+    static let logo: Self = .init(color: .black, opacity: 1, radius: 12, x: 0, y: 4)
+    static let name: Self = .init(color: .black, opacity: 1, radius: 12, x: 0, y: 4)
+    static let text: Self = .init(color: .black, opacity: 1, radius: 12, x: 0, y: 4)
+    static let subtext: Self = .init(color: .black, opacity: 1, radius: 12, x: 0, y: 4)
 }
 
 private extension RootViewFactory {

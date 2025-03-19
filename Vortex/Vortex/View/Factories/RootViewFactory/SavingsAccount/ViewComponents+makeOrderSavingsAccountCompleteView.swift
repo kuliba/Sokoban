@@ -14,34 +14,45 @@ extension ViewComponents {
     
     @inlinable
     func makeOrderSavingsAccountCompleteView(
+        newInProgress: NewInProgressFlag,
         _ complete: OpenSavingsAccountCompleteDomain.Complete,
         action: @escaping () -> Void
     ) -> some View {
        
-        makePaymentCompletionLayoutView(
-            state: .init(formattedAmount: complete.context.formattedAmount, merchantIcon: nil, status: complete.context.status.status),
-            statusConfig: .orderSavingsAccount(
-                title: complete.context.formattedAmount != nil
-                ? "Накопительный счет открыт\nи пополнен на сумму"
-                : "Накопительный счет открыт")
-        ) {
-            makeButtons(complete)
-        } details: {
-            EmptyView()
-        } footer: {
-            heroButton(title: "На главный") {
-                action()
-                goToMain()
+        let needNewInProgress: Bool = complete.context.status.status == .inflight && newInProgress.isActive
+        let title: String = .savingsAccountTitle(needNewInProgress, complete.context.formattedAmount != nil)
+        let subtitle: String? = needNewInProgress ? .subtitle : nil
+
+        let config: PaymentCompletionConfig = .orderSavingsAccount(title: title, subtitle: subtitle)
+        
+        return makePaymentCompletionLayoutView(
+            state: complete.context.state(needNewInProgress),
+            statusConfig: config,
+            buttons: { makeButtons(needNewInProgress, complete) },
+            details: { EmptyView() },
+            footer: {
+                heroButton(title: "На главный") {
+                    action()
+                    goToMain()
+                }
             }
-        }
+        )
     }
-    
+
     @ViewBuilder
     func makeButtons(
+        _ needNewInProgress: Bool,
         _ complete: OpenSavingsAccountCompleteDomain.Complete
     ) -> some View {
         
-        if complete.context.status.status == .completed {
+        switch (needNewInProgress, complete.context.status.status) {
+        case (true, _):
+            RxWrapperView(model: complete.details) { state, _ in
+                
+                makeDetailsButton(state: state)
+            }
+            
+        case (false, .completed):
             HStack {
                 RxWrapperView(model: complete.document) { state, _ in
                     
@@ -53,7 +64,8 @@ extension ViewComponents {
                     makeDetailsButton(state: state)
                 }
             }
-        } else {
+            
+        default:
             EmptyView()
         }
     }
@@ -66,7 +78,7 @@ extension ViewComponents {
         switch state {
         case let .completed(details):
             WithFullScreenCoverView {
-                circleButton(image: .ic24File, title: "Детали", action: $0)
+                circleButton(image: .ic24Info, title: "Детали", action: $0)
             } sheet: {
                 saTransactionDetails(details: details, dismiss: $0)
             }
@@ -171,5 +183,53 @@ extension OpenSavingsAccountCompleteDomain.Complete.Context.Status {
         case .suspend:
             return .suspend
         }
+    }
+}
+
+private extension String {
+    
+    static let titleWithTopUp: Self = "Накопительный счет открыт\nи пополнен на сумму"
+    static let titleWithOutTopUp: Self = "Накопительный счет открыт"
+    static let newInProgressTitle: Self = "Платеж успешно принят в обработку"
+    static let subtitle: Self =  "Баланс обновится после\nобработки операции"
+    
+    static func savingsAccountTitle(
+        _ newInProgress: Bool,
+        _ withTopUp: Bool
+    ) -> Self {
+        newInProgress
+        ? newInProgressTitle
+        : {
+            withTopUp ? titleWithTopUp : titleWithOutTopUp
+        }()
+    }
+}
+
+private extension OpenSavingsAccountCompleteDomain.Complete.Context.Status {
+    
+    func newStatus(
+        _ newInProgress: Bool
+    ) -> PaymentCompletion.Status {
+        
+        switch self.status {
+        case .inflight:
+            newInProgress ? .completed : .inflight
+            
+        default: self.status
+        }
+    }
+}
+
+private extension OpenSavingsAccountCompleteDomain.Complete.Context {
+    
+    func state(
+        _ needNewInProgress: Bool
+    ) -> PaymentCompletion {
+        
+        .init(
+            formattedAmount: status == .rejected ? nil : formattedAmount,
+            merchantIcon: nil,
+            status: status.newStatus(needNewInProgress)
+        )
     }
 }

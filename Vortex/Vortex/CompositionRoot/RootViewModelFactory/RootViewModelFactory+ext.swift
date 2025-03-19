@@ -40,7 +40,7 @@ extension RootViewModelFactory {
         let featureFlags = FeatureFlags(
             c2gFlag: featureFlags.c2gFlag,
             creditCardMVPFlag: featureFlags.creditCardMVPFlag,
-            getProductListByTypeV6Flag: .active,
+            newInProgressFlag: featureFlags.newInProgressFlag,
             paymentsTransfersFlag: .active,
             collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
             splashScreenFlag: featureFlags.splashScreenFlag,
@@ -393,7 +393,7 @@ extension RootViewModelFactory {
         updateClientInformAlerts()
             .store(in: &bindings)
         
-        let bannersBox = makeBannersBox(flags: featureFlags)
+        let bannersBox = makeBannersBox()
         
         performOrWaitForAuthorized { [weak bannersBox] in
             
@@ -402,7 +402,7 @@ extension RootViewModelFactory {
         
         // MARK: - Splash Screen
         
-        let splash = makeSplashScreenViewModel(flag: featureFlags.splashScreenFlag)
+        let splash = makeSplashScreenBinder(flag: featureFlags.splashScreenFlag)
         
         if featureFlags.splashScreenFlag.isActive {
             
@@ -415,8 +415,6 @@ extension RootViewModelFactory {
                 
                 self?.scheduleGetAndCacheSplashImages()
             }
-            
-            bindings.formUnion(splashEvents(splash: splash))
         }
         
         let rootViewModel = make(
@@ -468,8 +466,7 @@ extension RootViewModelFactory {
         let getRootNavigation = { select, notify, completion in
             
             self.getRootNavigation(
-                c2gFlag: featureFlags.c2gFlag,
-                orderCardFlag: featureFlags.orderCardFlag, 
+                rootFlags: featureFlags.rootFlags, 
                 makeProductProfileByID: makeProductProfileByID,
                 select: select,
                 notify: notify,
@@ -511,6 +508,18 @@ extension RootViewModelFactory {
         )
         
         return composer.compose(with: rootViewModel)
+    }
+}
+
+extension FeatureFlags {
+    
+    var rootFlags: RootViewModelFactory.RootFlags {
+        
+        .init(
+            c2gFlag: c2gFlag,
+            orderCardFlag: orderCardFlag,
+            newInProgressFlag: newInProgressFlag
+        )
     }
 }
 
@@ -773,7 +782,7 @@ private extension RootViewModelFactory {
     func make(
         featureFlags: FeatureFlags,
         bannersBox: any BannersBoxInterface<BannerList>,
-        splash: SplashScreenViewModel,
+        splash: SplashScreenBinder,
         makeProductProfileViewModel: @escaping MakeProductProfileViewModel,
         makeTemplates: @escaping PaymentsTransfersFactory.MakeTemplates,
         fastPaymentsFactory: FastPaymentsFactory,

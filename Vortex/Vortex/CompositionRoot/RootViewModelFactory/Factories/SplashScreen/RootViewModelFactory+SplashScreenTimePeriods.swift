@@ -13,6 +13,7 @@ import VortexTools
 
 extension RootViewModelFactory {
     
+    /// - Warning: This method has side-effect of clearing splash images cache on new time periods.
     @inlinable
     func scheduleGetAndCacheSplashScreenTimePeriods() {
         
@@ -26,7 +27,6 @@ extension RootViewModelFactory {
     }
     
     /// - Warning: This method is not responsible for threading.
-    /// - Warning: This method has side-effect of clearing splash images cache on new time periods.
     @inlinable
     func getAndCacheSplashScreenTimePeriods(
         completion: @escaping (Bool) -> Void
@@ -92,9 +92,12 @@ extension RootViewModelFactory {
     }
     
     @inlinable
-    func getTimePeriodString() -> String {
+    func getTimePeriodString() -> SplashScreenTimePeriod {
         
-        Calendar.current.timePeriod(for: loadSplashScreenTimePeriods())
+        infra.calendar.timePeriod(
+            for: loadSplashScreenTimePeriods(),
+            with: infra.currentDate
+        )
     }
     
     @inlinable
@@ -111,26 +114,14 @@ private extension Calendar {
     
     func timePeriod(
         for periods: [SplashScreenTimePeriod]?,
-        with currentDate: @escaping () -> Date = Date.init
-    ) -> String {
+        with currentDate: @escaping () -> Date
+    ) -> SplashScreenTimePeriod {
         
         let timeString = currentTimeString(currentDate: currentDate)
         let period = (periods ?? .default).period(for: timeString ?? "")
         
-        return period?.timePeriod ?? "DAY"
+        return period ?? .day
     }
-}
-
-// MARK: - Defaults
-
-private extension Array where Element == SplashScreenTimePeriod {
-    
-    static let `default`: Self = [
-        .init(timePeriod: "MORNING", startTime: "04:00", endTime: "11:59"),
-        .init(timePeriod: "DAY",     startTime: "12:00", endTime: "17:59"),
-        .init(timePeriod: "EVENING", startTime: "18:00", endTime: "23:59"),
-        .init(timePeriod: "NIGHT",   startTime: "00:00", endTime: "03:59"),
-    ]
 }
 
 // MARK: - Adapters
@@ -145,7 +136,7 @@ private extension RemoteServices.ResponseMapper.SplashScreenTimePeriod {
 
 // MARK: - Codable (Caching)
 
-private struct CodableSplashScreenTimePeriod: Codable {
+struct CodableSplashScreenTimePeriod: Codable {
     
     let timePeriod: String
     let startTime: String
@@ -167,4 +158,19 @@ private extension SplashScreenCore.SplashScreenTimePeriod {
             endTime: codable.endTime
         )
     }
+}
+
+// MARK: - Defaults
+
+private extension Array where Element == SplashScreenTimePeriod {
+    
+    static let `default`: Self = [.morning, .day, .evening, .night,]
+}
+
+private extension SplashScreenTimePeriod {
+    
+    static let morning: Self = .init(timePeriod: "MORNING", startTime: "04:00", endTime: "11:59")
+    static let day:     Self = .init(timePeriod: "DAY",     startTime: "12:00", endTime: "17:59")
+    static let evening: Self = .init(timePeriod: "EVENING", startTime: "18:00", endTime: "23:59")
+    static let night:   Self = .init(timePeriod: "NIGHT",   startTime: "00:00", endTime: "03:59")
 }

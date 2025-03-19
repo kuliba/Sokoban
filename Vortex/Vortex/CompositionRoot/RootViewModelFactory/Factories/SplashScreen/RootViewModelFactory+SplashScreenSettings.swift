@@ -10,6 +10,7 @@ import RemoteServices
 import SerialComponents
 import SplashScreenBackend
 import SplashScreenCore
+import SwiftUI
 import VortexTools
 
 typealias SplashScreenStorage = CategorizedStorage<String, SplashScreenSettings>
@@ -245,6 +246,11 @@ where Category == String,
             let imageData = outcome.storage[setting.link].imageData
             
             return .init(
+                duration: setting.duration,
+                logo: setting.logo,
+                text: setting.text,
+                subtext: setting.subtext,
+                footer: setting.footer,
                 imageData: imageData,
                 link: setting.link,
                 period: setting.period
@@ -281,11 +287,57 @@ private extension RemoteServices.ResponseMapper.SplashScreenSettings {
         period: String
     ) -> SplashScreenSettings? {
         
-        return .init(imageData: nil, link: link, period: period)
+        return .init(
+            duration: .init(viewDuration ?? .defaultDurationInMS) / 1_000,
+            logo: _logo,
+            text: _text,
+            subtext: _subtext,
+            footer: _footer,
+            imageData: nil,
+            link: link,
+            period: period
+        )
+    }
+    
+    var _logo: SplashScreenSettings.Logo {
+        
+        return .init(color: bankLogo.color, shadow: bankLogo.shadow._shadow)
+    }
+    
+    var _text: SplashScreenSettings.Text {
+        
+        return .init(color: text.color, size: text.size, value: text.value, shadow: text.shadow._shadow)
+    }
+    
+    var _subtext: SplashScreenSettings.Text? {
+        
+        guard let subtext else { return nil }
+        
+        return .init(color: subtext.color, size: subtext.size, value: subtext.value, shadow: subtext.shadow._shadow)
+        
+    }
+    
+    var _footer: SplashScreenSettings.Logo {
+        
+        return .init(color: bankName.color, shadow: bankName.shadow._shadow)
+    }
+}
+
+private extension RemoteServices.ResponseMapper.Shadow {
+    
+    var _shadow: SplashScreenSettings.Shadow {
+        
+        return .init(color: color, opacity: opacity, radius: blur, x: x, y: y)
     }
 }
 
 struct CodableSplashScreenSettings: Codable {
+    
+    let duration: TimeInterval
+    let logo: Logo
+    let text: Text
+    let subtext: Text?
+    let footer: Logo
     
     let imageData: ImageData
     let link: String
@@ -295,7 +347,32 @@ struct CodableSplashScreenSettings: Codable {
         
         case data(Data)
         case failure
-        case none
+        case missing
+    }
+}
+
+extension CodableSplashScreenSettings {
+    
+    struct Logo: Codable {
+        
+        let color: String
+        let shadow: Shadow
+    }
+    
+    struct Text: Codable {
+        
+        let color: String
+        let size: CGFloat // TODO: ???
+        let value: String
+        let shadow: Shadow
+    }
+    struct Shadow: Codable {
+        
+        let color: String
+        let opacity: Double
+        let radius: CGFloat
+        let x: CGFloat
+        let y: CGFloat
     }
 }
 
@@ -306,7 +383,7 @@ extension CodableSplashScreenSettings {
         switch imageData {
         case let .data(data): return .success(data)
         case .failure:        return .failure(.init())
-        case .none:           return nil
+        case .missing:        return nil
         }
     }
 }
@@ -316,6 +393,11 @@ private extension SplashScreenSettings {
     init(codable: CodableSplashScreenSettings) {
         
         self.init(
+            duration: codable.duration,
+            logo: codable._logo,
+            text: codable._text,
+            subtext: codable._subtext,
+            footer: codable._footer,
             imageData: codable.imageDataResult,
             link: codable.link,
             period: codable.period
@@ -328,6 +410,11 @@ private extension CodableSplashScreenSettings {
     init(_ settings: SplashScreenSettings) {
         
         self.init(
+            duration: settings.duration,
+            logo: settings._logo,
+            text: settings._text,
+            subtext: settings._subtext,
+            footer: settings._footer,
             imageData: settings._imageData,
             link: settings.link,
             period: settings.period
@@ -340,18 +427,107 @@ private extension SplashScreenSettings {
     var codable: CodableSplashScreenSettings {
         
         return .init(
+            duration: duration,
+            logo: _logo,
+            text: _text,
+            subtext: _subtext,
+            footer: _footer,
             imageData: _imageData,
             link: link,
             period: category
         )
     }
     
+    var _logo: CodableSplashScreenSettings.Logo {
+        
+        return .init(color: logo.color, shadow: logo.shadow._shadow)
+    }
+    
+    var _text: CodableSplashScreenSettings.Text {
+        
+        return .init(color: text.color, size: text.size, value: text.value, shadow: text.shadow._shadow)
+    }
+    
+    var _subtext: CodableSplashScreenSettings.Text? {
+        
+        guard let subtext else { return nil }
+        
+        return .init(color: subtext.color, size: subtext.size, value: subtext.value, shadow: subtext.shadow._shadow)
+    }
+    
+    var _footer: CodableSplashScreenSettings.Logo {
+        
+        return .init(color: footer.color, shadow: footer.shadow._shadow)
+    }
+    
     var _imageData: CodableSplashScreenSettings.ImageData {
         
         switch imageData {
-        case .none:              return .none
+        case .none:              return .missing
         case .failure:           return .failure
         case let .success(data): return .data(data)
         }
     }
+}
+
+private extension SplashScreenSettings.Shadow {
+    
+    var _shadow: CodableSplashScreenSettings.Shadow {
+        
+        return .init(color: color, opacity: opacity, radius: radius, x: x, y: y)
+    }
+}
+
+private extension CodableSplashScreenSettings {
+    
+    var settings: SplashScreenSettings {
+        
+        return .init(
+            duration: duration,
+            logo: _logo,
+            text: _text,
+            subtext: _subtext,
+            footer: _footer,
+            imageData: imageDataResult,
+            link: link,
+            period: category
+        )
+    }
+    
+    var _logo: SplashScreenSettings.Logo {
+        
+        return .init(color: logo.color, shadow: logo.shadow._shadow)
+    }
+    
+    var _text: SplashScreenSettings.Text {
+        
+        return .init(color: text.color, size: text.size, value: text.value, shadow: text.shadow._shadow)
+    }
+    
+    var _subtext: SplashScreenSettings.Text? {
+        
+        guard let subtext else { return nil }
+        
+        return .init(color: subtext.color, size: subtext.size, value: subtext.value, shadow: subtext.shadow._shadow)
+    }
+    
+    var _footer: SplashScreenSettings.Logo {
+        
+        return .init(color: footer.color, shadow: footer.shadow._shadow)
+    }
+}
+
+private extension CodableSplashScreenSettings.Shadow {
+    
+    var _shadow: SplashScreenSettings.Shadow {
+        
+        return .init(color: color, opacity: opacity, radius: radius, x: x, y: y)
+    }
+}
+
+// MARK: - Defaults
+
+private extension Int {
+    
+    static let defaultDurationInMS = 4_000
 }

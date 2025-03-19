@@ -33,12 +33,87 @@ extension SplashScreenState {
     
     public struct Settings: Equatable {
         
+        public let duration: TimeInterval
         public let image: Image
+        public let logo: Logo
+        public let text: Text
+        public let subtext: Text?
+        public let footer: Logo
         
         public init(
-            image: Image
+            duration: TimeInterval,
+            image: Image,
+            logo: Logo,
+            text: Text,
+            subtext: Text?,
+            footer: Logo
         ) {
+            self.duration = duration
             self.image = image
+            self.logo = logo
+            self.text = text
+            self.subtext = subtext
+            self.footer = footer
+        }
+    }
+}
+
+extension SplashScreenState.Settings {
+    
+    public struct Logo: Equatable {
+        
+        public let color: Color
+        public let shadow: Shadow
+        
+        public init(
+            color: Color,
+            shadow: Shadow
+        ) {
+            self.color = color
+            self.shadow = shadow
+        }
+    }
+    
+    public struct Text: Equatable {
+        
+        public let color: Color
+        public let size: CGFloat // TODO: ???
+        public let value: String
+        public let shadow: Shadow
+        
+        public init(
+            color: Color,
+            size: CGFloat,
+            value: String,
+            shadow: Shadow
+        ) {
+            self.color = color
+            self.size = size
+            self.value = value
+            self.shadow = shadow
+        }
+    }
+    
+    public struct Shadow: Equatable {
+        
+        public let color: Color
+        public let opacity: Double
+        public let radius: CGFloat
+        public let x: CGFloat
+        public let y: CGFloat
+        
+        public init(
+            color: Color,
+            opacity: Double,
+            radius: CGFloat,
+            x: CGFloat,
+            y: CGFloat
+        ) {
+            self.color = color
+            self.opacity = opacity
+            self.radius = radius
+            self.x = x
+            self.y = y
         }
     }
 }
