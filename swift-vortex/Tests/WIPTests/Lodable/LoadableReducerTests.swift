@@ -86,7 +86,7 @@ final class LoadableReducerTests: LoadableTests {
         let resource = makeResource()
         let state = makeState(result: .success(.init()))
         
-        assert(state, event: .loaded(resource)) {
+        assert(state, event: .loaded(.success(resource))) {
             
             $0.resource = resource
             $0.result = .success(.init())
@@ -97,7 +97,7 @@ final class LoadableReducerTests: LoadableTests {
         
         let state = makeState(result: .success(.init()))
         
-        assert(state, event: .loaded(makeResource()), delivers: nil)
+        assert(state, event: .loaded(.success(makeResource())), delivers: nil)
     }
     
     func test_loaded_shouldChangeState_onSuccess_resourceNonNilResultSuccess() {
@@ -105,7 +105,7 @@ final class LoadableReducerTests: LoadableTests {
         let resource = makeResource()
         let state = makeState(resource: makeResource(), result: .success(.init()))
         
-        assert(state, event: .loaded(resource)) {
+        assert(state, event: .loaded(.success(resource))) {
             
             $0.resource = resource
             $0.result = .success(.init())
@@ -116,7 +116,7 @@ final class LoadableReducerTests: LoadableTests {
         
         let state = makeState(resource: makeResource(), result: .success(.init()))
         
-        assert(state, event: .loaded(makeResource()), delivers: nil)
+        assert(state, event: .loaded(.success(makeResource())), delivers: nil)
     }
     
     func test_loaded_shouldChangeState_onSuccess_resourceNilResultFailure() {
@@ -124,7 +124,7 @@ final class LoadableReducerTests: LoadableTests {
         let resource = makeResource()
         let state = makeState(failure: makeFailure())
         
-        assert(state, event: .loaded(resource)) {
+        assert(state, event: .loaded(.success(resource))) {
             
             $0.resource = resource
             $0.result = .success(.init())
@@ -135,7 +135,7 @@ final class LoadableReducerTests: LoadableTests {
         
         let state = makeState(failure: makeFailure())
         
-        assert(state, event: .loaded(makeResource()), delivers: nil)
+        assert(state, event: .loaded(.success(makeResource())), delivers: nil)
     }
     
     func test_loaded_shouldChangeState_onSuccess_resourceNonNilResultFailure() {
@@ -143,7 +143,7 @@ final class LoadableReducerTests: LoadableTests {
         let resource = makeResource()
         let state = makeState(resource: makeResource(), failure: makeFailure())
         
-        assert(state, event: .loaded(resource)) {
+        assert(state, event: .loaded(.success(resource))) {
             
             $0.resource = resource
             $0.result = .success(.init())
@@ -154,7 +154,7 @@ final class LoadableReducerTests: LoadableTests {
         
         let state = makeState(resource: makeResource(), failure: makeFailure())
         
-        assert(state, event: .loaded(makeResource()), delivers: nil)
+        assert(state, event: .loaded(.success(makeResource())), delivers: nil)
     }
     
     // MARK: - Helpers

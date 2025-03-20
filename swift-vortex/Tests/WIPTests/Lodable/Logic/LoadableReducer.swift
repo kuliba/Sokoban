@@ -1,6 +1,6 @@
 //
 //  LoadableReducer.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 20.03.2025.
 //
@@ -25,7 +25,10 @@ extension LoadableReducer {
             state.result = nil
             effect = .load
             
-        case let .loaded(loaded):
+        case let .loaded(.failure(failure)):
+            break
+            
+        case let .loaded(.success(loaded)):
             state.resource = loaded
             state.result = .success(.init())
         }
@@ -37,6 +40,6 @@ extension LoadableReducer {
 extension LoadableReducer {
     
     typealias State = LoadableState<Resource, Failure>
-    typealias Event = LoadableEvent<Resource>
+    typealias Event = LoadableEvent<Resource, Failure>
     typealias Effect = LoadableEffect
 }

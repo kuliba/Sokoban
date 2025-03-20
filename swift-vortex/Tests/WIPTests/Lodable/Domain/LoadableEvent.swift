@@ -5,10 +5,10 @@
 //  Created by Igor Malyarov on 20.03.2025.
 //
 
-enum LoadableEvent<Resource> {
+enum LoadableEvent<Resource, Failure: Error> {
     
     case load
-    case loaded(Resource)
+    case loaded(Result<Resource, Failure>)
 }
 
-extension LoadableEvent: Equatable where Resource: Equatable {}
+extension LoadableEvent: Equatable where Resource: Equatable, Failure: Equatable {}
