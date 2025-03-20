@@ -11,7 +11,12 @@ import OTPInputComponent
 public struct CreateDraftCollateralLoanApplicationView<Confirmation, InformerPayload>: View
     where Confirmation: TimedOTPInputViewModel {
     
+    private enum Field: Int, CaseIterable {
+        case amount, period, city
+    }
+    
     @SwiftUI.State private var shimmeringEnabled = true
+    @FocusState private var focusedField: Field?
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
@@ -58,9 +63,12 @@ public struct CreateDraftCollateralLoanApplicationView<Confirmation, InformerPay
                 Group {
                     headerView()
                     amountView()
+                        .focused($focusedField, equals: .amount)
                     periodView()
+                        .focused($focusedField, equals: .period)
                     percentView()
                     cityView()
+                        .focused($focusedField, equals: .city)
                 }
                 
                 confirmationView()
