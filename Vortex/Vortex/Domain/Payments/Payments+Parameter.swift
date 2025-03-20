@@ -1539,6 +1539,9 @@ extension Payments {
 
             case .rejected, .unknown:
                 self.init(status: .error)
+                
+            case .processing:
+                self.init(status: .processing)
             }
         }
         
@@ -1580,6 +1583,7 @@ extension Payments {
             case transfer
             case suspended
             case error
+            case processing
         }
     }
     

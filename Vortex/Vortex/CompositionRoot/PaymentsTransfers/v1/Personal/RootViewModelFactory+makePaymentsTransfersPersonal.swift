@@ -14,11 +14,11 @@ extension RootViewModelFactory {
     
     @inlinable
     func makePaymentsTransfersPersonal(
-        c2gFlag: C2GFlag
+        rootFlags: RootFlags
     ) -> (PaymentsTransfersPersonalDomain.Binder, notifyPicker: () -> Void) {
         
         let nanoServices = composePaymentsTransfersPersonalNanoServices()
-        let content = makePaymentsTransfersPersonalContent(c2gFlag: c2gFlag, nanoServices)
+        let content = makePaymentsTransfersPersonalContent(rootFlags: rootFlags, nanoServices)
         
         let personal = composeBinder(
             content: content,

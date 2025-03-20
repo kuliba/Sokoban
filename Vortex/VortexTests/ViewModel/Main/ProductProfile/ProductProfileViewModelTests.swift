@@ -1128,7 +1128,7 @@ final class ProductProfileViewModelTests: XCTestCase {
                 cvvPINServicesClient: HappyCVVPINServicesClient(),
                 product: card,
                 productNavigationStateManager: .preview,
-                productProfileViewModelFactory: .preview,
+                productProfileViewModelFactory: .makeFactory(model),
                 filterHistoryRequest: {_,_,_,_  in},
                 filterState: .preview,
                 rootView: "",
@@ -1536,5 +1536,29 @@ private extension ProductProfileViewModel.BottomSheet {
         case meToMeLegacy
         case other
     }
+}
 
+extension ProductProfileViewModelFactory {
+    
+    static func makeFactory(
+        _ model: Model
+    ) -> Self {
+        .init(
+            makeInfoProductViewModel: {
+                _ in .sample
+            },
+            makeAlert: { .init(
+                title: $0.title,
+                message: $0.message,
+                primary: $0.primaryButton,
+                secondary: $0.secondaryButton)
+            },
+            makeInformerDataUpdateFailure: { nil },
+            makeCardGuardianPanel: { .bottomSheet(.cardGuardian($0)) },
+            makeRepeatPaymentNavigation: { _,_,_,_  in .none },
+            makeSubscriptionsViewModel: { _,_ in .preview },
+            makePaymentsMeToMeViewModel: { .init(model, mode: $0, successViewModelFactory: .previewSuccess) },
+            model: model
+        )
+    }
 }

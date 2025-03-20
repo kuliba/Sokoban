@@ -367,7 +367,7 @@ final class PaymentsMeToMeViewModelTests: XCTestCase {
     func test_meToMePayment_withSendActionMakeTransferActionSuccess_shouldSpyValue1() throws {
         
         let model = makeModelWithServerAgentStub()
-        let sut = PaymentsMeToMeViewModel(model, mode: .general)
+        let sut = PaymentsMeToMeViewModel(model, mode: .general, successViewModelFactory: .previewSuccess)
         let spy = ValueSpy(model.action.compactMap { $0 as? ModelAction.Payment.MeToMe.MakeTransfer.Response })
 
         XCTAssertNotNil(sut)
@@ -672,13 +672,15 @@ extension PaymentsMeToMeViewModelTests {
     func makeSUT(
         model: Model,
         mode: PaymentsMeToMeViewModel.Mode,
+        successViewodelFactory: SuccessViewModelFactory = .previewSuccess,
         file: StaticString = #file,
         line: UInt = #line
     ) -> PaymentsMeToMeViewModel? {
         
         let sut = PaymentsMeToMeViewModel(
             model,
-            mode: mode
+            mode: mode,
+            successViewModelFactory: successViewodelFactory
         )
         
         if let sut {
@@ -692,12 +694,13 @@ extension PaymentsMeToMeViewModelTests {
     func makeSUTWithAction(
         mode: PaymentsMeToMeViewModel.Mode = .general,
         failureResponse: ModelAction.Payment.MeToMe.CreateTransfer.Response,
+        successViewodelFactory: SuccessViewModelFactory = .previewSuccess,
         file: StaticString = #file,
         line: UInt = #line
     ) -> PaymentsMeToMeViewModel? {
         
         let model = makeModelWithServerAgentStub()
-        let sut = PaymentsMeToMeViewModel(model, mode: mode)
+        let sut = PaymentsMeToMeViewModel(model, mode: mode, successViewModelFactory: successViewodelFactory)
         
         if let sut {
             trackForMemoryLeaks(sut, file: file, line: line)

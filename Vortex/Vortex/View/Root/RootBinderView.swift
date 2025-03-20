@@ -179,7 +179,7 @@ private extension RootBinderView {
           
         case let .savingsAccount(response, updateFastAll, flag):
             components.makeOrderSavingsAccountCompleteView(
-                newInProgress: flag,
+                asyncWait: flag,
                 response,
                 action: updateFastAll
             )
@@ -362,7 +362,7 @@ extension RootViewNavigation {
     enum FullScreenCover {
         
         case orderCardResponse(OpenCardDomain.OrderCardResponse)
-        case savingsAccount(OpenSavingsAccountCompleteDomain.Complete, OpenSavingsAccountCompleteDomain.UpdateFastAll, NewInProgressFlag)
+        case savingsAccount(OpenSavingsAccountCompleteDomain.Complete, OpenSavingsAccountCompleteDomain.UpdateFastAll, ProcessingFlag)
         case scanQR(QRScannerDomain.Binder)
         case templates(TemplatesNode)
     }

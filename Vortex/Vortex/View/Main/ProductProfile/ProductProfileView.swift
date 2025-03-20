@@ -752,6 +752,11 @@ extension OperationDetailFactory {
     )
 }
 
+extension SuccessViewModelFactory {
+    
+    static let previewSuccess: Self = .init(makeCloseAccountPaymentsSuccessViewModel: { _ in .sampleSuccess })
+}
+
 extension Date {
     
     static func startDayOfCalendar() -> Date {

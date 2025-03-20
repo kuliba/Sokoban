@@ -74,6 +74,7 @@ final class RootViewModelFactory_getMeToMeNavigationTests: RootViewModelFactoryT
         _ select: Domain.Select,
         toDeliver expectedNavigation: EquatableNavigation,
         timeout: TimeInterval = 1.0,
+        processingFlag: ProcessingFlag = .inactive,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -81,6 +82,7 @@ final class RootViewModelFactory_getMeToMeNavigationTests: RootViewModelFactoryT
         let exp = expectation(description: "wait for get navigation completion")
         
         sut.getNavigation(
+            processingFlag: processingFlag,
             select: select,
             notify: { _ in }
         ) {

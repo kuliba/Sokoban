@@ -19,7 +19,7 @@ extension RootViewModelFactory {
     struct RootFlags {
         let c2gFlag: C2GFlag
         let orderCardFlag: OrderCardFlag
-        let newInProgressFlag: NewInProgressFlag
+        let processingFlag: ProcessingFlag
     }
     
     @inlinable
@@ -42,7 +42,7 @@ extension RootViewModelFactory {
             
         case let .savingsAccount(orderAccountResponse):
             
-            handleSavingsAccount(orderAccountResponse, rootFlags.newInProgressFlag, completion)
+            handleSavingsAccount(orderAccountResponse, rootFlags.processingFlag, completion)
 
         case let .openProduct(type):
             
@@ -166,7 +166,7 @@ extension RootViewModelFactory {
         
         func makeTemplatesNode() {
             
-            let templates = makeTemplates(.active) { notify(.dismiss) }
+            let templates = makeTemplates(rootFlags.processingFlag, .active) { notify(.dismiss) }
             let cancellables = bind(templates)
             
             completion(.templates(.init(
@@ -225,7 +225,7 @@ extension RootViewModelFactory {
     
     func handleSavingsAccount(
         _ orderAccountResponse: OpenSavingsAccountDomain.OrderAccountResponse,
-        _ newInProgress: NewInProgressFlag,
+        _ asyncWait: ProcessingFlag,
         _ completion: @escaping (RootViewNavigation) -> Void
     ) {
         
@@ -255,7 +255,7 @@ extension RootViewModelFactory {
                     
                     model?.action.send(ModelAction.Products.Update.Total.All())
                 },
-                newInProgress
+                asyncWait
             )
         )
     }

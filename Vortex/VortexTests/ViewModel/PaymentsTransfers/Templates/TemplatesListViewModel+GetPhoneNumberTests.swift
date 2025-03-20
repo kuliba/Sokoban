@@ -89,6 +89,7 @@ final class TemplatesListViewModel_GetPhoneNumberTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeSUT(
+        makePaymentsMeToMeViewModel: @escaping MakePaymentsMeToMeViewModel = { _ in .none },
         file: StaticString = #file,
         line: UInt = #line
     ) -> TemplatesListViewModel {
@@ -103,6 +104,7 @@ final class TemplatesListViewModel_GetPhoneNumberTests: XCTestCase {
             items: [],
             deletePannel: nil,
             updateFastAll: {},
+            makePaymentsMeToMeViewModel: makePaymentsMeToMeViewModel,
             model: model
         )
         

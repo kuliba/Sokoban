@@ -562,12 +562,16 @@ extension Payments.ParameterSuccessText {
             case .sberQR:
                 return .init(id: paramId, value: "Платеж отклонен", style: .title)
             }
+            
         case .suspended:
             return .init(
                 id: paramId,
                 value: "Операция приостановлена в целях безопасности.",
                 style: .warning
             )
+            
+        case .processing:
+            return .init(id: paramId, value: .processingTitle, style: .title)
         }
     }
     
@@ -577,52 +581,31 @@ extension Payments.ParameterSuccessText {
     ) -> Payments.ParameterSuccessText? {
         
         let paramId = Payments.Parameter.Identifier.successTitle.rawValue
-        
-        if let _ = operation.source {
             
-            switch documentStatus {
-            case .complete:
-                return .init(id: paramId, value: "Успешный перевод", style: .title)
+        switch documentStatus {
+        case .complete:
+            return .init(id: paramId, value: "Успешный перевод", style: .title)
+            
+        case .inProgress:
+            return .init(id: paramId, value: "Операция в обработке!", style: .title)
+            
+        case .rejected, .unknown:
+            switch operation.source {
+            case .sfp:
+                return .init(id: paramId, value: "Отказ", style: .title)
                 
-            case .inProgress:
-                return .init(id: paramId, value: "Операция в обработке!", style: .title)
-                
-            case .rejected, .unknown:
-                switch operation.source {
-                case .sfp:
-                    return .init(id: paramId, value: "Отказ", style: .title)
-                    
-                default:
-                    return .init(id: paramId, value: "Операция неуспешна!", style: .title)
-                }
-            case .suspended:
-                return .init(
-                    id: paramId,
-                    value: "Операция приостановлена в целях безопасности.",
-                    style: .warning
-                )
+            default:
+                return .init(id: paramId, value: "Операция неуспешна!", style: .title)
             }
+        case .suspended:
+            return .init(
+                id: paramId,
+                value: "Операция приостановлена в целях безопасности.",
+                style: .warning
+            )
             
-        } else {
-            
-            switch documentStatus {
-            case .complete:
-                return .init(id: paramId, value: "Успешный перевод", style: .title)
-                
-            case .inProgress:
-                return .init(id: paramId, value: "Операция в обработке!", style: .title)
-                
-            case .rejected, .unknown:
-                switch operation.service {
-                case .sfp:
-                    return .init(id: paramId, value: "Отказ", style: .title)
-                    
-                default:
-                    return .init(id: paramId, value: "Операция неуспешна!", style: .title)
-                }
-            case .suspended:
-                return .init(id: paramId, value: "Операция приостановлена в целях безопасности.", style: .warning)
-            }
+        case .processing:
+            return .init(id: paramId, value: .processingTitle, style: .title)
         }
     }
     
@@ -682,6 +665,14 @@ extension Payments.ParameterSuccessOptionButtons {
             )
         case .suspended:
             return nil
+            
+        case .processing:
+            return completeOptionButtons(
+                mode,
+                operation,
+                operationDetail,
+                meToMePayment
+            )
         }
     }
     
@@ -846,6 +837,9 @@ extension Payments.ParameterButton {
             default:
                 return .init(parameterId: paramId, title: "Повторить", style: .secondary, acton: .repeat, placement: .bottom)
             }
+            
+        case .processing:
+            return nil
         }
     }
     
@@ -913,6 +907,9 @@ extension Payments.ParameterSuccessStatus {
         
         case .transfer:
             return .unknown
+            
+        case .processing:
+            return .processing
         }
     }
 }

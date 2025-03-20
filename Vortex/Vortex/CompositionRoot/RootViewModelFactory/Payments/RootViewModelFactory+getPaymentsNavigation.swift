@@ -38,6 +38,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func getPaymentsNavigation(
+        processingFlag: ProcessingFlag,
         from paymentsPayload: PaymentsDomain.PaymentsPayload,
         closeAction: @escaping () -> Void
     ) -> PaymentsDomain.Navigation? {
@@ -62,7 +63,7 @@ extension RootViewModelFactory {
                 
                 guard let model else { return nil }
                 
-                return .init(model, mode: mode)
+                return .init(model, mode: mode, successViewModelFactory: makeSuccessViewModelFactory(processingFlag))
             }
         )
     }

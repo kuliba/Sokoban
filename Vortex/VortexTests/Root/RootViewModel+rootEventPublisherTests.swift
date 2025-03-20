@@ -120,9 +120,16 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
     
     private func makeSwitcher(
         c2gFlag: C2GFlag = .inactive, // TODO: add tests for active flag
+        orderCardFlag: OrderCardFlag = .inactive,
+        processingFlag: ProcessingFlag = .inactive,
         hasCorporateCardsOnlySubject: PassthroughSubject<Bool, Never>
     ) -> PaymentsTransfersSwitcher {
         
+        let rootFlags: RootViewModelFactory.RootFlags = .init(
+            c2gFlag: c2gFlag,
+            orderCardFlag: orderCardFlag,
+            processingFlag: processingFlag
+        )
         let factory = RootViewModelFactory(
             model: .mockWithEmptyExcept(),
             httpClient: HTTPClientSpy(),
@@ -141,7 +148,7 @@ final class RootViewModel_rootEventPublisherTests: RootViewModel_Tests {
                     loadBanners: { _ in unimplemented() }
                 )
             ),
-            personal: factory.makePaymentsTransfersPersonal(c2gFlag: c2gFlag).0,
+            personal: factory.makePaymentsTransfersPersonal(rootFlags: rootFlags).0,
             scheduler: .immediate
         )
         
