@@ -11,11 +11,6 @@ class LoadableTests: XCTestCase {
     
     typealias State = LoadableState<Resource, Failure>
     
-    func makeSuccess() -> State.Success {
-        
-        return .init()
-    }
-    
     struct Resource: Equatable {
         
         let value: String

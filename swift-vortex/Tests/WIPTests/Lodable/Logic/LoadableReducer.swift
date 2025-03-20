@@ -22,15 +22,15 @@ extension LoadableReducer {
         
         switch event {
         case .load:
-            state.result = nil
+            state.status = .loading
             effect = .load
             
         case let .loaded(.failure(failure)):
-            state.result = .failure(failure)
+            state.status = .failure(failure)
             
         case let .loaded(.success(loaded)):
             state.resource = loaded
-            state.result = .success(.init())
+            state.status = .loadedOK
         }
         
         return (state, effect)

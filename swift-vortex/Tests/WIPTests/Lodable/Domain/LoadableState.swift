@@ -8,28 +8,38 @@
 struct LoadableState<Resource, Failure: Error> {
     
     var resource: Resource?
-    var result: Result<Success, Failure>?
+    var status: LoadStatus
     
-    struct Success: Equatable {}
+    enum LoadStatus {
+        
+        case loading
+        case loadedOK
+        case failure(Failure)
+    }
 }
 
 extension LoadableState: Equatable where Resource: Equatable, Failure: Equatable {}
+extension LoadableState.LoadStatus: Equatable where Failure: Equatable {}
 
 extension LoadableState {
     
-    var isLoading: Bool { result == nil }
+    var isLoading: Bool {
+        
+        guard case .loading = status else { return false }
+        return true
+    }
 }
 
 extension LoadableState {
     
-    static var idle: Self { .init(resource: nil, result: .success(.init())) }
+    static var idle: Self { .init(resource: nil, status: .loadedOK) }
     
-    static var emptyLoading: Self { .init(resource: nil, result: nil) }
+    static var emptyLoading: Self { .init(resource: nil, status: .loading) }
     
     static func loading(
         withResource resource: Resource
     ) -> Self {
         
-        return .init(resource: resource, result: nil)
+        return .init(resource: resource, status: .loading)
     }
 }
