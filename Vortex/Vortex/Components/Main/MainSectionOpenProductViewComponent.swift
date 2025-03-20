@@ -17,7 +17,7 @@ extension MainSectionOpenProductView {
         
         override var type: MainSectionType { .openProduct }
         
-        @Published var newProducts: OpenNewProductsViewModel
+        @Published var newProducts: Node<OpenNewProductsViewModel>
         
         private let model: Model
         private let makeButtons: OpenNewProductsViewModel.MakeNewProductButtons
@@ -28,10 +28,13 @@ extension MainSectionOpenProductView {
             makeButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons
         ) {
             self.makeButtons = makeButtons
-            self.newProducts = .init(model, makeOpenNewProductButtons: makeButtons)
             self.model = model
+            let buttons: OpenNewProductsViewModel = .init(model, makeOpenNewProductButtons: makeButtons)
+            self.newProducts = .init(model: buttons, cancellables: [])
             super.init(isCollapsed: false)
             
+            self.newProducts = bindButtons(buttons)
+
             bind()
         }
         
@@ -43,8 +46,11 @@ extension MainSectionOpenProductView {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] _ in self?.updateButtons() }
                 .store(in: &bindings)
-
-            newProducts.action
+        }
+        
+        func bindButtons(_ buttons: OpenNewProductsViewModel) -> Node<OpenNewProductsViewModel> {
+            
+            let cancellable = buttons.action
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] action in
                     
@@ -55,14 +61,15 @@ extension MainSectionOpenProductView {
                         
                     default: break
                     }
-                    
-                }.store(in: &bindings)
+                }
+            
+            return .init(model: buttons, cancellable: cancellable)
         }
-        
+
         private func updateButtons() {
             
-            newProducts = .init(model, makeOpenNewProductButtons: makeButtons)
-            bind()
+            let buttons: OpenNewProductsViewModel = .init(model, makeOpenNewProductButtons: makeButtons)
+            newProducts = bindButtons(buttons)
         }
     }
 }
@@ -81,7 +88,7 @@ struct MainSectionOpenProductView: View {
                 
                 HStack(spacing: 8) {
                     
-                    ForEach(viewModel.newProducts.items, id: \.type) { itemViewModel in
+                    ForEach(viewModel.newProducts.model.items, id: \.type) { itemViewModel in
                         
                         NewProductButton(viewModel: itemViewModel)
                             .frame(width: 112, height: 124)
