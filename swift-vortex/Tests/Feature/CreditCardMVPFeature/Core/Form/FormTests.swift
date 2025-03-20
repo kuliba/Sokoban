@@ -10,6 +10,20 @@ import XCTest
 
 final class FormTests: XCTestCase {
     
+    // MARK: - action
+    
+    func test_action_shouldBeContinue_onNilOTP() {
+        
+        XCTAssertNoDiff(makeForm(otp: nil).action, .continue)
+    }
+    
+    func test_action_shouldBeSubmit_onNonNilOTP() {
+        
+        XCTAssertNoDiff(makeForm(otp: makeOTP()).action, .submit)
+    }
+    
+    // MARK: - isValid
+    
     func test_isValid_shouldBeFalse_onConsentNotGranted_andNilOTP() {
         
         XCTAssertFalse(isValid(isGranted: false, isValid: nil))
@@ -56,11 +70,14 @@ final class FormTests: XCTestCase {
     }
     
     private func makeForm(
-        consent: Consent,
+        consent: Consent? = nil,
         otp: OTP?
     ) -> Form {
         
-        return .init(consent: consent, otp: otp)
+        return .init(
+            consent: consent ?? makeConsent(),
+            otp: otp
+        )
     }
     
     private struct Consent: ConsentProviding {
@@ -69,7 +86,7 @@ final class FormTests: XCTestCase {
     }
     
     private func makeConsent(
-        isGranted: Bool
+        isGranted: Bool = .random()
     ) -> Consent {
         
         return .init(isGranted: isGranted)
@@ -81,7 +98,7 @@ final class FormTests: XCTestCase {
     }
     
     private func makeOTP(
-        isValid: Bool = false
+        isValid: Bool = .random()
     ) -> OTP {
         
         return .init(isValid: isValid)
