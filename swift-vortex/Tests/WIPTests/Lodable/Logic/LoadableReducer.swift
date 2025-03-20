@@ -24,6 +24,10 @@ extension LoadableReducer {
         case .load:
             state.result = nil
             effect = .load
+            
+        case let .loaded(loaded):
+            state.resource = loaded
+            state.result = .success(.init())
         }
         
         return (state, effect)
@@ -33,6 +37,6 @@ extension LoadableReducer {
 extension LoadableReducer {
     
     typealias State = LoadableState<Resource, Failure>
-    typealias Event = LoadableEvent
+    typealias Event = LoadableEvent<Resource>
     typealias Effect = LoadableEffect
 }

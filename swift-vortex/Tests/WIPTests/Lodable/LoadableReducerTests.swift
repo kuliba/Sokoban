@@ -79,6 +79,84 @@ final class LoadableReducerTests: LoadableTests {
         assert(state, event: .load, delivers: .load)
     }
     
+    // MARK: - loaded
+    
+    func test_loaded_shouldChangeState_onSuccess_resourceNilResultSuccess() {
+        
+        let resource = makeResource()
+        let state = makeState(result: .success(.init()))
+        
+        assert(state, event: .loaded(resource)) {
+            
+            $0.resource = resource
+            $0.result = .success(.init())
+        }
+    }
+    
+    func test_loaded_shouldNotSetEffect_onSuccess_resourceNilResultSuccess() {
+        
+        let state = makeState(result: .success(.init()))
+        
+        assert(state, event: .loaded(makeResource()), delivers: nil)
+    }
+    
+    func test_loaded_shouldChangeState_onSuccess_resourceNonNilResultSuccess() {
+        
+        let resource = makeResource()
+        let state = makeState(resource: makeResource(), result: .success(.init()))
+        
+        assert(state, event: .loaded(resource)) {
+            
+            $0.resource = resource
+            $0.result = .success(.init())
+        }
+    }
+    
+    func test_loaded_shouldNotSetEffect_onSuccess_resourceNonNilResultSuccess() {
+        
+        let state = makeState(resource: makeResource(), result: .success(.init()))
+        
+        assert(state, event: .loaded(makeResource()), delivers: nil)
+    }
+    
+    func test_loaded_shouldChangeState_onSuccess_resourceNilResultFailure() {
+        
+        let resource = makeResource()
+        let state = makeState(failure: makeFailure())
+        
+        assert(state, event: .loaded(resource)) {
+            
+            $0.resource = resource
+            $0.result = .success(.init())
+        }
+    }
+    
+    func test_loaded_shouldNotSetEffect_onSuccess_resourceNilResultFailure() {
+        
+        let state = makeState(failure: makeFailure())
+        
+        assert(state, event: .loaded(makeResource()), delivers: nil)
+    }
+    
+    func test_loaded_shouldChangeState_onSuccess_resourceNonNilResultFailure() {
+        
+        let resource = makeResource()
+        let state = makeState(resource: makeResource(), failure: makeFailure())
+        
+        assert(state, event: .loaded(resource)) {
+            
+            $0.resource = resource
+            $0.result = .success(.init())
+        }
+    }
+    
+    func test_loaded_shouldNotSetEffect_onSuccess_resourceNonNilResultFailure() {
+        
+        let state = makeState(resource: makeResource(), failure: makeFailure())
+        
+        assert(state, event: .loaded(makeResource()), delivers: nil)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = LoadableReducer<Resource, Failure>
