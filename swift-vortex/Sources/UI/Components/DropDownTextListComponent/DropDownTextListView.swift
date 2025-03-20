@@ -37,7 +37,8 @@ public struct DropDownTextListView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .accessibilityIdentifier("ListTitle")
                     
-                    config.colors.divider
+                    Divider()
+                        .tint(config.colors.divider)
                         .frame(height: 0.5)
                 }
             }
@@ -58,8 +59,9 @@ public struct DropDownTextListView: View {
             
             if list.items.last != item {
                 
-                config.colors.divider
-                    .frame(height: 0.7)
+                Divider()
+                    .tint(config.colors.divider)
+                    .frame(height: 0.5)
             }
         }
     }

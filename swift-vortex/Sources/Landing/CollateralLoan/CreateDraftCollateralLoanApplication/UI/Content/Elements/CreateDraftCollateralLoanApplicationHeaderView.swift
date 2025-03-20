@@ -26,7 +26,7 @@ struct CreateDraftCollateralLoanApplicationHeaderView<Confirmation, InformerPayl
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewWithMD5Hash(state.application.icons.productName) }
+            icon: { factory.makeImageViewWithMD5Hash(state.application.icons.productName).frame(width: 24, height: 24) }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }

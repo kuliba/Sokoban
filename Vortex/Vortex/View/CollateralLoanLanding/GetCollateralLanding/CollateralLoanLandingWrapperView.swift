@@ -543,9 +543,9 @@ extension DropDownTextListConfig {
             background: .grayLightest
         ),
         fonts: .init(
-            title: .init(textFont: Font.system(size: 18).bold(), textColor: .primary),
-            itemTitle: .init(textFont: Font.system(size: 14), textColor: .primary),
-            itemSubtitle: .init(textFont: Font.system(size: 14), textColor: .textPlaceholder)
+            title: .init(textFont: .textH3Sb18240(), textColor: .primary),
+            itemTitle: .init(textFont: .textBodyMR14200(), textColor: .primary),
+            itemSubtitle: .init(textFont: .textBodyMR14200(), textColor: .textPlaceholder)
         )
     )
 }

@@ -35,8 +35,8 @@ struct CreateDraftCollateralLoanApplicationConsentsView<Confirmation, InformerPa
                 action: { event(.checkConsent(consent.name)) },
                 label: {
                     state.checkedConsents.contains(consent.name)
-                        ? config.elements.consent.images.checkOn
-                        : config.elements.consent.images.checkOff
+                    ? config.elements.consent.images.checkOn.tint(config.elements.consent.imageColor)
+                        : config.elements.consent.images.checkOff.tint(config.elements.consent.imageColor)
                 })
             .frame(config.elements.consent.checkBoxSize)
             .padding(.trailing, config.elements.consent.horizontalSpacing)

@@ -16,6 +16,7 @@ extension CreateDraftCollateralLoanApplicationConfig {
                 
         public let otpLength: Int
         public let smsIcon: Image
+        public let iconColor: Color
         public let timerDuration: Int
         public let warningText: TextConfig
         public let view: TimedOTPInputViewConfig
@@ -23,12 +24,14 @@ extension CreateDraftCollateralLoanApplicationConfig {
         public init(
             otpLength: Int,
             smsIcon: Image,
+            iconColor: Color,
             timerDuration: Int,
             warningText: TextConfig,
             view: TimedOTPInputViewConfig
         ) {
             self.otpLength = otpLength
             self.smsIcon = smsIcon
+            self.iconColor = iconColor
             self.timerDuration = timerDuration
             self.warningText = warningText
             self.view = view
@@ -41,9 +44,10 @@ extension CreateDraftCollateralLoanApplicationConfig.OTP {
     static let preview = Self(
         otpLength: 6,
         smsIcon: .smsImage,
+        iconColor: .secondary,
         timerDuration: 60,
         warningText: .init(textFont: Font.system(size: 14), textColor: .red),
-        view: .default
+        view: .preview
     )
 }
 
@@ -60,51 +64,4 @@ extension Image {
     static var smsImage: Image {
         Image("ic24SmsCode")
     }
-}
-
-extension TimedOTPInputViewConfig {
-    
-    static let `default` = Self(
-        otp: .init(
-            textFont: .headline,
-            textColor: .primary
-        ),
-        resend: .default,
-        timer: .default,
-        title: .default
-    )
-}
-
-extension TimedOTPInputViewConfig.ResendConfig {
-    
-    static let `default` = Self(
-        text: "Отправить повторно",
-        backgroundColor: .white,
-        config: .init(
-            textFont: .caption,
-            textColor: .primary
-        )
-    )
-}
-
-extension TimedOTPInputViewConfig.TimerConfig {
-    
-    static let `default` = Self(
-        backgroundColor: .clear,
-        config: .init(
-            textFont: .subheadline.bold(),
-            textColor: .red
-        )
-    )
-}
-
-extension TitleConfig {
-    
-    static let `default` = Self(
-        text: "Введите код",
-        config: .init(
-            textFont: .subheadline,
-            textColor: .secondary
-        )
-    )
 }

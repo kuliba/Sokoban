@@ -35,6 +35,7 @@ struct CreateDraftCollateralLoanApplicationAmountView<Confirmation, InformerPayl
             config: config.elements.amount.inputComponentConfig,
             iconView: { factory.makeImageViewWithMD5Hash(state.application.icons.amount) }
         )
+        .frame(height: config.layouts.panelHeight)
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
     
@@ -48,7 +49,8 @@ struct CreateDraftCollateralLoanApplicationAmountView<Confirmation, InformerPayl
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewWithMD5Hash(state.application.icons.amount) }
+            icon: { factory.makeImageViewWithMD5Hash(state.application.icons.amount)
+                .frame(width: 24, height: 24) }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }

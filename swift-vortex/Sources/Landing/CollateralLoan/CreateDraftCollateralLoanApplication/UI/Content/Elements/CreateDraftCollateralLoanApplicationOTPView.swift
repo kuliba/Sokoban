@@ -24,7 +24,9 @@ struct CreateDraftCollateralLoanApplicationOTPView<Confirmation, InformerPayload
         TimedOTPInputWrapperView(
             viewModel: otpViewModel,
             config: config.elements.otp.view,
-            iconView: { config.elements.otp.smsIcon },
+            iconView: { config.elements.otp.smsIcon
+                .frame(width: 24, height: 24)
+                .foregroundColor(config.elements.otp.iconColor) },
             warningView: {
                 
                 OTPWarningView(
@@ -33,6 +35,7 @@ struct CreateDraftCollateralLoanApplicationOTPView<Confirmation, InformerPayload
                 )
             }
         )
+        .frame(minHeight: config.layouts.panelHeight)
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
 }

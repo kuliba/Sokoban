@@ -15,15 +15,18 @@ extension CreateDraftCollateralLoanApplicationConfig {
         public let checkBoxSize: CGSize
         public let horizontalSpacing: CGFloat
         public let images: Images
+        public let imageColor: Color
         
         public init(
             checkboxSize: CGSize,
             horizontalSpacing: CGFloat,
-            images: Images
+            images: Images,
+            imageColor: Color
         ) {
             self.checkBoxSize = checkboxSize
             self.horizontalSpacing = horizontalSpacing
             self.images = images
+            self.imageColor = imageColor
         }
         
         public struct Images {
@@ -50,6 +53,12 @@ extension CreateDraftCollateralLoanApplicationConfig.Consent {
         images: .init(
             checkOn: Image("Checkbox_active"),
             checkOff: Image("Checkbox_normal")
-        )
+        ),
+        imageColor: .greenIcon
     )
+}
+
+private extension Color {
+    
+    static let greenIcon: Self = .init(red: 0.133, green: 0.757, blue: 0.514)
 }

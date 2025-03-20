@@ -7,6 +7,7 @@
 
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 import InputComponent
+import OTPInputComponent
 import SwiftUI
 import TextFieldUI
 
@@ -28,6 +29,7 @@ extension CreateDraftCollateralLoanApplicationConfig {
             contentHorizontalSpacing: 12,
             contentVerticalSpacing: 4,
             shimmeringHeight: 150,
+            panelHeight: 40,
             paddings: .init(
                 stack: .init(
                     top: 10,
@@ -147,9 +149,10 @@ extension CreateDraftCollateralLoanApplicationConfig.OTP {
     static let `default` = Self(
         otpLength: 6,
         smsIcon: .smsImage,
+        iconColor: .iconGray,
         timerDuration: 60,
         warningText: .init(textFont: Font.system(size: 14), textColor: .red),
-        view: .iVortex
+        view: .default
     )
 }
 
@@ -161,7 +164,8 @@ extension CreateDraftCollateralLoanApplicationConfig.Consent {
         images: .init(
             checkOn: Image("Checkbox_active"),
             checkOff: Image("Checkbox_normal")
-        )
+        ),
+        imageColor: .greenIcon
     )
 }
 
@@ -221,6 +225,7 @@ private extension Color {
     static let shimmering: Self = .init(red: 0.77, green: 0.77, blue: 0.77)
     static let grayLightest: Self = .init(red: 0.96, green: 0.96, blue: 0.97)
     static let unselected: Self = .init(red: 0.92, green: 0.92, blue: 0.92)
+    static let greenIcon: Self = .init(red: 0.133, green: 0.757, blue: 0.514)
 }
 
 extension CreateDraftCollateralLoanApplicationConfig {
@@ -233,4 +238,46 @@ extension Image {
     static var smsImage: Image {
         Image("ic24SmsCode")
     }
+}
+
+extension TimedOTPInputViewConfig {
+    
+    static let `default` = Self(
+        otp: .init(
+            textFont: .headline,
+            textColor: .primary
+        ),
+        resend: .default,
+        timer: .default,
+        title: .init(
+            text: "Введите код",
+            config: .init(
+                textFont: .subheadline,
+                textColor: .secondary
+            )
+        )
+    )
+}
+
+extension TimedOTPInputViewConfig.ResendConfig {
+    
+    static let `default` = Self(
+        text: "Отправить повторно",
+        backgroundColor: .white,
+        config: .init(
+            textFont: .caption,
+            textColor: .primary
+        )
+    )
+}
+
+extension TimedOTPInputViewConfig.TimerConfig {
+    
+    static let `default` = Self(
+        backgroundColor: .clear,
+        config: .init(
+            textFont: .subheadline.bold(),
+            textColor: .red
+        )
+    )
 }
