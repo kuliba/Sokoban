@@ -32,35 +32,48 @@ final class FormTests: XCTestCase {
     
     func test_isValid_shouldBeFalse_onConsentNotGranted_andNilOTP() {
         
-        XCTAssertFalse(makeForm(consent: makeConsent(isGranted: false), otp: nil).isValid)
+        XCTAssertFalse(isValid(isGranted: false, isValid: nil))
     }
     
     func test_isValid_shouldBeTrue_onConsentGranted_andNilOTP() {
         
-        XCTAssertTrue(makeForm(consent: makeConsent(isGranted: true), otp: nil).isValid)
+        XCTAssertTrue(isValid(isGranted: true, isValid: nil))
     }
     
     func test_isValid_shouldBeFalse_onConsentNotGranted_andValidOTP() {
         
-        XCTAssertFalse(makeForm(consent: makeConsent(isGranted: false), otp: makeOTP(isValid: true)).isValid)
+        XCTAssertFalse(isValid(isGranted: false, isValid: true))
     }
     
     func test_isValid_shouldBeFalse_onConsentGranted_andInvalidOTP() {
         
-        XCTAssertFalse(makeForm(consent: makeConsent(isGranted: true), otp: makeOTP(isValid: false)).isValid)
+        XCTAssertFalse(isValid(isGranted: true, isValid: false))
     }
     
     func test_isValid_shouldBeFalse_onConsentNotGranted_andInvalidOTP() {
         
-        XCTAssertFalse(makeForm(consent: makeConsent(isGranted: false), otp: makeOTP(isValid: false)).isValid)
+        XCTAssertFalse(isValid(isGranted: false, isValid: false))
     }
     
     func test_isValid_shouldBeTrue_onConsentGranted_andValidOTP() {
         
-        XCTAssertTrue(makeForm(consent: makeConsent(isGranted: true), otp: makeOTP(isValid: true)).isValid)
+        XCTAssertTrue(isValid(isGranted: true, isValid: true))
     }
     
     // MARK: - Helpers
+    
+    private func isValid(
+        isGranted: Bool,
+        isValid: Bool?
+    ) -> Bool {
+        
+        let form = makeForm(
+            consent: makeConsent(isGranted: isGranted),
+            otp: isValid.map { makeOTP(isValid: $0) }
+        )
+        
+        return form.isValid
+    }
     
     private func makeForm(
         consent: Consent,
@@ -76,7 +89,7 @@ final class FormTests: XCTestCase {
     }
     
     private func makeConsent(
-        isGranted: Bool = false
+        isGranted: Bool
     ) -> Consent {
         
         return .init(isGranted: isGranted)
