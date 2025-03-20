@@ -362,6 +362,7 @@ extension Payments.Success {
                 Payments.ParameterDataValue.operationDetail(with: paymentOperationDetailId),
                 Payments.ParameterSuccessStatus(with: documentStatus),
                 Payments.ParameterSuccessText.title(mode, documentStatus: documentStatus),
+                documentStatus == .processing ? Payments.ParameterSuccessText.subTitle(with: .processingSubtitle) : nil,
                 Payments.ParameterSuccessText.amount(amount: amount),
                 Payments.ParameterSuccessOptionButtons.buttons(
                     with: mode,
@@ -667,7 +668,7 @@ extension Payments.ParameterSuccessOptionButtons {
             return nil
             
         case .processing:
-            return completeOptionButtons(
+            return processingOptionButtons(
                 mode,
                 operation,
                 operationDetail,
@@ -787,6 +788,33 @@ extension Payments.ParameterSuccessOptionButtons {
         }
     }
     
+    private static func processingOptionButtons(
+        _ mode: PaymentsSuccessViewModel.Mode,
+        _ operation: Payments.Operation?,
+        _ operationDetail: OperationDetailData?,
+        _ meToMePayment: MeToMePayment?
+    ) -> Payments.ParameterSuccessOptionButtons? {
+        
+        switch mode {
+        case .normal, .meToMe:
+            return nil
+            
+        case .makePaymentToDeposit, .makePaymentFromDeposit, .closeDeposit:
+            return nil
+            
+        case .closeAccount, .closeAccountEmpty:
+            return .init(
+                options: [.details],
+                templateID: nil,
+                meToMePayment: meToMePayment,
+                operation: operation
+            )
+            
+        case .changePin, .change, .refund, .sberQR:
+            return nil
+        }
+    }
+
     private static func optionButtons(
         operation: Payments.Operation?,
         options: [Payments.ParameterSuccessOptionButtons.Option],
