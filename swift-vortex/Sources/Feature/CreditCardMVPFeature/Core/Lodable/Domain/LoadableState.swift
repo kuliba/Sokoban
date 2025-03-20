@@ -5,12 +5,20 @@
 //  Created by Igor Malyarov on 20.03.2025.
 //
 
-struct LoadableState<Resource, Failure: Error> {
+public struct LoadableState<Resource, Failure: Error> {
     
-    var resource: Resource?
-    var status: LoadStatus
+    public var resource: Resource?
+    public var status: LoadStatus
     
-    enum LoadStatus {
+    public init(
+        resource: Resource? = nil,
+        status: LoadStatus
+    ) {
+        self.resource = resource
+        self.status = status
+    }
+    
+    public enum LoadStatus {
         
         case loading
         case loadedOK
@@ -21,16 +29,13 @@ struct LoadableState<Resource, Failure: Error> {
 extension LoadableState: Equatable where Resource: Equatable, Failure: Equatable {}
 extension LoadableState.LoadStatus: Equatable where Failure: Equatable {}
 
-extension LoadableState {
+public extension LoadableState {
     
     var isLoading: Bool {
         
         guard case .loading = status else { return false }
         return true
     }
-}
-
-extension LoadableState {
     
     static var idle: Self { .init(resource: nil, status: .loadedOK) }
     

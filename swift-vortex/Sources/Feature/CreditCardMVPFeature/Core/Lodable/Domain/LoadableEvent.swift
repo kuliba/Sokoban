@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 20.03.2025.
 //
 
-enum LoadableEvent<Resource, Failure: Error> {
+public enum LoadableEvent<Resource, Failure: Error> {
     
     case load
     case loaded(Result<Resource, Failure>)

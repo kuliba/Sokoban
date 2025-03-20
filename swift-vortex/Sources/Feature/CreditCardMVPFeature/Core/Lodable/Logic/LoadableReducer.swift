@@ -5,12 +5,12 @@
 //  Created by Igor Malyarov on 20.03.2025.
 //
 
-final class LoadableReducer<Resource, Failure: Error> {
+public final class LoadableReducer<Resource, Failure: Error> {
     
-    init() {}
+    public init() {}
 }
 
-extension LoadableReducer {
+public extension LoadableReducer {
     
     func reduce(
         _ state: State,
@@ -37,7 +37,7 @@ extension LoadableReducer {
     }
 }
 
-extension LoadableReducer {
+public extension LoadableReducer {
     
     typealias State = LoadableState<Resource, Failure>
     typealias Event = LoadableEvent<Resource, Failure>

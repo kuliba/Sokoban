@@ -5,19 +5,19 @@
 //  Created by Igor Malyarov on 20.03.2025.
 //
 
-final class LoadableEffectHandler<Resource, Failure: Error> {
+public final class LoadableEffectHandler<Resource, Failure: Error> {
     
     private let load: Load
     
-    init(load: @escaping Load) {
+    public init(load: @escaping Load) {
         
         self.load = load
     }
     
-    typealias Load = (@escaping (Result<Resource, Failure>) -> Void) -> Void
+    public typealias Load = (@escaping (Result<Resource, Failure>) -> Void) -> Void
 }
 
-extension LoadableEffectHandler {
+public extension LoadableEffectHandler {
     
     func handleEffect(
         _ effect: Effect,
@@ -30,7 +30,7 @@ extension LoadableEffectHandler {
     }
 }
 
-extension LoadableEffectHandler {
+public extension LoadableEffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
