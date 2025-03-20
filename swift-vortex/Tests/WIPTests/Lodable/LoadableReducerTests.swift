@@ -15,10 +15,7 @@ final class LoadableReducerTests: LoadableTests {
         
         let state = makeState(result: .success(.init()))
         
-        assert(state, event: .load) {
-            
-            $0.result = nil
-        }
+        assert(state, event: .load) { $0.result = nil }
     }
     
     func test_load_shouldSetEffect_onNilResource_resultSuccess() {
@@ -32,10 +29,7 @@ final class LoadableReducerTests: LoadableTests {
         
         let state = makeState(result: .success(.init()))
         
-        assert(state, event: .load) {
-            
-            $0.result = nil
-        }
+        assert(state, event: .load) { $0.result = nil }
     }
     
     func test_load_shouldSetEffect_onNonNilResource_resultSuccess() {
@@ -49,10 +43,7 @@ final class LoadableReducerTests: LoadableTests {
         
         let state = makeState(failure: makeFailure())
         
-        assert(state, event: .load) {
-            
-            $0.result = nil
-        }
+        assert(state, event: .load) { $0.result = nil }
     }
     
     func test_load_shouldSetEffect_onNilResource_resultFailure() {
@@ -66,10 +57,7 @@ final class LoadableReducerTests: LoadableTests {
         
         let state = makeState(failure: makeFailure())
         
-        assert(state, event: .load) {
-            
-            $0.result = nil
-        }
+        assert(state, event: .load) { $0.result = nil }
     }
     
     func test_load_shouldSetEffect_onNonNilResource_resultFailure() {
@@ -80,6 +68,78 @@ final class LoadableReducerTests: LoadableTests {
     }
     
     // MARK: - loaded
+    
+    func test_loaded_shouldChangeState_onFailure_resourceNilResultSuccess() {
+        
+        let failure = makeFailure()
+        let state = makeState(result: .success(.init()))
+        
+        assert(state, event: .loaded(.failure(failure))) {
+            
+            $0.result = .failure(failure)
+        }
+    }
+    
+    func test_loaded_shouldNotSetEffect_onFailure_resourceNilResultSuccess() {
+        
+        let state = makeState(result: .success(.init()))
+        
+        assert(state, event: .loaded(.failure(makeFailure())), delivers: nil)
+    }
+    
+    func test_loaded_shouldChangeState_onFailure_resourceNonNilResultSuccess() {
+        
+        let failure = makeFailure()
+        let state = makeState(resource: makeResource(), result: .success(.init()))
+        
+        assert(state, event: .loaded(.failure(failure))) {
+            
+            $0.result = .failure(failure)
+        }
+    }
+    
+    func test_loaded_shouldNotSetEffect_onFailure_resourceNonNilResultSuccess() {
+        
+        let state = makeState(resource: makeResource(), result: .success(.init()))
+        
+        assert(state, event: .loaded(.failure(makeFailure())), delivers: nil)
+    }
+    
+    func test_loaded_shouldChangeState_onFailure_resourceNilResultFailure() {
+        
+        let failure = makeFailure()
+        let state = makeState(failure: makeFailure())
+        
+        assert(state, event: .loaded(.failure(failure))) {
+            
+            $0.result = .failure(failure)
+        }
+    }
+    
+    func test_loaded_shouldNotSetEffect_onFailure_resourceNilResultFailure() {
+        
+        let state = makeState(failure: makeFailure())
+        
+        assert(state, event: .loaded(.failure(makeFailure())), delivers: nil)
+    }
+    
+    func test_loaded_shouldChangeState_onFailure_resourceNonNilResultFailure() {
+        
+        let failure = makeFailure()
+        let state = makeState(resource: makeResource(), failure: makeFailure())
+        
+        assert(state, event: .loaded(.failure(failure))) {
+            
+            $0.result = .failure(failure)
+        }
+    }
+    
+    func test_loaded_shouldNotSetEffect_onFailure_resourceNonNilResultFailure() {
+        
+        let state = makeState(resource: makeResource(), failure: makeFailure())
+        
+        assert(state, event: .loaded(.failure(makeFailure())), delivers: nil)
+    }
     
     func test_loaded_shouldChangeState_onSuccess_resourceNilResultSuccess() {
         

@@ -19,3 +19,17 @@ extension LoadableState {
     
     var isLoading: Bool { result == nil }
 }
+
+extension LoadableState {
+    
+    static var idle: Self { .init(resource: nil, result: .success(.init())) }
+    
+    static var emptyLoading: Self { .init(resource: nil, result: nil) }
+    
+    static func loading(
+        withResource resource: Resource
+    ) -> Self {
+        
+        return .init(resource: resource, result: nil)
+    }
+}

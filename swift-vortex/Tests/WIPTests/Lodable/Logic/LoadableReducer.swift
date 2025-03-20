@@ -26,7 +26,7 @@ extension LoadableReducer {
             effect = .load
             
         case let .loaded(.failure(failure)):
-            break
+            state.result = .failure(failure)
             
         case let .loaded(.success(loaded)):
             state.resource = loaded
