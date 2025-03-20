@@ -62,6 +62,7 @@ extension MainSectionOpenProductView {
         private func updateButtons() {
             
             newProducts = .init(model, makeOpenNewProductButtons: makeButtons)
+            bind()
         }
     }
 }
