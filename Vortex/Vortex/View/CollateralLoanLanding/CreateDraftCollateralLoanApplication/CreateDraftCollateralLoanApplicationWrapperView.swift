@@ -135,7 +135,7 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
                     case .offline:
                         documentButtonState = .failure(.offline)
 
-                    case .failureResultScreen, .incorrectOTP:
+                    case .failureResultScreen, .incorrectOTP, .serviceFailure:
                         break
                     }
                 }

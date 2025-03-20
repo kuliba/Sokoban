@@ -109,15 +109,14 @@ extension CreateDraftCollateralLoanApplicationDomain {
                     
                 case let .failure(failure):
                     state.failure = failure
-                    //
-                    //                    if case .incorrectOTP = failure.kind {
-                    //                    }
-                    state.confirmation?.event(.otpField(.failure(.serverError(""))))
                 }
                 
-            case .gettedVerificationCode:
-                break
-                
+            case let .gettedVerificationCode(result):
+                if case let .failure(failure) = result {
+
+                    state.failure = failure
+                }
+
             case let .checkConsent(consentName):
                 if state.checkedConsents.contains(consentName) {
                     state.checkedConsents.removeAll { $0 == consentName }

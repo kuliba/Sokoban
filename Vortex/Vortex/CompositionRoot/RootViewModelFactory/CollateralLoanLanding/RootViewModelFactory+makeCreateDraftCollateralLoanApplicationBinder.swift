@@ -274,7 +274,7 @@ extension RootViewModelFactory {
                 case .offline:
                     completion(.failure(.offline))
                     
-                case .incorrectOTP:
+                case .incorrectOTP, .serviceFailure:
                     break
                 }
             }
@@ -381,10 +381,10 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
             case .server(statusCode: let statusCode, errorMessage: let errorMessage):
                 switch (statusCode, errorMessage) {
                 case (102, "Введен некорректный код. Попробуйте еще раз."):
-                    self = .init(kind: .incorrectOTP)
+                    self = .init(kind: .incorrectOTP(errorMessage))
                     
                 default:
-                    self = defaultHandlerError
+                    self = .init(kind: .serviceFailure(errorMessage))
                 }
                                 
             default:
@@ -421,8 +421,11 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
         case .offline:
             return .offline
             
-        case .incorrectOTP:
-            return .incorrectOTP
+        case let .incorrectOTP(message):
+            return .incorrectOTP(message)
+            
+        case let .serviceFailure(message):
+            return .serviceFailure(message)
         }
     }
 }

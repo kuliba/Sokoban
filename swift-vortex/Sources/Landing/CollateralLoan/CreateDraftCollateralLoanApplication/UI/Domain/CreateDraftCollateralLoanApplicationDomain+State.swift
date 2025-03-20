@@ -132,15 +132,26 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
     }
 }
 
-extension OTPInputState {
+extension CreateDraftCollateralLoanApplicationDomain.State {
     
     var warning: String? {
         
-        guard case let .input(input) = status,
-              case let .failure(.serverError(warning)) = input.otpField.status
-        else { return nil }
-        
-        return warning
+        switch failure {
+        case .none:
+            return nil
+            
+        case let .some(failure):
+            switch failure.kind {
+            case let .incorrectOTP(message):
+                return message
+
+            case let .serviceFailure(message):
+                return message
+                
+            default:
+                return nil
+            }
+        }
     }
 }
 

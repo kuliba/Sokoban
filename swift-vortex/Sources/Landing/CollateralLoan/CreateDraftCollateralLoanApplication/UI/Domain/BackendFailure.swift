@@ -29,7 +29,8 @@ public extension BackendFailure {
         case informer(InformerPayload)
         case failureResultScreen
         case offline
-        case incorrectOTP
+        case incorrectOTP(String)
+        case serviceFailure(String)
     }
 }
 

@@ -28,7 +28,7 @@ struct CreateDraftCollateralLoanApplicationOTPView<Confirmation, InformerPayload
             warningView: {
                 
                 OTPWarningView(
-                    text: otpViewModel.state.warning,
+                    text: state.warning,
                     config: config.elements.otp.warningText
                 )
             }

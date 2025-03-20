@@ -13,17 +13,14 @@ public struct OptionalSelectorViewConfig: Equatable {
     let title: TitleConfig
     let search: TextConfig
     let searchPlaceholder: String
-    let keyboardType: UIKeyboardType?
     
     public init(
         title: TitleConfig,
         search: TextConfig,
-        searchPlaceholder: String,
-        keyboardType: UIKeyboardType? = nil
+        searchPlaceholder: String
     ) {
         self.title = title
         self.search = search
         self.searchPlaceholder = searchPlaceholder
-        self.keyboardType = keyboardType
     }
 }

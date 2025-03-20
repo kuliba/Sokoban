@@ -63,7 +63,8 @@ extension CreateDraftCollateralLoanApplicationDomain {
         case alert(String)
         case complete
         case offline
-        case incorrectOTP
+        case incorrectOTP(String)
+        case serviceFailure(String)
         case none
     }
 }
