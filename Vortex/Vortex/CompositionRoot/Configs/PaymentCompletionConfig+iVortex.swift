@@ -224,7 +224,7 @@ extension PaymentCompletionConfig.Statuses.Status {
         )
     }
     static func suspend(
-        title: String = "Операция временно приостановлена в целях безопасности",
+        title: String = "Операция приостановлена в целях безопасности.",
         subtitle: String = Payments.Success.antifraudSubtitle
     ) -> Self {
         
