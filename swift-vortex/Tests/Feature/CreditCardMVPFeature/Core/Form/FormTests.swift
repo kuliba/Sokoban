@@ -5,27 +5,7 @@
 //  Created by Igor Malyarov on 20.03.2025.
 //
 
-protocol ConsentProviding {
-    
-    var isGranted: Bool { get }
-}
-
-protocol Validatable {
-    
-    var isValid: Bool { get }
-}
-
-struct Form {
-    
-    var consent: any ConsentProviding
-    var otp: (any Validatable)?
-}
-
-extension Form {
-    
-    var isValid: Bool { consent.isGranted && (otp?.isValid ?? true) }
-}
-
+import CreditCardMVPCore
 import XCTest
 
 final class FormTests: XCTestCase {
