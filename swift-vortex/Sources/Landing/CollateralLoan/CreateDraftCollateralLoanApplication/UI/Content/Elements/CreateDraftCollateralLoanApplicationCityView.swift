@@ -52,6 +52,7 @@ struct CreateDraftCollateralLoanApplicationCityView<Confirmation, InformerPayloa
             ),
             config: config.elements.city.cityConfig.selector
         )
+        .onTapGesture { UIApplication.shared.endEditing() }
         .frame(minHeight: config.layouts.panelHeight)
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
@@ -115,5 +116,13 @@ struct CreateDraftCollateralLoanApplicationCityView_Previews<Confirmation, Infor
             factory: .preview
         )
         .previewDisplayName("Read only mode")
+    }
+}
+
+extension UIApplication {
+    
+    func endEditing() {
+
+        sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }

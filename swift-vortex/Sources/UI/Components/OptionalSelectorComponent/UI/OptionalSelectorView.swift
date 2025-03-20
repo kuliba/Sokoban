@@ -7,7 +7,6 @@
 
 import SharedConfigs
 import SwiftUI
-import IQKeyboardManagerSwift
 
 public struct OptionalSelectorView<Item, IconView, ItemLabel, SelectedItemLabel, ToggleLabel>: View
 where Item: Identifiable & Equatable,
@@ -101,27 +100,12 @@ private extension OptionalSelectorView {
     func searchView() -> some View {
         
         TextField(
-            config.searchPlaceholder,
+            config.searchPlaceholder, 
             text: .init(
                 get: { state.searchQuery },
                 set: { event(.search($0)) }
             )
         )
-        .onAppear {
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-                
-                IQKeyboardManager.shared.enable = true
-                IQKeyboardManager.shared.enableAutoToolbar = true
-                IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
-                IQKeyboardManager.shared.keyboardDistanceFromTextField = 30
-            }
-        }
-        .onDisappear {
-            
-            IQKeyboardManager.shared.enable = false
-            IQKeyboardManager.shared.enableAutoToolbar = false
-        }
     }
     
     func itemsView() -> some View {

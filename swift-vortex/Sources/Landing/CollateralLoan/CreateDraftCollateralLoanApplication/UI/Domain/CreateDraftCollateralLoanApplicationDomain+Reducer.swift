@@ -85,6 +85,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 state.isLoading = true
                 if let applicationID = state.applicationID {
                     
+                    state.failure = nil
                     effect = .saveConsents(
                         state.saveConsentsPayload(
                             applicationID: applicationID,
