@@ -24,9 +24,33 @@ struct CreateDraftCollateralLoanApplicationOTPView<Confirmation, InformerPayload
         TimedOTPInputWrapperView(
             viewModel: otpViewModel,
             config: config.elements.otp.view,
-            iconView: { config.elements.otp.smsIcon }
+            iconView: { config.elements.otp.smsIcon },
+            warningView: {
+                
+                OTPWarningView(
+                    text: otpViewModel.state.warning,
+                    config: config.elements.otp.warningText
+                )
+            }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
+    }
+}
+
+extension CreateDraftCollateralLoanApplicationOTPView {
+    
+    private struct OTPWarningView: View {
+        
+        let text: String?
+        let config: TextConfig
+        
+        var body: some View {
+            
+            text.map {
+                
+                $0.text(withConfig: config)
+            }
+        }
     }
 }
 

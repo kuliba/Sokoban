@@ -11,6 +11,7 @@ import UIPrimitives
 struct DocumentButton: View {
     
     @State private var isSheetPresented: Bool = false
+    @State private var isInformerPresented: Bool = false
     
     @Binding private var state: DocumentButtonState
     
@@ -43,16 +44,16 @@ struct DocumentButton: View {
                 case let .failure(failure):
                     switch failure {
                     case let .informer(informerData):
-                        
-                        InformerView(
-                            viewModel: .init(
-                                message: informerData.message,
-                                icon: informerData.icon.image
-                            )
-                        )
-                        .padding(.top, 30)
-                        .padding(.bottom, .infinity)
 
+                        informerView(informerData)
+                            .onAppear {
+                                
+                                Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { _ in
+                                    
+                                    isSheetPresented = false
+                                }
+                            }
+                        
                     default:
                         Color.white
                             .alert(
@@ -141,6 +142,18 @@ struct DocumentButton: View {
             
             return .init(with: alertViewModel)
         }
+    }
+    
+    func informerView(_ informerData: InformerData) -> some View {
+        
+        InformerView(
+            viewModel: .init(
+                message: informerData.message,
+                icon: informerData.icon.image
+            )
+        )
+        .padding(.top, 30)
+        .padding(.bottom, .infinity)
     }
 }
 

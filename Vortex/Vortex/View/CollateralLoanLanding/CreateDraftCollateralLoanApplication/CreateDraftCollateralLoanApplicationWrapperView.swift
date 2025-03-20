@@ -105,17 +105,6 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
                 config: .default,
                 factory: factory
             )
-//            .if(state.stage == .confirm) {
-//                
-//                $0.toolbar {
-//                    
-//                    ToolbarItem(placement: .navigationBarLeading) {
-//                        buttonBack(event: event)
-//                    }
-//                }
-//                .navigationBarBackButtonHidden()
-//
-//            }
         }
     }
         
@@ -143,11 +132,11 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
                     case let .informer(informerData):
                         documentButtonState = .failure(.informer(informerData))
 
-                    case .failureResultScreen:
-                        break
-
                     case .offline:
                         documentButtonState = .failure(.offline)
+
+                    case .failureResultScreen, .incorrectOTP:
+                        break
                     }
                 }
             }

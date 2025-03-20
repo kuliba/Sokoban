@@ -450,12 +450,8 @@ private extension MainView {
     
     private func goToPlaces() {
 
-        viewModel.reset()
         guard let placesViewModel = PlacesViewModel(viewModel.model) else { return }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-
-            viewModel.route.modal = .sheet(.init(type: .places(placesViewModel)))
-        }
+        viewModel.route.modal = .sheet(.init(type: .places(placesViewModel)))
     }
 }
 

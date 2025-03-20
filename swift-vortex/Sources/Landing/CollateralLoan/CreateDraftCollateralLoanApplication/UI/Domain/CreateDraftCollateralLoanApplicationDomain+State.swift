@@ -132,6 +132,18 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
     }
 }
 
+extension OTPInputState {
+    
+    var warning: String? {
+        
+        guard case let .input(input) = status,
+              case let .failure(.serverError(warning)) = input.otpField.status
+        else { return nil }
+        
+        return warning
+    }
+}
+
 extension CreateDraftCollateralLoanApplicationDomain {
     
     public struct PeriodItem: Equatable {

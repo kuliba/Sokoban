@@ -273,6 +273,9 @@ extension RootViewModelFactory {
                     
                 case .offline:
                     completion(.failure(.offline))
+                    
+                case .incorrectOTP:
+                    break
                 }
             }
         }
@@ -359,7 +362,35 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
         completionForm: Bool = false,
         offlineForm: Bool = false
     ) {
+        var defaultHandlerError: Self {
+            if completionForm {
+                
+                return .init(kind: .failureResultScreen)
+            } else if offlineForm {
+                
+                return .init(kind: .offline)
+            } else {
+                
+                return .init(kind: .alert("Попробуйте позже."))
+            }
+        }
+
         switch error {
+        case let .mapResponse(error):
+            switch error {
+            case .server(statusCode: let statusCode, errorMessage: let errorMessage):
+                switch (statusCode, errorMessage) {
+                case (102, "Введен некорректный код. Попробуйте еще раз."):
+                    self = .init(kind: .incorrectOTP)
+                    
+                default:
+                    self = defaultHandlerError
+                }
+                                
+            default:
+                self = defaultHandlerError
+            }
+
         case let .performRequest(error):
             if error.isNotConnectedToInternetOrTimeout() {
                 self = .init(kind: .informer(.init(
@@ -367,29 +398,11 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
                     icon: .close
                 )))
             } else {
-                if completionForm {
-
-                    self = .init(kind: .failureResultScreen)
-                } else if offlineForm {
-
-                    self = .init(kind: .offline)
-                } else {
-                    
-                    self = .init(kind: .alert("Попробуйте позже."))
-                }
+                self = defaultHandlerError
             }
             
         default:
-            if completionForm {
-                
-                self = .init(kind: .failureResultScreen)
-            } else if offlineForm {
-                
-                self = .init(kind: .offline)
-            } else {
-                
-                self = .init(kind: .alert("Попробуйте позже."))
-            }
+            self = defaultHandlerError
         }
     }
     
@@ -407,6 +420,9 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
             
         case .offline:
             return .offline
+            
+        case .incorrectOTP:
+            return .incorrectOTP
         }
     }
 }

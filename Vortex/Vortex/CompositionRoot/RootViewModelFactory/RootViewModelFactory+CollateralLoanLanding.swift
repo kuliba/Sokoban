@@ -25,12 +25,12 @@ extension CollateralLandingApplicationSaveConsentsResult {
                 value: name
             ),
             .init(
-                iconType: config.icons.period,
+                asyncImage: makeImageViewWithMD5Hash(icons.term),
                 title: config.titles.period,
                 value: term
             ),
             .init(
-                iconType: config.icons.percent,
+                asyncImage: makeImageViewWithMD5Hash(icons.rate),
                 title: config.titles.percent,
                 value: String(format: "%.1f", interestRate) + "%"
             )
@@ -40,7 +40,7 @@ extension CollateralLandingApplicationSaveConsentsResult {
             
             out.append(
                 .init(
-                    iconType: config.icons.amount,
+                    asyncImage: makeImageViewWithMD5Hash(icons.amount),
                     title: config.titles.amount,
                     value: amount
                 )
@@ -70,7 +70,7 @@ extension CollateralLandingApplicationSaveConsentsResult {
         
         out.append(
             .init(
-                iconType: config.icons.home,
+                asyncImage: makeImageViewWithMD5Hash(icons.city),
                 title: config.titles.city,
                 value: cityName
             )
@@ -78,37 +78,4 @@ extension CollateralLandingApplicationSaveConsentsResult {
         
         return out
     }
-}
-
-extension CreateDraftCollateralLoanApplicationConfig.Result {
-
-    static let `default` = Self(
-        titles: .default,
-        icons: .default
-    )
-}
-
-extension CreateDraftCollateralLoanApplicationConfig.Result.Titles {
-
-    static let `default` = Self(
-        productName: "Наименование кредита",
-        period: "Срок кредита",
-        percent: "Процентная ставка",
-        amount: "Сумма кредита",
-        collateralType: "Тип залога",
-        city: "Город получения кредита"
-    )
-}
-
-extension CreateDraftCollateralLoanApplicationConfig.Result.Icons {
-
-    static let `default` = Self(
-        period: .ic24Calendar,
-        percent: .ic24Percent,
-        amount: .ic24Coins,
-        more: .ic24MoreHorizontal,
-        car: .ic24Car,
-        home: .ic24Home,
-        city: .ic24Egrn
-    )
 }

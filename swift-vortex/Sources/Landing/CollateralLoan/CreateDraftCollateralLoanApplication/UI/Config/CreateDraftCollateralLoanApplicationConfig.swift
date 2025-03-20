@@ -5,9 +5,10 @@
 //  Created by Valentin Ozerov on 30.12.2024.
 //
 
-import SwiftUI
-import UIPrimitives
 import InputComponent
+import SwiftUI
+import TextFieldUI
+import UIPrimitives
 
 public struct CreateDraftCollateralLoanApplicationConfig {
         
@@ -16,6 +17,20 @@ public struct CreateDraftCollateralLoanApplicationConfig {
     public let layouts: Layouts
     public let icons: Icons
     public let elements: Elements
+    
+    public init(
+        fonts: Fonts,
+        colors: Colors,
+        layouts: Layouts,
+        icons: Icons,
+        elements: Elements
+    ) {
+        self.fonts = fonts
+        self.colors = colors
+        self.layouts = layouts
+        self.icons = icons
+        self.elements = elements
+    }
     
     public struct Elements {
         

@@ -63,6 +63,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
         case alert(String)
         case complete
         case offline
+        case incorrectOTP
         case none
     }
 }
@@ -73,8 +74,7 @@ public extension CollateralLandingApplicationSaveConsentsResult {
         
         .init(
             cryptoVersion: "1.0", // Constant, can be skipped in request
-            applicationId: applicationID,
-            verificationCode: verificationCode
+            applicationId: applicationID
         )
     }
 }

@@ -109,6 +109,10 @@ extension CreateDraftCollateralLoanApplicationDomain {
                     
                 case let .failure(failure):
                     state.failure = failure
+                    //
+                    //                    if case .incorrectOTP = failure.kind {
+                    //                    }
+                    state.confirmation?.event(.otpField(.failure(.serverError(""))))
                 }
                 
             case .gettedVerificationCode:

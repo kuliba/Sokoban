@@ -15,16 +15,13 @@ public extension RequestFactory {
         
         public let cryptoVersion: String
         public let applicationId: UInt
-        public let verificationCode: String
 
         public init(
             cryptoVersion: String,
-            applicationId: UInt,
-            verificationCode: String
+            applicationId: UInt
         ) {
             self.cryptoVersion = cryptoVersion
             self.applicationId = applicationId
-            self.verificationCode = verificationCode
         }
     }
     
@@ -45,8 +42,7 @@ extension RequestFactory.GetConsentsPayload {
         get throws {
 
             [
-                "applicationId": String(applicationId),
-                "verificationCode": String(verificationCode)
+                "applicationId": String(applicationId)
             ]
         }
     }
