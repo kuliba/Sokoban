@@ -285,12 +285,14 @@ final class RootViewModelFactory_getInfoRepeatPaymentNavigationTests: GetInfoRep
         product: ProductData? = nil,
         with info: Repeat,
         delivers expectedNavigation: EquatableNavigation?,
+        processingFlag: ProcessingFlag = .inactive,
         file: StaticString = #file,
         line: UInt = #line
     ) {
         let sut = makeSUT(model: model, file: file, line: line).sut
         
         let navigation = sut.getInfoRepeatPaymentNavigation(
+            processingFlag: processingFlag,
             from: info,
             activeProductID: makeProductID(),
             getProduct: { _ in product },

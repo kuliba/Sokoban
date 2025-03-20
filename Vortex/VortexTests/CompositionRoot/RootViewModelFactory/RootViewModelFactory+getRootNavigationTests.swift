@@ -333,7 +333,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         on action: () -> Void = {},
         c2gFlag: C2GFlag = .inactive, // TODO: add tests for active flag
         orderCardFlag: OrderCardFlag = .inactive,
-        newInProgress: NewInProgressFlag = .inactive,
+        processingFlag: ProcessingFlag = .inactive,
         file: StaticString = #file,
         line: UInt = #line
     ) {
@@ -350,7 +350,7 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         
         let sut = sut ?? makeSUT(model: model, file: file, line: line).sut
         let exp = expectation(description: "wait for completion")
-        let rootFlags: SUT.RootFlags = .init(c2gFlag: c2gFlag, orderCardFlag: orderCardFlag, newInProgressFlag: newInProgress)
+        let rootFlags: SUT.RootFlags = .init(c2gFlag: c2gFlag, orderCardFlag: orderCardFlag, processingFlag: processingFlag)
         
         sut.getRootNavigation(
             rootFlags: rootFlags,
@@ -378,14 +378,14 @@ final class RootViewModelFactory_getRootNavigationTests: RootViewModelFactoryTes
         action: () -> Void = {},
         c2gFlag: C2GFlag = .inactive, // TODO: add tests for active flag
         orderCardFlag: OrderCardFlag = .inactive, // TODO: add tests for active flag
-        newInProgress: NewInProgressFlag = .inactive,
+        processingFlag: ProcessingFlag = .inactive,
         file: StaticString = #file,
         line: UInt = #line
     ) {
         let sut = sut ?? makeSUT(file: file, line: line).sut
         let notifySpy = NotifySpy(stubs: [()])
         let exp = expectation(description: "wait for completion")
-        let rootFlags: SUT.RootFlags = .init(c2gFlag: c2gFlag, orderCardFlag: orderCardFlag, newInProgressFlag: newInProgress)
+        let rootFlags: SUT.RootFlags = .init(c2gFlag: c2gFlag, orderCardFlag: orderCardFlag, processingFlag: processingFlag)
 
         sut.getRootNavigation(
             rootFlags: rootFlags,

@@ -14,6 +14,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func processPayments(
+        processingFlag: ProcessingFlag,
         lastPayment: UtilityPaymentLastPayment,
         notify: @escaping (AnywayFlowState.Status.Outside) -> Void,
         completion: @escaping (PaymentsDomain.Navigation?) -> Void
@@ -35,6 +36,7 @@ extension RootViewModelFactory {
             else { return completion(nil) }
             
             return completion(getPaymentsNavigation(
+                processingFlag: processingFlag,
                 from: paymentsPayload,
                 closeAction: { notify(.main) }
             ))

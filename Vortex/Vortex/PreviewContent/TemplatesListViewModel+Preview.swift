@@ -192,6 +192,7 @@ extension TemplatesListViewModel {
         items: TemplatesListViewModel.sampleItems,
         deletePannel: TemplatesListViewModel.sampleDeletePanel,
         updateFastAll: {},
+        makePaymentsMeToMeViewModel: { _ in .none },
         model: .emptyMock
     )
     
@@ -203,6 +204,7 @@ extension TemplatesListViewModel {
         items: TemplatesListViewModel.sampleItems2,
         deletePannel: nil,
         updateFastAll: {},
+        makePaymentsMeToMeViewModel: { _ in .none },
         model: .emptyMock
     )
     
@@ -214,6 +216,7 @@ extension TemplatesListViewModel {
         items: TemplatesListViewModel.sampleItems3,
         deletePannel: TemplatesListViewModel.sampleDeletePanel,
         updateFastAll: {},
+        makePaymentsMeToMeViewModel: { _ in .none },
         model: .emptyMock
     )
 }

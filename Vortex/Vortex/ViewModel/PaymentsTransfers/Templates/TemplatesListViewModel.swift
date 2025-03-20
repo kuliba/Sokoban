@@ -39,6 +39,8 @@ class TemplatesListViewModel: ObservableObject {
     let dismissAction: () -> Void
     private let updateFastAll: UpdateFastAll
     
+    let makePaymentsMeToMeViewModel: MakePaymentsMeToMeViewModel
+    
     var isDeleteProcessing: Bool { !items.filter{$0.state.isDeleteProcessing}.isEmpty }
     var isExistDeleted: Bool { !items.filter{$0.state.isDeleting}.isEmpty }
     
@@ -55,6 +57,7 @@ class TemplatesListViewModel: ObservableObject {
         deletePannel: DeletePannelViewModel?,
         dismissAction: @escaping () -> Void = {},
         updateFastAll: @escaping UpdateFastAll,
+        makePaymentsMeToMeViewModel: @escaping MakePaymentsMeToMeViewModel,
         model: Model,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
@@ -67,6 +70,7 @@ class TemplatesListViewModel: ObservableObject {
         self.deletePanel = deletePannel
         self.dismissAction = dismissAction
         self.updateFastAll = updateFastAll
+        self.makePaymentsMeToMeViewModel = makePaymentsMeToMeViewModel
         self.model = model
         self.scheduler = scheduler
         
@@ -80,6 +84,7 @@ class TemplatesListViewModel: ObservableObject {
         _ model: Model,
         dismissAction: @escaping () -> Void,
         updateFastAll: @escaping UpdateFastAll,
+        makePaymentsMeToMeViewModel: @escaping MakePaymentsMeToMeViewModel,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         model.action.send(ModelAction.PaymentTemplate.List.Requested())
@@ -105,6 +110,7 @@ class TemplatesListViewModel: ObservableObject {
             deletePannel: nil,
             dismissAction: dismissAction,
             updateFastAll: updateFastAll,
+            makePaymentsMeToMeViewModel: makePaymentsMeToMeViewModel,
             model: model,
             scheduler: scheduler
         )
@@ -345,12 +351,8 @@ extension TemplatesListViewModel {
                     
                     switch template.type {
                     case .betweenTheir:
-                        guard let paymentsMeToMeViewModel = PaymentsMeToMeViewModel(
-                            model,
-                            mode: .templatePayment(template.id, item.title)) else {
-                            
-                            return
-                        }
+                        guard let paymentsMeToMeViewModel = makePaymentsMeToMeViewModel(.templatePayment(template.id, item.title))
+                        else { return }
                         
                         bind(paymentsMeToMeViewModel)
                         

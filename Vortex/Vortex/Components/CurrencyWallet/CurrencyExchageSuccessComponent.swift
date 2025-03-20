@@ -34,23 +34,28 @@ extension CurrencyExchangeSuccessView {
         fileprivate lazy var detailsButton: ButtonIconTextView.ViewModel = makeDetailsButton()
 
         enum State {
-                
-            case success
+            
             case error
-            case wait
+            case processing
+            case success
             case suspended
-                
+            case wait
+            
             var appearance: (icon: Image, text: String) {
                 switch self {
                 case .success: return (Image("Done"), "Успешный перевод")
                 case .error: return (.ic16Denied, "Операция неуспешна!")
                 case .suspended: return (.ic16Waiting, "Операция приостановлена в целях безопасности.")
                 case .wait: return (.ic16Waiting, "Операция в обработке!")
+                case .processing:
+                    return (Image("Done"), "Платеж успешно принят в обработку")
                 }
             }
             
             var subtitle: String? {
                 switch self {
+                case .processing: return .processingSubtitle
+                    
                 case .suspended:
                     return Payments.Success.antifraudSubtitle
                     

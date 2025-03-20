@@ -13,7 +13,7 @@ extension RootViewModelFactory {
     ) -> PaymentsTransfersCorporateTransfers {
         
         return .init(
-            meToMe: makeMeToMeFlow(),
+            meToMe: makeMeToMeFlow(featureFlags.processingFlag),
             openProduct: makeOpenProductFlow(featureFlags: featureFlags)
         )
     }

@@ -11,6 +11,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func getInfoRepeatPaymentNavigation(
+        processingFlag: ProcessingFlag,
         from info: GetInfoRepeatPaymentDomain.GetInfoRepeatPayment,
         activeProductID: ProductData.ID,
         getProduct: @escaping (ProductData.ID) -> ProductData?,
@@ -21,6 +22,7 @@ extension RootViewModelFactory {
         else { return nil }
         
         return getPaymentsNavigation(
+            processingFlag: processingFlag,
             from: paymentsPayload,
             closeAction: closeAction
         )

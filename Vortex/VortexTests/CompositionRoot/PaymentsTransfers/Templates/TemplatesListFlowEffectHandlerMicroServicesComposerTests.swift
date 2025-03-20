@@ -323,6 +323,7 @@ final class TemplatesListFlowEffectHandlerMicroServicesComposerTests: XCTestCase
         let composer = Composer(
             initiatePayment: spy.process(_:completion:),
             makeLegacyPayment: makeLegacy.call(payload:),
+            makeTemplatesListViewModel: { _  in .sampleComplete },
             paymentsTransfersFlag: .init(paymentsTransfersFlag)
         )
         let sut = composer.compose()
