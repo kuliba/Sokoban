@@ -18,13 +18,15 @@ extension CloseAccountSpinnerView {
         
         private let model: Model
         private let productData: ProductData
-        
+        private let successViewModelFactory: SuccessViewModelFactory
+
         private var bindings = Set<AnyCancellable>()
 
-        init(_ model: Model, productData: ProductData) {
+        init(_ model: Model, productData: ProductData, successViewModelFactory: SuccessViewModelFactory) {
             
             self.model = model
             self.productData = productData
+            self.successViewModelFactory = successViewModelFactory
             
             bind()
         }
@@ -44,18 +46,10 @@ extension CloseAccountSpinnerView {
                             
                             let currency = Currency(description: productData.currency)
                             let balance = productData.balanceValue
-                            if let success = Payments.Success(
-                                model: model,
-                                mode: .closeAccountEmpty(
-                                    productData.id,
-                                    currency,
-                                    balance: balance,
-                                    transferData
-                                ),
-                                amountFormatter: model.amountFormatted(amount:currencyCode:style:)
-                            ) {
-                                
-                                let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
+                            
+                            let mode: PaymentsSuccessViewModel.Mode = .closeAccountEmpty(productData.id, currency, balance: balance, transferData)
+
+                            if let successViewModel = successViewModelFactory.makeCloseAccountPaymentsSuccessViewModel(mode) {
                                 self.action.send(CloseAccountSpinnerAction.Response.Success(viewModel: successViewModel))
                             }
                             

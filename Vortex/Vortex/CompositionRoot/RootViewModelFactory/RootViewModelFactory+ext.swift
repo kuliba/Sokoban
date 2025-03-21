@@ -299,6 +299,12 @@ extension RootViewModelFactory {
         }
                 
         let makeTemplates = makeMakeTemplates(featureFlags.processingFlag, featureFlags.paymentsTransfersFlag)
+        let _makeCloseAccountSpinnerViewModel: MakeCloseAccountSpinnerViewModel = { [weak self] in
+            
+            guard let self else { return nil }
+            
+            return makeCloseAccountSpinnerViewModel(model, featureFlags.processingFlag, $0)
+        }
         
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
@@ -314,6 +320,7 @@ extension RootViewModelFactory {
             cvvPINServicesClient: cvvPINServicesClient,
             productNavigationStateManager: productNavigationStateManager,
             makeCardGuardianPanel: makeCardGuardianPanel,
+            makeCloseAccountSpinnerViewModel: _makeCloseAccountSpinnerViewModel,
             makeRepeatPaymentNavigation: { [weak self] in self?.getInfoRepeatPaymentNavigation(processingFlag: featureFlags.processingFlag, from: $0, activeProductID: $1, getProduct: $2, closeAction: $3) },
             makeSubscriptionsViewModel: makeSubscriptionsViewModel,
             updateInfoStatusFlag: updateInfoStatusFlag,
@@ -638,6 +645,7 @@ extension ProductProfileViewModel {
         cvvPINServicesClient: CVVPINServicesClient,
         productNavigationStateManager: ProductProfileFlowManager,
         makeCardGuardianPanel: @escaping ProductProfileViewModelFactory.MakeCardGuardianPanel,
+        makeCloseAccountSpinnerViewModel: @escaping MakeCloseAccountSpinnerViewModel,
         makeRepeatPaymentNavigation: @escaping MakeRepeatPaymentNavigation,
         makeSubscriptionsViewModel: @escaping UserAccountNavigationStateManager.MakeSubscriptionsViewModel,
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag,
@@ -666,6 +674,7 @@ extension ProductProfileViewModel {
                 cvvPINServicesClient: cvvPINServicesClient,
                 productNavigationStateManager: productNavigationStateManager,
                 makeCardGuardianPanel: makeCardGuardianPanel,
+                makeCloseAccountSpinnerViewModel: makeCloseAccountSpinnerViewModel,
                 makeRepeatPaymentNavigation: makeRepeatPaymentNavigation,
                 makeSubscriptionsViewModel: makeSubscriptionsViewModel,
                 updateInfoStatusFlag: updateInfoStatusFlag,
@@ -723,6 +732,7 @@ extension ProductProfileViewModel {
                     updateInfoStatusFlag.isActive ? .updateFailureInfo : nil
                 },
                 makeCardGuardianPanel: makeCardGuardianPanel,
+                makeCloseAccountSpinnerViewModel: makeCloseAccountSpinnerViewModel,
                 makeRepeatPaymentNavigation: makeRepeatPaymentNavigation,
                 makeSubscriptionsViewModel: makeSubscriptionsViewModel,
                 makePaymentsMeToMeViewModel: makePaymentsMeToMeViewModel,

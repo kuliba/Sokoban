@@ -2939,6 +2939,7 @@
 		836801532CC553B700DB8197 /* RootViewModelFactory+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836801512CC553B700DB8197 /* RootViewModelFactory+ext.swift */; };
 		836801542CC553B700DB8197 /* RootViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836801522CC553B700DB8197 /* RootViewModelFactory.swift */; };
 		836B81CB2CCFACEB006FACE3 /* GetProductListByTypeV7Service in Frameworks */ = {isa = PBXBuildFile; productRef = 836B81CA2CCFACEB006FACE3 /* GetProductListByTypeV7Service */; };
+		836D69B12D8C85E9008E5858 /* RootViewModelFactory+makeCloseAccountSpinnerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836D69B02D8C85C1008E5858 /* RootViewModelFactory+makeCloseAccountSpinnerViewModel.swift */; };
 		836DE2EC2AC72A7C00D4C754 /* Tagged in Frameworks */ = {isa = PBXBuildFile; productRef = 836DE2EB2AC72A7C00D4C754 /* Tagged */; };
 		836DE2EE2ACAE86C00D4C754 /* C2BSubscribeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836DE2ED2ACAE86C00D4C754 /* C2BSubscribeFactory.swift */; };
 		836E333F2BFE1D3A006848E2 /* Dictionary+ProductData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836E333E2BFE1D3A006848E2 /* Dictionary+ProductData.swift */; };
@@ -6757,6 +6758,7 @@
 		836801512CC553B700DB8197 /* RootViewModelFactory+ext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+ext.swift"; sourceTree = "<group>"; };
 		836801522CC553B700DB8197 /* RootViewModelFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewModelFactory.swift; sourceTree = "<group>"; };
 		836B81C92CCFAC86006FACE3 /* GetProductListByTypeV7Service.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = GetProductListByTypeV7Service.xctestplan; sourceTree = "<group>"; };
+		836D69B02D8C85C1008E5858 /* RootViewModelFactory+makeCloseAccountSpinnerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeCloseAccountSpinnerViewModel.swift"; sourceTree = "<group>"; };
 		836DE2ED2ACAE86C00D4C754 /* C2BSubscribeFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C2BSubscribeFactory.swift; sourceTree = "<group>"; };
 		836E333E2BFE1D3A006848E2 /* Dictionary+ProductData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+ProductData.swift"; sourceTree = "<group>"; };
 		836E33402BFE1E50006848E2 /* DictionaryExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryExtensionsTests.swift; sourceTree = "<group>"; };
@@ -11638,6 +11640,7 @@
 		2A72ACC12CC6CB8B00B8BF5B /* RootViewModelFactory */ = {
 			isa = PBXGroup;
 			children = (
+				836D69AF2D8C85B2008E5858 /* ProductProfile */,
 				C127C5262D6E303500683F85 /* OrderCardLanding */,
 				A781DF9B2D4BC4B400C8AE13 /* CollateralLoanLanding */,
 				847321082D11B5C00009C721 /* DelayingRemoteNanoServiceFactory.swift */,
@@ -12317,11 +12320,11 @@
 			isa = PBXGroup;
 			children = (
 				2AA258642CEB969F0038642C /* RootViewModelFactory+getRootNavigation.swift */,
-				2AA9EC452D70FE800056E6D0 /* RootViewModelFactory+makeCreditCardMVP.swift */,
 				2A3479832D6AF69C009CCC33 /* RootViewModelFactory+formatAmount.swift */,
 				2A3479852D6AFEF4009CCC33 /* RootViewModelFactory+productSelectProduct.swift */,
 				2A6167322D5BE7970026B036 /* C2G */,
 				2A3981D82D8A95AA00FFD0A2 /* C2GDocumentButton */,
+				2AF69F4C2D8C06D400A1DA51 /* CreditCardMVP */,
 				2A0BAB4A2D6D7562006ED2CA /* StateMachine */,
 				2A0BAB432D6D70DB006ED2CA /* DocumentButton */,
 				2AE508C12D68560B0055BB35 /* OperationDetail */,
@@ -12618,7 +12621,6 @@
 			isa = PBXGroup;
 			children = (
 				2AA9EC412D70ECCF0056E6D0 /* ViewComponents+makeCreditCardMVPView.swift */,
-				2AA9EC432D70FBA90056E6D0 /* CreditCardMVPDomain.swift */,
 			);
 			path = CreditCardMVP;
 			sourceTree = "<group>";
@@ -13808,6 +13810,15 @@
 				2AF529D42CC01C9B00D49804 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		2AF69F4C2D8C06D400A1DA51 /* CreditCardMVP */ = {
+			isa = PBXGroup;
+			children = (
+				2AA9EC452D70FE800056E6D0 /* RootViewModelFactory+makeCreditCardMVP.swift */,
+				2AA9EC432D70FBA90056E6D0 /* CreditCardMVPDomain.swift */,
+			);
+			path = CreditCardMVP;
 			sourceTree = "<group>";
 		};
 		2AF718D92C74C25B00511C02 /* LoadLatestOperations */ = {
@@ -16893,6 +16904,14 @@
 				83B6F3D52AB1EF0C00A4C427 /* LandingToCodable.swift */,
 			);
 			path = LandingsAdapters;
+			sourceTree = "<group>";
+		};
+		836D69AF2D8C85B2008E5858 /* ProductProfile */ = {
+			isa = PBXGroup;
+			children = (
+				836D69B02D8C85C1008E5858 /* RootViewModelFactory+makeCloseAccountSpinnerViewModel.swift */,
+			);
+			path = ProductProfile;
 			sourceTree = "<group>";
 		};
 		8372A8A82D6851B300CD1CFB /* OpenSavingsAccount */ = {
@@ -23111,6 +23130,7 @@
 				0BB24AA126EFEE4700DDA4F6 /* GetProductListByFilter.swift in Sources */,
 				502633D928B52BDD00A89940 /* Double+Extensions.swift in Sources */,
 				2A36249D2C5F414600174C50 /* AnywayServicePickerFlowModelFactory.swift in Sources */,
+				836D69B12D8C85E9008E5858 /* RootViewModelFactory+makeCloseAccountSpinnerViewModel.swift in Sources */,
 				83D962B12B63C3570092C61C /* GetProductDynamicParamsListFactory.swift in Sources */,
 				2A3624AD2C5F8DF500174C50 /* AsyncPickerEffectHandlerMicroServicesComposer.swift in Sources */,
 				2AA619532C16BD8000043997 /* __AnywayTransactionViewModelComposer.swift in Sources */,

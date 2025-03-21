@@ -91,6 +91,7 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
             cvvPINServicesClient: HappyCVVPINServicesClient(),
             productNavigationStateManager: ProductProfileFlowManager.preview,
             makeCardGuardianPanel: ProductProfileViewModelFactory.makeCardGuardianPanelPreview,
+            makeCloseAccountSpinnerViewModel: { .init(model, productData: $0, successViewModelFactory: .previewSuccess)},
             makeRepeatPaymentNavigation: { _,_,_,_  in .none },
             makeSubscriptionsViewModel: { _,_  in .preview},
             updateInfoStatusFlag: .inactive, 
