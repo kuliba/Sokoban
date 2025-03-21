@@ -12,22 +12,22 @@ public protocol VerificationCodeProviding {
     var verificationCode: String { get }
 }
 
-final class EffectHandler<ApplicationSuccess, ConfirmApplicationPayload, OTP>
-where ConfirmApplicationPayload: VerificationCodeProviding {
+final class EffectHandler<ApplicationPayload, ApplicationSuccess, OTP>
+where ApplicationPayload: VerificationCodeProviding {
     
-    private let confirmApplication: ConfirmApplication
+    private let apply: Apply
     private let otpWitness: OTPWitness
     
     init(
-        confirmApplication: @escaping ConfirmApplication,
+        apply: @escaping Apply,
         otpWitness: @escaping OTPWitness
     ) {
-        self.confirmApplication = confirmApplication
+        self.apply = apply
         self.otpWitness = otpWitness
     }
     
-    typealias ConfirmApplicationCompletion = (Event.ApplicationResult) -> Void
-    typealias ConfirmApplication = (ConfirmApplicationPayload, @escaping ConfirmApplicationCompletion) -> Void
+    typealias ApplyCompletion = (Event.ApplicationResult) -> Void
+    typealias Apply = (ApplicationPayload, @escaping ApplyCompletion) -> Void
     
     typealias OTPWitness = (OTP) -> (String) -> Void
 }
@@ -39,8 +39,8 @@ extension EffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-        case let .confirmApplication(payload):
-            confirmApplication(payload) { dispatch(.applicationResult($0)) }
+        case let .apply(payload):
+            apply(payload) { dispatch(.applicationResult($0)) }
             
         case .loadOTP:
             break
@@ -56,7 +56,7 @@ extension EffectHandler {
     typealias Dispatch = (Event) -> Void
     
     typealias Event = CreditCardMVPCoreTests.Event<ApplicationSuccess>
-    typealias Effect = CreditCardMVPCoreTests.Effect<ConfirmApplicationPayload, OTP>
+    typealias Effect = CreditCardMVPCoreTests.Effect<ApplicationPayload, OTP>
 }
 
 import XCTest
@@ -67,78 +67,78 @@ final class EffectHandlerTests: LogicTests {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, confirmApplication, otp) = makeSUT()
+        let (sut, application, otp) = makeSUT()
         
-        XCTAssertEqual(confirmApplication.callCount, 0)
+        XCTAssertEqual(application.callCount, 0)
         XCTAssertEqual(otp.callCount, 0)
         XCTAssertNotNil(sut)
     }
     
-    // MARK: - confirmApplication
+    // MARK: - apply
     
-    func test_confirmApplication_shouldCallConfirmApplicationWithPayload() {
+    func test_apply_shouldCallConfirmApplicationWithPayload() {
         
         let payload = makePayload()
-        let (sut, confirmApplication, _) = makeSUT()
+        let (sut, application, _) = makeSUT()
         
-        sut.handleEffect(.confirmApplication(payload)) { _ in }
+        sut.handleEffect(.apply(payload)) { _ in }
         
-        XCTAssertNoDiff(confirmApplication.payloads, [payload])
+        XCTAssertNoDiff(application.payloads, [payload])
     }
     
-    func test_confirmApplication_shouldDeliverAlertFailure_onApplicationAlertFailure() {
+    func test_apply_shouldDeliverAlertFailure_onApplicationAlertFailure() {
         
-        let (sut, confirmApplication, _) = makeSUT()
+        let (sut, application, _) = makeSUT()
         let message = anyMessage()
         
         expect(
             sut,
-            with: makeConfirmApplication(),
+            with: makeApplication(),
             toDeliver: makeApplicationResultFailure(message: message, type: .alert)
         ) {
-            confirmApplication.complete(with: .failure(.init(message: message, type: .alert)))
+            application.complete(with: .failure(.init(message: message, type: .alert)))
         }
     }
     
-    func test_confirmApplication_shouldDeliverInformerFailure_onApplicationInformerFailure() {
+    func test_apply_shouldDeliverInformerFailure_onApplicationInformerFailure() {
         
-        let (sut, confirmApplication, _) = makeSUT()
+        let (sut, application, _) = makeSUT()
         let message = anyMessage()
         
         expect(
             sut,
-            with: makeConfirmApplication(),
+            with: makeApplication(),
             toDeliver: makeApplicationResultFailure(message: message, type: .informer)
         ) {
-            confirmApplication.complete(with: .failure(.init(message: message, type: .informer)))
+            application.complete(with: .failure(.init(message: message, type: .informer)))
         }
     }
     
-    func test_confirmApplication_shouldDeliverOTPFailure_onApplicationOTPFailure() {
+    func test_apply_shouldDeliverOTPFailure_onApplicationOTPFailure() {
         
-        let (sut, confirmApplication, _) = makeSUT()
+        let (sut, application, _) = makeSUT()
         let message = anyMessage()
         
         expect(
             sut,
-            with: makeConfirmApplication(),
+            with: makeApplication(),
             toDeliver: makeApplicationResultFailure(message: message, type: .otp)
         ) {
-            confirmApplication.complete(with: .failure(.init(message: message, type: .otp)))
+            application.complete(with: .failure(.init(message: message, type: .otp)))
         }
     }
     
-    func test_confirmApplication_shouldDeliverSuccess_onApplicationSuccess() {
+    func test_apply_shouldDeliverSuccess_onApplicationSuccess() {
         
-        let (sut, confirmApplication, _) = makeSUT()
+        let (sut, application, _) = makeSUT()
         let success = makeApplicationSuccess()
         
         expect(
             sut,
-            with: makeConfirmApplication(),
+            with: makeApplication(),
             toDeliver: makeApplicationResultSuccess(success: success)
         ) {
-            confirmApplication.complete(with: .success(success))
+            application.complete(with: .success(success))
         }
     }
     
@@ -156,38 +156,38 @@ final class EffectHandlerTests: LogicTests {
     
     // MARK: - Helpers
     
-    private typealias SUT = EffectHandler<ApplicationSuccess, ConfirmApplicationPayload, OTP>
-    private typealias ConfirmApplication = Spy<ConfirmApplicationPayload, Event.ApplicationResult>
+    private typealias SUT = EffectHandler<ApplicationPayload, ApplicationSuccess, OTP>
+    private typealias Application = Spy<ApplicationPayload, Event.ApplicationResult>
     private typealias OTP = CallSpy<String, Void>
-    private typealias Effect = CreditCardMVPCoreTests.Effect<ConfirmApplicationPayload, OTP>
+    private typealias Effect = CreditCardMVPCoreTests.Effect<ApplicationPayload, OTP>
     
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        confirmApplication: ConfirmApplication,
+        application: Application,
         otp: OTP
     ) {
-        let confirmApplication = ConfirmApplication()
+        let application = Application()
         let otp = OTP(stubs: [()])
         let sut = SUT(
-            confirmApplication: confirmApplication.process,
+            apply: application.process,
             otpWitness: { _ in otp.call }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(confirmApplication, file: file, line: line)
+        trackForMemoryLeaks(application, file: file, line: line)
         trackForMemoryLeaks(otp, file: file, line: line)
         
-        return (sut, confirmApplication, otp)
+        return (sut, application, otp)
     }
     
-    private func makeConfirmApplication(
-        _ payload: ConfirmApplicationPayload? = nil
+    private func makeApplication(
+        _ payload: ApplicationPayload? = nil
     ) -> Effect {
         
-        return .confirmApplication(payload ?? makePayload())
+        return .apply(payload ?? makePayload())
     }
     
     private func expect(

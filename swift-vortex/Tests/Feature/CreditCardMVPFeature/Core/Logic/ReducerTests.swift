@@ -21,7 +21,8 @@ struct State<ApplicationSuccess, OTP> {
 
 extension State {
     
-    typealias ApplicationResult = Result<ApplicationSuccess, LoadFailure<FailureType>>
+    typealias ApplicationResult = Result<ApplicationSuccess, ApplicationFailure>
+    typealias ApplicationFailure = LoadFailure<FailureType>
     
     enum FailureType {
         
@@ -39,8 +40,9 @@ enum Event<ApplicationSuccess> {
 
 extension Event {
     
-    typealias ApplicationResult = Result<ApplicationSuccess, LoadFailure<FailureType>>
-    
+    typealias ApplicationResult = Result<ApplicationSuccess, ApplicationFailure>
+    typealias ApplicationFailure = LoadFailure<FailureType>
+
     enum FailureType {
         
         case alert, informer, otp
@@ -49,16 +51,16 @@ extension Event {
 
 extension Event: Equatable where ApplicationSuccess: Equatable {}
 
-enum Effect<ConfirmApplicationPayload, OTP> {
+enum Effect<ApplicationPayload, OTP> {
     
-    case confirmApplication(ConfirmApplicationPayload)
+    case apply(ApplicationPayload)
     case loadOTP
     case notifyOTP(OTP, String)
 }
 
-extension Effect: Equatable where OTP: Equatable, ConfirmApplicationPayload: Equatable {}
+extension Effect: Equatable where OTP: Equatable, ApplicationPayload: Equatable {}
 
-final class Reducer<ApplicationSuccess, ConfirmApplicationPayload, OTP> {
+final class Reducer<ApplicationPayload, ApplicationSuccess, OTP> {
     
     private let isValid: IsValid
     private let makeApplicationPayload: MakeApplicationPayload
@@ -72,7 +74,7 @@ final class Reducer<ApplicationSuccess, ConfirmApplicationPayload, OTP> {
     }
     
     typealias IsValid = (State) -> Bool
-    typealias MakeApplicationPayload = (State) -> ConfirmApplicationPayload?
+    typealias MakeApplicationPayload = (State) -> ApplicationPayload?
 }
 
 extension Reducer {
@@ -101,7 +103,7 @@ extension Reducer {
     
     typealias State = CreditCardMVPCoreTests.State<ApplicationSuccess, OTP>
     typealias Event = CreditCardMVPCoreTests.Event<ApplicationSuccess>
-    typealias Effect = CreditCardMVPCoreTests.Effect<ConfirmApplicationPayload, OTP>
+    typealias Effect = CreditCardMVPCoreTests.Effect<ApplicationPayload, OTP>
 }
 
 private extension Reducer {
@@ -112,7 +114,7 @@ private extension Reducer {
     ) {
         guard isValid(state) else { return }
         
-        effect = state.otp == nil ? .loadOTP : makeApplicationPayload(state).map { .confirmApplication($0) }
+        effect = state.otp == nil ? .loadOTP : makeApplicationPayload(state).map { .apply($0) }
     }
     
     func reduce(
@@ -421,18 +423,18 @@ final class ReducerTests: LogicTests {
         let state = makeState(otp: makeOTP())
         let (sut, _) = makeSUT(applicationPayload: payload, isValid: { _ in true })
         
-        assert(sut: sut, state, event: .continue, delivers: .confirmApplication(payload))
+        assert(sut: sut, state, event: .continue, delivers: .apply(payload))
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = Reducer<ApplicationSuccess, ConfirmApplicationPayload, OTP>
+    private typealias SUT = Reducer<ApplicationPayload, ApplicationSuccess, OTP>
     private typealias State = CreditCardMVPCoreTests.State<ApplicationSuccess, OTP>
-    private typealias Effect = CreditCardMVPCoreTests.Effect<ConfirmApplicationPayload, OTP>
-    private typealias MakePayloadSpy = CallSpy<State, ConfirmApplicationPayload?>
+    private typealias Effect = CreditCardMVPCoreTests.Effect<ApplicationPayload, OTP>
+    private typealias MakePayloadSpy = CallSpy<State, ApplicationPayload?>
     
     private func makeSUT(
-        applicationPayload: ConfirmApplicationPayload? = nil,
+        applicationPayload: ApplicationPayload? = nil,
         isValid: @escaping (State) -> Bool = { _ in false },
         file: StaticString = #file,
         line: UInt = #line

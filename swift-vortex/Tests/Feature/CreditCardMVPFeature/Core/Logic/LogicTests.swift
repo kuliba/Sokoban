@@ -23,7 +23,7 @@ class LogicTests: XCTestCase {
         return .init(value: value)
     }
     
-    struct ConfirmApplicationPayload: Equatable, VerificationCodeProviding {
+    struct ApplicationPayload: Equatable, VerificationCodeProviding {
         
         let value: String
         
@@ -32,7 +32,7 @@ class LogicTests: XCTestCase {
     
     func makePayload(
         _ value: String = anyMessage()
-    ) -> ConfirmApplicationPayload {
+    ) -> ApplicationPayload {
         
         return .init(value: value)
     }
