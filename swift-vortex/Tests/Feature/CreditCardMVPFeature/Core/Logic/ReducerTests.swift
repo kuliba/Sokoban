@@ -48,7 +48,7 @@ extension Event {
 
 extension Event: Equatable where ApplicationSuccess: Equatable {}
 
-enum Effect<OTP, ConfirmApplicationPayload> {
+enum Effect<ConfirmApplicationPayload, OTP> {
     
     case confirmApplication(ConfirmApplicationPayload)
     case notifyOTP(OTP, String)
@@ -56,7 +56,7 @@ enum Effect<OTP, ConfirmApplicationPayload> {
 
 extension Effect: Equatable where OTP: Equatable, ConfirmApplicationPayload: Equatable {}
 
-final class Reducer<ApplicationSuccess, OTP, ConfirmApplicationPayload> {}
+final class Reducer<ApplicationSuccess, ConfirmApplicationPayload, OTP> {}
 
 extension Reducer {
     
@@ -81,7 +81,7 @@ extension Reducer {
     
     typealias State = CreditCardMVPCoreTests.State<ApplicationSuccess, OTP>
     typealias Event = CreditCardMVPCoreTests.Event<ApplicationSuccess>
-    typealias Effect = CreditCardMVPCoreTests.Effect<OTP, ConfirmApplicationPayload>
+    typealias Effect = CreditCardMVPCoreTests.Effect<ConfirmApplicationPayload, OTP>
 }
 
 private extension Reducer {
@@ -292,7 +292,7 @@ final class ReducerTests: LogicTests {
     
     // MARK: - Helpers
     
-    private typealias SUT = Reducer<ApplicationSuccess, OTP, ConfirmApplicationPayload>
+    private typealias SUT = Reducer<ApplicationSuccess, ConfirmApplicationPayload, OTP>
     
     private func makeSUT(
         file: StaticString = #file,

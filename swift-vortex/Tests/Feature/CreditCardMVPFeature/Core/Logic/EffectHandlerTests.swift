@@ -12,7 +12,7 @@ public protocol VerificationCodeProviding {
     var verificationCode: String { get }
 }
 
-final class EffectHandler<ApplicationSuccess, OTP, ConfirmApplicationPayload>
+final class EffectHandler<ApplicationSuccess, ConfirmApplicationPayload, OTP>
 where ConfirmApplicationPayload: VerificationCodeProviding {
     
     private let confirmApplication: ConfirmApplication
@@ -53,7 +53,7 @@ extension EffectHandler {
     typealias Dispatch = (Event) -> Void
     
     typealias Event = CreditCardMVPCoreTests.Event<ApplicationSuccess>
-    typealias Effect = CreditCardMVPCoreTests.Effect<OTP, ConfirmApplicationPayload>
+    typealias Effect = CreditCardMVPCoreTests.Effect<ConfirmApplicationPayload, OTP>
 }
 
 import XCTest
@@ -97,7 +97,7 @@ final class EffectHandlerTests: LogicTests {
     
     // MARK: - Helpers
     
-    private typealias SUT = EffectHandler<ApplicationSuccess, OTP, ConfirmApplicationPayload>
+    private typealias SUT = EffectHandler<ApplicationSuccess, ConfirmApplicationPayload, OTP>
     private typealias ConfirmApplication = Spy<ConfirmApplicationPayload, Void>
     private typealias OTP = CallSpy<String, Void>
     
