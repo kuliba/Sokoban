@@ -5,6 +5,8 @@
 //  Created by Igor Malyarov on 21.03.2025.
 //
 
+import StateMachines
+
 public final class Reducer<ApplicationPayload, ApplicationSuccess, OTP> {
     
     private let isValid: IsValid
@@ -59,7 +61,7 @@ private extension Reducer {
     ) {
         guard isValid(state) else { return }
         
-        effect = state.otp.resource == nil ? .loadOTP : makeApplicationPayload(state).map { .apply($0) }
+        effect = state.otp.success == nil ? .loadOTP : makeApplicationPayload(state).map { .apply($0) }
     }
     
     func reduce(
@@ -83,7 +85,7 @@ private extension Reducer {
                 ))
                 
             case .otp:
-                effect = state.otp.resource.map { .notifyOTP($0, failure.message) }
+                effect = state.otp.success.map { .notifyOTP($0, failure.message) }
             }
             
         case let .success(success):
