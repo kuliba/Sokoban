@@ -5,18 +5,15 @@
 //  Created by Valentin Ozerov on 30.12.2024.
 //
 
-import SwiftUI
+import Combine
 import OTPInputComponent
+import SwiftUI
+import UIPrimitives
 
 public struct CreateDraftCollateralLoanApplicationView<Confirmation, InformerPayload>: View
-    where Confirmation: TimedOTPInputViewModel {
-    
-    private enum Field: Int, CaseIterable {
-        case amount, period, city
-    }
+where Confirmation: TimedOTPInputViewModel {
     
     @SwiftUI.State private var shimmeringEnabled = true
-    @FocusState private var focusedField: Field?
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
@@ -41,38 +38,44 @@ public struct CreateDraftCollateralLoanApplicationView<Confirmation, InformerPay
     }
     
     public var body: some View {
-
-            ScrollView() {
-                
-                applicationForm()
-            }
-            .alert(
-                item: backendFailure,
-                content: alert(externalEvent: externalEvent)
-            )
-            .safeAreaInset(edge: .bottom, content: buttonView)
+        
+        ScrollView() {
+            
+            applicationForm()
+        }
+        .alert(
+            item: backendFailure,
+            content: alert(externalEvent: externalEvent)
+        )
+        .safeAreaInset(edge: .bottom, content: buttonView)
     }
     
-    @ViewBuilder
     private func applicationForm() -> some View {
         
-        ScrollView {
-
-            VStack {
-
-                Group {
-                    headerView()
-                    amountView()
-                        .focused($focusedField, equals: .amount)
-                    periodView()
-                        .focused($focusedField, equals: .period)
-                    percentView()
-                    cityView()
-                        .focused($focusedField, equals: .city)
-                }
-                
-                confirmationView()
+        VStack {
+            
+            Group {
+                headerView()
+                amountView()
+                periodView()
+                percentView()
+                cityView()
             }
+            
+            confirmationView()
+        }
+    }
+}
+    
+extension CreateDraftCollateralLoanApplicationView {
+
+    struct ScrollOffsetKey: PreferenceKey {
+        
+        typealias Value = CGFloat
+        static var defaultValue: CGFloat { .zero }
+        static func reduce(value: inout Value, nextValue: () -> Value) {
+
+            value += nextValue()
         }
     }
 }
