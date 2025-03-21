@@ -14,21 +14,21 @@ extension ViewComponents {
     
     @inlinable
     func makeOrderSavingsAccountCompleteView(
-        asyncWait: ProcessingFlag,
+        processingFlag: ProcessingFlag,
         _ complete: OpenSavingsAccountCompleteDomain.Complete,
         action: @escaping () -> Void
     ) -> some View {
        
-        let needAsyncWait: Bool = complete.context.status.status == .inflight && asyncWait.isActive
-        let title: String = .savingsAccountTitle(needAsyncWait, complete.context.formattedAmount != nil)
-        let subtitle: String? = needAsyncWait ? .processingSubtitle : nil
+        let needProcessing: Bool = complete.context.status.status == .inflight && processingFlag.isActive
+        let title: String = .savingsAccountTitle(needProcessing, complete.context.formattedAmount != nil)
+        let subtitle: String? = needProcessing ? .processingSubtitle : nil
 
         let config: PaymentCompletionConfig = .orderSavingsAccount(title: title, subtitle: subtitle)
         
         return makePaymentCompletionLayoutView(
-            state: complete.context.state(needAsyncWait),
+            state: complete.context.state(needProcessing),
             statusConfig: config,
-            buttons: { makeButtons(needAsyncWait, complete) },
+            buttons: { makeButtons(needProcessing, complete) },
             details: { EmptyView() },
             footer: {
                 heroButton(title: "На главный") {
@@ -41,11 +41,11 @@ extension ViewComponents {
 
     @ViewBuilder
     func makeButtons(
-        _ needAsyncWait: Bool,
+        _ needProcessing: Bool,
         _ complete: OpenSavingsAccountCompleteDomain.Complete
     ) -> some View {
         
-        switch (needAsyncWait, complete.context.status.status) {
+        switch (needProcessing, complete.context.status.status) {
         case (true, _):
             RxWrapperView(model: complete.details) { state, _ in
                 
@@ -212,12 +212,12 @@ private extension String {
 private extension OpenSavingsAccountCompleteDomain.Complete.Context.Status {
     
     func newStatus(
-        _ asyncWait: Bool
+        _ needProcessing: Bool
     ) -> PaymentCompletion.Status {
         
         switch self.status {
         case .inflight:
-            asyncWait ? .completed : .inflight
+            needProcessing ? .completed : .inflight
             
         default: self.status
         }
@@ -227,13 +227,13 @@ private extension OpenSavingsAccountCompleteDomain.Complete.Context.Status {
 private extension OpenSavingsAccountCompleteDomain.Complete.Context {
     
     func state(
-        _ needAsyncWait: Bool
+        _ needProcessing: Bool
     ) -> PaymentCompletion {
         
         .init(
             formattedAmount: status == .rejected ? nil : formattedAmount,
             merchantIcon: nil,
-            status: status.newStatus(needAsyncWait)
+            status: status.newStatus(needProcessing)
         )
     }
 }

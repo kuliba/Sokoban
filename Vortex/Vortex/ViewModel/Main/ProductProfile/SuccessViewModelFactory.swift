@@ -8,7 +8,7 @@
 
 struct SuccessViewModelFactory {
     
-    typealias MakeCloseAccountPaymentsSuccessViewModel = (CloseAccountPayload.Payload) -> PaymentsSuccessViewModel?
+    typealias MakeCloseAccountPaymentsSuccessViewModel = (PaymentsSuccessViewModel.Mode) -> PaymentsSuccessViewModel?
     
     let makeCloseAccountPaymentsSuccessViewModel: MakeCloseAccountPaymentsSuccessViewModel
 }

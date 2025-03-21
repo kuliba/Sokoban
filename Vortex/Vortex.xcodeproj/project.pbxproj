@@ -2939,6 +2939,7 @@
 		836801532CC553B700DB8197 /* RootViewModelFactory+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836801512CC553B700DB8197 /* RootViewModelFactory+ext.swift */; };
 		836801542CC553B700DB8197 /* RootViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836801522CC553B700DB8197 /* RootViewModelFactory.swift */; };
 		836B81CB2CCFACEB006FACE3 /* GetProductListByTypeV7Service in Frameworks */ = {isa = PBXBuildFile; productRef = 836B81CA2CCFACEB006FACE3 /* GetProductListByTypeV7Service */; };
+		836D69B12D8C85E9008E5858 /* RootViewModelFactory+makeCloseAccountSpinnerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836D69B02D8C85C1008E5858 /* RootViewModelFactory+makeCloseAccountSpinnerViewModel.swift */; };
 		836DE2EC2AC72A7C00D4C754 /* Tagged in Frameworks */ = {isa = PBXBuildFile; productRef = 836DE2EB2AC72A7C00D4C754 /* Tagged */; };
 		836DE2EE2ACAE86C00D4C754 /* C2BSubscribeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836DE2ED2ACAE86C00D4C754 /* C2BSubscribeFactory.swift */; };
 		836E333F2BFE1D3A006848E2 /* Dictionary+ProductData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836E333E2BFE1D3A006848E2 /* Dictionary+ProductData.swift */; };
@@ -6755,6 +6756,7 @@
 		836801512CC553B700DB8197 /* RootViewModelFactory+ext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+ext.swift"; sourceTree = "<group>"; };
 		836801522CC553B700DB8197 /* RootViewModelFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewModelFactory.swift; sourceTree = "<group>"; };
 		836B81C92CCFAC86006FACE3 /* GetProductListByTypeV7Service.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = GetProductListByTypeV7Service.xctestplan; sourceTree = "<group>"; };
+		836D69B02D8C85C1008E5858 /* RootViewModelFactory+makeCloseAccountSpinnerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeCloseAccountSpinnerViewModel.swift"; sourceTree = "<group>"; };
 		836DE2ED2ACAE86C00D4C754 /* C2BSubscribeFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C2BSubscribeFactory.swift; sourceTree = "<group>"; };
 		836E333E2BFE1D3A006848E2 /* Dictionary+ProductData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+ProductData.swift"; sourceTree = "<group>"; };
 		836E33402BFE1E50006848E2 /* DictionaryExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryExtensionsTests.swift; sourceTree = "<group>"; };
@@ -11635,6 +11637,7 @@
 		2A72ACC12CC6CB8B00B8BF5B /* RootViewModelFactory */ = {
 			isa = PBXGroup;
 			children = (
+				836D69AF2D8C85B2008E5858 /* ProductProfile */,
 				C127C5262D6E303500683F85 /* OrderCardLanding */,
 				A781DF9B2D4BC4B400C8AE13 /* CollateralLoanLanding */,
 				847321082D11B5C00009C721 /* DelayingRemoteNanoServiceFactory.swift */,
@@ -16898,6 +16901,14 @@
 				83B6F3D52AB1EF0C00A4C427 /* LandingToCodable.swift */,
 			);
 			path = LandingsAdapters;
+			sourceTree = "<group>";
+		};
+		836D69AF2D8C85B2008E5858 /* ProductProfile */ = {
+			isa = PBXGroup;
+			children = (
+				836D69B02D8C85C1008E5858 /* RootViewModelFactory+makeCloseAccountSpinnerViewModel.swift */,
+			);
+			path = ProductProfile;
 			sourceTree = "<group>";
 		};
 		8372A8A82D6851B300CD1CFB /* OpenSavingsAccount */ = {
@@ -23115,6 +23126,7 @@
 				0BB24AA126EFEE4700DDA4F6 /* GetProductListByFilter.swift in Sources */,
 				502633D928B52BDD00A89940 /* Double+Extensions.swift in Sources */,
 				2A36249D2C5F414600174C50 /* AnywayServicePickerFlowModelFactory.swift in Sources */,
+				836D69B12D8C85E9008E5858 /* RootViewModelFactory+makeCloseAccountSpinnerViewModel.swift in Sources */,
 				83D962B12B63C3570092C61C /* GetProductDynamicParamsListFactory.swift in Sources */,
 				2A3624AD2C5F8DF500174C50 /* AsyncPickerEffectHandlerMicroServicesComposer.swift in Sources */,
 				2AA619532C16BD8000043997 /* __AnywayTransactionViewModelComposer.swift in Sources */,
