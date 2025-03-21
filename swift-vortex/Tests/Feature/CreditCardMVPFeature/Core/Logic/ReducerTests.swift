@@ -106,7 +106,7 @@ private extension Reducer {
             }
             
         case let .success(success):
-            break
+            state.orderResult = .success(.init())
         }
     }
 }
@@ -243,6 +243,46 @@ final class ReducerTests: XCTestCase {
         assert(state, event: event, delivers: .notifyOTP(otp, message))
     }
     
+    // MARK: - orderResult: success
+    
+    func test_orderResult_shouldChangeState_onSuccess_noOTP() {
+        
+        let state = makeState(otp: nil)
+        let event = makeOrderResultSuccess()
+        
+        assert(state, event: event) {
+            
+            $0.orderResult = .success(.init())
+        }
+    }
+    
+    func test_orderResult_shouldNotDeliverEffect_onSuccess_noOTP() {
+        
+        let state = makeState(otp: nil)
+        let event = makeOrderResultSuccess()
+        
+        assert(state, event: event, delivers: nil)
+    }
+    
+    func test_orderResult_shouldChangeState_onSuccess() {
+        
+        let state = makeState(otp: makeOTP())
+        let event = makeOrderResultSuccess()
+        
+        assert(state, event: event) {
+            
+            $0.orderResult = .success(.init())
+        }
+    }
+    
+    func test_orderResult_shouldNotDeliverEffect_onSuccess() {
+        
+        let state = makeState(otp: makeOTP())
+        let event = makeOrderResultSuccess()
+        
+        assert(state, event: event, delivers: nil)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = Reducer<OTP>
@@ -287,6 +327,12 @@ final class ReducerTests: XCTestCase {
             message: message,
             type: type
         )))
+    }
+    
+    private func makeOrderResultSuccess(
+    ) -> SUT.Event {
+        
+        return .orderResult(.success(.init()))
     }
     
     @discardableResult
