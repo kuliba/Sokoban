@@ -50,6 +50,7 @@ extension Event: Equatable where OrderSuccess: Equatable {}
 
 enum Effect<OTP> {
     
+    case confirmApplication(ConfirmApplicationPayload)
     case notifyOTP(OTP, String)
 }
 

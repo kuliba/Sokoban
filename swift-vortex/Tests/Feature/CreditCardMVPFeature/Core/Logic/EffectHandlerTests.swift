@@ -7,15 +7,26 @@
 
 final class EffectHandler<OrderSuccess, OTP> {
     
+    private let confirmApplication: ConfirmApplication
     private let otpWitness: OTPWitness
     
-    init(otpWitness: @escaping OTPWitness) {
-        
+    init(
+        confirmApplication: @escaping ConfirmApplication,
+        otpWitness: @escaping OTPWitness
+    ) {
+        self.confirmApplication = confirmApplication
         self.otpWitness = otpWitness
     }
     
+    typealias ConfirmApplicationCompletion = (Void) -> Void
+    typealias ConfirmApplication = (ConfirmApplicationPayload, @escaping ConfirmApplicationCompletion) -> Void
+    
     typealias OTPWitness = (OTP) -> ((String) -> Void)?
 }
+
+struct ConfirmApplicationPayload {}
+
+extension ConfirmApplicationPayload: Equatable {}
 
 extension EffectHandler {
     
@@ -24,6 +35,9 @@ extension EffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
+        case let .confirmApplication(payload):
+            confirmApplication(payload) { }
+            
         case let .notifyOTP(otp, message):
             otpWitness(otp)?(message)
         }
@@ -46,18 +60,31 @@ final class EffectHandlerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, otp) = makeSUT()
+        let (sut, confirmApplication, otp) = makeSUT()
         
+        XCTAssertEqual(confirmApplication.callCount, 0)
         XCTAssertEqual(otp.callCount, 0)
         XCTAssertNotNil(sut)
     }
     
+    // MARK: - confirmApplication
+    
+    func test_confirmApplication_shouldCallConfirmApplicationWithPayload() {
+        
+        let payload = makeConfirmApplicationPayload()
+        let (sut, confirmApplication, _) = makeSUT()
+        
+        sut.handleEffect(.confirmApplication(payload)) { _ in }
+        
+        XCTAssertNoDiff(confirmApplication.payloads, [payload])
+    }
+    
     // MARK: - notifyOTP
     
-    func test_shouldNotifyOTP_onNotifyOTP() {
+    func test_notifyOTP_shouldCallNotifyOTP() {
         
         let message = anyMessage()
-        let (sut, otp) = makeSUT()
+        let (sut, _, otp) = makeSUT()
         
         sut.handleEffect(.notifyOTP(otp, message)) { _ in }
         
@@ -67,6 +94,7 @@ final class EffectHandlerTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = EffectHandler<OrderSuccess, OTP>
+    private typealias ConfirmApplication = Spy<ConfirmApplicationPayload, Void>
     private typealias OTP = CallSpy<String, Void>
     
     private func makeSUT(
@@ -74,15 +102,21 @@ final class EffectHandlerTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: SUT,
+        confirmApplication: ConfirmApplication,
         otp: OTP
     ) {
+        let confirmApplication = ConfirmApplication()
         let otp = OTP(stubs: [()])
-        let sut = SUT(otpWitness: { otp in otp.call })
+        let sut = SUT(
+            confirmApplication: confirmApplication.process,
+            otpWitness: { otp in otp.call }
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(confirmApplication, file: file, line: line)
         trackForMemoryLeaks(otp, file: file, line: line)
         
-        return (sut, otp)
+        return (sut, confirmApplication, otp)
     }
     
     private struct OrderSuccess: Equatable {
@@ -96,7 +130,13 @@ final class EffectHandlerTests: XCTestCase {
         
         return .init(value: value)
     }
-
+    
+    private func makeConfirmApplicationPayload(
+    ) -> ConfirmApplicationPayload {
+        
+        return .init()
+    }
+    
     private func expect(
         _ sut: SUT,
         with effect: SUT.Effect,
