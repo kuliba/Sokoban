@@ -13,14 +13,16 @@ struct LoadFailure<FailureType>: Error {
 
 extension LoadFailure: Equatable where FailureType: Equatable {}
 
-struct State<OTP> {
+struct State<ApplicationSuccess, OTP> {
     
     let otp: OTP?
-    var orderResult: OrderResult?
+    var applicationResult: ApplicationResult?
+}
+
+extension State {
     
-    typealias OrderResult = Result<OK, LoadFailure<FailureType>>
-    
-    struct OK: Equatable {}
+    typealias ApplicationResult = Result<ApplicationSuccess, ApplicationFailure>
+    typealias ApplicationFailure = LoadFailure<FailureType>
     
     enum FailureType {
         
@@ -28,30 +30,52 @@ struct State<OTP> {
     }
 }
 
-extension State: Equatable where OTP: Equatable {}
+extension State: Equatable where ApplicationSuccess: Equatable, OTP: Equatable {}
 
-enum Event: Equatable {
+enum Event<ApplicationSuccess> {
     
-    case orderResult(OrderResult)
+    case applicationResult(ApplicationResult)
+    case `continue`
+}
+
+extension Event {
     
-    typealias OrderResult = Result<OK, LoadFailure<FailureType>>
-    
-    struct OK: Equatable {}
-    
+    typealias ApplicationResult = Result<ApplicationSuccess, ApplicationFailure>
+    typealias ApplicationFailure = LoadFailure<FailureType>
+
     enum FailureType {
         
         case alert, informer, otp
     }
 }
 
-enum Effect<OTP> {
+extension Event: Equatable where ApplicationSuccess: Equatable {}
+
+enum Effect<ApplicationPayload, OTP> {
     
+    case apply(ApplicationPayload)
+    case loadOTP
     case notifyOTP(OTP, String)
 }
 
-extension Effect: Equatable where OTP: Equatable {}
+extension Effect: Equatable where OTP: Equatable, ApplicationPayload: Equatable {}
 
-final class Reducer<OTP> {}
+final class Reducer<ApplicationPayload, ApplicationSuccess, OTP> {
+    
+    private let isValid: IsValid
+    private let makeApplicationPayload: MakeApplicationPayload
+    
+    init(
+        isValid: @escaping IsValid,
+        makeApplicationPayload: @escaping MakeApplicationPayload
+    ) {
+        self.isValid = isValid
+        self.makeApplicationPayload = makeApplicationPayload
+    }
+    
+    typealias IsValid = (State) -> Bool
+    typealias MakeApplicationPayload = (State) -> ApplicationPayload?
+}
 
 extension Reducer {
     
@@ -64,8 +88,11 @@ extension Reducer {
         var effect: Effect?
         
         switch event {
-        case let .orderResult(orderResult):
-            reduce(&state, &effect, orderResult)
+        case let .applicationResult(applicationResult):
+            reduce(&state, &effect, applicationResult)
+            
+        case .continue:
+            reduceContinue(&state, &effect)
         }
         
         return (state, effect)
@@ -74,29 +101,38 @@ extension Reducer {
 
 extension Reducer {
     
-    typealias State = CreditCardMVPCoreTests.State<OTP>
-    typealias Event = CreditCardMVPCoreTests.Event
-    typealias Effect = CreditCardMVPCoreTests.Effect<OTP>
+    typealias State = CreditCardMVPCoreTests.State<ApplicationSuccess, OTP>
+    typealias Event = CreditCardMVPCoreTests.Event<ApplicationSuccess>
+    typealias Effect = CreditCardMVPCoreTests.Effect<ApplicationPayload, OTP>
 }
 
 private extension Reducer {
     
+    func reduceContinue(
+        _ state: inout State,
+        _ effect: inout Effect?
+    ) {
+        guard isValid(state) else { return }
+        
+        effect = state.otp == nil ? .loadOTP : makeApplicationPayload(state).map { .apply($0) }
+    }
+    
     func reduce(
         _ state: inout State,
         _ effect: inout Effect?,
-        _ orderResult: Event.OrderResult
+        _ applicationResult: Event.ApplicationResult
     ) {
-        switch orderResult {
+        switch applicationResult {
         case let .failure(failure):
             switch failure.type {
             case .alert:
-                state.orderResult = .failure(.init(
+                state.applicationResult = .failure(.init(
                     message: failure.message,
                     type: .alert
                 ))
-
+                
             case .informer:
-                state.orderResult = .failure(.init(
+                state.applicationResult = .failure(.init(
                     message: failure.message,
                     type: .informer
                 ))
@@ -106,164 +142,317 @@ private extension Reducer {
             }
             
         case let .success(success):
-            break
+            state.applicationResult = .success(success)
         }
     }
 }
 
 import XCTest
 
-final class ReducerTests: XCTestCase {
+final class ReducerTests: LogicTests {
     
-    // MARK: - orderResult: alert failure
+    // MARK: - init
     
-    func test_orderResult_shouldChangeState_onAlertFailure_noOTP() {
+    func test_init_shouldNotCallCollaborators() {
+        
+        let (sut, makePayload) = makeSUT()
+        
+        XCTAssertEqual(makePayload.callCount, 0)
+        XCTAssertNotNil(sut)
+    }
+    
+    // MARK: - applicationResult: alert failure
+    
+    func test_applicationResult_shouldChangeState_onAlertFailure_noOTP() {
         
         let state = makeState(otp: nil)
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .alert)
+        let event = makeApplicationResultFailure(message: message, type: .alert)
         
         assert(state, event: event) {
             
-            $0.orderResult = .failure(.init(message: message, type: .alert))
+            $0.applicationResult = .failure(.init(message: message, type: .alert))
         }
     }
     
-    func test_orderResult_shouldNotDeliverEffect_onAlertFailure_noOTP() {
+    func test_applicationResult_shouldNotDeliverEffect_onAlertFailure_noOTP() {
         
         let state = makeState(otp: nil)
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .alert)
+        let event = makeApplicationResultFailure(message: message, type: .alert)
         
         assert(state, event: event, delivers: nil)
     }
     
-    func test_orderResult_shouldChangeState_onAlertFailure() {
+    func test_applicationResult_shouldChangeState_onAlertFailure_withOTP() {
         
         let state = makeState(otp: makeOTP())
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .alert)
+        let event = makeApplicationResultFailure(message: message, type: .alert)
         
         assert(state, event: event) {
             
-            $0.orderResult = .failure(.init(message: message, type: .alert))
+            $0.applicationResult = .failure(.init(message: message, type: .alert))
         }
     }
     
-    func test_orderResult_shouldNotDeliverEffect_onAlertFailure() {
+    func test_applicationResult_shouldNotDeliverEffect_onAlertFailure_withOTP() {
         
         let state = makeState(otp: makeOTP())
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .alert)
+        let event = makeApplicationResultFailure(message: message, type: .alert)
         
         assert(state, event: event, delivers: nil)
     }
     
-    // MARK: - orderResult: informer failure
+    // MARK: - applicationResult: informer failure
     
-    func test_orderResult_shouldChangeState_onInformerFailure_noOTP() {
+    func test_applicationResult_shouldChangeState_onInformerFailure_noOTP() {
         
         let state = makeState(otp: nil)
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .informer)
+        let event = makeApplicationResultFailure(message: message, type: .informer)
         
         assert(state, event: event) {
             
-            $0.orderResult = .failure(.init(message: message, type: .informer))
+            $0.applicationResult = .failure(.init(message: message, type: .informer))
         }
     }
     
-    func test_orderResult_shouldNotDeliverEffect_onInformerFailure_noOTP() {
+    func test_applicationResult_shouldNotDeliverEffect_onInformerFailure_noOTP() {
         
         let state = makeState(otp: nil)
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .informer)
+        let event = makeApplicationResultFailure(message: message, type: .informer)
         
         assert(state, event: event, delivers: nil)
     }
     
-    func test_orderResult_shouldChangeState_onInformerFailure() {
+    func test_applicationResult_shouldChangeState_onInformerFailure_withOTP() {
         
         let state = makeState(otp: makeOTP())
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .informer)
+        let event = makeApplicationResultFailure(message: message, type: .informer)
         
         assert(state, event: event) {
             
-            $0.orderResult = .failure(.init(message: message, type: .informer))
+            $0.applicationResult = .failure(.init(message: message, type: .informer))
         }
     }
     
-    func test_orderResult_shouldNotDeliverEffect_onInformerFailure() {
+    func test_applicationResult_shouldNotDeliverEffect_onInformerFailure_withOTP() {
         
         let state = makeState(otp: makeOTP())
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .informer)
+        let event = makeApplicationResultFailure(message: message, type: .informer)
         
         assert(state, event: event, delivers: nil)
     }
     
-    // MARK: - orderResult: otp failure
+    // MARK: - applicationResult: otp failure
     
-    func test_orderResult_shouldNotChangeState_onOTPFailure_noOTP() {
+    func test_applicationResult_shouldNotChangeState_onOTPFailure_noOTP() {
         
         let state = makeState(otp: nil)
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .otp)
+        let event = makeApplicationResultFailure(message: message, type: .otp)
         
         assert(state, event: event)
     }
     
-    func test_orderResult_shouldNotDeliverEffect_onOTPFailure_noOTP() {
+    func test_applicationResult_shouldNotDeliverEffect_onOTPFailure_noOTP() {
         
         let state = makeState(otp: nil)
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .otp)
+        let event = makeApplicationResultFailure(message: message, type: .otp)
         
         assert(state, event: event, delivers: nil)
     }
     
-    func test_orderResult_shouldNotChangeState_onOTPFailure() {
+    func test_applicationResult_shouldNotChangeState_onOTPFailure_withOTP() {
         
         let otp = makeOTP()
         let state = makeState(otp: otp)
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .otp)
+        let event = makeApplicationResultFailure(message: message, type: .otp)
         
         assert(state, event: event)
     }
     
-    func test_orderResult_shouldDeliverEffect_onOTPFailure() {
+    func test_applicationResult_shouldDeliverEffect_onOTPFailure_withOTP() {
         
         let otp = makeOTP()
         let state = makeState(otp: otp)
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .otp)
+        let event = makeApplicationResultFailure(message: message, type: .otp)
         
         assert(state, event: event, delivers: .notifyOTP(otp, message))
     }
     
-    // MARK: - Helpers
+    // MARK: - applicationResult: success
     
-    private typealias SUT = Reducer<OTP>
-    
-    private func makeSUT(
-        file: StaticString = #file,
-        line: UInt = #line
-    ) -> SUT {
-        let sut = SUT()
+    func test_applicationResult_shouldChangeState_onSuccess_noOTP() {
         
-        trackForMemoryLeaks(sut, file: file, line: line)
+        let state = makeState(otp: nil)
+        let success = makeApplicationSuccess()
+        let event = makeApplicationResultSuccess(success: success)
         
-        return sut
+        assert(state, event: event) {
+            
+            $0.applicationResult = .success(success)
+        }
     }
     
-    private func makeState(
-        otp: OTP? = nil,
-        orderResult: SUT.State.OrderResult? = nil
-    ) -> SUT.State {
+    func test_applicationResult_shouldNotDeliverEffect_onSuccess_noOTP() {
         
-        return .init(otp: otp, orderResult: orderResult)
+        let state = makeState(otp: nil)
+        let event = makeApplicationResultSuccess()
+        
+        assert(state, event: event, delivers: nil)
+    }
+    
+    func test_applicationResult_shouldChangeState_onSuccess_withOTP() {
+        
+        let state = makeState(otp: makeOTP())
+        let success = makeApplicationSuccess()
+        let event = makeApplicationResultSuccess(success: success)
+        
+        assert(state, event: event) {
+            
+            $0.applicationResult = .success(success)
+        }
+    }
+    
+    func test_applicationResult_shouldNotDeliverEffect_onSuccess_withOTP() {
+        
+        let state = makeState(otp: makeOTP())
+        let event = makeApplicationResultSuccess()
+        
+        assert(state, event: event, delivers: nil)
+    }
+    
+    // MARK: - continue
+    
+    func test_continue_shouldNotChangeState_onInvalidState_noOTP() {
+        
+        let state = makeState(otp: nil)
+        let (sut, _) = makeSUT(isValid: { _ in false })
+        
+        assert(sut: sut, state, event: .continue)
+    }
+    
+    func test_continue_shouldNotDeliverEffect_onInvalidState_noOTP() {
+        
+        let state = makeState(otp: nil)
+        let (sut, _) = makeSUT(isValid: { _ in false })
+        
+        assert(sut: sut, state, event: .continue, delivers: nil)
+    }
+    
+    func test_continue_shouldNotChangeState_onInvalidState_withOTP() {
+        
+        let state = makeState(otp: makeOTP())
+        let (sut, _) = makeSUT(isValid: { _ in false })
+        
+        assert(sut: sut, state, event: .continue)
+    }
+    
+    func test_continue_shouldNotDeliverEffect_onInvalidState_withOTP() {
+        
+        let state = makeState(otp: makeOTP())
+        let (sut, _) = makeSUT(isValid: { _ in false })
+        
+        assert(sut: sut, state, event: .continue, delivers: nil)
+    }
+    
+    func test_continue_shouldNotChangeState_onValidState_noOTP() {
+        
+        let state = makeState(otp: nil)
+        let (sut, _) = makeSUT(isValid: { _ in true })
+        
+        assert(sut: sut, state, event: .continue)
+    }
+    
+    func test_continue_shouldDeliverEffect_onValidState_noOTP() {
+        
+        let state = makeState(otp: nil)
+        let (sut, _) = makeSUT(isValid: { _ in true })
+        
+        assert(sut: sut, state, event: .continue, delivers: .loadOTP)
+    }
+    
+    func test_continue_shouldNotCallMakePayloadWithState_onValidState_noOTP() {
+        
+        let state = makeState(otp: nil)
+        let (sut, makePayload) = makeSUT(isValid: { _ in true })
+        
+        _ = sut.reduce(state, .continue)
+        
+        XCTAssertEqual(makePayload.callCount, 0)
+    }
+    
+    func test_continue_shouldNotChangeState_onValidState_withOTP() {
+        
+        let state = makeState(otp: makeOTP())
+        let (sut, _) = makeSUT(isValid: { _ in true })
+        
+        assert(sut: sut, state, event: .continue)
+    }
+    
+    func test_continue_shouldCallMakePayloadWithState_onValidState_withOTP() {
+        
+        let state = makeState(otp: makeOTP())
+        let (sut, makePayload) = makeSUT(isValid: { _ in true })
+        
+        _ = sut.reduce(state, .continue)
+        
+        XCTAssertNoDiff(makePayload.payloads, [state])
+    }
+    
+    func test_continue_shouldNotDeliverEffect_onValidState_withOTP() {
+        
+        let state = makeState(otp: makeOTP())
+        let (sut, _) = makeSUT(applicationPayload: nil, isValid: { _ in true })
+        
+        assert(sut: sut, state, event: .continue, delivers: nil)
+    }
+    
+    func test_continue_shouldDeliverEffect_onValidState_withOTP() {
+        
+        let payload = makePayload()
+        let state = makeState(otp: makeOTP())
+        let (sut, _) = makeSUT(applicationPayload: payload, isValid: { _ in true })
+        
+        assert(sut: sut, state, event: .continue, delivers: .apply(payload))
+    }
+    
+    // MARK: - Helpers
+    
+    private typealias SUT = Reducer<ApplicationPayload, ApplicationSuccess, OTP>
+    private typealias State = CreditCardMVPCoreTests.State<ApplicationSuccess, OTP>
+    private typealias Effect = CreditCardMVPCoreTests.Effect<ApplicationPayload, OTP>
+    private typealias MakePayloadSpy = CallSpy<State, ApplicationPayload?>
+    
+    private func makeSUT(
+        applicationPayload: ApplicationPayload? = nil,
+        isValid: @escaping (State) -> Bool = { _ in false },
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: SUT,
+        makePayload: MakePayloadSpy
+    ) {
+        let makePayload = MakePayloadSpy(stubs: [applicationPayload])
+        
+        let sut = SUT(
+            isValid: isValid,
+            makeApplicationPayload: makePayload.call
+        )
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(makePayload, file: file, line: line)
+        
+        return (sut, makePayload)
     }
     
     private struct OTP: Equatable {
@@ -278,28 +467,25 @@ final class ReducerTests: XCTestCase {
         return .init(value: value)
     }
     
-    private func makeOrderResultFailure(
-        message: String = anyMessage(),
-        type: SUT.Event.FailureType
-    ) -> SUT.Event {
+    private func makeState(
+        otp: OTP? = nil,
+        applicationResult: State.ApplicationResult? = nil
+    ) -> State {
         
-        return .orderResult(.failure(.init(
-            message: message,
-            type: type
-        )))
+        return .init(otp: otp, applicationResult: applicationResult)
     }
     
     @discardableResult
     private func assert(
         sut: SUT? = nil,
-        _ state: SUT.State,
-        event: SUT.Event,
-        updateStateToExpected: ((inout SUT.State) -> Void)? = nil,
+        _ state: State,
+        event: Event,
+        updateStateToExpected: ((inout State) -> Void)? = nil,
         file: StaticString = #file,
         line: UInt = #line
-    ) -> SUT.State {
+    ) -> State {
         
-        let sut = sut ?? makeSUT(file: file, line: line)
+        let sut = sut ?? makeSUT(file: file, line: line).sut
         
         var expectedState = state
         updateStateToExpected?(&expectedState)
@@ -319,16 +505,16 @@ final class ReducerTests: XCTestCase {
     @discardableResult
     private func assert(
         sut: SUT? = nil,
-        _ state: SUT.State,
-        event: SUT.Event,
-        delivers expectedEffect: SUT.Effect?,
+        _ state: State,
+        event: Event,
+        delivers expectedEffect: Effect?,
         file: StaticString = #file,
         line: UInt = #line
-    ) -> SUT.Effect? {
+    ) -> Effect? {
         
-        let sut = sut ?? makeSUT(file: file, line: line)
+        let sut = sut ?? makeSUT(file: file, line: line).sut
         
-        let (_, receivedEffect): (SUT.State, SUT.Effect?) = sut.reduce(state, event)
+        let (_, receivedEffect): (State, Effect?) = sut.reduce(state, event)
         
         XCTAssertNoDiff(
             receivedEffect,
