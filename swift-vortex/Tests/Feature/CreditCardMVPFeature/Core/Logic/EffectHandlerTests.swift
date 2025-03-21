@@ -12,7 +12,7 @@ public protocol VerificationCodeProviding {
     var verificationCode: String { get }
 }
 
-final class EffectHandler<OrderSuccess, OTP, ConfirmApplicationPayload>
+final class EffectHandler<ApplicationSuccess, OTP, ConfirmApplicationPayload>
 where ConfirmApplicationPayload: VerificationCodeProviding {
     
     private let confirmApplication: ConfirmApplication
@@ -52,13 +52,13 @@ extension EffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = CreditCardMVPCoreTests.Event<OrderSuccess>
+    typealias Event = CreditCardMVPCoreTests.Event<ApplicationSuccess>
     typealias Effect = CreditCardMVPCoreTests.Effect<OTP, ConfirmApplicationPayload>
 }
 
 import XCTest
 
-final class EffectHandlerTests: XCTestCase {
+final class EffectHandlerTests: LogicTests {
     
     // MARK: - init
     
@@ -97,8 +97,8 @@ final class EffectHandlerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = EffectHandler<OrderSuccess, OTP, Payload>
-    private typealias ConfirmApplication = Spy<Payload, Void>
+    private typealias SUT = EffectHandler<ApplicationSuccess, OTP, ConfirmApplicationPayload>
+    private typealias ConfirmApplication = Spy<ConfirmApplicationPayload, Void>
     private typealias OTP = CallSpy<String, Void>
     
     private func makeSUT(
@@ -121,32 +121,6 @@ final class EffectHandlerTests: XCTestCase {
         trackForMemoryLeaks(otp, file: file, line: line)
         
         return (sut, confirmApplication, otp)
-    }
-    
-    private struct OrderSuccess: Equatable {
-        
-        let value: String
-    }
-    
-    private func makeOrderSuccess(
-        _ value: String = anyMessage()
-    ) -> OrderSuccess {
-        
-        return .init(value: value)
-    }
-    
-    private struct Payload: Equatable, VerificationCodeProviding {
-        
-        let value: String
-        
-        var verificationCode: String { value }
-    }
-    
-    private func makePayload(
-        _ value: String = anyMessage()
-    ) -> Payload {
-        
-        return .init(value: value)
     }
     
     private func expect(

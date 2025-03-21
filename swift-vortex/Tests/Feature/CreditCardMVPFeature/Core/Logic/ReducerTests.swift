@@ -13,7 +13,7 @@ struct LoadFailure<FailureType>: Error {
 
 extension LoadFailure: Equatable where FailureType: Equatable {}
 
-struct State<OrderSuccess, OTP> {
+struct State<ApplicationSuccess, OTP> {
     
     let otp: OTP?
     var orderResult: OrderResult?
@@ -21,7 +21,7 @@ struct State<OrderSuccess, OTP> {
 
 extension State {
     
-    typealias OrderResult = Result<OrderSuccess, LoadFailure<FailureType>>
+    typealias OrderResult = Result<ApplicationSuccess, LoadFailure<FailureType>>
     
     enum FailureType {
         
@@ -29,16 +29,16 @@ extension State {
     }
 }
 
-extension State: Equatable where OrderSuccess: Equatable, OTP: Equatable {}
+extension State: Equatable where ApplicationSuccess: Equatable, OTP: Equatable {}
 
-enum Event<OrderSuccess> {
+enum Event<ApplicationSuccess> {
     
     case orderResult(OrderResult)
 }
 
 extension Event {
     
-    typealias OrderResult = Result<OrderSuccess, LoadFailure<FailureType>>
+    typealias OrderResult = Result<ApplicationSuccess, LoadFailure<FailureType>>
     
     enum FailureType {
         
@@ -46,7 +46,7 @@ extension Event {
     }
 }
 
-extension Event: Equatable where OrderSuccess: Equatable {}
+extension Event: Equatable where ApplicationSuccess: Equatable {}
 
 enum Effect<OTP, ConfirmApplicationPayload> {
     
@@ -56,7 +56,7 @@ enum Effect<OTP, ConfirmApplicationPayload> {
 
 extension Effect: Equatable where OTP: Equatable, ConfirmApplicationPayload: Equatable {}
 
-final class Reducer<OrderSuccess, OTP, ConfirmApplicationPayload> {}
+final class Reducer<ApplicationSuccess, OTP, ConfirmApplicationPayload> {}
 
 extension Reducer {
     
@@ -79,8 +79,8 @@ extension Reducer {
 
 extension Reducer {
     
-    typealias State = CreditCardMVPCoreTests.State<OrderSuccess, OTP>
-    typealias Event = CreditCardMVPCoreTests.Event<OrderSuccess>
+    typealias State = CreditCardMVPCoreTests.State<ApplicationSuccess, OTP>
+    typealias Event = CreditCardMVPCoreTests.Event<ApplicationSuccess>
     typealias Effect = CreditCardMVPCoreTests.Effect<OTP, ConfirmApplicationPayload>
 }
 
@@ -118,7 +118,7 @@ private extension Reducer {
 
 import XCTest
 
-final class ReducerTests: XCTestCase {
+final class ReducerTests: LogicTests {
     
     // MARK: - orderResult: alert failure
     
@@ -126,7 +126,7 @@ final class ReducerTests: XCTestCase {
         
         let state = makeState(otp: nil)
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .alert)
+        let event = makeApplicationResultFailure(message: message, type: .alert)
         
         assert(state, event: event) {
             
@@ -138,7 +138,7 @@ final class ReducerTests: XCTestCase {
         
         let state = makeState(otp: nil)
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .alert)
+        let event = makeApplicationResultFailure(message: message, type: .alert)
         
         assert(state, event: event, delivers: nil)
     }
@@ -147,7 +147,7 @@ final class ReducerTests: XCTestCase {
         
         let state = makeState(otp: makeOTP())
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .alert)
+        let event = makeApplicationResultFailure(message: message, type: .alert)
         
         assert(state, event: event) {
             
@@ -159,7 +159,7 @@ final class ReducerTests: XCTestCase {
         
         let state = makeState(otp: makeOTP())
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .alert)
+        let event = makeApplicationResultFailure(message: message, type: .alert)
         
         assert(state, event: event, delivers: nil)
     }
@@ -170,7 +170,7 @@ final class ReducerTests: XCTestCase {
         
         let state = makeState(otp: nil)
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .informer)
+        let event = makeApplicationResultFailure(message: message, type: .informer)
         
         assert(state, event: event) {
             
@@ -182,7 +182,7 @@ final class ReducerTests: XCTestCase {
         
         let state = makeState(otp: nil)
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .informer)
+        let event = makeApplicationResultFailure(message: message, type: .informer)
         
         assert(state, event: event, delivers: nil)
     }
@@ -191,7 +191,7 @@ final class ReducerTests: XCTestCase {
         
         let state = makeState(otp: makeOTP())
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .informer)
+        let event = makeApplicationResultFailure(message: message, type: .informer)
         
         assert(state, event: event) {
             
@@ -203,7 +203,7 @@ final class ReducerTests: XCTestCase {
         
         let state = makeState(otp: makeOTP())
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .informer)
+        let event = makeApplicationResultFailure(message: message, type: .informer)
         
         assert(state, event: event, delivers: nil)
     }
@@ -214,7 +214,7 @@ final class ReducerTests: XCTestCase {
         
         let state = makeState(otp: nil)
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .otp)
+        let event = makeApplicationResultFailure(message: message, type: .otp)
         
         assert(state, event: event)
     }
@@ -223,7 +223,7 @@ final class ReducerTests: XCTestCase {
         
         let state = makeState(otp: nil)
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .otp)
+        let event = makeApplicationResultFailure(message: message, type: .otp)
         
         assert(state, event: event, delivers: nil)
     }
@@ -233,7 +233,7 @@ final class ReducerTests: XCTestCase {
         let otp = makeOTP()
         let state = makeState(otp: otp)
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .otp)
+        let event = makeApplicationResultFailure(message: message, type: .otp)
         
         assert(state, event: event)
     }
@@ -243,7 +243,7 @@ final class ReducerTests: XCTestCase {
         let otp = makeOTP()
         let state = makeState(otp: otp)
         let message = anyMessage()
-        let event = makeOrderResultFailure(message: message, type: .otp)
+        let event = makeApplicationResultFailure(message: message, type: .otp)
         
         assert(state, event: event, delivers: .notifyOTP(otp, message))
     }
@@ -253,8 +253,8 @@ final class ReducerTests: XCTestCase {
     func test_orderResult_shouldChangeState_onSuccess_noOTP() {
         
         let state = makeState(otp: nil)
-        let success = makeOrderSuccess()
-        let event = makeOrderResultSuccess(orderSuccess: success)
+        let success = makeApplicationSuccess()
+        let event = makeApplicationResultSuccess(orderSuccess: success)
         
         assert(state, event: event) {
             
@@ -265,7 +265,7 @@ final class ReducerTests: XCTestCase {
     func test_orderResult_shouldNotDeliverEffect_onSuccess_noOTP() {
         
         let state = makeState(otp: nil)
-        let event = makeOrderResultSuccess()
+        let event = makeApplicationResultSuccess()
         
         assert(state, event: event, delivers: nil)
     }
@@ -273,8 +273,8 @@ final class ReducerTests: XCTestCase {
     func test_orderResult_shouldChangeState_onSuccess() {
         
         let state = makeState(otp: makeOTP())
-        let success = makeOrderSuccess()
-        let event = makeOrderResultSuccess(orderSuccess: success)
+        let success = makeApplicationSuccess()
+        let event = makeApplicationResultSuccess(orderSuccess: success)
         
         assert(state, event: event) {
             
@@ -285,14 +285,14 @@ final class ReducerTests: XCTestCase {
     func test_orderResult_shouldNotDeliverEffect_onSuccess() {
         
         let state = makeState(otp: makeOTP())
-        let event = makeOrderResultSuccess()
+        let event = makeApplicationResultSuccess()
         
         assert(state, event: event, delivers: nil)
     }
     
     // MARK: - Helpers
     
-    private typealias SUT = Reducer<OrderSuccess, OTP, Payload>
+    private typealias SUT = Reducer<ApplicationSuccess, OTP, ConfirmApplicationPayload>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -325,7 +325,7 @@ final class ReducerTests: XCTestCase {
         return .init(value: value)
     }
     
-    private func makeOrderResultFailure(
+    private func makeApplicationResultFailure(
         message: String = anyMessage(),
         type: SUT.Event.FailureType
     ) -> SUT.Event {
@@ -336,35 +336,11 @@ final class ReducerTests: XCTestCase {
         )))
     }
     
-    private func makeOrderResultSuccess(
-        orderSuccess: OrderSuccess? = nil
+    private func makeApplicationResultSuccess(
+        orderSuccess: ApplicationSuccess? = nil
     ) -> SUT.Event {
         
-        return .orderResult(.success(orderSuccess ?? makeOrderSuccess()))
-    }
-    
-    private struct OrderSuccess: Equatable {
-        
-        let value: String
-    }
-    
-    private func makeOrderSuccess(
-        _ value: String = anyMessage()
-    ) -> OrderSuccess {
-        
-        return .init(value: value)
-    }
-    
-    private struct Payload: Equatable {
-        
-        let value: String
-    }
-    
-    private func makePayload(
-        _ value: String = anyMessage()
-    ) -> Payload {
-        
-        return .init(value: value)
+        return .orderResult(.success(orderSuccess ?? makeApplicationSuccess()))
     }
     
     @discardableResult
