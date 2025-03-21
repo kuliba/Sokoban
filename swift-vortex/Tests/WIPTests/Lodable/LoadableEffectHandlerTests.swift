@@ -5,7 +5,6 @@
 //  Created by Igor Malyarov on 20.03.2025.
 //
 
-import CreditCardMVPCore
 import XCTest
 
 final class LoadableEffectHandlerTests: LoadableTests {
