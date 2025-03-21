@@ -24,6 +24,7 @@ public struct State<ApplicationSuccess, OTP> {
 public extension State {
     
     typealias ApplicationResult = Result<ApplicationSuccess, Failure>
+    
     typealias Failure = LoadFailure<FailureType>
     
     enum FailureType {

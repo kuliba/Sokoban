@@ -35,11 +35,14 @@ public extension Reducer {
         var effect: Effect?
         
         switch event {
-        case let .applicationResult(applicationResult):
-            reduce(&state, &effect, applicationResult)
+        case let .applicationResult(result):
+            reduce(&state, &effect, result)
             
         case .continue:
             reduceContinue(&state, &effect)
+            
+        case let .loadedOTP(result):
+            reduce(&state, &effect, result)
         }
         
         return (state, effect)
@@ -49,7 +52,7 @@ public extension Reducer {
 public extension Reducer {
     
     typealias State = CreditCardMVPCore.State<ApplicationSuccess, OTP>
-    typealias Event = CreditCardMVPCore.Event<ApplicationSuccess>
+    typealias Event = CreditCardMVPCore.Event<ApplicationSuccess, OTP>
     typealias Effect = CreditCardMVPCore.Effect<ApplicationPayload, OTP>
 }
 
@@ -61,15 +64,22 @@ private extension Reducer {
     ) {
         guard isValid(state) else { return }
         
-        effect = state.otp.success == nil ? .loadOTP : makeApplicationPayload(state).map { .apply($0) }
+        switch state.otp.success {
+        case .none:
+            state.otp = .loading(nil)
+            effect = .loadOTP
+            
+        case .some:
+            effect = makeApplicationPayload(state).map { .apply($0) }
+        }
     }
     
     func reduce(
         _ state: inout State,
         _ effect: inout Effect?,
-        _ applicationResult: Event.ApplicationResult
+        _ result: Event.ApplicationResult
     ) {
-        switch applicationResult {
+        switch result {
         case let .failure(failure):
             switch failure.type {
             case .alert:
@@ -90,6 +100,26 @@ private extension Reducer {
             
         case let .success(success):
             state.applicationResult = .success(success)
+        }
+    }
+    
+    func reduce(
+        _ state: inout State,
+        _ effect: inout Effect?,
+        _ result: Event.LoadedOTPResult
+    ) {
+        switch result {
+        case let .failure(failure):
+            switch failure.type {
+            case .alert:
+                break
+                
+            case .informer:
+                break
+            }
+            
+        case let .success(success):
+            break
         }
     }
 }
