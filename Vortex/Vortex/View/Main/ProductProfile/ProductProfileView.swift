@@ -754,7 +754,7 @@ extension OperationDetailFactory {
 
 extension SuccessViewModelFactory {
     
-    static let previewSuccess: Self = .init(makeCloseAccountPaymentsSuccessViewModel: { _ in .sampleSuccess })
+    static let previewSuccess: Self = .init(makeSuccessViewModel: { _ in .sampleSuccess })
 }
 
 extension Date {

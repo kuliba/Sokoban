@@ -3086,7 +3086,7 @@
 		83EB7A102D180BAF00E6E7BB /* GetInfoRepeatPaymentDomain+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83EB7A0F2D180BAF00E6E7BB /* GetInfoRepeatPaymentDomain+ext.swift */; };
 		83EB7A122D198DAD00E6E7BB /* RootViewModelFactory+repeatPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83EB7A112D198DAD00E6E7BB /* RootViewModelFactory+repeatPayment.swift */; };
 		83EB7CCB2C8B187B0058F417 /* ServiceItemsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83EB7CCA2C8B187B0058F417 /* ServiceItemsLoader.swift */; };
-		83EC2CFB2D899CD300AB83E6 /* RootViewModelFactory+makeCloseAccountPaymentsSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83EC2CFA2D899CD000AB83E6 /* RootViewModelFactory+makeCloseAccountPaymentsSuccessViewModel.swift */; };
+		83EC2CFB2D899CD300AB83E6 /* RootViewModelFactory+makeSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83EC2CFA2D899CD000AB83E6 /* RootViewModelFactory+makeSuccessViewModel.swift */; };
 		83ECC1C32CC63D0D0029D916 /* MarketShowcaseToRootViewModelBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83ECC1C22CC63D0D0029D916 /* MarketShowcaseToRootViewModelBinder.swift */; };
 		83F5AD462CB8FD5B0076CC0D /* LandingServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F5AD452CB8FD5A0076CC0D /* LandingServices.swift */; };
 		83F6565B2C3FF4570052B7E1 /* StickerEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F6565A2C3FF4570052B7E1 /* StickerEvents.swift */; };
@@ -6891,7 +6891,7 @@
 		83EB7A112D198DAD00E6E7BB /* RootViewModelFactory+repeatPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+repeatPayment.swift"; sourceTree = "<group>"; };
 		83EB7CC82C8A004E0058F417 /* ItemsWithSerial+BannersData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ItemsWithSerial+BannersData.swift"; sourceTree = "<group>"; };
 		83EB7CCA2C8B187B0058F417 /* ServiceItemsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceItemsLoader.swift; sourceTree = "<group>"; };
-		83EC2CFA2D899CD000AB83E6 /* RootViewModelFactory+makeCloseAccountPaymentsSuccessViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeCloseAccountPaymentsSuccessViewModel.swift"; sourceTree = "<group>"; };
+		83EC2CFA2D899CD000AB83E6 /* RootViewModelFactory+makeSuccessViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeSuccessViewModel.swift"; sourceTree = "<group>"; };
 		83ECC1C22CC63D0D0029D916 /* MarketShowcaseToRootViewModelBinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketShowcaseToRootViewModelBinder.swift; sourceTree = "<group>"; };
 		83F5AD452CB8FD5A0076CC0D /* LandingServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingServices.swift; sourceTree = "<group>"; };
 		83F6565A2C3FF4570052B7E1 /* StickerEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerEvents.swift; sourceTree = "<group>"; };
@@ -17225,7 +17225,7 @@
 			isa = PBXGroup;
 			children = (
 				83DBFD332D8AA1AC000C8330 /* CloseAccountPayload.swift */,
-				83EC2CFA2D899CD000AB83E6 /* RootViewModelFactory+makeCloseAccountPaymentsSuccessViewModel.swift */,
+				83EC2CFA2D899CD000AB83E6 /* RootViewModelFactory+makeSuccessViewModel.swift */,
 				83DBFD352D8ABCDF000C8330 /* RootViewModelFactory+makePaymentsMeToMeViewModel.swift */,
 			);
 			path = AsyncWaitSuccessScreen;
@@ -22164,7 +22164,7 @@
 				77A76A7A27FAFD3E00A271B3 /* AtmTypeData.swift in Sources */,
 				8372A8AA2D6851C900CD1CFB /* OpenSavingsAccountDomain.swift in Sources */,
 				0B283FBF26FBCA0A00B5E925 /* Router.swift in Sources */,
-				83EC2CFB2D899CD300AB83E6 /* RootViewModelFactory+makeCloseAccountPaymentsSuccessViewModel.swift in Sources */,
+				83EC2CFB2D899CD300AB83E6 /* RootViewModelFactory+makeSuccessViewModel.swift in Sources */,
 				0C8CF960282179E80047DDAE /* SendMailView.swift in Sources */,
 				0B22AEAC26CE8DD100B11E7F /* GKHDataSorted.swift in Sources */,
 				2AA3A9362BFF8A1900AEBCC9 /* AnywayPaymentFactoryComposer.swift in Sources */,
