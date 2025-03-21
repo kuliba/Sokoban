@@ -26,7 +26,7 @@ where ConfirmApplicationPayload: VerificationCodeProviding {
         self.otpWitness = otpWitness
     }
     
-    typealias ConfirmApplicationCompletion = (Void) -> Void
+    typealias ConfirmApplicationCompletion = (Event.OrderResult) -> Void
     typealias ConfirmApplication = (ConfirmApplicationPayload, @escaping ConfirmApplicationCompletion) -> Void
     
     typealias OTPWitness = (OTP) -> (String) -> Void
@@ -40,7 +40,7 @@ extension EffectHandler {
     ) {
         switch effect {
         case let .confirmApplication(payload):
-            confirmApplication(payload) { }
+            confirmApplication(payload) { dispatch(.orderResult($0)) }
             
         case let .notifyOTP(otp, message):
             otpWitness(otp)(message)
@@ -83,6 +83,62 @@ final class EffectHandlerTests: LogicTests {
         XCTAssertNoDiff(confirmApplication.payloads, [payload])
     }
     
+    func test_confirmApplication_shouldDeliverAlertFailure_onApplicationAlertFailure() {
+        
+        let (sut, confirmApplication, _) = makeSUT()
+        let message = anyMessage()
+        
+        expect(
+            sut,
+            with: .confirmApplication(makePayload()),
+            toDeliver: makeApplicationResultFailure(message: message, type: .alert)
+        ) {
+            confirmApplication.complete(with: .failure(.init(message: message, type: .alert)))
+        }
+    }
+    
+    func test_confirmApplication_shouldDeliverInformerFailure_onApplicationInformerFailure() {
+        
+        let (sut, confirmApplication, _) = makeSUT()
+        let message = anyMessage()
+        
+        expect(
+            sut,
+            with: .confirmApplication(makePayload()),
+            toDeliver: makeApplicationResultFailure(message: message, type: .informer)
+        ) {
+            confirmApplication.complete(with: .failure(.init(message: message, type: .informer)))
+        }
+    }
+    
+    func test_confirmApplication_shouldDeliverOTPFailure_onApplicationOTPFailure() {
+        
+        let (sut, confirmApplication, _) = makeSUT()
+        let message = anyMessage()
+        
+        expect(
+            sut,
+            with: .confirmApplication(makePayload()),
+            toDeliver: makeApplicationResultFailure(message: message, type: .otp)
+        ) {
+            confirmApplication.complete(with: .failure(.init(message: message, type: .otp)))
+        }
+    }
+    
+    func test_confirmApplication_shouldDeliverSuccess_onApplicationSuccess() {
+        
+        let (sut, confirmApplication, _) = makeSUT()
+        let success = makeApplicationSuccess()
+        
+        expect(
+            sut,
+            with: .confirmApplication(makePayload()),
+            toDeliver: makeApplicationResultSuccess(success: success)
+        ) {
+            confirmApplication.complete(with: .success(success))
+        }
+    }
+    
     // MARK: - notifyOTP
     
     func test_notifyOTP_shouldCallNotifyOTP() {
@@ -98,7 +154,7 @@ final class EffectHandlerTests: LogicTests {
     // MARK: - Helpers
     
     private typealias SUT = EffectHandler<ApplicationSuccess, ConfirmApplicationPayload, OTP>
-    private typealias ConfirmApplication = Spy<ConfirmApplicationPayload, Void>
+    private typealias ConfirmApplication = Spy<ConfirmApplicationPayload, Event.OrderResult>
     private typealias OTP = CallSpy<String, Void>
     
     private func makeSUT(

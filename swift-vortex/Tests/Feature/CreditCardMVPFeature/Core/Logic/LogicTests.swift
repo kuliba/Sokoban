@@ -63,9 +63,9 @@ class LogicTests: XCTestCase {
     }
     
     func makeApplicationResultSuccess(
-        orderSuccess: ApplicationSuccess? = nil
+        success: ApplicationSuccess? = nil
     ) -> Event {
         
-        return .orderResult(.success(orderSuccess ?? makeApplicationSuccess()))
+        return .orderResult(.success(success ?? makeApplicationSuccess()))
     }
 }

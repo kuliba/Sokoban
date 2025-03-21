@@ -254,7 +254,7 @@ final class ReducerTests: LogicTests {
         
         let state = makeState(otp: nil)
         let success = makeApplicationSuccess()
-        let event = makeApplicationResultSuccess(orderSuccess: success)
+        let event = makeApplicationResultSuccess(success: success)
         
         assert(state, event: event) {
             
@@ -274,7 +274,7 @@ final class ReducerTests: LogicTests {
         
         let state = makeState(otp: makeOTP())
         let success = makeApplicationSuccess()
-        let event = makeApplicationResultSuccess(orderSuccess: success)
+        let event = makeApplicationResultSuccess(success: success)
         
         assert(state, event: event) {
             
