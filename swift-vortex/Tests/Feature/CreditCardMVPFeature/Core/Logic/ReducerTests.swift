@@ -473,7 +473,7 @@ final class ReducerTests: LogicTests {
         _ value: String = anyMessage()
     ) -> State.OTPState {
         
-        return .init(resource: .init(value: value), status: .loadedOK)
+        return .init(resource: .init(value: value), status: .loaded)
     }
     
     private func makeState(

@@ -33,7 +33,7 @@ public struct LoadableState<Resource, Failure: Error> {
         case loading
         
         /// The resource has been successfully loaded.
-        case loadedOK
+        case loaded
         
         /// The resource failed to load.
         case failure(Failure)
@@ -51,8 +51,8 @@ public extension LoadableState {
         return true
     }
     
-    /// A predefined idle state where no resource is not loaded, and status is `loadedOK`.
-    static var missing: Self { .init(resource: nil, status: .loadedOK) }
+    /// A predefined idle state where no resource is not loaded, and status is `loaded`.
+    static var missing: Self { .init(resource: nil, status: .loaded) }
     
     /// A predefined state representing an empty resource in a loading phase.
     static var emptyLoading: Self { .init(resource: nil, status: .loading) }
