@@ -26,7 +26,7 @@ where ConfirmApplicationPayload: VerificationCodeProviding {
         self.otpWitness = otpWitness
     }
     
-    typealias ConfirmApplicationCompletion = (Event.OrderResult) -> Void
+    typealias ConfirmApplicationCompletion = (Event.ApplicationResult) -> Void
     typealias ConfirmApplication = (ConfirmApplicationPayload, @escaping ConfirmApplicationCompletion) -> Void
     
     typealias OTPWitness = (OTP) -> (String) -> Void
@@ -40,7 +40,7 @@ extension EffectHandler {
     ) {
         switch effect {
         case let .confirmApplication(payload):
-            confirmApplication(payload) { dispatch(.orderResult($0)) }
+            confirmApplication(payload) { dispatch(.applicationResult($0)) }
             
         case let .notifyOTP(otp, message):
             otpWitness(otp)(message)
@@ -154,7 +154,7 @@ final class EffectHandlerTests: LogicTests {
     // MARK: - Helpers
     
     private typealias SUT = EffectHandler<ApplicationSuccess, ConfirmApplicationPayload, OTP>
-    private typealias ConfirmApplication = Spy<ConfirmApplicationPayload, Event.OrderResult>
+    private typealias ConfirmApplication = Spy<ConfirmApplicationPayload, Event.ApplicationResult>
     private typealias OTP = CallSpy<String, Void>
     
     private func makeSUT(

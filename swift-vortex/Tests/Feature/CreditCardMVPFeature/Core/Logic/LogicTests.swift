@@ -56,7 +56,7 @@ class LogicTests: XCTestCase {
         type: Event.FailureType
     ) -> Event {
         
-        return .orderResult(.failure(.init(
+        return .applicationResult(.failure(.init(
             message: message,
             type: type
         )))
@@ -66,6 +66,6 @@ class LogicTests: XCTestCase {
         success: ApplicationSuccess? = nil
     ) -> Event {
         
-        return .orderResult(.success(success ?? makeApplicationSuccess()))
+        return .applicationResult(.success(success ?? makeApplicationSuccess()))
     }
 }

@@ -16,12 +16,12 @@ extension LoadFailure: Equatable where FailureType: Equatable {}
 struct State<ApplicationSuccess, OTP> {
     
     let otp: OTP?
-    var orderResult: OrderResult?
+    var applicationResult: ApplicationResult?
 }
 
 extension State {
     
-    typealias OrderResult = Result<ApplicationSuccess, LoadFailure<FailureType>>
+    typealias ApplicationResult = Result<ApplicationSuccess, LoadFailure<FailureType>>
     
     enum FailureType {
         
@@ -33,12 +33,12 @@ extension State: Equatable where ApplicationSuccess: Equatable, OTP: Equatable {
 
 enum Event<ApplicationSuccess> {
     
-    case orderResult(OrderResult)
+    case applicationResult(ApplicationResult)
 }
 
 extension Event {
     
-    typealias OrderResult = Result<ApplicationSuccess, LoadFailure<FailureType>>
+    typealias ApplicationResult = Result<ApplicationSuccess, LoadFailure<FailureType>>
     
     enum FailureType {
         
@@ -69,8 +69,8 @@ extension Reducer {
         var effect: Effect?
         
         switch event {
-        case let .orderResult(orderResult):
-            reduce(&state, &effect, orderResult)
+        case let .applicationResult(applicationResult):
+            reduce(&state, &effect, applicationResult)
         }
         
         return (state, effect)
@@ -89,19 +89,19 @@ private extension Reducer {
     func reduce(
         _ state: inout State,
         _ effect: inout Effect?,
-        _ orderResult: Event.OrderResult
+        _ applicationResult: Event.ApplicationResult
     ) {
-        switch orderResult {
+        switch applicationResult {
         case let .failure(failure):
             switch failure.type {
             case .alert:
-                state.orderResult = .failure(.init(
+                state.applicationResult = .failure(.init(
                     message: failure.message,
                     type: .alert
                 ))
                 
             case .informer:
-                state.orderResult = .failure(.init(
+                state.applicationResult = .failure(.init(
                     message: failure.message,
                     type: .informer
                 ))
@@ -111,7 +111,7 @@ private extension Reducer {
             }
             
         case let .success(success):
-            state.orderResult = .success(success)
+            state.applicationResult = .success(success)
         }
     }
 }
@@ -120,9 +120,9 @@ import XCTest
 
 final class ReducerTests: LogicTests {
     
-    // MARK: - orderResult: alert failure
+    // MARK: - applicationResult: alert failure
     
-    func test_orderResult_shouldChangeState_onAlertFailure_noOTP() {
+    func test_applicationResult_shouldChangeState_onAlertFailure_noOTP() {
         
         let state = makeState(otp: nil)
         let message = anyMessage()
@@ -130,11 +130,11 @@ final class ReducerTests: LogicTests {
         
         assert(state, event: event) {
             
-            $0.orderResult = .failure(.init(message: message, type: .alert))
+            $0.applicationResult = .failure(.init(message: message, type: .alert))
         }
     }
     
-    func test_orderResult_shouldNotDeliverEffect_onAlertFailure_noOTP() {
+    func test_applicationResult_shouldNotDeliverEffect_onAlertFailure_noOTP() {
         
         let state = makeState(otp: nil)
         let message = anyMessage()
@@ -143,7 +143,7 @@ final class ReducerTests: LogicTests {
         assert(state, event: event, delivers: nil)
     }
     
-    func test_orderResult_shouldChangeState_onAlertFailure() {
+    func test_applicationResult_shouldChangeState_onAlertFailure() {
         
         let state = makeState(otp: makeOTP())
         let message = anyMessage()
@@ -151,11 +151,11 @@ final class ReducerTests: LogicTests {
         
         assert(state, event: event) {
             
-            $0.orderResult = .failure(.init(message: message, type: .alert))
+            $0.applicationResult = .failure(.init(message: message, type: .alert))
         }
     }
     
-    func test_orderResult_shouldNotDeliverEffect_onAlertFailure() {
+    func test_applicationResult_shouldNotDeliverEffect_onAlertFailure() {
         
         let state = makeState(otp: makeOTP())
         let message = anyMessage()
@@ -164,9 +164,9 @@ final class ReducerTests: LogicTests {
         assert(state, event: event, delivers: nil)
     }
     
-    // MARK: - orderResult: informer failure
+    // MARK: - applicationResult: informer failure
     
-    func test_orderResult_shouldChangeState_onInformerFailure_noOTP() {
+    func test_applicationResult_shouldChangeState_onInformerFailure_noOTP() {
         
         let state = makeState(otp: nil)
         let message = anyMessage()
@@ -174,11 +174,11 @@ final class ReducerTests: LogicTests {
         
         assert(state, event: event) {
             
-            $0.orderResult = .failure(.init(message: message, type: .informer))
+            $0.applicationResult = .failure(.init(message: message, type: .informer))
         }
     }
     
-    func test_orderResult_shouldNotDeliverEffect_onInformerFailure_noOTP() {
+    func test_applicationResult_shouldNotDeliverEffect_onInformerFailure_noOTP() {
         
         let state = makeState(otp: nil)
         let message = anyMessage()
@@ -187,7 +187,7 @@ final class ReducerTests: LogicTests {
         assert(state, event: event, delivers: nil)
     }
     
-    func test_orderResult_shouldChangeState_onInformerFailure() {
+    func test_applicationResult_shouldChangeState_onInformerFailure() {
         
         let state = makeState(otp: makeOTP())
         let message = anyMessage()
@@ -195,11 +195,11 @@ final class ReducerTests: LogicTests {
         
         assert(state, event: event) {
             
-            $0.orderResult = .failure(.init(message: message, type: .informer))
+            $0.applicationResult = .failure(.init(message: message, type: .informer))
         }
     }
     
-    func test_orderResult_shouldNotDeliverEffect_onInformerFailure() {
+    func test_applicationResult_shouldNotDeliverEffect_onInformerFailure() {
         
         let state = makeState(otp: makeOTP())
         let message = anyMessage()
@@ -208,9 +208,9 @@ final class ReducerTests: LogicTests {
         assert(state, event: event, delivers: nil)
     }
     
-    // MARK: - orderResult: otp failure
+    // MARK: - applicationResult: otp failure
     
-    func test_orderResult_shouldNotChangeState_onOTPFailure_noOTP() {
+    func test_applicationResult_shouldNotChangeState_onOTPFailure_noOTP() {
         
         let state = makeState(otp: nil)
         let message = anyMessage()
@@ -219,7 +219,7 @@ final class ReducerTests: LogicTests {
         assert(state, event: event)
     }
     
-    func test_orderResult_shouldNotDeliverEffect_onOTPFailure_noOTP() {
+    func test_applicationResult_shouldNotDeliverEffect_onOTPFailure_noOTP() {
         
         let state = makeState(otp: nil)
         let message = anyMessage()
@@ -228,7 +228,7 @@ final class ReducerTests: LogicTests {
         assert(state, event: event, delivers: nil)
     }
     
-    func test_orderResult_shouldNotChangeState_onOTPFailure() {
+    func test_applicationResult_shouldNotChangeState_onOTPFailure() {
         
         let otp = makeOTP()
         let state = makeState(otp: otp)
@@ -238,7 +238,7 @@ final class ReducerTests: LogicTests {
         assert(state, event: event)
     }
     
-    func test_orderResult_shouldDeliverEffect_onOTPFailure() {
+    func test_applicationResult_shouldDeliverEffect_onOTPFailure() {
         
         let otp = makeOTP()
         let state = makeState(otp: otp)
@@ -248,9 +248,9 @@ final class ReducerTests: LogicTests {
         assert(state, event: event, delivers: .notifyOTP(otp, message))
     }
     
-    // MARK: - orderResult: success
+    // MARK: - applicationResult: success
     
-    func test_orderResult_shouldChangeState_onSuccess_noOTP() {
+    func test_applicationResult_shouldChangeState_onSuccess_noOTP() {
         
         let state = makeState(otp: nil)
         let success = makeApplicationSuccess()
@@ -258,11 +258,11 @@ final class ReducerTests: LogicTests {
         
         assert(state, event: event) {
             
-            $0.orderResult = .success(success)
+            $0.applicationResult = .success(success)
         }
     }
     
-    func test_orderResult_shouldNotDeliverEffect_onSuccess_noOTP() {
+    func test_applicationResult_shouldNotDeliverEffect_onSuccess_noOTP() {
         
         let state = makeState(otp: nil)
         let event = makeApplicationResultSuccess()
@@ -270,7 +270,7 @@ final class ReducerTests: LogicTests {
         assert(state, event: event, delivers: nil)
     }
     
-    func test_orderResult_shouldChangeState_onSuccess() {
+    func test_applicationResult_shouldChangeState_onSuccess() {
         
         let state = makeState(otp: makeOTP())
         let success = makeApplicationSuccess()
@@ -278,11 +278,11 @@ final class ReducerTests: LogicTests {
         
         assert(state, event: event) {
             
-            $0.orderResult = .success(success)
+            $0.applicationResult = .success(success)
         }
     }
     
-    func test_orderResult_shouldNotDeliverEffect_onSuccess() {
+    func test_applicationResult_shouldNotDeliverEffect_onSuccess() {
         
         let state = makeState(otp: makeOTP())
         let event = makeApplicationResultSuccess()
@@ -307,10 +307,10 @@ final class ReducerTests: LogicTests {
     
     private func makeState(
         otp: OTP? = nil,
-        orderResult: State.OrderResult? = nil
+        applicationResult: State.ApplicationResult? = nil
     ) -> State {
         
-        return .init(otp: otp, orderResult: orderResult)
+        return .init(otp: otp, applicationResult: applicationResult)
     }
     
     @discardableResult
