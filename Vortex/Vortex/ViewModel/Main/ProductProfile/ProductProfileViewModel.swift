@@ -2107,6 +2107,7 @@ fileprivate extension NavigationBarView.ViewModel {
             rightItems: rightButtons,
             background: Self.accentColor(with: product),
             foreground: Self.textColor(with: product),
+            subtitleForeground: Self.textColor(with: product),
             backgroundDimm: .init(color: Color(hex: "1с1с1с"), opacity: 0.3))
     }
     
