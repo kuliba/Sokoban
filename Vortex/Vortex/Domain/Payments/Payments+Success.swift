@@ -796,7 +796,7 @@ extension Payments.ParameterSuccessOptionButtons {
     ) -> Payments.ParameterSuccessOptionButtons? {
         
         switch mode {
-        case .normal, .meToMe:
+        case .normal:
             return nil
             
         case .makePaymentToDeposit, .makePaymentFromDeposit, .closeDeposit:
@@ -808,6 +808,14 @@ extension Payments.ParameterSuccessOptionButtons {
                 templateID: nil,
                 meToMePayment: meToMePayment,
                 operation: operation
+            )
+          
+        case .meToMe:
+            return optionButtons(
+                operation: operation,
+                options: [.template, .details],
+                operationDetail: operationDetail,
+                meToMePayment: meToMePayment
             )
             
         case .changePin, .change, .refund, .sberQR:

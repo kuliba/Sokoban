@@ -164,7 +164,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                             
                             let currency = Currency(description: productData.currency)
                             let mode: PaymentsSuccessViewModel.Mode = .closeAccount(productData.id, currency, balance: balance, transferData)
-                            if let successViewModel = successViewModelFactory.makeCloseAccountPaymentsSuccessViewModel(mode) {
+                            if let successViewModel = successViewModelFactory.makeSuccessViewModel(mode) {
                                 self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
                                 if transferData.documentStatus == .complete {
                                     makeInformer(closeAccount: true)
@@ -1013,15 +1013,11 @@ extension PaymentsMeToMeViewModel {
                         productIdTo: swapViewModel.productIdTo,
                         transferData: response
                     )
-                    guard let success = Payments.Success(
-                        model: model,
-                        mode: mode,
-                        amountFormatter: model.amountFormatted(amount:currencyCode:style:)
-                    ) else {
+                    guard let successViewModel = successViewModelFactory.makeSuccessViewModel(mode)
+                    else {
                         return
                     }
                     
-                    let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
                     self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
                     
                 } else {

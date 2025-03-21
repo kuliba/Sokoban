@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makeCloseAccountPaymentsSuccessViewModel.swift
+//  RootViewModelFactory+makeSuccessViewModel.swift
 //  Vortex
 //
 //  Created by Andryusina Nataly on 18.03.2025.
@@ -8,7 +8,7 @@
 extension RootViewModelFactory {
     
     @inlinable
-    func makeCloseAccountPaymentsSuccessViewModel(
+    func makeSuccessViewModel(
         payload: CloseAccountPayload
     ) -> PaymentsSuccessViewModel? {
                 
@@ -28,13 +28,13 @@ extension RootViewModelFactory {
         _ processingFlag: ProcessingFlag
     ) -> SuccessViewModelFactory {
         .init(
-            makeCloseAccountPaymentsSuccessViewModel: { [weak self] in
+            makeSuccessViewModel: { [weak self] in
                 
                 let payload: CloseAccountPayload = .init(
                     flag: processingFlag,
                     initialMode: $0
                 )
-                return self?.makeCloseAccountPaymentsSuccessViewModel(payload: payload)
+                return self?.makeSuccessViewModel(payload: payload)
             })
     }
 }
@@ -65,6 +65,31 @@ private extension TransferResponseData.DocumentStatus {
     }
 }
 
+private extension TransferResponseData {
+    
+    convenience init(
+        _ processingFlag: ProcessingFlag,
+        _ oldValue: TransferResponseData
+    ) {
+        self.init(
+            amount: oldValue.amount,
+            creditAmount: oldValue.creditAmount,
+            currencyAmount: oldValue.currencyAmount,
+            currencyPayee: oldValue.currencyPayee,
+            currencyPayer: oldValue.currencyPayer,
+            currencyRate: oldValue.currencyRate,
+            debitAmount: oldValue.debitAmount,
+            fee: oldValue.fee,
+            needMake: oldValue.needMake,
+            needOTP: oldValue.needOTP,
+            payeeName: oldValue.payeeName,
+            documentStatus: oldValue.documentStatus?.newStatus(processingFlag),
+            paymentOperationDetailId: oldValue.paymentOperationDetailId,
+            scenario: oldValue.scenario
+        )
+    }
+}
+
 private extension CloseAccountPayload {
     
     var mode: PaymentsSuccessViewModel.Mode {
@@ -85,6 +110,14 @@ private extension CloseAccountPayload {
                     balance: balance,
                     .init(flag, transferData)
                 )
+         
+        case let .meToMe(templateId: templateId, from: productIdFrom, to: productIdTo, transferData):
+            return .meToMe(
+                templateId: templateId,
+                from: productIdFrom,
+                to: productIdTo,
+                .init(flag, transferData)
+            )
             
         default:
             return self.initialMode

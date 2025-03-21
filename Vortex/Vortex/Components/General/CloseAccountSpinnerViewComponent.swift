@@ -49,7 +49,7 @@ extension CloseAccountSpinnerView {
                             
                             let mode: PaymentsSuccessViewModel.Mode = .closeAccountEmpty(productData.id, currency, balance: balance, transferData)
 
-                            if let successViewModel = successViewModelFactory.makeCloseAccountPaymentsSuccessViewModel(mode) {
+                            if let successViewModel = successViewModelFactory.makeSuccessViewModel(mode) {
                                 self.action.send(CloseAccountSpinnerAction.Response.Success(viewModel: successViewModel))
                             }
                             
