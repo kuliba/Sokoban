@@ -21,7 +21,7 @@ final class EffectHandler<OrderSuccess, OTP> {
     typealias ConfirmApplicationCompletion = (Void) -> Void
     typealias ConfirmApplication = (ConfirmApplicationPayload, @escaping ConfirmApplicationCompletion) -> Void
     
-    typealias OTPWitness = (OTP) -> ((String) -> Void)?
+    typealias OTPWitness = (OTP) -> (String) -> Void
 }
 
 struct ConfirmApplicationPayload {}
@@ -39,7 +39,7 @@ extension EffectHandler {
             confirmApplication(payload) { }
             
         case let .notifyOTP(otp, message):
-            otpWitness(otp)?(message)
+            otpWitness(otp)(message)
         }
     }
 }
