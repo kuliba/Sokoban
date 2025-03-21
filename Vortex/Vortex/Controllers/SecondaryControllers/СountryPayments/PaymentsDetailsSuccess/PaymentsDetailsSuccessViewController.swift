@@ -104,7 +104,7 @@ class PaymentsDetailsSuccessViewController: UIViewController {
         if confurmVCModel?.status == .antifraudCanceled {
          
             confurmView.statusImageView.image = UIImage(named: "waiting")
-            confurmView.statusLabel.text = "Операция временно приостановлена в целях безопасности"
+            confurmView.statusLabel.text = "Операция приостановлена в целях безопасности."
             confurmView.statusLabel.textColor = .systemRed
             confurmView.statusLabel.font = UIFont.systemFont(ofSize: 16, weight: .bold)
             

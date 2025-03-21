@@ -67,10 +67,9 @@ extension RootViewModelFactory {
                 let details = makeOperationDetailByPaymentID(payload)
                 details.event(.load)
                 
-                let document = makeC2GDocumentButton(
-                    paymentOperationDetailID: payload.paymentOperationDetailID
+                let document = makeC2GDocumentButtonDomainBinder(
+                    operationID: payload.paymentOperationDetailID
                 )
-                document.event(.load)
                 
                 completion(.success(.init(
                     context: .init(payload),
@@ -154,8 +153,7 @@ extension RootViewModelFactory {
                 let details = makeOperationDetailByPaymentID(basicDetails)
                 details.event(.load)
                 
-                let document = makeC2GDocumentButton(paymentOperationDetailID: 0)
-                document.event(.load)
+                let document = makeC2GDocumentButtonDomainBinder(operationID: 0)
                 
                 completion(.success(.init(
                     context: .init(basicDetails), 

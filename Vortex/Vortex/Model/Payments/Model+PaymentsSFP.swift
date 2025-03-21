@@ -262,7 +262,7 @@ extension Model {
             let customerParameterId = Payments.Parameter.Identifier.sftRecipient.rawValue
             let customerParameter = Payments.ParameterInfo(
                 .init(id: customerParameterId, value: customerName),
-                icon: .local("ic24Customer"),
+                icon: .local("ic24Account"),
                 title: "Получатель", placement: .feed)
             
             parameters.append(customerParameter)
@@ -331,7 +331,7 @@ extension Model {
         case Payments.Parameter.Identifier.sftRecipient.rawValue:
             return Payments.ParameterInfo(
                 .init(id: additionalData.fieldName, value: additionalData.fieldValue),
-                icon: .local("ic24Customer"),
+                icon: .local("ic24Account"),
                 title: additionalData.fieldTitle ?? "", placement: .feed) //FIXME: fix unwrap optional title
             
         case Payments.Parameter.Identifier.sfpAmount.rawValue:

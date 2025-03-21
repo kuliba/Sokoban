@@ -17,13 +17,15 @@ private class BundleProvider {
 public extension Image {
     static var ic12ArrowDown: Image { Image(#function) }
     static var ic12ArrowUp: Image { Image(#function) }
+    static var ic12Cash: Image { Image(#function) }
     static var ic12Clock: Image { Image(#function) }
     static var ic12Close: Image { Image(#function) }
     static var ic12Coins: Image { Image(#function) }
     static var ic12EyeOff: Image { Image(#function) }
+    static var ic12Hammer: Image { Image(#function) }
     static var ic12Lock: Image { Image(#function) }
     static var ic12Lockandeyeoff: Image { Image(#function) }
-    static var ic12LogoVortexColor: Image { Image(#function) }
+    static var ic12LogoColor: Image { Image(#function) }
     static var ic12Navigation: Image { Image(#function) }
     static var ic12Percent: Image { Image(#function) }
     static var ic12Shield: Image { Image(#function) }
@@ -217,7 +219,7 @@ public extension Image {
     static var ic16Lock: Image { Image(#function) }
     static var ic16LogIn: Image { Image(#function) }
     static var ic16LogOut: Image { Image(#function) }
-    static var ic16LogoVortexOneColor: Image { Image(#function) }
+    static var ic16LogoOneColor: Image { Image(#function) }
     static var ic16Mail: Image { Image(#function) }
     static var ic16MainCardGrey: Image { Image(#function) }
     static var ic16MainCardGreyFixed2: Image { Image(#function) }
@@ -383,13 +385,28 @@ public extension Image {
     static var ic16ZoomIn: Image { Image(#function) }
     static var ic16ZoomOut: Image { Image(#function) }
     static var ic18Check: Image { Image(#function) }
-    static var ic20VortexNy: Image { Image(#function) }
+    static var ic20Tariff: Image { Image(#function) }
+    static var ic20Bank: Image { Image(#function) }
+    static var ic20DriversLicense: Image { Image(#function) }
+    static var ic20Emblem: Image { Image(#function) }
+    static var ic20FileHash: Image { Image(#function) }
+    static var ic20Hammer: Image { Image(#function) }
+    static var ic20InternationalPassport: Image { Image(#function) }
+    static var ic20Ny: Image { Image(#function) }
+    static var ic20Passport: Image { Image(#function) }
+    static var ic20Permissions: Image { Image(#function) }
+    static var ic20Requisites: Image { Image(#function) }
+    static var ic20Sbp: Image { Image(#function) }
+    static var ic20Tax: Image { Image(#function) }
+    static var ic20UploadToAccount: Image { Image(#function) }
+    static var ic20Visa: Image { Image(#function) }
     static var ic24Ball: Image { Image(#function) }
     static var ic2412Circle: Image { Image(#function) }
     static var ic24Apple: Image { Image(#function) }
     static var ic24Tariff: Image { Image(#function) }
     static var ic24Abroad: Image { Image(#function) }
     static var ic24AbroadLine: Image { Image(#function) }
+    static var ic24Account: Image { Image(#function) }
     static var ic24Account1: Image { Image(#function) }
     static var ic24ActivatedCreditCard: Image { Image(#function) }
     static var ic24Activity: Image { Image(#function) }
@@ -506,7 +523,6 @@ public extension Image {
     static var ic24Crosshair: Image { Image(#function) }
     static var ic24Crosshair1: Image { Image(#function) }
     static var ic24CurrencyExchange: Image { Image(#function) }
-    static var ic24Customer: Image { Image(#function) }
     static var ic24Database: Image { Image(#function) }
     static var ic24DeactivatedCreditCard: Image { Image(#function) }
     static var ic24Delete: Image { Image(#function) }
@@ -605,10 +621,10 @@ public extension Image {
     static var ic24Lock: Image { Image(#function) }
     static var ic24LogIn: Image { Image(#function) }
     static var ic24LogOut: Image { Image(#function) }
-    static var ic24LogoVortexColor: Image { Image(#function) }
-    static var ic24LogoVortexLine: Image { Image(#function) }
-    static var ic24LogoVortexWhiteElipse: Image { Image(#function) }
-    static var ic24LogoVortexOneColor: Image { Image(#function) }
+    static var ic24LogoColor: Image { Image(#function) }
+    static var ic24LogoLine: Image { Image(#function) }
+    static var ic24LogoWhiteElipse: Image { Image(#function) }
+    static var ic24LogoOneColor: Image { Image(#function) }
     static var ic24Mail: Image { Image(#function) }
     static var ic24Male: Image { Image(#function) }
     static var ic24Map: Image { Image(#function) }
@@ -733,6 +749,7 @@ public extension Image {
     static var ic24Square: Image { Image(#function) }
     static var ic24Star: Image { Image(#function) }
     static var ic24Sticker: Image { Image(#function) }
+    static var ic24StickerPlus: Image { Image(#function) }
     static var ic24StopCircle: Image { Image(#function) }
     static var ic24Sts: Image { Image(#function) }
     static var ic24SubscrOn: Image { Image(#function) }
@@ -805,6 +822,9 @@ public extension Image {
     static var ic24ZoomIn: Image { Image(#function) }
     static var ic24ZoomOut: Image { Image(#function) }
     static var ic32AccountsRub: Image { Image(#function) }
+    static var ic32Denied: Image { Image(#function) }
+    static var ic32Done: Image { Image(#function) }
+    static var ic32Abroad: Image { Image(#function) }
     static var ic32AbroadLine: Image { Image(#function) }
     static var ic32Camera: Image { Image(#function) }
     static var ic32Edit2: Image { Image(#function) }
@@ -813,16 +833,19 @@ public extension Image {
     static var ic32GreySimple: Image { Image(#function) }
     static var ic32Image: Image { Image(#function) }
     static var ic32Location: Image { Image(#function) }
-    static var ic32LogoVortexLine: Image { Image(#function) }
+    static var ic32LogoLine: Image { Image(#function) }
     static var ic32Office: Image { Image(#function) }
+    static var ic32OtherCard: Image { Image(#function) }
     static var ic32Sbp: Image { Image(#function) }
     static var ic32SbpLine: Image { Image(#function) }
     static var ic32Search: Image { Image(#function) }
     static var ic32Service: Image { Image(#function) }
+    static var ic32SmsColor: Image { Image(#function) }
     static var ic32Swap: Image { Image(#function) }
     static var ic32Trash: Image { Image(#function) }
     static var ic32UserCheck: Image { Image(#function) }
     static var ic32UserPlus: Image { Image(#function) }
+    static var ic32Waiting: Image { Image(#function) }
     static var ic40Qr: Image { Image(#function) }
     static var ic40TvInternet: Image { Image(#function) }
     static var ic40ZkxServices: Image { Image(#function) }
@@ -832,7 +855,7 @@ public extension Image {
     static var ic40Beauty: Image { Image(#function) }
     static var ic40Card: Image { Image(#function) }
     static var ic40Catering: Image { Image(#function) }
-    static var ic40ClothesAccessories: Image { Image(#function) }
+    static var ic40Clothes: Image { Image(#function) }
     static var ic40Danger: Image { Image(#function) }
     static var ic40Delete: Image { Image(#function) }
     static var ic40Educations: Image { Image(#function) }
@@ -852,7 +875,6 @@ public extension Image {
     static var ic40Sbp: Image { Image(#function) }
     static var ic40Services: Image { Image(#function) }
     static var ic40ShoppingOther: Image { Image(#function) }
-    static var ic40Smth: Image { Image(#function) }
     static var ic40Star: Image { Image(#function) }
     static var ic40Supermarket: Image { Image(#function) }
     static var ic40Telephone: Image { Image(#function) }
@@ -876,6 +898,7 @@ public extension Image {
     static var ic48PinOffice: Image { Image(#function) }
     static var ic48PinOthers: Image { Image(#function) }
     static var ic48PinTerminal: Image { Image(#function) }
+    static var ic48Sbp: Image { Image(#function) }
     static var ic48Search: Image { Image(#function) }
     static var ic48Settings: Image { Image(#function) }
     static var ic48Telephone: Image { Image(#function) }
@@ -884,8 +907,8 @@ public extension Image {
     static var ic48User: Image { Image(#function) }
     static var ic56Sbp: Image { Image(#function) }
     static var ic64TouchId: Image { Image(#function) }
+    static var ic64Color: Image { Image(#function) }
     static var ic64FaceId: Image { Image(#function) }
-    static var ic64VortexColor: Image { Image(#function) }
     static var ic64Goods: Image { Image(#function) }
     static var ic72Sbp: Image { Image(#function) }
     static var ic96Sbp: Image { Image(#function) }

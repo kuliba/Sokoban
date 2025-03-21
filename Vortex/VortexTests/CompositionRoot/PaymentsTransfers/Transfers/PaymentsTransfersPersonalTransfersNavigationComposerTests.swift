@@ -437,12 +437,13 @@ extension Model {
     
     func addMeToMeProduct(
         product: ProductData? = nil,
+        successViewModelFactory: SuccessViewModelFactory = .previewSuccess,
         file: StaticString = #file,
         line: UInt = #line
     ) throws {
         
         products.value.append(element: product ?? .accountActiveRub, toValueOfKey: product?.productType ?? .account)
-        _ = try XCTUnwrap(PaymentsMeToMeViewModel(self, mode: .demandDeposit), "Fail to add product for MeToMe (Expected PaymentsMeToMeViewModel, got nil instead).", file: file, line: line)
+        _ = try XCTUnwrap(PaymentsMeToMeViewModel(self, mode: .demandDeposit, successViewModelFactory: successViewModelFactory), "Fail to add product for MeToMe (Expected PaymentsMeToMeViewModel, got nil instead).", file: file, line: line)
     }
 }
 

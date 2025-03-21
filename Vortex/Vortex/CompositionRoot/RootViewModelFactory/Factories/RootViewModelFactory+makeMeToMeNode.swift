@@ -22,10 +22,15 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeMeToMeNode(
+        processingFlag: ProcessingFlag,
         notify: @escaping MeToMeNotify
     ) -> Node<PaymentsMeToMeViewModel>? {
         
-        guard let meToMe = PaymentsMeToMeViewModel(model, mode: .demandDeposit)
+        guard let meToMe = PaymentsMeToMeViewModel(
+            model,
+            mode: .demandDeposit,
+            successViewModelFactory: makeSuccessViewModelFactory(processingFlag)
+        )
         else { return nil }
         
         let cancellables = bind(meToMe, using: notify)

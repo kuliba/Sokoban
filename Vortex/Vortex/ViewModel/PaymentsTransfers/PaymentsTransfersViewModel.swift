@@ -1136,7 +1136,7 @@ private extension PaymentsTransfersViewModel {
     
     private func handleBetweenSelfTransferButtonTapped() {
         
-        guard let viewModel = PaymentsMeToMeViewModel(model, mode: .demandDeposit)
+        guard let viewModel = paymentsTransfersFactory.makePaymentsMeToMeViewModel(.demandDeposit)
         else { return }
         
         bind(viewModel)

@@ -8,6 +8,7 @@
 extension SplashScreenState.Settings {
     
     static let preview: Self = .init(
+        duration: 2.0,
         image: .morning,
         logo: .init(color: .blue, shadow: .logo),
         text: .init(color: .green, size: 24, value: "Hello, world!", shadow: .text),

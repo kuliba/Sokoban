@@ -34,6 +34,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeOperationPicker(
+        processingFlag: ProcessingFlag,
         loadLatest: @escaping LoadLatest,
         prefix: [LoadablePickerState<UUID, OperationPickerDomain.Select>.Item]
     ) -> ReloadableOperationPicker {
@@ -43,7 +44,7 @@ extension RootViewModelFactory {
         return composeBinder(
             content: content,
             delayProvider: delayProvider,
-            getNavigation: getNavigation,
+            getNavigation: { [weak self] in self?.getNavigation(processingFlag: processingFlag, select: $0, notify: $1, completion: $2) },
             witnesses: .init(emitting: emitting, dismissing: dismissing)
         )
     }
@@ -72,6 +73,7 @@ extension RootViewModelFactory {
     }
     
     private func getNavigation(
+        processingFlag: ProcessingFlag,
         select: Domain.Select,
         notify: @escaping Domain.Notify,
         completion: @escaping (Domain.Navigation) -> Void
@@ -84,6 +86,7 @@ extension RootViewModelFactory {
             
         case let .latest(latest):
             processPayments(
+                processingFlag: processingFlag,
                 lastPayment: .init(latest),
                 notify: { notify($0.event) },
                 completion: { $0.map { completion(.latest($0)) }}

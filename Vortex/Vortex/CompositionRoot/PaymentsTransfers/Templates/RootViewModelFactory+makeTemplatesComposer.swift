@@ -12,6 +12,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeMakeTemplates(
+        _ processingFlag: ProcessingFlag,
         _ paymentsTransfersFlag: PaymentsTransfersFlag
     ) -> PaymentsTransfersFactory.MakeTemplates {
         
@@ -22,7 +23,7 @@ extension RootViewModelFactory {
         case .inactive:
             return { [weak self] in
                 
-                self?.makeTemplates(paymentsTransfersFlag, closeAction: $0)
+                self?.makeTemplates(processingFlag, paymentsTransfersFlag, closeAction: $0)
             }
         }
     }
@@ -34,11 +35,13 @@ extension RootViewModelFactory {
 
     @inlinable
     func makeTemplates(
+        _ processingFlag: ProcessingFlag,
         _ paymentsTransfersFlag: PaymentsTransfersFlag,
         closeAction: @escaping () -> Void
     ) -> Templates {
         
         let templatesComposer = makeTemplatesComposer(
+            processingFlag: processingFlag,
             paymentsTransfersFlag: paymentsTransfersFlag
         )
         
@@ -50,12 +53,14 @@ extension RootViewModelFactory {
     
     @inlinable
     func makeTemplatesComposer(
+        processingFlag: ProcessingFlag,
         paymentsTransfersFlag: PaymentsTransfersFlag
     ) -> TemplatesListFlowModelComposer {
         
         let composer = TemplatesListFlowEffectHandlerMicroServicesComposer(
             initiatePayment: initiatePaymentFromTemplate(template:completion:),
             makeLegacyPayment: makeLegacyTemplatePayment,
+            makeTemplatesListViewModel: { [makeTemplates] in makeTemplates(processingFlag, $0)},
             paymentsTransfersFlag: paymentsTransfersFlag
         )
         
@@ -72,6 +77,26 @@ extension RootViewModelFactory {
         completion: @escaping (Result<AnywayFlowModel, ServiceFailureAlert.ServiceFailure>) -> Void
     ) {
         initiateAnywayPayment(payload: .template(template), completion: completion)
+    }
+}
+
+extension RootViewModelFactory {
+    
+    @inlinable
+    func makeTemplates(
+        _ processingFlag: ProcessingFlag,
+        _ dismiss: @escaping () -> Void
+    ) -> TemplatesListViewModel {
+        
+        return .init(
+            model,
+            dismissAction: dismiss,
+            updateFastAll: { [weak model] in
+                
+                model?.action.send(ModelAction.Products.Update.Fast.All())
+            },
+            makePaymentsMeToMeViewModel: { [makePaymentsMeToMeViewModel] in makePaymentsMeToMeViewModel(processingFlag, $0) }
+        )
     }
 }
 

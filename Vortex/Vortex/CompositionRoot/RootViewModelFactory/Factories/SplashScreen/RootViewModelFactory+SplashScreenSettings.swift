@@ -246,6 +246,7 @@ where Category == String,
             let imageData = outcome.storage[setting.link].imageData
             
             return .init(
+                duration: setting.duration,
                 logo: setting.logo,
                 text: setting.text,
                 subtext: setting.subtext,
@@ -287,6 +288,7 @@ private extension RemoteServices.ResponseMapper.SplashScreenSettings {
     ) -> SplashScreenSettings? {
         
         return .init(
+            duration: .init(viewDuration ?? .defaultDurationInMS) / 1_000,
             logo: _logo,
             text: _text,
             subtext: _subtext,
@@ -331,6 +333,7 @@ private extension RemoteServices.ResponseMapper.Shadow {
 
 struct CodableSplashScreenSettings: Codable {
     
+    let duration: TimeInterval
     let logo: Logo
     let text: Text
     let subtext: Text?
@@ -390,6 +393,7 @@ private extension SplashScreenSettings {
     init(codable: CodableSplashScreenSettings) {
         
         self.init(
+            duration: codable.duration,
             logo: codable._logo,
             text: codable._text,
             subtext: codable._subtext,
@@ -406,6 +410,7 @@ private extension CodableSplashScreenSettings {
     init(_ settings: SplashScreenSettings) {
         
         self.init(
+            duration: settings.duration,
             logo: settings._logo,
             text: settings._text,
             subtext: settings._subtext,
@@ -422,6 +427,7 @@ private extension SplashScreenSettings {
     var codable: CodableSplashScreenSettings {
         
         return .init(
+            duration: duration,
             logo: _logo,
             text: _text,
             subtext: _subtext,
@@ -477,6 +483,7 @@ private extension CodableSplashScreenSettings {
     var settings: SplashScreenSettings {
         
         return .init(
+            duration: duration,
             logo: _logo,
             text: _text,
             subtext: _subtext,
@@ -516,4 +523,11 @@ private extension CodableSplashScreenSettings.Shadow {
         
         return .init(color: color, opacity: opacity, radius: radius, x: x, y: y)
     }
+}
+
+// MARK: - Defaults
+
+private extension Int {
+    
+    static let defaultDurationInMS = 4_000
 }

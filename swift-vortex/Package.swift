@@ -4750,11 +4750,21 @@ private extension String {
 private extension Array where Element == Product {
     
     static let features: Self = [
+        .сreditCardMVPFeature,
         .splashScreen,
     ]
 }
 
 private extension Product {
+    
+    static let сreditCardMVPFeature = library(
+        name: .creditCardMVP,
+        targets: [
+            .creditCardMVPBackend,
+            .creditCardMVPCore,
+            .creditCardMVPUI,
+        ]
+    )
     
     static let splashScreen = library(
         name: .splashScreen,
@@ -4769,6 +4779,14 @@ private extension Product {
 private extension Array where Element == Target {
     
     static let features: Self = [
+        // сreditCardMVP
+        .сreditCardMVPBackend,
+        .сreditCardMVPBackendTests,
+        .сreditCardMVPCore,
+        .сreditCardMVPCoreTests,
+        .сreditCardMVPUI,
+        .сreditCardMVPUITests,
+        // splashScreen
         .splashScreenBackend,
         .splashScreenBackendTests,
         .splashScreenCore,
@@ -4779,6 +4797,72 @@ private extension Array where Element == Target {
 }
 
 private extension Target {
+    
+    // MARK: - CreditCardMVP
+    
+    static let сreditCardMVPBackend = target(
+        name: .creditCardMVPBackend,
+        dependencies: [
+            .remoteServices,
+            .vortexTools,
+        ],
+        path: "Sources/Feature/\(String.creditCardMVP)/Backend"
+    )
+    static let сreditCardMVPBackendTests = testTarget(
+        name: .creditCardMVPBackendTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .creditCardMVPBackend,
+            .remoteServices,
+        ],
+        path: "Tests/Feature/\(String.creditCardMVP)/Backend"
+    )
+    
+    static let сreditCardMVPCore = target(
+        name: .creditCardMVPCore,
+        dependencies: [
+            .remoteServices,
+            .vortexTools,
+        ],
+        path: "Sources/Feature/\(String.creditCardMVP)/Core"
+    )
+    static let сreditCardMVPCoreTests = testTarget(
+        name: .creditCardMVPCoreTests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .creditCardMVPCore,
+        ],
+        path: "Tests/Feature/\(String.creditCardMVP)/Core"
+    )
+    
+    static let сreditCardMVPUI = target(
+        name: .creditCardMVPUI,
+        dependencies: [
+            // external packages
+            .combineSchedulers,
+            // internal modules
+            .sharedConfigs,
+            .uiPrimitives,
+            .vortexTools,
+        ],
+        path: "Sources/Feature/\(String.creditCardMVP)/UI"
+    )
+    static let сreditCardMVPUITests = testTarget(
+        name: .creditCardMVPUITests,
+        dependencies: [
+            // external packages
+            .customDump,
+            // internal modules
+            .creditCardMVPUI,
+        ],
+        path: "Tests/Feature/\(String.creditCardMVP)/UI"
+    )
+    
+    // MARK: - Splash Screen
     
     static let splashScreenBackend = target(
         name: .splashScreenBackend,
@@ -4849,6 +4933,22 @@ private extension Target {
 
 private extension Target.Dependency {
     
+    // MARK: - CreditCardMVP
+    
+    static let creditCardMVPBackend = byName(
+        name: .creditCardMVPBackend
+    )
+    
+    static let creditCardMVPCore = byName(
+        name: .creditCardMVPCore
+    )
+    
+    static let creditCardMVPUI = byName(
+        name: .creditCardMVPUI
+    )
+    
+    // MARK: - Splash Screen
+    
     static let splashScreenBackend = byName(
         name: .splashScreenBackend
     )
@@ -4863,6 +4963,21 @@ private extension Target.Dependency {
 }
 
 private extension String {
+    
+    // MARK: - CreditCardMVP
+    
+    static let creditCardMVP = "CreditCardMVPFeature"
+    
+    static let creditCardMVPBackend = "CreditCardMVPBackend"
+    static let creditCardMVPBackendTests = "CreditCardMVPBackendTests"
+    
+    static let creditCardMVPCore = "CreditCardMVPCore"
+    static let creditCardMVPCoreTests = "CreditCardMVPCoreTests"
+    
+    static let creditCardMVPUI = "CreditCardMVPUI"
+    static let creditCardMVPUITests = "CreditCardMVPUITests"
+    
+    // MARK: - Splash Screen
     
     static let splashScreen = "SplashScreen"
     
