@@ -59,7 +59,12 @@ extension RootViewModelFactory {
     ) -> [OpenProductType] {
         
         let displayButtonsTypes: [OpenProductType] = [.card(.landing), .deposit, .account, .sticker, .collateralLoan(.showcase)]
-        let additionalItems: [OpenProductType] = [.savingsAccount, .insurance, .mortgage]
+        let additionalItems: [OpenProductType] = {
+            model.hasSavingsAccount
+            ? [.insurance, .mortgage]
+            : [.savingsAccount, .insurance, .mortgage]
+        }()
+        
         return (displayButtonsTypes + additionalItems)
     }
     

@@ -237,7 +237,7 @@ private extension SplashEventsHandler {
 
 extension SplashScreenState.Settings {
     
-    static let preview: Self = .init(image: .init("splash"), logo: .preview, text: .preview, subtext: nil, footer: .preview)
+    static let preview: Self = .init(duration: 2.0, image: .init("splash"), logo: .preview, text: .preview, subtext: nil, footer: .preview)
 }
 
 extension SplashScreenState.Settings.Logo {

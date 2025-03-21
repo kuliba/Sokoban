@@ -3,13 +3,13 @@
     "version" : 1,
     "author" : "xcode"
   },
-  "properties" : {
-    "template-rendering-intent" : "template"
-  },
   "images" : [
     {
-      "filename" : "ic16BarChart2.svg",
-      "idiom" : "universal"
+      "idiom" : "universal",
+      "filename" : "ic16BarChart2.svg"
     }
-  ]
+  ],
+  "properties" : {
+    "template-rendering-intent" : "template"
+  }
 }

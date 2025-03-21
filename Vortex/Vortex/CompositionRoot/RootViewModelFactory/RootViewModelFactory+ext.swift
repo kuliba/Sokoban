@@ -40,7 +40,7 @@ extension RootViewModelFactory {
         let featureFlags = FeatureFlags(
             c2gFlag: featureFlags.c2gFlag,
             creditCardMVPFlag: featureFlags.creditCardMVPFlag,
-            newInProgressFlag: featureFlags.newInProgressFlag,
+            processingFlag: featureFlags.processingFlag,
             paymentsTransfersFlag: .active,
             collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
             splashScreenFlag: featureFlags.splashScreenFlag,
@@ -160,7 +160,7 @@ extension RootViewModelFactory {
             createSVCardLanding: landingService, 
             getSavingsAccountInfo: getSavingsAccountInfo, 
             getSavingsAccountPrintForm: getPrintFormForSavingsAccount,
-            repeatPayment: repeatPayment,
+            repeatPayment: { [weak self] in self?.repeatPayment(processingFlag: featureFlags.processingFlag, payload: $0, closeAction: $1, completion: $2) },
             makeSVCardLandingViewModel: makeSVCardLandig,
             makeInformer: { [weak model] in
                 
@@ -271,7 +271,8 @@ extension RootViewModelFactory {
             mapResponse: LandingMapper.map
         )
         
-        let (paymentsTransfersPersonal, loadCategoriesAndNotifyPicker) = makePaymentsTransfersPersonal(c2gFlag: featureFlags.c2gFlag)
+        let rootFlags = featureFlags.rootFlags
+        let (paymentsTransfersPersonal, loadCategoriesAndNotifyPicker) = makePaymentsTransfersPersonal(rootFlags: rootFlags)
         
         let loadBannersList = makeLoadBanners()
         
@@ -296,12 +297,14 @@ extension RootViewModelFactory {
             
             performOrWaitForActive(loadCategoriesAndNotifyPicker)
         }
+                
+        let makeTemplates = makeMakeTemplates(featureFlags.processingFlag, featureFlags.paymentsTransfersFlag)
         
         let makeProductProfileViewModel = ProductProfileViewModel.make(
             with: model,
             fastPaymentsFactory: fastPaymentsFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
-            makeTemplates: makeMakeTemplates(featureFlags.paymentsTransfersFlag),
+            makeTemplates: makeTemplates,
             makePaymentsTransfersFlowManager: makePaymentsTransfersFlowManager,
             userAccountNavigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,
@@ -311,7 +314,7 @@ extension RootViewModelFactory {
             cvvPINServicesClient: cvvPINServicesClient,
             productNavigationStateManager: productNavigationStateManager,
             makeCardGuardianPanel: makeCardGuardianPanel,
-            makeRepeatPaymentNavigation: getInfoRepeatPaymentNavigation(from:activeProductID:getProduct:closeAction:),
+            makeRepeatPaymentNavigation: { [weak self] in self?.getInfoRepeatPaymentNavigation(processingFlag: featureFlags.processingFlag, from: $0, activeProductID: $1, getProduct: $2, closeAction: $3) },
             makeSubscriptionsViewModel: makeSubscriptionsViewModel,
             updateInfoStatusFlag: updateInfoStatusFlag,
             makePaymentProviderPickerFlowModel: makeSegmentedPaymentProviderPickerFlowModel,
@@ -319,7 +322,8 @@ extension RootViewModelFactory {
             makeServicePaymentBinder: makeServicePaymentBinder,
             makeOpenNewProductButtons: { _ in [] },
             operationDetailFactory: makeOperationDetailFactory(),
-            makePaymentsTransfers: { paymentsTransfersSwitcher }
+            makePaymentsTransfers: { paymentsTransfersSwitcher },
+            makePaymentsMeToMeViewModel: { [makePaymentsMeToMeViewModel] in makePaymentsMeToMeViewModel(featureFlags.processingFlag, $0) }
         )
         
         let makeProductProfileByID: (ProductData.ID, @escaping () -> Void) -> ProductProfileViewModel? = { [weak self] id, dismiss in
@@ -422,7 +426,7 @@ extension RootViewModelFactory {
             bannersBox: bannersBox,
             splash: splash,
             makeProductProfileViewModel: makeProductProfileViewModel,
-            makeTemplates: makeMakeTemplates(featureFlags.paymentsTransfersFlag),
+            makeTemplates: makeTemplates,
             fastPaymentsFactory: fastPaymentsFactory,
             stickerViewFactory: stickerViewFactory,
             makeUtilitiesViewModel: makeUtilitiesViewModel,
@@ -448,7 +452,8 @@ extension RootViewModelFactory {
                 )
             },
             marketShowcaseBinder: marketShowcaseBinder,
-            makePaymentsTransfers: { paymentsTransfersSwitcher }
+            makePaymentsTransfers: { paymentsTransfersSwitcher },
+            makePaymentsMeToMeViewModel: { [makePaymentsMeToMeViewModel] in makePaymentsMeToMeViewModel(featureFlags.processingFlag, $0) }
         )
         
         let marketBinder = MarketShowcaseToRootViewModelBinder(
@@ -518,7 +523,7 @@ extension FeatureFlags {
         .init(
             c2gFlag: c2gFlag,
             orderCardFlag: orderCardFlag,
-            newInProgressFlag: newInProgressFlag
+            processingFlag: processingFlag
         )
     }
 }
@@ -641,7 +646,8 @@ extension ProductProfileViewModel {
         makeServicePaymentBinder: @escaping PaymentsTransfersFactory.MakeServicePaymentBinder,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
         operationDetailFactory: OperationDetailFactory,
-        makePaymentsTransfers: @escaping PaymentsTransfersFactory.MakePaymentsTransfers
+        makePaymentsTransfers: @escaping PaymentsTransfersFactory.MakePaymentsTransfers,
+        makePaymentsMeToMeViewModel: @escaping MakePaymentsMeToMeViewModel
     ) -> MakeProductProfileViewModel {
         
         return { product, rootView, filterState, dismissAction in
@@ -668,7 +674,8 @@ extension ProductProfileViewModel {
                 makeServicePaymentBinder: makeServicePaymentBinder,
                 makeOpenNewProductButtons: makeOpenNewProductButtons,
                 operationDetailFactory: operationDetailFactory,
-                makePaymentsTransfers: makePaymentsTransfers
+                makePaymentsTransfers: makePaymentsTransfers,
+                makePaymentsMeToMeViewModel: makePaymentsMeToMeViewModel
             )
             
             let makeAlertViewModels = PaymentsTransfersFactory.MakeAlertViewModels(
@@ -689,7 +696,8 @@ extension ProductProfileViewModel {
                 makeServicePaymentBinder: makeServicePaymentBinder,
                 makeTemplates: makeTemplates,
                 makeUtilitiesViewModel: makeUtilitiesViewModel,
-                makePaymentsTransfers: makePaymentsTransfers
+                makePaymentsTransfers: makePaymentsTransfers,
+                makePaymentsMeToMeViewModel: makePaymentsMeToMeViewModel
             )
             
             let makeProductProfileViewModelFactory: ProductProfileViewModelFactory = .init(
@@ -717,6 +725,7 @@ extension ProductProfileViewModel {
                 makeCardGuardianPanel: makeCardGuardianPanel,
                 makeRepeatPaymentNavigation: makeRepeatPaymentNavigation,
                 makeSubscriptionsViewModel: makeSubscriptionsViewModel,
+                makePaymentsMeToMeViewModel: makePaymentsMeToMeViewModel,
                 model: model
             )
             
@@ -803,7 +812,8 @@ private extension RootViewModelFactory {
         bannersBinder: BannersBinder,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
         marketShowcaseBinder: MarketShowcaseDomain.Binder,
-        makePaymentsTransfers: @escaping PaymentsTransfersFactory.MakePaymentsTransfers
+        makePaymentsTransfers: @escaping PaymentsTransfersFactory.MakePaymentsTransfers,
+        makePaymentsMeToMeViewModel: @escaping MakePaymentsMeToMeViewModel
     ) -> RootViewModel {
         
         let makeAlertViewModels: PaymentsTransfersFactory.MakeAlertViewModels = .init(
@@ -823,7 +833,8 @@ private extension RootViewModelFactory {
             makeServicePaymentBinder: makeServicePaymentBinder,
             makeTemplates: makeTemplates,
             makeUtilitiesViewModel: makeUtilitiesViewModel, 
-            makePaymentsTransfers: makePaymentsTransfers
+            makePaymentsTransfers: makePaymentsTransfers,
+            makePaymentsMeToMeViewModel: makePaymentsMeToMeViewModel
         )
                 
         let sections = makeMainViewModelSections(

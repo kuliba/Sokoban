@@ -4,8 +4,8 @@
   },
   "images" : [
     {
-      "filename" : "ic24Abroad.svg",
-      "idiom" : "universal"
+      "idiom" : "universal",
+      "filename" : "ic24Abroad.svg"
     }
   ],
   "info" : {

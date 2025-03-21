@@ -35,7 +35,7 @@ extension Payments.ParameterSuccessStatus.Status {
     var icon: Image {
         
         switch self {
-        case .success: return .ic48Check
+        case .success, .processing: return .ic48Check
         case .accepted: return .ic48Clock
         case .transfer: return .ic48UploadToAccount
         case .suspended: return .ic48Clock
@@ -46,7 +46,7 @@ extension Payments.ParameterSuccessStatus.Status {
     var color: Color {
         
         switch self {
-        case .success: return .systemColorActive
+        case .success, .processing: return .systemColorActive
         case .accepted: return .systemColorWarning
         case .transfer: return .systemColorWarning
         case .suspended: return .systemColorWarning

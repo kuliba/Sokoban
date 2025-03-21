@@ -1,14 +1,14 @@
 {
-  "images" : [
-    {
-      "filename" : "ic24Rewind.svg",
-      "idiom" : "universal"
-    }
-  ],
   "info" : {
     "version" : 1,
     "author" : "xcode"
   },
+  "images" : [
+    {
+      "idiom" : "universal",
+      "filename" : "ic24Rewind.svg"
+    }
+  ],
   "properties" : {
     "template-rendering-intent" : "template"
   }

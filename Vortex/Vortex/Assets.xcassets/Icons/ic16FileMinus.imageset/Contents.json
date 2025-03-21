@@ -1,15 +1,15 @@
 {
-  "properties" : {
-    "template-rendering-intent" : "template"
-  },
-  "images" : [
-    {
-      "filename" : "ic16FileMinus.svg",
-      "idiom" : "universal"
-    }
-  ],
   "info" : {
     "version" : 1,
     "author" : "xcode"
+  },
+  "images" : [
+    {
+      "idiom" : "universal",
+      "filename" : "ic16FileMinus.svg"
+    }
+  ],
+  "properties" : {
+    "template-rendering-intent" : "template"
   }
 }
