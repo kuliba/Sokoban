@@ -1,11 +1,21 @@
 //
 //  EffectHandlerTests.swift
-//  
+//
 //
 //  Created by Igor Malyarov on 21.03.2025.
 //
 
-final class EffectHandler {}
+final class EffectHandler<OTP> {
+    
+    private let otpWitness: OTPWitness
+    
+    init(otpWitness: @escaping OTPWitness) {
+        
+        self.otpWitness = otpWitness
+    }
+    
+    typealias OTPWitness = (OTP) -> ((String) -> Void)?
+}
 
 extension EffectHandler {
     
@@ -14,7 +24,8 @@ extension EffectHandler {
         _ dispatch: @escaping Dispatch
     ) {
         switch effect {
-            
+        case let .notifyOTP(otp, message):
+            otpWitness(otp)?(message)
         }
     }
 }
@@ -24,44 +35,54 @@ extension EffectHandler {
     typealias Dispatch = (Event) -> Void
     
     typealias Event = CreditCardMVPCoreTests.Event
-    typealias Effect = CreditCardMVPCoreTests.Effect
+    typealias Effect = CreditCardMVPCoreTests.Effect<OTP>
 }
 
 import XCTest
 
 final class EffectHandlerTests: XCTestCase {
-
+    
     // MARK: - init
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, load) = makeSUT()
+        let (sut, otp) = makeSUT()
         
-        XCTAssertEqual(load.callCount, 0)
+        XCTAssertEqual(otp.callCount, 0)
         XCTAssertNotNil(sut)
     }
     
-    // MARK: - ???
-
+    // MARK: - notifyOTP
+    
+    func test_shouldNotifyOTP_onNotifyOTP() {
+        
+        let message = anyMessage()
+        let (sut, otp) = makeSUT()
+        
+        sut.handleEffect(.notifyOTP(otp, message)) { _ in }
+        
+        XCTAssertNoDiff(otp.payloads, [message])
+    }
+    
     // MARK: - Helpers
     
-    private typealias SUT = EffectHandler
-    private typealias LoadSpy = Spy<Void, Void>
+    private typealias SUT = EffectHandler<OTP>
+    private typealias OTP = CallSpy<String, Void>
     
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
-        load: LoadSpy
+        otp: OTP
     ) {
-        let load = LoadSpy()
-        let sut = SUT()//load: load.process(completion:))
+        let otp = OTP(stubs: [()])
+        let sut = SUT(otpWitness: { otp in otp.call })
         
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(load, file: file, line: line)
+        trackForMemoryLeaks(otp, file: file, line: line)
         
-        return (sut, load)
+        return (sut, otp)
     }
     
     private func expect(
