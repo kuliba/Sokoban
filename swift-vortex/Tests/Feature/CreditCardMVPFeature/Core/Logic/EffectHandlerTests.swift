@@ -5,7 +5,15 @@
 //  Created by Igor Malyarov on 21.03.2025.
 //
 
-final class EffectHandler<OrderSuccess, OTP> {
+/// A type that provides a verification code (e.g., OTP).
+public protocol VerificationCodeProviding {
+    
+    /// The verification code as a string (e.g., OTP).
+    var verificationCode: String { get }
+}
+
+final class EffectHandler<OrderSuccess, OTP, ConfirmApplicationPayload>
+where ConfirmApplicationPayload: VerificationCodeProviding {
     
     private let confirmApplication: ConfirmApplication
     private let otpWitness: OTPWitness
@@ -23,10 +31,6 @@ final class EffectHandler<OrderSuccess, OTP> {
     
     typealias OTPWitness = (OTP) -> (String) -> Void
 }
-
-struct ConfirmApplicationPayload {}
-
-extension ConfirmApplicationPayload: Equatable {}
 
 extension EffectHandler {
     
@@ -49,7 +53,7 @@ extension EffectHandler {
     typealias Dispatch = (Event) -> Void
     
     typealias Event = CreditCardMVPCoreTests.Event<OrderSuccess>
-    typealias Effect = CreditCardMVPCoreTests.Effect<OTP>
+    typealias Effect = CreditCardMVPCoreTests.Effect<OTP, ConfirmApplicationPayload>
 }
 
 import XCTest
@@ -71,7 +75,7 @@ final class EffectHandlerTests: XCTestCase {
     
     func test_confirmApplication_shouldCallConfirmApplicationWithPayload() {
         
-        let payload = makeConfirmApplicationPayload()
+        let payload = makePayload()
         let (sut, confirmApplication, _) = makeSUT()
         
         sut.handleEffect(.confirmApplication(payload)) { _ in }
@@ -93,8 +97,8 @@ final class EffectHandlerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = EffectHandler<OrderSuccess, OTP>
-    private typealias ConfirmApplication = Spy<ConfirmApplicationPayload, Void>
+    private typealias SUT = EffectHandler<OrderSuccess, OTP, Payload>
+    private typealias ConfirmApplication = Spy<Payload, Void>
     private typealias OTP = CallSpy<String, Void>
     
     private func makeSUT(
@@ -131,10 +135,18 @@ final class EffectHandlerTests: XCTestCase {
         return .init(value: value)
     }
     
-    private func makeConfirmApplicationPayload(
-    ) -> ConfirmApplicationPayload {
+    private struct Payload: Equatable, VerificationCodeProviding {
         
-        return .init()
+        let value: String
+        
+        var verificationCode: String { value }
+    }
+    
+    private func makePayload(
+        _ value: String = anyMessage()
+    ) -> Payload {
+        
+        return .init(value: value)
     }
     
     private func expect(
