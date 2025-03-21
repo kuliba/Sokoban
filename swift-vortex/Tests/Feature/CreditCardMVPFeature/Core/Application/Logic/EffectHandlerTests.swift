@@ -100,7 +100,7 @@ final class EffectHandlerTests: LogicTests {
         
         XCTAssertEqual(loadOTP.callCount, 1)
     }
-
+    
     // TODO: add test for Notify!!
     
     func test_loadOTP_shouldDeliverInformerFailure_onLoadOTPInformerFailure() {
@@ -125,6 +125,17 @@ final class EffectHandlerTests: LogicTests {
         }
     }
     
+    func test_loadOTP_shouldDeliverOTP_onLoadOTPSuccess() {
+        
+        let otp = OTP()
+        let (sut, _, loadOTP, _) = makeSUT()
+        
+        expect(sut, with: .loadOTP, toDeliver: makeLoadOTPSuccess(otp)) {
+            
+            loadOTP.complete(with: .success(otp))
+        }
+    }
+    
     // MARK: - notifyOTP
     
     func test_notifyOTP_shouldCallNotifyOTP() {
@@ -143,6 +154,7 @@ final class EffectHandlerTests: LogicTests {
     private typealias Application = Spy<ApplicationPayload, Event.ApplicationResult>
     private typealias LoadOTPSpy = Spy<Void, Event.LoadedOTPResult>
     private typealias OTP = CallSpy<String, Void>
+    private typealias Event = CreditCardMVPCore.Event<ApplicationSuccess, OTP>
     private typealias Effect = CreditCardMVPCore.Effect<ApplicationPayload, OTP>
     
     private func makeSUT(
@@ -178,6 +190,71 @@ final class EffectHandlerTests: LogicTests {
         return .apply(payload ?? makePayload())
     }
     
+    private func makeApplicationResultFailure(
+        message: String = anyMessage(),
+        type: Event.ApplicationFailure
+    ) -> Event {
+        
+        return .applicationResult(.failure(.init(
+            message: message,
+            type: type
+        )))
+    }
+    
+    private func makeApplicationResultSuccess(
+        success: ApplicationSuccess? = nil
+    ) -> Event {
+        
+        return .applicationResult(.success(success ?? makeApplicationSuccess()))
+    }
+    
+    private func makeLoadOTPFailure(
+        message: String = anyMessage(),
+        type: Event.LoadOTPFailure
+    ) -> Event {
+        
+        return .loadedOTP(.failure(.init(
+            message: message,
+            type: type
+        )))
+    }
+    
+    private func makeLoadOTPSuccess(
+        _ otp: OTP? = nil
+    ) -> Event {
+        
+        return .loadedOTP(.success(otp ?? .init()))
+    }
+    
+    private func equatable(
+        _ event: Event
+    ) -> EquatableEvent {
+        
+        switch event {
+        case let .applicationResult(applicationResult):
+            return .applicationResult(applicationResult)
+            
+        case .continue:
+            return .continue
+            
+        case let .loadedOTP(result):
+            switch result {
+            case let .failure(failure):
+                return .loadedOTP(.failure(failure))
+                
+            case let .success(otp):
+                return .loadedOTP(.success(.init(otp)))
+            }
+        }
+    }
+    
+    private enum EquatableEvent: Equatable {
+        
+        case applicationResult(Event.ApplicationResult)
+        case `continue`
+        case loadedOTP(Result<ObjectIdentifier, LoadFailure<Event.LoadOTPFailure>>)
+    }
+    
     private func expect(
         _ sut: SUT,
         with effect: Effect,
@@ -198,7 +275,7 @@ final class EffectHandlerTests: LogicTests {
         
         action()
         
-        XCTAssertNoDiff(events, expectedEvents, file: file, line: line)
+        XCTAssertNoDiff(events.map(equatable), expectedEvents.map(equatable), file: file, line: line)
         
         wait(for: [exp], timeout: 1)
     }

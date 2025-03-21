@@ -291,6 +291,7 @@ final class ReducerTests: LogicTests {
     
     private typealias SUT = Reducer<ApplicationPayload, ApplicationSuccess, OTP>
     private typealias State = CreditCardMVPCore.State<ApplicationSuccess, OTP>
+    private typealias Event = CreditCardMVPCore.Event<ApplicationSuccess, OTP>
     private typealias Effect = CreditCardMVPCore.Effect<ApplicationPayload, OTP>
     private typealias MakePayloadSpy = CallSpy<State, ApplicationPayload?>
     
@@ -341,6 +342,24 @@ final class ReducerTests: LogicTests {
     ) -> State {
         
         return .init(applicationResult: applicationResult, otp: otp)
+    }
+    
+    private func makeApplicationResultFailure(
+        message: String = anyMessage(),
+        type: Event.ApplicationFailure
+    ) -> Event {
+        
+        return .applicationResult(.failure(.init(
+            message: message,
+            type: type
+        )))
+    }
+    
+    private func makeApplicationResultSuccess(
+        success: ApplicationSuccess? = nil
+    ) -> Event {
+        
+        return .applicationResult(.success(success ?? makeApplicationSuccess()))
     }
     
     @discardableResult

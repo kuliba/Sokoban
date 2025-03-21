@@ -61,6 +61,6 @@ public extension EffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = CreditCardMVPCore.Event<ApplicationSuccess>
+    typealias Event = CreditCardMVPCore.Event<ApplicationSuccess, OTP>
     typealias Effect = CreditCardMVPCore.Effect<ApplicationPayload, OTP>
 }

@@ -52,7 +52,7 @@ public extension Reducer {
 public extension Reducer {
     
     typealias State = CreditCardMVPCore.State<ApplicationSuccess, OTP>
-    typealias Event = CreditCardMVPCore.Event<ApplicationSuccess>
+    typealias Event = CreditCardMVPCore.Event<ApplicationSuccess, OTP>
     typealias Effect = CreditCardMVPCore.Effect<ApplicationPayload, OTP>
 }
 

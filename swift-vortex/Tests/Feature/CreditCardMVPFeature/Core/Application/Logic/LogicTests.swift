@@ -10,8 +10,6 @@ import XCTest
 
 class LogicTests: XCTestCase {
     
-    typealias Event = CreditCardMVPCore.Event<ApplicationSuccess>
-    
     struct ApplicationSuccess: Equatable {
         
         let value: String
@@ -36,34 +34,5 @@ class LogicTests: XCTestCase {
     ) -> ApplicationPayload {
         
         return .init(value: value)
-    }
-    
-    func makeApplicationResultFailure(
-        message: String = anyMessage(),
-        type: Event.ApplicationFailure
-    ) -> Event {
-        
-        return .applicationResult(.failure(.init(
-            message: message,
-            type: type
-        )))
-    }
-    
-    func makeApplicationResultSuccess(
-        success: ApplicationSuccess? = nil
-    ) -> Event {
-        
-        return .applicationResult(.success(success ?? makeApplicationSuccess()))
-    }
-    
-    func makeLoadOTPFailure(
-        message: String = anyMessage(),
-        type: Event.LoadOTPFailure
-    ) -> Event {
-        
-        return .loadedOTP(.failure(.init(
-            message: message,
-            type: type
-        )))
     }
 }
