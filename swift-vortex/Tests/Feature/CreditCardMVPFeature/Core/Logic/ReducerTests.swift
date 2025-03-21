@@ -5,20 +5,27 @@
 //  Created by Igor Malyarov on 21.03.2025.
 //
 
-struct LoadFailure: Error, Equatable {
+struct LoadFailure<FailureType>: Error {
     
     let message: String
     let type: FailureType
-    
-    enum FailureType {
-        
-        case alert, informer, otp
-    }
 }
+
+extension LoadFailure: Equatable where FailureType: Equatable {}
 
 struct State<OTP> {
     
     let otp: OTP?
+    var orderResult: OrderResult?
+    
+    typealias OrderResult = Result<OK, LoadFailure<FailureType>>
+    
+    struct OK: Equatable {}
+    
+    enum FailureType {
+        
+        case alert, informer
+    }
 }
 
 extension State: Equatable where OTP: Equatable {}
@@ -27,8 +34,14 @@ enum Event: Equatable {
     
     case orderResult(OrderResult)
     
-    typealias OrderResult = Result<OK, LoadFailure>
+    typealias OrderResult = Result<OK, LoadFailure<FailureType>>
+    
     struct OK: Equatable {}
+    
+    enum FailureType {
+        
+        case alert, informer, otp
+    }
 }
 
 enum Effect<OTP> {
@@ -77,9 +90,17 @@ private extension Reducer {
         case let .failure(failure):
             switch failure.type {
             case .alert:
-                break
+                state.orderResult = .failure(.init(
+                    message: failure.message,
+                    type: .alert
+                ))
+
             case .informer:
-                break
+                state.orderResult = .failure(.init(
+                    message: failure.message,
+                    type: .informer
+                ))
+                
             case .otp:
                 effect = state.otp.map { .notifyOTP($0, failure.message) }
             }
@@ -94,11 +115,118 @@ import XCTest
 
 final class ReducerTests: XCTestCase {
     
-    // MARK: - orderResult
+    // MARK: - orderResult: alert failure
+    
+    func test_orderResult_shouldChangeState_onAlertFailure_noOTP() {
+        
+        let state = makeState(otp: nil)
+        let message = anyMessage()
+        let event = makeOrderResultFailure(message: message, type: .alert)
+        
+        assert(state, event: event) {
+            
+            $0.orderResult = .failure(.init(message: message, type: .alert))
+        }
+    }
+    
+    func test_orderResult_shouldNotDeliverEffect_onAlertFailure_noOTP() {
+        
+        let state = makeState(otp: nil)
+        let message = anyMessage()
+        let event = makeOrderResultFailure(message: message, type: .alert)
+        
+        assert(state, event: event, delivers: nil)
+    }
+    
+    func test_orderResult_shouldChangeState_onAlertFailure() {
+        
+        let state = makeState(otp: makeOTP())
+        let message = anyMessage()
+        let event = makeOrderResultFailure(message: message, type: .alert)
+        
+        assert(state, event: event) {
+            
+            $0.orderResult = .failure(.init(message: message, type: .alert))
+        }
+    }
+    
+    func test_orderResult_shouldNotDeliverEffect_onAlertFailure() {
+        
+        let state = makeState(otp: makeOTP())
+        let message = anyMessage()
+        let event = makeOrderResultFailure(message: message, type: .alert)
+        
+        assert(state, event: event, delivers: nil)
+    }
+    
+    // MARK: - orderResult: informer failure
+    
+    func test_orderResult_shouldChangeState_onInformerFailure_noOTP() {
+        
+        let state = makeState(otp: nil)
+        let message = anyMessage()
+        let event = makeOrderResultFailure(message: message, type: .informer)
+        
+        assert(state, event: event) {
+            
+            $0.orderResult = .failure(.init(message: message, type: .informer))
+        }
+    }
+    
+    func test_orderResult_shouldNotDeliverEffect_onInformerFailure_noOTP() {
+        
+        let state = makeState(otp: nil)
+        let message = anyMessage()
+        let event = makeOrderResultFailure(message: message, type: .informer)
+        
+        assert(state, event: event, delivers: nil)
+    }
+    
+    func test_orderResult_shouldChangeState_onInformerFailure() {
+        
+        let state = makeState(otp: makeOTP())
+        let message = anyMessage()
+        let event = makeOrderResultFailure(message: message, type: .informer)
+        
+        assert(state, event: event) {
+            
+            $0.orderResult = .failure(.init(message: message, type: .informer))
+        }
+    }
+    
+    func test_orderResult_shouldNotDeliverEffect_onInformerFailure() {
+        
+        let state = makeState(otp: makeOTP())
+        let message = anyMessage()
+        let event = makeOrderResultFailure(message: message, type: .informer)
+        
+        assert(state, event: event, delivers: nil)
+    }
+    
+    // MARK: - orderResult: otp failure
+    
+    func test_orderResult_shouldNotChangeState_onOTPFailure_noOTP() {
+        
+        let state = makeState(otp: nil)
+        let message = anyMessage()
+        let event = makeOrderResultFailure(message: message, type: .otp)
+        
+        assert(state, event: event)
+    }
+    
+    func test_orderResult_shouldNotDeliverEffect_onOTPFailure_noOTP() {
+        
+        let state = makeState(otp: nil)
+        let message = anyMessage()
+        let event = makeOrderResultFailure(message: message, type: .otp)
+        
+        assert(state, event: event, delivers: nil)
+    }
     
     func test_orderResult_shouldNotChangeState_onOTPFailure() {
         
-        let state = makeState()
+        let otp = makeOTP()
+        let state = makeState(otp: otp)
         let message = anyMessage()
         let event = makeOrderResultFailure(message: message, type: .otp)
         
@@ -131,10 +259,11 @@ final class ReducerTests: XCTestCase {
     }
     
     private func makeState(
-        otp: OTP? = nil
+        otp: OTP? = nil,
+        orderResult: SUT.State.OrderResult? = nil
     ) -> SUT.State {
         
-        return .init(otp: otp ?? makeOTP())
+        return .init(otp: otp, orderResult: orderResult)
     }
     
     private struct OTP: Equatable {
@@ -151,7 +280,7 @@ final class ReducerTests: XCTestCase {
     
     private func makeOrderResultFailure(
         message: String = anyMessage(),
-        type: LoadFailure.FailureType
+        type: SUT.Event.FailureType
     ) -> SUT.Event {
         
         return .orderResult(.failure(.init(
