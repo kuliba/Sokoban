@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import IQKeyboardManagerSwift
 import SwiftUI
 import ToggleComponent
 
@@ -269,21 +268,6 @@ struct GetCollateralLandingCalculatorView<InformerPayload>: View where InformerP
         AmountTextField(state: state, config: config, event: domainEvent)
             .padding(.leading, config.calculator.root.layouts.contentLeadingPadding)
             .fixedSize()
-            .onAppear {
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-                    
-                    IQKeyboardManager.shared.enable = true
-                    IQKeyboardManager.shared.enableAutoToolbar = true
-                    IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
-                    IQKeyboardManager.shared.keyboardDistanceFromTextField = 30
-                }
-            }
-            .onDisappear {
-                
-                IQKeyboardManager.shared.enable = false
-                IQKeyboardManager.shared.enableAutoToolbar = false
-            }
             .onChange(of: state.formattedDesiredAmount) {
                 
                 if let amount = $0 {

@@ -79,15 +79,3 @@ extension GetShowcaseDomain.State {
         return nil
     }
 }
-
-//
-//public extension GetShowcaseDomain.State {
-//    
-//    var showcase: GetShowcaseDomain.ShowCase? {
-//        
-//        guard case let .success(showcase) = result
-//        else { return nil }
-//        
-//        return showcase
-//    }
-//}
