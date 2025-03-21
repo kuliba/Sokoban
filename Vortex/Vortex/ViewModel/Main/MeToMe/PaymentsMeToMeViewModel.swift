@@ -21,7 +21,8 @@ class PaymentsMeToMeViewModel: ObservableObject {
 
     let swapViewModel: ProductsSwapView.ViewModel
     let paymentsAmount: PaymentsAmountView.ViewModel
-        
+    let successViewModelFactory: SuccessViewModelFactory
+    
     var title: String
     let mode: Mode
     
@@ -38,6 +39,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
         _ model: Model,
         swapViewModel: ProductsSwapView.ViewModel,
         paymentsAmount: PaymentsAmountView.ViewModel,
+        successViewModelFactory: SuccessViewModelFactory,
         title: String,
         mode: Mode = .general,
         state: State = .normal,
@@ -48,6 +50,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
         self.model = model
         self.swapViewModel = swapViewModel
         self.paymentsAmount = paymentsAmount
+        self.successViewModelFactory = successViewModelFactory
         self.title = title
         self.mode = mode
         self.state = state
@@ -62,7 +65,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
         LoggerAgent.shared.log(level: .debug, category: .ui, message: "PaymentsMeToMeViewModel deinitialized")
     }
     
-    convenience init?(_ model: Model, mode: Mode) {
+    convenience init?(_ model: Model, mode: Mode, successViewModelFactory: SuccessViewModelFactory) {
         
         guard let swapViewModel = ProductsSwapView.ViewModel(model, mode: mode) else {
             return nil
@@ -72,10 +75,26 @@ class PaymentsMeToMeViewModel: ObservableObject {
         
         switch mode {
         case let .templatePayment(_, title):
-            self.init(model, swapViewModel: swapViewModel, paymentsAmount: amountViewModel, title: title, mode: mode, state: .normal)
+            self.init(
+                model,
+                swapViewModel: swapViewModel,
+                paymentsAmount: amountViewModel,
+                successViewModelFactory: successViewModelFactory,
+                title: title,
+                mode: mode,
+                state: .normal
+            )
             
         default:
-            self.init(model, swapViewModel: swapViewModel, paymentsAmount: amountViewModel, title: "Между своими", mode: mode, state: .normal)
+            self.init(
+                model,
+                swapViewModel: swapViewModel,
+                paymentsAmount: amountViewModel,
+                successViewModelFactory: successViewModelFactory,
+                title: "Между своими",
+                mode: mode,
+                state: .normal
+            )
         }
         
         bind()
@@ -144,20 +163,17 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         case let .closeAccount(productData, balance):
                             
                             let currency = Currency(description: productData.currency)
-                            if let success = Payments.Success(
-                                model: model,
-                                mode: .closeAccount(
-                                    productData.id,
-                                    currency,
-                                    balance: balance,
-                                    transferData
-                                ),
-                                amountFormatter: model.amountFormatted(amount:currencyCode:style:)
-                            ) {
-                                
-                                let successViewModel = PaymentsSuccessViewModel(paymentSuccess: success, model)
+                            let payload: CloseAccountPayload.Payload = .init(
+                                balance: balance,
+                                currency: currency,
+                                productDataID: productData.id,
+                                transferData: transferData
+                            )
+                            if let successViewModel = successViewModelFactory.makeCloseAccountPaymentsSuccessViewModel(payload) {
                                 self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
-                                makeInformer(closeAccount: true)
+                                if transferData.documentStatus == .complete {
+                                    makeInformer(closeAccount: true)
+                                }
                             }
                             
                         default:

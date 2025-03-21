@@ -74,7 +74,7 @@
 			<key>Title</key>
 			<string>Ассинхрон</string>
 			<key>Key</key>
-			<string>newInProgress</string>
+			<string>processing</string>
 		</dict>
 	</array>
 </dict>

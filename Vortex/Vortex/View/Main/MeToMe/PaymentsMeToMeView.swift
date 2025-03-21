@@ -102,44 +102,64 @@ struct PaymentsMeToMeView_Previews: PreviewProvider {
 
         Group {
             
-            preview(.init(
-                .emptyMock,
-                swapViewModel: .init(
-                    model: .emptyMock,
-                    items: [.sample2, .sampleMe2MeCollapsed],
-                    divider: .sample),
-                paymentsAmount: .init(
+            preview(
+                .init(
                     .emptyMock,
-                    title: "Сумма перевода",
-                    textField: .init(150, currencySymbol: "₽"),
-                    transferButton: .active(title: "Перевести", action: {}),
-                    info: .button(title: "Без комиссии", icon: .ic16Info, action: {})), title: "Между своими"))
+                    swapViewModel: .init(
+                        model: .emptyMock,
+                        items: [.sample2, .sampleMe2MeCollapsed],
+                        divider: .sample),
+                    paymentsAmount: .init(
+                        .emptyMock,
+                        title: "Сумма перевода",
+                        textField: .init(150, currencySymbol: "₽"),
+                        transferButton: .active(title: "Перевести", action: {}),
+                        info: .button(
+                            title: "Без комиссии",
+                            icon: .ic16Info,
+                            action: {
+                            })
+                    ),
+                    successViewModelFactory: .previewSuccess,
+                    title: "Между своими"
+                )
+            )
             
-            preview(.init(
-                .emptyMock,
-                swapViewModel: .init(
-                    model: .emptyMock,
-                    items: [.sampleMe2MeCollapsed, .sample2],
-                    divider: .sample),
-                paymentsAmount: .init(
+            preview(
+                .init(
                     .emptyMock,
-                    title: "Сумма перевода",
-                    textField: .init(150, currencySymbol: "₽"),
-                    transferButton: .active(title: "Перевести", action: {}),
-                    info: .button(title: "Без комиссии", icon: .ic16Info, action: {})), title: "Между своими"))
+                    swapViewModel: .init(
+                        model: .emptyMock,
+                        items: [.sampleMe2MeCollapsed, .sample2],
+                        divider: .sample),
+                    paymentsAmount: .init(
+                        .emptyMock,
+                        title: "Сумма перевода",
+                        textField: .init(150, currencySymbol: "₽"),
+                        transferButton: .active(title: "Перевести", action: {}),
+                        info: .button(title: "Без комиссии", icon: .ic16Info, action: {})),
+                    successViewModelFactory: .previewSuccess,
+                    title: "Между своими"
+                )
+            )
             
-            preview(.init(
-                .emptyMock,
-                swapViewModel: .init(
-                    model: .emptyMock,
-                    items: [.sampleMe2MeCollapsed, .sample3],
-                    divider: .sample),
-                paymentsAmount: .init(
+            preview(
+                .init(
                     .emptyMock,
-                    title: "Сумма перевода",
-                    textField: .init(0, currencySymbol: "₽"),
-                    transferButton: .active(title: "Перевести", action: {}),
-                    info: .button(title: "Без комиссии", icon: .ic16Info, action: {})), title: "Между своими"))
+                    swapViewModel: .init(
+                        model: .emptyMock,
+                        items: [.sampleMe2MeCollapsed, .sample3],
+                        divider: .sample),
+                    paymentsAmount: .init(
+                        .emptyMock,
+                        title: "Сумма перевода",
+                        textField: .init(0, currencySymbol: "₽"),
+                        transferButton: .active(title: "Перевести", action: {}),
+                        info: .button(title: "Без комиссии", icon: .ic16Info, action: {})),
+                    successViewModelFactory: .previewSuccess,
+                    title: "Между своими"
+                )
+            )
         }
         .previewLayout(.sizeThatFits)
         .padding(.top)

@@ -57,6 +57,8 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalContentTests: XCTe
     
     private func makeSUT(
         c2gFlag: C2GFlag = .inactive, // TODO: add tests assertions for active flag
+        orderCardFlag: OrderCardFlag = .inactive,
+        processingFlag: ProcessingFlag = .inactive,
         mapScanResult: @escaping RootViewModelFactory.MapScanResult = { _, completion in completion(.unknown) },
         makeQRResolve: @escaping RootViewModelFactory.MakeResolveQR = { _ in { _ in .unknown }},
         file: StaticString = #file,
@@ -79,8 +81,13 @@ final class RootViewModelFactory_makePaymentsTransfersPersonalContentTests: XCTe
             scanner: QRScannerViewModelSpy(),
             schedulers: .immediate
         )
-        let sut = factory.makePaymentsTransfersPersonalContent(
+        let rootFlags: RootViewModelFactory.RootFlags = .init(
             c2gFlag: c2gFlag,
+            orderCardFlag: orderCardFlag,
+            processingFlag: processingFlag
+        )
+        let sut = factory.makePaymentsTransfersPersonalContent(
+            rootFlags: rootFlags,
             .init(
                 loadCategories: loadCategoriesSpy.process(completion:),
                 reloadCategories: reloadCategoriesSpy.process(_:completion:),

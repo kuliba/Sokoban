@@ -27,7 +27,7 @@ extension FeatureFlagsLoader {
         return .init(
             c2gFlag: loadC2GFlag(),
             creditCardMVPFlag: loadСreditCardMVPFlag(),
-            newInProgressFlag: loadNewInProgress(),
+            processingFlag: loadProcessingFlag(),
             paymentsTransfersFlag: loadPaymentsTransfersFlag(),
             collateralLoanLandingFlag: loadCollateralLoanLandingFlag(),
             splashScreenFlag: loadSplashScreenFlag(),
@@ -40,7 +40,7 @@ enum FeatureFlagKey: String {
     
     case c2gFlag = "c2g"
     case creditCardMVPFlag = "creditCardMVP"
-    case newInProgress = "newInProgress"
+    case processingFlag = "processing"
     case paymentsTransfersFlag = "payments_transfers"
     case collateralLoanLandingFlag = "collateralLoanLanding"
     case splashScreenFlag = "splashScreen"
@@ -65,9 +65,9 @@ private extension FeatureFlagsLoader {
         }
     }
         
-    func loadNewInProgress() -> NewInProgressFlag {
+    func loadProcessingFlag() -> ProcessingFlag {
         
-        switch retrieve(.newInProgress) {
+        switch retrieve(.processingFlag) {
         case "1":  return .active
         default:   return .inactive
         }

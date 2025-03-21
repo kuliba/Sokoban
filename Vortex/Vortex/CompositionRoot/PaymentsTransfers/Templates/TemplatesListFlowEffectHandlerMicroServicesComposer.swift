@@ -12,21 +12,25 @@ final class TemplatesListFlowEffectHandlerMicroServicesComposer<Legacy, V1> {
     
     private let initiatePayment: InitiatePayment
     private let makeLegacyPayment: MakeLegacyPayment
+    private let makeTemplatesListViewModel: MakeTemplatesListViewModel
     private let paymentsTransfersFlag: PaymentsTransfersFlag
     
     init(
         initiatePayment: @escaping InitiatePayment,
         makeLegacyPayment: @escaping MakeLegacyPayment,
+        makeTemplatesListViewModel: @escaping MakeTemplatesListViewModel,
         paymentsTransfersFlag: PaymentsTransfersFlag
     ) {
         self.initiatePayment = initiatePayment
         self.makeLegacyPayment = makeLegacyPayment
+        self.makeTemplatesListViewModel = makeTemplatesListViewModel
         self.paymentsTransfersFlag = paymentsTransfersFlag
     }
     
     typealias InitiatePaymentCompletion = (Result<V1, ServiceFailureAlert.ServiceFailure>) -> Void
     typealias InitiatePayment = (PaymentTemplateData, @escaping InitiatePaymentCompletion) -> Void
     typealias MakeLegacyPayment = (MicroServices.MakePaymentPayload) -> Legacy
+    typealias MakeTemplatesListViewModel = (@escaping () -> Void) -> TemplatesListViewModel
 }
 
 extension TemplatesListFlowEffectHandlerMicroServicesComposer {
@@ -38,21 +42,24 @@ extension TemplatesListFlowEffectHandlerMicroServicesComposer {
             makeV1: makeV1Payment
         )
         
-        return .init(makePayment: { [paymentsTransfersFlag] payload, completion in
-            
-            let isLegacy = payload.0.isLegacy(flag: paymentsTransfersFlag)
-            
-            strategy.compose(isLegacy: isLegacy, payload: payload) {
+        return .init(
+            makePayment: { [paymentsTransfersFlag] payload, completion in
                 
-                switch $0 {
-                case let .legacy(legacy):
-                    completion(.success(.legacy(legacy)))
+                let isLegacy = payload.0.isLegacy(flag: paymentsTransfersFlag)
+                
+                strategy.compose(isLegacy: isLegacy, payload: payload) {
                     
-                case let .v1(v1):
-                    completion(v1)
+                    switch $0 {
+                    case let .legacy(legacy):
+                        completion(.success(.legacy(legacy)))
+                        
+                    case let .v1(v1):
+                        completion(v1)
+                    }
                 }
-            }
-        })
+            },
+            makeTemplates: makeTemplatesListViewModel
+        )
     }
     
     typealias MicroServices = TemplatesListFlowEffectHandlerMicroServices<Legacy, V1>

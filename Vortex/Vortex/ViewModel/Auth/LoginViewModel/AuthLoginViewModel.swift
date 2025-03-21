@@ -474,7 +474,7 @@ extension AuthLoginViewModel {
         
         private var bindings = Set<AnyCancellable>()
         
-        internal init(icon: Image = .ic32LogoVortexLine, scanButton: ScanButtonViewModel, textField: TextFieldMaskableView.ViewModel, nextButton: NextButtonViewModel? = nil, subTitle: String = "Введите номер вашей карты или счета", state: State = .editing) {
+        internal init(icon: Image = .ic32LogoLine, scanButton: ScanButtonViewModel, textField: TextFieldMaskableView.ViewModel, nextButton: NextButtonViewModel? = nil, subTitle: String = "Введите номер вашей карты или счета", state: State = .editing) {
             
             self.icon = icon
             self.scanButton = scanButton

@@ -1,0 +1,15 @@
+{
+  "properties" : {
+    "template-rendering-intent" : "template"
+  },
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "images" : [
+    {
+      "filename" : "ic20Sbp.svg",
+      "idiom" : "universal"
+    }
+  ]
+}

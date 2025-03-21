@@ -417,7 +417,7 @@ final class RootViewModelFactory_makeTests: RootViewModelFactoryServiceCategoryT
         .init(
             c2gFlag: .inactive,
             creditCardMVPFlag: .inactive,
-            newInProgressFlag: .inactive,
+            processingFlag: .inactive,
             paymentsTransfersFlag: .active,
             collateralLoanLandingFlag: .active,
             splashScreenFlag: .inactive,

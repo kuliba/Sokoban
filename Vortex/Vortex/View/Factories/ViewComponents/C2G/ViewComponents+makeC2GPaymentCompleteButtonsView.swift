@@ -15,21 +15,30 @@ extension ViewComponents {
     @inlinable
     func makeC2GPaymentCompleteButtonsView(
         details: OperationDetailDomain.Model,
-        document: DocumentButtonDomain.Model
+        document: C2GDocumentButtonDomain.Binder
     ) -> some View {
         
         HStack(alignment: .top, spacing: 8) {
             
-            RxWrapperView(model: document) { state, _ in
-                
-                makeDocumentButtonView(state: state)
-            }
+            makeC2GDocumentButtonDomainBinderView(document)
             
             RxWrapperView(model: details) { state, _ in
                 
                 makeC2GPaymentCompleteDetailsAndRequisitesButtonsView(state: state)
             }
         }
+    }
+    
+    @inlinable
+    func makeC2GDocumentButtonDomainBinderView(
+        _ binder: C2GDocumentButtonDomain.Binder
+    ) -> some View {
+        
+        circleButton(image: .ic24File, title: "Документ") {
+            
+            binder.flow.event(.select(.tap(binder.content)))
+        }
+        .background(makeC2GDocumentButtonFlowView(binder.flow))
     }
     
     @inlinable

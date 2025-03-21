@@ -547,6 +547,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     private func makeSUT(
         qrModel: QRScannerModel? = nil,
         model: Model = .mockWithEmptyExcept(),
+        successViewMOdelFactory: SuccessViewModelFactory = .previewSuccess,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
@@ -561,6 +562,7 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
         let sut = SUT(
             makeQRModel: makeQRModelSpy.call,
             model: model,
+            makeSuccessViewModelFactory: { successViewMOdelFactory },
             scheduler: scheduler.eraseToAnyScheduler()
         )
         let spy = NotifySpy(stubs: .init(repeating: (), count: 9))
@@ -772,12 +774,13 @@ extension XCTestCase {
     
     func makeMeToMe(
         with model: Model = .mockWithEmptyExcept(),
+        successViewModelFactory: SuccessViewModelFactory = .previewSuccess,
         file: StaticString = #file,
         line: UInt = #line
     ) throws -> PaymentsMeToMeViewModel {
         
         try model.addMeToMeProduct(file: file, line: line)
-        let meToMe = try XCTUnwrap(PaymentsMeToMeViewModel(model, mode: .demandDeposit), "Expected PaymentsMeToMeViewModel, got nil instead.", file: file, line: line)
+        let meToMe = try XCTUnwrap(PaymentsMeToMeViewModel(model, mode: .demandDeposit, successViewModelFactory: successViewModelFactory), "Expected PaymentsMeToMeViewModel, got nil instead.", file: file, line: line)
         
         return meToMe
     }
