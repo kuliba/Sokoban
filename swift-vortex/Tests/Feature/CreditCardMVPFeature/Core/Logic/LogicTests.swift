@@ -5,11 +5,12 @@
 //  Created by Igor Malyarov on 21.03.2025.
 //
 
+import CreditCardMVPCore
 import XCTest
 
 class LogicTests: XCTestCase {
     
-    typealias Event = CreditCardMVPCoreTests.Event<ApplicationSuccess>
+    typealias Event = CreditCardMVPCore.Event<ApplicationSuccess>
     
     struct ApplicationSuccess: Equatable {
         
