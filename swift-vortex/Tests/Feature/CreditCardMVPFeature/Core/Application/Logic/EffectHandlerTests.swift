@@ -100,6 +100,30 @@ final class EffectHandlerTests: LogicTests {
         
         XCTAssertEqual(loadOTP.callCount, 1)
     }
+
+    // TODO: add test for Notify!!
+    
+    func test_loadOTP_shouldDeliverInformerFailure_onLoadOTPInformerFailure() {
+        
+        let message = anyMessage()
+        let (sut, _, loadOTP, _) = makeSUT()
+        
+        expect(sut, with: .loadOTP, toDeliver: makeLoadOTPFailure(message: message, type: .alert)) {
+            
+            loadOTP.complete(with: .failure(.init(message: message, type: .alert)))
+        }
+    }
+    
+    func test_loadOTP_shouldDeliverAlertFailure_onLoadOTPAlertFailure() {
+        
+        let message = anyMessage()
+        let (sut, _, loadOTP, _) = makeSUT()
+        
+        expect(sut, with: .loadOTP, toDeliver: makeLoadOTPFailure(message: message, type: .informer)) {
+            
+            loadOTP.complete(with: .failure(.init(message: message, type: .informer)))
+        }
+    }
     
     // MARK: - notifyOTP
     
@@ -117,7 +141,7 @@ final class EffectHandlerTests: LogicTests {
     
     private typealias SUT = EffectHandler<ApplicationPayload, ApplicationSuccess, OTP>
     private typealias Application = Spy<ApplicationPayload, Event.ApplicationResult>
-    private typealias LoadOTPSpy = Spy<Void, Void>
+    private typealias LoadOTPSpy = Spy<Void, Event.LoadedOTPResult>
     private typealias OTP = CallSpy<String, Void>
     private typealias Effect = CreditCardMVPCore.Effect<ApplicationPayload, OTP>
     

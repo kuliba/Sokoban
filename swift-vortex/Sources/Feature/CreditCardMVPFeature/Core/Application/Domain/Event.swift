@@ -8,17 +8,26 @@
 public enum Event<ApplicationSuccess> {
     
     case applicationResult(ApplicationResult)
+    case loadedOTP(LoadedOTPResult)
     case `continue`
 }
 
 public extension Event {
     
-    typealias ApplicationResult = Result<ApplicationSuccess, ApplicationFailure>
-    typealias ApplicationFailure = LoadFailure<FailureType>
+    typealias ApplicationResult = Result<ApplicationSuccess, LoadFailure<ApplicationFailure>>
     
-    enum FailureType {
+    typealias LoadedOTPResult = Result<LoadedOTP, LoadFailure<LoadOTPFailure>>
+    
+    struct LoadedOTP: Equatable {}
+    
+    enum ApplicationFailure {
         
         case alert, informer, otp
+    }
+
+    enum LoadOTPFailure {
+        
+        case alert, informer
     }
 }
 

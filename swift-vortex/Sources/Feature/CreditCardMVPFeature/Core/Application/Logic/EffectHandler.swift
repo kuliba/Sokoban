@@ -32,7 +32,8 @@ where ApplicationPayload: VerificationCodeProviding {
     public typealias ApplyCompletion = (Event.ApplicationResult) -> Void
     public typealias Apply = (ApplicationPayload, @escaping ApplyCompletion) -> Void
     
-    public typealias LoadOTP = (@escaping (Void) -> Void) -> Void
+    public typealias LoadOTPCompletion = (Event.LoadedOTPResult) -> Void
+    public typealias LoadOTP = (@escaping LoadOTPCompletion) -> Void
     
     public typealias OTPWitness = (OTP) -> (String) -> Void
 }
@@ -48,7 +49,7 @@ public extension EffectHandler {
             apply(payload) { dispatch(.applicationResult($0)) }
             
         case .loadOTP:
-            loadOTP { _ in }
+            loadOTP { dispatch(.loadedOTP($0)) }
             
         case let .notifyOTP(otp, message):
             otpWitness(otp)(message)

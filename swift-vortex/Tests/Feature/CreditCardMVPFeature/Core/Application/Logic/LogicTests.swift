@@ -40,7 +40,7 @@ class LogicTests: XCTestCase {
     
     func makeApplicationResultFailure(
         message: String = anyMessage(),
-        type: Event.FailureType
+        type: Event.ApplicationFailure
     ) -> Event {
         
         return .applicationResult(.failure(.init(
@@ -54,5 +54,16 @@ class LogicTests: XCTestCase {
     ) -> Event {
         
         return .applicationResult(.success(success ?? makeApplicationSuccess()))
+    }
+    
+    func makeLoadOTPFailure(
+        message: String = anyMessage(),
+        type: Event.LoadOTPFailure
+    ) -> Event {
+        
+        return .loadedOTP(.failure(.init(
+            message: message,
+            type: type
+        )))
     }
 }
