@@ -4827,7 +4827,7 @@ private extension Target {
     static let сreditCardMVPCore = target(
         name: .creditCardMVPCore,
         dependencies: [
-            .remoteServices,
+            .stateMachines,
             .vortexTools,
         ],
         path: "Sources/Feature/\(String.creditCardMVP)/Core"

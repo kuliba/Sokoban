@@ -41,6 +41,7 @@ public extension LoadableReducer {
             switch state.status {
             case.loading:
                 break
+                
             default:
                 state.status = .loading
                 effect = .load
@@ -51,7 +52,7 @@ public extension LoadableReducer {
             
         case let .loaded(.success(loaded)):
             state.resource = loaded
-            state.status = .loadedOK
+            state.status = .loaded
         }
         
         return (state, effect)

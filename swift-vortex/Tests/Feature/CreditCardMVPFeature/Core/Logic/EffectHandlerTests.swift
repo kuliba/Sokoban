@@ -5,60 +5,7 @@
 //  Created by Igor Malyarov on 21.03.2025.
 //
 
-/// A type that provides a verification code (e.g., OTP).
-public protocol VerificationCodeProviding {
-    
-    /// The verification code as a string (e.g., OTP).
-    var verificationCode: String { get }
-}
-
-final class EffectHandler<ApplicationPayload, ApplicationSuccess, OTP>
-where ApplicationPayload: VerificationCodeProviding {
-    
-    private let apply: Apply
-    private let otpWitness: OTPWitness
-    
-    init(
-        apply: @escaping Apply,
-        otpWitness: @escaping OTPWitness
-    ) {
-        self.apply = apply
-        self.otpWitness = otpWitness
-    }
-    
-    typealias ApplyCompletion = (Event.ApplicationResult) -> Void
-    typealias Apply = (ApplicationPayload, @escaping ApplyCompletion) -> Void
-    
-    typealias OTPWitness = (OTP) -> (String) -> Void
-}
-
-extension EffectHandler {
-    
-    func handleEffect(
-        _ effect: Effect,
-        _ dispatch: @escaping Dispatch
-    ) {
-        switch effect {
-        case let .apply(payload):
-            apply(payload) { dispatch(.applicationResult($0)) }
-            
-        case .loadOTP:
-            break
-            
-        case let .notifyOTP(otp, message):
-            otpWitness(otp)(message)
-        }
-    }
-}
-
-extension EffectHandler {
-    
-    typealias Dispatch = (Event) -> Void
-    
-    typealias Event = CreditCardMVPCoreTests.Event<ApplicationSuccess>
-    typealias Effect = CreditCardMVPCoreTests.Effect<ApplicationPayload, OTP>
-}
-
+import CreditCardMVPCore
 import XCTest
 
 final class EffectHandlerTests: LogicTests {
@@ -159,7 +106,7 @@ final class EffectHandlerTests: LogicTests {
     private typealias SUT = EffectHandler<ApplicationPayload, ApplicationSuccess, OTP>
     private typealias Application = Spy<ApplicationPayload, Event.ApplicationResult>
     private typealias OTP = CallSpy<String, Void>
-    private typealias Effect = CreditCardMVPCoreTests.Effect<ApplicationPayload, OTP>
+    private typealias Effect = CreditCardMVPCore.Effect<ApplicationPayload, OTP>
     
     private func makeSUT(
         file: StaticString = #file,
