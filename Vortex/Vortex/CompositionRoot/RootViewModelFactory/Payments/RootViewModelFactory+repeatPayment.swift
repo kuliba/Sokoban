@@ -24,11 +24,13 @@ extension RootViewModelFactory {
     
     @inlinable
     func repeatPayment(
+        processingFlag: ProcessingFlag,
         payload: GetInfoRepeatPaymentDomain.PaymentPayload,
         closeAction: @escaping () -> Void,
         completion: @escaping (PaymentsDomain.Navigation?) -> Void
     ) {
         repeatPayment(
+            processingFlag: processingFlag,
             payload: payload,
             closeAction: closeAction,
             makeStandardFlow: processPayments,
@@ -52,6 +54,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func repeatPayment(
+        processingFlag: ProcessingFlag,
         payload: GetInfoRepeatPaymentDomain.PaymentPayload,
         closeAction: @escaping () -> Void,
         makeStandardFlow: @escaping MakeStandardFlow,
@@ -93,6 +96,7 @@ extension RootViewModelFactory {
                     else { return completion(nil) }
                     
                     return completion(getPaymentsNavigation(
+                        processingFlag: processingFlag,
                         from: paymentsPayload,
                         closeAction: closeAction
                     ))

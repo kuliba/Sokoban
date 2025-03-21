@@ -95,6 +95,7 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
     private typealias Transaction = AnywayTransactionState.Transaction
     private typealias MakePaymentSpy = Spy<(PaymentTemplateData, () -> Void), SUT.MicroServices.Payment, ServiceFailure>
     private typealias ServiceFailure = ServiceFailureAlert.ServiceFailure
+    private typealias MakeTemplatesListViewModel = (@escaping () -> Void) -> TemplatesListViewModel
     
     private func makeSUT(
         file: StaticString = #file,
@@ -106,9 +107,17 @@ final class TemplatesListFlowModelComposerTests: XCTestCase {
         let httpClient = HTTPClientSpy()
         let model: Model = .mockWithEmptyExcept()
         let spy = MakePaymentSpy()
+        let makeTemplates: MakeTemplatesListViewModel = {
+            .init(
+                model,
+                dismissAction: $0,
+                updateFastAll: {},
+                makePaymentsMeToMeViewModel: { .init(model, mode: $0, successViewModelFactory: .previewSuccess) }
+            )
+        }
         let sut = SUT(
             model: model,
-            microServices: .init(makePayment: spy.process),
+            microServices: .init(makePayment: spy.process, makeTemplates: makeTemplates),
             scheduler: .immediate
         )
         

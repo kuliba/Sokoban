@@ -5,11 +5,11 @@
       "filename" : "ic24Wind.svg"
     }
   ],
+  "properties" : {
+    "template-rendering-intent" : "template"
+  },
   "info" : {
     "version" : 1,
     "author" : "xcode"
-  },
-  "properties" : {
-    "template-rendering-intent" : "template"
   }
 }

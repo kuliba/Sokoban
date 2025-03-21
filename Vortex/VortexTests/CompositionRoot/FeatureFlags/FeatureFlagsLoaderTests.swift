@@ -152,30 +152,29 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         ))
     }
     
-    // MARK: - NewInProgressFlag
+    // MARK: - processingFlag
     
-    func test_load_shouldDeliverActiveNewInProgressFlagForActiveRetrieveResult() {
+    func test_load_shouldDeliverActiveProcessingFlagForActiveRetrieveResult() {
         
-        let sut = makeSUT { $0 == .newInProgress ? "1" : nil }
+        let sut = makeSUT { $0 == .processingFlag ? "1" : nil }
         
         let flags = sut.load()
         
         XCTAssertNoDiff(flags, makeFeatureFlags(
-            newInProgressFlag: .active
+            processingFlag: .active
         ))
     }
     
-    func test_load_shouldDeliverInactiveNewInProgressFlagForInactiveRetrieveResult() {
+    func test_load_shouldDeliverInactiveProcessingFlagForInactiveRetrieveResult() {
         
         let sut = makeSUT { _ in "0" }
         
         let flags = sut.load()
         
         XCTAssertNoDiff(flags, makeFeatureFlags(
-            newInProgressFlag: .inactive
+            processingFlag: .inactive
         ))
     }
-
     
     // MARK: - SplashScreenFlag
     
@@ -221,7 +220,7 @@ final class FeatureFlagsLoaderTests: XCTestCase {
     private func makeFeatureFlags(
         c2gFlag: C2GFlag? = nil,
         creditCardMVPFlag: СreditCardMVPFlag? = nil,
-        newInProgressFlag: NewInProgressFlag? = nil,
+        processingFlag: ProcessingFlag? = nil,
         paymentsTransfersFlag: PaymentsTransfersFlag? = nil,
         collateralLoanLandingFlag: CollateralLoanLandingFlag? = nil,
         splashScreenFlag: SplashScreenFlag? = nil,
@@ -231,7 +230,7 @@ final class FeatureFlagsLoaderTests: XCTestCase {
         return .init(
             c2gFlag: c2gFlag?.map { $0 } ?? .inactive,
             creditCardMVPFlag: creditCardMVPFlag.map { $0 } ?? .inactive,
-            newInProgressFlag: newInProgressFlag?.map { $0 } ?? .inactive,
+            processingFlag: processingFlag?.map { $0 } ?? .inactive,
             paymentsTransfersFlag: paymentsTransfersFlag?.map { $0 } ?? .inactive,
             collateralLoanLandingFlag: collateralLoanLandingFlag?.map { $0 } ?? .inactive,
             splashScreenFlag: splashScreenFlag?.map { $0 } ?? .inactive,

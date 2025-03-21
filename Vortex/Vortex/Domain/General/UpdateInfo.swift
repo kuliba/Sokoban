@@ -9,10 +9,10 @@ import Foundation
 
 struct UpdateInfo: Equatable {
     
-    var areCardsUpdated: Bool
-    var areLoansUpdated: Bool
-    var areDepositsUpdated: Bool
-    var areAccountsUpdated: Bool
+    var areCardsUpdated = true
+    var areLoansUpdated = true
+    var areDepositsUpdated = true
+    var areAccountsUpdated = true
     
     // TODO: вернуть после оптимизации запросов
     
@@ -21,22 +21,13 @@ struct UpdateInfo: Equatable {
     }
     
     var areCardsOrAccountsUpdated: Bool {
+        
         return true /*areCardsUpdated || areAccountsUpdated*/
     }
 
-    init(
-        areCardsUpdated: Bool = true,
-        areLoansUpdated: Bool = true,
-        areDepositsUpdated: Bool = true,
-        areAccountsUpdated: Bool = true
-    ) {
-        self.areCardsUpdated = areCardsUpdated
-        self.areLoansUpdated = areLoansUpdated
-        self.areDepositsUpdated = areDepositsUpdated
-        self.areAccountsUpdated = areAccountsUpdated
-    }
     
     mutating func setValue(_ value: Bool, for type: ProductType) {
+        
         switch type {
         case .card:
             areCardsUpdated = value
@@ -69,6 +60,6 @@ class UpdateInfoPTViewModel: PaymentsTransfersSectionViewModel {
 typealias MakeUpdateInfoView = (String) -> UpdateInfoView
 
 extension String {
-  
-    static let updateInfoText: Self = "Мы не смогли загрузить ваши продукты. Попробуйте позже."
+    
+    static let updateInfoText = "Мы не смогли загрузить ваши продукты. Попробуйте позже."
 }

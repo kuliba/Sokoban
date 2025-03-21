@@ -1,15 +1,15 @@
 {
-  "properties" : {
-    "template-rendering-intent" : "template"
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
   },
   "images" : [
     {
-      "filename" : "ic24RegistrationPhone.svg",
-      "idiom" : "universal"
+      "idiom" : "universal",
+      "filename" : "ic24RegistrationPhone.svg"
     }
   ],
-  "info" : {
-    "author" : "xcode",
-    "version" : 1
+  "properties" : {
+    "template-rendering-intent" : "template"
   }
 }

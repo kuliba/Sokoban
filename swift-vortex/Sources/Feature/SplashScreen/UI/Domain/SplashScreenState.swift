@@ -33,6 +33,7 @@ extension SplashScreenState {
     
     public struct Settings: Equatable {
         
+        public let duration: TimeInterval
         public let image: Image
         public let logo: Logo
         public let text: Text
@@ -40,12 +41,14 @@ extension SplashScreenState {
         public let footer: Logo
         
         public init(
+            duration: TimeInterval,
             image: Image,
             logo: Logo,
             text: Text,
             subtext: Text?,
             footer: Logo
         ) {
+            self.duration = duration
             self.image = image
             self.logo = logo
             self.text = text

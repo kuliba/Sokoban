@@ -99,7 +99,8 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
             makeServicePaymentBinder: ServicePaymentBinder.preview,
             makeOpenNewProductButtons: { _ in [] },
             operationDetailFactory: .preview,
-            makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() }
+            makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() },
+            makePaymentsMeToMeViewModel: { _ in .none }
         )
         
         return .init(
@@ -111,7 +112,8 @@ final class PaymentsTransfersViewModelGetSectionsTests: XCTestCase {
             makeServicePaymentBinder: ServicePaymentBinder.preview,
             makeTemplates: { _ in .sampleComplete },
             makeUtilitiesViewModel: { _,_ in },
-            makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() }
+            makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() },
+            makePaymentsMeToMeViewModel: { _ in .none }
         )
     }
     

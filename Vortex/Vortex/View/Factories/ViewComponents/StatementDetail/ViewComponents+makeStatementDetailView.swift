@@ -19,7 +19,7 @@ extension ViewComponents {
         
         StatementDetailLayoutView(config: .iVortex) {
             
-            makeC2GPaymentCompleteButtonsView(
+            makeC2GPaymentStatementDetailButtonsView(
                 details: details.details,
                 document: details.document
             )
@@ -29,6 +29,111 @@ extension ViewComponents {
             makeStatementDetailContentView(details: details)
         }
         .padding(.horizontal)
+    }
+    
+    @inlinable
+    func makeC2GPaymentStatementDetailButtonsView(
+        details: OperationDetailDomain.Model,
+        document: C2GDocumentButtonDomain.Binder?
+    ) -> some View {
+        
+        HStack(alignment: .top, spacing: 8) {
+            
+            document.map(makeC2GDocumentButtonDomainBinderView)
+            
+            RxWrapperView(model: details) { state, _ in
+                
+                makeC2GPaymentCompleteDetailsAndRequisitesButtonsView(state: state)
+            }
+        }
+    }
+    
+    @inlinable
+    func makeC2GDocumentButtonFlowView(
+        _ flow: C2GDocumentButtonDomain.Flow
+    ) -> some View {
+        
+        RxWrapperView(model: flow) { state, event in
+            
+            Color.clear
+                .fullScreenCover(
+                    cover: state.navigation,
+                    dismiss: { event(.dismiss) },
+                    content: {
+                        
+                        makeC2GDocumentButtonDomainNavigationView(
+                            navigation: $0,
+                            dismiss: { flow.event(.dismiss) }
+                        )
+                    }
+                )
+        }
+    }
+    
+    @inlinable
+    @ViewBuilder
+    func makeC2GDocumentButtonDomainNavigationView(
+        navigation: C2GDocumentButtonDomain.Navigation,
+        dismiss: @escaping () -> Void
+    ) -> some View {
+        
+        switch navigation {
+        case let .destination(binder):
+            makePDFDocumentDomainContentView(binder.content, dismiss: dismiss)
+                .background(makePDFDocumentDomainFlowView(binder.flow, dismiss: dismiss))
+        }
+    }
+    
+    @inlinable
+    @ViewBuilder
+    func makePDFDocumentDomainContentView(
+        _ content: PDFDocumentDomain.Content,
+        dismiss: @escaping () -> Void
+    ) -> some View {
+        
+        RxWrapperView(model: content) { state, event in
+            
+            switch state {
+            case let .completed(pdfDocument):
+                PDFDocumentWrapperView(
+                    pdfDocument: pdfDocument, 
+                    dismissAction: dismiss
+                )
+                .navigationBarWithClose(
+                    title: "Сохранить или отправить ", 
+                    dismiss: dismiss
+                )
+                
+            case .failure, .pending:
+                EmptyView()
+                
+            case .loading:
+                SpinnerView(viewModel: .init())
+            }
+        }
+    }
+    
+    @inlinable
+    @ViewBuilder
+    func makePDFDocumentDomainFlowView(
+        _ flow: PDFDocumentDomain.Flow,
+        dismiss: @escaping () -> Void
+    ) -> some View {
+        
+        RxWrapperView(model: flow) { state, _ in
+            
+            Color.clear
+                .alert(item: state.navigation) {
+                    
+                    switch $0 {
+                    case let .alert(message):
+                        return .init(with: .techError(
+                            message: message,
+                            primaryAction: dismiss
+                        ))
+                    }
+                }
+        }
     }
     
     @inlinable
@@ -70,6 +175,32 @@ extension ViewComponents {
             config: .iVortex,
             makeLogoView: makeIconView
         )
+    }
+}
+
+extension C2GDocumentButtonDomain.Navigation: Identifiable {
+    
+    var id: ID {
+        
+        switch self {
+        case let .destination(binder):
+            return .destination(.init(binder))
+        }
+    }
+    
+    enum ID: Hashable {
+        
+        case destination(ObjectIdentifier)
+    }
+}
+
+extension PDFDocumentDomain.Navigation: Identifiable {
+    
+    var id: String {
+        
+        switch self {
+        case let .alert(string): return string
+        }
     }
 }
 
@@ -127,7 +258,10 @@ struct MakeStatementDetailView_Previews: PreviewProvider {
         Group {
             
             view(.completed(.preview))
-                .previewDisplayName("completed")
+                .previewDisplayName("completed no doc")
+            
+            view(.completed(.preview), .preview)
+                .previewDisplayName("completed with doc")
             
             view(.failure(NSError(domain: "Load Failure", code: -1)))
                 .previewDisplayName("failure")
@@ -141,7 +275,8 @@ struct MakeStatementDetailView_Previews: PreviewProvider {
     }
     
     private static func view(
-        _ fullDetails: OperationDetailDomain.State.ExtendedDetailsState
+        _ fullDetails: OperationDetailDomain.State.ExtendedDetailsState,
+        _ document: C2GDocumentButtonDomain.Binder? = nil
     ) -> some View {
         
         ViewComponents.preview.makeStatementDetailView(.init(
@@ -150,7 +285,20 @@ struct MakeStatementDetailView_Previews: PreviewProvider {
                 basicDetails: .preview,
                 fullDetails: fullDetails
             ),
-            document: .preview
+            document: document
         ))
     }
+}
+
+private extension C2GDocumentButtonDomain.Binder {
+    
+    static let preview: C2GDocumentButtonDomain.Binder = .init(
+        content: 0,
+        flow: .init(
+            initialState: .init(),
+            reduce: { state, _ in (state, nil) },
+            handleEffect: { _,_ in }
+        ),
+        bind: { _,_ in [] }
+    )
 }

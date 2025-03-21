@@ -75,6 +75,7 @@ class ProductProfileViewModel: ObservableObject {
     private let qrViewModelFactory: QRViewModelFactory
     private let paymentsTransfersFactory: PaymentsTransfersFactory
     private let operationDetailFactory: OperationDetailFactory
+
     private let cvvPINServicesClient: CVVPINServicesClient
     private var cardAction: CardAction?
     private let productProfileViewModelFactory: ProductProfileViewModelFactory
@@ -707,9 +708,10 @@ private extension ProductProfileViewModel {
                         
                     } else {
                         
-                        guard let viewModel = PaymentsMeToMeViewModel(model, mode: .closeAccount(from, balance)) else {
-                            return
-                        }
+                        guard let viewModel = productProfileViewModelFactory.makePaymentsMeToMeViewModel(
+                            .closeAccount(from, balance)
+                        )
+                        else { return }
                         
                         bind(viewModel)
                         bottomSheet = .init(type: .meToMe(viewModel))
@@ -867,23 +869,29 @@ private extension ProductProfileViewModel {
                             if product.isDemandDeposit {
                                 let displayNumber = product.displayNumber ?? number
                                 let topString = "Вы действительно хотите закрыть вклад №*\(displayNumber)?\n\n"
-                                let alertViewModel = Alert.ViewModel(title: "Закрыть вклад",
-                                                                     message: "\(topString)При закрытии будет предложено перевести остаток денежных средств на другой счет/карту. Вклад будет закрыт после совершения перевода.",
-                                                                     primary: .init(type: .default, title: "Отмена", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}),
-                                                                     secondary: .init(type: .default, title: "Закрыть", action: { [weak self] in
-                                    guard let self = self,
-                                          let depositProduct = self.model.product(productId: self.product.activeProductId) as? ProductDepositData else {
-                                        return
-                                    }
-                                    
-                                    guard let viewModel = PaymentsMeToMeViewModel(self.model, mode: .transferAndCloseDeposit(depositProduct, depositProduct.balanceValue)) else {
-                                        return
-                                    }
-                                    
-                                    self.bind(viewModel)
-                                    
-                                    self.bottomSheet = .init(type: .meToMe(viewModel))
-                                }))
+                                let alertViewModel = Alert.ViewModel(
+                                    title: "Закрыть вклад",
+                                    message: "\(topString)При закрытии будет предложено перевести остаток денежных средств на другой счет/карту. Вклад будет закрыт после совершения перевода.",
+                                    primary: .init(type: .default, title: "Отмена", action: { [weak self] in self?.action.send(ProductProfileViewModelAction.Close.Alert())}),
+                                    secondary: .init(
+                                        type: .default,
+                                        title: "Закрыть",
+                                        action: { [weak self] in
+                                            guard let self = self,
+                                                  let depositProduct = self.model.product(productId: self.product.activeProductId) as? ProductDepositData else {
+                                                return
+                                            }
+                                            
+                                            guard let viewModel = productProfileViewModelFactory.makePaymentsMeToMeViewModel(
+                                                .transferAndCloseDeposit(depositProduct, depositProduct.balanceValue)
+                                            )
+                                            else { return }
+                                            
+                                            self.bind(viewModel)
+                                            
+                                            self.bottomSheet = .init(type: .meToMe(viewModel))
+                                        })
+                                )
                                 self.alert = .init(alertViewModel)
                             }
                             else{
@@ -929,9 +937,10 @@ private extension ProductProfileViewModel {
                             return
                         }
                         
-                        guard let viewModel = PaymentsMeToMeViewModel(model, mode: .closeDeposit(depositProduct, amount)) else {
-                            return
-                        }
+                        guard let viewModel = productProfileViewModelFactory.makePaymentsMeToMeViewModel(
+                            .closeDeposit(depositProduct, amount)
+                        )
+                        else { return }
                         
                         bind(viewModel)
                         bottomSheet = .init(type: .meToMe(viewModel))
@@ -1170,9 +1179,10 @@ private extension ProductProfileViewModel {
                 case let payload as ProductProfileDetailViewModelAction.MakePayment:
                     
                     guard let product = model.product(productId: payload.settlementAccountId),
-                          let meToMeViewModel = PaymentsMeToMeViewModel(model, mode: .makePaymentTo(product, payload.amount)) else {
-                        return
-                    }
+                          let meToMeViewModel = productProfileViewModelFactory.makePaymentsMeToMeViewModel(
+                            .makePaymentTo(product, payload.amount)
+                          )
+                    else { return }
                     
                     bind(meToMeViewModel)
                     bottomSheet = .init(type: .meToMe(meToMeViewModel))
@@ -1347,9 +1357,11 @@ private extension ProductProfileViewModel {
 
         switch transferType {
         case .remains:
-            guard let viewModel = PaymentsMeToMeViewModel(self.model, mode: .transferDeposit(depositProduct, 0)) else {
-                return
-            }
+            guard let viewModel = productProfileViewModelFactory.makePaymentsMeToMeViewModel(
+                .transferDeposit(depositProduct, 0)
+            )
+            else { return }
+            
             self.bind(viewModel)
             self.bottomSheet = .init(type: .meToMe(viewModel))
 
@@ -1490,9 +1502,9 @@ private extension ProductProfileViewModel {
                                let loanAccount = self.model.products.value[.account]?
                                 .first(where: {$0.number == productData.settlementAccount}) {
                                 
-                                guard let viewModel = PaymentsMeToMeViewModel(
-                                    self.model,
-                                    mode: .makePaymentTo(loanAccount, 0.0))
+                                guard let viewModel = productProfileViewModelFactory.makePaymentsMeToMeViewModel(
+                                    .makePaymentTo(loanAccount, 0.0)
+                                )
                                 else { return }
                                 
                                 self.bind(viewModel)
@@ -1501,9 +1513,10 @@ private extension ProductProfileViewModel {
                             } else if let productData = productData as? ProductDepositData,
                                       productData.isDemandDeposit { //только вклады
                                 
-                                guard let viewModel = PaymentsMeToMeViewModel(self.model, mode: .makePaymentToDeposite(productData, 0)) else {
-                                    return
-                                }
+                                guard let viewModel = productProfileViewModelFactory.makePaymentsMeToMeViewModel(
+                                    .makePaymentToDeposite(productData, 0)
+                                )
+                                else { return }
                                 
                                 self.bind(viewModel)
                                 
@@ -1511,9 +1524,9 @@ private extension ProductProfileViewModel {
                             }
                             else {
                                 
-                                guard let viewModel = PaymentsMeToMeViewModel(
-                                    self.model,
-                                    mode: .makePaymentTo(productData, 0.0))
+                                guard let viewModel = productProfileViewModelFactory.makePaymentsMeToMeViewModel(
+                                    .makePaymentTo(productData, 0.0)
+                                )
                                 else { return }
                                 
                                 self.bind(viewModel)
@@ -3192,9 +3205,9 @@ extension ProductProfileViewModel {
                 with: .generalToWithDepositAndIndividualBusinessmanMain) {
                 event(.alert(.delayAlert(.showServiceOnlyIndividualCard)))
             } else {
-                guard let viewModel = PaymentsMeToMeViewModel(
-                    model,
-                    mode: .makePaymentTo(productData, 0.0))
+                guard let viewModel = productProfileViewModelFactory.makePaymentsMeToMeViewModel(
+                    .makePaymentTo(productData, 0.0)
+                )
                 else { return }
                 
                 bind(viewModel)

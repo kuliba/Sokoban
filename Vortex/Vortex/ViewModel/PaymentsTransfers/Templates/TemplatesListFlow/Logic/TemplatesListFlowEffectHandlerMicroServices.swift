@@ -8,6 +8,7 @@
 struct TemplatesListFlowEffectHandlerMicroServices<Legacy, V1> {
     
     let makePayment: MakePayment
+    let makeTemplates: MakeTemplatesListViewModel
 }
 
 extension TemplatesListFlowEffectHandlerMicroServices {
@@ -17,7 +18,8 @@ extension TemplatesListFlowEffectHandlerMicroServices {
     typealias MakePaymentResult = Result<Payment, ServiceFailure>
     typealias MakePaymentCompletion = (MakePaymentResult) -> Void
     typealias MakePayment = (MakePaymentPayload, @escaping MakePaymentCompletion) -> Void
-    
+    typealias MakeTemplatesListViewModel = (@escaping () -> Void) -> TemplatesListViewModel
+
     enum Payment {
         
         case legacy(Legacy)

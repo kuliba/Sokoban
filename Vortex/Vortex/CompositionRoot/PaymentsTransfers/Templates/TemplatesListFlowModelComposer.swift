@@ -34,7 +34,7 @@ extension TemplatesListFlowModelComposer {
         dismiss: @escaping () -> Void
     ) -> TemplatesListFlowModel<TemplatesListViewModel, AnywayFlowModel> {
         
-        let content = makeTemplates(dismiss: dismiss)
+        let content = microServices.makeTemplates(dismiss)
         let reducer = TemplatesListFlowReducer<TemplatesListViewModel, AnywayFlowModel>()
         let effectHandler = TemplatesListFlowEffectHandler<AnywayFlowModel>(
             microServices: microServices
@@ -73,22 +73,5 @@ extension AnywayFlowState {
         case .main:     return .tab(.main)
         case .payments: return .tab(.payments)
         }
-    }
-}
-
-private extension TemplatesListFlowModelComposer {
-    
-    func makeTemplates(
-        dismiss: @escaping () -> Void
-    ) -> TemplatesListViewModel {
-        
-        return .init(
-            model,
-            dismissAction: dismiss,
-            updateFastAll: { [weak model] in
-                
-                model?.action.send(ModelAction.Products.Update.Fast.All())
-            }
-        )
     }
 }

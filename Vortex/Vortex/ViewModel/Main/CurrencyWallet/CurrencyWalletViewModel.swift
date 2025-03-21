@@ -1002,6 +1002,9 @@ extension CurrencyWalletViewModel {
             
         case .inProgress:
             return .wait
+            
+        case .processing:
+            return .processing
         }
     }
 }

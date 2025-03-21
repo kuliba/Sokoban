@@ -44,10 +44,12 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:CI.xctestplan"
-            default = "YES">
+            default = "YES"
+            reference = "container:CI.xctestplan">
          </TestPlanReference>
       </TestPlans>
+      <Testables>
+      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"

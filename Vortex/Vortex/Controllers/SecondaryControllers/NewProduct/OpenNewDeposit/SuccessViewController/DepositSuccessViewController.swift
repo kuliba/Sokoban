@@ -94,7 +94,7 @@ class DepositSuccessViewController: UIViewController {
             incomeField.isHidden = true
             
             optionsButtons.isHidden = true
-            depositLabel.text = "Операция временно приостановлена в целях безопасности"
+            depositLabel.text = "Операция приостановлена в целях безопасности."
             depositLabel.textColor = .systemRed
             descriptionLabel.text = Payments.Success.antifraudSubtitle
             amountLabel.text = confurmVCModel?.summTransction ?? ""

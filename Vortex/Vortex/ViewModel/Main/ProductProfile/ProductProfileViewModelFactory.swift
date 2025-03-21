@@ -10,6 +10,7 @@ import LandingUIComponent
 import GetInfoRepeatPaymentService
 
 typealias MakeRepeatPaymentNavigation = (GetInfoRepeatPaymentDomain.GetInfoRepeatPayment, ProductData.ID, @escaping (ProductData.ID) -> ProductData?, @escaping () -> Void) -> PaymentsDomain.Navigation?
+typealias MakePaymentsMeToMeViewModel = (PaymentsMeToMeViewModel.Mode) -> PaymentsMeToMeViewModel?
 
 struct ProductProfileViewModelFactory {
     
@@ -19,6 +20,7 @@ struct ProductProfileViewModelFactory {
     let makeCardGuardianPanel: MakeCardGuardianPanel
     let makeRepeatPaymentNavigation: MakeRepeatPaymentNavigation
     let makeSubscriptionsViewModel: UserAccountNavigationStateManager.MakeSubscriptionsViewModel
+    let makePaymentsMeToMeViewModel: MakePaymentsMeToMeViewModel
 
     // TODO: need remove model
     private let model: Model
@@ -30,6 +32,7 @@ struct ProductProfileViewModelFactory {
         makeCardGuardianPanel: @escaping MakeCardGuardianPanel,
         makeRepeatPaymentNavigation: @escaping MakeRepeatPaymentNavigation,
         makeSubscriptionsViewModel: @escaping UserAccountNavigationStateManager.MakeSubscriptionsViewModel,
+        makePaymentsMeToMeViewModel: @escaping MakePaymentsMeToMeViewModel,
         model: Model
     ) {
         self.makeInfoProductViewModel = makeInfoProductViewModel
@@ -38,6 +41,7 @@ struct ProductProfileViewModelFactory {
         self.makeCardGuardianPanel = makeCardGuardianPanel
         self.makeRepeatPaymentNavigation = makeRepeatPaymentNavigation
         self.makeSubscriptionsViewModel = makeSubscriptionsViewModel
+        self.makePaymentsMeToMeViewModel = makePaymentsMeToMeViewModel
         self.model = model
     }
 
@@ -134,6 +138,7 @@ extension ProductProfileViewModelFactory {
         makeCardGuardianPanel: { .bottomSheet(.cardGuardian($0)) },
         makeRepeatPaymentNavigation: { _,_,_,_  in .none },
         makeSubscriptionsViewModel: { _,_ in .preview },
+        makePaymentsMeToMeViewModel: { _ in .none },
         model: .emptyMock
     )
 }

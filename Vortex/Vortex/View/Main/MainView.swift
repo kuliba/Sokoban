@@ -656,7 +656,8 @@ extension ProductProfileViewModel  {
         makeServicePaymentBinder: ServicePaymentBinder.preview,
         makeOpenNewProductButtons: { _ in [] },
         operationDetailFactory: .preview,
-        makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() }
+        makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() },
+        makePaymentsMeToMeViewModel: { _ in .none }
     )
 }
 
