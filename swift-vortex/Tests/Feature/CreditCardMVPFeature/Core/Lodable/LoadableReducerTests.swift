@@ -12,6 +12,34 @@ final class LoadableReducerTests: LoadableTests {
     
     // MARK: - load
     
+    func test_load_shouldNotChangeState_onNilResource_loading() {
+        
+        let state = makeState(status: .loading)
+        
+        assert(state, event: .load)
+    }
+    
+    func test_load_shouldNotDeliverEffect_onNilResource_loading() {
+        
+        let state = makeState(status: .loading)
+        
+        assert(state, event: .load, delivers: nil)
+    }
+    
+    func test_load_shouldNotChangeState_onNonNilResource_loading() {
+        
+        let state = makeState(resource: makeResource(), status: .loading)
+        
+        assert(state, event: .load)
+    }
+    
+    func test_load_shouldNotDeliverEffect_onNonNilResource_loading() {
+        
+        let state = makeState(resource: makeResource(), status: .loading)
+        
+        assert(state, event: .load, delivers: nil)
+    }
+    
     func test_load_shouldChangeStatus_onNilResource_loadedOK() {
         
         let state = makeState(status: .loadedOK)
@@ -69,6 +97,42 @@ final class LoadableReducerTests: LoadableTests {
     }
     
     // MARK: - loaded
+    
+    func test_loaded_shouldChangeStatus_onFailure_resourceNil_loading() {
+        
+        let failure = makeFailure()
+        let state = makeState(status: .loading)
+        
+        assert(state, event: .loaded(.failure(failure))) {
+            
+            $0.status = .failure(failure)
+        }
+    }
+    
+    func test_loaded_shouldNotDeliverEffect_onFailure_resourceNil_loading() {
+        
+        let state = makeState(status: .loading)
+        
+        assert(state, event: .loaded(.failure(makeFailure())), delivers: nil)
+    }
+    
+    func test_loaded_shouldChangeStateStatus_onFailure_resourceNonNil_loading() {
+        
+        let failure = makeFailure()
+        let state = makeState(resource: makeResource(), status: .loading)
+        
+        assert(state, event: .loaded(.failure(failure))) {
+            
+            $0.status = .failure(failure)
+        }
+    }
+    
+    func test_loaded_shouldNotDeliverEffect_onFailure_resourceNonNil_loading() {
+        
+        let state = makeState(resource: makeResource(), status: .loading)
+        
+        assert(state, event: .loaded(.failure(makeFailure())), delivers: nil)
+    }
     
     func test_loaded_shouldChangeStatus_onFailure_resourceNil_loadedOK() {
         

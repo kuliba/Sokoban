@@ -38,8 +38,13 @@ public extension LoadableReducer {
         
         switch event {
         case .load:
-            state.status = .loading
-            effect = .load
+            switch state.status {
+            case.loading:
+                break
+            default:
+                state.status = .loading
+                effect = .load
+            }
             
         case let .loaded(.failure(failure)):
             state.status = .failure(failure)
