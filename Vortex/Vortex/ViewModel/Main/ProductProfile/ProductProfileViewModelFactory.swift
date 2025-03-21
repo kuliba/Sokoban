@@ -11,6 +11,7 @@ import GetInfoRepeatPaymentService
 
 typealias MakeRepeatPaymentNavigation = (GetInfoRepeatPaymentDomain.GetInfoRepeatPayment, ProductData.ID, @escaping (ProductData.ID) -> ProductData?, @escaping () -> Void) -> PaymentsDomain.Navigation?
 typealias MakePaymentsMeToMeViewModel = (PaymentsMeToMeViewModel.Mode) -> PaymentsMeToMeViewModel?
+typealias MakeCloseAccountSpinnerViewModel = (ProductData) -> CloseAccountSpinnerView.ViewModel?
 
 struct ProductProfileViewModelFactory {
     
@@ -18,6 +19,7 @@ struct ProductProfileViewModelFactory {
     let makeAlert: (AlertParameters) -> Alert.ViewModel
     let makeInformerDataUpdateFailure: MakeInformerDataUpdateFailure
     let makeCardGuardianPanel: MakeCardGuardianPanel
+    let makeCloseAccountSpinnerViewModel: MakeCloseAccountSpinnerViewModel
     let makeRepeatPaymentNavigation: MakeRepeatPaymentNavigation
     let makeSubscriptionsViewModel: UserAccountNavigationStateManager.MakeSubscriptionsViewModel
     let makePaymentsMeToMeViewModel: MakePaymentsMeToMeViewModel
@@ -30,6 +32,7 @@ struct ProductProfileViewModelFactory {
         makeAlert: @escaping (AlertParameters) -> Alert.ViewModel,
         makeInformerDataUpdateFailure: @escaping MakeInformerDataUpdateFailure,
         makeCardGuardianPanel: @escaping MakeCardGuardianPanel,
+        makeCloseAccountSpinnerViewModel: @escaping MakeCloseAccountSpinnerViewModel,
         makeRepeatPaymentNavigation: @escaping MakeRepeatPaymentNavigation,
         makeSubscriptionsViewModel: @escaping UserAccountNavigationStateManager.MakeSubscriptionsViewModel,
         makePaymentsMeToMeViewModel: @escaping MakePaymentsMeToMeViewModel,
@@ -39,6 +42,7 @@ struct ProductProfileViewModelFactory {
         self.makeAlert = makeAlert
         self.makeInformerDataUpdateFailure = makeInformerDataUpdateFailure
         self.makeCardGuardianPanel = makeCardGuardianPanel
+        self.makeCloseAccountSpinnerViewModel = makeCloseAccountSpinnerViewModel
         self.makeRepeatPaymentNavigation = makeRepeatPaymentNavigation
         self.makeSubscriptionsViewModel = makeSubscriptionsViewModel
         self.makePaymentsMeToMeViewModel = makePaymentsMeToMeViewModel
@@ -136,6 +140,7 @@ extension ProductProfileViewModelFactory {
         },
         makeInformerDataUpdateFailure: { nil }, 
         makeCardGuardianPanel: { .bottomSheet(.cardGuardian($0)) },
+        makeCloseAccountSpinnerViewModel: { .init(.emptyMock, productData: $0, successViewModelFactory: .previewSuccess)},
         makeRepeatPaymentNavigation: { _,_,_,_  in .none },
         makeSubscriptionsViewModel: { _,_ in .preview },
         makePaymentsMeToMeViewModel: { _ in .none },

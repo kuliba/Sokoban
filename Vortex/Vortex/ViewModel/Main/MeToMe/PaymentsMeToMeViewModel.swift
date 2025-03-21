@@ -163,13 +163,8 @@ class PaymentsMeToMeViewModel: ObservableObject {
                         case let .closeAccount(productData, balance):
                             
                             let currency = Currency(description: productData.currency)
-                            let payload: CloseAccountPayload.Payload = .init(
-                                balance: balance,
-                                currency: currency,
-                                productDataID: productData.id,
-                                transferData: transferData
-                            )
-                            if let successViewModel = successViewModelFactory.makeCloseAccountPaymentsSuccessViewModel(payload) {
+                            let mode: PaymentsSuccessViewModel.Mode = .closeAccount(productData.id, currency, balance: balance, transferData)
+                            if let successViewModel = successViewModelFactory.makeCloseAccountPaymentsSuccessViewModel(mode) {
                                 self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
                                 if transferData.documentStatus == .complete {
                                     makeInformer(closeAccount: true)

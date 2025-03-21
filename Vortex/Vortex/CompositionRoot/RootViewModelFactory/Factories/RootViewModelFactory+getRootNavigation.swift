@@ -225,7 +225,7 @@ extension RootViewModelFactory {
     
     func handleSavingsAccount(
         _ orderAccountResponse: OpenSavingsAccountDomain.OrderAccountResponse,
-        _ asyncWait: ProcessingFlag,
+        _ processingFlag: ProcessingFlag,
         _ completion: @escaping (RootViewNavigation) -> Void
     ) {
         
@@ -255,7 +255,7 @@ extension RootViewModelFactory {
                     
                     model?.action.send(ModelAction.Products.Update.Total.All())
                 },
-                asyncWait
+                processingFlag
             )
         )
     }

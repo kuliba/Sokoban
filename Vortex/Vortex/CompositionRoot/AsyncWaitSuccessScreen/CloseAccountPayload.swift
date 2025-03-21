@@ -8,14 +8,6 @@
 struct CloseAccountPayload {
     
     let flag: ProcessingFlag
-    let payload: Payload
-    
-    struct Payload {
-        
-        let balance: Double
-        let currency: Currency
-        let productDataID: Int
-        let transferData: CloseProductTransferData
-    }
+    let initialMode: PaymentsSuccessViewModel.Mode
 }
 

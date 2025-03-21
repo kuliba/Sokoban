@@ -695,7 +695,7 @@ private extension ProductProfileViewModel {
                     
                     if balance == 0 {
                         
-                        closeAccountSpinner = .init(model, productData: from)
+                        closeAccountSpinner = productProfileViewModelFactory.makeCloseAccountSpinnerViewModel(from)
                         
                         if let closeAccountSpinner = closeAccountSpinner {
                             bind(closeAccountSpinner)

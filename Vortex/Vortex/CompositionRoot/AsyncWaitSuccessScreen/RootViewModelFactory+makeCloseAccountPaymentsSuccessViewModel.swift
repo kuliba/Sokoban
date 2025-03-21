@@ -32,7 +32,7 @@ extension RootViewModelFactory {
                 
                 let payload: CloseAccountPayload = .init(
                     flag: processingFlag,
-                    payload: $0
+                    initialMode: $0
                 )
                 return self?.makeCloseAccountPaymentsSuccessViewModel(payload: payload)
             })
@@ -69,11 +69,25 @@ private extension CloseAccountPayload {
     
     var mode: PaymentsSuccessViewModel.Mode {
         
-        .closeAccount(
-            payload.productDataID,
-            payload.currency,
-            balance: payload.balance,
-            .init(flag, payload.transferData)
-        )
+        switch self.initialMode {
+        case let .closeAccount(productDataID, currency, balance: balance, transferData):
+            return .closeAccount(
+                    productDataID,
+                    currency,
+                    balance: balance,
+                    .init(flag, transferData)
+                )
+            
+        case let .closeAccountEmpty(productDataID, currency, balance: balance, transferData):
+            return .closeAccountEmpty(
+                    productDataID,
+                    currency,
+                    balance: balance,
+                    .init(flag, transferData)
+                )
+            
+        default:
+            return self.initialMode
+        }
     }
 }

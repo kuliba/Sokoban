@@ -1555,6 +1555,7 @@ extension ProductProfileViewModelFactory {
             },
             makeInformerDataUpdateFailure: { nil },
             makeCardGuardianPanel: { .bottomSheet(.cardGuardian($0)) },
+            makeCloseAccountSpinnerViewModel: { .init(model, productData: $0, successViewModelFactory: .previewSuccess)},
             makeRepeatPaymentNavigation: { _,_,_,_  in .none },
             makeSubscriptionsViewModel: { _,_ in .preview },
             makePaymentsMeToMeViewModel: { .init(model, mode: $0, successViewModelFactory: .previewSuccess) },

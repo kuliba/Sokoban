@@ -179,7 +179,7 @@ private extension RootBinderView {
           
         case let .savingsAccount(response, updateFastAll, flag):
             components.makeOrderSavingsAccountCompleteView(
-                asyncWait: flag,
+                processingFlag: flag,
                 response,
                 action: updateFastAll
             )
