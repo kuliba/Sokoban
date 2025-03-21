@@ -307,51 +307,21 @@ final class ReducerTests: LogicTests {
     
     private func makeState(
         otp: OTP? = nil,
-        orderResult: SUT.State.OrderResult? = nil
-    ) -> SUT.State {
+        orderResult: State.OrderResult? = nil
+    ) -> State {
         
         return .init(otp: otp, orderResult: orderResult)
-    }
-    
-    private struct OTP: Equatable {
-        
-        let value: String
-    }
-    
-    private func makeOTP(
-        _ value: String = anyMessage()
-    ) -> OTP {
-        
-        return .init(value: value)
-    }
-    
-    private func makeApplicationResultFailure(
-        message: String = anyMessage(),
-        type: SUT.Event.FailureType
-    ) -> SUT.Event {
-        
-        return .orderResult(.failure(.init(
-            message: message,
-            type: type
-        )))
-    }
-    
-    private func makeApplicationResultSuccess(
-        orderSuccess: ApplicationSuccess? = nil
-    ) -> SUT.Event {
-        
-        return .orderResult(.success(orderSuccess ?? makeApplicationSuccess()))
     }
     
     @discardableResult
     private func assert(
         sut: SUT? = nil,
-        _ state: SUT.State,
-        event: SUT.Event,
-        updateStateToExpected: ((inout SUT.State) -> Void)? = nil,
+        _ state: State,
+        event: Event,
+        updateStateToExpected: ((inout State) -> Void)? = nil,
         file: StaticString = #file,
         line: UInt = #line
-    ) -> SUT.State {
+    ) -> State {
         
         let sut = sut ?? makeSUT(file: file, line: line)
         
@@ -373,16 +343,16 @@ final class ReducerTests: LogicTests {
     @discardableResult
     private func assert(
         sut: SUT? = nil,
-        _ state: SUT.State,
-        event: SUT.Event,
-        delivers expectedEffect: SUT.Effect?,
+        _ state: State,
+        event: Event,
+        delivers expectedEffect: Effect?,
         file: StaticString = #file,
         line: UInt = #line
-    ) -> SUT.Effect? {
+    ) -> Effect? {
         
         let sut = sut ?? makeSUT(file: file, line: line)
         
-        let (_, receivedEffect): (SUT.State, SUT.Effect?) = sut.reduce(state, event)
+        let (_, receivedEffect): (State, Effect?) = sut.reduce(state, event)
         
         XCTAssertNoDiff(
             receivedEffect,
