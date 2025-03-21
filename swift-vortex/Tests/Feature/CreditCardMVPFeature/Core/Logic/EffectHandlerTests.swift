@@ -42,6 +42,9 @@ extension EffectHandler {
         case let .confirmApplication(payload):
             confirmApplication(payload) { dispatch(.applicationResult($0)) }
             
+        case .loadOTP:
+            break
+            
         case let .notifyOTP(otp, message):
             otpWitness(otp)(message)
         }
