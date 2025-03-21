@@ -9,9 +9,7 @@ import XCTest
 
 class LogicTests: XCTestCase {
     
-    typealias State = CreditCardMVPCoreTests.State<ApplicationSuccess, OTP>
     typealias Event = CreditCardMVPCoreTests.Event<ApplicationSuccess>
-    typealias Effect = CreditCardMVPCoreTests.Effect<ConfirmApplicationPayload, OTP>
     
     struct ApplicationSuccess: Equatable {
         
@@ -35,18 +33,6 @@ class LogicTests: XCTestCase {
     func makePayload(
         _ value: String = anyMessage()
     ) -> ConfirmApplicationPayload {
-        
-        return .init(value: value)
-    }
-    
-    struct OTP: Equatable {
-        
-        let value: String
-    }
-    
-    func makeOTP(
-        _ value: String = anyMessage()
-    ) -> OTP {
         
         return .init(value: value)
     }

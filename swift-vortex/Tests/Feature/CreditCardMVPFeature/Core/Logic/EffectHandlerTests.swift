@@ -90,7 +90,7 @@ final class EffectHandlerTests: LogicTests {
         
         expect(
             sut,
-            with: .confirmApplication(makePayload()),
+            with: makeConfirmApplication(),
             toDeliver: makeApplicationResultFailure(message: message, type: .alert)
         ) {
             confirmApplication.complete(with: .failure(.init(message: message, type: .alert)))
@@ -104,7 +104,7 @@ final class EffectHandlerTests: LogicTests {
         
         expect(
             sut,
-            with: .confirmApplication(makePayload()),
+            with: makeConfirmApplication(),
             toDeliver: makeApplicationResultFailure(message: message, type: .informer)
         ) {
             confirmApplication.complete(with: .failure(.init(message: message, type: .informer)))
@@ -118,7 +118,7 @@ final class EffectHandlerTests: LogicTests {
         
         expect(
             sut,
-            with: .confirmApplication(makePayload()),
+            with: makeConfirmApplication(),
             toDeliver: makeApplicationResultFailure(message: message, type: .otp)
         ) {
             confirmApplication.complete(with: .failure(.init(message: message, type: .otp)))
@@ -132,7 +132,7 @@ final class EffectHandlerTests: LogicTests {
         
         expect(
             sut,
-            with: .confirmApplication(makePayload()),
+            with: makeConfirmApplication(),
             toDeliver: makeApplicationResultSuccess(success: success)
         ) {
             confirmApplication.complete(with: .success(success))
@@ -156,6 +156,7 @@ final class EffectHandlerTests: LogicTests {
     private typealias SUT = EffectHandler<ApplicationSuccess, ConfirmApplicationPayload, OTP>
     private typealias ConfirmApplication = Spy<ConfirmApplicationPayload, Event.ApplicationResult>
     private typealias OTP = CallSpy<String, Void>
+    private typealias Effect = CreditCardMVPCoreTests.Effect<ConfirmApplicationPayload, OTP>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -169,7 +170,7 @@ final class EffectHandlerTests: LogicTests {
         let otp = OTP(stubs: [()])
         let sut = SUT(
             confirmApplication: confirmApplication.process,
-            otpWitness: { otp in otp.call }
+            otpWitness: { _ in otp.call }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -179,17 +180,24 @@ final class EffectHandlerTests: LogicTests {
         return (sut, confirmApplication, otp)
     }
     
+    private func makeConfirmApplication(
+        _ payload: ConfirmApplicationPayload? = nil
+    ) -> Effect {
+        
+        return .confirmApplication(payload ?? makePayload())
+    }
+    
     private func expect(
         _ sut: SUT,
-        with effect: SUT.Effect,
-        toDeliver expectedEvents: SUT.Event...,
+        with effect: Effect,
+        toDeliver expectedEvents: Event...,
         on action: @escaping () -> Void,
         file: StaticString = #file,
         line: UInt = #line
     ) {
         let exp = expectation(description: "wait for completion")
         exp.expectedFulfillmentCount = expectedEvents.count
-        var events = [SUT.Event]()
+        var events = [Event]()
         
         sut.handleEffect(effect) {
             

@@ -293,6 +293,8 @@ final class ReducerTests: LogicTests {
     // MARK: - Helpers
     
     private typealias SUT = Reducer<ApplicationSuccess, ConfirmApplicationPayload, OTP>
+    private typealias State = CreditCardMVPCoreTests.State<ApplicationSuccess, OTP>
+    private typealias Effect = CreditCardMVPCoreTests.Effect<ConfirmApplicationPayload, OTP>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -303,6 +305,18 @@ final class ReducerTests: LogicTests {
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return sut
+    }
+    
+    private struct OTP: Equatable {
+        
+        let value: String
+    }
+    
+    private func makeOTP(
+        _ value: String = anyMessage()
+    ) -> OTP {
+        
+        return .init(value: value)
     }
     
     private func makeState(
