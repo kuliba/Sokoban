@@ -45,7 +45,7 @@ enum RootViewNavigation {
     case failure(Failure)
     case openProduct(OpenProduct)
     case orderCardResponse(OpenCardDomain.OrderCardResponse)
-    case savingsAccount(OpenSavingsAccountCompleteDomain.Complete, OpenSavingsAccountCompleteDomain.UpdateFastAll, NewInProgressFlag)
+    case savingsAccount(OpenSavingsAccountCompleteDomain.Complete, OpenSavingsAccountCompleteDomain.UpdateFastAll, ProcessingFlag)
 
     case outside(RootViewOutside)
     case scanQR(Node<QRScannerDomain.Binder>)

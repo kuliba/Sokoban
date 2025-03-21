@@ -177,7 +177,7 @@ class MainViewModel: ObservableObject, Resetable {
 
 extension MainViewModel {
     
-    static let logo: Image = .ic12LogoVortexColor
+    static let logo: Image = .ic12LogoColor
     
     func reset() {
         

@@ -10,11 +10,21 @@ import Foundation
 extension RootViewModelFactory {
     
     @inlinable
-    func makeMeToMeFlow() -> MeToMeDomain.Flow {
+    func makeMeToMeFlow(
+        _ processingFlag: ProcessingFlag
+    ) -> MeToMeDomain.Flow {
         
         composeFlow(
             delayProvider: delayProvider,
-            getNavigation: getNavigation
+            getNavigation: { [weak self] in
+                
+                self?.getNavigation(
+                    processingFlag: processingFlag,
+                    select: $0,
+                    notify: $1,
+                    completion: $2
+                )
+            }
         )
     }
     
@@ -32,6 +42,7 @@ extension RootViewModelFactory {
     
     @inlinable
     func getNavigation(
+        processingFlag: ProcessingFlag,
         select: MeToMeDomain.Select,
         notify: @escaping MeToMeDomain.Notify,
         completion: @escaping (MeToMeDomain.Navigation) -> Void
@@ -41,7 +52,7 @@ extension RootViewModelFactory {
             completion(.alert(alert))
             
         case .meToMe:
-            let node = makeMeToMeNode { notify($0.event) }
+            let node = makeMeToMeNode(processingFlag: processingFlag) { notify($0.event) }
             completion(node.map { .meToMe($0) } ?? .alert("Ошибка создания платежа между своими."))
             
         case let .successMeToMe(successMeToMe):

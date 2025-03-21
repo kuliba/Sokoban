@@ -9,7 +9,7 @@ struct FeatureFlags: Equatable {
     
     let c2gFlag: C2GFlag
     let creditCardMVPFlag: СreditCardMVPFlag
-    let newInProgressFlag: NewInProgressFlag
+    let processingFlag: ProcessingFlag
     let paymentsTransfersFlag: PaymentsTransfersFlag
     let collateralLoanLandingFlag: CollateralLoanLandingFlag
     let splashScreenFlag: SplashScreenFlag

@@ -4,8 +4,8 @@
   },
   "images" : [
     {
-      "filename" : "ic24PlusCircle.svg",
-      "idiom" : "universal"
+      "idiom" : "universal",
+      "filename" : "ic24PlusCircle.svg"
     }
   ],
   "info" : {

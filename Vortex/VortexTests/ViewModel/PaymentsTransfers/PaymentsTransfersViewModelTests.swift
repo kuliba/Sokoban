@@ -1074,7 +1074,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
             makeServicePaymentBinder: ServicePaymentBinder.preview,
             makeOpenNewProductButtons: { _ in [] },
             operationDetailFactory: .preview,
-            makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() }
+            makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() },
+            makePaymentsMeToMeViewModel: { .init(model, mode: $0, successViewModelFactory: .previewSuccess) }
         )
         
         let paymentsTransfersFactory = PaymentsTransfersFactory(
@@ -1089,7 +1090,8 @@ final class PaymentsTransfersViewModelTests: XCTestCase {
                 
                 completion(.utilities)
             },
-            makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() }
+            makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() },
+            makePaymentsMeToMeViewModel: { .init(model, mode: $0, successViewModelFactory: .previewSuccess) }
         )
         
         let sut = SUT(

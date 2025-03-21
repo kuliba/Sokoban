@@ -15,7 +15,8 @@ extension RootViewModelFactory {
     @inlinable
     func makeTransfers(
         buttonTypes: [PaymentsTransfersPersonalTransfersDomain.ButtonType] = PaymentsTransfersPersonalTransfersDomain.ButtonType.allCases,
-        makeQRModel: @escaping () -> QRScannerModel
+        makeQRModel: @escaping () -> QRScannerModel,
+        makeSuccessViewModelFactory: @escaping () -> SuccessViewModelFactory
     ) -> PaymentsTransfersPersonalTransfersDomain.Binder {
         
         let elements = buttonTypes.map {
@@ -28,7 +29,10 @@ extension RootViewModelFactory {
         return composeBinder(
             content: content,
             delayProvider: delayProvider,
-            getNavigation: getNavigation(makeQRModel: makeQRModel),
+            getNavigation: getNavigation(
+                makeQRModel: makeQRModel,
+                makeSuccessViewModelFactory: makeSuccessViewModelFactory
+            ),
             witnesses: .init(
                 emitting: {
                     
@@ -67,7 +71,8 @@ extension RootViewModelFactory {
     
     @inlinable
     func getNavigation(
-        makeQRModel: @escaping () -> QRScannerModel
+        makeQRModel: @escaping () -> QRScannerModel,
+        makeSuccessViewModelFactory: @escaping () -> SuccessViewModelFactory
     ) -> (
         PaymentsTransfersPersonalTransfersDomain.Select,
         @escaping PaymentsTransfersPersonalTransfersDomain.Notify,
@@ -81,6 +86,7 @@ extension RootViewModelFactory {
             let nanoServicesComposer = PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer(
                 makeQRModel: makeQRModel,
                 model: model,
+                makeSuccessViewModelFactory: makeSuccessViewModelFactory,
                 scheduler: schedulers.main
             )
             

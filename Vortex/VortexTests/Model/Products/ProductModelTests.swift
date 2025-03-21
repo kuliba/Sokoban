@@ -11,7 +11,32 @@ import CardStatementAPI
 
 class ProductModelTests: XCTestCase {
 
-    //MARK: - Products data
+    // MARK: - test updateProducts
+    
+    func test_updateProducts_initialProductsIsEmpty_shouldUpdateProducts() {
+        
+        let data = ProductsData()
+        
+        XCTAssertNil(data[.card])
+        
+        let result = data.update(with: .cardProducts, for: .card)
+        
+        XCTAssertNoDiff(result, [.card: .cardProducts])
+    }
+    
+    func test_updateProducts_initialProductsNotEmpty_shouldUpdateProducts() {
+        
+        let data: ProductsData = [.card : [.cardActiveMainUsd]]
+        
+        XCTAssertNoDiff(data[.card], [.cardActiveMainUsd])
+        
+        let result = data.update(with: [.cardActiveMainDebitOnlyRub], for: .card)
+        
+        XCTAssertNotNil(result[.card]?.contains(.cardActiveMainDebitOnlyRub))
+        XCTAssertNotNil(result[.card]?.contains(.cardActiveMainUsd))
+    }
+    
+    // MARK: - Products data
     
     func testReduceProducts_New_Type_Not_Empty() throws {
 
@@ -19,7 +44,7 @@ class ProductModelTests: XCTestCase {
         let existing: ProductsData = [.card : [Self.sampleCard]]
         
         // when
-        let result = Model.reduce(products: existing, with: [Self.sampleAccount], for: .account)
+        let result = existing.update(with: [Self.sampleAccount], for: .account)
         
         // then
         XCTAssertNotNil(result[.card])
@@ -40,7 +65,7 @@ class ProductModelTests: XCTestCase {
         let existing: ProductsData = [.card : [Self.sampleCard]]
         
         // when
-        let result = Model.reduce(products: existing, with: [], for: .account)
+        let result = existing.update(with: [], for: .account)
         
         // then
         XCTAssertEqual(existing, result)
@@ -52,7 +77,7 @@ class ProductModelTests: XCTestCase {
         let existing: ProductsData = [.card : [Self.sampleCard]]
         
         // when
-        let result = Model.reduce(products: existing, with: [Self.sampleCard, Self.sampleCardTwo], for: .card)
+        let result = existing.update(with: [Self.sampleCard, Self.sampleCardTwo], for: .card)
         
         // then
         XCTAssertNotNil(result[.card])
@@ -71,7 +96,7 @@ class ProductModelTests: XCTestCase {
         let existing: ProductsData = [.card : [Self.sampleCard]]
         
         // when
-        let result = Model.reduce(products: existing, with: [Self.sampleCardTwo], for: .card)
+        let result = existing.update(with: [Self.sampleCardTwo], for: .card)
         
         // then
         XCTAssertNotNil(result[.card])
@@ -89,7 +114,7 @@ class ProductModelTests: XCTestCase {
         let existing: ProductsData = [.card : [Self.sampleCard]]
         
         // when
-        let result = Model.reduce(products: existing, with: [], for: .card)
+        let result = existing.update(with: [], for: .card)
         
         // then
         XCTAssertNil(result[.card])
@@ -104,7 +129,7 @@ class ProductModelTests: XCTestCase {
         let existing: ProductsData = [.card : [Self.sampleCard]]
         
         // when
-        let result = Model.reduce(products: existing, with: [Self.sampleAccount], for: .card)
+        let result = existing.update(with: [Self.sampleAccount], for: .card)
         
         // then
         XCTAssertEqual(existing, result)

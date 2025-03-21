@@ -1,15 +1,15 @@
 {
-  "info" : {
-    "version" : 1,
-    "author" : "xcode"
-  },
+  "images" : [
+    {
+      "idiom" : "universal",
+      "filename" : "ic24DivideCircle.svg"
+    }
+  ],
   "properties" : {
     "template-rendering-intent" : "template"
   },
-  "images" : [
-    {
-      "filename" : "ic24DivideCircle.svg",
-      "idiom" : "universal"
-    }
-  ]
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  }
 }

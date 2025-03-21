@@ -22,6 +22,7 @@ struct PaymentsTransfersFactory {
     let makeTemplates: MakeTemplates
     let makeUtilitiesViewModel: MakeUtilitiesViewModel
     let makePaymentsTransfers: MakePaymentsTransfers
+    let makePaymentsMeToMeViewModel: MakePaymentsMeToMeViewModel
 }
 
 extension PaymentsTransfersFactory {
@@ -67,7 +68,6 @@ extension PaymentsTransfersFactory {
     typealias MakeServicePaymentBinder = (AnywayTransactionState.Transaction, ServicePaymentFlowState) -> ServicePaymentBinder
     
     typealias MakePaymentsTransfers = () -> PaymentsTransfersSwitcherProtocol
-
 }
 
 extension PaymentsTransfersFactory {
@@ -96,7 +96,8 @@ extension PaymentsTransfersFactory {
             makeServicePaymentBinder: ServicePaymentBinder.preview,
             makeOpenNewProductButtons: { _ in [] },
             operationDetailFactory: .preview,
-            makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() }
+            makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() },
+            makePaymentsMeToMeViewModel: { _ in .none }
         )
         
         return .init(
@@ -108,7 +109,8 @@ extension PaymentsTransfersFactory {
             makeServicePaymentBinder: ServicePaymentBinder.preview,
             makeTemplates: { _ in .sampleComplete },
             makeUtilitiesViewModel: { _,_ in },
-            makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() }
+            makePaymentsTransfers: { PreviewPaymentsTransfersSwitcher() },
+            makePaymentsMeToMeViewModel: { _ in .none }
         )
     }()
 }
@@ -248,7 +250,8 @@ extension TemplatesListFlowModel<TemplatesListViewModel, AnywayFlowModel> {
                     model: .emptyMock,
                     closeAction: close
                 ))))
-            }
+            },
+            makeTemplates: { _  in .sampleComplete }
         )
         let effectHandler = TemplatesListFlowEffectHandler<AnywayFlowModel>(
             microServices: microServices

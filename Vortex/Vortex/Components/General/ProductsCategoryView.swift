@@ -65,7 +65,7 @@ struct ProductsCategoryView: View {
     private func capsuleWithDots() -> some View {
         
         let capsuleColor = isSelected ? Color.mainColorsGrayLightest : .clear
-        let circleColor = isShowingDot ? Color.mainColorsRed : .mainColorsGrayLightest
+        let circleColor = isShowingDot ? Color.mainColorsRed : .clear
 
         ZStack(alignment: .topTrailing) {
             Capsule().foregroundColor(capsuleColor)

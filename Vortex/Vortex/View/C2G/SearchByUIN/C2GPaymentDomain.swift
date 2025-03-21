@@ -81,7 +81,7 @@ extension C2GPaymentDomain {
         
         let context: Context
         let details: OperationDetailDomain.Model
-        let document: DocumentButtonDomain.Model
+        let document: C2GDocumentButtonDomain.Binder
         
         struct Context: Equatable {
             

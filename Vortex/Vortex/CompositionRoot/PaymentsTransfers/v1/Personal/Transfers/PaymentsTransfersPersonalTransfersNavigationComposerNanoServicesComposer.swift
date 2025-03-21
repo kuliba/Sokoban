@@ -14,18 +14,22 @@ final class PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComp
     private let makeQRModel: MakeQRScannerModel
     private let model: Model
     private let scheduler: AnySchedulerOf<DispatchQueue>
+    let makeSuccessViewModelFactory: MakeSuccessViewModelFactory
     
     init(
         makeQRModel: @escaping MakeQRScannerModel,
         model: Model,
+        makeSuccessViewModelFactory: @escaping MakeSuccessViewModelFactory,
         scheduler: AnySchedulerOf<DispatchQueue>
     ) {
         self.makeQRModel = makeQRModel
         self.model = model
+        self.makeSuccessViewModelFactory = makeSuccessViewModelFactory
         self.scheduler = scheduler
     }
     
     typealias MakeQRScannerModel = () -> QRScannerModel
+    typealias MakeSuccessViewModelFactory = () -> SuccessViewModelFactory
 }
 
 extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServicesComposer {
@@ -204,7 +208,11 @@ private extension PaymentsTransfersPersonalTransfersNavigationComposerNanoServic
         notify: @escaping Notify
     ) -> Node<PaymentsMeToMeViewModel>? {
         
-        guard let meToMe = PaymentsMeToMeViewModel(model, mode: .demandDeposit)
+        guard let meToMe = PaymentsMeToMeViewModel(
+            model,
+            mode: .demandDeposit,
+            successViewModelFactory: makeSuccessViewModelFactory()
+        )
         else { return nil }
         
         let cancellables = bind(meToMe, using: notify)

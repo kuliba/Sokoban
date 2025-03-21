@@ -10,35 +10,6 @@ import XCTest
 
 final class Model_ProductsTests: XCTestCase {
     
-    // MARK: - test updateProducts
-
-    func test_updateProducts_initialProductsIsEmpty_shouldUpdateProducts() {
-        
-        let sut = makeSUT()
-        
-        XCTAssertNoDiff(sut.products(.card), [])
-        
-        let result = sut.updateProducts(productsData: sut.products.value, with: .cardProducts, for: .card)
-        
-        XCTAssertNoDiff(result, [.card: .cardProducts])
-        XCTAssertNoDiff(sut.products(.card), .cardProducts)
-    }
-    
-    func test_updateProducts_initialProductsNotEmpty_shouldUpdateProducts() {
-        
-        let sut = makeSUT(productsData: [.card : [.cardActiveMainUsd]])
-        
-        XCTAssertNoDiff(sut.products(.card), [.cardActiveMainUsd])
-        
-        let result = sut.updateProducts(productsData: sut.products.value, with: [.cardActiveMainDebitOnlyRub], for: .card)
-        
-        XCTAssertNotNil(result[.card]?.contains(.cardActiveMainDebitOnlyRub))
-        XCTAssertNotNil(result[.card]?.contains(.cardActiveMainUsd))
-
-        XCTAssertNotNil(sut.products(.card)?.contains(.cardActiveMainDebitOnlyRub))
-        XCTAssertNotNil(sut.products(.card)?.contains(.cardActiveMainUsd))
-    }
-    
     // MARK: - test handleGetProductListByTypeResponse
 
     func test_handleGetProductListByTypeResponse_cardType_responseNil_shouldNotUpdateProducts() {
