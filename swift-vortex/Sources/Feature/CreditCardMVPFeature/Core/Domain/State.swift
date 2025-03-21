@@ -5,10 +5,12 @@
 //  Created by Igor Malyarov on 21.03.2025.
 //
 
+import StateMachines
+
 public struct State<ApplicationSuccess, OTP> {
     
     public var applicationResult: ApplicationResult?
-    public var otp: OTPState = .missing
+    public var otp: OTPState = .pending
     
     public init(
         applicationResult: ApplicationResult? = nil,
@@ -29,7 +31,7 @@ public extension State {
         case alert, informer
     }
     
-    typealias OTPState = LoadableState<OTP, Failure>
+    typealias OTPState = LoadState<OTP, Failure>
 }
 
 extension State: Equatable where ApplicationSuccess: Equatable, OTP: Equatable {}
