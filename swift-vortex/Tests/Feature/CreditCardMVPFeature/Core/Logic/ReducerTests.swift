@@ -13,14 +13,15 @@ struct LoadFailure<FailureType>: Error {
 
 extension LoadFailure: Equatable where FailureType: Equatable {}
 
-struct State<OTP> {
+struct State<OrderSuccess, OTP> {
     
     let otp: OTP?
     var orderResult: OrderResult?
+}
+
+extension State {
     
-    typealias OrderResult = Result<OK, LoadFailure<FailureType>>
-    
-    struct OK: Equatable {}
+    typealias OrderResult = Result<OrderSuccess, LoadFailure<FailureType>>
     
     enum FailureType {
         
@@ -28,21 +29,24 @@ struct State<OTP> {
     }
 }
 
-extension State: Equatable where OTP: Equatable {}
+extension State: Equatable where OrderSuccess: Equatable, OTP: Equatable {}
 
-enum Event: Equatable {
+enum Event<OrderSuccess> {
     
     case orderResult(OrderResult)
+}
+
+extension Event {
     
-    typealias OrderResult = Result<OK, LoadFailure<FailureType>>
-    
-    struct OK: Equatable {}
+    typealias OrderResult = Result<OrderSuccess, LoadFailure<FailureType>>
     
     enum FailureType {
         
         case alert, informer, otp
     }
 }
+
+extension Event: Equatable where OrderSuccess: Equatable {}
 
 enum Effect<OTP> {
     
@@ -51,7 +55,7 @@ enum Effect<OTP> {
 
 extension Effect: Equatable where OTP: Equatable {}
 
-final class Reducer<OTP> {}
+final class Reducer<OrderSuccess, OTP> {}
 
 extension Reducer {
     
@@ -74,8 +78,8 @@ extension Reducer {
 
 extension Reducer {
     
-    typealias State = CreditCardMVPCoreTests.State<OTP>
-    typealias Event = CreditCardMVPCoreTests.Event
+    typealias State = CreditCardMVPCoreTests.State<OrderSuccess, OTP>
+    typealias Event = CreditCardMVPCoreTests.Event<OrderSuccess>
     typealias Effect = CreditCardMVPCoreTests.Effect<OTP>
 }
 
@@ -94,7 +98,7 @@ private extension Reducer {
                     message: failure.message,
                     type: .alert
                 ))
-
+                
             case .informer:
                 state.orderResult = .failure(.init(
                     message: failure.message,
@@ -106,7 +110,7 @@ private extension Reducer {
             }
             
         case let .success(success):
-            state.orderResult = .success(.init())
+            state.orderResult = .success(success)
         }
     }
 }
@@ -248,11 +252,12 @@ final class ReducerTests: XCTestCase {
     func test_orderResult_shouldChangeState_onSuccess_noOTP() {
         
         let state = makeState(otp: nil)
-        let event = makeOrderResultSuccess()
+        let success = makeOrderSuccess()
+        let event = makeOrderResultSuccess(orderSuccess: success)
         
         assert(state, event: event) {
             
-            $0.orderResult = .success(.init())
+            $0.orderResult = .success(success)
         }
     }
     
@@ -267,11 +272,12 @@ final class ReducerTests: XCTestCase {
     func test_orderResult_shouldChangeState_onSuccess() {
         
         let state = makeState(otp: makeOTP())
-        let event = makeOrderResultSuccess()
+        let success = makeOrderSuccess()
+        let event = makeOrderResultSuccess(orderSuccess: success)
         
         assert(state, event: event) {
             
-            $0.orderResult = .success(.init())
+            $0.orderResult = .success(success)
         }
     }
     
@@ -285,7 +291,7 @@ final class ReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = Reducer<OTP>
+    private typealias SUT = Reducer<OrderSuccess, OTP>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -330,9 +336,22 @@ final class ReducerTests: XCTestCase {
     }
     
     private func makeOrderResultSuccess(
+        orderSuccess: OrderSuccess? = nil
     ) -> SUT.Event {
         
-        return .orderResult(.success(.init()))
+        return .orderResult(.success(orderSuccess ?? makeOrderSuccess()))
+    }
+    
+    private struct OrderSuccess: Equatable {
+        
+        let value: String
+    }
+    
+    private func makeOrderSuccess(
+        _ value: String = anyMessage()
+    ) -> OrderSuccess {
+        
+        return .init(value: value)
     }
     
     @discardableResult

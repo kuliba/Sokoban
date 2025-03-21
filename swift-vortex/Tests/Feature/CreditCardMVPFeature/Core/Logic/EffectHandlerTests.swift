@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 21.03.2025.
 //
 
-final class EffectHandler<OTP> {
+final class EffectHandler<OrderSuccess, OTP> {
     
     private let otpWitness: OTPWitness
     
@@ -34,7 +34,7 @@ extension EffectHandler {
     
     typealias Dispatch = (Event) -> Void
     
-    typealias Event = CreditCardMVPCoreTests.Event
+    typealias Event = CreditCardMVPCoreTests.Event<OrderSuccess>
     typealias Effect = CreditCardMVPCoreTests.Effect<OTP>
 }
 
@@ -66,7 +66,7 @@ final class EffectHandlerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = EffectHandler<OTP>
+    private typealias SUT = EffectHandler<OrderSuccess, OTP>
     private typealias OTP = CallSpy<String, Void>
     
     private func makeSUT(
@@ -85,6 +85,18 @@ final class EffectHandlerTests: XCTestCase {
         return (sut, otp)
     }
     
+    private struct OrderSuccess: Equatable {
+        
+        let value: String
+    }
+    
+    private func makeOrderSuccess(
+        _ value: String = anyMessage()
+    ) -> OrderSuccess {
+        
+        return .init(value: value)
+    }
+
     private func expect(
         _ sut: SUT,
         with effect: SUT.Effect,
