@@ -160,8 +160,8 @@ extension CreateDraftCollateralLoanApplication {
             "Липецк"
         ],
         consents: [
-            .init(name: "Согласие 1", link: "https://www.forabank.ru/"),
-            .init(name: "Согласие 2", link: "https://www.forabank.ru/")
+            .init(name: "Согласие 1", link: "https://www.vortex.com"),
+            .init(name: "Согласие 2", link: "https://www.vortex.com")
             ],
         icons: .init(
             productName: "info",
