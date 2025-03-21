@@ -51,8 +51,8 @@ public extension LoadableState {
         return true
     }
     
-    /// A predefined idle state where no resource is loaded, and status is `loadedOK`.
-    static var idle: Self { .init(resource: nil, status: .loadedOK) }
+    /// A predefined idle state where no resource is not loaded, and status is `loadedOK`.
+    static var missing: Self { .init(resource: nil, status: .loadedOK) }
     
     /// A predefined state representing an empty resource in a loading phase.
     static var emptyLoading: Self { .init(resource: nil, status: .loading) }

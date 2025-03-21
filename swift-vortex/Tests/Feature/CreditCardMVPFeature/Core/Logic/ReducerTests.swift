@@ -15,19 +15,21 @@ extension LoadFailure: Equatable where FailureType: Equatable {}
 
 struct State<ApplicationSuccess, OTP> {
     
-    let otp: OTP?
     var applicationResult: ApplicationResult?
+    var otp: OTPState = .missing
 }
 
 extension State {
     
-    typealias ApplicationResult = Result<ApplicationSuccess, ApplicationFailure>
-    typealias ApplicationFailure = LoadFailure<FailureType>
+    typealias ApplicationResult = Result<ApplicationSuccess, Failure>
+    typealias Failure = LoadFailure<FailureType>
     
     enum FailureType {
         
         case alert, informer
     }
+    
+    typealias OTPState = LoadableState<OTP, Failure>
 }
 
 extension State: Equatable where ApplicationSuccess: Equatable, OTP: Equatable {}
@@ -42,7 +44,7 @@ extension Event {
     
     typealias ApplicationResult = Result<ApplicationSuccess, ApplicationFailure>
     typealias ApplicationFailure = LoadFailure<FailureType>
-
+    
     enum FailureType {
         
         case alert, informer, otp
@@ -114,7 +116,7 @@ private extension Reducer {
     ) {
         guard isValid(state) else { return }
         
-        effect = state.otp == nil ? .loadOTP : makeApplicationPayload(state).map { .apply($0) }
+        effect = state.otp.resource == nil ? .loadOTP : makeApplicationPayload(state).map { .apply($0) }
     }
     
     func reduce(
@@ -138,7 +140,7 @@ private extension Reducer {
                 ))
                 
             case .otp:
-                effect = state.otp.map { .notifyOTP($0, failure.message) }
+                effect = state.otp.resource.map { .notifyOTP($0, failure.message) }
             }
             
         case let .success(success):
@@ -147,6 +149,7 @@ private extension Reducer {
     }
 }
 
+import CreditCardMVPCore
 import XCTest
 
 final class ReducerTests: LogicTests {
@@ -165,7 +168,7 @@ final class ReducerTests: LogicTests {
     
     func test_applicationResult_shouldChangeState_onAlertFailure_noOTP() {
         
-        let state = makeState(otp: nil)
+        let state = makeState(otp: .missing)
         let message = anyMessage()
         let event = makeApplicationResultFailure(message: message, type: .alert)
         
@@ -177,7 +180,7 @@ final class ReducerTests: LogicTests {
     
     func test_applicationResult_shouldNotDeliverEffect_onAlertFailure_noOTP() {
         
-        let state = makeState(otp: nil)
+        let state = makeState(otp: .missing)
         let message = anyMessage()
         let event = makeApplicationResultFailure(message: message, type: .alert)
         
@@ -186,7 +189,7 @@ final class ReducerTests: LogicTests {
     
     func test_applicationResult_shouldChangeState_onAlertFailure_withOTP() {
         
-        let state = makeState(otp: makeOTP())
+        let state = makeState(otp: presentOTP())
         let message = anyMessage()
         let event = makeApplicationResultFailure(message: message, type: .alert)
         
@@ -198,7 +201,7 @@ final class ReducerTests: LogicTests {
     
     func test_applicationResult_shouldNotDeliverEffect_onAlertFailure_withOTP() {
         
-        let state = makeState(otp: makeOTP())
+        let state = makeState(otp: presentOTP())
         let message = anyMessage()
         let event = makeApplicationResultFailure(message: message, type: .alert)
         
@@ -209,7 +212,7 @@ final class ReducerTests: LogicTests {
     
     func test_applicationResult_shouldChangeState_onInformerFailure_noOTP() {
         
-        let state = makeState(otp: nil)
+        let state = makeState(otp: .missing)
         let message = anyMessage()
         let event = makeApplicationResultFailure(message: message, type: .informer)
         
@@ -221,7 +224,7 @@ final class ReducerTests: LogicTests {
     
     func test_applicationResult_shouldNotDeliverEffect_onInformerFailure_noOTP() {
         
-        let state = makeState(otp: nil)
+        let state = makeState(otp: .missing)
         let message = anyMessage()
         let event = makeApplicationResultFailure(message: message, type: .informer)
         
@@ -230,7 +233,7 @@ final class ReducerTests: LogicTests {
     
     func test_applicationResult_shouldChangeState_onInformerFailure_withOTP() {
         
-        let state = makeState(otp: makeOTP())
+        let state = makeState(otp: presentOTP())
         let message = anyMessage()
         let event = makeApplicationResultFailure(message: message, type: .informer)
         
@@ -242,7 +245,7 @@ final class ReducerTests: LogicTests {
     
     func test_applicationResult_shouldNotDeliverEffect_onInformerFailure_withOTP() {
         
-        let state = makeState(otp: makeOTP())
+        let state = makeState(otp: presentOTP())
         let message = anyMessage()
         let event = makeApplicationResultFailure(message: message, type: .informer)
         
@@ -253,7 +256,7 @@ final class ReducerTests: LogicTests {
     
     func test_applicationResult_shouldNotChangeState_onOTPFailure_noOTP() {
         
-        let state = makeState(otp: nil)
+        let state = makeState(otp: .missing)
         let message = anyMessage()
         let event = makeApplicationResultFailure(message: message, type: .otp)
         
@@ -262,7 +265,7 @@ final class ReducerTests: LogicTests {
     
     func test_applicationResult_shouldNotDeliverEffect_onOTPFailure_noOTP() {
         
-        let state = makeState(otp: nil)
+        let state = makeState(otp: .missing)
         let message = anyMessage()
         let event = makeApplicationResultFailure(message: message, type: .otp)
         
@@ -271,29 +274,28 @@ final class ReducerTests: LogicTests {
     
     func test_applicationResult_shouldNotChangeState_onOTPFailure_withOTP() {
         
-        let otp = makeOTP()
-        let state = makeState(otp: otp)
+        let state = makeState(otp: presentOTP())
         let message = anyMessage()
         let event = makeApplicationResultFailure(message: message, type: .otp)
         
         assert(state, event: event)
     }
     
-    func test_applicationResult_shouldDeliverEffect_onOTPFailure_withOTP() {
+    func test_applicationResult_shouldDeliverEffect_onOTPFailure_withOTP() throws {
         
-        let otp = makeOTP()
+        let otp = presentOTP()
         let state = makeState(otp: otp)
         let message = anyMessage()
         let event = makeApplicationResultFailure(message: message, type: .otp)
         
-        assert(state, event: event, delivers: .notifyOTP(otp, message))
+        try assert(state, event: event, delivers: .notifyOTP(XCTUnwrap(otp.resource), message))
     }
     
     // MARK: - applicationResult: success
     
     func test_applicationResult_shouldChangeState_onSuccess_noOTP() {
         
-        let state = makeState(otp: nil)
+        let state = makeState(otp: .missing)
         let success = makeApplicationSuccess()
         let event = makeApplicationResultSuccess(success: success)
         
@@ -305,7 +307,7 @@ final class ReducerTests: LogicTests {
     
     func test_applicationResult_shouldNotDeliverEffect_onSuccess_noOTP() {
         
-        let state = makeState(otp: nil)
+        let state = makeState(otp: .missing)
         let event = makeApplicationResultSuccess()
         
         assert(state, event: event, delivers: nil)
@@ -313,7 +315,7 @@ final class ReducerTests: LogicTests {
     
     func test_applicationResult_shouldChangeState_onSuccess_withOTP() {
         
-        let state = makeState(otp: makeOTP())
+        let state = makeState(otp: presentOTP())
         let success = makeApplicationSuccess()
         let event = makeApplicationResultSuccess(success: success)
         
@@ -325,7 +327,7 @@ final class ReducerTests: LogicTests {
     
     func test_applicationResult_shouldNotDeliverEffect_onSuccess_withOTP() {
         
-        let state = makeState(otp: makeOTP())
+        let state = makeState(otp: presentOTP())
         let event = makeApplicationResultSuccess()
         
         assert(state, event: event, delivers: nil)
@@ -335,7 +337,7 @@ final class ReducerTests: LogicTests {
     
     func test_continue_shouldNotChangeState_onInvalidState_noOTP() {
         
-        let state = makeState(otp: nil)
+        let state = makeState(otp: .missing)
         let (sut, _) = makeSUT(isValid: { _ in false })
         
         assert(sut: sut, state, event: .continue)
@@ -343,7 +345,7 @@ final class ReducerTests: LogicTests {
     
     func test_continue_shouldNotDeliverEffect_onInvalidState_noOTP() {
         
-        let state = makeState(otp: nil)
+        let state = makeState(otp: .missing)
         let (sut, _) = makeSUT(isValid: { _ in false })
         
         assert(sut: sut, state, event: .continue, delivers: nil)
@@ -351,7 +353,7 @@ final class ReducerTests: LogicTests {
     
     func test_continue_shouldNotChangeState_onInvalidState_withOTP() {
         
-        let state = makeState(otp: makeOTP())
+        let state = makeState(otp: presentOTP())
         let (sut, _) = makeSUT(isValid: { _ in false })
         
         assert(sut: sut, state, event: .continue)
@@ -359,7 +361,7 @@ final class ReducerTests: LogicTests {
     
     func test_continue_shouldNotDeliverEffect_onInvalidState_withOTP() {
         
-        let state = makeState(otp: makeOTP())
+        let state = makeState(otp: presentOTP())
         let (sut, _) = makeSUT(isValid: { _ in false })
         
         assert(sut: sut, state, event: .continue, delivers: nil)
@@ -367,7 +369,7 @@ final class ReducerTests: LogicTests {
     
     func test_continue_shouldNotChangeState_onValidState_noOTP() {
         
-        let state = makeState(otp: nil)
+        let state = makeState(otp: .missing)
         let (sut, _) = makeSUT(isValid: { _ in true })
         
         assert(sut: sut, state, event: .continue)
@@ -375,7 +377,7 @@ final class ReducerTests: LogicTests {
     
     func test_continue_shouldDeliverEffect_onValidState_noOTP() {
         
-        let state = makeState(otp: nil)
+        let state = makeState(otp: .missing)
         let (sut, _) = makeSUT(isValid: { _ in true })
         
         assert(sut: sut, state, event: .continue, delivers: .loadOTP)
@@ -383,7 +385,7 @@ final class ReducerTests: LogicTests {
     
     func test_continue_shouldNotCallMakePayloadWithState_onValidState_noOTP() {
         
-        let state = makeState(otp: nil)
+        let state = makeState(otp: .missing)
         let (sut, makePayload) = makeSUT(isValid: { _ in true })
         
         _ = sut.reduce(state, .continue)
@@ -393,7 +395,7 @@ final class ReducerTests: LogicTests {
     
     func test_continue_shouldNotChangeState_onValidState_withOTP() {
         
-        let state = makeState(otp: makeOTP())
+        let state = makeState(otp: presentOTP())
         let (sut, _) = makeSUT(isValid: { _ in true })
         
         assert(sut: sut, state, event: .continue)
@@ -401,7 +403,7 @@ final class ReducerTests: LogicTests {
     
     func test_continue_shouldCallMakePayloadWithState_onValidState_withOTP() {
         
-        let state = makeState(otp: makeOTP())
+        let state = makeState(otp: presentOTP())
         let (sut, makePayload) = makeSUT(isValid: { _ in true })
         
         _ = sut.reduce(state, .continue)
@@ -411,7 +413,7 @@ final class ReducerTests: LogicTests {
     
     func test_continue_shouldNotDeliverEffect_onValidState_withOTP() {
         
-        let state = makeState(otp: makeOTP())
+        let state = makeState(otp: presentOTP())
         let (sut, _) = makeSUT(applicationPayload: nil, isValid: { _ in true })
         
         assert(sut: sut, state, event: .continue, delivers: nil)
@@ -420,7 +422,7 @@ final class ReducerTests: LogicTests {
     func test_continue_shouldDeliverEffect_onValidState_withOTP() {
         
         let payload = makePayload()
-        let state = makeState(otp: makeOTP())
+        let state = makeState(otp: presentOTP())
         let (sut, _) = makeSUT(applicationPayload: payload, isValid: { _ in true })
         
         assert(sut: sut, state, event: .continue, delivers: .apply(payload))
@@ -467,12 +469,19 @@ final class ReducerTests: LogicTests {
         return .init(value: value)
     }
     
+    private func presentOTP(
+        _ value: String = anyMessage()
+    ) -> State.OTPState {
+        
+        return .init(resource: .init(value: value), status: .loadedOK)
+    }
+    
     private func makeState(
-        otp: OTP? = nil,
-        applicationResult: State.ApplicationResult? = nil
+        applicationResult: State.ApplicationResult? = nil,
+        otp: State.OTPState
     ) -> State {
         
-        return .init(otp: otp, applicationResult: applicationResult)
+        return .init(applicationResult: applicationResult, otp: otp)
     }
     
     @discardableResult
