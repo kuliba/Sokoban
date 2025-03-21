@@ -223,12 +223,15 @@ final class ReducerTests: LogicTests {
         assert(sut: sut, state, event: .continue, delivers: nil)
     }
     
-    func test_continue_shouldNotChangeState_onValidState_noOTP() {
+    func test_continue_shouldChangeState_onValidState_noOTP() {
         
         let state = makeState(otp: .pending)
         let (sut, _) = makeSUT(isValid: { _ in true })
         
-        assert(sut: sut, state, event: .continue)
+        assert(sut: sut, state, event: .continue) {
+            
+            $0.otp = .loading(nil)
+        }
     }
     
     func test_continue_shouldDeliverEffect_onValidState_noOTP() {

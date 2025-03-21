@@ -61,7 +61,14 @@ private extension Reducer {
     ) {
         guard isValid(state) else { return }
         
-        effect = state.otp.success == nil ? .loadOTP : makeApplicationPayload(state).map { .apply($0) }
+        switch state.otp.success {
+        case .none:
+            state.otp = .loading(nil)
+            effect = .loadOTP
+            
+        case .some:
+            effect = makeApplicationPayload(state).map { .apply($0) }
+        }
     }
     
     func reduce(

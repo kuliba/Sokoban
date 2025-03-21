@@ -14,9 +14,10 @@ final class EffectHandlerTests: LogicTests {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, application, otp) = makeSUT()
+        let (sut, application, loadOTP, otp) = makeSUT()
         
         XCTAssertEqual(application.callCount, 0)
+        XCTAssertEqual(loadOTP.callCount, 0)
         XCTAssertEqual(otp.callCount, 0)
         XCTAssertNotNil(sut)
     }
@@ -26,7 +27,7 @@ final class EffectHandlerTests: LogicTests {
     func test_apply_shouldCallConfirmApplicationWithPayload() {
         
         let payload = makePayload()
-        let (sut, application, _) = makeSUT()
+        let (sut, application, _,_) = makeSUT()
         
         sut.handleEffect(.apply(payload)) { _ in }
         
@@ -35,7 +36,7 @@ final class EffectHandlerTests: LogicTests {
     
     func test_apply_shouldDeliverAlertFailure_onApplicationAlertFailure() {
         
-        let (sut, application, _) = makeSUT()
+        let (sut, application, _,_) = makeSUT()
         let message = anyMessage()
         
         expect(
@@ -49,7 +50,7 @@ final class EffectHandlerTests: LogicTests {
     
     func test_apply_shouldDeliverInformerFailure_onApplicationInformerFailure() {
         
-        let (sut, application, _) = makeSUT()
+        let (sut, application, _,_) = makeSUT()
         let message = anyMessage()
         
         expect(
@@ -63,7 +64,7 @@ final class EffectHandlerTests: LogicTests {
     
     func test_apply_shouldDeliverOTPFailure_onApplicationOTPFailure() {
         
-        let (sut, application, _) = makeSUT()
+        let (sut, application, _,_) = makeSUT()
         let message = anyMessage()
         
         expect(
@@ -77,7 +78,7 @@ final class EffectHandlerTests: LogicTests {
     
     func test_apply_shouldDeliverSuccess_onApplicationSuccess() {
         
-        let (sut, application, _) = makeSUT()
+        let (sut, application, _,_) = makeSUT()
         let success = makeApplicationSuccess()
         
         expect(
@@ -89,12 +90,23 @@ final class EffectHandlerTests: LogicTests {
         }
     }
     
+    // MARK: - loadOTP
+    
+    func test_loadOTP_shouldCallLoadOTP() {
+        
+        let (sut, _, loadOTP, _) = makeSUT()
+        
+        sut.handleEffect(.loadOTP) { _ in }
+        
+        XCTAssertEqual(loadOTP.callCount, 1)
+    }
+    
     // MARK: - notifyOTP
     
     func test_notifyOTP_shouldCallNotifyOTP() {
         
         let message = anyMessage()
-        let (sut, _, otp) = makeSUT()
+        let (sut, _,_, otp) = makeSUT()
         
         sut.handleEffect(.notifyOTP(otp, message)) { _ in }
         
@@ -105,6 +117,7 @@ final class EffectHandlerTests: LogicTests {
     
     private typealias SUT = EffectHandler<ApplicationPayload, ApplicationSuccess, OTP>
     private typealias Application = Spy<ApplicationPayload, Event.ApplicationResult>
+    private typealias LoadOTPSpy = Spy<Void, Void>
     private typealias OTP = CallSpy<String, Void>
     private typealias Effect = CreditCardMVPCore.Effect<ApplicationPayload, OTP>
     
@@ -114,20 +127,24 @@ final class EffectHandlerTests: LogicTests {
     ) -> (
         sut: SUT,
         application: Application,
+        loadOTP: LoadOTPSpy,
         otp: OTP
     ) {
         let application = Application()
+        let loadOTP = LoadOTPSpy()
         let otp = OTP(stubs: [()])
         let sut = SUT(
             apply: application.process,
+            loadOTP: loadOTP.process,
             otpWitness: { _ in otp.call }
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(application, file: file, line: line)
+        trackForMemoryLeaks(loadOTP, file: file, line: line)
         trackForMemoryLeaks(otp, file: file, line: line)
         
-        return (sut, application, otp)
+        return (sut, application, loadOTP, otp)
     }
     
     private func makeApplication(
