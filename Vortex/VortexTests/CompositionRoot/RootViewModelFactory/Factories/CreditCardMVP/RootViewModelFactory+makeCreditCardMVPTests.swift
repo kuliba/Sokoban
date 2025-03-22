@@ -219,31 +219,22 @@ final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTes
     
     // MARK: - alert
     
-    func test_shouldShowAlert_onServerError() {
+    func test_shouldShowAlert_onAlertFailure() {
         
         let (sut, loadSpy) = makeSUT()
         
-        loadSpy.complete(with: .init(message: anyMessage(), type: .alert))
+        loadSpy.complete(with: alert())
         
         XCTAssertTrue(sut.flow.isShowingAlert)
     }
     
     // MARK: - informer
     
-    func test_shouldShowInformer_onConnectivityError() {
+    func test_shouldShowInformer_onInformerFailure() {
         
         let (sut, loadSpy) = makeSUT()
         
-        loadSpy.complete(with: .init(message: anyMessage(), type: .informer))
-        
-        XCTAssertTrue(sut.flow.isShowingInformer)
-    }
-    
-    func test_shouldShowInformer_onUnknownStatus() {
-        
-        let (sut, loadSpy) = makeSUT()
-        
-        loadSpy.complete(with: .init(message: anyMessage(), type: .informer))
+        loadSpy.complete(with: informer())
         
         XCTAssertTrue(sut.flow.isShowingInformer)
     }
@@ -251,7 +242,7 @@ final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTes
     func test_shouldRemoveInformer_onDismiss() {
         
         let (sut, loadSpy) = makeSUT()
-        loadSpy.complete(with: .init(message: anyMessage(), type: .informer))
+        loadSpy.complete(with: informer())
         XCTAssertTrue(sut.flow.isShowingInformer)
         
         sut.flow.event(.dismiss)
@@ -333,6 +324,16 @@ final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTes
         trackForMemoryLeaks(loadSpy, file: file, line: line)
         
         return (sut, loadSpy)
+    }
+    
+    private func alert() -> LoadFailure<CreditCardMVPDomain.Failure> {
+        
+        return .init(message: anyMessage(), type: .alert)
+    }
+    
+    private func informer() -> LoadFailure<CreditCardMVPDomain.Failure> {
+        
+        return .init(message: anyMessage(), type: .informer)
     }
 }
 
