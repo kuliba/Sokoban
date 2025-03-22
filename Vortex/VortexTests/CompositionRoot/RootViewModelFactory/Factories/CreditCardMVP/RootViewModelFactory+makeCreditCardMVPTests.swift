@@ -63,10 +63,12 @@ extension CreditCardMVPDomain {
 extension RootViewModelFactory {
     
     // TODO: add @inlinable
-    func makeCreditCardMVPBinder() -> CreditCardMVPDomain.Binder {
+    func makeCreditCardMVPBinder(
+        content: CreditCardMVPDomain.Content
+    ) -> CreditCardMVPDomain.Binder {
         
         composeBinder(
-            content: .init(.pending),
+            content: content,
             getNavigation: getNavigation,
             witnesses: .init(
                 emitting: { $0.compactMap(\.select) },
@@ -248,7 +250,7 @@ final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTes
     ) -> SUT {
         
         let (factory, _,_) = super.makeSUT(file: file, line: line)
-        let sut = factory.makeCreditCardMVPBinder()
+        let sut = factory.makeCreditCardMVPBinder(content: .init(.pending))
         
         trackForMemoryLeaks(sut, file: file, line: line)
         
