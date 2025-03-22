@@ -209,53 +209,35 @@ extension CreditCardMVPDomain.State {
     var select: CreditCardMVPDomain.Select? {
         
         switch self {
-        case let .completed(completed):
-            switch completed {
-            case .approved:
+        case .completed(.approved):
+            return .approved
+            
+        case let .completed(.draft(draft)):
+            switch draft.application {
+            case .completed(.approved):
                 return .approved
                 
-            case let .draft(draft):
-                switch draft.application {
-                case let .completed(completed):
-                    switch completed {
-                    case .approved:
-                        return .approved
-                        
-                    case .inReview:
-                        return .inReview
-                        
-                    case .rejected:
-                        return .rejected
-                    }
-                    
-                case let .failure(failure):
-                    switch failure.type {
-                    case .alert:
-                        return .alert
-                        
-                    case .informer:
-                        return .informer
-                    }
-                    
-                case .loading, .pending:
-                    return nil
-                }
-                
-            case .inReview:
+            case .completed(.inReview):
                 return .inReview
                 
-            case .rejected:
+            case .completed(.rejected):
                 return .rejected
+                
+            case let .failure(failure):
+                return failure.select
+                
+            case .loading, .pending:
+                return nil
             }
             
+        case .completed(.inReview):
+            return .inReview
+            
+        case .completed(.rejected):
+            return .rejected
+            
         case let .failure(failure):
-            switch failure.type {
-            case .alert:
-                return .alert
-                
-            case .informer:
-                return .informer
-            }
+            return failure.select
             
         case .loading, .pending:
             return nil
@@ -265,6 +247,17 @@ extension CreditCardMVPDomain.State {
     // TODO: extract to extension in UI mapping
     
     // var isLoading: Bool { application.isLoading || status.isLoading }
+}
+
+extension CreditCardMVPDomain.Failure {
+    
+    var select: CreditCardMVPDomain.Select {
+        
+        switch type {
+        case .alert:    return .alert
+        case .informer: return .informer
+        }
+    }
 }
 
 @testable import Vortex
