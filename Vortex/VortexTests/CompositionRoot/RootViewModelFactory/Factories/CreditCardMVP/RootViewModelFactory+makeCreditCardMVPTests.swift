@@ -22,18 +22,7 @@ extension CreditCardMVPDomain {
     
     // MARK: - Content
     
-    typealias Content = CurrentValueSubject<State, Never> // RxViewModel<State, Event, Effect>
-    typealias State = StateMachines.LoadState<ApplicationStatus, LoadFailure<Failure>>
-    
-    enum ApplicationStatus {
-        
-        case approved, draft, inReview, rejected
-    }
-    
-    enum Failure {
-        
-        case alert, informer
-    }
+    typealias Content = RxViewModel<State, Event, Effect>
     
     // MARK: - Flow
     
@@ -60,6 +49,46 @@ extension CreditCardMVPDomain {
     }
 }
 
+extension CreditCardMVPDomain {
+    
+    // MARK: - Content Domain
+    
+    typealias State = StateMachines.LoadState<ApplicationStatus, ApplicationFailure>
+    
+    enum Event {
+        
+        case dismissInformer
+        case load(LoadEvent)
+        
+        typealias LoadEvent = StateMachines.LoadEvent<ApplicationStatus, ApplicationFailure>
+    }
+    
+    typealias Effect = StateMachines.LoadEffect
+    
+    // MARK: - Content Logic
+    
+    typealias LoadReducer = StateMachines.LoadReducer<ApplicationStatus, ApplicationFailure>
+    typealias LoadEffectHandler = StateMachines.LoadEffectHandler<ApplicationStatus, ApplicationFailure>
+    
+    // MARK: - Content Types
+    
+    typealias ApplicationFailure = LoadFailure<Failure>
+    
+    enum ApplicationStatus {
+        
+        case approved, draft, inReview, rejected
+    }
+    
+    enum Failure {
+        
+        case alert, informer
+    }
+    
+    typealias LoadResult = Result<ApplicationStatus, ApplicationFailure>
+    typealias LoadCompletion = (LoadResult) -> Void
+    typealias Load = (@escaping LoadCompletion) -> Void
+}
+
 extension RootViewModelFactory {
     
     // TODO: add @inlinable
@@ -67,13 +96,48 @@ extension RootViewModelFactory {
         content: CreditCardMVPDomain.Content
     ) -> CreditCardMVPDomain.Binder {
         
-        composeBinder(
+        content.event(.load(.load))
+        
+        return composeBinder(
             content: content,
             getNavigation: getNavigation,
             witnesses: .init(
-                emitting: { $0.compactMap(\.select) },
-                dismissing: { content in { content.value = .pending }}
+                emitting: { $0.$state.compactMap(\.select) },
+                dismissing: { content in { content.event(.dismissInformer) }}
             )
+        )
+    }
+    
+    // TODO: add @inlinable
+    func makeCreditCardMVPContent(
+        load: @escaping CreditCardMVPDomain.Load
+    ) -> CreditCardMVPDomain.Content {
+        
+        let reducer = CreditCardMVPDomain.LoadReducer()
+        let effectHandler = CreditCardMVPDomain.LoadEffectHandler(load: load)
+        
+        return .init(
+            initialState: .pending,
+            reduce: { state, event in // TODO: extract reducer
+                
+                var state = state
+                var effect: CreditCardMVPDomain.Effect?
+                
+                switch event {
+                case let .load(loadEvent):
+                    (state, effect) = reducer.reduce(state, loadEvent)
+                    
+                case .dismissInformer:
+                    state = .pending
+                }
+                
+                return (state, effect)
+            },
+            handleEffect: { effect, dispatch in
+                
+                effectHandler.handleEffect(effect) { dispatch(.load($0)) }
+            },
+            scheduler: schedulers.main
         )
     }
     
@@ -138,9 +202,17 @@ import XCTest
 
 final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTests {
     
+    func test_shouldCallLoadInitially() {
+        
+        let (sut, loadSpy) = makeSUT()
+        
+        XCTAssertEqual(loadSpy.callCount, 1)
+        XCTAssertNotNil(sut)
+    }
+    
     func test_shouldHaveNoNavigationInitially() {
         
-        let sut = makeSUT()
+        let (sut, _) = makeSUT()
         
         XCTAssertNil(sut.flow.state.navigation)
     }
@@ -149,9 +221,9 @@ final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTes
     
     func test_shouldShowAlert_onServerError() {
         
-        let sut = makeSUT()
+        let (sut, loadSpy) = makeSUT()
         
-        sut.content.send(.failure(.init(message: anyMessage(), type: .alert))) // httpClient.complete(with: makeServerErrorData())
+        loadSpy.complete(with: .init(message: anyMessage(), type: .alert))
         
         XCTAssertTrue(sut.flow.isShowingAlert)
     }
@@ -160,26 +232,26 @@ final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTes
     
     func test_shouldShowInformer_onConnectivityError() {
         
-        let sut = makeSUT()
+        let (sut, loadSpy) = makeSUT()
         
-        sut.content.send(.failure(.init(message: anyMessage(), type: .informer))) // httpClient.complete(with: anyError())
+        loadSpy.complete(with: .init(message: anyMessage(), type: .informer))
         
         XCTAssertTrue(sut.flow.isShowingInformer)
     }
     
     func test_shouldShowInformer_onUnknownStatus() {
         
-        let sut = makeSUT()
+        let (sut, loadSpy) = makeSUT()
         
-        sut.content.send(.failure(.init(message: anyMessage(), type: .informer))) // httpClient.complete(with: makeUnknownStatusData())
+        loadSpy.complete(with: .init(message: anyMessage(), type: .informer))
         
         XCTAssertTrue(sut.flow.isShowingInformer)
     }
     
     func test_shouldRemoveInformer_onDismiss() {
         
-        let sut = makeSUT()
-        sut.content.send(.failure(.init(message: anyMessage(), type: .informer))) // httpClient.complete(with: anyError())
+        let (sut, loadSpy) = makeSUT()
+        loadSpy.complete(with: .init(message: anyMessage(), type: .informer))
         XCTAssertTrue(sut.flow.isShowingInformer)
         
         sut.flow.event(.dismiss)
@@ -191,18 +263,18 @@ final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTes
     
     func test_shouldShowForm_onDraftStatus() {
         
-        let sut = makeSUT()
+        let (sut, loadSpy) = makeSUT()
         
-        sut.content.send(.completed(.draft)) // httpClient.complete(with: makeDraftStatusData())
+        loadSpy.complete(with: .draft)
         
         XCTAssertTrue(sut.content.hasForm)
     }
     
     func test_shouldNotNavigate_onDraftStatus() {
         
-        let sut = makeSUT()
+        let (sut, loadSpy) = makeSUT()
         
-        sut.content.send(.completed(.draft)) // httpClient.complete(with: makeDraftStatusData())
+        loadSpy.complete(with: .draft)
         
         XCTAssertNil(sut.flow.state.navigation)
     }
@@ -211,9 +283,9 @@ final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTes
     
     func test_shouldNavigateToApproved_onApprovedStatus() {
         
-        let sut = makeSUT()
+        let (sut, loadSpy) = makeSUT()
         
-        sut.content.send(.completed(.approved)) // httpClient.complete(with: makeApprovedStatusData())
+        loadSpy.complete(with: .approved)
         
         XCTAssertTrue(sut.flow.isShowingApproved)
     }
@@ -222,9 +294,9 @@ final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTes
     
     func test_shouldNavigateToRejected_onInReviewStatus() {
         
-        let sut = makeSUT()
+        let (sut, loadSpy) = makeSUT()
         
-        sut.content.send(.completed(.inReview)) // httpClient.complete(with: makeInReviewStatusData())
+        loadSpy.complete(with: .inReview)
         
         XCTAssertTrue(sut.flow.isShowingInReview)
     }
@@ -233,9 +305,9 @@ final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTes
     
     func test_shouldNavigateToRejected_onRejectedStatus() {
         
-        let sut = makeSUT()
+        let (sut, loadSpy) = makeSUT()
         
-        sut.content.send(.completed(.rejected)) // httpClient.complete(with: makeRejectedStatusData())
+        loadSpy.complete(with: .rejected)
         
         XCTAssertTrue(sut.flow.isShowingRejected)
     }
@@ -243,25 +315,25 @@ final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTes
     // MARK: - Helpers
     
     private typealias SUT = CreditCardMVPDomain.Binder
+    private typealias LoadSpy = Spy<Void, CreditCardMVPDomain.ApplicationStatus, CreditCardMVPDomain.ApplicationFailure>
     
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
-    ) -> SUT {
-        
+    ) -> (
+        sut: SUT,
+        loadSpy: LoadSpy
+    ) {
         let (factory, _,_) = super.makeSUT(file: file, line: line)
-        let sut = factory.makeCreditCardMVPBinder(content: .init(.pending))
+        let loadSpy = LoadSpy()
+        let content = factory.makeCreditCardMVPContent(load: loadSpy.process)
+        let sut = factory.makeCreditCardMVPBinder(content: content)
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(loadSpy, file: file, line: line)
         
-        return sut
+        return (sut, loadSpy)
     }
-    
-    func makeUnknownStatusData() -> Data { fatalError() }
-    func makeDraftStatusData() -> Data { fatalError() }
-    func makeApprovedStatusData() -> Data { fatalError() }
-    func makeInReviewStatusData() -> Data { fatalError() }
-    func makeRejectedStatusData() -> Data { fatalError() }
 }
 
 // MARK: - DSL
@@ -270,13 +342,13 @@ extension CreditCardMVPDomain.Content {
     
     var hasConnectivityError: Bool {
         
-        guard case let .failure(failure) = value else { return false }
+        guard case let .failure(failure) = state else { return false }
         return failure.type == .alert
     }
     
     var hasForm: Bool {
         
-        guard case let .completed(status) = value else { return false }
+        guard case let .completed(status) = state else { return false }
         return status == .draft
     }
 }
