@@ -33,6 +33,7 @@ extension CreditCardMVPDomain {
     enum Select {
         
         case alert
+        case failure
         case informer
         case approved
         case inReview
@@ -42,6 +43,7 @@ extension CreditCardMVPDomain {
     enum Navigation {
         
         case alert
+        case failure
         case informer
         case approved
         case inReview
@@ -191,6 +193,7 @@ extension RootViewModelFactory {
     ) {
         switch select {
         case .alert:    completion(.alert)
+        case .failure:  completion(.failure)
         case .informer: completion(.informer)
         case .approved: completion(.approved)
         case .inReview: completion(.inReview)
@@ -224,7 +227,10 @@ extension CreditCardMVPDomain.State {
                 return .rejected
                 
             case let .failure(failure):
-                return failure.select
+                switch failure.type {
+                case .alert:    return .failure
+                case .informer: return .informer
+                }
                 
             case .loading, .pending:
                 return nil
@@ -237,7 +243,10 @@ extension CreditCardMVPDomain.State {
             return .rejected
             
         case let .failure(failure):
-            return failure.select
+            switch failure.type {
+            case .alert:    return .alert
+            case .informer: return .informer
+            }
             
         case .loading, .pending:
             return nil
@@ -247,17 +256,6 @@ extension CreditCardMVPDomain.State {
     // TODO: extract to extension in UI mapping
     
     // var isLoading: Bool { application.isLoading || status.isLoading }
-}
-
-extension CreditCardMVPDomain.Failure {
-    
-    var select: CreditCardMVPDomain.Select {
-        
-        switch type {
-        case .alert:    return .alert
-        case .informer: return .informer
-        }
-    }
 }
 
 @testable import Vortex
@@ -341,7 +339,7 @@ final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTes
         XCTAssertNil(sut.flow.state.navigation)
     }
     
-    func test_shouldShowAlert_onDraftApplyAlertFailure() {
+    func test_shouldNavigateToFailure_onDraftApplyAlertFailure() {
         
         let (sut, loadSpy, applySpy) = makeSUT()
         loadSpy.complete(with: draft())
@@ -349,7 +347,7 @@ final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTes
         sut.content.event(.apply(.load))
         applySpy.complete(with: alert())
         
-        XCTAssertTrue(sut.flow.isShowingAlert)
+        XCTAssertTrue(sut.flow.isShowingFailure)
     }
     
     func test_shouldShowInformer_onDraftApplyInformerFailure() {
@@ -512,6 +510,12 @@ extension CreditCardMVPDomain.Flow {
     var isShowingAlert: Bool {
         
         guard case .alert = state.navigation else { return false }
+        return true
+    }
+    
+    var isShowingFailure: Bool {
+        
+        guard case .failure = state.navigation else { return false }
         return true
     }
     
