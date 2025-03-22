@@ -44,9 +44,8 @@ extension CreditCardMVPDomain {
         
         case alert
         case informer
-        case approved
-        case rejected
         case complete(Complete)
+        case decision(Decision)
         
         struct Complete {
             
@@ -58,14 +57,24 @@ extension CreditCardMVPDomain {
                 case failure, inReview
             }
         }
+        
+        struct Decision {
+            
+            let status: Status
+            
+            enum Status {
+                
+                case approved, rejected
+            }
+        }
     }
 }
 
 // TODO: move to UI Mapping: map to PaymentCompletion.Status to reuse completion view
 //extension CreditCardMVPDomain.Navigation.Complete.Status {
-//    
+//
 //    var paymentCompletionStatus: PaymentCompletion.Status {
-//        
+//
 //        switch self {
 //        case .failure:  return .rejected
 //        case .inReview: return .completed
@@ -227,7 +236,7 @@ extension RootViewModelFactory {
             completion(.informer)
             
         case .approved:
-            completion(.approved)
+            completion(.decision(.init(status: .approved)))
             
         case .inReview:
             completion(.complete(.init(
@@ -236,7 +245,7 @@ extension RootViewModelFactory {
             )))
             
         case .rejected:
-            completion(.rejected)
+            completion(.decision(.init(status: .rejected)))
         }
     }
 }
@@ -575,8 +584,8 @@ extension CreditCardMVPDomain.Flow {
     
     var isShowingApproved: Bool {
         
-        guard case .approved = state.navigation else { return false }
-        return true
+        guard case let .decision(decision) = state.navigation else { return false }
+        return decision.status == .approved
     }
     
     var isShowingInReview: Bool {
@@ -589,7 +598,7 @@ extension CreditCardMVPDomain.Flow {
     
     var isShowingRejected: Bool {
         
-        guard case .rejected = state.navigation else { return false }
-        return true
+        guard case let .decision(decision) = state.navigation else { return false }
+        return decision.status == .rejected
     }
 }
