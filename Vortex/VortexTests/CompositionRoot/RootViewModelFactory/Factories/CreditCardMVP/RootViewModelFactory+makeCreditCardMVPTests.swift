@@ -138,117 +138,122 @@ final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTes
     
     func test_shouldHaveNoNavigationInitially() {
         
-        let (sut, _,_) = makeSUT()
-        let binder = sut.makeCreditCardMVPBinder()
+        let sut = makeSUT()
         
-        XCTAssertNil(binder.flow.state.navigation)
+        XCTAssertNil(sut.flow.state.navigation)
     }
     
     // MARK: - alert
     
     func test_shouldShowAlert_onServerError() {
         
-        let (sut, _,_) = makeSUT()
-        let binder = sut.makeCreditCardMVPBinder()
+        let sut = makeSUT()
         
-        binder.content.send(.failure(.init(message: anyMessage(), type: .alert))) // httpClient.complete(with: makeServerErrorData())
+        sut.content.send(.failure(.init(message: anyMessage(), type: .alert))) // httpClient.complete(with: makeServerErrorData())
         
-        XCTAssertTrue(binder.flow.isShowingAlert)
+        XCTAssertTrue(sut.flow.isShowingAlert)
     }
     
     // MARK: - informer
     
     func test_shouldShowInformer_onConnectivityError() {
         
-        let (sut, _,_) = makeSUT()
-        let binder = sut.makeCreditCardMVPBinder()
+        let sut = makeSUT()
         
-        binder.content.send(.failure(.init(message: anyMessage(), type: .informer))) // httpClient.complete(with: anyError())
+        sut.content.send(.failure(.init(message: anyMessage(), type: .informer))) // httpClient.complete(with: anyError())
         
-        XCTAssertTrue(binder.flow.isShowingInformer)
+        XCTAssertTrue(sut.flow.isShowingInformer)
     }
     
     func test_shouldShowInformer_onUnknownStatus() {
         
-        let (sut, _,_) = makeSUT()
-        let binder = sut.makeCreditCardMVPBinder()
+        let sut = makeSUT()
         
-        binder.content.send(.failure(.init(message: anyMessage(), type: .informer))) // httpClient.complete(with: makeUnknownStatusData())
+        sut.content.send(.failure(.init(message: anyMessage(), type: .informer))) // httpClient.complete(with: makeUnknownStatusData())
         
-        XCTAssertTrue(binder.flow.isShowingInformer)
+        XCTAssertTrue(sut.flow.isShowingInformer)
     }
     
     func test_shouldRemoveInformer_onDismiss() {
         
-        let (sut, _,_) = makeSUT()
-        let binder = sut.makeCreditCardMVPBinder()
-        binder.content.send(.failure(.init(message: anyMessage(), type: .informer))) // httpClient.complete(with: anyError())
-        XCTAssertTrue(binder.flow.isShowingInformer)
+        let sut = makeSUT()
+        sut.content.send(.failure(.init(message: anyMessage(), type: .informer))) // httpClient.complete(with: anyError())
+        XCTAssertTrue(sut.flow.isShowingInformer)
         
-        binder.flow.event(.dismiss)
+        sut.flow.event(.dismiss)
         
-        XCTAssertFalse(binder.content.hasConnectivityError)
+        XCTAssertFalse(sut.content.hasConnectivityError)
     }
     
     // MARK: - form
     
     func test_shouldShowForm_onDraftStatus() {
         
-        let (sut, _,_) = makeSUT()
-        let binder = sut.makeCreditCardMVPBinder()
+        let sut = makeSUT()
         
-        binder.content.send(.completed(.draft)) // httpClient.complete(with: makeDraftStatusData())
+        sut.content.send(.completed(.draft)) // httpClient.complete(with: makeDraftStatusData())
         
-        XCTAssertTrue(binder.content.hasForm)
+        XCTAssertTrue(sut.content.hasForm)
     }
     
     func test_shouldNotNavigate_onDraftStatus() {
         
-        let (sut, _,_) = makeSUT()
-        let binder = sut.makeCreditCardMVPBinder()
+        let sut = makeSUT()
         
-        binder.content.send(.completed(.draft)) // httpClient.complete(with: makeDraftStatusData())
+        sut.content.send(.completed(.draft)) // httpClient.complete(with: makeDraftStatusData())
         
-        XCTAssertNil(binder.flow.state.navigation)
+        XCTAssertNil(sut.flow.state.navigation)
     }
     
     // MARK: - approved
     
     func test_shouldNavigateToApproved_onApprovedStatus() {
         
-        let (sut, _,_) = makeSUT()
-        let binder = sut.makeCreditCardMVPBinder()
+        let sut = makeSUT()
         
-        binder.content.send(.completed(.approved)) // httpClient.complete(with: makeApprovedStatusData())
+        sut.content.send(.completed(.approved)) // httpClient.complete(with: makeApprovedStatusData())
         
-        XCTAssertTrue(binder.flow.isShowingApproved)
+        XCTAssertTrue(sut.flow.isShowingApproved)
     }
     
     // MARK: - inReview
     
     func test_shouldNavigateToRejected_onInReviewStatus() {
         
-        let (sut, _,_) = makeSUT()
-        let binder = sut.makeCreditCardMVPBinder()
+        let sut = makeSUT()
         
-        binder.content.send(.completed(.inReview)) // httpClient.complete(with: makeInReviewStatusData())
+        sut.content.send(.completed(.inReview)) // httpClient.complete(with: makeInReviewStatusData())
         
-        XCTAssertTrue(binder.flow.isShowingInReview)
+        XCTAssertTrue(sut.flow.isShowingInReview)
     }
     
     // MARK: - rejected
     
     func test_shouldNavigateToRejected_onRejectedStatus() {
         
-        let (sut, _,_) = makeSUT()
-        let binder = sut.makeCreditCardMVPBinder()
+        let sut = makeSUT()
         
-        binder.content.send(.completed(.rejected)) // httpClient.complete(with: makeRejectedStatusData())
+        sut.content.send(.completed(.rejected)) // httpClient.complete(with: makeRejectedStatusData())
         
-        XCTAssertTrue(binder.flow.isShowingRejected)
+        XCTAssertTrue(sut.flow.isShowingRejected)
     }
     
     // MARK: - Helpers
+    
+    private typealias SUT = CreditCardMVPDomain.Binder
+    
+    private func makeSUT(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> SUT {
+        
+        let (factory, _,_) = super.makeSUT(file: file, line: line)
+        let sut = factory.makeCreditCardMVPBinder()
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        
+        return sut
+    }
     
     func makeUnknownStatusData() -> Data { fatalError() }
     func makeDraftStatusData() -> Data { fatalError() }
