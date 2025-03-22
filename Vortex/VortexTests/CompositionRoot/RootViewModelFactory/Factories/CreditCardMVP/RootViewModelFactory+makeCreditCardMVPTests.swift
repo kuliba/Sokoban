@@ -43,13 +43,35 @@ extension CreditCardMVPDomain {
     enum Navigation {
         
         case alert
-        case failure
         case informer
         case approved
-        case inReview
         case rejected
+        case complete(Complete)
+        
+        struct Complete {
+            
+            let message: String
+            let status: Status
+            
+            enum Status {
+                
+                case failure, inReview
+            }
+        }
     }
 }
+
+// TODO: move to UI Mapping: map to PaymentCompletion.Status to reuse completion view
+//extension CreditCardMVPDomain.Navigation.Complete.Status {
+//    
+//    var paymentCompletionStatus: PaymentCompletion.Status {
+//        
+//        switch self {
+//        case .failure:  return .rejected
+//        case .inReview: return .completed
+//        }
+//    }
+//}
 
 // TODO: extract to module
 extension CreditCardMVPDomain {
@@ -192,14 +214,38 @@ extension RootViewModelFactory {
         completion: @escaping (CreditCardMVPDomain.Navigation) -> Void
     ) {
         switch select {
-        case .alert:    completion(.alert)
-        case .failure:  completion(.failure)
-        case .informer: completion(.informer)
-        case .approved: completion(.approved)
-        case .inReview: completion(.inReview)
-        case .rejected: completion(.rejected)
+        case .alert:
+            completion(.alert)
+            
+        case .failure:
+            completion(.complete(.init(
+                message: .failure,
+                status: .failure
+            )))
+            
+        case .informer:
+            completion(.informer)
+            
+        case .approved:
+            completion(.approved)
+            
+        case .inReview:
+            completion(.complete(.init(
+                message: .inReview,
+                status: .inReview
+            )))
+            
+        case .rejected:
+            completion(.rejected)
         }
     }
+}
+
+private extension String {
+    
+    static let failure = "Что-то пошло не так...\nПопробуйте позже."
+    
+    static let inReview = "Ожидайте рассмотрения Вашей заявки\nРезультат придет в Push/смс\nПримерное время рассмотрения заявки 10 минут."
 }
 
 extension CreditCardMVPDomain.State {
@@ -515,8 +561,10 @@ extension CreditCardMVPDomain.Flow {
     
     var isShowingFailure: Bool {
         
-        guard case .failure = state.navigation else { return false }
-        return true
+        guard case let .complete(complete) = state.navigation
+        else { return false }
+        
+        return complete.status == .failure
     }
     
     var isShowingInformer: Bool {
@@ -533,8 +581,10 @@ extension CreditCardMVPDomain.Flow {
     
     var isShowingInReview: Bool {
         
-        guard case .inReview = state.navigation else { return false }
-        return true
+        guard case let .complete(complete) = state.navigation
+        else { return false }
+        
+        return complete.status == .inReview
     }
     
     var isShowingRejected: Bool {
