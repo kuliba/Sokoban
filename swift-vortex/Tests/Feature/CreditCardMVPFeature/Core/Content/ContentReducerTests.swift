@@ -26,9 +26,10 @@ extension ContentDomain {
         typealias LoadEvent = StateMachines.LoadEvent<DraftableStatus, Failure>
     }
     
-    enum Effect {
+    enum Effect: Equatable {
         
-        case apply, load
+        case apply
+        case load(LoadEffect)
     }
     
     // MARK: - Content Types
@@ -62,6 +63,8 @@ extension ContentDomain {
     typealias DraftableReducer = StateMachines.LoadReducer<DraftableStatus, Failure>
     typealias FinalReducer = StateMachines.LoadReducer<FinalStatus, Failure>
     
+    typealias LoadEvent = StateMachines.LoadEvent<DraftableStatus, Failure>
+    
     // MARK: - Closures
     
     typealias LoadResult = Result<DraftableStatus, Failure>
@@ -94,7 +97,15 @@ extension ContentDomain.State {
 
 final class ContentReducer {
     
-    init() {}
+    private let loadReduce: LoadReduce
+    
+    init(loadReduce: @escaping LoadReduce) {
+        
+        self.loadReduce = loadReduce
+    }
+    
+    typealias LoadReduce = (State, LoadEvent) -> (State, LoadEffect?)
+    typealias LoadEvent = ContentDomain.LoadEvent
 }
 
 extension ContentReducer {
@@ -146,7 +157,9 @@ private extension ContentReducer {
         _ effect: inout Effect?,
         with loadEvent: Event.LoadEvent
     ) {
-        
+        let (reducedState, reducedEffect) = loadReduce(state, loadEvent)
+        state = reducedState
+        effect = reducedEffect.map { .load($0) }
     }
 }
 
@@ -161,6 +174,18 @@ import CreditCardMVPCore
 import XCTest
 
 final class ContentReducerTests: XCTestCase {
+    
+    // MARK: - init
+    
+    func test_init_shouldNotCallCollaborators() {
+        
+        let (sut, loadSpy) = makeSUT()
+        
+        XCTAssertEqual(loadSpy.callCount, 0)
+        XCTAssertNotNil(sut)
+    }
+    
+    // MARK: - apply
     
     // MARK: - dismissInformer
     
@@ -381,23 +406,66 @@ final class ContentReducerTests: XCTestCase {
         assert(.pending, event: .dismissInformer, delivers: nil)
     }
     
+    // MARK: - load
+    
+    func test_load_shouldCallLoadReduce() {
+        
+        let (sut, loadSpy) = makeSUT()
+        
+        _ = sut.reduce(makeDraftState(application: .pending), .load(.load))
+        
+        XCTAssertEqual(loadSpy.callCount, 1)
+    }
+    
+    func test_load_shouldDeliverLoadReduceState() {
+        
+        let state = makeDraftState(application: .completed(.inReview))
+        let (sut, _) = makeSUT(stub: (state, nil))
+        
+        assert(sut: sut, .pending, event: .load(.load)) { $0 = state }
+    }
+
+    func test_load_shouldDeliverLoadReduceEffect() {
+        
+        let state = makeDraftState(application: .completed(.inReview))
+        let (sut, _) = makeSUT(stub: (state, .load))
+
+        assert(sut: sut, .pending, event: .load(.load), delivers: .load(.load))
+    }
+
+    func test_load_shouldDeliverLoadReduceNilEffect() {
+        
+        let state = makeDraftState(application: .completed(.inReview))
+        let (sut, _) = makeSUT(stub: (state, nil))
+
+        assert(sut: sut, .pending, event: .load(.load), delivers: nil)
+    }
+
     // MARK: - Helpers
     
     private typealias SUT = ContentReducer
+    
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
+    private typealias LoadSpy = CallSpy<(State, ContentDomain.LoadEvent), (State, LoadEffect?)>
+    
     private func makeSUT(
+        stub: (State, LoadEffect?) = (.loading(nil), nil),
         file: StaticString = #file,
         line: UInt = #line
-    ) -> SUT {
-        
-        let sut = SUT()
+    ) -> (
+        sut: SUT,
+        loadSpy: LoadSpy
+    ) {
+        let loadSpy = LoadSpy(stubs: [stub])
+        let sut = SUT(loadReduce: loadSpy.call)
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(loadSpy, file: file, line: line)
         
-        return sut
+        return (sut, loadSpy)
     }
     
     private func makeDraftState(
@@ -433,7 +501,7 @@ final class ContentReducerTests: XCTestCase {
         line: UInt = #line
     ) -> State {
         
-        let sut = sut ?? makeSUT(file: file, line: line)
+        let sut = sut ?? makeSUT(file: file, line: line).sut
         
         var expectedState = state
         updateStateToExpected?(&expectedState)
@@ -460,7 +528,7 @@ final class ContentReducerTests: XCTestCase {
         line: UInt = #line
     ) -> Effect? {
         
-        let sut = sut ?? makeSUT(file: file, line: line)
+        let sut = sut ?? makeSUT(file: file, line: line).sut
         
         let (_, receivedEffect): (State, Effect?) = sut.reduce(state, event)
         
