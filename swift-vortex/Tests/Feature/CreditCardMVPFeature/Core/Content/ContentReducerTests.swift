@@ -12,8 +12,6 @@ enum ContentDomain {}
 
 extension ContentDomain {
     
-    // MARK: - Domain
-    
     typealias State = StateMachines.LoadState<DraftableStatus, Failure>
     
     enum Event {
@@ -32,7 +30,7 @@ extension ContentDomain {
         case load(LoadEffect)
     }
     
-    // MARK: - Content Types
+    // MARK: - Types
     
     typealias DraftableStatus = ApplicationStatus<Draft>
     typealias FinalStatus = ApplicationStatus<Never>
@@ -77,7 +75,7 @@ final class ContentReducer {
     typealias ApplyReduce = (ApplyState, ApplyEvent) -> (ApplyState, LoadEffect?)
     typealias ApplyState = ContentDomain.Draft.ApplicationState
     typealias ApplyEvent = ContentDomain.Event.ApplyEvent
-
+    
     typealias LoadReduce = (State, LoadEvent) -> (State, LoadEffect?)
     typealias LoadEvent = ContentDomain.Event.LoadEvent
 }
@@ -95,7 +93,7 @@ extension ContentReducer {
         switch event {
         case let .apply(applyEvent):
             reduce(&state, &effect, with: applyEvent)
-
+            
         case .dismissInformer:
             dismissInformer(&state)
             
@@ -208,7 +206,7 @@ final class ContentReducerTests: XCTestCase {
         
         assert(sut: sut, .completed(.approved), event: .apply(.load), delivers: nil)
     }
-
+    
     func test_apply_shouldNotChangeInReviewState() {
         
         let (sut, _,_) = makeSUT(applyStub: (.completed(.inReview), .load))
@@ -236,13 +234,13 @@ final class ContentReducerTests: XCTestCase {
         
         assert(sut: sut, .completed(.approved), event: .apply(.load), delivers: nil)
     }
-
+    
     func test_apply_shouldChangeApplicationState() {
         
         let (sut, _,_) = makeSUT(applyStub: (.completed(.inReview), .load))
         
         assert(sut: sut, makeDraftState(application: .pending), event: .apply(.load)) {
-        
+            
             $0 = .completed(.draft(.init(application: .completed(.inReview))))
         }
     }
