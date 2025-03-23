@@ -17,30 +17,40 @@ struct VerifiableApplicationState<ApplicationStatus, Verification, Failure: Erro
 
 extension VerifiableApplicationState: Equatable where ApplicationStatus: Equatable, Verification: Equatable, Failure: Equatable {}
 
-enum VerifiableApplicationEvent<VerificationEvent> {
+enum VerifiableApplicationEvent<VerificationEvent, Failure: Error> {
     
+    case application(ApplicationEvent)
     case verification(VerificationEvent)
+    
+    typealias ApplicationEvent = StateMachines.LoadEvent<VerificationEvent, Failure>
 }
 
-extension VerifiableApplicationEvent: Equatable where VerificationEvent: Equatable {}
+extension VerifiableApplicationEvent: Equatable where VerificationEvent: Equatable, Failure: Equatable {}
 
 enum VerifiableApplicationEffect<VerificationEffect> {
     
+    case application(ApplicationEffect)
     case verification(VerificationEffect)
+    
+    typealias ApplicationEffect = StateMachines.LoadEffect
 }
 
 extension VerifiableApplicationEffect: Equatable where VerificationEffect: Equatable {}
 
 final class VerifiableApplicationReducer<ApplicationStatus, Verification, VerificationEvent, VerificationEffect, Failure: Error> {
     
+    private let applicationReduce: ApplicationReduce
     private let verificationReduce: VerificationReduce
     
     init(
+        applicationReduce: @escaping ApplicationReduce,
         verificationReduce: @escaping VerificationReduce
     ) {
+        self.applicationReduce = applicationReduce
         self.verificationReduce = verificationReduce
     }
     
+    typealias ApplicationReduce = (State.ApplicationState, Event.ApplicationEvent) -> (State.ApplicationState, Effect.ApplicationEffect?)
     typealias VerificationReduce = (Verification, VerificationEvent) -> (Verification, VerificationEffect?)
 }
 
@@ -55,6 +65,9 @@ extension VerifiableApplicationReducer {
         var effect: Effect?
         
         switch event {
+        case let .application(applicationEvent):
+            reduce(&state, &effect, with: applicationEvent)
+            
         case let .verification(verificationEvent):
             reduce(&state, &effect, with: verificationEvent)
         }
@@ -66,11 +79,21 @@ extension VerifiableApplicationReducer {
 extension VerifiableApplicationReducer {
     
     typealias State = VerifiableApplicationState<ApplicationStatus, Verification, Failure>
-    typealias Event = VerifiableApplicationEvent<VerificationEvent>
+    typealias Event = VerifiableApplicationEvent<VerificationEvent, Failure>
     typealias Effect = VerifiableApplicationEffect<VerificationEffect>
 }
 
 private extension VerifiableApplicationReducer {
+    
+    func reduce(
+        _ state: inout State,
+        _ effect: inout Effect?,
+        with applicationEvent: Event.ApplicationEvent
+    ) {
+        let (application, applicationEffect) = applicationReduce(state.applicationState, applicationEvent)
+        state.applicationState = application
+        effect = applicationEffect.map { .application($0) }
+    }
     
     func reduce(
         _ state: inout State,
@@ -91,17 +114,59 @@ final class VerifiableApplicationReducerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, verification) = makeSUT()
+        let (sut, application, verification) = makeSUT()
         
+        XCTAssertEqual(application.callCount, 0)
         XCTAssertEqual(verification.callCount, 0)
         XCTAssertNotNil(sut)
+    }
+    
+    // MARK: - application
+    
+    func test_application_shouldCallApplicationReduceWithApplication() {
+        
+        let (sut, application, _) = makeSUT()
+        let applicationState = makeApplication()
+        let state = makeState(applicationState: applicationState)
+        let applicationEvent = makeApplicationEvent()
+        
+        _ = sut.reduce(state, .application(applicationEvent))
+        
+        XCTAssertNoDiff(application.payloads.map(\.0), [applicationState])
+        XCTAssertNoDiff(application.payloads.map(\.1), [applicationEvent])
+    }
+    
+    func test_application_shouldDeliverApplicationReduceState() {
+        
+        let applicationState = makeApplication()
+        let (sut, _,_) = makeSUT(applicationStub: (applicationState, nil))
+        
+        assert(sut: sut, makeState(), event: .application(makeApplicationEvent())) {
+            
+            $0.applicationState = applicationState
+        }
+    }
+    
+    func test_application_shouldDeliverApplicationReduceEffect() {
+        
+        let applicationEffect = makeApplicationEffect()
+        let (sut, _,_) = makeSUT(applicationStub: (makeApplication(), applicationEffect))
+        
+        assert(sut: sut, makeState(), event: .application(makeApplicationEvent()), delivers: .application(applicationEffect))
+    }
+    
+    func test_application_shouldDeliverApplicationReduceNilEffect() {
+        
+        let (sut, _,_) = makeSUT(applicationStub: (makeApplication(), nil))
+        
+        assert(sut: sut, makeState(), event: .application(makeApplicationEvent()), delivers: nil)
     }
     
     // MARK: - verification
     
     func test_verification_shouldCallVerificationReduceWithVerification() {
         
-        let (sut, verification) = makeSUT()
+        let (sut, _, verification) = makeSUT()
         let verificationState = makeVerification()
         let state = makeState(verification: verificationState)
         let verificationEvent = makeVerificationEvent()
@@ -115,7 +180,7 @@ final class VerifiableApplicationReducerTests: XCTestCase {
     func test_verification_shouldDeliverVerificationReduceState() {
         
         let verificationState = makeVerification()
-        let (sut, _) = makeSUT(stub: (verificationState, nil))
+        let (sut, _,_) = makeSUT(stub: (verificationState, nil))
         
         assert(sut: sut, makeState(), event: .verification(makeVerificationEvent())) {
             
@@ -126,14 +191,14 @@ final class VerifiableApplicationReducerTests: XCTestCase {
     func test_verification_shouldDeliverVerificationReduceEffect() {
         
         let verificationEffect = makeVerificationEffect()
-        let (sut, _) = makeSUT(stub: (makeVerification(), verificationEffect))
+        let (sut, _,_) = makeSUT(stub: (makeVerification(), verificationEffect))
         
         assert(sut: sut, makeState(), event: .verification(makeVerificationEvent()), delivers: .verification(verificationEffect))
     }
     
     func test_verification_shouldDeliverVerificationReduceNilEffect() {
         
-        let (sut, _) = makeSUT(stub: (makeVerification(), nil))
+        let (sut, _,_) = makeSUT(stub: (makeVerification(), nil))
         
         assert(sut: sut, makeState(), event: .verification(makeVerificationEvent()), delivers: nil)
     }
@@ -146,25 +211,35 @@ final class VerifiableApplicationReducerTests: XCTestCase {
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
+    private typealias ApplicationSpy = CallSpy<(State.ApplicationState, Event.ApplicationEvent), (State.ApplicationState, Effect.ApplicationEffect?)>
     private typealias VerificationSpy = CallSpy<(Verification, VerificationEvent), (Verification, VerificationEffect?)>
     
     private func makeSUT(
+        applicationStub: (State.ApplicationState, Effect.ApplicationEffect?)? = nil,
         stub: (Verification, VerificationEffect?)? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
+        applicationSpy: ApplicationSpy,
         verification: VerificationSpy
     ) {
+        let application = ApplicationSpy(stubs: [
+            applicationStub ?? (.loading(nil), .load)
+        ])
         let verification = VerificationSpy(stubs: [
             stub ?? (makeVerification(), makeVerificationEffect())
         ])
-        let sut = SUT(verificationReduce: verification.call)
+        let sut = SUT(
+            applicationReduce: application.call,
+            verificationReduce: verification.call
+        )
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(application, file: file, line: line)
         trackForMemoryLeaks(verification, file: file, line: line)
         
-        return (sut, verification)
+        return (sut, application, verification)
     }
     
     private func makeState(
@@ -178,6 +253,13 @@ final class VerifiableApplicationReducerTests: XCTestCase {
         )
     }
     
+    private func makeApplication(
+        _ status: ApplicationStatus? = nil
+    ) -> State.ApplicationState {
+        
+        return .completed(status ?? makeApplicationStatus())
+    }
+    
     private struct ApplicationStatus: Equatable {
         
         let value: String
@@ -188,6 +270,20 @@ final class VerifiableApplicationReducerTests: XCTestCase {
     ) -> ApplicationStatus {
         
         return .init(value: value)
+    }
+    
+    private func makeApplicationEvent(
+        _ value: String = anyMessage()
+    ) -> Event.ApplicationEvent {
+        
+        return .load
+    }
+    
+    private func makeApplicationEffect(
+        _ value: String = anyMessage()
+    ) -> Effect.ApplicationEffect {
+        
+        return .load
     }
     
     private struct Verification: Equatable {
