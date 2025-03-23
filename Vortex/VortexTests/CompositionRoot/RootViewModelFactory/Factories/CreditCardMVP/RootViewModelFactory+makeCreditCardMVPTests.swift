@@ -22,7 +22,8 @@ extension CreditCardMVPDomain {
     
     // MARK: - Content
     
-    typealias Content = RxViewModel<State, Event, Effect>
+    typealias ContentDomain = CreditCardMVPContentDomain
+    typealias Content = RxViewModel<ContentDomain.State, ContentDomain.Event, ContentDomain.Effect>
     
     // MARK: - Flow
     
@@ -83,9 +84,11 @@ extension CreditCardMVPDomain {
 //}
 
 // TODO: extract to module
-extension CreditCardMVPDomain {
+/// A namespace.
+enum CreditCardMVPContentDomain {}
+extension CreditCardMVPContentDomain {
     
-    // MARK: - Content Domain
+    // MARK: - Domain
     
     typealias State = StateMachines.LoadState<DraftableStatus, Failure>
     
@@ -104,23 +107,18 @@ extension CreditCardMVPDomain {
         case apply, load
     }
     
-    // MARK: - Content Logic
-    
-    typealias DraftableReducer = StateMachines.LoadReducer<DraftableStatus, Failure>
-    typealias FinalReducer = StateMachines.LoadReducer<FinalStatus, Failure>
-    
     // MARK: - Content Types
     
     typealias DraftableStatus = ApplicationStatus<Draft>
     typealias FinalStatus = ApplicationStatus<Never>
-    
-    typealias Failure = LoadFailure<FailureType>
     
     enum ApplicationStatus<Draft> {
         
         case approved, inReview, rejected
         case draft(Draft)
     }
+    
+    typealias Failure = LoadFailure<FailureType>
     
     /// `Form`
     struct Draft {
@@ -134,6 +132,11 @@ extension CreditCardMVPDomain {
         
         case alert, informer
     }
+    
+    // MARK: - Content Logic
+    
+    typealias DraftableReducer = StateMachines.LoadReducer<DraftableStatus, Failure>
+    typealias FinalReducer = StateMachines.LoadReducer<FinalStatus, Failure>
     
     // MARK: - Closures
     
@@ -167,19 +170,19 @@ extension RootViewModelFactory {
     
     // TODO: add @inlinable
     func makeCreditCardMVPContent(
-        load: @escaping CreditCardMVPDomain.Load,
-        apply: @escaping CreditCardMVPDomain.Apply
+        load: @escaping CreditCardMVPDomain.ContentDomain.Load,
+        apply: @escaping CreditCardMVPDomain.ContentDomain.Apply
     ) -> CreditCardMVPDomain.Content {
         
-        let draftableReducer = CreditCardMVPDomain.DraftableReducer()
-        let finalReducer = CreditCardMVPDomain.FinalReducer()
+        let draftableReducer = CreditCardMVPDomain.ContentDomain.DraftableReducer()
+        let finalReducer = CreditCardMVPDomain.ContentDomain.FinalReducer()
         
         return .init(
             initialState: .pending,
             reduce: { state, event in // TODO: extract reducer
                 
                 var state = state
-                var effect: CreditCardMVPDomain.Effect?
+                var effect: CreditCardMVPDomain.ContentDomain.Effect?
                 
                 switch event {
                 case let .apply(applicationEvent): // TODO: extract helper or even reducer - this is Form Domain, no other case is applicable
@@ -257,7 +260,7 @@ private extension String {
     static let inReview = "Ожидайте рассмотрения Вашей заявки\nРезультат придет в Push/смс\nПримерное время рассмотрения заявки 10 минут."
 }
 
-extension CreditCardMVPDomain.State {
+extension CreditCardMVPDomain.ContentDomain.State {
     
     var selectEvent: FlowEvent<CreditCardMVPDomain.Select, Never>? {
         
@@ -497,9 +500,12 @@ final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTes
     
     // MARK: - Helpers
     
-    private typealias SUT = CreditCardMVPDomain.Binder
-    private typealias LoadSpy = Spy<Void, CreditCardMVPDomain.DraftableStatus, CreditCardMVPDomain.Failure>
-    private typealias ApplySpy = Spy<Void, CreditCardMVPDomain.FinalStatus, CreditCardMVPDomain.Failure>
+    private typealias Domain = CreditCardMVPDomain
+    private typealias ContentDomain = Domain.ContentDomain
+    
+    private typealias SUT = Domain.Binder
+    private typealias LoadSpy = Spy<Void, ContentDomain.DraftableStatus, ContentDomain.Failure>
+    private typealias ApplySpy = Spy<Void, ContentDomain.FinalStatus, ContentDomain.Failure>
     
     private func makeSUT(
         file: StaticString = #file,
@@ -525,19 +531,19 @@ final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTes
         return (sut, loadSpy, applySpy)
     }
     
-    private func alert() -> LoadFailure<CreditCardMVPDomain.FailureType> {
+    private func alert() -> LoadFailure<ContentDomain.FailureType> {
         
         return .init(message: anyMessage(), type: .alert)
     }
     
-    private func informer() -> LoadFailure<CreditCardMVPDomain.FailureType> {
+    private func informer() -> LoadFailure<ContentDomain.FailureType> {
         
         return .init(message: anyMessage(), type: .informer)
     }
     
     private func draft(
-        application: CreditCardMVPDomain.Draft.ApplicationState = .pending
-    ) -> CreditCardMVPDomain.DraftableStatus {
+        application: ContentDomain.Draft.ApplicationState = .pending
+    ) -> ContentDomain.DraftableStatus {
         
         return .draft(.init(application: application))
     }
