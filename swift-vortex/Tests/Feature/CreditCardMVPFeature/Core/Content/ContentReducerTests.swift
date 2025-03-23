@@ -28,7 +28,7 @@ extension ContentDomain {
     
     enum Effect: Equatable {
         
-        case apply
+        case apply(LoadEffect)
         case load(LoadEffect)
     }
     
@@ -87,9 +87,11 @@ extension ContentDomain.State {
             return draft
         }
         
-        set(newValue) { 
+        set(newValue) {
             
-            guard let newValue else { return }
+            guard let newValue,
+                  case .completed(.draft) = self
+            else { return }
             self = .completed(.draft(newValue))
         }
     }
@@ -97,15 +99,23 @@ extension ContentDomain.State {
 
 final class ContentReducer {
     
+    private let applyReduce: ApplyReduce
     private let loadReduce: LoadReduce
     
-    init(loadReduce: @escaping LoadReduce) {
-        
+    init(
+        applyReduce: @escaping ApplyReduce,
+        loadReduce: @escaping LoadReduce
+    ) {
+        self.applyReduce = applyReduce
         self.loadReduce = loadReduce
     }
     
+    typealias ApplyReduce = (ApplyState, ApplyEvent) -> (ApplyState, LoadEffect?)
+    typealias ApplyState = ContentDomain.Draft.ApplicationState
+    typealias ApplyEvent = ContentDomain.Event.ApplyEvent
+
     typealias LoadReduce = (State, LoadEvent) -> (State, LoadEffect?)
-    typealias LoadEvent = ContentDomain.LoadEvent
+    typealias LoadEvent = ContentDomain.Event.LoadEvent
 }
 
 extension ContentReducer {
@@ -119,9 +129,9 @@ extension ContentReducer {
         var effect: Effect?
         
         switch event {
-        case let .apply(applicationEvent):
-            break
-            
+        case let .apply(applyEvent):
+            reduce(&state, &effect, with: applyEvent)
+
         case .dismissInformer:
             dismissInformer(&state)
             
@@ -155,6 +165,19 @@ private extension ContentReducer {
     func reduce(
         _ state: inout State,
         _ effect: inout Effect?,
+        with applyEvent: Event.ApplyEvent
+    ) {
+        guard case var .completed(.draft(draft)) = state else { return }
+        
+        let (reducedState, reducedEffect) = applyReduce(draft.application, applyEvent)
+        draft.application = reducedState
+        state = .completed(.draft(draft))
+        effect = reducedEffect.map { .apply($0) }
+    }
+    
+    func reduce(
+        _ state: inout State,
+        _ effect: inout Effect?,
         with loadEvent: Event.LoadEvent
     ) {
         let (reducedState, reducedEffect) = loadReduce(state, loadEvent)
@@ -179,13 +202,89 @@ final class ContentReducerTests: XCTestCase {
     
     func test_init_shouldNotCallCollaborators() {
         
-        let (sut, loadSpy) = makeSUT()
+        let (sut, applySpy, loadSpy) = makeSUT()
         
+        XCTAssertEqual(applySpy.callCount, 0)
         XCTAssertEqual(loadSpy.callCount, 0)
         XCTAssertNotNil(sut)
     }
     
     // MARK: - apply
+    
+    func test_apply_shouldCallApplyReduce() {
+        
+        let (sut, applySpy, _) = makeSUT()
+        
+        _ = sut.reduce(makeDraftState(application: .pending), .apply(.load))
+        
+        XCTAssertEqual(applySpy.callCount, 1)
+    }
+    
+    func test_apply_shouldNotChangeApprovedState() {
+        
+        let (sut, _,_) = makeSUT(applyStub: (.completed(.inReview), .load))
+        
+        assert(sut: sut, .completed(.approved), event: .apply(.load))
+    }
+    
+    func test_apply_shouldNotDeliverEffect_onApprovedState() {
+        
+        let (sut, _,_) = makeSUT(applyStub: (.completed(.inReview), .load))
+        
+        assert(sut: sut, .completed(.approved), event: .apply(.load), delivers: nil)
+    }
+
+    func test_apply_shouldNotChangeInReviewState() {
+        
+        let (sut, _,_) = makeSUT(applyStub: (.completed(.inReview), .load))
+        
+        assert(sut: sut, .completed(.inReview), event: .apply(.load))
+    }
+    
+    func test_apply_shouldNotDeliverEffect_onInReviewState() {
+        
+        let (sut, _,_) = makeSUT(applyStub: (.completed(.inReview), .load))
+        
+        assert(sut: sut, .completed(.approved), event: .apply(.load), delivers: nil)
+    }
+    
+    func test_apply_shouldNotChangeRejectedState() {
+        
+        let (sut, _,_) = makeSUT(applyStub: (.completed(.inReview), .load))
+        
+        assert(sut: sut, .completed(.rejected), event: .apply(.load))
+    }
+    
+    func test_apply_shouldNotDeliverEffect_onRejectedState() {
+        
+        let (sut, _,_) = makeSUT(applyStub: (.completed(.inReview), .load))
+        
+        assert(sut: sut, .completed(.approved), event: .apply(.load), delivers: nil)
+    }
+
+    func test_apply_shouldChangeApplicationState() {
+        
+        let (sut, _,_) = makeSUT(applyStub: (.completed(.inReview), .load))
+        
+        assert(sut: sut, makeDraftState(application: .pending), event: .apply(.load)) {
+        
+            $0 = .completed(.draft(.init(application: .completed(.inReview))))
+        }
+    }
+    
+    func test_apply_shouldDeliverApplyReduceEffect_onDraftState() {
+        
+        let (sut, _,_) = makeSUT(applyStub: (.completed(.inReview), .load))
+        
+        assert(sut: sut, makeDraftState(application: .pending), event: .apply(.load), delivers: .apply(.load))
+    }
+    
+    func test_apply_shouldDeliverApplyReduceNilEffect() {
+        
+        let (sut, _,_) = makeSUT(applyStub: (.completed(.inReview), nil))
+        
+        assert(sut: sut, .pending, event: .apply(.load), delivers: nil)
+    }
     
     // MARK: - dismissInformer
     
@@ -321,8 +420,7 @@ final class ContentReducerTests: XCTestCase {
         
         assert(makeDraftState(application: .pending), event: .dismissInformer, delivers: nil)
     }
-        
-    // continue
+    
     func test_dismissInformer_shouldNotChangeAlertFailureState() {
         
         assert(makeFailureState(type: .alert), event: .dismissInformer)
@@ -410,7 +508,7 @@ final class ContentReducerTests: XCTestCase {
     
     func test_load_shouldCallLoadReduce() {
         
-        let (sut, loadSpy) = makeSUT()
+        let (sut, _, loadSpy) = makeSUT()
         
         _ = sut.reduce(makeDraftState(application: .pending), .load(.load))
         
@@ -420,27 +518,27 @@ final class ContentReducerTests: XCTestCase {
     func test_load_shouldDeliverLoadReduceState() {
         
         let state = makeDraftState(application: .completed(.inReview))
-        let (sut, _) = makeSUT(stub: (state, nil))
+        let (sut, _,_) = makeSUT(stub: (state, nil))
         
         assert(sut: sut, .pending, event: .load(.load)) { $0 = state }
     }
-
+    
     func test_load_shouldDeliverLoadReduceEffect() {
         
         let state = makeDraftState(application: .completed(.inReview))
-        let (sut, _) = makeSUT(stub: (state, .load))
-
+        let (sut, _,_) = makeSUT(stub: (state, .load))
+        
         assert(sut: sut, .pending, event: .load(.load), delivers: .load(.load))
     }
-
+    
     func test_load_shouldDeliverLoadReduceNilEffect() {
         
         let state = makeDraftState(application: .completed(.inReview))
-        let (sut, _) = makeSUT(stub: (state, nil))
-
+        let (sut, _,_) = makeSUT(stub: (state, nil))
+        
         assert(sut: sut, .pending, event: .load(.load), delivers: nil)
     }
-
+    
     // MARK: - Helpers
     
     private typealias SUT = ContentReducer
@@ -449,23 +547,28 @@ final class ContentReducerTests: XCTestCase {
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
-    private typealias LoadSpy = CallSpy<(State, ContentDomain.LoadEvent), (State, LoadEffect?)>
+    private typealias LoadSpy = CallSpy<(State, Event.LoadEvent), (State, LoadEffect?)>
+    private typealias ApplySpy = CallSpy<(SUT.ApplyState, Event.ApplyEvent), (SUT.ApplyState, LoadEffect?)>
     
     private func makeSUT(
-        stub: (State, LoadEffect?) = (.loading(nil), nil),
+        applyStub: (SUT.ApplyState, LoadEffect?) = (.loading(nil), nil),
+        stub loadStub: (State, LoadEffect?) = (.loading(nil), nil),
         file: StaticString = #file,
         line: UInt = #line
     ) -> (
         sut: SUT,
+        applySpy: ApplySpy,
         loadSpy: LoadSpy
     ) {
-        let loadSpy = LoadSpy(stubs: [stub])
-        let sut = SUT(loadReduce: loadSpy.call)
+        let applySpy = ApplySpy(stubs: [applyStub])
+        let loadSpy = LoadSpy(stubs: [loadStub])
+        let sut = SUT(applyReduce: applySpy.call, loadReduce: loadSpy.call)
         
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(applySpy, file: file, line: line)
         trackForMemoryLeaks(loadSpy, file: file, line: line)
         
-        return (sut, loadSpy)
+        return (sut, applySpy, loadSpy)
     }
     
     private func makeDraftState(
