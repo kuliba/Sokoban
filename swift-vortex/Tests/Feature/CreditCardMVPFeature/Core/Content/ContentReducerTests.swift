@@ -57,45 +57,9 @@ extension ContentDomain {
         
         case alert, informer
     }
-    
-    // MARK: - Content Logic
-    
-    typealias DraftableReducer = StateMachines.LoadReducer<DraftableStatus, Failure>
-    typealias FinalReducer = StateMachines.LoadReducer<FinalStatus, Failure>
-    
-    typealias LoadEvent = StateMachines.LoadEvent<DraftableStatus, Failure>
-    
-    // MARK: - Closures
-    
-    typealias LoadResult = Result<DraftableStatus, Failure>
-    typealias LoadCompletion = (LoadResult) -> Void
-    typealias Load = (@escaping LoadCompletion) -> Void
-    
-    typealias ApplyResult = Result<FinalStatus, Failure>
-    typealias ApplyCompletion = (ApplyResult) -> Void
-    typealias Apply = (@escaping ApplyCompletion) -> Void
 }
 
 extension ContentDomain.ApplicationStatus: Equatable where Draft: Equatable {}
-
-extension ContentDomain.State {
-    
-    var draft: ContentDomain.Draft? {
-        
-        get {
-            guard case let .completed(.draft(draft)) = self else { return nil }
-            return draft
-        }
-        
-        set(newValue) {
-            
-            guard let newValue,
-                  case .completed(.draft) = self
-            else { return }
-            self = .completed(.draft(newValue))
-        }
-    }
-}
 
 final class ContentReducer {
     
@@ -143,22 +107,22 @@ extension ContentReducer {
     }
 }
 
+extension ContentReducer {
+    
+    typealias State = ContentDomain.State
+    typealias Event = ContentDomain.Event
+    typealias Effect = ContentDomain.Effect
+}
+
 private extension ContentReducer {
     
     func dismissInformer(
         _ state: inout State
     ) {
-        switch state {
-        case let .failure(failure) where failure.type == .informer:
+        if state.failure?.type == .informer {
             state = .pending
-            
-        case var .completed(.draft(draft)) where draft.application.failure?.type == .informer:
-            
-            draft.application = .pending
-            state = .completed(.draft(draft))
-            
-        default:
-            return
+        } else if state.draft?.application.failure?.type == .informer {
+            state.draft?.application = .pending
         }
     }
     
@@ -167,12 +131,11 @@ private extension ContentReducer {
         _ effect: inout Effect?,
         with applyEvent: Event.ApplyEvent
     ) {
-        guard case var .completed(.draft(draft)) = state else { return }
+        guard let draft = state.draft else { return }
         
-        let (reducedState, reducedEffect) = applyReduce(draft.application, applyEvent)
-        draft.application = reducedState
-        state = .completed(.draft(draft))
-        effect = reducedEffect.map { .apply($0) }
+        let (application, applyEffect) = applyReduce(draft.application, applyEvent)
+        state.draft?.application = application
+        effect = applyEffect.map { .apply($0) }
     }
     
     func reduce(
@@ -186,11 +149,23 @@ private extension ContentReducer {
     }
 }
 
-extension ContentReducer {
+private extension ContentDomain.State {
     
-    typealias State = ContentDomain.State
-    typealias Event = ContentDomain.Event
-    typealias Effect = ContentDomain.Effect
+    var draft: ContentDomain.Draft? {
+        
+        get {
+            guard case let .completed(.draft(draft)) = self else { return nil }
+            return draft
+        }
+        
+        set(newValue) {
+            
+            guard let newValue,
+                  case .completed(.draft) = self
+            else { return }
+            self = .completed(.draft(newValue))
+        }
+    }
 }
 
 import CreditCardMVPCore
