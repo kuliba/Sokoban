@@ -5,100 +5,7 @@
 //  Created by Igor Malyarov on 23.03.2025.
 //
 
-struct DraftState<Consent, Content, Verification> {
-    
-    var consent: Consent
-    let content: Content
-    var verification: Verification
-}
-
-extension DraftState: Equatable where Consent: Equatable , Content: Equatable , Verification: Equatable {}
-
-enum DraftEvent<ConsentEvent, VerificationEvent> {
-    
-    case consent(ConsentEvent)
-    case verification(VerificationEvent)
-}
-
-extension DraftEvent: Equatable where ConsentEvent: Equatable, VerificationEvent: Equatable {}
-
-enum DraftEffect<VerificationEffect> {
-    
-    case verification(VerificationEffect)
-}
-
-extension DraftEffect: Equatable where VerificationEffect: Equatable {}
-
-
-final class DraftReducer<Consent, ConsentEvent, Content, Verification, VerificationEvent, VerificationEffect> {
-    
-    private let consentReduce: ConsentReduce
-    private let verificationReduce: VerificationReduce
-    
-    init(
-        consentReduce: @escaping ConsentReduce,
-        verificationReduce: @escaping VerificationReduce
-    ) {
-        self.consentReduce = consentReduce
-        self.verificationReduce = verificationReduce
-    }
-    
-    typealias ConsentReduce = (Consent, ConsentEvent) -> (Consent, Never?)
-    typealias VerificationReduce = (Verification, VerificationEvent) -> (Verification, VerificationEffect?)
-}
-
-extension DraftReducer {
-    
-    func reduce(
-        _ state: State,
-        _ event: Event
-    ) -> (State, Effect?) {
-        
-        var state = state
-        var effect: Effect?
-        
-        switch event {
-        case let .consent(consentEvent):
-            reduce(&state, &effect, with: consentEvent)
-            
-        case let .verification(verificationEvent):
-            reduce(&state, &effect, with: verificationEvent)
-        }
-        
-        return (state, effect)
-    }
-}
-
-extension DraftReducer {
-    
-    typealias State = DraftState<Consent, Content, Verification>
-    typealias Event = DraftEvent<ConsentEvent, VerificationEvent>
-    typealias Effect = DraftEffect<VerificationEffect>
-}
-
-extension DraftReducer {
-    
-    // @inlinable
-    func reduce(
-        _ state: inout State,
-        _ effect: inout Effect?,
-        with consentEvent: ConsentEvent
-    ) {
-        state.consent = consentReduce(state.consent, consentEvent).0
-    }
-    
-    // @inlinable
-    func reduce(
-        _ state: inout State,
-        _ effect: inout Effect?,
-        with verificationEvent: VerificationEvent
-    ) {
-        let (verification, verificationEffect) = verificationReduce(state.verification, verificationEvent)
-        state.verification = verification
-        effect = verificationEffect.map { .verification($0) }
-    }
-}
-
+import CreditCardMVPCore
 import XCTest
 
 final class DraftReducerTests: XCTestCase {
@@ -311,7 +218,7 @@ final class DraftReducerTests: XCTestCase {
         
         return .init(value: value)
     }
-        
+    
     @discardableResult
     private func assert(
         sut: SUT? = nil,
