@@ -7,15 +7,15 @@
 
 import StateMachines
 
-struct VerifiableApplication<ApplicationStatus, Verification, Failure: Error> {
+struct VerifiableApplicationState<ApplicationStatus, Verification, Failure: Error> {
     
-    var application: ApplicationState = .pending
+    var applicationState: ApplicationState = .pending
     var verification: Verification
     
     typealias ApplicationState = StateMachines.LoadState<ApplicationStatus, Failure>
 }
 
-extension VerifiableApplication: Equatable where ApplicationStatus: Equatable, Verification: Equatable, Failure: Equatable {}
+extension VerifiableApplicationState: Equatable where ApplicationStatus: Equatable, Verification: Equatable, Failure: Equatable {}
 
 enum VerifiableApplicationEvent<VerificationEvent> {
     
@@ -65,7 +65,7 @@ extension VerifiableApplicationReducer {
 
 extension VerifiableApplicationReducer {
     
-    typealias State = VerifiableApplication<ApplicationStatus, Verification, Failure>
+    typealias State = VerifiableApplicationState<ApplicationStatus, Verification, Failure>
     typealias Event = VerifiableApplicationEvent<VerificationEvent>
     typealias Effect = VerifiableApplicationEffect<VerificationEffect>
 }
@@ -77,7 +77,9 @@ private extension VerifiableApplicationReducer {
         _ effect: inout Effect?,
         with verificationEvent: VerificationEvent
     ) {
-        _ = verificationReduce(state.verification, verificationEvent)
+        let (verification, verificationEffect) = verificationReduce(state.verification, verificationEvent)
+        state.verification = verification
+        effect = verificationEffect.map { .verification($0) }
     }
 }
 
@@ -110,6 +112,32 @@ final class VerifiableApplicationReducerTests: XCTestCase {
         XCTAssertNoDiff(verification.payloads.map(\.1), [verificationEvent])
     }
     
+    func test_verification_shouldDeliverVerificationReduceState() {
+        
+        let verificationState = makeVerification()
+        let (sut, _) = makeSUT(stub: (verificationState, nil))
+        
+        assert(sut: sut, makeState(), event: .verification(makeVerificationEvent())) {
+            
+            $0.verification = verificationState
+        }
+    }
+    
+    func test_verification_shouldDeliverVerificationReduceEffect() {
+        
+        let verificationEffect = makeVerificationEffect()
+        let (sut, _) = makeSUT(stub: (makeVerification(), verificationEffect))
+        
+        assert(sut: sut, makeState(), event: .verification(makeVerificationEvent()), delivers: .verification(verificationEffect))
+    }
+    
+    func test_verification_shouldDeliverVerificationReduceNilEffect() {
+        
+        let (sut, _) = makeSUT(stub: (makeVerification(), nil))
+        
+        assert(sut: sut, makeState(), event: .verification(makeVerificationEvent()), delivers: nil)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = VerifiableApplicationReducer<ApplicationStatus, Verification, VerificationEvent, VerificationEffect, Failure>
@@ -140,12 +168,12 @@ final class VerifiableApplicationReducerTests: XCTestCase {
     }
     
     private func makeState(
-        application: State.ApplicationState = .loading(nil),
+        applicationState: State.ApplicationState = .loading(nil),
         verification: Verification? = nil
     ) -> State {
         
         return .init(
-            application: application,
+            applicationState: applicationState,
             verification: verification ?? makeVerification()
         )
     }
