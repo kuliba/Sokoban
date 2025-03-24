@@ -54,8 +54,10 @@ extension ViewComponents {
             .padding(.horizontal)
             .safeAreaInset(edge: .bottom) {
                 
-                makeSPBFooter(isActive: state.digest != nil) {
-                    
+                makeSPBFooter(
+                    isActive: state.digest != nil,
+                    title: "Оплатить"
+                ) {
                     state.digest.map(pay)
                 }
                 .padding(.horizontal)

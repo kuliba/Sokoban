@@ -32,7 +32,7 @@ extension ViewComponents {
             },
             details: { makeC2GPaymentDetailsView(cover: cover, config: config) }
         ) {
-            makeSPBFooter(isActive: true, event: goToMain, title: "На главный")
+            makeSPBFooter(isActive: true, title: "На главный", event: goToMain)
         }
     }
     
