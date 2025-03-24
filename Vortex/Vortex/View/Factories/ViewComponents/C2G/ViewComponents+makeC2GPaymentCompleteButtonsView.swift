@@ -116,6 +116,7 @@ extension ViewComponents {
             action: action
         ))
         .frame(width: 100, height: 92, alignment: .top)
+        .contentShape(Rectangle())
     }
     
     @inlinable

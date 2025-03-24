@@ -27,7 +27,17 @@ extension RootViewModelFactory {
         
         switch statement.paymentDetailType {
         case .c2gPayment:
-            return makeC2GPaymentOperationDetail(product, statement).map { .v3($0) }
+            guard let digest = makeDigest(product, statement) else { return nil }
+            
+            let content = StatementDetailsDomain.Details.Content(
+                logo: statement.md5hash,
+                name: statement.fastPayment?.foreignName
+            )
+            
+            return .v3(makeAndLoadC2GPaymentOperationDetail(.init(
+                digest: digest,
+                content: content
+            )))
             
         default:
             return .legacy(.init(
@@ -43,35 +53,10 @@ extension RootViewModelFactory {
     }
     
     @inlinable
-    func makeC2GPaymentOperationDetail(
+    func makeDigest(
         _ product: ProductData,
         _ statement: ProductStatementData
-    ) -> StatementDetails? {
-        
-        guard let details = makeOperationDetail(product, statement)
-        else { return nil }
-        
-        details.event(.load)
-        
-        let content = StatementDetails.Content(
-            logo: statement.md5hash,
-            name: statement.fastPayment?.foreignName
-        )
-        
-        let document = statement.documentId.map(makeC2GDocumentButtonDomainBinder)
-        
-        return .init(
-            content: content,
-            details: details,
-            document: document
-        )
-    }
-    
-    @inlinable
-    func makeOperationDetail(
-        _ product: ProductData,
-        _ statement: ProductStatementData
-    ) -> OperationDetailDomain.Model? {
+    ) -> OperationDetailDomain.StatementDigest? {
         
         let formattedAmount = format(
             amount: statement.amount,
@@ -87,7 +72,70 @@ extension RootViewModelFactory {
               )
         else { return nil }
         
-        return makeOperationDetail(digest: digest)
+        return digest
+    }
+    
+    @inlinable
+    func makeAndLoadC2GPaymentOperationDetail(
+        _ payload: LoadStatementDetailsPayload
+    ) -> StatementDetailsDomain.Model {
+        
+        let detail = makeC2GPaymentOperationDetail(payload)
+        detail.event(.load)
+        
+        return detail
+    }
+    
+    @inlinable
+    func makeC2GPaymentOperationDetail(
+        _ payload: LoadStatementDetailsPayload
+    ) -> StatementDetailsDomain.Model {
+        
+        let reducer = StatementDetailsDomain.Reducer()
+        let effectHandler = StatementDetailsDomain.EffectHandler(
+            load: { [weak self] in self?.loadStatementDetails(payload, $0) }
+        )
+        
+        return .init(
+            initialState: .pending,
+            reduce: reducer.reduce(_:_:),
+            handleEffect: effectHandler.handleEffect(_:_:),
+            scheduler: schedulers.main
+        )
+    }
+    
+    struct LoadStatementDetailsPayload {
+        
+        let digest: OperationDetailDomain.StatementDigest
+        let content: StatementDetailsDomain.Details.Content
+    }
+    
+    @inlinable
+    func loadStatementDetails(
+        _ payload: LoadStatementDetailsPayload,
+        _ completion: @escaping (Result<StatementDetailsDomain.Details, Error>) -> Void
+    ) {
+        getOperationDetail(payload.digest) { [weak self] in
+            
+            guard let self else { return }
+            
+            switch $0 {
+            case let .failure(failure):
+                completion(.failure(failure))
+                
+            case let .success(extendedDetails):
+                let details = makeOperationDetail(digest: payload.digest)
+                details.event(.loaded(.success(extendedDetails)))
+                
+                let document = extendedDetails.paymentOperationDetailID.map(makeC2GDocumentButtonDomainBinder)
+                
+                completion(.success(.init(
+                    content: payload.content,
+                    details: details,
+                    document: document
+                )))
+            }
+        }
     }
 }
 

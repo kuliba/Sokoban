@@ -108,6 +108,7 @@ private extension RemoteServices.ResponseMapper.GetOperationDetailResponse {
             formattedAmount: format(amount, payerCurrency),
             legalAct: legalAct,
             payeeFullName: payeeFullName,
+            paymentOperationDetailID: paymentOperationDetailID,
             paymentTerm: paymentTerm,
             realPayerFIO: realPayerFIO,
             realPayerINN: realPayerINN,

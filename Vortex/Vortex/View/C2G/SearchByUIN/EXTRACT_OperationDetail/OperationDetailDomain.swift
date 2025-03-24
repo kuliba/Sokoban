@@ -36,7 +36,7 @@ extension OperationDetailDomain {
     typealias Effect = StateMachines.LoadEffect
     
     // MARK: - Digests,...
-        
+    
     struct ModelPayload: Equatable {
         
         let product: Product
@@ -83,7 +83,7 @@ extension OperationDetailDomain {
         let formattedDate: String?
         let product: Product
     }
-
+    
     struct ExtendedDetails: Equatable {
         
         let product: Product
@@ -97,6 +97,7 @@ extension OperationDetailDomain {
         let formattedAmount: String? // Сумма платежа - payerAmount+ payerCurrency
         let legalAct: String?        // Информация о НПА - "legalAct"
         let payeeFullName: String?   // Получатель - payeeFullName
+        let paymentOperationDetailID: Int?
         let paymentTerm: String?     // Срок оплаты - "paymentTerm"
         let realPayerFIO: String?    // Информация о плательщике - "realPayerFIO"
         let realPayerINN: String?    // ИНН плательщика - “realPayerINN”
