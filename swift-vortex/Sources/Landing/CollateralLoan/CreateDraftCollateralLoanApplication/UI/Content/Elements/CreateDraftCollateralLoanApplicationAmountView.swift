@@ -29,7 +29,7 @@ struct CreateDraftCollateralLoanApplicationAmountView<Confirmation, InformerPayl
     
     private var editModeView: some View {
         
-        TextInputView(
+        AmountInputView(
             state: state.amount,
             event: { event(.amount($0)) },
             config: config.elements.amount.inputComponentConfig,

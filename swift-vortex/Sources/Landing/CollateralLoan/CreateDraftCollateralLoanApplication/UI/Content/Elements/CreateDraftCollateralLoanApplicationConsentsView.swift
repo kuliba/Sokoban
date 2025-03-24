@@ -41,12 +41,10 @@ struct CreateDraftCollateralLoanApplicationConsentsView<Confirmation, InformerPa
             .frame(config.elements.consent.checkBoxSize)
             .padding(.trailing, config.elements.consent.horizontalSpacing)
 
-            LinkableTextView(
-                taggedText: "<u>" + consent.name + "</u>",
-                urlString: consent.link,
-                handleURL: { url in externalEvent(.showConsent(url)) }
-            )
-            .font(config.fonts.title.textFont)
+            consent.name.text(withConfig: config.elements.consent.textConfig)
+                .onTapGesture {
+                    externalEvent(.showConsent(consent.link))
+                }
             .frame(maxWidth: .infinity, alignment: .leading)
             .minimumScaleFactor(0.9)
         }

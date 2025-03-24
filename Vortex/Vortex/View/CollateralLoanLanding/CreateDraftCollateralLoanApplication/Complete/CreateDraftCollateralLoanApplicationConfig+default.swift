@@ -75,7 +75,7 @@ extension CreateDraftCollateralLoanApplicationConfig.Amount {
     )
 }
 
-extension TextInputConfig {
+extension AmountInputConfig {
     
     static let `default` = Self(
         hint: .init(textFont: .footnote, textColor: .red),
@@ -96,7 +96,7 @@ extension TextInputConfig {
     )
 }
 
-extension ToolbarConfig {
+extension AmountToolbarConfig {
     
     static let `default` = Self(
         closeImage: "closeImage",
@@ -165,7 +165,8 @@ extension CreateDraftCollateralLoanApplicationConfig.Consent {
             checkOn: Image("Checkbox_active"),
             checkOff: Image("Checkbox_normal")
         ),
-        imageColor: .greenIcon
+        imageColor: .greenIcon,
+        textConfig: .init(textFont: Font.system(size: 14), textColor: .title)
     )
 }
 
@@ -178,7 +179,7 @@ extension CreateDraftCollateralLoanApplicationConfig.Button {
             foreground: .white,
             background: .red,
             disabled: .unselected,
-            fillBackground: .grayLightest
+            fillBackground: .white
         ),
         font: .init(Font.system(size: 16).bold()),
         layouts: .init(

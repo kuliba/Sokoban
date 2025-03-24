@@ -50,6 +50,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
                     
                     state.amount.message = nil
                 }
+
             case let .period(periodEvent):
                 state.period = periodSelectReduce(state.period, periodEvent)
                 

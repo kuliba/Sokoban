@@ -77,7 +77,7 @@ extension CreateDraftCollateralLoanApplicationConfig.Button {
             foreground: .white,
             background: .red,
             disabled: .unselected,
-            fillBackground: .grayLightest
+            fillBackground: .white
         ),
         font: .init(Font.system(size: 16).bold()),
         layouts: .init(
@@ -90,6 +90,5 @@ extension CreateDraftCollateralLoanApplicationConfig.Button {
 
 private extension Color {
     
-    static let grayLightest: Self = .init(red: 0.96, green: 0.96, blue: 0.97)
     static let unselected: Self = .init(red: 0.92, green: 0.92, blue: 0.92)
 }

@@ -14,11 +14,11 @@ extension CreateDraftCollateralLoanApplicationConfig {
     public struct Amount {
         
         public let title: String
-        public let inputComponentConfig: TextInputConfig
+        public let inputComponentConfig: AmountInputConfig
 
         public init(
             title: String,
-            inputComponentConfig: TextInputConfig
+            inputComponentConfig: AmountInputConfig
         ) {
             self.title = title
             self.inputComponentConfig = inputComponentConfig
@@ -34,7 +34,7 @@ extension CreateDraftCollateralLoanApplicationConfig.Amount {
     )
 }
 
-extension TextInputConfig {
+extension AmountInputConfig {
     
     static let preview = Self(
         hint: .init(textFont: .footnote, textColor: .red),
@@ -49,7 +49,7 @@ extension TextInputConfig {
     )
 }
 
-extension TextFieldView.TextFieldConfig {
+extension AmountFieldView.TextFieldConfig {
     
     static let preview = Self(
         font: .systemFont(ofSize: 16),
@@ -60,7 +60,7 @@ extension TextFieldView.TextFieldConfig {
     )
 }
 
-extension ToolbarConfig {
+extension AmountToolbarConfig {
     
     static let preview = Self(
         closeImage: "closeImage",

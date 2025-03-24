@@ -77,7 +77,7 @@ extension GetCollateralLandingConfig.Footer {
             buttonForeground: .white,
             buttonBackground: .red,
             disabledButtonBackground: .unselected,
-            background: .grayLightest
+            background: .white
         ),
         layouts: .init(
             height: 56,

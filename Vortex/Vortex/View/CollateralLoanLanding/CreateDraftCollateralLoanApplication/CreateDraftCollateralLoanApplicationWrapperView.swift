@@ -147,7 +147,10 @@ struct CreateDraftCollateralLoanApplicationWrapperView: View {
         
         switch events {
         case let .showConsent(url):
-            openURL(url)
+            if let url = URL(string: url) {
+             
+                openURL(url)
+            }
             
         case .goToMain:
             goToMain()

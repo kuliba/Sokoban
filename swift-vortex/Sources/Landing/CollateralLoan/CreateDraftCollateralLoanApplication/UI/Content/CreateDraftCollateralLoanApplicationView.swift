@@ -277,7 +277,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
  
     public enum ExternalEvent: Equatable {
         
-        case showConsent(URL)
+        case showConsent(String)
         case goToMain
     }
 }
