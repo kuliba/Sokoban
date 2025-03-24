@@ -13,22 +13,36 @@ import UIPrimitives
 extension ViewComponents {
     
     @inlinable
+    @ViewBuilder
     func makeStatementDetailView(
-        _ details: StatementDetails
+        _ details: StatementDetailsDomain.Model
     ) -> some View {
         
-        StatementDetailLayoutView(config: .iVortex) {
+        RxWrapperView(model: details) { state, _ in
             
-            makeC2GPaymentStatementDetailButtonsView(
-                details: details.details,
-                document: details.document
-            )
-            
-        } content: {
-            
-            makeStatementDetailContentView(details: details)
+            Group {
+                
+                switch state {
+                case let .completed(details):
+                    StatementDetailLayoutView(config: .iVortex) {
+                        
+                        makeC2GPaymentStatementDetailButtonsView(
+                            details: details.details,
+                            document: details.document
+                        )
+                        
+                    } content: {
+                        
+                        makeStatementDetailContentView(details: details)
+                    }
+                    .padding(.horizontal)
+                    
+                default:
+                    EmptyView()
+                }
+            }
+            .animation(.bouncy, value: state.case)
         }
-        .padding(.horizontal)
     }
     
     @inlinable
@@ -138,7 +152,7 @@ extension ViewComponents {
     
     @inlinable
     func makeStatementDetailContentView(
-        details: StatementDetails
+        details: StatementDetailsDomain.Details
     ) -> some View {
         
         RxWrapperView(model: details.details) { state, _ in
@@ -209,7 +223,7 @@ extension PDFDocumentDomain.Navigation: Identifiable {
 private extension StatementDetailContent {
     
     init(
-        content: StatementDetails.Content,
+        content: StatementDetailsDomain.Details.Content,
         extendedDetails: OperationDetailDomain.ExtendedDetails?
     ) {
         self.init(
@@ -280,12 +294,16 @@ struct MakeStatementDetailView_Previews: PreviewProvider {
     ) -> some View {
         
         ViewComponents.preview.makeStatementDetailView(.init(
-            content: .init(logo: nil, name: "merchant"),
-            details: .preview(
-                basicDetails: .preview,
-                fullDetails: fullDetails
-            ),
-            document: document
+            initialState: .completed(.init(
+                content: .init(logo: nil, name: "merchant"),
+                details: .preview(
+                    basicDetails: .preview,
+                    fullDetails: fullDetails
+                ),
+                document: document
+            )),
+            reduce: { state, _ in (state, nil) },
+            handleEffect: { _,_ in }
         ))
     }
 }

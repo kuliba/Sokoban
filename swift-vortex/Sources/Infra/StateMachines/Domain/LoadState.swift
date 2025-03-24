@@ -46,3 +46,21 @@ public extension LoadState {
         return success
     }
 }
+
+public extension LoadState {
+    
+    var `case`: Case {
+        
+        switch self {
+        case .completed: return .completed
+        case .failure:   return .failure
+        case .loading:   return .loading
+        case .pending:   return .pending
+        }
+    }
+    
+    enum Case: Hashable {
+        
+        case completed, failure, loading, pending
+    }
+}
