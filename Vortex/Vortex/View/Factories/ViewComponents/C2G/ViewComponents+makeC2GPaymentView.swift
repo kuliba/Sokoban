@@ -82,7 +82,8 @@ extension ViewComponents {
                 
                 makeProductSelectView(
                     state: state.productSelect,
-                    event: { event(.productSelect($0)) }
+                    event: { event(.productSelect($0)) },
+                    edgeInsets: .selector
                 )
                 
                 amountView(state.context)
@@ -190,6 +191,11 @@ extension ViewComponents {
             )
         }
     }
+}
+
+private extension EdgeInsets {
+    
+    static let selector: Self = .init(top: 0, leading: 2, bottom: 0, trailing: 12)
 }
 
 extension View {
