@@ -25,14 +25,23 @@ extension LoadState: Equatable where Success: Equatable, Failure: Equatable {}
 
 public extension LoadState {
     
+    /// Returns the `true` if the state is `.loading`, otherwise `false`.
+    var isLoading: Bool {
+        
+        guard case .loading = self else { return false }
+        return true
+    }
+    
     /// Returns the failure value if the state is `.failure`, otherwise `nil`.
     var failure: Failure? {
+        
         guard case let .failure(failure) = self else { return nil }
         return failure
     }
     
     /// Returns the success value if the state is `.completed`, otherwise `nil`.
     var success: Success? {
+        
         guard case let .completed(success) = self else { return nil }
         return success
     }

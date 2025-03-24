@@ -1870,6 +1870,8 @@
 		2AF5E29629BB4691004D69F3 /* createAnywayTransfer_iVortex_515A3_10rub_request.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A0F2F6E29AE3ED40054B920 /* createAnywayTransfer_iVortex_515A3_10rub_request.json */; };
 		2AF5E29729BB4691004D69F3 /* createAnywayTransfer_iVortex_4285_9rub_response.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A0F2F6529AE3ED40054B920 /* createAnywayTransfer_iVortex_4285_9rub_response.json */; };
 		2AF5E29929BB4691004D69F3 /* createAnywayTransfer_iVortex_515A3_10rub_response.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A0F2F6429AE3ED40054B920 /* createAnywayTransfer_iVortex_515A3_10rub_response.json */; };
+		2AF6384C2D8E8566007D39E2 /* RootViewModelFactory+makeCreditCardMVPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF6384B2D8E8566007D39E2 /* RootViewModelFactory+makeCreditCardMVPTests.swift */; };
+		2AF6384E2D8EA40C007D39E2 /* CreditCardMVPFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 2AF6384D2D8EA40C007D39E2 /* CreditCardMVPFeature */; };
 		2AF718DB2C74C27A00511C02 /* RootViewModelFactory+makeLoadLatestOperationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF718DA2C74C27A00511C02 /* RootViewModelFactory+makeLoadLatestOperationsTests.swift */; };
 		2AF718DF2C74D4B500511C02 /* RootViewModelFactory+makePaymentsTransfersPersonalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF718DE2C74D4B500511C02 /* RootViewModelFactory+makePaymentsTransfersPersonalTests.swift */; };
 		2AF720232C74841D00919CAF /* PayHub in Frameworks */ = {isa = PBXBuildFile; productRef = 2AF720222C74841D00919CAF /* PayHub */; };
@@ -5694,6 +5696,7 @@
 		2AF5DF352BF6113D00F7549B /* RequestFactory+createGetOperatorsListByParamOperatorOnlyFalseRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetOperatorsListByParamOperatorOnlyFalseRequestTests.swift"; sourceTree = "<group>"; };
 		2AF5E28B29BB4516004D69F3 /* NSObject+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Extension.swift"; sourceTree = "<group>"; };
 		2AF5E28C29BB4517004D69F3 /* Model+stubbed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Model+stubbed.swift"; sourceTree = "<group>"; };
+		2AF6384B2D8E8566007D39E2 /* RootViewModelFactory+makeCreditCardMVPTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeCreditCardMVPTests.swift"; sourceTree = "<group>"; };
 		2AF718DA2C74C27A00511C02 /* RootViewModelFactory+makeLoadLatestOperationsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeLoadLatestOperationsTests.swift"; sourceTree = "<group>"; };
 		2AF718DE2C74D4B500511C02 /* RootViewModelFactory+makePaymentsTransfersPersonalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makePaymentsTransfersPersonalTests.swift"; sourceTree = "<group>"; };
 		2AF718E02C75149100511C02 /* PayHubUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PayHubUI.xctestplan; sourceTree = "<group>"; };
@@ -7943,6 +7946,7 @@
 				83CA1C932A600DFC00672AA5 /* PinCodeUI in Frameworks */,
 				68FFA5682695921E002DADFA /* QRScanner in Frameworks */,
 				837F82E52A3B271C003544BB /* PickerWithPreviewComponent in Frameworks */,
+				2AF6384E2D8EA40C007D39E2 /* CreditCardMVPFeature in Frameworks */,
 				C1AF2EA32B2C882100569F2B /* SberQR in Frameworks */,
 				2A07B20A2C6524B40021B594 /* SelectorComponents in Frameworks */,
 				83B2B8842AE7A90500DAD486 /* PhoneNumberWrapper in Frameworks */,
@@ -11768,6 +11772,7 @@
 			isa = PBXGroup;
 			children = (
 				2A6167352D5BE8750026B036 /* C2G */,
+				2AF6384A2D8E8548007D39E2 /* CreditCardMVP */,
 				2A75DC822D83E63E0009937E /* SplashScreen */,
 			);
 			path = Factories;
@@ -13807,6 +13812,14 @@
 				2AF529D42CC01C9B00D49804 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		2AF6384A2D8E8548007D39E2 /* CreditCardMVP */ = {
+			isa = PBXGroup;
+			children = (
+				2AF6384B2D8E8566007D39E2 /* RootViewModelFactory+makeCreditCardMVPTests.swift */,
+			);
+			path = CreditCardMVP;
 			sourceTree = "<group>";
 		};
 		2AF69F4C2D8C06D400A1DA51 /* CreditCardMVP */ = {
@@ -20519,6 +20532,7 @@
 				2A8DAD2E2D763B9E00AC7018 /* ResourceProviderComponent */,
 				C19017AA2D7AC91B00044AFC /* OrderCardLandingComponent */,
 				2A590F4E2D7C4AB300A22BBE /* SplashScreen */,
+				2AF6384D2D8EA40C007D39E2 /* CreditCardMVPFeature */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* Vortex.app */;
@@ -24627,6 +24641,7 @@
 				2A94AAF42C8F0E60003B4FB1 /* LocalAgentLoaderComposerTests.swift in Sources */,
 				2A30393E2A17D5C80008701D /* TextFieldStateTests.swift in Sources */,
 				2A58FAA52AD701E500BD1967 /* Services_EndpointGetPINConfirmationCodeTests.swift in Sources */,
+				2AF6384C2D8E8566007D39E2 /* RootViewModelFactory+makeCreditCardMVPTests.swift in Sources */,
 				2A95816B2AB9A063009698F5 /* Model+OperationTests.swift in Sources */,
 				2A90494B2C32698500313CB8 /* InMemoryValueStoreTests.swift in Sources */,
 				8353CD522B56B37E005F7D1A /* RequestFactory+getCardStatementForPeriodTests.swift in Sources */,
@@ -30810,6 +30825,10 @@
 		2AF5AC312B66628D00845E7A /* UserAccountNavigationComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = UserAccountNavigationComponent;
+		};
+		2AF6384D2D8EA40C007D39E2 /* CreditCardMVPFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CreditCardMVPFeature;
 		};
 		2AF720222C74841D00919CAF /* PayHub */ = {
 			isa = XCSwiftPackageProductDependency;
