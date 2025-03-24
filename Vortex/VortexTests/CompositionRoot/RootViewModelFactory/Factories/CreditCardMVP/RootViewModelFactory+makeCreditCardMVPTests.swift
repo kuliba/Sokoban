@@ -132,6 +132,9 @@ extension CreditCardMVPContentDomain {
         
         case alert, informer
     }
+}
+
+extension CreditCardMVPContentDomain {
     
     // MARK: - Content Logic
     
