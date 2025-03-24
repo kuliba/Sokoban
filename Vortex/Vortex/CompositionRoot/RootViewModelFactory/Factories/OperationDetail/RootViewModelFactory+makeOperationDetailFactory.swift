@@ -27,23 +27,7 @@ extension RootViewModelFactory {
         
         switch statement.paymentDetailType {
         case .c2gPayment:
-            guard let details = makeOperationDetail(product, statement)
-            else { return nil }
-            
-            details.event(.load)
-            
-            let content = StatementDetails.Content(
-                logo: statement.md5hash,
-                name: statement.fastPayment?.foreignName
-            )
-            
-            let document = statement.documentId.map(makeC2GDocumentButtonDomainBinder)
-            
-            return .v3(.init(
-                content: content,
-                details: details,
-                document: document
-            ))
+            return makeC2GPaymentOperationDetail(product, statement).map { .v3($0) }
             
         default:
             return .legacy(.init(
@@ -56,6 +40,31 @@ extension RootViewModelFactory {
                 model: model
             ))
         }
+    }
+    
+    @inlinable
+    func makeC2GPaymentOperationDetail(
+        _ product: ProductData,
+        _ statement: ProductStatementData
+    ) -> StatementDetails? {
+        
+        guard let details = makeOperationDetail(product, statement)
+        else { return nil }
+        
+        details.event(.load)
+        
+        let content = StatementDetails.Content(
+            logo: statement.md5hash,
+            name: statement.fastPayment?.foreignName
+        )
+        
+        let document = statement.documentId.map(makeC2GDocumentButtonDomainBinder)
+        
+        return .init(
+            content: content,
+            details: details,
+            document: document
+        )
     }
     
     @inlinable
