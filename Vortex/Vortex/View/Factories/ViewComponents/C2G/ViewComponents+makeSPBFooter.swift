@@ -13,8 +13,8 @@ extension ViewComponents {
     @inlinable
     func makeSPBFooter(
         isActive: Bool,
-        event: @escaping () -> Void,
-        title: String = "Продолжить"
+        title: String = "Продолжить",
+        event: @escaping () -> Void
     ) -> some View {
         
         VStack(spacing: 20) {
