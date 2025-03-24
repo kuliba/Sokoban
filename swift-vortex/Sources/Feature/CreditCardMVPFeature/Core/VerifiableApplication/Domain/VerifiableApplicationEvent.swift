@@ -9,7 +9,7 @@ import StateMachines
 
 /// An event in a verifiable application process.
 /// This event can be either an application event or a verification event.
-public enum VerifiableApplicationEvent<VerificationEvent, Failure: Error> {
+public enum VerifiableApplicationEvent<ApplicationStatus, VerificationEvent, Failure: Error> {
     
     /// An application event, wrapping a `StateMachines.LoadEvent`.
     case application(ApplicationEvent)
@@ -18,7 +18,7 @@ public enum VerifiableApplicationEvent<VerificationEvent, Failure: Error> {
     case verification(VerificationEvent)
     
     /// Typealias for the application event.
-    public typealias ApplicationEvent = StateMachines.LoadEvent<VerificationEvent, Failure>
+    public typealias ApplicationEvent = StateMachines.LoadEvent<ApplicationStatus, Failure>
 }
 
-extension VerifiableApplicationEvent: Equatable where VerificationEvent: Equatable, Failure: Equatable {}
+extension VerifiableApplicationEvent: Equatable where ApplicationStatus: Equatable, VerificationEvent: Equatable, Failure: Equatable {}

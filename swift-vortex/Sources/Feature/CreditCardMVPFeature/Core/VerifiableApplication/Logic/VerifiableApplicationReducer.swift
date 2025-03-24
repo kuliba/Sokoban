@@ -70,7 +70,7 @@ public extension VerifiableApplicationReducer {
     typealias State = VerifiableApplicationState<ApplicationStatus, Verification, Failure>
     
     /// The event type used by the reducer.
-    typealias Event = VerifiableApplicationEvent<VerificationEvent, Failure>
+    typealias Event = VerifiableApplicationEvent<ApplicationStatus, VerificationEvent, Failure>
     
     /// The effect type produced by the reducer.
     typealias Effect = VerifiableApplicationEffect<VerificationEffect>
