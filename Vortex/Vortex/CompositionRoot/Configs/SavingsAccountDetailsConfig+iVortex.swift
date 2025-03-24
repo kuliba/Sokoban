@@ -19,21 +19,21 @@ extension SavingsAccountDetailsConfig {
             progress: .textPrimary,
             shimmering: Color(red: 0.76, green: 0.76, blue: 0.76)),
         cornerRadius: 12,
-        days: .init(textFont: .system(size: 12), textColor: .gray),
+        days: .init(textFont: .textBodySR12160(), textColor: .textPlaceholder),
         heights: .init(
             big: 340,
             header: 24,
             interest: 20,
             period: 16,
             progress: 6,
-            small: 144
+            small: 130
         ),
-        info: .init(systemName: "info.circle"),
-        interestDate: .init(textFont: .system(size: 16), textColor: .white),
-        interestTitle: .init(textFont: .system(size: 14), textColor: .gray),
-        interestSubtitle: .init(textFont: .system(size: 16), textColor: .white),
+        info: .ic24AlertCircle,
+        interestDate: .init(textFont: .textH4M16240(), textColor: .textWhite),
+        interestTitle: .init(textFont: .textBodySR12160(), textColor: .textPlaceholder),
+        interestSubtitle: .init(textFont: .textH4M16240(), textColor: .textWhite),
         padding: 16,
-        period: .init(textFont: .system(size: 12), textColor: .gray),
+        period: .init(textFont: .textBodySR12160(), textColor: .textPlaceholder),
         progressColors: [
             .systemColorActive,
             Color(red: 255/255, green: 187/255, blue: 54/255),
@@ -41,7 +41,7 @@ extension SavingsAccountDetailsConfig {
         ],
         texts: .init(
             currentInterest: "Проценты текущего периода",
-            header: .init(text: "Детали счета", config: .init(textFont: .system(size: 20), textColor: .white)),
+            header: .init(text: "Детали счета", config: .init(textFont: .textH2Sb20282(), textColor: .white)),
             minBalance: "Минимальный остаток текущего периода",
             paidInterest: "Выплачено всего процентов",
             per: " / мес",
