@@ -43,6 +43,7 @@ public extension VerifiableApplicationReducer {
     ///   - state: The current verifiable application state.
     ///   - event: The event to process (either an application or verification event).
     /// - Returns: A tuple containing the updated state and an optional effect.
+    @inlinable
     func reduce(
         _ state: State,
         _ event: Event
@@ -75,7 +76,7 @@ public extension VerifiableApplicationReducer {
     typealias Effect = VerifiableApplicationEffect<VerificationEffect>
 }
 
-private extension VerifiableApplicationReducer {
+extension VerifiableApplicationReducer {
     
     /// Reduces an application event by updating the application state and mapping the produced effect.
     ///
@@ -83,6 +84,7 @@ private extension VerifiableApplicationReducer {
     ///   - state: The current state, passed as inout.
     ///   - effect: The optional effect to be updated.
     ///   - applicationEvent: The application event to reduce.
+    @usableFromInline
     func reduce(
         _ state: inout State,
         _ effect: inout Effect?,
@@ -99,6 +101,7 @@ private extension VerifiableApplicationReducer {
     ///   - state: The current state, passed as inout.
     ///   - effect: The optional effect to be updated.
     ///   - verificationEvent: The verification event to reduce.
+    @usableFromInline
     func reduce(
         _ state: inout State,
         _ effect: inout Effect?,
