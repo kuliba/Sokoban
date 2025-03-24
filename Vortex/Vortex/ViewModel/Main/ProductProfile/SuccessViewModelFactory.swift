@@ -8,8 +8,28 @@
 
 struct SuccessViewModelFactory {
     
-    typealias MakeCloseAccountPaymentsSuccessViewModel = (PaymentsSuccessViewModel.Mode) -> PaymentsSuccessViewModel?
+    typealias MakeSuccessViewModel = (PaymentsSuccessViewModel.Mode) -> PaymentsSuccessViewModel?
     
-    let makeCloseAccountPaymentsSuccessViewModel: MakeCloseAccountPaymentsSuccessViewModel
+    let makeSuccessViewModel: MakeSuccessViewModel
 }
 
+extension SuccessViewModelFactory{
+    
+    static func makeSuccessViewModel(
+        _ model: Model
+    ) -> SuccessViewModelFactory {
+        
+        .init(makeSuccessViewModel: {
+            
+            if let success = Payments.Success(
+                model: model,
+                mode: $0,
+                amountFormatter: model.amountFormatted(amount:currencyCode:style:)
+            ) {
+                
+                return .init(paymentSuccess: success, model)
+            }
+            return nil
+        })
+    }
+}

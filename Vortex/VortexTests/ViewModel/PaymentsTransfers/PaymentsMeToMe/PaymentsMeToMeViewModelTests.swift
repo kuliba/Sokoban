@@ -672,7 +672,6 @@ extension PaymentsMeToMeViewModelTests {
     func makeSUT(
         model: Model,
         mode: PaymentsMeToMeViewModel.Mode,
-        successViewodelFactory: SuccessViewModelFactory = .previewSuccess,
         file: StaticString = #file,
         line: UInt = #line
     ) -> PaymentsMeToMeViewModel? {
@@ -680,7 +679,7 @@ extension PaymentsMeToMeViewModelTests {
         let sut = PaymentsMeToMeViewModel(
             model,
             mode: mode,
-            successViewModelFactory: successViewodelFactory
+            successViewModelFactory: .makeSuccessViewModel(model)
         )
         
         if let sut {

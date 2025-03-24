@@ -5,7 +5,6 @@
 //  Created by Igor Malyarov on 20.03.2025.
 //
 
-import CreditCardMVPCore
 import XCTest
 
 final class LoadableReducerTests: LoadableTests {
@@ -40,30 +39,30 @@ final class LoadableReducerTests: LoadableTests {
         assert(state, event: .load, delivers: nil)
     }
     
-    func test_load_shouldChangeStatus_onNilResource_loadedOK() {
+    func test_load_shouldChangeStatus_onNilResource_loaded() {
         
-        let state = makeState(status: .loadedOK)
+        let state = makeState(status: .loaded)
         
         assert(state, event: .load) { $0.status = .loading }
     }
     
-    func test_load_shouldDeliverEffect_onNilResource_loadedOK() {
+    func test_load_shouldDeliverEffect_onNilResource_loaded() {
         
-        let state = makeState(status: .loadedOK)
+        let state = makeState(status: .loaded)
         
         assert(state, event: .load, delivers: .load)
     }
     
-    func test_load_shouldChangeStatus_onNonNilResource_loadedOK() {
+    func test_load_shouldChangeStatus_onNonNilResource_loaded() {
         
-        let state = makeState(resource: makeResource(), status: .loadedOK)
+        let state = makeState(resource: makeResource(), status: .loaded)
         
         assert(state, event: .load) { $0.status = .loading }
     }
     
-    func test_load_shouldDeliverEffect_onNonNilResource_loadedOK() {
+    func test_load_shouldDeliverEffect_onNonNilResource_loaded() {
         
-        let state = makeState(resource: makeResource(), status: .loadedOK)
+        let state = makeState(resource: makeResource(), status: .loaded)
         
         assert(state, event: .load, delivers: .load)
     }
@@ -134,10 +133,10 @@ final class LoadableReducerTests: LoadableTests {
         assert(state, event: .loaded(.failure(makeFailure())), delivers: nil)
     }
     
-    func test_loaded_shouldChangeStatus_onFailure_resourceNil_loadedOK() {
+    func test_loaded_shouldChangeStatus_onFailure_resourceNil_loaded() {
         
         let failure = makeFailure()
-        let state = makeState(status: .loadedOK)
+        let state = makeState(status: .loaded)
         
         assert(state, event: .loaded(.failure(failure))) {
             
@@ -145,17 +144,17 @@ final class LoadableReducerTests: LoadableTests {
         }
     }
     
-    func test_loaded_shouldNotDeliverEffect_onFailure_resourceNil_loadedOK() {
+    func test_loaded_shouldNotDeliverEffect_onFailure_resourceNil_loaded() {
         
-        let state = makeState(status: .loadedOK)
+        let state = makeState(status: .loaded)
         
         assert(state, event: .loaded(.failure(makeFailure())), delivers: nil)
     }
     
-    func test_loaded_shouldChangeStateStatus_onFailure_resourceNonNil_loadedOK() {
+    func test_loaded_shouldChangeStateStatus_onFailure_resourceNonNil_loaded() {
         
         let failure = makeFailure()
-        let state = makeState(resource: makeResource(), status: .loadedOK)
+        let state = makeState(resource: makeResource(), status: .loaded)
         
         assert(state, event: .loaded(.failure(failure))) {
             
@@ -163,9 +162,9 @@ final class LoadableReducerTests: LoadableTests {
         }
     }
     
-    func test_loaded_shouldNotDeliverEffect_onFailure_resourceNonNil_loadedOK() {
+    func test_loaded_shouldNotDeliverEffect_onFailure_resourceNonNil_loaded() {
         
-        let state = makeState(resource: makeResource(), status: .loadedOK)
+        let state = makeState(resource: makeResource(), status: .loaded)
         
         assert(state, event: .loaded(.failure(makeFailure())), delivers: nil)
     }
@@ -206,40 +205,40 @@ final class LoadableReducerTests: LoadableTests {
         assert(state, event: .loaded(.failure(makeFailure())), delivers: nil)
     }
     
-    func test_loaded_shouldChangeState_onSuccess_resourceNil_loadedOK() {
+    func test_loaded_shouldChangeState_onSuccess_resourceNil_loaded() {
         
         let resource = makeResource()
-        let state = makeState(status: .loadedOK)
+        let state = makeState(status: .loaded)
         
         assert(state, event: .loaded(.success(resource))) {
             
             $0.resource = resource
-            $0.status = .loadedOK
+            $0.status = .loaded
         }
     }
     
-    func test_loaded_shouldNotDeliverEffect_onSuccess_resourceNil_loadedOK() {
+    func test_loaded_shouldNotDeliverEffect_onSuccess_resourceNil_loaded() {
         
-        let state = makeState(status: .loadedOK)
+        let state = makeState(status: .loaded)
         
         assert(state, event: .loaded(.success(makeResource())), delivers: nil)
     }
     
-    func test_loaded_shouldChangeState_onSuccess_resourceNonNil_loadedOK() {
+    func test_loaded_shouldChangeState_onSuccess_resourceNonNil_loaded() {
         
         let resource = makeResource()
-        let state = makeState(resource: makeResource(), status: .loadedOK)
+        let state = makeState(resource: makeResource(), status: .loaded)
         
         assert(state, event: .loaded(.success(resource))) {
             
             $0.resource = resource
-            $0.status = .loadedOK
+            $0.status = .loaded
         }
     }
     
-    func test_loaded_shouldNotDeliverEffect_onSuccess_resourceNonNil_loadedOK() {
+    func test_loaded_shouldNotDeliverEffect_onSuccess_resourceNonNil_loaded() {
         
-        let state = makeState(resource: makeResource(), status: .loadedOK)
+        let state = makeState(resource: makeResource(), status: .loaded)
         
         assert(state, event: .loaded(.success(makeResource())), delivers: nil)
     }
@@ -252,7 +251,7 @@ final class LoadableReducerTests: LoadableTests {
         assert(state, event: .loaded(.success(resource))) {
             
             $0.resource = resource
-            $0.status = .loadedOK
+            $0.status = .loaded
         }
     }
     
@@ -271,7 +270,7 @@ final class LoadableReducerTests: LoadableTests {
         assert(state, event: .loaded(.success(resource))) {
             
             $0.resource = resource
-            $0.status = .loadedOK
+            $0.status = .loaded
         }
     }
     

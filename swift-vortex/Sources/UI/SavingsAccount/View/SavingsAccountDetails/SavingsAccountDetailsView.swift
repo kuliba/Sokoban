@@ -88,6 +88,7 @@ public struct SavingsAccountDetailsView: View {
         
         VStack {
             header(config.texts.header, needShimmering)
+                .frame(height: config.heights.header)
                 .padding(.bottom, config.padding)
             
             state.period.map {
@@ -99,7 +100,9 @@ public struct SavingsAccountDetailsView: View {
             }
             
             interest(needShimmering)
-            
+                .frame(height: config.heights.interest)
+                .padding(.bottom, 12)
+
             lineProgressView(needShimmering)
                 .frame(height: config.heights.progress)
             
@@ -159,7 +162,10 @@ public struct SavingsAccountDetailsView: View {
                 subtitle.text.text(withConfig: subtitle.config)
                     .frame(alignment: .leading)
                 config.info
+                    .resizable()
                     .foregroundColor(config.colors.chevron)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: config.padding)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .onTapGesture { event(.showSheet) }
             }
