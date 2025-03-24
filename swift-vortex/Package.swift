@@ -102,6 +102,7 @@ let package = Package(
         .rxViewModel,
         .savingsAccount,
         .searchBarComponent,
+        .shimmerLandingComponent,
         .textFieldComponent,
         .uiKitHelpers,
         .uiPrimitives,
@@ -363,6 +364,7 @@ let package = Package(
         .productProfileComponents,
         .productSelectComponent,
         .productSelectComponentTests,
+        .shimmerLandingComponent,
         .sharedConfigs,
         .bottomSheetComponent,
         .carouselComponent,
@@ -784,6 +786,11 @@ private extension Product {
     static let headerLandingComponent = library(
         name: .headerLandingComponent,
         targets: [.headerLandingComponent]
+    )  
+    
+    static let shimmerLandingComponent = library(
+        name: .shimmerLandingComponent,
+        targets: [.shimmerLandingComponent]
     )
     
     static let openNewProductComponent = library(
@@ -3574,6 +3581,14 @@ private extension Target {
         path: "Tests/UI/Components/\(String.productSelectComponentTests)"
     )
     
+    static let shimmerLandingComponent = target(
+        name: .shimmerLandingComponent,
+        dependencies: [
+            .uiPrimitives,
+        ],
+        path: "Sources/UI/Components/\(String.shimmerLandingComponent)"
+    )
+    
     static let sharedConfigs = target(
         name: .sharedConfigs,
         dependencies: [
@@ -3962,6 +3977,10 @@ private extension Target.Dependency {
     
     static let productSelectComponent = byName(
         name: .productSelectComponent
+    )
+    
+    static let shimmerLandingComponent = byName(
+        name: .shimmerLandingComponent
     )
     
     static let sharedConfigs = byName(
@@ -4418,6 +4437,8 @@ private extension String {
     
     static let productSelectComponent = "ProductSelectComponent"
     static let productSelectComponentTests = "ProductSelectComponentTests"
+
+    static let shimmerLandingComponent = "ShimmerLandingComponent"
     
     static let sharedConfigs = "SharedConfigs"
     
