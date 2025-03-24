@@ -14,13 +14,18 @@ extension RootViewModelFactory {
     func makeUINInputViewModel(
         value: String?,
         placeholderText: String = "Введите значение",
+        limit: Int = 25,
         hintText: String? = nil,
         warningText: String = "От 20 до 25 знаков"
     ) -> RxInputViewModel {
         
         let textFieldReducer = TransformingReducer(
             placeholderText: placeholderText,
-            transformer: FilteringTransformer.digits
+            transformer: Transform(build: {
+                
+                FilteringTransformer.digits
+                Transformers.limiting(limit)
+            })
         )
         
         let textInputValidator = TextInputValidator(
