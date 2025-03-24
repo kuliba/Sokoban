@@ -498,12 +498,14 @@ where AmountInfo == Text,
       OTPView == Text,
       ProductPicker == Text {
     
-    static var placeholder: Self {
-        
+    static func preview(
+        state: OrderSavingsAccountState
+    ) -> OrderSavingsAccountView {
+     
         OrderSavingsAccountView(
-            amountToString: 
+            amountToString:
                 { "\($0) \($1)" },
-            state: .placeholder,
+            state: state,
             event: {
                 switch $0 {
                 case .continue:
@@ -539,8 +541,13 @@ struct LandingUIView_Previews: PreviewProvider {
     static var previews: some View {
         
         NavigationView {
-            OrderSavingsAccountView.placeholder
+            OrderSavingsAccountView.preview(state: .placeholder)
         }
-        .previewDisplayName("Placeholder")
+        .previewDisplayName("Placeholder Shimmering")
+        
+        NavigationView {
+            OrderSavingsAccountView.preview(state: .preview)
+        }
+        .previewDisplayName("Preview Content")
     }
 }

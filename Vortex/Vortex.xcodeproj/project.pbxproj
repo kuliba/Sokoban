@@ -3255,7 +3255,7 @@
 		C123110C2C4E0960002871A8 /* CalendarWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C123110B2C4E0960002871A8 /* CalendarWrapperView.swift */; };
 		C124C7E72D6C45CB00124721 /* ListLandingComponent in Frameworks */ = {isa = PBXBuildFile; productRef = C124C7E62D6C45CB00124721 /* ListLandingComponent */; };
 		C127C5202D6CA96C00683F85 /* HeaderLandingComponent in Frameworks */ = {isa = PBXBuildFile; productRef = C127C51F2D6CA96C00683F85 /* HeaderLandingComponent */; };
-		C127C5232D6CB3F300683F85 /* ViewComponents+makeOpenCardLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C127C5222D6CB3F300683F85 /* ViewComponents+makeOpenCardLanding.swift */; };
+		C127C5232D6CB3F300683F85 /* ViewComponents+makeOrderCardLandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C127C5222D6CB3F300683F85 /* ViewComponents+makeOrderCardLandingView.swift */; };
 		C127C5252D6D94A800683F85 /* OrderCardLandingConfig+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C127C5242D6D94A800683F85 /* OrderCardLandingConfig+iVortex.swift */; };
 		C127C5282D6E305200683F85 /* OrderCardLandingDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = C127C5272D6E305200683F85 /* OrderCardLandingDomain.swift */; };
 		C127C52A2D6E34F000683F85 /* RootViewModelFactory+makeOrderCardLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C127C5292D6E34F000683F85 /* RootViewModelFactory+makeOrderCardLanding.swift */; };
@@ -7048,7 +7048,7 @@
 		C11F5A572CAED62C00E40CD2 /* RequestFactory+createPrepareDeleteDefaultBankRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createPrepareDeleteDefaultBankRequest.swift"; sourceTree = "<group>"; };
 		C12187792D1C025200565224 /* GoogleService-InfoVortexMbsDebug.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-InfoVortexMbsDebug.plist"; sourceTree = "<group>"; };
 		C123110B2C4E0960002871A8 /* CalendarWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarWrapperView.swift; sourceTree = "<group>"; };
-		C127C5222D6CB3F300683F85 /* ViewComponents+makeOpenCardLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeOpenCardLanding.swift"; sourceTree = "<group>"; };
+		C127C5222D6CB3F300683F85 /* ViewComponents+makeOrderCardLandingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeOrderCardLandingView.swift"; sourceTree = "<group>"; };
 		C127C5242D6D94A800683F85 /* OrderCardLandingConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OrderCardLandingConfig+iVortex.swift"; sourceTree = "<group>"; };
 		C127C5272D6E305200683F85 /* OrderCardLandingDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCardLandingDomain.swift; sourceTree = "<group>"; };
 		C127C5292D6E34F000683F85 /* RootViewModelFactory+makeOrderCardLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeOrderCardLanding.swift"; sourceTree = "<group>"; };
@@ -17704,7 +17704,7 @@
 		C127C5212D6CB38700683F85 /* OpenCardLanding */ = {
 			isa = PBXGroup;
 			children = (
-				C127C5222D6CB3F300683F85 /* ViewComponents+makeOpenCardLanding.swift */,
+				C127C5222D6CB3F300683F85 /* ViewComponents+makeOrderCardLandingView.swift */,
 				C1904BE42D81769000805475 /* ViewComponents+makeCardLanding.swift */,
 				C1904BE82D82AE8C00805475 /* CardLandingView.swift */,
 			);
@@ -23884,7 +23884,7 @@
 				0B931B1E26DCD83B00CA8017 /* GKHAdditionalListModel.swift in Sources */,
 				2AE2B9AE2B8DE40400B86D56 /* PaymentsTransfersNavigationStateManager.swift in Sources */,
 				A5C7A1B1275BF0B9003BEF6D /* InternetTVApiRequests.swift in Sources */,
-				C127C5232D6CB3F300683F85 /* ViewComponents+makeOpenCardLanding.swift in Sources */,
+				C127C5232D6CB3F300683F85 /* ViewComponents+makeOrderCardLandingView.swift in Sources */,
 				2AC72B922CEF8C72001578CC /* PaymentsTransfersCorporateFlowView.swift in Sources */,
 				0BF34866269444D9005138A8 /* AllCardCell.swift in Sources */,
 				77246B3B287DAB5E00219F17 /* MeToMeExternalView+Legacy.swift in Sources */,

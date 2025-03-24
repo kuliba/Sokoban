@@ -1,5 +1,5 @@
 //
-//  ViewComponents+makeOpenCardLanding.swift
+//  ViewComponents+makeOrderCardLandingView.swift
 //  Vortex
 //
 //  Created by Дмитрий Савушкин on 24.02.2025.
