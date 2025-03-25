@@ -43,8 +43,8 @@ extension CreditCardMVPDomain {
     
     enum Navigation {
         
-        case alert
-        case informer
+        case alert(String)
+        case informer(String)
         case complete(Complete)
         case decision(Decision)
         
@@ -256,7 +256,7 @@ extension RootViewModelFactory {
     ) {
         switch select {
         case .alert:
-            completion(.alert)
+            completion(.alert("Попробуйте позже."))
             
         case .failure:
             completion(.complete(.init(
@@ -265,7 +265,7 @@ extension RootViewModelFactory {
             )))
             
         case .informer:
-            completion(.informer)
+            completion(.informer("Ошибка загрузки данных.\nПопробуйте позже."))
             
         case .approved:
             completion(.decision(.init(status: .approved)))
@@ -381,7 +381,7 @@ final class RootViewModelFactory_makeCreditCardMVPBinderTests: CreditCardMVPRoot
         
         loadSpy.complete(with: alert())
         
-        XCTAssertTrue(sut.flow.isShowingAlert)
+        XCTAssertTrue(sut.flow.isShowingAlert(with: alertMessage))
     }
     
     // MARK: - informer
@@ -392,14 +392,14 @@ final class RootViewModelFactory_makeCreditCardMVPBinderTests: CreditCardMVPRoot
         
         loadSpy.complete(with: informer())
         
-        XCTAssertTrue(sut.flow.isShowingInformer)
+        XCTAssertTrue(sut.flow.isShowingInformer(with: informerMessage))
     }
     
     func test_shouldRemoveInformer_onDismiss() {
         
         let (sut, loadSpy, _) = makeSUT()
         loadSpy.complete(with: informer())
-        XCTAssertTrue(sut.flow.isShowingInformer)
+        XCTAssertTrue(sut.flow.isShowingInformer(with: informerMessage))
         
         sut.flow.event(.dismiss)
         
@@ -445,7 +445,7 @@ final class RootViewModelFactory_makeCreditCardMVPBinderTests: CreditCardMVPRoot
         sut.content.event(.apply(.load))
         applySpy.complete(with: informer())
         
-        XCTAssertTrue(sut.flow.isShowingInformer)
+        XCTAssertTrue(sut.flow.isShowingInformer(with: informerMessage))
     }
     
     func test_shouldRemoveInformer_onDismiss_onDraftApply() {
@@ -454,7 +454,7 @@ final class RootViewModelFactory_makeCreditCardMVPBinderTests: CreditCardMVPRoot
         loadSpy.complete(with: draft())
         sut.content.event(.apply(.load))
         applySpy.complete(with: informer())
-        XCTAssertTrue(sut.flow.isShowingInformer) // flow.isShowingInformer or what is showing??
+        XCTAssertTrue(sut.flow.isShowingInformer(with: informerMessage)) // flow.isShowingInformer or what is showing??
         
         sut.flow.event(.dismiss)
         
@@ -604,7 +604,7 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
         
         send(subject, alert())
         
-        XCTAssertTrue(sut.flow.isShowingAlert)
+        XCTAssertTrue(sut.flow.isShowingAlert(with: alertMessage))
     }
     
     // MARK: - informer
@@ -615,7 +615,7 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
         
         send(subject, informer())
         
-        XCTAssertTrue(sut.flow.isShowingInformer)
+        XCTAssertTrue(sut.flow.isShowingInformer(with: informerMessage))
     }
     
     func test_shouldRemoveInformer_onDismiss_onInformerFailure() {
@@ -654,14 +654,14 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
         
         send(subject, draft(application: .failure(informer())))
         
-        XCTAssertTrue(sut.flow.isShowingInformer)
+        XCTAssertTrue(sut.flow.isShowingInformer(with: informerMessage))
     }
     
     func test_shouldRemoveInformer_onDismiss_onDraftApplicationInformerFailure() {
         
         let (sut, subject, dismissing) = makeSUT()
         subject.send(.completed(draft(application: .failure(informer()))))
-        XCTAssertTrue(sut.flow.isShowingInformer) // flow.isShowingInformer or what is showing??
+        XCTAssertTrue(sut.flow.isShowingInformer(with: informerMessage)) // flow.isShowingInformer or what is showing??
         
         sut.flow.event(.dismiss)
         
@@ -832,16 +832,23 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
 
 class CreditCardMVPRootViewModelFactory: RootViewModelFactoryTests {
     
+    let alertMessage = "Попробуйте позже."
+    let informerMessage = "Ошибка загрузки данных.\nПопробуйте позже."
+    
     typealias ContentDomain = CreditCardMVPContentDomain
     
-    func alert() -> LoadFailure<ContentDomain.FailureType> {
+    func alert(
+        _ message: String = anyMessage()
+    ) -> LoadFailure<ContentDomain.FailureType> {
         
-        return .init(message: anyMessage(), type: .alert)
+        return .init(message: message, type: .alert)
     }
     
-    func informer() -> LoadFailure<ContentDomain.FailureType> {
+    func informer(
+        _ message: String = anyMessage()
+    ) -> LoadFailure<ContentDomain.FailureType> {
         
-        return .init(message: anyMessage(), type: .informer)
+        return .init(message: message, type: .informer)
     }
     
     func draft(
@@ -871,10 +878,12 @@ extension CreditCardMVPDomain.Content {
 
 extension CreditCardMVPDomain.Flow {
     
-    var isShowingAlert: Bool {
+    func isShowingAlert(
+        with message: String = anyMessage()
+    ) -> Bool {
         
-        guard case .alert = state.navigation else { return false }
-        return true
+        guard case let .alert(alertMessage) = state.navigation else { return false }
+        return alertMessage == message
     }
     
     var isShowingFailure: Bool {
@@ -885,10 +894,12 @@ extension CreditCardMVPDomain.Flow {
         return complete.status == .failure
     }
     
-    var isShowingInformer: Bool {
+    func isShowingInformer(
+        with message: String = anyMessage()
+    ) -> Bool {
         
-        guard case .informer = state.navigation else { return false }
-        return true
+        guard case let .informer(informerMessage) = state.navigation else { return false }
+        return informerMessage == message
     }
     
     var isShowingApproved: Bool {
