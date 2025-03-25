@@ -102,7 +102,7 @@ let package = Package(
         .rxViewModel,
         .savingsAccount,
         .searchBarComponent,
-        .shimmerLandingComponent,
+        .placeholderLandingComponent,
         .textFieldComponent,
         .uiKitHelpers,
         .uiPrimitives,
@@ -364,7 +364,7 @@ let package = Package(
         .productProfileComponents,
         .productSelectComponent,
         .productSelectComponentTests,
-        .shimmerLandingComponent,
+        .placeholderLandingComponent,
         .sharedConfigs,
         .bottomSheetComponent,
         .carouselComponent,
@@ -786,11 +786,6 @@ private extension Product {
     static let headerLandingComponent = library(
         name: .headerLandingComponent,
         targets: [.headerLandingComponent]
-    )  
-    
-    static let shimmerLandingComponent = library(
-        name: .shimmerLandingComponent,
-        targets: [.shimmerLandingComponent]
     )
     
     static let openNewProductComponent = library(
@@ -3581,12 +3576,12 @@ private extension Target {
         path: "Tests/UI/Components/\(String.productSelectComponentTests)"
     )
     
-    static let shimmerLandingComponent = target(
-        name: .shimmerLandingComponent,
+    static let placeholderLandingComponent = target(
+        name: .placeholderLandingComponent,
         dependencies: [
             .uiPrimitives,
         ],
-        path: "Sources/UI/Components/\(String.shimmerLandingComponent)"
+        path: "Sources/UI/Components/\(String.placeholderLandingComponent)"
     )
     
     static let sharedConfigs = target(
@@ -3979,8 +3974,8 @@ private extension Target.Dependency {
         name: .productSelectComponent
     )
     
-    static let shimmerLandingComponent = byName(
-        name: .shimmerLandingComponent
+    static let placeholderLandingComponent = byName(
+        name: .placeholderLandingComponent
     )
     
     static let sharedConfigs = byName(
@@ -4438,7 +4433,7 @@ private extension String {
     static let productSelectComponent = "ProductSelectComponent"
     static let productSelectComponentTests = "ProductSelectComponentTests"
 
-    static let shimmerLandingComponent = "ShimmerLandingComponent"
+    static let placeholderLandingComponent = "PlaceholderLandingComponent"
     
     static let sharedConfigs = "SharedConfigs"
     
