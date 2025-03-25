@@ -102,7 +102,6 @@ let package = Package(
         .rxViewModel,
         .savingsAccount,
         .searchBarComponent,
-        .placeholderLandingComponent,
         .textFieldComponent,
         .uiKitHelpers,
         .uiPrimitives,
