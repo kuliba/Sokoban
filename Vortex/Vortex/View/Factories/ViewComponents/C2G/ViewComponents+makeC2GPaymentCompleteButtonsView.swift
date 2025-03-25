@@ -179,6 +179,7 @@ extension OperationDetailDomain.ModelPayload {
         status: .completed,
         dateForDetail: "19 февраля 2025, 12:44",
         formattedAmount: "2 000 ₽",
+        isComplete: true,
         merchantName: "2 000 ₽",
         message: nil,
         paymentOperationDetailID: 1,

@@ -74,7 +74,7 @@ extension RootViewModelFactory {
                 completion(.success(.init(
                     context: .init(payload),
                     details: details,
-                    document: document
+                    document: payload.isComplete ? document : nil
                 )))
             }
         }
@@ -263,6 +263,7 @@ private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
             status: status,
             dateForDetail: dateForDetail,
             formattedAmount: formattedAmount,
+            isComplete: status == .completed,
             merchantName: merchantName,
             message: message,
             paymentOperationDetailID: paymentOperationDetailID,
@@ -286,6 +287,7 @@ private extension OperationDetailDomain.ModelPayload {
             status: status, 
             dateForDetail: "19 февраля 2025, 12:44",
             formattedAmount: "100 ₽",
+            isComplete: status == .completed,
             merchantName: "merchantName",
             message: "message",
             paymentOperationDetailID: 122004,

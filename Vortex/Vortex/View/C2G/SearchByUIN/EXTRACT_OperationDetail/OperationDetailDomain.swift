@@ -45,6 +45,7 @@ extension OperationDetailDomain {
         // from payment (on payment completion)
         let dateForDetail: String
         let formattedAmount: String?
+        let isComplete: Bool
         let merchantName: String?
         let message: String?
         let paymentOperationDetailID: Int
