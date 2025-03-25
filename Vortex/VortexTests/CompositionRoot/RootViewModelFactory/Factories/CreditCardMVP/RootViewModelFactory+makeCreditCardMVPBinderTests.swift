@@ -531,7 +531,7 @@ final class RootViewModelFactory_makeCreditCardMVPBinderTests: CreditCardMVPRoot
         sut.content.event(.apply(.load))
         applySpy.complete(with: .inReview)
         
-        XCTAssertTrue(sut.flow.isShowingInReview)
+        assertInReview(sut.flow, message: inReview)
     }
     
     func test_shouldNavigateToRejected_onRejectedApplyStatus() {
@@ -578,7 +578,7 @@ final class RootViewModelFactory_makeCreditCardMVPBinderTests: CreditCardMVPRoot
         
         loadSpy.complete(with: .inReview)
         
-        XCTAssertTrue(sut.flow.isShowingInReview)
+        assertInReview(sut.flow, message: inReview)
     }
     
     // MARK: - rejected
@@ -766,7 +766,7 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
         
         send(subject, draft(application: .completed(.inReview)))
         
-        XCTAssertTrue(sut.flow.isShowingInReview)
+        assertInReview(sut.flow, message: inReview)
     }
     
     func test_shouldNavigateToRejected_onDraftRejectedApplicationStatus() {
@@ -811,7 +811,7 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
         
         send(subject, .inReview)
         
-        XCTAssertTrue(sut.flow.isShowingInReview)
+        assertInReview(sut.flow, message: inReview)
     }
     
     // MARK: - rejected
@@ -935,6 +935,8 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
 
 class CreditCardMVPRootViewModelFactory: RootViewModelFactoryTests {
     
+    let inReview = "Ожидайте рассмотрения Вашей заявки\nРезультат придет в Push/смс\nПримерное время рассмотрения заявки 10 минут."
+    
     typealias ContentDomain = CreditCardMVPContentDomain
     
     func alert(
@@ -1054,6 +1056,21 @@ class CreditCardMVPRootViewModelFactory: RootViewModelFactoryTests {
         }
     }
     
+    func assertInReview(
+        _ flow: CreditCardMVPDomain.Flow,
+        message: String,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        switch flow.state.navigation {
+        case let .complete(complete):
+            XCTAssertNoDiff(complete, .init(message: message, status: .inReview), file: file, line: line)
+            
+        default:
+            XCTFail("Expected complete case, but got \(String(describing: flow.state.navigation)) instead.", file: file, line: line)
+        }
+    }
+    
     func assertRejected(
         _ flow: CreditCardMVPDomain.Flow,
         product: ProductCard,
@@ -1107,13 +1124,5 @@ extension CreditCardMVPDomain.Flow {
         
         guard case let .informer(informerMessage) = state.navigation else { return false }
         return informerMessage == message
-    }
-    
-    var isShowingInReview: Bool {
-        
-        guard case let .complete(complete) = state.navigation
-        else { return false }
-        
-        return complete.status == .inReview
     }
 }
