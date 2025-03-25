@@ -10,7 +10,7 @@ import UIPrimitives
 
 struct PlaceholderLandingView: View {
     
-    let config: PlaceholderConfig
+    let config: PlaceholderLandingViewConfig
     let isAnimated: Bool
     
     var body: some View {
@@ -19,22 +19,14 @@ struct PlaceholderLandingView: View {
             
             VStack(spacing: config.cover.verticalSpacing) {
                 
-                withShimmering {
-                    
-                    coverView()
-                }
+                withShimmering(coverView)
                 
                 Group {
                     
-                    withShimmering {
-                        
-                        itemsView()
-                    }
+                    withShimmering(itemsView)
                     
-                    withShimmering {
-                        
-                        listView()
-                    }
+                    withShimmering(listView)
+                    
                 }
                 .padding(.horizontal, config.hpadding)
                 .padding(.vertical, config.vpadding)
@@ -125,7 +117,6 @@ struct PlaceholderLandingView: View {
         content()
             ._shimmering(isActive: isAnimated)
     }
-    
     
     @ViewBuilder
     func dropDownPlaceholderView() -> some View {
