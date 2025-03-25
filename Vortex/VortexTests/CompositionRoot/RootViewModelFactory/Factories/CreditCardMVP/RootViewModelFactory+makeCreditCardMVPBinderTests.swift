@@ -33,9 +33,9 @@ extension CreditCardMVPDomain {
     
     enum Select {
         
-        case alert
+        case alert(String)
         case failure
-        case informer
+        case informer(String)
         case approved
         case inReview
         case rejected
@@ -255,8 +255,8 @@ extension RootViewModelFactory {
         completion: @escaping (CreditCardMVPDomain.Navigation) -> Void
     ) {
         switch select {
-        case .alert:
-            completion(.alert("Попробуйте позже."))
+        case let .alert(message):
+            completion(.alert(message))
             
         case .failure:
             completion(.complete(.init(
@@ -264,8 +264,8 @@ extension RootViewModelFactory {
                 status: .failure
             )))
             
-        case .informer:
-            completion(.informer("Ошибка загрузки данных.\nПопробуйте позже."))
+        case let .informer(message):
+            completion(.informer(message))
             
         case .approved:
             completion(.decision(.init(status: .approved)))
@@ -287,6 +287,11 @@ private extension String {
     static let failure = "Что-то пошло не так...\nПопробуйте позже."
     
     static let inReview = "Ожидайте рассмотрения Вашей заявки\nРезультат придет в Push/смс\nПримерное время рассмотрения заявки 10 минут."
+    
+#warning("to use in load and appy mapping")
+    static let alertMessage = "Попробуйте позже."
+    static let informerLoadMessage = "Ошибка загрузки данных.\nПопробуйте позже."
+    static let informerApplyMessage = "Ошибка отправки заявки.\nПопробуйте повторить."
 }
 
 extension CreditCardMVPDomain.ContentDomain.State {
@@ -316,7 +321,7 @@ extension CreditCardMVPDomain.ContentDomain.State {
             case let .failure(failure):
                 switch failure.type {
                 case .alert:    return .failure
-                case .informer: return .informer
+                case .informer: return .informer(failure.message)
                 }
                 
             case .loading, .pending:
@@ -331,8 +336,8 @@ extension CreditCardMVPDomain.ContentDomain.State {
             
         case let .failure(failure):
             switch failure.type {
-            case .alert:    return .alert
-            case .informer: return .informer
+            case .alert:    return .alert(failure.message)
+            case .informer: return .informer(failure.message)
             }
             
         case .loading, .pending:
@@ -377,29 +382,32 @@ final class RootViewModelFactory_makeCreditCardMVPBinderTests: CreditCardMVPRoot
     
     func test_shouldShowAlert_onAlertFailure() {
         
+        let message = anyMessage()
         let (sut, loadSpy, _) = makeSUT()
         
-        loadSpy.complete(with: alert())
+        loadSpy.complete(with: alert(message))
         
-        XCTAssertTrue(sut.flow.isShowingAlert(with: alertMessage))
+        XCTAssertTrue(sut.flow.isShowingAlert(with: message))
     }
     
     // MARK: - informer
     
     func test_shouldShowInformer_onInformerFailure() {
         
+        let message = anyMessage()
         let (sut, loadSpy, _) = makeSUT()
         
-        loadSpy.complete(with: informer())
+        loadSpy.complete(with: informer(message))
         
-        XCTAssertTrue(sut.flow.isShowingInformer(with: informerMessage))
+        XCTAssertTrue(sut.flow.isShowingInformer(with: message))
     }
     
     func test_shouldRemoveInformer_onDismiss() {
         
+        let message = anyMessage()
         let (sut, loadSpy, _) = makeSUT()
-        loadSpy.complete(with: informer())
-        XCTAssertTrue(sut.flow.isShowingInformer(with: informerMessage))
+        loadSpy.complete(with: informer(message))
+        XCTAssertTrue(sut.flow.isShowingInformer(with: message))
         
         sut.flow.event(.dismiss)
         
@@ -439,22 +447,24 @@ final class RootViewModelFactory_makeCreditCardMVPBinderTests: CreditCardMVPRoot
     
     func test_shouldShowInformer_onDraftApplyInformerFailure() {
         
+        let message = anyMessage()
         let (sut, loadSpy, applySpy) = makeSUT()
         loadSpy.complete(with: draft())
         
         sut.content.event(.apply(.load))
-        applySpy.complete(with: informer())
+        applySpy.complete(with: informer(message))
         
-        XCTAssertTrue(sut.flow.isShowingInformer(with: informerMessage))
+        XCTAssertTrue(sut.flow.isShowingInformer(with: message))
     }
     
     func test_shouldRemoveInformer_onDismiss_onDraftApply() {
         
+        let message = anyMessage()
         let (sut, loadSpy, applySpy) = makeSUT()
         loadSpy.complete(with: draft())
         sut.content.event(.apply(.load))
-        applySpy.complete(with: informer())
-        XCTAssertTrue(sut.flow.isShowingInformer(with: informerMessage)) // flow.isShowingInformer or what is showing??
+        applySpy.complete(with: informer(message))
+        XCTAssertTrue(sut.flow.isShowingInformer(with: message)) // flow.isShowingInformer or what is showing??
         
         sut.flow.event(.dismiss)
         
@@ -600,22 +610,24 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
     
     func test_shouldShowAlert_onAlertFailure() {
         
+        let message = anyMessage()
         let (sut, subject, _) = makeSUT()
         
-        send(subject, alert())
+        send(subject, alert(message))
         
-        XCTAssertTrue(sut.flow.isShowingAlert(with: alertMessage))
+        XCTAssertTrue(sut.flow.isShowingAlert(with: message))
     }
     
     // MARK: - informer
     
     func test_shouldShowInformer_onInformerFailure() {
         
+        let message = anyMessage()
         let (sut, subject, _) = makeSUT()
         
-        send(subject, informer())
+        send(subject, informer(message))
         
-        XCTAssertTrue(sut.flow.isShowingInformer(with: informerMessage))
+        XCTAssertTrue(sut.flow.isShowingInformer(with: message))
     }
     
     func test_shouldRemoveInformer_onDismiss_onInformerFailure() {
@@ -650,18 +662,20 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
     
     func test_shouldNavigateToFailure_onDraftApplicationInformerFailure() {
         
+        let message = anyMessage()
         let (sut, subject, _) = makeSUT()
         
-        send(subject, draft(application: .failure(informer())))
+        send(subject, draft(application: .failure(informer(message))))
         
-        XCTAssertTrue(sut.flow.isShowingInformer(with: informerMessage))
+        XCTAssertTrue(sut.flow.isShowingInformer(with: message))
     }
     
     func test_shouldRemoveInformer_onDismiss_onDraftApplicationInformerFailure() {
         
+        let message = anyMessage()
         let (sut, subject, dismissing) = makeSUT()
-        subject.send(.completed(draft(application: .failure(informer()))))
-        XCTAssertTrue(sut.flow.isShowingInformer(with: informerMessage)) // flow.isShowingInformer or what is showing??
+        subject.send(.completed(draft(application: .failure(informer(message)))))
+        XCTAssertTrue(sut.flow.isShowingInformer(with: message)) // flow.isShowingInformer or what is showing??
         
         sut.flow.event(.dismiss)
         
@@ -831,9 +845,6 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
 }
 
 class CreditCardMVPRootViewModelFactory: RootViewModelFactoryTests {
-    
-    let alertMessage = "Попробуйте позже."
-    let informerMessage = "Ошибка загрузки данных.\nПопробуйте позже."
     
     typealias ContentDomain = CreditCardMVPContentDomain
     
