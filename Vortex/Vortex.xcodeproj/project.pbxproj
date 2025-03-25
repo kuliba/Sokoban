@@ -1175,6 +1175,7 @@
 		2A77B6582AE004520022600F /* CVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6572AE004520022600F /* CVVPINServicesClient.swift */; };
 		2A77B65F2AE004E80022600F /* HappyCVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B65E2AE004E80022600F /* HappyCVVPINServicesClient.swift */; };
 		2A77B6612AE004F80022600F /* SadCVVPINServicesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77B6602AE004F80022600F /* SadCVVPINServicesClient.swift */; };
+		2A77C6F92D931A89008C0B3B /* ProductCardViewConfig+prod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A77C6F82D931A89008C0B3B /* ProductCardViewConfig+prod.swift */; };
 		2A77FECE2BB4A40500884D87 /* AnywayPayment in Frameworks */ = {isa = PBXBuildFile; productRef = 2A77FECD2BB4A40500884D87 /* AnywayPayment */; };
 		2A7801512C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7801502C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift */; };
 		2A7801532C898092004898A4 /* CurrencyWalletViewModelComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7801522C898092004898A4 /* CurrencyWalletViewModelComposer.swift */; };
@@ -5037,6 +5038,7 @@
 		2A77B6572AE004520022600F /* CVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVPINServicesClient.swift; sourceTree = "<group>"; };
 		2A77B65E2AE004E80022600F /* HappyCVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HappyCVVPINServicesClient.swift; sourceTree = "<group>"; };
 		2A77B6602AE004F80022600F /* SadCVVPINServicesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SadCVVPINServicesClient.swift; sourceTree = "<group>"; };
+		2A77C6F82D931A89008C0B3B /* ProductCardViewConfig+prod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProductCardViewConfig+prod.swift"; sourceTree = "<group>"; };
 		2A7801502C8976B4004898A4 /* CurrencyWalletViewModelComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyWalletViewModelComposerTests.swift; sourceTree = "<group>"; };
 		2A7801522C898092004898A4 /* CurrencyWalletViewModelComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyWalletViewModelComposer.swift; sourceTree = "<group>"; };
 		2A78246C2D6241620084B8A9 /* ViewComponents+makeSPBFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeSPBFooter.swift"; sourceTree = "<group>"; };
@@ -9289,6 +9291,7 @@
 		2A1F5E802C26E9FF002B3F65 /* Configs */ = {
 			isa = PBXGroup;
 			children = (
+				2A77C6F72D931A73008C0B3B /* CreditCardMVP */,
 				2AFC34A22D830EA0000C6FBA /* SplashScreen */,
 				83A3F5B02C9432B800CE8B3B /* BannerPickerSectionStateItemViewConfig+iVortex.swift */,
 				2A5AEF282B7A191B00E935B6 /* ButtonConfig+iVortex.swift */,
@@ -11894,6 +11897,14 @@
 				2A77B6602AE004F80022600F /* SadCVVPINServicesClient.swift */,
 			);
 			path = CertificateClientStubs;
+			sourceTree = "<group>";
+		};
+		2A77C6F72D931A73008C0B3B /* CreditCardMVP */ = {
+			isa = PBXGroup;
+			children = (
+				2A77C6F82D931A89008C0B3B /* ProductCardViewConfig+prod.swift */,
+			);
+			path = CreditCardMVP;
 			sourceTree = "<group>";
 		};
 		2A783A822B5A87CE0035CEAB /* OTPInputComponentPreview */ = {
@@ -22615,6 +22626,7 @@
 				EDFFCAF32682461F004EE095 /* CardCell.swift in Sources */,
 				ED733D5C285895F700F22D42 /* PaymentSystemList+Legacy.swift in Sources */,
 				ED60A1E626DCEA01000F3208 /* MeToMeRequestController.swift in Sources */,
+				2A77C6F92D931A89008C0B3B /* ProductCardViewConfig+prod.swift in Sources */,
 				0B8C1C4B273B09CD00BA5CAC /* QRErrorViewController.swift in Sources */,
 				77F5CE1128056EF600611B66 /* Model+Location.swift in Sources */,
 				2A01F93C2AE50F340064F15B /* ComposedCVVPINService+ShowCVVClient.swift in Sources */,
