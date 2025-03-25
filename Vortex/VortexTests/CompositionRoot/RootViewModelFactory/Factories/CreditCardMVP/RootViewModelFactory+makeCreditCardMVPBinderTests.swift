@@ -536,13 +536,19 @@ final class RootViewModelFactory_makeCreditCardMVPBinderTests: CreditCardMVPRoot
     
     func test_shouldNavigateToRejected_onRejectedApplyStatus() {
         
+        let product = makeProductCard()
         let (sut, loadSpy, applySpy) = makeSUT()
         loadSpy.complete(with: draft())
         
         sut.content.event(.apply(.load))
-        applySpy.complete(with: rejected())
+        applySpy.complete(with: rejected(product))
         
-        XCTAssertTrue(sut.flow.isShowingRejected)
+        assertRejected(
+            sut.flow,
+            product: product,
+            message: "К сожалению, ваша кредитная история не позволяет оформить карту",
+            title: "Кредитная карта не одобрена"
+        )
     }
     
     // MARK: - approved
@@ -579,11 +585,17 @@ final class RootViewModelFactory_makeCreditCardMVPBinderTests: CreditCardMVPRoot
     
     func test_shouldNavigateToRejected_onRejectedStatus() {
         
+        let product = makeProductCard()
         let (sut, loadSpy, _) = makeSUT()
         
-        loadSpy.complete(with: rejected())
+        loadSpy.complete(with: rejected(product))
         
-        XCTAssertTrue(sut.flow.isShowingRejected)
+        assertRejected(
+            sut.flow,
+            product: product,
+            message: "К сожалению, ваша кредитная история не позволяет оформить карту",
+            title: "Кредитная карта не одобрена"
+        )
     }
     
     // MARK: - loading
@@ -759,11 +771,17 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
     
     func test_shouldNavigateToRejected_onDraftRejectedApplicationStatus() {
         
+        let product = makeProductCard()
         let (sut, subject, _) = makeSUT()
         
-        send(subject, draft(application: .completed(rejected())))
+        send(subject, draft(application: .completed(rejected(product))))
         
-        XCTAssertTrue(sut.flow.isShowingRejected)
+        assertRejected(
+            sut.flow,
+            product: product,
+            message: "К сожалению, ваша кредитная история не позволяет оформить карту",
+            title: "Кредитная карта не одобрена"
+        )
     }
     
     // MARK: - approved
@@ -800,11 +818,17 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
     
     func test_shouldNavigateToRejected_onRejectedStatus() {
         
+        let product = makeProductCard()
         let (sut, subject, _) = makeSUT()
         
-        send(subject, rejected())
+        send(subject, rejected(product))
         
-        XCTAssertTrue(sut.flow.isShowingRejected)
+        assertRejected(
+            sut.flow,
+            product: product,
+            message: "К сожалению, ваша кредитная история не позволяет оформить карту",
+            title: "Кредитная карта не одобрена"
+        )
     }
     
     // MARK: - loading
@@ -950,14 +974,14 @@ class CreditCardMVPRootViewModelFactory: RootViewModelFactoryTests {
     }
     
     func rejected(
-        product: ProductCard? = nil
+        _ product: ProductCard? = nil
     ) -> ContentDomain.FinalStatus {
         
         return .rejected(product ?? makeProductCard())
     }
     
     func rejected(
-        product: ProductCard? = nil
+        _ product: ProductCard? = nil
     ) -> ContentDomain.DraftableStatus {
         
         return .rejected(product ?? makeProductCard())
@@ -1009,6 +1033,23 @@ class CreditCardMVPRootViewModelFactory: RootViewModelFactoryTests {
         switch flow.state.navigation {
         case let .decision(decision):
             XCTAssertNoDiff(decision, .init(message: message, product: product, title: title, status: .approved(.init(consent: consent, info: info))), file: file, line: line)
+            
+        default:
+            XCTFail("Expected decision case, but got \(String(describing: flow.state.navigation)) instead.", file: file, line: line)
+        }
+    }
+    
+    func assertRejected(
+        _ flow: CreditCardMVPDomain.Flow,
+        product: ProductCard,
+        message: String,
+        title: String,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        switch flow.state.navigation {
+        case let .decision(decision):
+            XCTAssertNoDiff(decision, .init(message: message, product: product, title: title, status: .rejected), file: file, line: line)
             
         default:
             XCTFail("Expected decision case, but got \(String(describing: flow.state.navigation)) instead.", file: file, line: line)
@@ -1067,11 +1108,5 @@ extension CreditCardMVPDomain.Flow {
         else { return false }
         
         return complete.status == .inReview
-    }
-    
-    var isShowingRejected: Bool {
-        
-        guard case let .decision(decision) = state.navigation else { return false }
-        return decision.status == .rejected
     }
 }
