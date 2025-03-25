@@ -15,12 +15,12 @@ extension ViewComponents {
     @inlinable
     func makeC2GPaymentCompleteButtonsView(
         details: OperationDetailDomain.Model,
-        document: C2GDocumentButtonDomain.Binder
+        document: C2GDocumentButtonDomain.Binder?
     ) -> some View {
         
         HStack(alignment: .top, spacing: 8) {
             
-            makeC2GDocumentButtonDomainBinderView(document)
+            document.map(makeC2GDocumentButtonDomainBinderView)
             
             RxWrapperView(model: details) { state, _ in
                 
