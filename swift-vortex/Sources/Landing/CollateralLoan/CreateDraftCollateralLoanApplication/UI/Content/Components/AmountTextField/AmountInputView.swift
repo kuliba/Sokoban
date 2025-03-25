@@ -39,13 +39,15 @@ public struct AmountInputView<IconView: View>: View {
                 iconView()
                     .frame(width: config.imageWidth, height: config.imageWidth)
                 
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 0) {
                     
                     config.title.text(withConfig: config.titleConfig, alignment: .leading)
+                        .offset(y: config.titleOffset)
                     
                     textField()
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.top, config.topPadding)
             }
             
             messageView()

@@ -45,7 +45,9 @@ extension AmountInputConfig {
         title: "Сумма кредита",
         titleConfig: .init(textFont: Font.system(size: 14), textColor: .title),
         toolbar: .preview,
-        warning: .init(textFont: .footnote, textColor: .red)
+        warning: .init(textFont: .footnote, textColor: .red),
+        titleOffset: 3,
+        topPadding: 5
     )
 }
 

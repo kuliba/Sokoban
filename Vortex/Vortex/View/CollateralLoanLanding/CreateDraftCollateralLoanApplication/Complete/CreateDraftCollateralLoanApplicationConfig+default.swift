@@ -28,7 +28,7 @@ extension CreateDraftCollateralLoanApplicationConfig {
             cornerRadius: 12,
             contentHorizontalSpacing: 12,
             contentVerticalSpacing: 4,
-            shimmeringHeight: 150,
+            shimmeringHeight: 80,
             panelHeight: 40,
             paddings: .init(
                 stack: .init(
@@ -92,7 +92,9 @@ extension AmountInputConfig {
         title: "Сумма кредита",
         titleConfig: .init(textFont: Font.system(size: 14), textColor: .title),
         toolbar: .default,
-        warning: .init(textFont: .footnote, textColor: .red)
+        warning: .init(textFont: .footnote, textColor: .red),
+        titleOffset: 2,
+        topPadding: 4
     )
 }
 
@@ -245,7 +247,7 @@ extension TimedOTPInputViewConfig {
     
     static let `default` = Self(
         otp: .init(
-            textFont: .headline,
+            textFont: .textH4M16240(),
             textColor: .primary
         ),
         resend: .default,

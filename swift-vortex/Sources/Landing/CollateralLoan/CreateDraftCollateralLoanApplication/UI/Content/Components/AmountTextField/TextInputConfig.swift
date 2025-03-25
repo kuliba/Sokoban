@@ -20,7 +20,9 @@ public struct AmountInputConfig: Equatable {
     public let titleConfig: TextConfig
     public let toolbar: AmountToolbarConfig
     public let warning: TextConfig
-    
+    public let titleOffset: CGFloat
+    public let topPadding: CGFloat
+
     public init(
         hint: TextConfig,
         imageWidth: CGFloat,
@@ -30,7 +32,9 @@ public struct AmountInputConfig: Equatable {
         title: String,
         titleConfig: TextConfig,
         toolbar: AmountToolbarConfig,
-        warning: TextConfig
+        warning: TextConfig,
+        titleOffset: CGFloat,
+        topPadding: CGFloat
     ) {
         self.hint = hint
         self.imageWidth = imageWidth
@@ -41,6 +45,8 @@ public struct AmountInputConfig: Equatable {
         self.titleConfig = titleConfig
         self.toolbar = toolbar
         self.warning = warning
+        self.titleOffset = titleOffset
+        self.topPadding = topPadding
     }
 }
 
