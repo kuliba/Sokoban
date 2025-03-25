@@ -12,6 +12,7 @@ import UIPrimitives
 
 struct ProductCard: Equatable {
     
+    let md5Hash: String
     let options: [Option]
     let title: String
     let subtitle: String
@@ -124,6 +125,7 @@ extension ProductCardViewConfig.LabelConfig.OptionConfig {
 extension ProductCard {
     
     static func preview(
+        md5Hash: String = UUID().uuidString,
         options: [Option] = [
             .init(title: "Открытие ", value: "Бесплатно"),
             .init(title: "Обслуживание ", value: "Бесплатно"),
@@ -132,7 +134,7 @@ extension ProductCard {
         subtitle: String = "!Бесплатное открытие и обслуживание"
     ) -> Self {
         
-        return .init(options: options, title: title, subtitle: subtitle)
+        return .init(md5Hash: md5Hash, options: options, title: title, subtitle: subtitle)
     }
 }
 
@@ -204,10 +206,11 @@ extension ProductCardViewConfig.LabelConfig.IconConfig {
     }
 }
 
-struct ProductCardView: View {
+struct ProductCardView<IconView: View>: View {
     
     let product: ProductCard
     let config: Config
+    let iconView: (String) -> IconView
     
     var body: some View {
         
@@ -246,7 +249,7 @@ private extension ProductCardView {
 #warning("replace `Color.red` with injected view!")
     func icon() -> some View {
         
-        Color.red
+        iconView(product.md5Hash)
             .frame(config.label.icon.size)
             .clipShape(RoundedRectangle(cornerRadius: config.label.icon.cornerRadius))
             .background(alignment: .bottom, content: shadow)
@@ -327,7 +330,10 @@ struct ProductCardView_Previews:  PreviewProvider {
     
     private static func productCardView() -> some View {
         
-        ProductCardView(product: .preview(), config: .preview())
-            .padding()
+        ProductCardView(product: .preview(), config: .preview()) { _ in
+            
+            Color.red
+        }
+        .padding()
     }
 }
