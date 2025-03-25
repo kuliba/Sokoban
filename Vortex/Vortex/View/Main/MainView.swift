@@ -266,17 +266,11 @@ struct MainView<NavigationOperationView: View>: View {
             servicePicker(flowModel: node.model)
             
         case let .collateralLoanLanding(binder):
-            viewFactory.makeCollateralLoanShowcaseWrapperView(
-                binder,
-                viewModel.getPDFDocument,
-                viewModel.resetDestination
-            )
-                .navigationBarWithBack(
-                    title: "Кредиты",
-                    dismiss: viewModel.resetDestination
-                )
-                .edgesIgnoringSafeArea(.bottom)
- 
+            makeCollateralLoanShowcaseWrapperView(binder: binder)
+
+        case let .collateralLoanLandingProduct(binder):
+            makeCollateralLoanWrapperView(binder: binder)
+            
         case .orderCard:
             viewFactory.components.makeOrderCardView()
         }
@@ -405,6 +399,60 @@ private extension MainView {
     }
     
     private typealias Config = BannerPickerSectionStateItemViewConfig
+    
+    private func makeOperationDetailInfoViewModel(
+        _ cells: [OperationDetailInfoViewModel.DefaultCellViewModel],
+        dismissAction: @escaping () -> Void
+    ) -> OperationDetailInfoViewModel {
+
+        OperationDetailInfoViewModel(
+            model: viewModel.model,
+            logo: nil,
+            cells: cells,
+            dismissAction: dismissAction
+        )
+    }
+    
+    private func makeCollateralLoanShowcaseWrapperView(
+            binder: GetShowcaseDomain.Binder
+        ) -> some View {
+            
+        viewFactory.components.makeCollateralLoanShowcaseWrapperView(
+            makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,
+            binder: binder,
+            goToPlaces: goToPlaces,
+            goToMain: viewModel.resetDestination,
+            getPDFDocument: viewModel.getPDFDocument,
+            formatCurrency: viewModel.formatCurrency
+        )
+        .navigationBarWithBack(
+            title: "Кредиты",
+            dismiss: viewModel.resetDestination
+        )
+        .edgesIgnoringSafeArea(.bottom)
+    }
+    
+    private func makeCollateralLoanWrapperView(binder: GetCollateralLandingDomain.Binder) -> some View {
+        
+        return viewFactory.components.makeCollateralLoanWrapperView(
+            binder: binder,
+            makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,
+            goToPlaces: goToPlaces,
+            goToMain: viewModel.resetDestination,
+            getPDFDocument: viewModel.getPDFDocument,
+            formatCurrency: viewModel.formatCurrency
+        )
+        .navigationBarWithBack(
+            title: "",
+            dismiss: viewModel.resetDestination
+        )
+    }
+    
+    private func goToPlaces() {
+
+        guard let placesViewModel = PlacesViewModel(viewModel.model) else { return }
+        viewModel.route.modal = .sheet(.init(type: .places(placesViewModel)))
+    }
 }
 
 // MARK: - payment provider & service pickers
@@ -587,8 +635,7 @@ extension MainViewFactory {
                     viewFactory: .preview
                 )
             },
-            components: .preview,
-            makeCollateralLoanShowcaseWrapperView: { _,_,_  in .preview }
+            components: .preview
         )
     }
 }

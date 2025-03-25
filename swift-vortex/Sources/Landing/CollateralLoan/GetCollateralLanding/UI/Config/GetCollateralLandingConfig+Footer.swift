@@ -14,22 +14,39 @@ extension GetCollateralLandingConfig {
         
         public let text: String
         public let font: FontConfig
-        public let foreground: Color
-        public let background: Color
+        public let colors: Colors
         public let layouts: Layouts
         
         public init(
             text: String,
             font: FontConfig,
-            foreground: Color,
-            background: Color,
+            colors: Colors,
             layouts: Layouts
         ) {
             self.text = text
             self.font = font
-            self.foreground = foreground
-            self.background = background
+            self.colors = colors
             self.layouts = layouts
+        }
+        
+        public struct Colors {
+            
+            public let buttonForeground: Color
+            public let buttonBackground: Color
+            public let disabledButtonBackground: Color
+            public let background: Color
+            
+            public init(
+                buttonForeground: Color,
+                buttonBackground: Color,
+                disabledButtonBackground: Color,
+                background: Color
+            ) {
+                self.buttonForeground = buttonForeground
+                self.buttonBackground = buttonBackground
+                self.disabledButtonBackground = disabledButtonBackground
+                self.background = background
+            }
         }
         
         public struct Layouts {
@@ -56,8 +73,12 @@ extension GetCollateralLandingConfig.Footer {
     static let preview = Self(
         text: "Оформить заявку",
         font: .init(Font.system(size: 16).bold()),
-        foreground: .white,
-        background: .red,
+        colors: .init(
+            buttonForeground: .white,
+            buttonBackground: .red,
+            disabledButtonBackground: .unselected,
+            background: .white
+        ),
         layouts: .init(
             height: 56,
             cornerRadius: 12,

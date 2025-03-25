@@ -29,12 +29,13 @@ struct CreateDraftCollateralLoanApplicationAmountView<Confirmation, InformerPayl
     
     private var editModeView: some View {
         
-        TextInputView(
+        AmountInputView(
             state: state.amount,
             event: { event(.amount($0)) },
             config: config.elements.amount.inputComponentConfig,
             iconView: { factory.makeImageViewWithMD5Hash(state.application.icons.amount) }
         )
+        .frame(height: config.layouts.panelHeight)
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
     
@@ -48,7 +49,8 @@ struct CreateDraftCollateralLoanApplicationAmountView<Confirmation, InformerPayl
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewWithMD5Hash(state.application.icons.amount) }
+            icon: { factory.makeImageViewWithMD5Hash(state.application.icons.amount)
+                .frame(width: 24, height: 24) }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
@@ -77,8 +79,4 @@ struct CreateDraftCollateralLoanApplicationAmountView_Previews<Confirmation, Inf
             factory: .preview
         )
     }
-    
-    typealias Factory = CreateDraftCollateralLoanApplicationFactory
-    typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias Applicaton = CreateDraftCollateralLoanApplication
 }

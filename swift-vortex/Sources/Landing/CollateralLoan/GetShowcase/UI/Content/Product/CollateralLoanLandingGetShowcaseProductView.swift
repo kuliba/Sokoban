@@ -7,10 +7,11 @@
 
 import SwiftUI
 
-public struct CollateralLoanLandingGetShowcaseProductView: View {
+public struct CollateralLoanLandingGetShowcaseProductView<InformerPayload>: View
+    where InformerPayload: Equatable {
     
     let product: Product
-    let event: (GetShowcaseViewEvent.External) -> Void
+    let event: (GetShowcaseViewEvent<InformerPayload>.External) -> Void
     let config: Config
     let factory: Factory
     
@@ -66,5 +67,5 @@ extension CollateralLoanLandingGetShowcaseProductView {
     typealias Product = CollateralLoanLandingGetShowcaseData.Product
     typealias Config = CollateralLoanLandingGetShowcaseViewConfig
     typealias Event = GetShowcaseDomain.Event
-    typealias Factory = CollateralLoanLandingGetShowcaseViewFactory
+    typealias Factory = CollateralLoanLandingFactory
 }

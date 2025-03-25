@@ -8,13 +8,16 @@
 import ActivateSlider
 import AnywayPaymentDomain
 import Banners
+import CollateralLoanLandingGetConsentsBackend
 import CollateralLoanLandingGetShowcaseUI
 import LoadableResourceComponent
 import MarketShowcase
+import PDFKit
 import RemoteServices
 import SberQR
 import SplashScreenUI
 import SwiftUI
+import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 
 typealias MakeActivateSliderView = (ProductData.ID, ActivateSliderViewModel, SliderConfig) -> ActivateSliderStateWrapperView
 typealias MakeAnywayPaymentFactory = (@escaping (AnywayPaymentEvent) -> Void) -> AnywayPaymentFactory<IconDomain.IconView>
@@ -25,7 +28,6 @@ typealias MakePaymentCompleteView = (Completed, @escaping () -> Void) -> Payment
 typealias MakeAnywayFlowView = (AnywayFlowModel) -> AnywayFlowView<PaymentCompleteView>
 typealias MakePaymentsTransfersView = (PaymentsTransfersViewModel) -> PaymentsTransfersView
 typealias MakeSberQRConfirmPaymentView = (SberQRConfirmPaymentViewModel) -> SberQRConfirmPaymentWrapperView
-typealias MakeCollateralLoanShowcaseWrapperView = (GetShowcaseDomain.Binder, @escaping CollateralLoanLandingGetShowcaseViewFactory.GetPDFDocument, @escaping () -> Void) -> CollateralLoanShowcaseWrapperView
 typealias MakeUserAccountView = (UserAccountViewModel) -> UserAccountView
 typealias MakeTemplateButtonWrapperView = (OperationDetailData) -> TemplateButtonStateWrapperView
 
@@ -63,7 +65,6 @@ struct RootViewFactory {
     let paymentsViewFactory: PaymentsViewFactory
     let makeTemplateButtonWrapperView: MakeTemplateButtonWrapperView
     let makeUpdatingUserAccountButtonLabel: MakeUpdatingUserAccountButtonLabel
-    let makeCollateralLoanShowcaseWrapperView: MakeCollateralLoanShowcaseWrapperView
     
     typealias MakeUpdatingUserAccountButtonLabel = () -> UpdatingUserAccountButtonLabel
 }
@@ -118,8 +119,7 @@ extension RootViewFactory {
             makePaymentCompleteView: makePaymentCompleteView,
             makeSberQRConfirmPaymentView: makeSberQRConfirmPaymentView,
             makeUserAccountView: makeUserAccountView, 
-            components: components,
-            makeCollateralLoanShowcaseWrapperView: makeCollateralLoanShowcaseWrapperView
+            components: components
         )
     }
 }

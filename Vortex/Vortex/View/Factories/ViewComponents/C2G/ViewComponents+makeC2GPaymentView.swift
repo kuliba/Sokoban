@@ -54,8 +54,10 @@ extension ViewComponents {
             .padding(.horizontal)
             .safeAreaInset(edge: .bottom) {
                 
-                makeSPBFooter(isActive: state.digest != nil) {
-                    
+                makeSPBFooter(
+                    isActive: state.digest != nil,
+                    title: "Оплатить"
+                ) {
                     state.digest.map(pay)
                 }
                 .padding(.horizontal)
@@ -80,7 +82,8 @@ extension ViewComponents {
                 
                 makeProductSelectView(
                     state: state.productSelect,
-                    event: { event(.productSelect($0)) }
+                    event: { event(.productSelect($0)) },
+                    edgeInsets: .selector
                 )
                 
                 amountView(state.context)
@@ -190,6 +193,11 @@ extension ViewComponents {
     }
 }
 
+private extension EdgeInsets {
+    
+    static let selector: Self = .init(top: 0, leading: 2, bottom: 0, trailing: 12)
+}
+
 extension View {
     
     @ViewBuilder
@@ -241,7 +249,7 @@ private extension C2GPaymentFlowView {
         backendFailure: BackendFailure
     ) -> Alert {
         
-        return backendFailure.alert(action: dismiss)
+        return backendFailure.alert(title: "Ошибка", action: dismiss)
     }
 }
 

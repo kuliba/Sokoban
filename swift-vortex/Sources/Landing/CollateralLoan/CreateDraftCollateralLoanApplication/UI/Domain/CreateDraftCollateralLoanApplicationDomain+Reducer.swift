@@ -7,6 +7,7 @@
 
 import Foundation
 import InputComponent
+import LandingUIComponent
 import OptionalSelectorComponent
 import OTPInputComponent
 import TextFieldComponent
@@ -49,7 +50,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
                     
                     state.amount.message = nil
                 }
-                
+
             case let .period(periodEvent):
                 state.period = periodSelectReduce(state.period, periodEvent)
                 
@@ -57,9 +58,12 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 state.city = citySelectReduce(state.city, cityEvent)
                 
             case .continue:
-                state.isLoading = true
                 state.stage = .confirm
-                effect = .createDraftApplication(state.createDraftApplicationPayload)
+                if state.confirmation == nil {
+
+                    state.isLoading = true
+                    effect = .createDraftApplication(state.createDraftApplicationPayload)
+                }
                 
             case let .applicationCreated(result):
                 state.isLoading = false
@@ -82,6 +86,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 state.isLoading = true
                 if let applicationID = state.applicationID {
                     
+                    state.failure = nil
                     effect = .saveConsents(
                         state.saveConsentsPayload(
                             applicationID: applicationID,
@@ -99,6 +104,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 
             case let .showSaveConsentsResult(result):
                 state.isLoading = false
+                
                 switch result {
                 case let .success(success):
                     state.saveConsentsResult = success
@@ -107,9 +113,12 @@ extension CreateDraftCollateralLoanApplicationDomain {
                     state.failure = failure
                 }
                 
-            case .gettedVerificationCode:
-                break
-                
+            case let .gettedVerificationCode(result):
+                if case let .failure(failure) = result {
+
+                    state.failure = failure
+                }
+
             case let .checkConsent(consentName):
                 if state.checkedConsents.contains(consentName) {
                     state.checkedConsents.removeAll { $0 == consentName }
@@ -135,6 +144,7 @@ extension CreateDraftCollateralLoanApplicationDomain {
                 
             case .dismissFailure:
                 state.failure = nil
+                state.isLoading = false
             }
             
             return (state, effect)
@@ -161,12 +171,13 @@ public extension CreateDraftCollateralLoanApplicationDomain.Reducer {
         application: CreateDraftCollateralLoanApplication,
         placeholderText: String = "Введите значение",
         warningText: String = "Некорректная сумма",
-        hintText: String
+        hintText: String,
+        maxAmount: Decimal
     ) {
         let decimalFormatter = DecimalFormatter(currencySymbol: "₽")
         
-        let textFieldReducer = ChangingReducer.decimal(formatter: decimalFormatter)
-        
+        let textFieldReducer = ChangingReducer.decimal(formatter: decimalFormatter, maxValue: maxAmount)
+
         let textInputValidator = TextInputValidator(
             hintText: hintText,
             warningText: warningText,

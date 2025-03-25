@@ -295,9 +295,8 @@ class MyProductsViewModel: ObservableObject {
                 case .savingsAccount:
                     openProductByType(.savingsAccount)
                     
-                case .loan:
-                    // TODO: - add openCollateralLoanLanding
-                    break
+                case .collateralLoan:
+                    openProductByType(.collateralLoan(.showcase))
                     
                 default:
                     break

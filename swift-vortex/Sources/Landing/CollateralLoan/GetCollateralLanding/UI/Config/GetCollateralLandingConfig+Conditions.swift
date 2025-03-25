@@ -12,7 +12,7 @@ extension GetCollateralLandingConfig {
     public struct Conditions {
         
         public let header: Header
-        let list: List
+        public let list: List
         
         public init(
             header: Header,

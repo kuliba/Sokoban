@@ -33,6 +33,7 @@ extension OpenProductDomain {
         case openAccount(OpenAccountViewModel)
         case openCard(AuthProductsViewModel)
         case openDeposit(OpenDepositListViewModel)
+        case openLoan
         case openProduct(Node<MyProductsOpenProductView.ViewModel>)
         case openURL(URL)
         case openSticker(LandingWrapperViewModel)

@@ -17,9 +17,10 @@ extension RootViewModelFactory {
         
         let needShow = {
             switch viewModel.promoProduct {
-            case .creditCardMVP:    return featureFlags.creditCardMVPFlag.isActive
-            case .sticker:          return true
-            case .savingsAccount:   return true
+            case .creditCardMVP:  return featureFlags.creditCardMVPFlag.isActive
+            case .sticker:        return true
+            case .savingsAccount: return true
+            case .collateralLoan: return featureFlags.collateralLoanLandingFlag.isActive
             }
         }()
         

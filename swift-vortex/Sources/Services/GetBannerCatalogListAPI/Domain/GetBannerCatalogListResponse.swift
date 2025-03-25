@@ -70,6 +70,7 @@ public struct GetBannerCatalogListResponse: Equatable {
         case depositsList
         case depositTransfer(String)
         case landing(String)
+        case collateralLanding(String)
         case savingLanding(String)
         case migAuthTransfer(String)
         case migTransfer(String)

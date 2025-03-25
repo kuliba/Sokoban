@@ -24,15 +24,16 @@ extension AdditionalProductViewModel: Identifiable {
     public var id: ID {
         
         switch promoItem.promoProduct {
-        case .creditCardMVP:  return .creditCardMVP
-        case .savingsAccount: return .savingsAccount
-        case .sticker:        return .sticker
+        case .creditCardMVP:            return .creditCardMVP
+        case .savingsAccount:           return .savingsAccount
+        case .sticker:                  return .sticker
+        case let .collateralLoan(type): return .collateralLoan(type)
         }
     }
     
     public enum ID: Hashable {
         
-        case creditCardMVP, savingsAccount, sticker
+        case creditCardMVP, savingsAccount, sticker, collateralLoan(CollateralLoanType)
     }
 }
 

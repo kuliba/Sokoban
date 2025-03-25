@@ -55,7 +55,9 @@ public struct GetCollateralLandingConfig {
         
         public let body: FontConfig
         
-        public init(body: FontConfig) {
+        public init(
+            body: FontConfig
+        ) {
             self.body = body
         }
     }
@@ -106,7 +108,7 @@ public extension GetCollateralLandingConfig {
         paddings: .init(
             outerLeading: 16,
             outerTrailing: 15,
-            outerBottom: 110,
+            outerBottom: 20,
             outerTop: 16
         ),
         spacing: 16,

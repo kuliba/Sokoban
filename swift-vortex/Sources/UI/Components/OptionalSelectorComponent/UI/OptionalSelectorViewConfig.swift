@@ -6,6 +6,7 @@
 //
 
 import SharedConfigs
+import UIKit
 
 public struct OptionalSelectorViewConfig: Equatable {
     

@@ -8,6 +8,7 @@
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 import CollateralLoanLandingGetCollateralLandingUI
 import DropDownTextListComponent
+import CollateralLoanLandingGetShowcaseUI
 import RxViewModel
 import SwiftUI
 import UIPrimitives
@@ -19,14 +20,20 @@ struct CollateralLoanLandingWrapperView: View {
     let binder: GetCollateralLandingDomain.Binder
     let config: Config
     let factory: Factory
-    let viewModelFactory: ViewModelFactory
+    let goToPlaces: () -> Void
     let goToMain: () -> Void
+    let makeOperationDetailInfoViewModel: ViewComponents.MakeOperationDetailInfoViewModel
+    let getPDFDocument: GetPDFDocument
     
     var body: some View {
         
         RxWrapperView(model: binder.flow) { state, event in
             
             content()
+                .alert(
+                    item: state.navigation?.alert,
+                    content: makeAlert
+                )
                 .navigationDestination(
                     destination: state.navigation?.destination,
                     content: { destinationView(destination: $0) { event(.dismiss) }}
@@ -41,39 +48,64 @@ struct CollateralLoanLandingWrapperView: View {
     
     private func content() -> some View {
         
-        RxWrapperView(
-            model: binder.content,
-            makeContentView: makeContentView(state:event:)
-        )
+        ZStack(alignment: .top) {
+            
+            binder.flow.state.navigation?.informer.map(informerView)
+                .zIndex(1)
+            
+            RxWrapperView(
+                model: binder.content,
+                makeContentView: makeContentView(state:event:)
+            )
+        }
     }
     
     private func makeContentView(
-        state: GetCollateralLandingDomain.State,
-        event: @escaping (GetCollateralLandingDomain.Event) -> Void
+        state: State,
+        event: @escaping (Event) -> Void
     ) -> some View {
         
-        Group {
+        ZStack(alignment: .top) {
             
-            switch state.product {
-            case .none:
+            binder.flow.state.navigation?.informer.map(informerView)
+                .zIndex(1)
+
+            switch binder.content.state.status {
+            case .initiate:
                 Color.clear
-                    .loader(isLoading: state.product == nil, color: .clear)
+                    .frame(maxHeight: .infinity)
                 
-            case let .some(product):
-                getCollateralLandingView(product, state, event)
+            case let .failure(_, oldProduct):
+                if let oldProduct {
+                    
+                    content(oldProduct, state, event)
+                } else {
+
+                    Color.clear
+                        .frame(maxHeight: .infinity)
+                }
+
+            case let .loaded(product):
+                content(product, state, event)
+
+            case .inflight:
+                Color.white
+                    .frame(maxHeight: .infinity)
+                    .loader(isLoading: true, color: .white)
             }
         }
         .onFirstAppear { event(.load(state.landingID)) }
     }
     
-    private func getCollateralLandingView(
+    private func content(
         _ product: GetCollateralLandingProduct,
-        _ state: GetCollateralLandingDomain.State,
-        _ event: @escaping (GetCollateralLandingDomain.Event) -> Void
+        _ state: GetCollateralLandingDomain.State<InformerData>,
+        _ event: @escaping (GetCollateralLandingDomain.Event<InformerData>) -> Void
     ) -> some View {
         
         GetCollateralLandingView(
             state: state,
+            product: product,
             domainEvent: event,
             externalEvent: {
                 switch $0 {
@@ -94,7 +126,6 @@ struct CollateralLoanLandingWrapperView: View {
             factory: .init(
                 makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
                 makeImageViewWithURL: factory.makeImageViewWithURL,
-                getPDFDocument: factory.getPDFDocument,
                 formatCurrency: factory.formatCurrency
             )
         )
@@ -114,16 +145,36 @@ struct CollateralLoanLandingWrapperView: View {
                 factory: .init(
                     makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
                     makeImageViewWithURL: factory.makeImageViewWithURL,
-                    getPDFDocument: factory.getPDFDocument,
                     formatCurrency: factory.formatCurrency
                 ),
-                viewModelFactory: viewModelFactory,
-                goToMain: goToMain
+                goToPlaces: goToPlaces,
+                goToMain: goToMain,
+                makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,
+                getPDFDocument: getPDFDocument
             )
-            .navigationBarWithBack(title: "Оформление заявки", dismiss: dissmiss)
-        }
+            .navigationTitle("Оформление заявки")
+            .navigationBarItems(leading: buttonBack(action: {
+
+                if (binder.content.state.stage == .confirm) {
+                    
+                    binder.content.event(.back)
+                } else { dissmiss() }}))
+                .navigationBarBackButtonHidden()
+            }
     }
     
+    func buttonBack(action: @escaping () -> Void) -> some View {
+        
+        Button(action: action) {
+            
+            HStack {
+                
+                Image.ic16ChevronLeft
+                    .aspectRatio(contentMode: .fit)
+            }
+        }
+    }
+
     @ViewBuilder
     private func bottomSheetView(
         bottomSheet: GetCollateralLandingDomain.Navigation.BottomSheet
@@ -131,39 +182,47 @@ struct CollateralLoanLandingWrapperView: View {
         
         switch bottomSheet {
         case let .showBottomSheet(type):
-            switch type {
-            case .periods:
-                periodsBottomSheetView
-                
-            case .collaterals:
-                collateralsBottomSheetView
-            }
+            bottomSheetView(type)
         }
     }
     
-    private var periodsBottomSheetView: some View {
+    private func bottomSheetView(
+            _ type: GetCollateralLandingDomain.State<InformerData>.BottomSheet.SheetType
+        ) -> some View {
+            
+            GetCollateralLandingBottomSheetView(
+                state: binder.content.state,
+                event: handlePeriodsDomainEvent(_:),
+                config: config.bottomSheet,
+                factory: .init(
+                    makeImageViewWithMD5Hash: factory.makeImageViewWithMD5Hash,
+                    makeImageViewWithURL: factory.makeImageViewWithURL,
+                    formatCurrency: factory.formatCurrency
+                ),
+                type: type
+            )
+        }
+
+    private func informerView(
+        _ informerData: InformerData
+    ) -> some View {
         
-        GetCollateralLandingBottomSheetView(
-            state: binder.content.state,
-            event: handlePeriodsDomainEvent(_:),
-            config: config.bottomSheet,
-            factory: factory,
-            type: .periods
+        InformerView(
+            viewModel: .init(
+                message: informerData.message,
+                icon: informerData.icon.image,
+                color: informerData.color)
         )
-    }
-    
-    private var collateralsBottomSheetView: some View {
-        
-        GetCollateralLandingBottomSheetView(
-            state: binder.content.state,
-            event: handlePeriodsDomainEvent(_:),
-            config: config.bottomSheet,
-            factory: factory,
-            type: .collaterals
-        )
+        .onAppear {
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+
+                binder.flow.event(.navigation(.failure(.none)))
+            }
+        }
     }
 
-    private func handlePeriodsDomainEvent(_ event: GetCollateralLandingDomain.Event) {
+    private func handlePeriodsDomainEvent(_ event: Event) {
         
         binder.content.event(event)
         // Делаем задержку закрытия, чтобы пользователь увидел на шторке выбранный айтем
@@ -172,34 +231,63 @@ struct CollateralLoanLandingWrapperView: View {
         }
     }
     
-    private func handleCollateralsDomainEvent(_ event: GetCollateralLandingDomain.Event) {
+    private func makeAlert(
+        alert: GetCollateralLandingDomain.Navigation.Alert
+    ) -> SwiftUI.Alert {
         
-        binder.content.event(event)
-        binder.flow.event(.dismiss)
+        switch alert {
+            
+        case let .failure(failure):
+            return .init(
+                title: Text("Ошибка"),
+                message: Text(failure),
+                dismissButton: .default(Text("ОK")) { goToMain() }
+            )
+        }
     }
 }
  
-extension CollateralLoanLandingWrapperView {
-    
-    typealias Factory = GetCollateralLandingFactory
-    typealias ViewModelFactory = CollateralLoanLandingViewModelFactory
-    typealias Domain = CreateDraftCollateralLoanApplicationDomain
-    typealias SaveConsentsResult = Domain.SaveConsentsResult
-    typealias Config = GetCollateralLandingConfig
-
-    public typealias makeImageViewWithMD5Hash = (String) -> UIPrimitives.AsyncImage
-    public typealias makeImageViewWithURL = (String) -> UIPrimitives.AsyncImage
-}
+// MARK: UI mapping
 
 extension GetCollateralLandingDomain.Navigation {
     
+    var alert: Alert? {
+        
+        switch self {
+        case let .failure(kind):
+            switch kind {
+            case let .alert(message):
+                return .failure(message)
+                
+            default:
+                return nil
+            }
+            
+        default:
+            return nil
+        }
+    }
+
+    enum Alert {
+        
+        case failure(String)
+    }
+
+    var informer: GetCollateralLandingDomain.InformerPayload? {
+        
+        guard case let .failure(.informer(informer)) = self
+        else { return nil }
+        
+        return informer
+    }
+
     var destination: Destination? {
         
         switch self {
         case let .createDraft(binder):
             return .createDraft(binder)
             
-        case .showBottomSheet:
+        case .showBottomSheet, .failure:
             return nil
         }
     }
@@ -212,7 +300,7 @@ extension GetCollateralLandingDomain.Navigation {
     var bottomSheet: BottomSheet? {
         
             switch self {
-            case .createDraft:
+            case .createDraft, .failure:
                 return nil
                 
             case let .showBottomSheet(id):
@@ -222,7 +310,7 @@ extension GetCollateralLandingDomain.Navigation {
     
     enum BottomSheet {
         
-        case showBottomSheet(GetCollateralLandingDomain.ExternalEvent.CaseType)
+        case showBottomSheet(GetCollateralLandingDomain.State<InformerData>.BottomSheet.SheetType)
     }
     
     typealias Domain = CreateDraftCollateralLoanApplicationDomain
@@ -251,6 +339,17 @@ extension GetCollateralLandingDomain.Navigation.BottomSheet: Identifiable, Botto
             case .collaterals:
                 return "collaterals"
             }
+        }
+    }
+}
+
+extension GetCollateralLandingDomain.Navigation.Alert: Identifiable {
+    
+    var id: String {
+        
+        switch self {
+        case let .failure(message):
+            return message
         }
     }
 }
@@ -408,7 +507,10 @@ extension GetCollateralLandingConfig.Calculator {
             maxText: "До 15 млн. ₽",
             titleTopPadding: 20,
             sliderBottomPadding: 12,
-            fontValue: .init(Font.system(size: 24).bold(), foreground: .white)
+            fontValue: .init(Font.system(size: 24).bold(), foreground: .white),
+            textFieldFont: UIFont(name: "Inter-SemiBold", size: 24)!,
+            editImage: .ic16Edit2,
+            iconColor: .mainColorsGray
         ),
         monthlyPayment: .init(
             titleText: "Ежемесячный платеж",
@@ -441,9 +543,9 @@ extension DropDownTextListConfig {
             background: .grayLightest
         ),
         fonts: .init(
-            title: .init(textFont: Font.system(size: 18).bold(), textColor: .primary),
-            itemTitle: .init(textFont: Font.system(size: 14), textColor: .primary),
-            itemSubtitle: .init(textFont: Font.system(size: 14), textColor: .textPlaceholder)
+            title: .init(textFont: .textH3Sb18240(), textColor: .primary),
+            itemTitle: .init(textFont: .textBodyMR14200(), textColor: .primary),
+            itemSubtitle: .init(textFont: .textBodyMR14200(), textColor: .textPlaceholder)
         )
     )
 }
@@ -479,8 +581,12 @@ extension GetCollateralLandingConfig.Footer {
     static let `default` = Self(
         text: "Оформить заявку",
         font: .init(Font.system(size: 16).bold()),
-        foreground: .white,
-        background: .red,
+        colors: .init(
+            buttonForeground: .white,
+            buttonBackground: .red,
+            disabledButtonBackground: .unselected,
+            background: .white
+        ),
         layouts: .init(
             height: 56,
             cornerRadius: 12,
@@ -540,4 +646,21 @@ private extension Color {
     static let divider: Self = .init(red: 0.6, green: 0.6, blue: 0.6)
     static let bottomPanelBackground: Self = .init(red: 0.16, green: 0.16, blue: 0.16)
     static let faqDivider: Self = .init(red: 0.83, green: 0.83, blue: 0.83)
+}
+
+extension CollateralLoanLandingWrapperView {
+    
+    typealias Factory = CollateralLoanLandingFactory
+    typealias Domain = CreateDraftCollateralLoanApplicationDomain
+    typealias SaveConsentsResult = Domain.SaveConsentsResult
+    typealias Config = GetCollateralLandingConfig
+    typealias Payload = CollateralLandingApplicationSaveConsentsResult
+    typealias MakeOperationDetailInfoViewModel = (Payload) -> OperationDetailInfoViewModel
+    typealias Event = GetCollateralLandingDomain.Event<InformerData>
+    typealias State = GetCollateralLandingDomain.State<InformerData>
+    typealias Informer = GetCollateralLandingDomain.InformerPayload
+    typealias GetPDFDocument = Domain.GetPDFDocument
+
+    public typealias makeImageViewWithMD5Hash = (String) -> UIPrimitives.AsyncImage
+    public typealias makeImageViewWithURL = (String) -> UIPrimitives.AsyncImage
 }

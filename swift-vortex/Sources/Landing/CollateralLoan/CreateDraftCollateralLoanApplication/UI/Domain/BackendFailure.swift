@@ -10,7 +10,6 @@ import Foundation
 public struct BackendFailure<InformerPayload>: Error, Identifiable {
     
     public var id: UUID
-
     public let kind: Kind
     
     public init(
@@ -28,6 +27,10 @@ public extension BackendFailure {
         
         case alert(String)
         case informer(InformerPayload)
+        case failureResultScreen
+        case offline
+        case incorrectOTP(String)
+        case serviceFailure(String)
     }
 }
 

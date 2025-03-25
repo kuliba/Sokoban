@@ -423,7 +423,7 @@ extension SettingsAgentProtocol {
             try store(shouldShow, type: .interface(promoType.interfaceType))
         } catch {
             
-            LoggerAgent.shared.log(level: .error, category: .model, message: "\(promoType.rawValue) Hide Error: \(error.localizedDescription)")
+            LoggerAgent.shared.log(level: .error, category: .model, message: "\(promoType) Hide Error: \(error.localizedDescription)")
         }
     }
 }

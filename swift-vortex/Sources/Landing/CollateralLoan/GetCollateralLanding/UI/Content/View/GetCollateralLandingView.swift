@@ -8,9 +8,10 @@
 import Combine
 import SwiftUI
 
-public struct GetCollateralLandingView: View {
+public struct GetCollateralLandingView<InformerPayload>: View where InformerPayload: Equatable {
     
     let state: State
+    let product: Product
     let domainEvent: (DomainEvent) -> Void
     let externalEvent: (ExternalEvent) -> Void
     let config: Config
@@ -18,12 +19,14 @@ public struct GetCollateralLandingView: View {
 
     public init(
         state: State,
+        product: Product,
         domainEvent: @escaping (DomainEvent) -> Void,
         externalEvent: @escaping (ExternalEvent) -> Void,
         config: Config,
         factory: Factory
     ) {
         self.state = state
+        self.product = product
         self.domainEvent = domainEvent
         self.externalEvent = externalEvent
         self.config = config
@@ -32,23 +35,17 @@ public struct GetCollateralLandingView: View {
     
     public var body: some View {
         
-        switch state.product {
-        case .none:
-            ProgressView()
-        case let .some(product):
+        ScrollView {
             
-            ScrollView {
+            ZStack {
                 
-                ZStack {
-                    
-                    backgroundImageView(product: product)
-                    contentView(product: product)
-                }
-                .background(product.getCollateralLandingTheme.backgroundColor)
+                backgroundImageView(product: product)
+                contentView(product: product)
             }
-            .ignoresSafeArea()
-            .safeAreaInset(edge: .bottom, content: { footerView(product: product) })
+            .background(product.getCollateralLandingTheme.backgroundColor)
         }
+        .ignoresSafeArea()
+        .safeAreaInset(edge: .bottom, content: { footerView(product: product) })
     }
         
     private var bottomSheetItem: Binding<State.BottomSheet?> {
@@ -135,36 +132,37 @@ extension GetCollateralLandingView {
     typealias FaqView = GetCollateralLandingFaqView
     typealias DocumentsView = GetCollateralLandingDocumentsView
     typealias FooterView = GetCollateralLandingFooterView
-    typealias Product = GetCollateralLandingProduct
-    
+
+    public typealias Product = GetCollateralLandingProduct
     public typealias Config = GetCollateralLandingConfig
     public typealias Factory = GetCollateralLandingFactory
-    public typealias State = GetCollateralLandingDomain.State
-    public typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent
-    public typealias DomainEvent = GetCollateralLandingDomain.Event
+    public typealias State = GetCollateralLandingDomain.State<InformerPayload>
+    public typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent<InformerPayload>
+    public typealias DomainEvent = GetCollateralLandingDomain.Event<InformerPayload>
 }
 
 // MARK: - Previews
 
-struct GetCollateralLandingView_Previews: PreviewProvider {
+struct GetCollateralLandingView_Previews<InformerPayload>: PreviewProvider where InformerPayload: Equatable {
     
     static var previews: some View {
         
-        GetCollateralLandingView(
+        GetCollateralLandingView<InformerPayload>(
             state: .init(
                 landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
                 formatCurrency: { _ in "" }
             ),
+            product: .carStub,
             domainEvent: { print($0) },
             externalEvent: {
                 print($0)
             },
             config: .preview,
-            factory: Factory.preview
+            factory: .preview
         )
         .previewDisplayName("Product with calculator")
 
-        let periodBottomSheet = State.BottomSheet(sheetType: .periods)
+        let periodBottomSheet = State.BottomSheet(sheetType: .periods([]))
         
         GetCollateralLandingView(
             state: .init(
@@ -172,16 +170,17 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
                 bottomSheet: periodBottomSheet,
                 formatCurrency: { _ in "" }
             ),
+            product: .carStub,
             domainEvent: { print($0) },
             externalEvent: {
                 print($0)
             },
             config: .preview,
-            factory: Factory.preview
+            factory: .preview
         )
         .previewDisplayName("Product period selector")
         
-        let collateralBottomSheet = State.BottomSheet(sheetType: .collaterals)
+        let collateralBottomSheet = State.BottomSheet(sheetType: .collaterals([]))
 
         GetCollateralLandingView(
             state: .init(
@@ -189,18 +188,16 @@ struct GetCollateralLandingView_Previews: PreviewProvider {
                 bottomSheet: collateralBottomSheet,
                 formatCurrency: { _ in "" }
             ),
+            product: .carStub,
             domainEvent: {
                 print($0)
             },
             externalEvent: { print($0) },
             config: .preview,
-            factory: Factory.preview
+            factory: .preview
         )
         .previewDisplayName("Product collateral selector")
     }
 
-    static let carStub = GetCollateralLandingProduct.carStub
-
-    typealias State = GetCollateralLandingDomain.State
-    typealias Factory = GetCollateralLandingFactory
+    typealias State = GetCollateralLandingDomain.State<InformerPayload>
 }

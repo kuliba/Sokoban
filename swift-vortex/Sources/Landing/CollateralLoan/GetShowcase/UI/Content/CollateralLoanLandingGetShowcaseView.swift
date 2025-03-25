@@ -7,17 +7,17 @@
 
 import SwiftUI
 
-public struct CollateralLoanLandingGetShowcaseView: View {
+public struct CollateralLoanLandingGetShowcaseView<InformerPayload>: View where InformerPayload: Equatable {
         
     private let data: Data
-    private let event: (GetShowcaseViewEvent.External) -> Void
+    private let event: (GetShowcaseViewEvent<InformerPayload>.External) -> Void
     private let config: Config
     private let theme: Theme
     private let factory: Factory
     
     public init(
         data: Data,
-        event: @escaping (GetShowcaseViewEvent.External) -> Void,
+        event: @escaping (GetShowcaseViewEvent<InformerPayload>.External) -> Void,
         config: Config = .base,
         factory: Factory,
         theme: Theme = .white
@@ -31,13 +31,18 @@ public struct CollateralLoanLandingGetShowcaseView: View {
     
     public var body: some View {
         
+        content()
+    }
+    
+    private func content() -> some View {
+
         ScrollView(showsIndicators: false) {
             
             VStack(spacing: 0) {
                 
                 ForEach(data.products, id: \.landingId) {
                     
-                    CollateralLoanLandingGetShowcaseProductView(
+                    CollateralLoanLandingGetShowcaseProductView<InformerPayload>(
                         product: $0,
                         event: event,
                         config: config,
@@ -49,9 +54,9 @@ public struct CollateralLoanLandingGetShowcaseView: View {
     }
 }
 
-public enum GetShowcaseViewEvent: Equatable {
+public enum GetShowcaseViewEvent<InformerPayload> where InformerPayload: Equatable {
     
-    case domainEvent(GetShowcaseDomain.Event)
+    case domainEvent(GetShowcaseDomain.Event<InformerPayload>)
     case external(External)
     
     public enum External: Equatable {
@@ -67,5 +72,5 @@ public extension CollateralLoanLandingGetShowcaseView {
     typealias Config = CollateralLoanLandingGetShowcaseViewConfig
     typealias Theme = CollateralLoanLandingGetShowcaseTheme
     typealias Event = GetShowcaseDomain.Event
-    typealias Factory = CollateralLoanLandingGetShowcaseViewFactory
+    typealias Factory = CollateralLoanLandingFactory
 }

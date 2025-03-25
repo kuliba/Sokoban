@@ -5,6 +5,9 @@
 //  Created by Valentin Ozerov on 16.01.2025.
 //
 
+import PDFKit
+import RemoteServices
+
 // Namespace
 public enum CreateDraftCollateralLoanApplicationDomain {}
 

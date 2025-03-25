@@ -119,7 +119,8 @@ extension OperationDetailInfoInternalView {
             HStack(alignment: .bottom, spacing: 15) {
                 
                 icon()
-                    .frame(width: 32, height: 32, alignment: .bottom)
+                    .frame(width: 24, height: 24, alignment: .bottom)
+                    .padding(.bottom, 10)
                 
                 VStack(alignment: .leading, spacing: 4) {
                     

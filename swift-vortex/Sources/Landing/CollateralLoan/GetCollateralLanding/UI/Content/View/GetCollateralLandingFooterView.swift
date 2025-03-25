@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct GetCollateralLandingFooterView: View {
+struct GetCollateralLandingFooterView<InformerPayload>: View where InformerPayload: Equatable {
     
     let product: Product
     let config: Config.Footer
@@ -21,13 +21,18 @@ struct GetCollateralLandingFooterView: View {
             Text(config.text)
                 .frame(maxWidth: .infinity)
                 .frame(height: config.layouts.height)
-                .foregroundColor(config.foreground)
-                .background(config.background)
+                .foregroundColor(config.colors.buttonForeground)
+                .background(
+                    state.isButtonDisabled
+                        ? config.colors.disabledButtonBackground
+                        : config.colors.buttonBackground
+                )
                 .cornerRadius(12)
                 .font(config.font.font)
         }
+        .disabled(state.isButtonDisabled)
         .padding(config.layouts.paddings)
-        .background(Color.white)
+        .background(config.colors.background)
     }
 }
 
@@ -36,20 +41,24 @@ extension GetCollateralLandingFooterView {
     typealias Config = GetCollateralLandingConfig
     typealias Theme = GetCollateralLandingTheme
     typealias Product = GetCollateralLandingProduct
-    typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent
-    typealias State = GetCollateralLandingDomain.State
+    typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent<InformerPayload>
+    typealias State = GetCollateralLandingDomain.State<InformerPayload>
 }
 
 // MARK: - Previews
 
-struct GetCollateralLandingFooterView_Previews: PreviewProvider {
+struct GetCollateralLandingFooterView_Previews<InformerPayload>: PreviewProvider
+    where InformerPayload: Equatable {
     
     static var previews: some View {
         
-        GetCollateralLandingFooterView(
+        GetCollateralLandingFooterView<InformerPayload>(
             product: .carStub,
-            config: .preview,
-            state: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE", formatCurrency: { _ in "" }),
+            config: GetCollateralLandingConfig.preview.footer,
+            state: .init(
+                landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
+                formatCurrency: { _ in "" }
+            ),
             externalEvent: { print($0) }
         )
     }

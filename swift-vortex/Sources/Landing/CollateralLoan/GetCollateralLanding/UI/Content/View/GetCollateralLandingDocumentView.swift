@@ -8,7 +8,7 @@
 import Combine
 import SwiftUI
 
-struct GetCollateralLandingDocumentView: View {
+struct GetCollateralLandingDocumentView<InformerPayload>: View where InformerPayload: Equatable {
     
     let document: Document
     let config: Config.Documents.List
@@ -51,16 +51,17 @@ extension GetCollateralLandingDocumentView {
     typealias Config = GetCollateralLandingConfig
     typealias Document = GetCollateralLandingProduct.Document
     typealias Factory = GetCollateralLandingFactory
-    typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent
+    typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent<InformerPayload>
 }
 
 // MARK: - Previews
 
-struct GetCollateralLandingDocumentView_Previews: PreviewProvider {
+struct GetCollateralLandingDocumentView_Previews<InformerPayload>: PreviewProvider
+    where InformerPayload: Equatable {
     
     static var previews: some View {
         
-        GetCollateralLandingDocumentView(
+        GetCollateralLandingDocumentView<PreviewInformerPayload>(
             document: Product.carStub.documents.first!,
             config: Config.Documents.preview.list,
             externalEvent: { print($0) },
@@ -69,8 +70,6 @@ struct GetCollateralLandingDocumentView_Previews: PreviewProvider {
         .padding(.top, 300)
         .padding(.horizontal, 16)
     }
-
-    typealias Factory = GetCollateralLandingFactory
     typealias Product = GetCollateralLandingProduct
     typealias Config = GetCollateralLandingConfig
 }

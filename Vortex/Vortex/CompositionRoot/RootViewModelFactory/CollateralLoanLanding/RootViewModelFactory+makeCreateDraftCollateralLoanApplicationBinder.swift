@@ -87,7 +87,11 @@ extension RootViewModelFactory {
             return "Мин. - \(minAmount), Макс. - \(maxAmount)"
         }
 
-        let reducer = Domain.ContentReducer(application: application, hintText: hintText)
+        let reducer = Domain.ContentReducer(
+            application: application,
+            hintText: hintText,
+            maxAmount: Decimal(application.maxAmount)
+        )
         let effectHandler = Domain.ContentEffectHandler(
             createDraft: createDraft(payload:otpEvent:completion:),
             getVerificationCode: getVerificationCode(completion:),
@@ -167,7 +171,7 @@ extension RootViewModelFactory {
         let createDraftApplication = nanoServiceComposer.compose(
             createRequest: RequestFactory.createCreateDraftCollateralLoanApplicationRequest(with:),
             mapResponse: RemoteServices.ResponseMapper.mapCreateDraftCollateralLoanApplicationResponse(_:_:),
-            mapError: Domain.ContentError.init(error:)
+            mapError: { Domain.ContentError.init(error: $0) }
         )
         
         let confirmation = self.makeTimedOTPInputViewModel(
@@ -183,7 +187,7 @@ extension RootViewModelFactory {
                     applicationResult: .success(.init(applicationID: $0.applicationID)),
                     confirmation: confirmation
                 )
-            })
+            }.mapError { $0 })
             _ = createDraftApplication
         }
     }
@@ -194,32 +198,13 @@ extension RootViewModelFactory {
         let getVerificationCode = nanoServiceComposer.compose(
             createRequest: Vortex.RequestFactory.createGetVerificationCodeOrderCardVerifyRequest,
             mapResponse: AnywayPaymentBackend.ResponseMapper.mapGetVerificationCodeResponse,
-            mapError: Domain.ContentError.init(error:)
+            mapError: { Domain.ContentError.init(error: $0) }
         )
                 
         getVerificationCode(()) { [getVerificationCode] in
             
-            completion($0.map(\.resendOTPCount))
+            completion($0.map(\.resendOTPCount).mapError { $0 })
             _ = getVerificationCode
-        }
-    }
-
-    private func getConsents(
-        payload: CollateralLandingApplicationSaveConsentsPayload,
-        completion: @escaping (Domain.SaveConsentsResult<InformerData>) -> Void
-    ) {
-        let saveConsents = nanoServiceComposer.compose(
-            createRequest: RequestFactory.createSaveConsentsRequest(with:),
-            mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:),
-            mapError: Domain.ContentError.init(error:)
-        )
-        
-        let save = schedulers.background.scheduled(saveConsents)
-
-        save(payload.payload) { [saveConsents] in
-
-            completion($0.map {$0.response(payload: payload)})
-            _ = saveConsents
         }
     }
 
@@ -230,36 +215,35 @@ extension RootViewModelFactory {
         let saveConsents = nanoServiceComposer.compose(
             createRequest: RequestFactory.createSaveConsentsRequest(with:),
             mapResponse: RemoteServices.ResponseMapper.mapSaveConsentsResponse(_:_:),
-            mapError: Domain.ContentError.init(error:)
+            mapError: { Domain.ContentError.init(error: $0, completionForm: true) }
         )
         
         let save = schedulers.background.scheduled(saveConsents)
 
         save(payload.payload) { [saveConsents] in
 
-            completion($0.map { $0.response(payload: payload) })
+            completion($0.map { $0.response(payload: payload) }.mapError { $0 })
             _ = saveConsents
         }
     }
 
     func getPDFDocument(
         payload: RemoteServices.RequestFactory.GetConsentsPayload,
-        completion: @escaping (PDFDocument?) -> Void
+        completion: @escaping (CreateDraftCollateralLoanApplicationDomain.GetConsentsResult<InformerData>) -> Void
     ) {
-        
         let getConsents = nanoServiceComposer.compose(
             createRequest: RequestFactory.createGetConsentsRequest(with:),
             mapResponse: RemoteServices.ResponseMapper.mapGetConsentsResponse(_:_:),
-            mapError: Domain.ContentError.init(error:)
+            mapError: { Domain.ContentError.init(error: $0, offlineForm: true) }
         )
         
         getConsents(payload) { [getConsents] in
-            
-            completion(try? $0.get())
+  
+            completion($0.map { $0 }.mapError { $0 })
             _ = getConsents
         }
     }
-
+    
     // MARK: - Flow
     
     private func getNavigation(
@@ -272,9 +256,27 @@ extension RootViewModelFactory {
             switch result {
             case let .success(success):
                 completion(.saveConsents(success))
-
+                
             case let .failure(failure):
-                completion(.failure(failure))
+                switch failure.navigationFailure {
+                case let .informer(informerPayload):
+                    completion(.failure(.informer(informerPayload)))
+
+                case let .alert(message):
+                    completion(.failure(.alert(message)))
+
+                case .complete:
+                    completion(.failure(.complete))
+                    
+                case .none:
+                    completion(.failure(.none))
+                    
+                case .offline:
+                    completion(.failure(.offline))
+                    
+                case .incorrectOTP, .serviceFailure:
+                    break
+                }
             }
         }
     }
@@ -356,23 +358,74 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
     typealias RemoteError = RemoteServiceError<Error, Error, RemoteServices.ResponseMapper.MappingError>
     
     init(
-        error: RemoteError
+        error: RemoteError,
+        completionForm: Bool = false,
+        offlineForm: Bool = false
     ) {
+        var defaultHandlerError: Self {
+            if completionForm {
+                
+                return .init(kind: .failureResultScreen)
+            } else if offlineForm {
+                
+                return .init(kind: .offline)
+            } else {
+                
+                return .init(kind: .alert("Попробуйте позже."))
+            }
+        }
+
         switch error {
+        case let .mapResponse(error):
+            switch error {
+            case .server(statusCode: let statusCode, errorMessage: let errorMessage):
+                switch (statusCode, errorMessage) {
+                case (102, "Введен некорректный код. Попробуйте еще раз."):
+                    self = .init(kind: .incorrectOTP(errorMessage))
+                    
+                default:
+                    self = .init(kind: .serviceFailure(errorMessage))
+                }
+                                
+            default:
+                self = defaultHandlerError
+            }
+
         case let .performRequest(error):
             if error.isNotConnectedToInternetOrTimeout() {
-                
-                self = .init(kind: .informer(.init(message: "Проверьте подключение к сети", icon: .wifiOff)))
-            } else { self = .default }
-        case let .mapResponse(error):
-            if case .server(statusCode: _, errorMessage: let errorMessage) = error {
-                
-                self = .init(kind: .alert(errorMessage))
-            } else { self = .default }
+                self = .init(kind: .informer(.init(
+                    message: "Что-то пошло не так. Попробуйте позже",
+                    icon: .close
+                )))
+            } else {
+                self = defaultHandlerError
+            }
+            
         default:
-            self = .default
+            self = defaultHandlerError
         }
     }
     
-    static let `default` = Self(kind: .alert("Попробуйте позже."))
+    var navigationFailure: CreateDraftCollateralLoanApplicationDomain.Failure {
+        
+        switch self.kind {
+        case let .alert(message):
+            return .alert(message)
+            
+        case let .informer(informerPayload):
+            return .informer(informerPayload)
+            
+        case .failureResultScreen:
+            return .complete
+            
+        case .offline:
+            return .offline
+            
+        case let .incorrectOTP(message):
+            return .incorrectOTP(message)
+            
+        case let .serviceFailure(message):
+            return .serviceFailure(message)
+        }
+    }
 }

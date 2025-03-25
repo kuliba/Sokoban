@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import UIPrimitives
 
 extension CreateDraftCollateralLoanApplicationConfig {
     
@@ -15,15 +16,21 @@ extension CreateDraftCollateralLoanApplicationConfig {
         public let checkBoxSize: CGSize
         public let horizontalSpacing: CGFloat
         public let images: Images
+        public let imageColor: Color
+        public let textConfig: TextConfig
         
         public init(
             checkboxSize: CGSize,
             horizontalSpacing: CGFloat,
-            images: Images
+            images: Images,
+            imageColor: Color,
+            textConfig: TextConfig
         ) {
             self.checkBoxSize = checkboxSize
             self.horizontalSpacing = horizontalSpacing
             self.images = images
+            self.imageColor = imageColor
+            self.textConfig = textConfig
         }
         
         public struct Images {
@@ -50,6 +57,14 @@ extension CreateDraftCollateralLoanApplicationConfig.Consent {
         images: .init(
             checkOn: Image("Checkbox_active"),
             checkOff: Image("Checkbox_normal")
-        )
+        ),
+        imageColor: .greenIcon,
+        textConfig: .init(textFont: Font.system(size: 14), textColor: .title)
     )
+}
+
+private extension Color {
+    
+    static let greenIcon: Self = .init(red: 0.133, green: 0.757, blue: 0.514)
+    static let title: Self = .init(red: 0.6, green: 0.6, blue: 0.6)
 }

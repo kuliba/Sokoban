@@ -61,11 +61,11 @@ struct CreateDraftCollateralLoanApplicationPeriodView<Confirmation, InformerPayl
             info: .init(
                 id: .other(State.FieldID.period.id),
                 title: config.elements.period.title,
-                value: state.application.selectedPeriodTitle,
+                value: state.period.selected?.title ?? state.application.selectedPeriodTitle,
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewWithMD5Hash(state.application.icons.term) }
+            icon: { factory.makeImageViewWithMD5Hash(state.application.icons.term).frame(width: 24, height: 24) }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }

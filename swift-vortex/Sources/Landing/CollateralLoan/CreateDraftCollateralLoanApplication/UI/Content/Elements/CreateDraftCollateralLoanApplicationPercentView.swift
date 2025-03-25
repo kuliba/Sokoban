@@ -26,7 +26,7 @@ struct CreateDraftCollateralLoanApplicationPercentView<Confirmation, InformerPay
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewWithMD5Hash(state.application.icons.rate) }
+            icon: { factory.makeImageViewWithMD5Hash(state.application.icons.rate).frame(width: 24, height: 24) }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }

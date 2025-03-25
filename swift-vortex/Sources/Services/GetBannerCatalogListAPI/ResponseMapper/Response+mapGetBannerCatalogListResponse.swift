@@ -86,6 +86,13 @@ private extension ResponseMapper._DTO._Item._BannerAction {
         case "LANDING":
             guard let target else { return nil }
             return .init(type: .landing(target))
+
+        case "COLLATERAL_LANDING":
+            guard let target else { return nil }
+            return .init(type: .collateralLanding(target))
+
+        case "COLLATERAL_SHOWCASE":
+            return .init(type: .collateralLanding("SHOWCASE"))
             
         case "SAVING_LANDING":
             guard let target else { return nil }

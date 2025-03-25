@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public struct GetCollateralLandingBottomSheetView: View {
+public struct GetCollateralLandingBottomSheetView<InformerPayload>: View where InformerPayload: Equatable {
     
     @SwiftUI.State var selected: Item? = nil
 
@@ -206,48 +206,80 @@ public struct GetCollateralLandingBottomSheetView: View {
     }
 }
 
-extension GetCollateralLandingBottomSheetView {
+public extension GetCollateralLandingBottomSheetView {
     
-    public typealias Item = GetCollateralLandingDomain.State.BottomSheet.Item
-    public typealias Config = GetCollateralLandingConfig.BottomSheet
-    public typealias Factory = GetCollateralLandingFactory
-    public typealias Event = GetCollateralLandingDomain.Event
-    public typealias State = GetCollateralLandingDomain.State
+    typealias Item = State.BottomSheet.Item
+    typealias Config = GetCollateralLandingConfig.BottomSheet
+    typealias Factory = GetCollateralLandingFactory
+    typealias Event = GetCollateralLandingDomain.Event<InformerPayload>
+    typealias State = GetCollateralLandingDomain.State<InformerPayload>
 }
 
 // MARK: - Previews
 
-struct GetCollateralLandingBottomSheetView_Previews: PreviewProvider {
+struct GetCollateralLandingBottomSheetView_Previews<InformerPayload>: PreviewProvider
+    where InformerPayload: Equatable{
+    
+    static var periodSamples: [GetCollateralLandingDomain.Period] {
+        
+        [
+            .init(
+                rateBase: 9.5,
+                ratePayrollClient: 8.5,
+                termMonth: 12,
+                termStringValue: "12 месяцев"
+            ),
+            .init(
+                rateBase: 9.5,
+                ratePayrollClient: 8.5,
+                termMonth: 36,
+                termStringValue: "3 года"
+            )
+        ]
+    }
+    
+    static var collateralSamples: [GetCollateralLandingDomain.Collateral] {
+        
+        [
+            .init(
+                icon: "car",
+                name: "Car",
+                type: "CAR"
+            ),
+            .init(
+                icon: "home",
+                name: "Real estate",
+                type: "REAL_ESTATE"
+            )
+        ]
+    }
     
     static var previews: some View {
-        
-        GetCollateralLandingBottomSheetView(
+
+        GetCollateralLandingBottomSheetView<PreviewInformerPayload>(
             state: .init(
                 landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
-                bottomSheet: .init(sheetType: .periods),
+                bottomSheet: .init(sheetType: .periods(periodSamples)),
                 formatCurrency: { _ in "" }
             ),
             event: { print($0) },
             config: .preview,
             factory: .preview,
-            type: .periods
+            type: .periods(periodSamples)
         )
         .previewDisplayName("Product period selector")
         
-        GetCollateralLandingBottomSheetView(
+        GetCollateralLandingBottomSheetView<PreviewInformerPayload>(
             state: .init(
                 landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
-                bottomSheet: .init(sheetType: .periods),
+                bottomSheet: .init(sheetType: .collaterals(collateralSamples)),
                 formatCurrency: { _ in "" }
             ),
             event: { print($0) },
             config: .preview,
             factory: .preview,
-            type: .collaterals
+            type: .collaterals(collateralSamples)
         )
         .previewDisplayName("Product collateral selector")
     }
-    
-    typealias Factory = GetCollateralLandingFactory
-    typealias Item = GetCollateralLandingDomain.State.BottomSheet.Item
 }

@@ -122,7 +122,7 @@ extension OpenProductDomain.Navigation {
         case let .openProduct(node):
             return .openProduct(node.model)
             
-        case .openCard, .openDeposit, .openURL, .openSticker(_), .main:
+        case .openCard, .openDeposit, .openURL, .openSticker(_), .main, .openLoan:
             return nil
         }
     }
@@ -145,7 +145,7 @@ extension OpenProductDomain.Navigation {
         case let .openDeposit(openDeposit):
             return .openDeposit(openDeposit)
             
-        case .openProduct, .openURL, .main:
+        case .openProduct, .openURL, .main, .openLoan:
             return nil
             
         case let .openSticker(sticker):
@@ -203,6 +203,7 @@ extension OpenProductDomain.Navigation.Destination: Identifiable {
         
         case openCard(ObjectIdentifier)
         case openDeposit(ObjectIdentifier)
+        case openLoan
         case openSticker(ObjectIdentifier)
     }
 }
