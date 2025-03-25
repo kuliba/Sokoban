@@ -75,11 +75,12 @@ extension BackendFailure: Identifiable {
 extension BackendFailure {
     
     func alert(
+        title: String? = nil,
         action: @escaping () -> Void
     ) -> SwiftUI.Alert {
         
         return .init(
-            title: Text(title),
+            title: Text(title ?? self.title),
             message: Text(message),
             dismissButton: .default(Text("OK"), action: action)
         )
