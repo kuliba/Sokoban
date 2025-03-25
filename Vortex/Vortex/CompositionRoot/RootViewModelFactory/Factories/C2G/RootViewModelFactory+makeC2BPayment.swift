@@ -59,6 +59,8 @@ extension RootViewModelFactory {
             
             guard let self else { return }
             
+            model.action.send(ModelAction.Products.Update.Total.All())
+            
             switch $0 {
             case let .failure(failure):
                 completion(.failure(failure))
