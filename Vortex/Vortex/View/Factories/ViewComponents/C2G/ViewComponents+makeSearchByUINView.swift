@@ -206,7 +206,7 @@ private extension SearchByUINFlowView {
         backendFailure: BackendFailure
     ) -> Alert {
         
-        return backendFailure.alert(action: dismiss)
+        return backendFailure.alert(title: "Ошибка", action: dismiss)
     }
 }
 
