@@ -65,16 +65,28 @@ private extension ProductCardView {
     
     func icon() -> some View {
         
-        iconView(product.md5Hash)
-            .frame(config.label.icon.size)
-            .clipShape(RoundedRectangle(cornerRadius: config.label.icon.cornerRadius))
-            .background(alignment: .bottom, content: shadow)
-            .frame(height: iconFrameHeight, alignment: .top)
+        ZStack(alignment: .bottomLeading) {
+            
+            product.limit.text(withConfig: iconConfig.limit)
+                .padding(iconConfig.limitPadding)
+                .zIndex(1.0)
+            
+            iconView(product.md5Hash)
+                .frame(iconConfig.size)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: iconConfig.cornerRadius))
+        .background(alignment: .bottom, content: shadow)
+        .frame(height: iconFrameHeight, alignment: .top)
+    }
+    
+    private var iconConfig: ProductCardViewConfig.LabelConfig.IconConfig {
+        
+        config.label.icon
     }
     
     private var iconFrameHeight: CGFloat {
         
-        config.label.icon.size.height + shadowConfig.offset + shadowConfig.blur
+        iconConfig.size.height + shadowConfig.offset + shadowConfig.blur
     }
     
     func shadow() -> some View {
@@ -87,7 +99,7 @@ private extension ProductCardView {
     
     private var shadowConfig: Config.LabelConfig.IconConfig.ShadowConfig {
         
-        config.label.icon.shadow
+        iconConfig.shadow
     }
     
     func title(config: Config.LabelConfig.TitleConfig) -> some View {

@@ -79,15 +79,21 @@ extension ProductCardViewConfig.LabelConfig {
     public struct IconConfig: Equatable {
         
         public let cornerRadius: CGFloat
+        public let limit: TextConfig
+        public let limitPadding: CGFloat
         public let shadow: ShadowConfig
         public let size: CGSize
         
         public init(
             cornerRadius: CGFloat,
+            limit: TextConfig,
+            limitPadding: CGFloat,
             shadow: ShadowConfig,
             size: CGSize
         ) {
             self.cornerRadius = cornerRadius
+            self.limit = limit
+            self.limitPadding = limitPadding
             self.shadow = shadow
             self.size = size
         }

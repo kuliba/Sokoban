@@ -57,6 +57,11 @@ extension ProductCardViewConfig.LabelConfig.IconConfig {
         
         return .init(
             cornerRadius: 8,
+            limit: .init(
+                textFont: .caption.bold(), // Text/Body XS/SB_11×14_0%
+                textColor: .white // Text/White
+            ),
+            limitPadding: 8,
             shadow: .preview(),
             size: .init(width: 112, height: 72)
         )
