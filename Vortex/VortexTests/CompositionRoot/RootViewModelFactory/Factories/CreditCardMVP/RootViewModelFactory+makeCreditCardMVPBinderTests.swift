@@ -475,7 +475,7 @@ final class RootViewModelFactory_makeCreditCardMVPBinderTests: CreditCardMVPRoot
         sut.content.event(.apply(.load))
         applySpy.complete(with: alert())
         
-        XCTAssertTrue(sut.flow.isShowingFailure)
+        assertFailure(sut.flow, message: "Что-то пошло не так...\nПопробуйте позже.")
     }
     
     func test_shouldShowInformer_onDraftApplyInformerFailure() {
@@ -718,7 +718,7 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
         
         send(subject, draft(application: .failure(alert())))
         
-        XCTAssertTrue(sut.flow.isShowingFailure)
+        assertFailure(sut.flow, message: "Что-то пошло не так...\nПопробуйте позже.")
     }
     
     func test_shouldNavigateToFailure_onDraftApplicationInformerFailure() {
@@ -1039,6 +1039,21 @@ class CreditCardMVPRootViewModelFactory: RootViewModelFactoryTests {
         }
     }
     
+    func assertFailure(
+        _ flow: CreditCardMVPDomain.Flow,
+        message: String,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        switch flow.state.navigation {
+        case let .complete(complete):
+            XCTAssertNoDiff(complete, .init(message: message, status: .failure), file: file, line: line)
+            
+        default:
+            XCTFail("Expected complete case, but got \(String(describing: flow.state.navigation)) instead.", file: file, line: line)
+        }
+    }
+    
     func assertRejected(
         _ flow: CreditCardMVPDomain.Flow,
         product: ProductCard,
@@ -1084,14 +1099,6 @@ extension CreditCardMVPDomain.Flow {
         
         guard case let .alert(alertMessage) = state.navigation else { return false }
         return alertMessage == message
-    }
-    
-    var isShowingFailure: Bool {
-        
-        guard case let .complete(complete) = state.navigation
-        else { return false }
-        
-        return complete.status == .failure
     }
     
     func isShowingInformer(
