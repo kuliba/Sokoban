@@ -21,14 +21,11 @@ struct ShimmeringModifier: ViewModifier {
     }
     
     func body(content: Content) -> some View {
-        if needShimmering {
-            content
-                .background(color)
-                .cornerRadius(90)
-                .shimmering()
-        } else {
-            content
-        }
+        
+        content
+            .overlay(needShimmering ? color : .clear)
+            .cornerRadius(needShimmering ? 90 : 0)
+            .shimmering(active: needShimmering)
     }
 }
 

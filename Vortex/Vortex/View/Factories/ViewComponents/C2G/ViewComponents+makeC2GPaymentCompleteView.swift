@@ -32,7 +32,7 @@ extension ViewComponents {
             },
             details: { makeC2GPaymentDetailsView(cover: cover, config: config) }
         ) {
-            makeSPBFooter(isActive: true, event: goToMain, title: "На главный")
+            makeSPBFooter(isActive: true, title: "На главный", event: goToMain)
         }
     }
     
@@ -290,6 +290,7 @@ extension OperationDetailDomain.ExtendedDetails {
         formattedAmount: "1 000 ₽",
         legalAct: "Часть 1 статьи 12.16 КоАП, а так же ин...",
         payeeFullName: "УФК Владимирской области",
+        paymentOperationDetailID: 1234567,
         paymentTerm: "06.05.2021",
         realPayerFIO: "ООО “Альфа”",
         realPayerINN: "771400007",

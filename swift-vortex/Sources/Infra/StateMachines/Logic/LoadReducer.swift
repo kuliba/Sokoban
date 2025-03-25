@@ -5,20 +5,31 @@
 //  Created by Igor Malyarov on 19.02.2025.
 //
 
-/// Reducer that handles state transitions based on load events.
+/// A reducer that manages state transitions for loadable resources.
+/// It processes load events and produces updated load states along with optional side effects.
 public final class LoadReducer<Success, Failure: Error> {
     
-    /// Initializes a new instance of `LoadReducer`.
-    public init() {}
+    private let canReload: Bool
+    
+    /// Creates a new instance of `LoadReducer`.
+    ///
+    /// - Parameter canReload: A Boolean value indicating whether the reducer allows reloading
+    ///   after a successful load. Defaults to `true`.
+    public init(canReload: Bool = true) {
+        
+        self.canReload = canReload
+    }
 }
 
 public extension LoadReducer {
     
-    /// Transitions the state based on the given event.
+    /// Processes a load event and transitions the current load state accordingly.
+    /// Depending on the current state and the event received, an optional side effect (`Effect`)
+    /// may be produced.
     ///
     /// - Parameters:
     ///   - state: The current load state.
-    ///   - event: The event to handle.
+    ///   - event: The event to process.
     /// - Returns: A tuple containing the updated state and an optional effect.
     func reduce(
         _ state: State,
@@ -32,8 +43,10 @@ public extension LoadReducer {
         case .load:
             switch state {
             case let .completed(success):
-                state = .loading(success)
-                effect = .load
+                if canReload {
+                    state = .loading(success)
+                    effect = .load
+                }
                 
             case .failure:
                 state = .loading(nil)
@@ -51,6 +64,7 @@ public extension LoadReducer {
             switch result {
             case let .failure(failure):
                 state = .failure(failure)
+                
             case let .success(success):
                 state = .completed(success)
             }
@@ -62,10 +76,12 @@ public extension LoadReducer {
 
 public extension LoadReducer {
     
-    /// Type alias for the state managed by `LoadReducer`.
+    /// The state type managed by `LoadReducer`.
     typealias State = LoadState<Success, Failure>
-    /// Type alias for the events processed by `LoadReducer`.
+    
+    /// The event type processed by `LoadReducer`.
     typealias Event = LoadEvent<Success, Failure>
-    /// Type alias for the effects produced by `LoadReducer`.
+    
+    /// The effect type produced by `LoadReducer`.
     typealias Effect = LoadEffect
 }

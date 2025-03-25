@@ -1734,6 +1734,7 @@
 		2ADBDBD42BD7F76900114E87 /* OperatorsPickerConfig+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBD32BD7F76900114E87 /* OperatorsPickerConfig+preview.swift */; };
 		2ADBDBD62BD8C16500114E87 /* _exploring.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBDBD52BD8C16500114E87 /* _exploring.swift */; };
 		2ADBE70C2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */; };
+		2ADCFCC62D9162A60023D66F /* StatementDetailsDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADCFCC52D9162A60023D66F /* StatementDetailsDomain.swift */; };
 		2ADD15F42D5CB6A3003C2AB5 /* C2GPreviewAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADD15F32D5CB6A3003C2AB5 /* C2GPreviewAppApp.swift */; };
 		2ADD15F62D5CB6A3003C2AB5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADD15F52D5CB6A3003C2AB5 /* ContentView.swift */; };
 		2ADD15F82D5CB6A3003C2AB5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2ADD15F72D5CB6A3003C2AB5 /* Assets.xcassets */; };
@@ -1870,6 +1871,8 @@
 		2AF5E29629BB4691004D69F3 /* createAnywayTransfer_iVortex_515A3_10rub_request.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A0F2F6E29AE3ED40054B920 /* createAnywayTransfer_iVortex_515A3_10rub_request.json */; };
 		2AF5E29729BB4691004D69F3 /* createAnywayTransfer_iVortex_4285_9rub_response.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A0F2F6529AE3ED40054B920 /* createAnywayTransfer_iVortex_4285_9rub_response.json */; };
 		2AF5E29929BB4691004D69F3 /* createAnywayTransfer_iVortex_515A3_10rub_response.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A0F2F6429AE3ED40054B920 /* createAnywayTransfer_iVortex_515A3_10rub_response.json */; };
+		2AF6384C2D8E8566007D39E2 /* RootViewModelFactory+makeCreditCardMVPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF6384B2D8E8566007D39E2 /* RootViewModelFactory+makeCreditCardMVPTests.swift */; };
+		2AF6384E2D8EA40C007D39E2 /* CreditCardMVPFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 2AF6384D2D8EA40C007D39E2 /* CreditCardMVPFeature */; };
 		2AF718DB2C74C27A00511C02 /* RootViewModelFactory+makeLoadLatestOperationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF718DA2C74C27A00511C02 /* RootViewModelFactory+makeLoadLatestOperationsTests.swift */; };
 		2AF718DF2C74D4B500511C02 /* RootViewModelFactory+makePaymentsTransfersPersonalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AF718DE2C74D4B500511C02 /* RootViewModelFactory+makePaymentsTransfersPersonalTests.swift */; };
 		2AF720232C74841D00919CAF /* PayHub in Frameworks */ = {isa = PBXBuildFile; productRef = 2AF720222C74841D00919CAF /* PayHub */; };
@@ -3257,7 +3260,7 @@
 		C123110C2C4E0960002871A8 /* CalendarWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C123110B2C4E0960002871A8 /* CalendarWrapperView.swift */; };
 		C124C7E72D6C45CB00124721 /* ListLandingComponent in Frameworks */ = {isa = PBXBuildFile; productRef = C124C7E62D6C45CB00124721 /* ListLandingComponent */; };
 		C127C5202D6CA96C00683F85 /* HeaderLandingComponent in Frameworks */ = {isa = PBXBuildFile; productRef = C127C51F2D6CA96C00683F85 /* HeaderLandingComponent */; };
-		C127C5232D6CB3F300683F85 /* ViewComponents+makeOpenCardLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C127C5222D6CB3F300683F85 /* ViewComponents+makeOpenCardLanding.swift */; };
+		C127C5232D6CB3F300683F85 /* ViewComponents+makeOrderCardLandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C127C5222D6CB3F300683F85 /* ViewComponents+makeOrderCardLandingView.swift */; };
 		C127C5252D6D94A800683F85 /* OrderCardLandingConfig+iVortex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C127C5242D6D94A800683F85 /* OrderCardLandingConfig+iVortex.swift */; };
 		C127C5282D6E305200683F85 /* OrderCardLandingDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = C127C5272D6E305200683F85 /* OrderCardLandingDomain.swift */; };
 		C127C52A2D6E34F000683F85 /* RootViewModelFactory+makeOrderCardLanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C127C5292D6E34F000683F85 /* RootViewModelFactory+makeOrderCardLanding.swift */; };
@@ -5571,6 +5574,7 @@
 		2ADBDBD32BD7F76900114E87 /* OperatorsPickerConfig+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperatorsPickerConfig+preview.swift"; sourceTree = "<group>"; };
 		2ADBDBD52BD8C16500114E87 /* _exploring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _exploring.swift; sourceTree = "<group>"; };
 		2ADBE70B2A42CF1000163FD4 /* Model+getMosParkingListDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+getMosParkingListDataTests.swift"; sourceTree = "<group>"; };
+		2ADCFCC52D9162A60023D66F /* StatementDetailsDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatementDetailsDomain.swift; sourceTree = "<group>"; };
 		2ADD15F12D5CB6A2003C2AB5 /* C2GPreviewApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = C2GPreviewApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2ADD15F32D5CB6A3003C2AB5 /* C2GPreviewAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C2GPreviewAppApp.swift; sourceTree = "<group>"; };
 		2ADD15F52D5CB6A3003C2AB5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -5696,6 +5700,7 @@
 		2AF5DF352BF6113D00F7549B /* RequestFactory+createGetOperatorsListByParamOperatorOnlyFalseRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createGetOperatorsListByParamOperatorOnlyFalseRequestTests.swift"; sourceTree = "<group>"; };
 		2AF5E28B29BB4516004D69F3 /* NSObject+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Extension.swift"; sourceTree = "<group>"; };
 		2AF5E28C29BB4517004D69F3 /* Model+stubbed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Model+stubbed.swift"; sourceTree = "<group>"; };
+		2AF6384B2D8E8566007D39E2 /* RootViewModelFactory+makeCreditCardMVPTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeCreditCardMVPTests.swift"; sourceTree = "<group>"; };
 		2AF718DA2C74C27A00511C02 /* RootViewModelFactory+makeLoadLatestOperationsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeLoadLatestOperationsTests.swift"; sourceTree = "<group>"; };
 		2AF718DE2C74D4B500511C02 /* RootViewModelFactory+makePaymentsTransfersPersonalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makePaymentsTransfersPersonalTests.swift"; sourceTree = "<group>"; };
 		2AF718E02C75149100511C02 /* PayHubUI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PayHubUI.xctestplan; sourceTree = "<group>"; };
@@ -7051,7 +7056,7 @@
 		C11F5A572CAED62C00E40CD2 /* RequestFactory+createPrepareDeleteDefaultBankRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestFactory+createPrepareDeleteDefaultBankRequest.swift"; sourceTree = "<group>"; };
 		C12187792D1C025200565224 /* GoogleService-InfoVortexMbsDebug.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-InfoVortexMbsDebug.plist"; sourceTree = "<group>"; };
 		C123110B2C4E0960002871A8 /* CalendarWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarWrapperView.swift; sourceTree = "<group>"; };
-		C127C5222D6CB3F300683F85 /* ViewComponents+makeOpenCardLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeOpenCardLanding.swift"; sourceTree = "<group>"; };
+		C127C5222D6CB3F300683F85 /* ViewComponents+makeOrderCardLandingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewComponents+makeOrderCardLandingView.swift"; sourceTree = "<group>"; };
 		C127C5242D6D94A800683F85 /* OrderCardLandingConfig+iVortex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OrderCardLandingConfig+iVortex.swift"; sourceTree = "<group>"; };
 		C127C5272D6E305200683F85 /* OrderCardLandingDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCardLandingDomain.swift; sourceTree = "<group>"; };
 		C127C5292D6E34F000683F85 /* RootViewModelFactory+makeOrderCardLanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeOrderCardLanding.swift"; sourceTree = "<group>"; };
@@ -7946,6 +7951,7 @@
 				83CA1C932A600DFC00672AA5 /* PinCodeUI in Frameworks */,
 				68FFA5682695921E002DADFA /* QRScanner in Frameworks */,
 				837F82E52A3B271C003544BB /* PickerWithPreviewComponent in Frameworks */,
+				2AF6384E2D8EA40C007D39E2 /* CreditCardMVPFeature in Frameworks */,
 				C1AF2EA32B2C882100569F2B /* SberQR in Frameworks */,
 				2A07B20A2C6524B40021B594 /* SelectorComponents in Frameworks */,
 				83B2B8842AE7A90500DAD486 /* PhoneNumberWrapper in Frameworks */,
@@ -11771,6 +11777,7 @@
 			isa = PBXGroup;
 			children = (
 				2A6167352D5BE8750026B036 /* C2G */,
+				2AF6384A2D8E8548007D39E2 /* CreditCardMVP */,
 				2A75DC822D83E63E0009937E /* SplashScreen */,
 			);
 			path = Factories;
@@ -13810,6 +13817,14 @@
 				2AF529D42CC01C9B00D49804 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		2AF6384A2D8E8548007D39E2 /* CreditCardMVP */ = {
+			isa = PBXGroup;
+			children = (
+				2AF6384B2D8E8566007D39E2 /* RootViewModelFactory+makeCreditCardMVPTests.swift */,
+			);
+			path = CreditCardMVP;
 			sourceTree = "<group>";
 		};
 		2AF69F4C2D8C06D400A1DA51 /* CreditCardMVP */ = {
@@ -16182,6 +16197,7 @@
 				689A99AC2779E70200D1FDAE /* Info */,
 				774706A1277DD4E400B524F1 /* OperationDetailViewModel.swift */,
 				8357E3302B6809540065E581 /* ProductFactory.swift */,
+				2ADCFCC52D9162A60023D66F /* StatementDetailsDomain.swift */,
 			);
 			path = OperationDetail;
 			sourceTree = "<group>";
@@ -17708,7 +17724,7 @@
 		C127C5212D6CB38700683F85 /* OpenCardLanding */ = {
 			isa = PBXGroup;
 			children = (
-				C127C5222D6CB3F300683F85 /* ViewComponents+makeOpenCardLanding.swift */,
+				C127C5222D6CB3F300683F85 /* ViewComponents+makeOrderCardLandingView.swift */,
 				C1904BE42D81769000805475 /* ViewComponents+makeCardLanding.swift */,
 				C1904BE82D82AE8C00805475 /* CardLandingView.swift */,
 			);
@@ -20523,6 +20539,7 @@
 				2A8DAD2E2D763B9E00AC7018 /* ResourceProviderComponent */,
 				C19017AA2D7AC91B00044AFC /* OrderCardLandingComponent */,
 				2A590F4E2D7C4AB300A22BBE /* SplashScreen */,
+				2AF6384D2D8EA40C007D39E2 /* CreditCardMVPFeature */,
 			);
 			productName = ForaBank;
 			productReference = EDB1437D265FDA410028EF5A /* Vortex.app */;
@@ -23317,6 +23334,7 @@
 				83E455E62AC2EE980045BEC1 /* DecodeQrData.swift in Sources */,
 				0BDE452D26E298F600B64A0A /* ExtensionQRViewController.swift in Sources */,
 				2AE259E62C636AD100B4088B /* MakeAnywayTransactionPayload.swift in Sources */,
+				2ADCFCC62D9162A60023D66F /* StatementDetailsDomain.swift in Sources */,
 				2A0D9B7D2B0E20CD00F1DFD1 /* RequestFactory+createGetPrintFormRequest.swift in Sources */,
 				ED0AF887286B281E00F86B68 /* UserAccountPhotoSourceView.swift in Sources */,
 				A58F263627E12E0D00A73778 /* C2BDetailsViewController.swift in Sources */,
@@ -23889,7 +23907,7 @@
 				0B931B1E26DCD83B00CA8017 /* GKHAdditionalListModel.swift in Sources */,
 				2AE2B9AE2B8DE40400B86D56 /* PaymentsTransfersNavigationStateManager.swift in Sources */,
 				A5C7A1B1275BF0B9003BEF6D /* InternetTVApiRequests.swift in Sources */,
-				C127C5232D6CB3F300683F85 /* ViewComponents+makeOpenCardLanding.swift in Sources */,
+				C127C5232D6CB3F300683F85 /* ViewComponents+makeOrderCardLandingView.swift in Sources */,
 				2AC72B922CEF8C72001578CC /* PaymentsTransfersCorporateFlowView.swift in Sources */,
 				0BF34866269444D9005138A8 /* AllCardCell.swift in Sources */,
 				77246B3B287DAB5E00219F17 /* MeToMeExternalView+Legacy.swift in Sources */,
@@ -24633,6 +24651,7 @@
 				2A94AAF42C8F0E60003B4FB1 /* LocalAgentLoaderComposerTests.swift in Sources */,
 				2A30393E2A17D5C80008701D /* TextFieldStateTests.swift in Sources */,
 				2A58FAA52AD701E500BD1967 /* Services_EndpointGetPINConfirmationCodeTests.swift in Sources */,
+				2AF6384C2D8E8566007D39E2 /* RootViewModelFactory+makeCreditCardMVPTests.swift in Sources */,
 				2A95816B2AB9A063009698F5 /* Model+OperationTests.swift in Sources */,
 				2A90494B2C32698500313CB8 /* InMemoryValueStoreTests.swift in Sources */,
 				8353CD522B56B37E005F7D1A /* RequestFactory+getCardStatementForPeriodTests.swift in Sources */,
@@ -30816,6 +30835,10 @@
 		2AF5AC312B66628D00845E7A /* UserAccountNavigationComponent */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = UserAccountNavigationComponent;
+		};
+		2AF6384D2D8EA40C007D39E2 /* CreditCardMVPFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CreditCardMVPFeature;
 		};
 		2AF720222C74841D00919CAF /* PayHub */ = {
 			isa = XCSwiftPackageProductDependency;
