@@ -10,160 +10,223 @@ import UIPrimitives
 
 struct PlaceholderLandingView: View {
     
+    let config: PlaceholderConfig
+    let isAnimated: Bool
+    
     var body: some View {
-
+        
         ScrollView {
             
-            VStack(spacing: 20) {
+            VStack(spacing: config.cover.verticalSpacing) {
                 
-                ZStack {
+                withShimmering {
                     
-                    Color
-                        .gray
-                        .opacity(0.3)
-                    
-                    VStack(spacing: 32) {
-                        
-                        itemsPlaceholderView()
-                        itemsPlaceholderView()
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.leading, 16)
+                    coverView()
                 }
-                .frame(height: 703)
                 
-                VStack(spacing: 8) {
+                Group {
                     
-                    Color
-                        .gray
-                        .frame(height: 24)
-                        .cornerRadius(90)
-                        ._shimmering()
-                    
-                    VStack(spacing: 16) {
+                    withShimmering {
                         
-                        optionPlaceholderView()
-                        optionPlaceholderView()
-                        optionPlaceholderView()
-                        optionPlaceholderView()
+                        itemsView()
+                    }
+                    
+                    withShimmering {
+                        
+                        listView()
                     }
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
-                .background(Color.gray.opacity(0.3))
-                .cornerRadius(12)
-                .padding(.horizontal, 16)
+                .padding(.horizontal, config.hpadding)
+                .padding(.vertical, config.vpadding)
+                .background(config.background)
+                .cornerRadius(config.cornerRadius)
+                .padding(.horizontal, config.hpadding)
                 
-                VStack(spacing: 36) {
-                    
-                    secondItemView()
-                    secondItemView()
-                    secondItemView()
-                    secondItemView()
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
-                .background(Color.gray.opacity(0.3))
-                .cornerRadius(12)
-                .padding(.horizontal, 16)
-                
-                VStack(spacing: 16) {
-                    
-                    dropDownPlaceholderView()
-                    dropDownPlaceholderView()
-                    
-                }
-                .padding(.horizontal, 16)
-                
+                dropDownView()
             }
         }
+        .edgesIgnoringSafeArea(.top)
         .safeAreaInset(edge: .bottom) {
             
-            Color.gray
-                .frame(height: 56, alignment: .center)
-                .cornerRadius(12)
-                .padding(.horizontal, 16)
-                ._shimmering()
+            withShimmering(heroButton)
+                .padding(.top, 18)
+                .background(.white)
         }
-        
     }
+    
+    private func dropDownView() -> some View {
+        
+        VStack(spacing: config.dropDownList.vspacing) {
+            
+            ForEach(0..<config.dropDownList.itemsCount) { _ in
+                
+                dropDownPlaceholderView()
+            }
+        }
+        .padding(.horizontal, config.dropDownList.hpadding)
+    }
+    
+    private func listView() -> some View {
+        
+        VStack(spacing: config.list.vspacing) {
+            
+            ForEach(0..<config.list.countItems) { _ in
+                secondItemView()
+            }
+        }
+    }
+    
+    private func itemsView() -> some View {
+        
+        VStack(spacing: config.items.verticalSpacing) {
+            
+            config.items.itemColor
+                .frame(height: config.items.titleItemHeight)
+                .cornerRadius(90)
+            
+            VStack(spacing: 16) {
+                
+                ForEach(0..<config.items.countItems) { _ in
+                    optionPlaceholderView()
+                }
+            }
+        }
+    }
+    
+    private func coverView() -> some View {
+        
+        ZStack {
+            
+            config.cover.coverColor
+            
+            VStack(spacing: config.cover.itemsSpacing) {
+                
+                itemsPlaceholderView()
+                itemsPlaceholderView()
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.leading, config.cover.itemsLeadingPadding)
+        }
+        .frame(height: 703)
+    }
+    
+    private func heroButton() -> some View {
+        
+        Color.gray
+            .frame(height: config.heroButton.height)
+            .cornerRadius(config.heroButton.cornerRadius)
+            .padding(.horizontal, config.heroButton.hpadding)
+    }
+    
+    private func withShimmering(
+        _ content: () -> some View
+    ) -> some View {
+        
+        content()
+            ._shimmering(isActive: isAnimated)
+    }
+    
     
     @ViewBuilder
     func dropDownPlaceholderView() -> some View {
-
-        HStack {
+        
+        withShimmering {
             
-            Color.gray
-                .frame(width: 24, height: 24, alignment: .center)
-                ._shimmering()
-                .cornerRadius(24/2)
-            
-            Color.gray
-                .frame(height: 8)
-                .cornerRadius(90)
-                ._shimmering()
+            HStack(spacing: config.dropDownList.hspacingItem) {
+                
+                config.dropDownList.colorItem
+                    .frame(
+                        width: config.dropDownList.itemIconSize,
+                        height: config.dropDownList.itemIconSize
+                    )
+                    .cornerRadius(config.dropDownList.itemIconSize/2)
+                
+                config.dropDownList.colorItem
+                    .frame(height: config.dropDownList.lineHeight)
+                    .cornerRadius(config.dropDownList.cornerRadius)
+            }
         }
     }
     
     @ViewBuilder
     func secondItemView() -> some View {
-    
-        Color.gray
-            .frame(height: 24)
-            .cornerRadius(90)
-            ._shimmering()
+        
+        withShimmering {
+            
+            config.list.colorItem
+                .frame(height: config.list.itemHeight)
+                .cornerRadius(config.list.cornerRadius)
+        }
     }
     
     @ViewBuilder
     func optionPlaceholderView() -> some View {
-    
-        HStack(spacing: 16) {
+        
+        HStack(spacing: config.items.item.hspacing) {
             
-            Color.gray
-                .frame(width: 40, height: 40, alignment: .center)
-                ._shimmering()
-                .cornerRadius(40/2)
+            config.items.item.color
+                .frame(
+                    width: config.items.item.iconSize,
+                    height: config.items.item.iconSize
+                )
+                .cornerRadius(config.items.item.iconSize/2)
             
-            VStack(spacing: 6) {
+            VStack(spacing: config.items.item.vspacing) {
                 
-                Color.gray
-                    .frame(height: 14)
-                    .cornerRadius(90)
-                    ._shimmering()
+                config.items.item.color
+                    .frame(height: config.items.item.heightTitle)
+                    .cornerRadius(config.items.item.cornerRadius)
                 
-                Color.gray
-                    .frame(height: 18)
-                    .cornerRadius(90)
-                    ._shimmering()
+                config.items.item.color
+                    .frame(height: config.items.item.heightSubtitle)
+                    .cornerRadius(config.items.item.cornerRadius)
             }
         }
     }
     
     func itemsPlaceholderView() -> some View {
         
-        VStack(spacing: 12) {
+        withShimmering {
             
-            Color
-                .white
-                .frame(width: 100, height: 8, alignment: .center)
-                .cornerRadius(90)
-                ._shimmering()
-            
-            Color
-                .white
-                .frame(width: 100, height: 8, alignment: .center)
-                .cornerRadius(90)
-                ._shimmering()
-            
-            Color
-                .white
-                .frame(width: 100, height: 8, alignment: .center)
-                .cornerRadius(90)
-                ._shimmering()
+            VStack(spacing: config.cover.vspacingItems) {
+                
+                config.cover.item.color
+                    .frame(
+                        width: config.cover.item.weight,
+                        height: config.cover.item.height
+                    )
+                    .cornerRadius(config.cover.item.cornerRadius)
+                
+                config.cover.item.color
+                    .frame(
+                        width: config.cover.item.weight,
+                        height: config.cover.item.height
+                    )
+                    .cornerRadius(config.cover.item.cornerRadius)
+                
+                config.cover.item.color
+                    .frame(
+                        width: config.cover.item.weight,
+                        height: config.cover.item.height
+                    )
+                    .cornerRadius(config.cover.item.cornerRadius)
+            }
         }
     }
 }
 
 #Preview {
-    PlaceholderLandingView()
+    
+    return PlaceholderLandingView(
+        config: .preview,
+        isAnimated: true
+    )
+}
+
+#Preview {
+    
+    PlaceholderLandingView(
+        config: .preview,
+        isAnimated: false
+    )
 }
