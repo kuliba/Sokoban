@@ -7,6 +7,7 @@
 
 import Combine
 import CreditCardMVPCore
+import CreditCardMVPUI
 import FlowCore
 import RxViewModel
 import StateMachines
@@ -36,9 +37,9 @@ extension CreditCardMVPDomain {
         case alert(String)
         case failure
         case informer(String)
-        case approved
+        case approved(consent: AttributedString, ProductCard)
         case inReview
-        case rejected
+        case rejected(ProductCard)
     }
     
     enum Navigation {
@@ -48,7 +49,7 @@ extension CreditCardMVPDomain {
         case complete(Complete)
         case decision(Decision)
         
-        struct Complete {
+        struct Complete: Equatable {
             
             let message: String
             let status: Status
@@ -59,13 +60,23 @@ extension CreditCardMVPDomain {
             }
         }
         
-        struct Decision {
+        struct Decision: Equatable {
             
+            let message: String
+            let product: ProductCard
+            let title: String
             let status: Status
             
-            enum Status {
+            enum Status: Equatable {
                 
-                case approved, rejected
+                case approved(Details)
+                case rejected
+                
+                struct Details: Equatable {
+                    
+                    let consent: AttributedString
+                    let info: String
+                }
             }
         }
     }
@@ -114,8 +125,10 @@ extension CreditCardMVPContentDomain {
     
     enum ApplicationStatus<Draft> {
         
-        case approved, inReview, rejected
+        case approved(consent: AttributedString, ProductCard)
         case draft(Draft)
+        case inReview
+        case rejected(ProductCard)
     }
     
     typealias Failure = LoadFailure<FailureType>
@@ -267,8 +280,16 @@ extension RootViewModelFactory {
         case let .informer(message):
             completion(.informer(message))
             
-        case .approved:
-            completion(.decision(.init(status: .approved)))
+        case let .approved(consent, product):
+            completion(.decision(.init(
+                message: .approvedMessage,
+                product: product,
+                title: .approvedTitle,
+                status: .approved(.init(
+                    consent: consent,
+                    info: .approvedInfo
+                ))
+            )))
             
         case .inReview:
             completion(.complete(.init(
@@ -276,8 +297,13 @@ extension RootViewModelFactory {
                 status: .inReview
             )))
             
-        case .rejected:
-            completion(.decision(.init(status: .rejected)))
+        case let .rejected(product):
+            completion(.decision(.init(
+                message: .rejectedMessage,
+                product: product,
+                title: .rejectedTitle,
+                status: .rejected
+            )))
         }
     }
 }
@@ -285,6 +311,13 @@ extension RootViewModelFactory {
 private extension String {
     
     static let failure = "Что-то пошло не так...\nПопробуйте позже."
+    
+    static let approvedMessage = "Ваша кредитная карта готова к оформлению!"
+    static let approvedInfo = "Про то что можно забрать в офисе"
+    static let approvedTitle = "Кредитная карта одобрена"
+    
+    static let rejectedMessage = "К сожалению, ваша кредитная история не позволяет оформить карту"
+    static let rejectedTitle = "Кредитная карта не одобрена"
     
     static let inReview = "Ожидайте рассмотрения Вашей заявки\nРезультат придет в Push/смс\nПримерное время рассмотрения заявки 10 минут."
     
@@ -304,19 +337,19 @@ extension CreditCardMVPDomain.ContentDomain.State {
     var select: CreditCardMVPDomain.Select? {
         
         switch self {
-        case .completed(.approved):
-            return .approved
+        case let .completed(.approved(consent, product)):
+            return .approved(consent: consent, product)
             
         case let .completed(.draft(draft)):
             switch draft.application {
-            case .completed(.approved):
-                return .approved
+            case let .completed(.approved(consent, product)):
+                return .approved(consent: consent, product)
                 
             case .completed(.inReview):
                 return .inReview
                 
-            case .completed(.rejected):
-                return .rejected
+            case let .completed(.rejected(product)):
+                return .rejected(product)
                 
             case let .failure(failure):
                 switch failure.type {
@@ -331,8 +364,8 @@ extension CreditCardMVPDomain.ContentDomain.State {
         case .completed(.inReview):
             return .inReview
             
-        case .completed(.rejected):
-            return .rejected
+        case let .completed(.rejected(product)):
+            return .rejected(product)
             
         case let .failure(failure):
             switch failure.type {
@@ -473,13 +506,21 @@ final class RootViewModelFactory_makeCreditCardMVPBinderTests: CreditCardMVPRoot
     
     func test_shouldNavigateToApproved_onApprovedApplyStatus() {
         
+        let (consent, product) = (makeConsent(), makeProductCard())
         let (sut, loadSpy, applySpy) = makeSUT()
         loadSpy.complete(with: draft())
         
         sut.content.event(.apply(.load))
-        applySpy.complete(with: .approved)
+        applySpy.complete(with: approved(consent: consent, product: product))
         
-        XCTAssertTrue(sut.flow.isShowingApproved)
+        assertApproved(
+            sut.flow,
+            consent: consent,
+            product: product,
+            message: "Ваша кредитная карта готова к оформлению!",
+            title: "Кредитная карта одобрена",
+            info: "Про то что можно забрать в офисе"
+        )
     }
     
     func test_shouldNavigateToRejected_onInReviewApplyStatus() {
@@ -499,7 +540,7 @@ final class RootViewModelFactory_makeCreditCardMVPBinderTests: CreditCardMVPRoot
         loadSpy.complete(with: draft())
         
         sut.content.event(.apply(.load))
-        applySpy.complete(with: .rejected)
+        applySpy.complete(with: rejected())
         
         XCTAssertTrue(sut.flow.isShowingRejected)
     }
@@ -508,11 +549,19 @@ final class RootViewModelFactory_makeCreditCardMVPBinderTests: CreditCardMVPRoot
     
     func test_shouldNavigateToApproved_onApprovedStatus() {
         
+        let (consent, product) = (makeConsent(), makeProductCard())
         let (sut, loadSpy, _) = makeSUT()
         
-        loadSpy.complete(with: .approved)
+        loadSpy.complete(with: approved(consent: consent, product: product))
         
-        XCTAssertTrue(sut.flow.isShowingApproved)
+        assertApproved(
+            sut.flow,
+            consent: consent,
+            product: product,
+            message: "Ваша кредитная карта готова к оформлению!",
+            title: "Кредитная карта одобрена",
+            info: "Про то что можно забрать в офисе"
+        )
     }
     
     // MARK: - inReview
@@ -532,7 +581,7 @@ final class RootViewModelFactory_makeCreditCardMVPBinderTests: CreditCardMVPRoot
         
         let (sut, loadSpy, _) = makeSUT()
         
-        loadSpy.complete(with: .rejected)
+        loadSpy.complete(with: rejected())
         
         XCTAssertTrue(sut.flow.isShowingRejected)
     }
@@ -684,11 +733,19 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
     
     func test_shouldNavigateToApproved_onDraftApprovedApplicationStatus() {
         
+        let (consent, product) = (makeConsent(), makeProductCard())
         let (sut, subject, _) = makeSUT()
         
-        send(subject, draft(application: .completed(.approved)))
+        send(subject, draft(application: .completed(approved(consent: consent, product: product))))
         
-        XCTAssertTrue(sut.flow.isShowingApproved)
+        assertApproved(
+            sut.flow,
+            consent: consent,
+            product: product,
+            message: "Ваша кредитная карта готова к оформлению!",
+            title: "Кредитная карта одобрена",
+            info: "Про то что можно забрать в офисе"
+        )
     }
     
     func test_shouldNavigateToRejected_onDraftInReviewApplicationStatus() {
@@ -704,7 +761,7 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
         
         let (sut, subject, _) = makeSUT()
         
-        send(subject, draft(application: .completed(.rejected)))
+        send(subject, draft(application: .completed(rejected())))
         
         XCTAssertTrue(sut.flow.isShowingRejected)
     }
@@ -713,11 +770,19 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
     
     func test_shouldNavigateToApproved_onApprovedStatus() {
         
+        let (consent, product) = (makeConsent(), makeProductCard())
         let (sut, subject, _) = makeSUT()
         
-        send(subject, .approved)
+        send(subject, approved(consent: consent, product: product))
         
-        XCTAssertTrue(sut.flow.isShowingApproved)
+        assertApproved(
+            sut.flow,
+            consent: consent,
+            product: product,
+            message: "Ваша кредитная карта готова к оформлению!",
+            title: "Кредитная карта одобрена",
+            info: "Про то что можно забрать в офисе"
+        )
     }
     
     // MARK: - inReview
@@ -737,7 +802,7 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
         
         let (sut, subject, _) = makeSUT()
         
-        send(subject, .rejected)
+        send(subject, rejected())
         
         XCTAssertTrue(sut.flow.isShowingRejected)
     }
@@ -766,7 +831,7 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
         
         let (sut, subject, _) = makeSUT()
         
-        subject.send(.loading(.approved))
+        subject.send(.loading(approved()))
         
         XCTAssertNil(sut.flow.state.navigation)
     }
@@ -784,7 +849,7 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
         
         let (sut, subject, _) = makeSUT()
         
-        subject.send(.loading(.rejected))
+        subject.send(.loading(rejected()))
         
         XCTAssertNil(sut.flow.state.navigation)
     }
@@ -862,11 +927,92 @@ class CreditCardMVPRootViewModelFactory: RootViewModelFactoryTests {
         return .init(message: message, type: .informer)
     }
     
+    func approved(
+        consent: AttributedString? = nil,
+        product: ProductCard? = nil
+    ) -> ContentDomain.FinalStatus {
+        
+        return .approved(
+            consent: consent ?? makeConsent(),
+            product ?? makeProductCard()
+        )
+    }
+    
+    func approved(
+        consent: AttributedString? = nil,
+        product: ProductCard? = nil
+    ) -> ContentDomain.DraftableStatus {
+        
+        return .approved(
+            consent: consent ?? makeConsent(),
+            product ?? makeProductCard()
+        )
+    }
+    
+    func rejected(
+        product: ProductCard? = nil
+    ) -> ContentDomain.FinalStatus {
+        
+        return .rejected(product ?? makeProductCard())
+    }
+    
+    func rejected(
+        product: ProductCard? = nil
+    ) -> ContentDomain.DraftableStatus {
+        
+        return .rejected(product ?? makeProductCard())
+    }
+    
     func draft(
         application: ContentDomain.Draft.ApplicationState = .pending
     ) -> ContentDomain.DraftableStatus {
         
         return .draft(.init(application: application))
+    }
+    
+    func makeConsent(
+        _ value: String = anyMessage()
+    ) -> AttributedString {
+        
+        return .init(value)
+    }
+    
+    func makeProductCard(
+        limit: String = anyMessage(),
+        md5Hash: String = anyMessage(),
+        options: [ProductCard.Option] = [
+            .init(title: anyMessage(), value: anyMessage())
+        ],
+        title: String = anyMessage(),
+        subtitle: String = anyMessage()
+    ) -> ProductCard {
+        
+        return .init(
+            limit: limit,
+            md5Hash: md5Hash,
+            options: options,
+            title: title,
+            subtitle: subtitle
+        )
+    }
+    
+    func assertApproved(
+        _ flow: CreditCardMVPDomain.Flow,
+        consent: AttributedString,
+        product: ProductCard,
+        message: String,
+        title: String,
+        info: String,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) {
+        switch flow.state.navigation {
+        case let .decision(decision):
+            XCTAssertNoDiff(decision, .init(message: message, product: product, title: title, status: .approved(.init(consent: consent, info: info))), file: file, line: line)
+            
+        default:
+            XCTFail("Expected decision case, but got \(String(describing: flow.state.navigation)) instead.", file: file, line: line)
+        }
     }
 }
 
@@ -886,6 +1032,8 @@ extension CreditCardMVPDomain.Content {
         return true
     }
 }
+
+#warning("improve assertions")
 
 extension CreditCardMVPDomain.Flow {
     
@@ -911,12 +1059,6 @@ extension CreditCardMVPDomain.Flow {
         
         guard case let .informer(informerMessage) = state.navigation else { return false }
         return informerMessage == message
-    }
-    
-    var isShowingApproved: Bool {
-        
-        guard case let .decision(decision) = state.navigation else { return false }
-        return decision.status == .approved
     }
     
     var isShowingInReview: Bool {
