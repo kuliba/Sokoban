@@ -8,68 +8,152 @@
 import SwiftUI
 import UIPrimitives
 
-struct ProductCardViewConfig: Equatable {
+public struct ProductCardViewConfig: Equatable {
     
-    let backgroundColor: Color
-    let cornerRadius: CGFloat
-    let edges: EdgeInsets
-    let spacing: CGFloat
-    let header: HeaderConfig
-    let label: LabelConfig
+    public let backgroundColor: Color
+    public let cornerRadius: CGFloat
+    public let edges: EdgeInsets
+    public let spacing: CGFloat
+    public let header: HeaderConfig
+    public let label: LabelConfig
+    
+    public init(
+        backgroundColor: Color,
+        cornerRadius: CGFloat,
+        edges: EdgeInsets,
+        spacing: CGFloat,
+        header: HeaderConfig,
+        label: LabelConfig
+    ) {
+        self.backgroundColor = backgroundColor
+        self.cornerRadius = cornerRadius
+        self.edges = edges
+        self.spacing = spacing
+        self.header = header
+        self.label = label
+    }
 }
 
 extension ProductCardViewConfig {
     
-    struct HeaderConfig: Equatable {
+    public struct HeaderConfig: Equatable {
         
-        let title: TextConfig
-        let subtitle: TextConfig
-        let spacing: CGFloat
+        public let title: TextConfig
+        public let subtitle: TextConfig
+        public let spacing: CGFloat
+        
+        public init(
+            title: TextConfig,
+            subtitle: TextConfig,
+            spacing: CGFloat
+        ) {
+            self.title = title
+            self.subtitle = subtitle
+            self.spacing = spacing
+        }
     }
     
-    struct LabelConfig: Equatable {
+    public struct LabelConfig: Equatable {
         
-        let icon: IconConfig
-        let option: OptionConfig
-        let title: TitleConfig
-        let spacing: CGFloat
+        public let icon: IconConfig
+        public let option: OptionConfig
+        public let title: TitleConfig
+        public let spacing: CGFloat
+        
+        public init(
+            icon: IconConfig,
+            option: OptionConfig,
+            title: TitleConfig,
+            spacing: CGFloat
+        ) {
+            self.icon = icon
+            self.option = option
+            self.title = title
+            self.spacing = spacing
+        }
     }
 }
 
 extension ProductCardViewConfig.LabelConfig {
     
-    struct IconConfig: Equatable {
+    public struct IconConfig: Equatable {
         
-        let cornerRadius: CGFloat
-        let shadow: ShadowConfig
-        let size: CGSize
+        public let cornerRadius: CGFloat
+        public let shadow: ShadowConfig
+        public let size: CGSize
+        
+        public init(
+            cornerRadius: CGFloat,
+            shadow: ShadowConfig,
+            size: CGSize
+        ) {
+            self.cornerRadius = cornerRadius
+            self.shadow = shadow
+            self.size = size
+        }
     }
     
-    struct OptionConfig: Equatable {
+    public struct OptionConfig: Equatable {
         
-        let icon: Image
-        let iconColor: Color
-        let iconSize: CGFloat
-        let spacing: CGFloat
-        let title: TextConfig
-        let value: TextConfig
-        let valueSpacing: CGFloat
+        public let icon: Image
+        public let iconColor: Color
+        public let iconSize: CGFloat
+        public let spacing: CGFloat
+        public let title: TextConfig
+        public let value: TextConfig
+        public let valueSpacing: CGFloat
+        
+        public init(
+            icon: Image,
+            iconColor: Color,
+            iconSize: CGFloat,
+            spacing: CGFloat,
+            title: TextConfig,
+            value: TextConfig,
+            valueSpacing: CGFloat
+        ) {
+            self.icon = icon
+            self.iconColor = iconColor
+            self.iconSize = iconSize
+            self.spacing = spacing
+            self.title = title
+            self.value = value
+            self.valueSpacing = valueSpacing
+        }
     }
     
 #warning("Remove")
-    struct TitleConfig: Equatable {
-        let spacing: CGFloat
+    public struct TitleConfig: Equatable {
+        
+        public let spacing: CGFloat
+        
+        public init(
+            spacing: CGFloat
+        ) {
+            self.spacing = spacing
+        }
     }
 }
 
 extension ProductCardViewConfig.LabelConfig.IconConfig {
     
-    struct ShadowConfig: Equatable {
+    public struct ShadowConfig: Equatable {
         
-        let color: Color
-        let offset: CGFloat
-        let blur: CGFloat
-        let size: CGSize
+        public let color: Color
+        public let offset: CGFloat
+        public let blur: CGFloat
+        public let size: CGSize
+        
+        public init(
+            color: Color,
+            offset: CGFloat,
+            blur: CGFloat,
+            size: CGSize
+        ) {
+            self.color = color
+            self.offset = offset
+            self.blur = blur
+            self.size = size
+        }
     }
 }
-

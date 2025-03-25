@@ -8,13 +8,23 @@
 import SwiftUI
 import UIPrimitives
 
-struct ProductCardView<IconView: View>: View {
+public struct ProductCardView<IconView: View>: View {
     
-    let product: ProductCard
-    let config: Config
-    let iconView: (String) -> IconView
+    private let product: ProductCard
+    private let config: Config
+    private let iconView: (String) -> IconView
     
-    var body: some View {
+    public init(
+        product: ProductCard,
+        config: Config,
+        iconView: @escaping (String) -> IconView
+    ) {
+        self.product = product
+        self.config = config
+        self.iconView = iconView
+    }
+    
+    public var body: some View {
         
         VStack(alignment: .leading, spacing: config.spacing) {
             
@@ -26,6 +36,11 @@ struct ProductCardView<IconView: View>: View {
         .background(config.backgroundColor)
         .clipShape(RoundedRectangle(cornerRadius: config.cornerRadius))
     }
+}
+
+public extension ProductCardView {
+    
+    typealias Config = ProductCardViewConfig
 }
 
 private extension ProductCardView {
@@ -115,11 +130,6 @@ private extension ProductCardView {
     }
     
     private var optionConfig: Config.LabelConfig.OptionConfig { config.label.option }
-}
-
-extension ProductCardView {
-    
-    typealias Config = ProductCardViewConfig
 }
 
 // MARK: - Previews
