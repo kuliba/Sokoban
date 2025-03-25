@@ -155,15 +155,26 @@ extension CreditCardMVPContentDomain {
 extension RootViewModelFactory {
     
     // TODO: add @inlinable
+    func makeCreditCardMVPBinder() -> CreditCardMVPDomain.Binder {
+        
+        let load: CreditCardMVPDomain.ContentDomain.Load = { _ in }
+        
+        let apply: CreditCardMVPDomain.ContentDomain.Apply = { _ in }
+        
+        return makeCreditCardMVPBinder(load: load, apply: apply)
+    }
+    
+    // TODO: add @inlinable
     func makeCreditCardMVPBinder(
-        content: CreditCardMVPDomain.Content
+        load: @escaping CreditCardMVPDomain.ContentDomain.Load,
+        apply: @escaping CreditCardMVPDomain.ContentDomain.Apply
     ) -> CreditCardMVPDomain.Binder {
         
+        let content = makeCreditCardMVPContent(load: load, apply: apply)
         content.event(.load(.load))
         
-        return composeBinder(
+        return makeCreditCardMVPBinder(
             content: content,
-            getNavigation: getNavigation,
             witnesses: .init(
                 emitting: { $0.$state.compactMap(\.selectEvent) },
                 dismissing: { content in { content.event(.dismissInformer) }}
@@ -219,6 +230,19 @@ extension RootViewModelFactory {
                 }
             },
             scheduler: schedulers.main
+        )
+    }
+    
+    // TODO: add @inlinable
+    func makeCreditCardMVPBinder<Content>(
+        content: Content,
+        witnesses: ContentWitnesses<Content, FlowEvent<CreditCardMVPDomain.Select, Never>>
+    ) -> Binder<Content, CreditCardMVPDomain.Flow> {
+        
+        return composeBinder(
+            content: content,
+            getNavigation: getNavigation,
+            witnesses: witnesses
         )
     }
     
@@ -521,11 +545,10 @@ final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTes
         let (factory, _,_) = super.makeSUT(file: file, line: line)
         let loadSpy = LoadSpy()
         let applySpy = ApplySpy()
-        let content = factory.makeCreditCardMVPContent(
+        let sut = factory.makeCreditCardMVPBinder(
             load: loadSpy.process,
             apply: applySpy.process
         )
-        let sut = factory.makeCreditCardMVPBinder(content: content)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(loadSpy, file: file, line: line)
