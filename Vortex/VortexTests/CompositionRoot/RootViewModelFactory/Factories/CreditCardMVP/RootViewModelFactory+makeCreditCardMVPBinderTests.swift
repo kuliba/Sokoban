@@ -475,7 +475,7 @@ final class RootViewModelFactory_makeCreditCardMVPBinderTests: CreditCardMVPRoot
         sut.content.event(.apply(.load))
         applySpy.complete(with: alert())
         
-        assertFailure(sut.flow, message: "Что-то пошло не так...\nПопробуйте позже.")
+        assertFailure(sut.flow, message: failureMessage)
     }
     
     func test_shouldShowInformer_onDraftApplyInformerFailure() {
@@ -517,9 +517,9 @@ final class RootViewModelFactory_makeCreditCardMVPBinderTests: CreditCardMVPRoot
             sut.flow,
             consent: consent,
             product: product,
-            message: "Ваша кредитная карта готова к оформлению!",
-            title: "Кредитная карта одобрена",
-            info: "Про то что можно забрать в офисе"
+            message: approvedMessage,
+            title: approvedTitle,
+            info: approvedInfo
         )
     }
     
@@ -546,8 +546,8 @@ final class RootViewModelFactory_makeCreditCardMVPBinderTests: CreditCardMVPRoot
         assertRejected(
             sut.flow,
             product: product,
-            message: "К сожалению, ваша кредитная история не позволяет оформить карту",
-            title: "Кредитная карта не одобрена"
+            message: rejectedMessage,
+            title: rejectedTitle
         )
     }
     
@@ -564,9 +564,9 @@ final class RootViewModelFactory_makeCreditCardMVPBinderTests: CreditCardMVPRoot
             sut.flow,
             consent: consent,
             product: product,
-            message: "Ваша кредитная карта готова к оформлению!",
-            title: "Кредитная карта одобрена",
-            info: "Про то что можно забрать в офисе"
+            message: approvedMessage,
+            title: approvedTitle,
+            info: approvedInfo
         )
     }
     
@@ -593,8 +593,8 @@ final class RootViewModelFactory_makeCreditCardMVPBinderTests: CreditCardMVPRoot
         assertRejected(
             sut.flow,
             product: product,
-            message: "К сожалению, ваша кредитная история не позволяет оформить карту",
-            title: "Кредитная карта не одобрена"
+            message: rejectedMessage,
+            title: rejectedTitle
         )
     }
     
@@ -718,7 +718,7 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
         
         send(subject, draft(application: .failure(alert())))
         
-        assertFailure(sut.flow, message: "Что-то пошло не так...\nПопробуйте позже.")
+        assertFailure(sut.flow, message: failureMessage)
     }
     
     func test_shouldNavigateToFailure_onDraftApplicationInformerFailure() {
@@ -754,9 +754,9 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
             sut.flow,
             consent: consent,
             product: product,
-            message: "Ваша кредитная карта готова к оформлению!",
-            title: "Кредитная карта одобрена",
-            info: "Про то что можно забрать в офисе"
+            message: approvedMessage,
+            title: approvedTitle,
+            info: approvedInfo
         )
     }
     
@@ -779,8 +779,8 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
         assertRejected(
             sut.flow,
             product: product,
-            message: "К сожалению, ваша кредитная история не позволяет оформить карту",
-            title: "Кредитная карта не одобрена"
+            message: rejectedMessage,
+            title: rejectedTitle
         )
     }
     
@@ -797,9 +797,9 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
             sut.flow,
             consent: consent,
             product: product,
-            message: "Ваша кредитная карта готова к оформлению!",
-            title: "Кредитная карта одобрена",
-            info: "Про то что можно забрать в офисе"
+            message: approvedMessage,
+            title: approvedTitle,
+            info: approvedInfo
         )
     }
     
@@ -826,8 +826,8 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
         assertRejected(
             sut.flow,
             product: product,
-            message: "К сожалению, ваша кредитная история не позволяет оформить карту",
-            title: "Кредитная карта не одобрена"
+            message: rejectedMessage,
+            title: rejectedTitle
         )
     }
     
@@ -935,7 +935,16 @@ final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: Cre
 
 class CreditCardMVPRootViewModelFactory: RootViewModelFactoryTests {
     
+    let approvedMessage = "Ваша кредитная карта готова к оформлению!"
+    let approvedInfo = "Про то что можно забрать в офисе"
+    let approvedTitle = "Кредитная карта одобрена"
+    
+    let failureMessage = "Что-то пошло не так...\nПопробуйте позже."
+    
     let inReview = "Ожидайте рассмотрения Вашей заявки\nРезультат придет в Push/смс\nПримерное время рассмотрения заявки 10 минут."
+    
+    let rejectedMessage = "К сожалению, ваша кредитная история не позволяет оформить карту"
+    let rejectedTitle = "Кредитная карта не одобрена"
     
     typealias ContentDomain = CreditCardMVPContentDomain
     
@@ -1106,23 +1115,21 @@ extension CreditCardMVPDomain.Content {
     }
 }
 
-#warning("improve assertions")
-
 extension CreditCardMVPDomain.Flow {
     
     func isShowingAlert(
         with message: String = anyMessage()
     ) -> Bool {
         
-        guard case let .alert(alertMessage) = state.navigation else { return false }
-        return alertMessage == message
+        guard case let .alert(alert) = state.navigation else { return false }
+        return alert == message
     }
     
     func isShowingInformer(
         with message: String = anyMessage()
     ) -> Bool {
         
-        guard case let .informer(informerMessage) = state.navigation else { return false }
-        return informerMessage == message
+        guard case let .informer(informer) = state.navigation else { return false }
+        return informer == message
     }
 }
