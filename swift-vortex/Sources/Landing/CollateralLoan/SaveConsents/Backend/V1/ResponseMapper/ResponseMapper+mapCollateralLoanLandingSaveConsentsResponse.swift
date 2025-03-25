@@ -11,12 +11,12 @@ import RemoteServices
 public extension ResponseMapper {
     
     typealias MappingError = RemoteServices.ResponseMapper.MappingError
-    typealias GetSaveConsentsResult = Result<CollateralLoanLandingSaveConsentsResponse, MappingError>
+    typealias SaveConsentsResult = Result<CollateralLoanLandingSaveConsentsResponse, MappingError>
     
     static func mapSaveConsentsResponse(
         _ data: Data,
         _ httpURLResponse: HTTPURLResponse
-    ) -> GetSaveConsentsResult {
+    ) -> SaveConsentsResult {
 
         map(
             data, httpURLResponse,

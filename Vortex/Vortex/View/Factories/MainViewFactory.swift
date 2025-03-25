@@ -16,7 +16,6 @@ struct MainViewFactory {
     let makeSberQRConfirmPaymentView: MakeSberQRConfirmPaymentView
     let makeUserAccountView: MakeUserAccountView
     let components: ViewComponents
-    let makeCollateralLoanShowcaseWrapperView: MakeCollateralLoanShowcaseWrapperView
 }
 
 extension MainViewFactory {

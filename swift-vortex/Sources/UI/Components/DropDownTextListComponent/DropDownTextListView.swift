@@ -37,8 +37,9 @@ public struct DropDownTextListView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .accessibilityIdentifier("ListTitle")
                     
-                    config.colors.divider
-                        .frame(height: 0.6)
+                    Divider()
+                        .tint(config.colors.divider)
+                        .frame(height: 0.5)
                 }
             }
             
@@ -58,7 +59,8 @@ public struct DropDownTextListView: View {
             
             if list.items.last != item {
                 
-                config.colors.divider
+                Divider()
+                    .tint(config.colors.divider)
                     .frame(height: 0.5)
             }
         }
@@ -95,6 +97,9 @@ public struct DropDownTextListView: View {
                 .accessibilityIdentifier("ItemChevron")
         }
         .modifier(PaddingsModifier(horizontal: config.layouts.horizontalPadding))
+        .if(config.layouts.minCellHeight != nil ) {
+            $0.frame(minHeight :config.layouts.minCellHeight ?? 0)
+        }
     }
     
     private func subTitleView(for item: Item) -> some View {
@@ -118,6 +123,25 @@ public extension DropDownTextListView {
     typealias Config = DropDownTextListConfig
     typealias TextList = DropDownTextList
     typealias Item = DropDownTextList.Item
+}
+
+//MARK: - Conditional View Modifier
+
+extension View {
+    /// Applies the given transform if the given condition evaluates to `true`.
+    /// - Parameters:
+    ///   - condition: The condition to evaluate.
+    ///   - transform: The transform to apply to the source `View`.
+    /// - Returns: Either the original `View` or the modified `View` if the condition is `true`.
+    
+    @ViewBuilder
+    func `if`<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
+        if condition {
+            transform(self)
+        } else {
+            self
+        }
+    }
 }
 
 // MARK: - Previews
@@ -146,6 +170,10 @@ extension DropDownTextList {
             .init(
                 title: "Как можно увеличить сумму кредита?",
                 subTitle: "Если вашего дохода недостаточно, то вы можете привлечь созаемщика с доходом, созаемщиком может являться любое физическое лицо."
+            ),
+            .init(
+                title: "Как можно увеличить сумму кредита?",
+                subTitle: "Если вашего дохода недостаточно, то вы можете привлечь созаемщика с доходом, созаемщиком может являться любое физическое лицо."
             )
         ]
     )
@@ -158,7 +186,8 @@ extension DropDownTextListConfig {
         chevronDownImage: Image(systemName: "chevron.down"),
         layouts: .init(
             horizontalPadding: 16,
-            verticalPadding: 12
+            verticalPadding: 12,
+            minCellHeight: 64
         ),
         colors: .init(
             divider: .gray,

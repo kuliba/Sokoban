@@ -100,7 +100,7 @@ private extension OptionalSelectorView {
     func searchView() -> some View {
         
         TextField(
-            config.searchPlaceholder,
+            config.searchPlaceholder, 
             text: .init(
                 get: { state.searchQuery },
                 set: { event(.search($0)) }
@@ -141,6 +141,22 @@ private extension OptionalSelectorView {
             label().contentShape(Rectangle())
         }
         .buttonStyle(PlainButtonStyle())
+    }
+}
+
+extension View {
+    
+    @ViewBuilder
+    func iflet<Content: View, T>(
+        _ conditional: Optional<T>,
+        @ViewBuilder _ content: (Self, _ value: T) -> Content
+    ) -> some View {
+    
+        if let value = conditional {
+            content(self, value)
+        } else {
+            self
+        }
     }
 }
 

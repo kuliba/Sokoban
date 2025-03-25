@@ -11,8 +11,8 @@ import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
 
 struct CollateralLoanLandingDetailsButton: View {
     
-    let viewModel: OperationDetailInfoViewModel
-    let payload: Payload
+    let makeViewModel: MakeOperationDetailInfoViewModel
+    let details: DetailCells
     
     var body: some View {
         
@@ -20,7 +20,7 @@ struct CollateralLoanLandingDetailsButton: View {
 
         MagicButtonWithSheet(
             buttonLabel: buttonLabel,
-            getValue: { $0(payload) },
+            getValue: { $0(details) },
             makeValueView: makeDetailView
         )
     }
@@ -28,18 +28,21 @@ struct CollateralLoanLandingDetailsButton: View {
 
 extension CollateralLoanLandingDetailsButton {
     
-    typealias Payload = CollateralLandingApplicationSaveConsentsResult
+    typealias MakeOperationDetailInfoViewModel = ViewComponents.MakeOperationDetailInfoViewModel
+    typealias DetailCells = [OperationDetailInfoViewModel.DefaultCellViewModel]
 }
 
 extension CollateralLoanLandingDetailsButton {
     
     @ViewBuilder
     func makeDetailView(
-        detail: Payload,
+        detail: DetailCells,
         dismiss: @escaping () -> Void
     ) -> some View {
         
-        OperationDetailInfoView(viewModel: viewModel)
+        OperationDetailInfoView(
+            viewModel: makeViewModel(detail, dismiss)
+        )
     }
     
     func makeSuccessButtonLabel(
@@ -51,9 +54,9 @@ extension CollateralLoanLandingDetailsButton {
             icon: option.icon
         )
     }
-    
+
     static let preview = Self(
-        viewModel: .detailMockData(),
-        payload: .preview
+        makeViewModel: { _,_  in .detailMockData() },
+        details: []
     )
 }

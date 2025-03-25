@@ -5,6 +5,8 @@
 //  Created by Valentin Ozerov on 16.01.2025.
 //
 
+import Tagged
+
 extension CreateDraftCollateralLoanApplicationDomain {
     
     public final class EffectHandler<Confirmation, InformerPayload> {

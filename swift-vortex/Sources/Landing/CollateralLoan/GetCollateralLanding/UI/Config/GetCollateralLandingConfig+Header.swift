@@ -31,7 +31,10 @@ extension GetCollateralLandingConfig {
             public let layouts: Layouts
             public let fonts: Fonts
 
-            public init(layouts: Layouts, fonts: Fonts) {
+            public init(
+                layouts: Layouts,
+                fonts: Fonts
+            ) {
                 self.layouts = layouts
                 self.fonts = fonts
             }

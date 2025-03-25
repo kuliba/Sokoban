@@ -1484,7 +1484,6 @@ private extension Target {
     static let collateralLoanLandingGetShowcaseUI = target(
         name: .collateralLoanLandingGetShowcaseUI,
         dependencies: [
-            .collateralLoanLandingGetConsentsBackend,
             .otpInputComponent,
             .rxViewModel,
             .uiPrimitives
@@ -1543,15 +1542,16 @@ private extension Target {
     static let collateralLoanLandingCreateDraftCollateralLoanApplicationUI = target(
         name: .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
         dependencies: [
-            .collateralLoanLandingGetConsentsBackend,
             .inputComponent,
+            .landingUIComponent,
             .linkableText,
-            .collateralLoanLandingGetShowcaseUI,
             .optionalSelectorComponent,
             .otpInputComponent,
             .paymentComponents,
             .textFieldDomain,
             .textFieldUI,
+            .textFieldDomain,
+            .textFieldComponent,
             .uiPrimitives,
         ],
         path: "Sources/Landing/\(String.collateralLoan)/\(String.collateralLoanLandingCreateDraftCollateralLoanApplicationName)/UI"
@@ -1615,8 +1615,6 @@ private extension Target {
         dependencies: [
             .collateralLoanLandingCreateDraftCollateralLoanApplicationUI,
             .dropDownTextListComponent,
-            .rxViewModel,
-            .sharedConfigs,
             .toggleComponent,
             .uiPrimitives
         ],

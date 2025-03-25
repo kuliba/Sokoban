@@ -1254,7 +1254,7 @@ private extension MainViewModel {
         let openProductSection = try XCTUnwrap(section, file: file, line: line)
 
         let openCollateralLoanLandingAction =
-        MainSectionViewModelAction.OpenProduct.ButtonTapped(productType: .loan)
+        MainSectionViewModelAction.OpenProduct.ButtonTapped(productType: .collateralLoan(.showcase))
         openProductSection.action.send(openCollateralLoanLandingAction)
     }
 }

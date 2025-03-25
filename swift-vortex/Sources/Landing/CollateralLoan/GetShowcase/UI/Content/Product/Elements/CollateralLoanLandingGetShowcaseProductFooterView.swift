@@ -7,11 +7,12 @@
 
 import SwiftUI
 
-struct CollateralLoanLandingGetShowcaseProductFooterView: View {
+struct CollateralLoanLandingGetShowcaseProductFooterView<InformerPayload>: View
+    where InformerPayload: Equatable {
     
     let landingId: String
     let termsUrl: String
-    let event: (GetShowcaseViewEvent.External) -> Void
+    let event: (GetShowcaseViewEvent<InformerPayload>.External) -> Void
     let config: Config
     let theme: Theme
 

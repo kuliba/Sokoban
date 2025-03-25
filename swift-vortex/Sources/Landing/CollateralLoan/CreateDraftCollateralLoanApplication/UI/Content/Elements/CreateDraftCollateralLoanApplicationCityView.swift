@@ -52,6 +52,7 @@ struct CreateDraftCollateralLoanApplicationCityView<Confirmation, InformerPayloa
             ),
             config: config.elements.city.cityConfig.selector
         )
+        .frame(minHeight: config.layouts.panelHeight)
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
     
@@ -65,7 +66,7 @@ struct CreateDraftCollateralLoanApplicationCityView<Confirmation, InformerPayloa
                 style: .expanded
             ),
             config: .init(title: config.fonts.title, value: config.fonts.value),
-            icon: { factory.makeImageViewWithMD5Hash(state.application.icons.city) }
+            icon: { factory.makeImageViewWithMD5Hash(state.application.icons.city).frame(width: 24, height: 24) }
         )
         .modifier(FrameWithCornerRadiusModifier(config: config))
     }
@@ -115,8 +116,4 @@ struct CreateDraftCollateralLoanApplicationCityView_Previews<Confirmation, Infor
         )
         .previewDisplayName("Read only mode")
     }
-    
-    typealias Factory = CreateDraftCollateralLoanApplicationFactory
-    typealias Config = CreateDraftCollateralLoanApplicationConfig
-    typealias Application = CreateDraftCollateralLoanApplication
 }

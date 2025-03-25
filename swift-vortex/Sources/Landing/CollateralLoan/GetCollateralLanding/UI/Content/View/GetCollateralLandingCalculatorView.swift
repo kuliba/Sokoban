@@ -9,17 +9,18 @@ import Foundation
 import SwiftUI
 import ToggleComponent
 
-struct GetCollateralLandingCalculatorView: View {
+struct GetCollateralLandingCalculatorView<InformerPayload>: View where InformerPayload: Equatable {
     
     @SwiftUI.State private var toggleIsOn = false
     @SwiftUI.State private var sliderCurrentValue: Double = .zero
+    @SwiftUI.State private var desiredAmount: String = ""
     
     let state: State
     let product: Product
     let config: Config
     let domainEvent: (DomainEvent) -> Void
     let externalEvent: (ExternalEvent) -> Void
-
+    
     init(
         state: State,
         product: Product,
@@ -35,6 +36,7 @@ struct GetCollateralLandingCalculatorView: View {
         self.domainEvent = domainEvent
         self.externalEvent = externalEvent
         self.toggleIsOn = toggleIsOn
+        self.desiredAmount = state.formattedDesiredAmount ?? ""
     }
     
     var body: some View {
@@ -86,7 +88,7 @@ struct GetCollateralLandingCalculatorView: View {
                     .toggleStyle(ToggleComponentStyle(config: config.salary.toggle))
                     .onChange(of: toggleIsOn) { state in
                         
-                        domainEvent(.toggleIHaveSalaryInCompany(state))
+                        domainEvent(.togglePayrollClient(state))
                     }
                     .padding(.trailing, config.salary.toggleTrailingPadding)
             }
@@ -129,7 +131,7 @@ struct GetCollateralLandingCalculatorView: View {
     }
     
     private func calculatorBottomContentView(config: Config) -> some View {
-
+        
         VStack(spacing: 0) {
             
             monthlyPaymentTitleText(config: config)
@@ -217,6 +219,7 @@ struct GetCollateralLandingCalculatorView: View {
         }
         .contentShape(Rectangle())
         .onTapGesture {
+            
             externalEvent(.showCaseList(.collaterals(product.calc.collaterals)))
         }
     }
@@ -224,7 +227,7 @@ struct GetCollateralLandingCalculatorView: View {
     private func desiredAmountView(config: Config.Calculator) -> some View {
         
         Group {
-            
+                        
             desiredAmountTitleText(config: config)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, config.desiredAmount.titleTopPadding)
@@ -232,10 +235,22 @@ struct GetCollateralLandingCalculatorView: View {
                 .frame(minWidth: 0, maxWidth: .infinity)
             
             HStack {
-                
-                desiredAmountValueText(config: config)
-                    .padding(.leading, config.root.layouts.contentLeadingPadding)
-                    .fixedSize(horizontal: true, vertical: false)
+             
+                amountTextFild()
+                    .onTapGesture {
+                        
+                        domainEvent(.setAmountResponder(true))
+                    }
+
+                Button {
+                    
+                    domainEvent(.setAmountResponder(!state.isAmountTextFieldFirstResponder))
+                } label: {
+                    
+                    config.desiredAmount.editImage
+                        .renderingMode(.template)
+                        .foregroundColor(config.desiredAmount.iconColor)
+                }
                 
                 desiredAmountMaxText(config: config)
                     .padding(.trailing, config.root.layouts.contentTrailingPadding)
@@ -246,6 +261,28 @@ struct GetCollateralLandingCalculatorView: View {
             
             sliderView(config: config)
         }
+    }
+    
+    private func amountTextFild() -> some View {
+        
+        AmountTextField(state: state, config: config, event: domainEvent)
+            .padding(.leading, config.calculator.root.layouts.contentLeadingPadding)
+            .fixedSize()
+            .onChange(of: state.formattedDesiredAmount) {
+                
+                if let amount = $0 {
+                    
+                    desiredAmount = String(amount)
+                }
+            }
+            .onChange(of: desiredAmount) {
+                
+                domainEvent(.enterDesiredAmount($0))
+                
+                withAnimation {
+                    sliderCurrentValue = Double(state.desiredAmount)
+                }
+            }
     }
     
     private func sliderView(config: Config.Calculator) -> some View {
@@ -361,23 +398,28 @@ extension GetCollateralLandingCalculatorView {
     
     typealias Config = GetCollateralLandingConfig
     typealias Theme = GetCollateralLandingTheme
-    typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent
-    typealias DomainEvent = GetCollateralLandingDomain.Event
-    typealias State = GetCollateralLandingDomain.State
+    typealias ExternalEvent = GetCollateralLandingDomain.ExternalEvent<InformerPayload>
+    typealias DomainEvent = GetCollateralLandingDomain.Event<InformerPayload>
+    typealias State = GetCollateralLandingDomain.State<InformerPayload>
     typealias Product = GetCollateralLandingProduct
 }
 
 // MARK: - Previews
 
-struct CollateralLoanLandingGetCollateralLandingCalculatorView_Previews: PreviewProvider {
+struct CollateralLoanLandingGetCollateralLandingCalculatorView_Previews<InformerPayload>: PreviewProvider
+    where InformerPayload: Equatable {
     
     static var previews: some View {
         
-        GetCollateralLandingCalculatorView(
-            state: .init(landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE", formatCurrency: { _ in "" }),
+        GetCollateralLandingCalculatorView<InformerPayload>(
+            state: .init(
+                landingID: "COLLATERAL_LOAN_CALC_REAL_ESTATE",
+                formatCurrency: { _ in "" }
+            ),
             product: .carStub,
             config: .preview,
-            domainEvent: { print($0) },
+            domainEvent: { print($0)
+            },
             externalEvent: { print($0) }
         )
     }

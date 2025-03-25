@@ -6,7 +6,10 @@
 //
 
 import CollateralLoanLandingCreateDraftCollateralLoanApplicationUI
+import CollateralLoanLandingGetConsentsBackend
 import OTPInputComponent
+import PDFKit
+import RemoteServices
 import RxViewModel
 
 extension CreateDraftCollateralLoanApplicationDomain {
@@ -25,6 +28,13 @@ extension CreateDraftCollateralLoanApplicationDomain {
     typealias ContentState = State<Confirmation, InformerPayload>
     typealias OTPEvent = ContentEvent.OTPEvent
     
+    typealias GetConsentsResult<InformerPayload> = Swift.Result<
+        PDFDocument,
+        CollateralLoanLandingCreateDraftCollateralLoanApplicationUI.BackendFailure<InformerPayload>
+    >
+    typealias GetPDFDocumentCompletion = (GetConsentsResult<InformerData>) -> Void
+    typealias GetPDFDocument = (RemoteServices.RequestFactory.GetConsentsPayload, @escaping GetPDFDocumentCompletion) -> Void
+
     // MARK: - Flow
     
     typealias FlowDomain = Vortex.FlowDomain<Select, Navigation>
@@ -43,7 +53,29 @@ extension CreateDraftCollateralLoanApplicationDomain {
     
     enum Navigation {
 
-        case failure(ContentError)
         case saveConsents(CollateralLandingApplicationSaveConsentsResult)
+        case failure(Failure)
+    }
+    
+    enum Failure: Equatable {
+        
+        case informer(InformerPayload)
+        case alert(String)
+        case complete
+        case offline
+        case incorrectOTP(String)
+        case serviceFailure(String)
+        case none
+    }
+}
+
+public extension CollateralLandingApplicationSaveConsentsResult {
+    
+    var payload: RemoteServices.RequestFactory.GetConsentsPayload {
+        
+        .init(
+            cryptoVersion: "1.0", // Constant, can be skipped in request
+            applicationId: applicationID
+        )
     }
 }

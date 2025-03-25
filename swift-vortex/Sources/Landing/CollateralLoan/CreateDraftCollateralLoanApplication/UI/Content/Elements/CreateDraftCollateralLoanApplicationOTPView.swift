@@ -24,9 +24,36 @@ struct CreateDraftCollateralLoanApplicationOTPView<Confirmation, InformerPayload
         TimedOTPInputWrapperView(
             viewModel: otpViewModel,
             config: config.elements.otp.view,
-            iconView: { config.elements.otp.smsIcon }
+            iconView: { config.elements.otp.smsIcon
+                .frame(width: 24, height: 24)
+                .foregroundColor(config.elements.otp.iconColor) },
+            warningView: {
+                
+                OTPWarningView(
+                    text: state.warning,
+                    config: config.elements.otp.warningText
+                )
+            }
         )
+        .frame(minHeight: config.layouts.panelHeight)
         .modifier(FrameWithCornerRadiusModifier(config: config))
+    }
+}
+
+extension CreateDraftCollateralLoanApplicationOTPView {
+    
+    private struct OTPWarningView: View {
+        
+        let text: String?
+        let config: TextConfig
+        
+        var body: some View {
+            
+            text.map {
+                
+                $0.text(withConfig: config)
+            }
+        }
     }
 }
 
@@ -56,4 +83,13 @@ struct CreateDraftCollateralLoanApplicationOTPView_Previews<Confirmation, Inform
             otpViewModel: .preview
         )
     }
+}
+
+extension TimedOTPInputViewModel {
+    
+    static let preview = TimedOTPInputViewModel(
+        initialState: .init(phoneNumber: .init(""), status: .input(.completeOTP)),
+        reduce: { state, _ in (state, nil) },
+        handleEffect: { _,_ in }
+    )
 }

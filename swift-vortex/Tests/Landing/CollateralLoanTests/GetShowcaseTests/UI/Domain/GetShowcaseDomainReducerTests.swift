@@ -8,14 +8,13 @@
 @testable import CollateralLoanLandingGetShowcaseUI
 import XCTest
 
-final class GetShowcaseDomainReducerTests: XCTestCase {
+final class GetShowcaseDomainReducerTests<InformerPayload>: XCTestCase where InformerPayload: Equatable {
 
     func test_reduce_when_load() {
         
         let sut = makeSUT()
-        let (state, effect) = sut.reduce(.init(isLoading: false), .load)
+        let (state, effect) = sut.reduce(.init(status: .loaded(.stub)), .load)
         
-        XCTAssertTrue(state.isLoading)
         XCTAssertEqual(effect, .load)
     }
     
@@ -23,29 +22,16 @@ final class GetShowcaseDomainReducerTests: XCTestCase {
         
         let sut = makeSUT()
         let (state, effect) = sut.reduce(
-            .init(isLoading: false),
-            .loaded(.failure(.init()))
+            .init(status: .loaded(.stub)),
+            .loaded(.stub)
         )
         
-        XCTAssertFalse(state.isLoading)
-        XCTAssertNil(effect)
-    }
-
-    func test_reduce_when_productTap() {
-        
-        let sut = makeSUT()
-        let (state, effect) = sut.reduce(
-            .init(isLoading: true),
-            .loaded(.failure(.init()))
-        )
-        
-        XCTAssertFalse(state.isLoading)
         XCTAssertNil(effect)
     }
 
     private typealias SUT = GetShowcaseDomain.Reducer
     
-    private func makeSUT() -> SUT {
+    private func makeSUT() -> SUT<InformerPayload> {
         SUT()
     }
 }

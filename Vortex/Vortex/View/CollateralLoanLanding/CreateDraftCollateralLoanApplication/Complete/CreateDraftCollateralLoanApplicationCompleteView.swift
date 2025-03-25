@@ -17,7 +17,7 @@ struct CreateDraftCollateralLoanApplicationCompleteView: View {
     let state: State
     let action: () -> Void
     let makeIconView: MakeIconView
-    let pdfDocumentButton: PDFDocumentButton
+    let documentButton: DocumentButton
     let detailsButton: CollateralLoanLandingDetailsButton
     
     var body: some View {
@@ -57,7 +57,7 @@ private extension CreateDraftCollateralLoanApplicationCompleteView {
         
         HStack {
             
-            pdfDocumentButton
+            documentButton
             Color.clear.frame(width: 8)
             detailsButton
         }
@@ -98,7 +98,7 @@ struct CreateDraftCollateralLoanApplicationCompleteView_Previews: PreviewProvide
                         .eraseToAnyPublisher()
                 )
             }, 
-            pdfDocumentButton: .preview,
+            documentButton: .preview,
             detailsButton: .preview
         )
     }

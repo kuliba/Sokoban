@@ -16,13 +16,14 @@ import LandingUIComponent
 import PaymentSticker
 import SberQR
 import SwiftUI
+import UIPrimitives
 import VortexTools
 
 class MainViewModel: ObservableObject, Resetable {
     
     typealias Templates = PaymentsTransfersFactory.Templates
     typealias TemplatesNode = PaymentsTransfersFactory.TemplatesNode
-
+    
     let action: PassthroughSubject<Action, Never> = .init()
     let routeSubject = PassthroughSubject<Route, Never>()
     
@@ -53,8 +54,8 @@ class MainViewModel: ObservableObject, Resetable {
     let bindersFactory: BindersFactory
     let viewModelsFactory: MainViewModelsFactory
     let makeOpenNewProductButtons: OpenNewProductsViewModel.MakeNewProductButtons
-    let getPDFDocument: CollateralLoanLandingGetShowcaseViewFactory.GetPDFDocument
-    
+    let getPDFDocument: CreateDraftCollateralLoanApplicationDomain.GetPDFDocument
+
     let bannersBox: any BannersBoxInterface<BannerList>
     
     private var bindings = Set<AnyCancellable>()
@@ -74,7 +75,7 @@ class MainViewModel: ObservableObject, Resetable {
         bindersFactory: BindersFactory,
         viewModelsFactory: MainViewModelsFactory,
         makeOpenNewProductButtons: @escaping OpenNewProductsViewModel.MakeNewProductButtons,
-        getPDFDocument: @escaping CollateralLoanLandingGetShowcaseViewFactory.GetPDFDocument,
+        getPDFDocument: @escaping CreateDraftCollateralLoanApplicationDomain.GetPDFDocument,
         scheduler: AnySchedulerOf<DispatchQueue> = .main
     ) {
         self.model = model
@@ -99,7 +100,7 @@ class MainViewModel: ObservableObject, Resetable {
         bind()
         update(sections, with: model.settingsMainSections)
     }
-    
+        
     private var disableAlertViewModel: Alert.ViewModel {
         
         paymentsTransfersFactory.makeAlertViewModels.disableForCorporateCard({})
@@ -130,6 +131,9 @@ class MainViewModel: ObservableObject, Resetable {
             
         case .savingsAccount:
             openSavingsAccount()
+            
+        case let .collateralLoan(type):
+            handlePromoAction(.collateralLoan(type))
         }
     }
     
@@ -150,7 +154,12 @@ class MainViewModel: ObservableObject, Resetable {
             sections[index] = .init(model: model, cancellables: cancellables)
         }
     }
-
+        
+    func formatCurrency(_ currency: UInt) -> String? {
+        
+        model.amountFormatted(amount: Double(currency), currencyCode: "RUB", style: .normal)
+    }
+    
     private func removePromo(
         _ type: PromoProduct
     ) {
@@ -524,8 +533,8 @@ private extension MainViewModel {
                             case .creditCardMVP:
                                 openСreditCardMVP()
                                 
-                            case .loan:
-                                openCollateralLoanLanding()
+                            case .collateralLoan:
+                                openProductByType(.collateralLoan(.showcase))
                                 
                             case .sticker:
                                 handleLandingAction(.sticker)
@@ -674,6 +683,17 @@ private extension MainViewModel {
     ) {
         var promo: [PromoItem] = []
         
+        if let loanBannerList = banners.loanBannerList {
+            
+            promo.append(contentsOf: loanBannerList.map {
+
+                .init(
+                    item: $0,
+                    productType: .card,
+                    promoProduct: .collateralLoan(CollateralLoanType(rawValue: $0.action?.target ?? ""))
+                )})
+        }
+
         if let sticker = banners.cardBannerList?.first {
             promo.append(.init(item: sticker, productType: .card, promoProduct: .sticker))
         }
@@ -702,7 +722,7 @@ private extension MainViewModel {
     func openProductByType(_ type: OpenProductType) {
         
         switch type {
-        case .account, .card, .creditCardMVP, .deposit, .insurance, .loan, .mortgage:
+        case .account, .card, .creditCardMVP, .deposit, .insurance, .mortgage:
             break
             
         case .savingsAccount:
@@ -717,15 +737,28 @@ private extension MainViewModel {
                 
                 self?.handleLandingAction(.sticker)
             }
+            
+        case let .collateralLoan(type):
+            
+            switch type {
+            case .showcase:
+                let binder = bindersFactory.makeCollateralLoanShowcaseBinder()
+                route.destination = .collateralLoanLanding(binder)
+                
+            case .car, .realEstate:
+                guard !type.id.isEmpty else { return }
+                let binder = bindersFactory.makeCollateralLoanLandingBinder(type.id)
+                route.destination = .collateralLoanLandingProduct(binder)
+            }
         }
     }
     
-    func openMoreProducts() { //
+    func openMoreProducts() {
         
         let myProductsViewModel = MyProductsViewModel(
             model,
             makeProductProfileViewModel: viewModelsFactory.makeProductProfileViewModel,
-            openProductByType: openProductByType, 
+            openProductByType: openProductByType,
             makeMyProductsViewFactory: .init(
                 makeInformerDataUpdateFailure: { [weak self] in
                     
@@ -828,9 +861,20 @@ private extension MainViewModel {
             openContactTransfer(payload)
             
         case let payload as BannerActionLanding:
-            if payload.target == .abroadSticker {
+            switch payload.target {
+            case .abroadSticker:
                 handleLandingAction(.sticker)
-            } else {
+
+            case .carLanding:
+                openProductByType(.collateralLoan(.car))
+
+            case .realEstateLanding:
+                openProductByType(.collateralLoan(.realEstate))
+
+            case .showcase:
+                openProductByType(.collateralLoan(.showcase))
+                
+            default:
                 handleLandingAction(payload.target)
             }
             
@@ -1018,12 +1062,6 @@ private extension MainViewModel {
                 }
             }
         }
-    }
-    
-    func openCollateralLoanLanding() {
-        
-        let binder = bindersFactory.makeCollateralLoanShowcaseBinder()
-        route.destination = .collateralLoanLanding(binder)
     }
     
     private func openDeposit() {
@@ -1780,6 +1818,7 @@ extension MainViewModel {
         case paymentProviderPicker(Node<SegmentedPaymentProviderPickerFlowModel>)
         case providerServicePicker(Node<AnywayServicePickerFlowModel>)
         case collateralLoanLanding(GetShowcaseDomain.Binder)
+        case collateralLoanLandingProduct(GetCollateralLandingDomain.Binder)
         case orderCard
         
         enum OpenCard {
@@ -1837,6 +1876,8 @@ extension MainViewModel {
                 return .providerServicePicker
             case .collateralLoanLanding:
                 return .collateralLoanLanding
+            case .collateralLoanLandingProduct:
+                return .collateralLoanLandingProduct
             case .orderCard:
                 return .orderCard
             }
@@ -1845,6 +1886,7 @@ extension MainViewModel {
         enum Case {
             
             case collateralLoanLanding
+            case collateralLoanLandingProduct
             case country
             case currencyWallet
             case failedView
@@ -1927,6 +1969,9 @@ extension MainViewModel {
             
         case .savingsAccount:
             openSavingsAccount()
+            
+        case let .collateralLoan(type):
+            openProductByType(.collateralLoan(type))
         }
     }
     
@@ -2144,4 +2189,7 @@ extension Array where Element == MainSectionViewModel {
 extension String {
     
     static let abroadSticker: Self = "abroadSticker"
+    static let carLanding = "CAR_LANDING"
+    static let realEstateLanding = "REAL_ESTATE_LANDING"
+    static let showcase = "SHOWCASE"
 }

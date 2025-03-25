@@ -9,7 +9,8 @@
 import XCTest
 import Combine
 
-final class GetShowcaseDomainEffectHandlerTests: XCTestCase {
+final class GetShowcaseDomainEffectHandlerTests<InformerPayload>: XCTestCase
+    where InformerPayload: Equatable {
     
     func test_init_shouldNotCallLoadOnInit() {
         
@@ -20,14 +21,15 @@ final class GetShowcaseDomainEffectHandlerTests: XCTestCase {
     func test_handleEffect_shouldDeliverFailureOnLoadFailure() {
         
         let (sut, loadSpy) = makeSUT()
+        let message = anyMessage()
         
         expect(
             sut,
             with: .load,
-            toDeliver: .loaded(.failure(.init())),
+            toDeliver: .failure(.alert(message)),
             on: {
                 
-                loadSpy.complete(with: .failure(.init()))
+                loadSpy.complete(with: .failure(.init(kind: .alert(message))))
             }
         )
     }
@@ -39,7 +41,7 @@ final class GetShowcaseDomainEffectHandlerTests: XCTestCase {
         expect(
             sut,
             with: .load,
-            toDeliver: .loaded(.success(.stub)),
+            toDeliver: .loaded(.stub),
             on: {
                 
                 loadSpy.complete(with: .success(.stub))
@@ -60,12 +62,12 @@ final class GetShowcaseDomainEffectHandlerTests: XCTestCase {
     // MARK: - Helpers
     
     private typealias SUT = GetShowcaseDomain.EffectHandler
-    private typealias Load = (@escaping Completion) -> Void
-    private typealias Completion = (GetShowcaseDomain.Result) -> Void
-    private typealias LoadSpy = Spy<Void, GetShowcaseDomain.Result>
+    private typealias Load = ( Completion) -> Void
+    private typealias Completion = (GetShowcaseDomain.Result<InformerPayload>) -> Void
+    private typealias LoadSpy = Spy<Void, GetShowcaseDomain.Result<InformerPayload>>
     
     private func makeSUT() -> (
-        sut: SUT,
+        sut: SUT<InformerPayload>,
         loadSpy: LoadSpy
     ) {
         let loadSpy = LoadSpy()
@@ -75,9 +77,9 @@ final class GetShowcaseDomainEffectHandlerTests: XCTestCase {
     }
     
     func expect(
-        _ sut: GetShowcaseDomain.EffectHandler,
+        _ sut: GetShowcaseDomain.EffectHandler<InformerPayload>,
         with effect: GetShowcaseDomain.Effect,
-        toDeliver expectedEvent: GetShowcaseDomain.Event,
+        toDeliver expectedEvent: GetShowcaseDomain.Event<InformerPayload>,
         on action: @escaping () -> Void,
         timeout: TimeInterval = 0.05,
         file: StaticString = #file,

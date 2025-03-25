@@ -118,7 +118,7 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
     
     public var formattedAmount: String? {
         
-        formatCurrency(application.amount)
+        formatCurrency(selectedAmount)
     }
 
     public var hintText: String {
@@ -129,6 +129,29 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
         else { return "" }
         
         return "Мин. - \(minAmount), Макс. - \(maxAmount)"
+    }
+}
+
+extension CreateDraftCollateralLoanApplicationDomain.State {
+    
+    var warning: String? {
+        
+        switch failure {
+        case .none:
+            return nil
+            
+        case let .some(failure):
+            switch failure.kind {
+            case let .incorrectOTP(message):
+                return message
+
+            case let .serviceFailure(message):
+                return message
+                
+            default:
+                return nil
+            }
+        }
     }
 }
 
@@ -166,16 +189,15 @@ extension CreateDraftCollateralLoanApplicationDomain.State {
     
     var createDraftApplicationPayload: CollateralLandingApplicationCreateDraftPayload {
         
-        // TODO: Need to realize. Stub!
         .init(
-            name: "Кредит под залог транспорта",
-            amount: 1000000,
-            termMonth: 12,
-            collateralType: "CAR",
-            interestRate: 18.5,
-            collateralInfo: "Лада веста 2012 года выпуска",
-            cityName: "Москва",
-            payrollClient: true
+            name: application.name,
+            amount: selectedAmount,
+            termMonth: application.selectedMonths,
+            collateralType: application.collateralType,
+            interestRate: application.percent,
+            collateralInfo: "", // Не заполняем
+            cityName: selectedCity,
+            payrollClient: application.payrollClient
         )
     }
     

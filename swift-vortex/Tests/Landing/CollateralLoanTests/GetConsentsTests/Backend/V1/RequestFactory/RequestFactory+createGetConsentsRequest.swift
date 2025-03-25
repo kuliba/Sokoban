@@ -51,8 +51,7 @@ final class RequestFactory_createGetConsentsRequestTests: XCTestCase {
         
         let payload = Payload(
             cryptoVersion: "1.0", // Constant
-            applicationId: UInt(applicationID),
-            verificationCode: verificationCode
+            applicationId: UInt(applicationID)
         )
 
         let request = try RequestFactory.createGetConsentsRequest(

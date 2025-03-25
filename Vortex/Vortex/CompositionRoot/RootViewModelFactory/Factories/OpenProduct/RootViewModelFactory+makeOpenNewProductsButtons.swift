@@ -47,7 +47,7 @@ extension RootViewModelFactory {
         case .creditCardMVP:    return ""
         case .deposit:          return depositDescription(with: model.deposits.value)
         case .insurance:        return "Надежно"
-        case .loan:             return "Выгодно"
+        case .collateralLoan:   return "Выгодно"
         case .mortgage:         return "Удобно"
         case .savingsAccount:   return "% на остаток"
         case .sticker:          return "Быстро"
@@ -58,7 +58,7 @@ extension RootViewModelFactory {
         collateralLoanLandingFlag: CollateralLoanLandingFlag
     ) -> [OpenProductType] {
         
-        let displayButtonsTypes: [OpenProductType] = [.card(.landing), .deposit, .account, .sticker, .loan]
+        let displayButtonsTypes: [OpenProductType] = [.card(.landing), .deposit, .account, .sticker, .collateralLoan(.showcase)]
         let additionalItems: [OpenProductType] = {
             model.hasSavingsAccount
             ? [.insurance, .mortgage]
@@ -75,7 +75,7 @@ extension RootViewModelFactory {
     ) -> NewProductButton.ViewModel.TapActionType? {
         
         switch type {
-        case .loan:
+        case .collateralLoan:
             return collateralLoanLandingFlag.isActive
             ? .action({ action(type) })
             : .url(model.productsOpenLoanURL)

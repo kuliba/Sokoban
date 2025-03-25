@@ -88,6 +88,8 @@ extension GetBannerCatalogListResponse.BannerAction {
             return BannerActionDepositTransfer(countryId: countryId)
         case let .landing(target):
             return BannerActionLanding(target: target)
+        case let .collateralLanding(target):
+            return BannerActionCollateralLanding(target: target)
         case let .savingLanding(target):
             return BannerActionSavingLanding(target: target)
         case let .payment(category):

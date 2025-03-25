@@ -463,8 +463,7 @@ private extension RootViewFactory {
                             
                             return .init(viewModel: $0, config: .preview, viewFactory: .preview)
                         },
-                        components: .preview,
-                        makeCollateralLoanShowcaseWrapperView: { _,_,_  in .preview }
+                        components: .preview
                     ),
                     productProfileViewFactory: .init(
                         makeActivateSliderView: ActivateSliderStateWrapperView.init(payload:viewModel:config:),
@@ -494,8 +493,7 @@ private extension RootViewFactory {
             makeUpdatingUserAccountButtonLabel: {
                 
                 .init(label: .init(avatar: nil, name: ""), publisher: Empty().eraseToAnyPublisher(), config: .preview)
-            },
-            makeCollateralLoanShowcaseWrapperView: { _,_,_  in .preview }
+            }
         )
     }
 }

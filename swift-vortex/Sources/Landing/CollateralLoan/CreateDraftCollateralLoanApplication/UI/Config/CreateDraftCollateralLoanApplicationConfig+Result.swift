@@ -50,30 +50,18 @@ extension CreateDraftCollateralLoanApplicationConfig {
         
         public struct Icons {
             
-            public let period: Image
-            public let percent: Image
-            public let amount: Image
             public let more: Image
             public let car: Image
             public let home: Image
-            public let city: Image
             
             public init(
-                period: Image,
-                percent: Image,
-                amount: Image,
                 more: Image,
                 car: Image,
-                home: Image,
-                city: Image
+                home: Image
             ) {
-                self.period = period
-                self.percent = percent
-                self.amount = amount
                 self.more = more
                 self.car = car
                 self.home = home
-                self.city = city
             }
         }
     }
@@ -102,12 +90,8 @@ extension CreateDraftCollateralLoanApplicationConfig.Result.Titles {
 extension CreateDraftCollateralLoanApplicationConfig.Result.Icons {
     
     static let preview = Self(
-        period: .iconPlaceholder,
-        percent: .iconPlaceholder,
-        amount: .iconPlaceholder,
         more: .iconPlaceholder,
         car: .iconPlaceholder,
-        home: .iconPlaceholder,
-        city: .iconPlaceholder
+        home: .iconPlaceholder
     )
 }

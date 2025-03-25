@@ -7,35 +7,46 @@
 
 extension GetCollateralLandingDomain {
     
-    public final class Reducer {
+    public final class Reducer<InformerPayload> where InformerPayload: Equatable {
         
         public init() {}
         
-        public func reduce(_ state: State, _ event: Event) -> (State, Effect?) {
+        public func reduce(_ state: State<InformerPayload>, _ event: Event<InformerPayload>)
+            -> (State<InformerPayload>, Effect?) {
            
             var state = state
             var effect: Effect?
             
             switch event {
-            case let .load(landingId):
-                guard !state.isLoading else { break }
-                        
-                state.isLoading = true
-                effect = .load(landingId)
+            case let .load(landingID):
                 
-            case let .loaded(result):
-                state.isLoading = false
-                state.result = result
-                
-                // set default value
-                if state.selectedCollateralType == "" {
-                    
-                    state.selectedCollateralType = state.product?.calc.collaterals.first?.type ?? ""
+                if !state.status.isLoading {
+                    let oldProduct = state.status.oldProduct
+                    state.status = .inflight(oldProduct)
+                    effect = .load(landingID)
                 }
                 
-            case .selectCaseList(_,_):
-                // TODO: need to realize
-                break
+            case let .loaded(product):
+                state.status = .loaded(product)
+                state.selectedCollateralType = product.calc.collaterals.first?.type ?? ""
+                state.desiredAmount = product.calc.amount.minIntValue
+
+            case let .failure(failure):
+                switch failure {
+                case let .alert(message):
+                    let oldProduct = state.status.oldProduct
+                    state.status = .failure(.alert(message), oldProduct)
+                    
+                case let .informer(informer):
+                    let oldProduct = state.status.oldProduct
+                    state.status = .failure(.informer(informer), oldProduct)
+                }
+                
+            case .dismissFailure:
+                if let product = state.status.oldProduct {
+                    state.status = .loaded(product)
+                }
+                state.backendFailure = nil
 
             case let .changeDesiredAmount(newValue):
                 state.desiredAmount = newValue
@@ -46,8 +57,19 @@ extension GetCollateralLandingDomain {
             case let .selectMonthPeriod(period):
                 state.selectedMonthPeriod = period
 
-            case let .toggleIHaveSalaryInCompany(iHave):
-                state.iHaveSalaryInCompany = iHave
+            case let .togglePayrollClient(payrollClient):
+                state.payrollClient = payrollClient
+                
+            case let .enterDesiredAmount(newValue):
+                if
+                    let newDesiredAmount = UInt(newValue.filter(\.isWholeNumber)),
+                    newDesiredAmount != state.desiredAmount {
+                    
+                    state.desiredAmount = newDesiredAmount
+                }
+                
+            case let .setAmountResponder(value):
+                state.isAmountTextFieldFirstResponder = value
             }
             
             return (state, effect)

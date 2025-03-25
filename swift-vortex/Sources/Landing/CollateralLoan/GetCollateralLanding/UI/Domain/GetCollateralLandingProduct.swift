@@ -238,28 +238,25 @@ extension GetCollateralLandingProduct {
     }
 }
 
-extension GetCollateralLandingProduct.Calc.Rate {
+extension GetCollateralLandingDomain.State.BottomSheet.Item {
     
-    public var bottomSheetItem: GetCollateralLandingDomain.State.BottomSheet.Item {
+    init(rate: GetCollateralLandingProduct.Calc.Rate) {
         
-        .init(
+        self = Self(
             id: UUID().uuidString,
-            termMonth: termMonth,
+            termMonth: rate.termMonth,
             icon: nil,
-            title: termStringValue
+            title: rate.termStringValue
         )
     }
-}
-
-extension GetCollateralLandingProduct.Calc.Collateral {
     
-    public var bottomSheetItem: GetCollateralLandingDomain.State.BottomSheet.Item {
+    init(collateral: GetCollateralLandingProduct.Calc.Collateral) {
         
-        .init(
-            id: type,
+        self = Self(
+            id: collateral.type,
             termMonth: nil,
-            icon: icon,
-            title: name
+            icon: collateral.icon,
+            title: collateral.name
         )
     }
 }
