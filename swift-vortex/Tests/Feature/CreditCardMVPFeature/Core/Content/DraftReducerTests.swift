@@ -39,7 +39,7 @@ final class DraftReducerTests: XCTestCase {
     func test_application_shouldDeliverConsentReduceState() {
         
         let consent = makeConsent()
-        let (sut, _,_) = makeSUT(consentStub: consent)
+        let (sut, _,_) = makeSUT(consentStub: (consent, nil))
         
         assert(sut: sut, makeState(), event: .consent(makeConsentEvent())) {
             
@@ -47,9 +47,17 @@ final class DraftReducerTests: XCTestCase {
         }
     }
     
+    func test_consent_shouldDeliverConsentReduceEffect() {
+        
+        let effect = makeConsentEffect()
+        let (sut, _,_) = makeSUT(consentStub: (makeConsent(), effect))
+        
+        assert(sut: sut, makeState(), event: .consent(makeConsentEvent()), delivers: .consent(effect))
+    }
+    
     func test_consent_shouldDeliverConsentReduceNilEffect() {
         
-        let (sut, _,_) = makeSUT(consentStub: makeConsent())
+        let (sut, _,_) = makeSUT(consentStub: (makeConsent(), nil))
         
         assert(sut: sut, makeState(), event: .consent(makeConsentEvent()), delivers: nil)
     }
@@ -97,17 +105,17 @@ final class DraftReducerTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private typealias SUT = DraftReducer<Consent, ConsentEvent, Content, Verification, VerificationEvent, VerificationEffect>
+    private typealias SUT = DraftReducer<Consent, ConsentEvent, ConsentEffect, Content, Verification, VerificationEvent, VerificationEffect>
     
     private typealias State = SUT.State
     private typealias Event = SUT.Event
     private typealias Effect = SUT.Effect
     
-    private typealias ConsentSpy = CallSpy<(Consent, ConsentEvent), (Consent, Never?)>
+    private typealias ConsentSpy = CallSpy<(Consent, ConsentEvent), (Consent, ConsentEffect?)>
     private typealias VerificationSpy = CallSpy<(Verification, VerificationEvent), (Verification, VerificationEffect?)>
     
     private func makeSUT(
-        consentStub: Consent? = nil,
+        consentStub: (Consent, ConsentEffect?)? = nil,
         verificationStub: (Verification, VerificationEffect?)? = nil,
         file: StaticString = #file,
         line: UInt = #line
@@ -117,7 +125,7 @@ final class DraftReducerTests: XCTestCase {
         verification: VerificationSpy
     ) {
         let consent = ConsentSpy(stubs: [
-            (consentStub ?? makeConsent(), nil)
+            consentStub ?? (makeConsent(), makeConsentEffect())
         ])
         let verification = VerificationSpy(stubs: [
             verificationStub ?? (makeVerification(), makeVerificationEffect())
@@ -179,6 +187,18 @@ final class DraftReducerTests: XCTestCase {
     private func makeConsentEvent(
         _ value: String = anyMessage()
     ) -> ConsentEvent {
+        
+        return .init(value: value)
+    }
+    
+    private struct ConsentEffect: Equatable {
+        
+        let value: String
+    }
+    
+    private func makeConsentEffect(
+        _ value: String = anyMessage()
+    ) -> ConsentEffect {
         
         return .init(value: value)
     }

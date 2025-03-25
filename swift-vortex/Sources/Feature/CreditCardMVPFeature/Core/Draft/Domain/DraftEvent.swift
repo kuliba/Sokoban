@@ -15,6 +15,7 @@ public enum DraftEvent<ConsentEvent, VerificationEvent> {
     
     /// An event related to consent changes.
     case consent(ConsentEvent)
+    
     /// An event related to verification changes.
     case verification(VerificationEvent)
 }
