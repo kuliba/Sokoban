@@ -10,40 +10,35 @@ import Foundation
 extension RootViewModelFactory {
     
     @inlinable
-    func makeCreditCardMVP(
-    ) -> CreditCardMVPDomain.Binder {
+    func makeCreditCardMVP() -> CreditCardMVPDomain.Binder {
+        
+        // TODO: remove on live implementation
+        let isLive = false
         
         return composeBinder(
             content: makeCreditCardMVPContent(),
-            getNavigation: getNavigation,
+            getNavigation: isLive ? getNavigation : delayedGetNavigation,
             witnesses: .empty
         )
     }
     
     @inlinable
-    func makeCreditCardMVPContent(
-    ) -> CreditCardMVPDomain.Content {
+    func makeCreditCardMVPContent() -> CreditCardMVPDomain.Content {
         
-        return .init(
-            initialState: .init(otp: ""),
-            reduce: { state, event in
-                
-                var state = state
-                var effect: CreditCardMVPDomain.Effect?
-                
-                switch event {
-                case let .otp(otp):
-                    state.otp = otp
-                }
-                
-                return (state, effect)
-            },
-            handleEffect: { effect, dispatch in
-                
-                switch effect { }
-            },
-            scheduler: schedulers.main
-        )
+        return ()
+    }
+    
+    // TODO: remove on live implementation
+    @inlinable
+    func delayedGetNavigation(
+        select: CreditCardMVPDomain.Select,
+        notify: @escaping CreditCardMVPDomain.Notify,
+        completion: @escaping (CreditCardMVPDomain.Navigation) -> Void
+    ) {
+        schedulers.background.delay(for: .seconds(1)) { [weak self] in
+            
+            self?.getNavigation(select: select, notify: notify, completion: completion)
+        }
     }
     
     @inlinable
@@ -53,21 +48,29 @@ extension RootViewModelFactory {
         completion: @escaping (CreditCardMVPDomain.Navigation) -> Void
     ) {
         // TODO: add call to update banners (on success?)
-        schedulers.background.delay(for: .seconds(2)) {
+        
+        switch select {
+        case let .alert(message):
+            completion(.alert(message))
             
-            switch select {
-            case let .order(payload):
-                switch payload.otp {
-                case "000000":
-                    completion(.complete(.init(message: .success, status: .completed)))
-                    
-                case "111111":
-                    completion(.complete(.init(message: .failure, status: .rejected)))
-                    
-                default:
-                    completion(.complete(.init(message: "TBD", status: .rejected))) // TODO: replace with otp failure
-                }
-            }
+        case .failure:
+            completion(.complete(.init(
+                message: .failure,
+                status: .failure
+            )))
+
+        case let .informer(message):
+            schedulers.background.delay(for: .seconds(2)) { notify(.dismiss) }
+            completion(.informer(message))
+            
+        case let .approved(consent, productCard):
+            break
+            
+        case .inReview:
+            break
+            
+        case let .rejected(productCard):
+            break
         }
     }
 }

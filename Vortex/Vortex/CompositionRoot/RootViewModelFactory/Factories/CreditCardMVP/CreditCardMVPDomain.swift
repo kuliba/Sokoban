@@ -5,10 +5,11 @@
 //  Created by Igor Malyarov on 27.02.2025.
 //
 
+import CreditCardMVPUI
 import FlowCore
 import Foundation
-import RxViewModel
 import PaymentCompletionUI
+import RxViewModel
 
 /// A namespace.
 enum CreditCardMVPDomain {}
@@ -21,7 +22,7 @@ extension CreditCardMVPDomain {
     
     // MARK: - Content
     
-    typealias Content = RxViewModel<State, Event, Effect>
+    typealias Content = Void
     
     // MARK: - Flow
     
@@ -31,50 +32,50 @@ extension CreditCardMVPDomain {
     
     enum Select {
         
-        case order(OrderPayload)
-        
-        struct OrderPayload: Equatable {
-            
-            let otp: String
-        }
+        case alert(String)
+        case failure
+        case informer(String)
+        case approved(consent: AttributedString, ProductCard)
+        case inReview
+        case rejected(ProductCard)
     }
     
     enum Navigation {
         
+        case alert(String)
+        case informer(String)
         case complete(Complete)
+        case decision(Decision)
         
-        struct Complete: Identifiable {
+        struct Complete: Equatable {
             
-            let id: UUID
             let message: String
-            let status: PaymentCompletion.Status
+            let status: Status
             
-            init(
-                id: UUID = .init(),
-                message: String,
-                status: PaymentCompletion.Status
-            ) {
-                self.id = id
-                self.message = message
-                self.status = status
+            enum Status {
+                
+                case failure, inReview
+            }
+        }
+        
+        struct Decision: Equatable {
+            
+            let message: String
+            let product: ProductCard
+            let title: String
+            let status: Status
+            
+            enum Status: Equatable {
+                
+                case approved(Details)
+                case rejected
+                
+                struct Details: Equatable {
+                    
+                    let consent: AttributedString
+                    let info: String
+                }
             }
         }
     }
-}
-
-extension CreditCardMVPDomain {
-    
-    struct State: Equatable {
-        
-        var otp: String
-        
-        var isValid: Bool { otp.count == 6 }
-    }
-    
-    enum Event: Equatable {
-        
-        case otp(String)
-    }
-    
-    enum Effect: Equatable {}
 }
