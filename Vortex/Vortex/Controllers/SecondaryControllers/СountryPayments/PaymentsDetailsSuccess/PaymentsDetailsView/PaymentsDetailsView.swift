@@ -132,7 +132,7 @@ class PaymentsDetailsView: UIView {
             }
         
         case .antifraudCanceled:
-            statusLabel.text = "Операция приостановлена в целях безопасности."
+            statusLabel.text = "Операция временно приостановлена в целях безопасности"
             infoLabel.text = Payments.Success.antifraudSubtitle
             statusImageView.image = UIImage(named: "waiting")
             summLabel.text = model.summTransction
