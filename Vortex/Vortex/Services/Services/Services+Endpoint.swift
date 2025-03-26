@@ -417,7 +417,7 @@ extension Services.Endpoint {
     
     static let getProductDetails: Self = .init(
         pathPrefix: .rest,
-        version: .v2,
+        version: .v3,
         serviceName: .getProductDetails
     )
     

@@ -129,6 +129,7 @@ private extension ProductDetails {
     
     static let accountDetails: Self = .accountDetails(.init(
             accountNumber: "4081781000000000001",
+            bankName: "bankName",
             bic: "044525341",
             corrAccount: "30101810300000000341",
             inn: "7704113772",
@@ -137,6 +138,7 @@ private extension ProductDetails {
     
     static let cardDetails: Self = .cardDetails(.init(
             accountNumber: "4081781000000000001",
+            bankName: "bankName",
             bic: "044525341",
             cardNumber: "4444555566661122",
             corrAccount: "30101810300000000341",
@@ -152,6 +154,7 @@ private extension ProductDetails {
     
     static let cardDetailsWithEmpty: Self = .cardDetails(.init(
             accountNumber: "",
+            bankName: "",
             bic: "",
             cardNumber: "4444555566661122",
             corrAccount: "",
@@ -168,6 +171,7 @@ private extension ProductDetails {
     
     static let depositDetails: Self = .depositDetails(.init(
             accountNumber: "4081781000000000001",
+            bankName: "bankName",
             bic: "044525341",
             corrAccount: "30101810300000000341",
             expireDate: "08/25",

@@ -288,6 +288,17 @@ extension Array where Element == InfoProductViewModel.ItemViewModelForList {
         ),
         .single(
             .init(
+                id: .bankName,
+                title: "Наименование банка",
+                titleForInformer: "Наименование банка",
+                subtitle: "",
+                valueForCopy: "valueForCopy",
+                actionForLongPress: { _,_ in },
+                actionForIcon: {}
+            )
+        ),
+        .single(
+            .init(
                 id: .corrAccount,
                 title: "Кореспондентский счет",
                 titleForInformer: "Кореспондентский счет",

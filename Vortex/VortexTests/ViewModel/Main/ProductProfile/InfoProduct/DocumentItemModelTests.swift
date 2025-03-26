@@ -18,7 +18,7 @@ final class DocumentItemModelTests: XCTestCase {
     
     func test_init_documentItemModel_shouldSetValuesForAccountNumber() {
         
-        let sut = makeSUT(
+        let sut = makeItemModel(
             id: .accountNumber,
             subtitle: "accountNumber subtitle",
             valueForCopy: "accountNumber valueForCopy"
@@ -32,7 +32,7 @@ final class DocumentItemModelTests: XCTestCase {
     
     func test_init_documentItemModel_shouldSetValuesForBic() {
         
-        let sut = makeSUT(
+        let sut = makeItemModel(
             id: .bic,
             subtitle: "some subtitle",
             valueForCopy: "some valueForCopy"
@@ -45,9 +45,17 @@ final class DocumentItemModelTests: XCTestCase {
         XCTAssertNoDiff(sut.valueForCopy, "some valueForCopy")
     }
     
+    func test_init_documentItemModel_shouldSetValuesForBankName() {
+        
+        let sut = makeItemModel(id: .bankName)
+        
+        XCTAssertNoDiff(sut.title, "Наименование банка")
+        XCTAssertNoDiff(sut.titleForInformer, "Наименование банка")
+    }
+
     func test_init_documentItemModel_shouldSetValuesForСorrAccount() {
         
-        let sut = makeSUT(id: .corrAccount)
+        let sut = makeItemModel(id: .corrAccount)
         
         XCTAssertNoDiff(sut.title, "Корреспондентский счет")
         XCTAssertNoDiff(sut.titleForInformer, "Корреспондентский счет")
@@ -55,7 +63,7 @@ final class DocumentItemModelTests: XCTestCase {
     
     func test_init_documentItemModel_shouldSetValuesForINN() {
         
-        let sut = makeSUT(id: .inn)
+        let sut = makeItemModel(id: .inn)
         
         XCTAssertNoDiff(sut.title, "ИНН")
         XCTAssertNoDiff(sut.titleForInformer, "ИНН")
@@ -63,7 +71,7 @@ final class DocumentItemModelTests: XCTestCase {
     
     func test_init_documentItemModel_shouldSetValuesForKPP() {
         
-        let sut = makeSUT(id: .kpp)
+        let sut = makeItemModel(id: .kpp)
         
         XCTAssertNoDiff(sut.title, "КПП")
         XCTAssertNoDiff(sut.titleForInformer, "КПП")
@@ -71,7 +79,7 @@ final class DocumentItemModelTests: XCTestCase {
     
     func test_init_documentItemModel_shouldSetValuesForPayeeName() {
         
-        let sut = makeSUT(id: .payeeName)
+        let sut = makeItemModel(id: .payeeName)
         
         XCTAssertNoDiff(sut.title, "Получатель")
         XCTAssertNoDiff(sut.titleForInformer, "Получатель")
@@ -79,7 +87,7 @@ final class DocumentItemModelTests: XCTestCase {
     
     func test_init_documentItemModel_shouldSetValuesForNumber() {
         
-        let sut = makeSUT(id: .number)
+        let sut = makeItemModel(id: .number)
         
         XCTAssertNoDiff(sut.title, "Номер карты")
         XCTAssertNoDiff(sut.titleForInformer, "Номер карты")
@@ -87,7 +95,7 @@ final class DocumentItemModelTests: XCTestCase {
     
     func test_init_documentItemModel_shouldSetValuesForNumberMasked() {
         
-        let sut = makeSUT(id: .numberMasked)
+        let sut = makeItemModel(id: .numberMasked)
         
         XCTAssertNoDiff(sut.title, "Номер карты")
         XCTAssertNoDiff(sut.titleForInformer, "Номер карты")
@@ -95,7 +103,7 @@ final class DocumentItemModelTests: XCTestCase {
     
     func test_init_documentItemModel_shouldSetValuesForHolder() {
         
-        let sut = makeSUT(id: .holderName)
+        let sut = makeItemModel(id: .holderName)
         
         XCTAssertNoDiff(sut.title, "Держатель карты")
         XCTAssertNoDiff(sut.titleForInformer, "Держатель карты")
@@ -103,7 +111,7 @@ final class DocumentItemModelTests: XCTestCase {
     
     func test_init_documentItemModel_shouldSetValuesForExpirationDate() {
         
-        let sut = makeSUT(id: .expirationDate)
+        let sut = makeItemModel(id: .expirationDate)
         
         XCTAssertNoDiff(sut.title, "Карта действует до")
         XCTAssertNoDiff(sut.titleForInformer, "Срок действия карты")
@@ -111,7 +119,7 @@ final class DocumentItemModelTests: XCTestCase {
     
     func test_init_documentItemModel_shouldSetValuesForCVV_empty() {
         
-        let sut = makeSUT(id: .cvv, valueForCopy: "")
+        let sut = makeItemModel(id: .cvv, valueForCopy: "")
         
         XCTAssertNoDiff(sut.title, .cvvTitle)
         XCTAssertNoDiff(sut.titleForInformer, .cvvTitle)
@@ -120,7 +128,7 @@ final class DocumentItemModelTests: XCTestCase {
     
     func test_init_documentItemModel_shouldSetValuesForCVV_nonEmpty() {
         
-        let sut = makeSUT(id: .cvv, valueForCopy: "any value")
+        let sut = makeItemModel(id: .cvv, valueForCopy: "any value")
         
         XCTAssertNoDiff(sut.title, .cvvTitle)
         XCTAssertNoDiff(sut.titleForInformer, .cvvTitle)
@@ -129,7 +137,7 @@ final class DocumentItemModelTests: XCTestCase {
     
     func test_init_documentItemModel_shouldSetValuesForCVVMasked_empty() {
         
-        let sut = makeSUT(id: .cvvMasked, valueForCopy: "")
+        let sut = makeItemModel(id: .cvvMasked, valueForCopy: "")
         
         XCTAssertNoDiff(sut.title, .cvvTitle)
         XCTAssertNoDiff(sut.titleForInformer, .cvvTitle)
@@ -138,7 +146,7 @@ final class DocumentItemModelTests: XCTestCase {
     
    func test_init_documentItemModel_shouldSetValuesForCVVMasked_nonEmpty() {
         
-        let sut = makeSUT(id: .cvvMasked, valueForCopy: "any value")
+        let sut = makeItemModel(id: .cvvMasked, valueForCopy: "any value")
         
         XCTAssertNoDiff(sut.title, .cvvTitle)
         XCTAssertNoDiff(sut.titleForInformer, .cvvTitle)
@@ -147,10 +155,10 @@ final class DocumentItemModelTests: XCTestCase {
     
     // MARK: - Helpers
     
-    func makeSUT(
+    private func makeItemModel(
         id: ItemModel.ID,
-        subtitle: String = "subtitle",
-        valueForCopy: String = "valueForCopy"
+        subtitle: String = anyMessage(),
+        valueForCopy: String = anyMessage()
     ) -> ItemModel {
         
         return .init(
