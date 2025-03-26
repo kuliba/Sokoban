@@ -41,26 +41,14 @@ extension RootViewModelFactory {
             completion(.orderCardResponse(orderCardResponse))
             
         case let .savingsAccount(orderAccountResponse):
-            
             handleSavingsAccount(orderAccountResponse, rootFlags.processingFlag, completion)
 
         case let .openProduct(type):
-            
             switch type {
             case let .card(kind):
-                if rootFlags.orderCardFlag == .active {
-                    
-                    switch kind {
-                    case .form:
-                        break
-                        
-                    case .landing:
-                        completion(.openProduct(openProduct(
-                            type: type,
-                            notify: notify
-                        )))
-                    }
-                }
+                completion(.openProduct(
+                    makeOpenCard(rootFlags.orderCardFlag, type, notify))
+                )
                 
             case .creditCardMVP:
                 completion(.openProduct(.creditCardMVP(
@@ -220,6 +208,26 @@ extension RootViewModelFactory {
                     completion(.standardPayment(node))
                 }
             }
+        }
+    }
+    
+    // TODO: add tests
+    @inlinable
+    func makeOpenCard(
+        _ flag: OrderCardFlag,
+        _ type: OpenProductType,
+        _ notify: @escaping RootViewDomain.Notify
+    ) -> OpenProduct {
+        
+        switch flag {
+        case .active:
+            return openProduct(type: type, notify: notify)
+            
+        case .inactive:
+            return openProduct(type: .card(.form), notify: notify)
+            
+        default:
+            return openProduct(type: type, notify: notify)
         }
     }
     
