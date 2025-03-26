@@ -211,6 +211,8 @@ extension RootViewModelFactory {
         }
     }
     
+    // TODO: add tests
+    @inlinable
     func makeOpenCard(
         _ flag: OrderCardFlag,
         _ type: OpenProductType,
@@ -219,21 +221,13 @@ extension RootViewModelFactory {
         
         switch flag {
         case .active:
-            return openProduct(
-                type: type,
-                notify: notify
-            )
+            return openProduct(type: type, notify: notify)
             
         case .inactive:
-            return openProduct(
-                type: .card(.form),
-                notify: notify
-            )
+            return openProduct(type: .card(.form), notify: notify)
+            
         default:
-            return openProduct(
-                type: type,
-                notify: notify
-            )
+            return openProduct(type: type, notify: notify)
         }
     }
     
