@@ -72,8 +72,13 @@ extension RootViewModelFactory {
                 status: .inReview
             )))
             
-        case let .rejected(productCard):
-            break
+        case let .rejected(product):
+            completion(.decision(.init(
+                message: .rejectedMessage,
+                product: product,
+                title: .rejectedTitle,
+                status: .rejected
+            )))
         }
     }
 }
@@ -81,8 +86,8 @@ extension RootViewModelFactory {
 private extension String {
     
     static let failure = "Что-то пошло не так...\nПопробуйте позже."
-    
     static let inReview = "Ожидайте рассмотрения Вашей заявки\nРезультат придет в Push/смс\nПримерное время рассмотрения заявки 10 минут."
     
-    static let success = "Ожидайте рассмотрения Вашей заявки\nРезультат придет в Push/смс\nПримерное время рассмотрения заявки 10 минут."
+    static let rejectedMessage = "К сожалению, ваша кредитная история не позволяет оформить карту"
+    static let rejectedTitle = "Кредитная карта не одобрена"
 }

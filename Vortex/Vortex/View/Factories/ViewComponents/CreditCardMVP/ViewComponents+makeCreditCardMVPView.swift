@@ -6,7 +6,9 @@
 //
 
 import ButtonComponent
+import CreditCardMVPUI
 import PaymentCompletionUI
+import PaymentComponents
 import RxViewModel
 import SwiftUI
 
@@ -46,9 +48,12 @@ extension ViewComponents {
     }
     
     @inlinable
+    @ViewBuilder
     func makeCreditCardMVPContentView(
         _ binder: CreditCardMVPDomain.Binder
     ) -> some View {
+        
+        let product = ProductCard(limit: "₽ 0", md5Hash: "d65188320fca0a9291240dae108ebd73", options: [.init(title: "!Fee", value: "!Free"), .init(title: "!Where", value: "!Everywhere")], title: "Credit Card", subtitle: "Better forever")
         
         List {
             
@@ -74,11 +79,16 @@ extension ViewComponents {
                 
                 binder.flow.event(.select(.inReview))
             }
-//            
-//            Button("Application Approved") {
-//                
-//                binder.flow.event(.select(.failure))
-//            }
+            
+            Button("Application Approved") {
+                
+                binder.flow.event(.select(.approved(consent: .init("TBD: consent"), product)))
+            }
+            
+            Button("Application Rejected") {
+                
+                binder.flow.event(.select(.rejected(product)))
+            }
         }
         .listStyle(.plain)
     }
@@ -94,7 +104,8 @@ extension ViewComponents {
             CreditCardMVPFlowView(
                 state: state.navigation,
                 dismiss: dismiss,
-                completeView: makeCompleteView
+                completeView: makeCompleteView,
+                decisionView: makeDecisionView
             )
         }
     }
@@ -116,15 +127,40 @@ extension ViewComponents {
             statusConfig: .creditCardMVP
         )
     }
+    
+    @inlinable
+    func makeDecisionView(
+        _ decision: CreditCardMVPDomain.Navigation.Decision
+    ) -> some View {
+        
+        VStack(spacing: 23) {
+            
+            ProductCardView(product: decision.product, config: .prod(), iconView: makeIconView)
+            
+            decision.message.text(withConfig: .init(
+                textFont: .textH3Sb18240(),
+                textColor: .textSecondary
+            ))
+            
+            Spacer()
+            
+            goToMainHeroButton()
+        }
+        .padding([.horizontal, .top])
+        .navigationBar(withTitle: decision.title)
+    }
 }
 
 // MARK: - Flow View
 
-struct CreditCardMVPFlowView<CompleteView: View>: View {
+struct CreditCardMVPFlowView<CompleteView, DecisionView>: View
+where CompleteView: View,
+        DecisionView: View {
     
     let state: State?
     let dismiss: () -> Void
     let completeView: (State.Complete) -> CompleteView
+    let decisionView: (State.Decision) -> DecisionView
     
     var body: some View {
         
@@ -158,8 +194,7 @@ private extension CreditCardMVPFlowView {
             completeView(complete)
             
         case let .decision(decision):
-            Text(String(describing: decision))
-                .padding()
+            decisionView(decision)
         }
     }
 }
@@ -250,7 +285,7 @@ private extension PaymentCompletion.Status {
         
         switch status {
         case .failure:  self = .rejected
-        case .inReview: self = .inflight
+        case .inReview: self = .completed
         }
     }
 }
