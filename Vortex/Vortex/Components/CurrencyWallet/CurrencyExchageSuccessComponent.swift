@@ -45,7 +45,7 @@ extension CurrencyExchangeSuccessView {
                 switch self {
                 case .success: return (Image("Done"), "Успешный перевод")
                 case .error: return (.ic16Denied, "Операция неуспешна!")
-                case .suspended: return (.ic16Waiting, "Операция приостановлена в целях безопасности.")
+                case .suspended: return (.ic16Waiting, "Операция временно приостановлена в целях безопасности!")
                 case .wait: return (.ic16Waiting, "Операция в обработке!")
                 case .processing:
                     return (Image("Done"), "Платеж успешно принят в обработку")
