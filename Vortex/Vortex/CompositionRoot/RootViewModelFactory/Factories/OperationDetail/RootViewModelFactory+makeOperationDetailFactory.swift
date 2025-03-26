@@ -113,15 +113,15 @@ extension RootViewModelFactory {
     @inlinable
     func loadStatementDetails(
         _ payload: LoadStatementDetailsPayload,
-        _ completion: @escaping (Result<StatementDetailsDomain.Details, Error>) -> Void
+        _ completion: @escaping (Result<StatementDetailsDomain.Details, StatementDetailsDomain.Failure>) -> Void
     ) {
         getOperationDetail(payload.digest) { [weak self] in
             
             guard let self else { return }
             
             switch $0 {
-            case let .failure(failure):
-                completion(.failure(failure))
+            case .failure:
+                completion(.failure(.init(content: payload.content)))
                 
             case let .success(extendedDetails):
                 let details = makeOperationDetail(digest: payload.digest)

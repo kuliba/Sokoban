@@ -19,14 +19,14 @@ extension StatementDetailsDomain {
     
     // MARK: - Domain
     
-    typealias State = StateMachines.LoadState<Details, Error>
-    typealias Event = StateMachines.LoadEvent<Details, Error>
+    typealias State = StateMachines.LoadState<Details, Failure>
+    typealias Event = StateMachines.LoadEvent<Details, Failure>
     typealias Effect = StateMachines.LoadEffect
     
     // MARK: - Logic
     
-    typealias Reducer = StateMachines.LoadReducer<Details, Error>
-    typealias EffectHandler = StateMachines.LoadEffectHandler<Details, Error>
+    typealias Reducer = StateMachines.LoadReducer<Details, Failure>
+    typealias EffectHandler = StateMachines.LoadEffectHandler<Details, Failure>
     
     // MARK: - Types
     
@@ -41,5 +41,10 @@ extension StatementDetailsDomain {
             let logo: String? // Лого- md5hash из getCardStatementForPeriod_V3/getAccountStatementForPeriod_V3
             let name: String? // Наименование получателя-    foreignName из getCardStatementForPeriod_V3/getAccountStatementForPeriod_V3
         }
+    }
+    
+    struct Failure: Error {
+        
+        let content: Details.Content
     }
 }

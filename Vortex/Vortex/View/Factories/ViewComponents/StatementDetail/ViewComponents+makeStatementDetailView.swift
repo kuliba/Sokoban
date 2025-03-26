@@ -37,6 +37,12 @@ extension ViewComponents {
                     }
                     .padding(.horizontal)
                     
+                case let .failure(failure):
+                    makeStatementDetailContentLayoutView(content: .init(
+                        content: failure.content,
+                        extendedDetails: nil
+                    ))
+                    
                 default:
                     EmptyView()
                 }
