@@ -58,7 +58,7 @@ extension RootViewModelFactory {
                 message: .failure,
                 status: .failure
             )))
-
+            
         case let .informer(message):
             schedulers.background.delay(for: .seconds(2)) { notify(.dismiss) }
             completion(.informer(message))
@@ -67,7 +67,10 @@ extension RootViewModelFactory {
             break
             
         case .inReview:
-            break
+            completion(.complete(.init(
+                message: .inReview,
+                status: .inReview
+            )))
             
         case let .rejected(productCard):
             break
@@ -77,7 +80,9 @@ extension RootViewModelFactory {
 
 private extension String {
     
-    static let success = "Ожидайте рассмотрения Вашей заявки\nРезультат придет в Push/смс\nПримерное время рассмотрения заявки 10 минут."
-    
     static let failure = "Что-то пошло не так...\nПопробуйте позже."
+    
+    static let inReview = "Ожидайте рассмотрения Вашей заявки\nРезультат придет в Push/смс\nПримерное время рассмотрения заявки 10 минут."
+    
+    static let success = "Ожидайте рассмотрения Вашей заявки\nРезультат придет в Push/смс\nПримерное время рассмотрения заявки 10 минут."
 }

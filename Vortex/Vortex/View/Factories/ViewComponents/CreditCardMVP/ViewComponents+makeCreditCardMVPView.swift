@@ -65,10 +65,20 @@ extension ViewComponents {
                 binder.flow.event(.select(.informer("fail to fetch data")))
             }
             
-            Button("Failure") {
+            Button("Application Failure") {
                 
                 binder.flow.event(.select(.failure))
             }
+            
+            Button("Application In Review") {
+                
+                binder.flow.event(.select(.inReview))
+            }
+//            
+//            Button("Application Approved") {
+//                
+//                binder.flow.event(.select(.failure))
+//            }
         }
         .listStyle(.plain)
     }
