@@ -152,7 +152,7 @@ struct CollateralLoanLandingWrapperView: View {
                 makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,
                 getPDFDocument: getPDFDocument
             )
-            .navigationTitle("Оформление заявки")
+            .navigationBarTitle("Оформление заявки", displayMode: .inline)
             .navigationBarItems(leading: buttonBack(action: {
 
                 if (binder.content.state.stage == .confirm) {

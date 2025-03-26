@@ -30,27 +30,30 @@ struct CollateralLoanShowcaseWrapperView: View {
         
         RxWrapperView(model: binder.flow) { state, event in
             
-            content()
-                .alert(
-                    item: state.navigation?.alert,
-                    content: makeAlert
-                )
-                .navigationDestination(
-                    destination: state.navigation?.destination,
-                    content: destinationView
-                )
-                .onFirstAppear { binder.content.event(.load) }
+            ZStack(alignment: .top) {
+                
+                state.navigation?.informer.map(informerView)
+                    .zIndex(1)
+                
+                content()
+                    .alert(
+                        item: state.navigation?.alert,
+                        content: makeAlert
+                    )
+                    .navigationDestination(
+                        destination: state.navigation?.destination,
+                        content: destinationView
+                    )
+                    .onFirstAppear { binder.content.event(.load) }
+            }
         }
     }
     
     private func content() -> some View {
         
-        ZStack(alignment: .top) {
+        RxWrapperView(model: binder.content) { state, _ in
             
-            binder.flow.state.navigation?.informer.map(informerView)
-                .zIndex(1)
-
-            switch binder.content.state.status {
+            switch state.status {
             case .initiate:
                 Color.clear
                     .frame(maxHeight: .infinity)
@@ -60,16 +63,15 @@ struct CollateralLoanShowcaseWrapperView: View {
                     
                     makeShowcaseView(oldShowcase)
                 } else {
-
+                    
                     Color.clear
                         .frame(maxHeight: .infinity)
                 }
-
+                
             case let .loaded(showcase):
                 makeShowcaseView(showcase)
                 
             case .inflight:
-  
                 Color.white
                     .frame(maxHeight: .infinity)
                     .loader(isLoading: true, color: .white)

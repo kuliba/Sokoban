@@ -434,7 +434,7 @@ private extension MainView {
     
     private func makeCollateralLoanWrapperView(binder: GetCollateralLandingDomain.Binder) -> some View {
         
-        return viewFactory.components.makeCollateralLoanWrapperView(
+        viewFactory.components.makeCollateralLoanWrapperView(
             binder: binder,
             makeOperationDetailInfoViewModel: makeOperationDetailInfoViewModel,
             goToPlaces: goToPlaces,
