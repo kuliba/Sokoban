@@ -11,18 +11,14 @@ import XCTest
 
 final class RequestFactory_createGetProductDetailsRequestTests: XCTestCase {
     
-    func test_createRequest_shouldSetURLStringV3() throws {
-        
-        let url = anyURL(string: "https://pl.\(Config.domen)/dbo/api/v3/rest/v3/getProductDetails")
-        let request = try createRequest(url: url)
-        
-        XCTAssertNoDiff(request.url?.absoluteString, url.absoluteString)
+    func test_createRequest_shouldSetV3() throws {
+                
+        try  XCTAssertTrue(XCTUnwrap(createRequest().url).absoluteString.contains("rest/v3"))
     }
     
     // MARK: - Helpers
     
     private func createRequest(
-        url: URL = anyURL(),
         payload: ProductDetailsPayload = .cardId(1)
     ) throws -> URLRequest {
         
