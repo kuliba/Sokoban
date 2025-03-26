@@ -501,6 +501,9 @@ extension RootViewModelFactory {
                 case .scanQR, .templates:
                     return .zero//.milliseconds(100)
                 
+                case .openProduct(.creditCardMVP):
+                    return .zero
+                
                 case .openProduct, .searchByUIN, .standardPayment, .userAccount:
                     return .milliseconds(600)
                     
