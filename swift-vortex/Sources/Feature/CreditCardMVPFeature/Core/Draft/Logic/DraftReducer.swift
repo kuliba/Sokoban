@@ -14,11 +14,12 @@
 /// - Parameters:
 ///   - Consent: the type representing the consent state.
 ///   - ConsentEvent: the type representing events related to consent.
+///   - ConsentEffect: the type representing side effects triggered by consent events.
 ///   - Content: the type representing the content of the draft.
 ///   - Verification: the type representing the verification state.
 ///   - VerificationEvent: the type representing events related to verification.
 ///   - VerificationEffect: the type representing side effects triggered by verification events.
-public final class DraftReducer<Consent, ConsentEvent, Content, Verification, VerificationEvent, VerificationEffect> {
+public final class DraftReducer<Consent, ConsentEvent, ConsentEffect, Content, Verification, VerificationEvent, VerificationEffect> {
     
     private let consentReduce: ConsentReduce
     private let verificationReduce: VerificationReduce
@@ -26,8 +27,8 @@ public final class DraftReducer<Consent, ConsentEvent, Content, Verification, Ve
     /// Initializes a new instance of `DraftReducer`.
     ///
     /// - Parameters:
-    ///   - consentReduce: A function that takes the current consent state and a consent event, and returns the updated consent state.
-    ///   - verificationReduce: A function that takes the current verification state and a verification event, and returns the updated verification state along with an optional effect.
+    ///   - consentReduce: A function that takes the current consent state and a consent event, and returns the updated consent state along with an optional consent effect.
+    ///   - verificationReduce: A function that takes the current verification state and a verification event, and returns the updated verification state along with an optional verification effect.
     public init(
         consentReduce: @escaping ConsentReduce,
         verificationReduce: @escaping VerificationReduce
@@ -41,8 +42,8 @@ public final class DraftReducer<Consent, ConsentEvent, Content, Verification, Ve
     /// - Parameters:
     ///   - Consent: the current consent state.
     ///   - ConsentEvent: the event affecting the consent.
-    /// - Returns: A tuple containing the updated consent state and a placeholder for effect (always `nil` in this case).
-    public typealias ConsentReduce = (Consent, ConsentEvent) -> (Consent, Never?)
+    /// - Returns: A tuple containing the updated consent state and an optional consent effect.
+    public typealias ConsentReduce = (Consent, ConsentEvent) -> (Consent, ConsentEffect?)
     
     /// A function that reduces a verification state given a verification event.
     ///
@@ -88,10 +89,12 @@ public extension DraftReducer {
     
     /// Typealias for the draft state.
     typealias State = DraftState<Consent, Content, Verification>
+    
     /// Typealias for the events that can be processed.
     typealias Event = DraftEvent<ConsentEvent, VerificationEvent>
+    
     /// Typealias for the effect delivered after processing an event.
-    typealias Effect = DraftEffect<VerificationEffect>
+    typealias Effect = DraftEffect<ConsentEffect, VerificationEffect>
 }
 
 extension DraftReducer {
@@ -110,7 +113,9 @@ extension DraftReducer {
         _ effect: inout Effect?,
         with consentEvent: ConsentEvent
     ) {
-        state.consent = consentReduce(state.consent, consentEvent).0
+        let (consent, consentEffect) = consentReduce(state.consent, consentEvent)
+        state.consent = consent
+        effect = consentEffect.map { .consent($0) }
     }
     
     /// Reduces the state by applying a verification event.

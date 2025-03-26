@@ -1,5 +1,5 @@
 //
-//  RootViewModelFactory+makeCreditCardMVPTests.swift
+//  RootViewModelFactory+makeCreditCardMVPBinderTests.swift
 //  VortexTests
 //
 //  Created by Igor Malyarov on 22.03.2025.
@@ -33,9 +33,9 @@ extension CreditCardMVPDomain {
     
     enum Select {
         
-        case alert
+        case alert(String)
         case failure
-        case informer
+        case informer(String)
         case approved
         case inReview
         case rejected
@@ -43,8 +43,8 @@ extension CreditCardMVPDomain {
     
     enum Navigation {
         
-        case alert
-        case informer
+        case alert(String)
+        case informer(String)
         case complete(Complete)
         case decision(Decision)
         
@@ -155,19 +155,28 @@ extension CreditCardMVPContentDomain {
 extension RootViewModelFactory {
     
     // TODO: add @inlinable
+    func makeCreditCardMVPBinder() -> CreditCardMVPDomain.Binder {
+        
+        let load: CreditCardMVPDomain.ContentDomain.Load = { _ in }
+        
+        let apply: CreditCardMVPDomain.ContentDomain.Apply = { _ in }
+        
+        return makeCreditCardMVPBinder(load: load, apply: apply)
+    }
+    
+    // TODO: add @inlinable
     func makeCreditCardMVPBinder(
-        content: CreditCardMVPDomain.Content
+        load: @escaping CreditCardMVPDomain.ContentDomain.Load,
+        apply: @escaping CreditCardMVPDomain.ContentDomain.Apply
     ) -> CreditCardMVPDomain.Binder {
         
+        let content = makeCreditCardMVPContent(load: load, apply: apply)
         content.event(.load(.load))
         
-        return composeBinder(
+        return makeCreditCardMVPBinder(
             content: content,
-            getNavigation: getNavigation,
-            witnesses: .init(
-                emitting: { $0.$state.compactMap(\.selectEvent) },
-                dismissing: { content in { content.event(.dismissInformer) }}
-            )
+            emitting: { $0.$state },
+            dismissing: { content in { content.event(.dismissInformer) }}
         )
     }
     
@@ -223,14 +232,31 @@ extension RootViewModelFactory {
     }
     
     // TODO: add @inlinable
+    func makeCreditCardMVPBinder<Content>(
+        content: Content,
+        emitting: @escaping (Content) -> some Publisher<CreditCardMVPContentDomain.State, Never>,
+        dismissing: @escaping ContentWitnesses<Content, FlowEvent<CreditCardMVPDomain.Select, Never>>.Dismissing
+    ) -> Binder<Content, CreditCardMVPDomain.Flow> {
+        
+        return composeBinder(
+            content: content,
+            getNavigation: getNavigation,
+            witnesses: .init(
+                emitting: { emitting($0).compactMap(\.selectEvent) },
+                dismissing: dismissing
+            )
+        )
+    }
+    
+    // TODO: add @inlinable
     func getNavigation(
         select: CreditCardMVPDomain.Select,
         notify: @escaping CreditCardMVPDomain.Notify,
         completion: @escaping (CreditCardMVPDomain.Navigation) -> Void
     ) {
         switch select {
-        case .alert:
-            completion(.alert)
+        case let .alert(message):
+            completion(.alert(message))
             
         case .failure:
             completion(.complete(.init(
@@ -238,8 +264,8 @@ extension RootViewModelFactory {
                 status: .failure
             )))
             
-        case .informer:
-            completion(.informer)
+        case let .informer(message):
+            completion(.informer(message))
             
         case .approved:
             completion(.decision(.init(status: .approved)))
@@ -261,6 +287,11 @@ private extension String {
     static let failure = "Что-то пошло не так...\nПопробуйте позже."
     
     static let inReview = "Ожидайте рассмотрения Вашей заявки\nРезультат придет в Push/смс\nПримерное время рассмотрения заявки 10 минут."
+    
+#warning("to use in load and appy mapping")
+    static let alertMessage = "Попробуйте позже."
+    static let informerLoadMessage = "Ошибка загрузки данных.\nПопробуйте позже."
+    static let informerApplyMessage = "Ошибка отправки заявки.\nПопробуйте повторить."
 }
 
 extension CreditCardMVPDomain.ContentDomain.State {
@@ -290,7 +321,7 @@ extension CreditCardMVPDomain.ContentDomain.State {
             case let .failure(failure):
                 switch failure.type {
                 case .alert:    return .failure
-                case .informer: return .informer
+                case .informer: return .informer(failure.message)
                 }
                 
             case .loading, .pending:
@@ -305,8 +336,8 @@ extension CreditCardMVPDomain.ContentDomain.State {
             
         case let .failure(failure):
             switch failure.type {
-            case .alert:    return .alert
-            case .informer: return .informer
+            case .alert:    return .alert(failure.message)
+            case .informer: return .informer(failure.message)
             }
             
         case .loading, .pending:
@@ -322,7 +353,7 @@ extension CreditCardMVPDomain.ContentDomain.State {
 @testable import Vortex
 import XCTest
 
-final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTests {
+final class RootViewModelFactory_makeCreditCardMVPBinderTests: CreditCardMVPRootViewModelFactory {
     
     func test_shouldCallLoadInitially() {
         
@@ -351,29 +382,32 @@ final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTes
     
     func test_shouldShowAlert_onAlertFailure() {
         
+        let message = anyMessage()
         let (sut, loadSpy, _) = makeSUT()
         
-        loadSpy.complete(with: alert())
+        loadSpy.complete(with: alert(message))
         
-        XCTAssertTrue(sut.flow.isShowingAlert)
+        XCTAssertTrue(sut.flow.isShowingAlert(with: message))
     }
     
     // MARK: - informer
     
     func test_shouldShowInformer_onInformerFailure() {
         
+        let message = anyMessage()
         let (sut, loadSpy, _) = makeSUT()
         
-        loadSpy.complete(with: informer())
+        loadSpy.complete(with: informer(message))
         
-        XCTAssertTrue(sut.flow.isShowingInformer)
+        XCTAssertTrue(sut.flow.isShowingInformer(with: message))
     }
     
     func test_shouldRemoveInformer_onDismiss() {
         
+        let message = anyMessage()
         let (sut, loadSpy, _) = makeSUT()
-        loadSpy.complete(with: informer())
-        XCTAssertTrue(sut.flow.isShowingInformer)
+        loadSpy.complete(with: informer(message))
+        XCTAssertTrue(sut.flow.isShowingInformer(with: message))
         
         sut.flow.event(.dismiss)
         
@@ -413,22 +447,24 @@ final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTes
     
     func test_shouldShowInformer_onDraftApplyInformerFailure() {
         
+        let message = anyMessage()
         let (sut, loadSpy, applySpy) = makeSUT()
         loadSpy.complete(with: draft())
         
         sut.content.event(.apply(.load))
-        applySpy.complete(with: informer())
+        applySpy.complete(with: informer(message))
         
-        XCTAssertTrue(sut.flow.isShowingInformer)
+        XCTAssertTrue(sut.flow.isShowingInformer(with: message))
     }
     
     func test_shouldRemoveInformer_onDismiss_onDraftApply() {
         
+        let message = anyMessage()
         let (sut, loadSpy, applySpy) = makeSUT()
         loadSpy.complete(with: draft())
         sut.content.event(.apply(.load))
-        applySpy.complete(with: informer())
-        XCTAssertTrue(sut.flow.isShowingInformer) // flow.isShowingInformer or what is showing??
+        applySpy.complete(with: informer(message))
+        XCTAssertTrue(sut.flow.isShowingInformer(with: message)) // flow.isShowingInformer or what is showing??
         
         sut.flow.event(.dismiss)
         
@@ -501,10 +537,29 @@ final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTes
         XCTAssertTrue(sut.flow.isShowingRejected)
     }
     
+    // MARK: - loading
+    
+    func test_shouldNotNavigate_onLoadingStatus() {
+        
+        let (sut, _,_) = makeSUT()
+        
+        sut.content.event(.load(.load))
+        
+        XCTAssertNil(sut.flow.state.navigation)
+    }
+    
+    // MARK: - pending
+    
+    func test_shouldNotNavigate_onPendingStatus() {
+        
+        let (sut, _,_) = makeSUT()
+        
+        XCTAssertNil(sut.flow.state.navigation)
+    }
+    
     // MARK: - Helpers
     
     private typealias Domain = CreditCardMVPDomain
-    private typealias ContentDomain = Domain.ContentDomain
     
     private typealias SUT = Domain.Binder
     private typealias LoadSpy = Spy<Void, ContentDomain.DraftableStatus, ContentDomain.Failure>
@@ -521,11 +576,10 @@ final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTes
         let (factory, _,_) = super.makeSUT(file: file, line: line)
         let loadSpy = LoadSpy()
         let applySpy = ApplySpy()
-        let content = factory.makeCreditCardMVPContent(
+        let sut = factory.makeCreditCardMVPBinder(
             load: loadSpy.process,
             apply: applySpy.process
         )
-        let sut = factory.makeCreditCardMVPBinder(content: content)
         
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(loadSpy, file: file, line: line)
@@ -533,18 +587,282 @@ final class RootViewModelFactory_makeCreditCardMVPTests: RootViewModelFactoryTes
         
         return (sut, loadSpy, applySpy)
     }
+}
+
+final class RootViewModelFactory_makeCreditCardMVPBinderGenericContentTests: CreditCardMVPRootViewModelFactory {
     
-    private func alert() -> LoadFailure<ContentDomain.FailureType> {
+    func test_shouldNotCallDismissInitially() {
         
-        return .init(message: anyMessage(), type: .alert)
+        let (sut, _, dismissing) = makeSUT()
+        
+        XCTAssertEqual(dismissing.callCount, 0)
+        XCTAssertNotNil(sut)
     }
     
-    private func informer() -> LoadFailure<ContentDomain.FailureType> {
+    func test_shouldHaveNoNavigationInitially() {
         
-        return .init(message: anyMessage(), type: .informer)
+        let (sut, _,_) = makeSUT()
+        
+        XCTAssertNil(sut.flow.state.navigation)
     }
     
-    private func draft(
+    // MARK: - alert
+    
+    func test_shouldShowAlert_onAlertFailure() {
+        
+        let message = anyMessage()
+        let (sut, subject, _) = makeSUT()
+        
+        send(subject, alert(message))
+        
+        XCTAssertTrue(sut.flow.isShowingAlert(with: message))
+    }
+    
+    // MARK: - informer
+    
+    func test_shouldShowInformer_onInformerFailure() {
+        
+        let message = anyMessage()
+        let (sut, subject, _) = makeSUT()
+        
+        send(subject, informer(message))
+        
+        XCTAssertTrue(sut.flow.isShowingInformer(with: message))
+    }
+    
+    func test_shouldRemoveInformer_onDismiss_onInformerFailure() {
+        
+        let (sut, subject, dismissing) = makeSUT()
+        subject.send(.failure(informer()))
+        
+        sut.flow.event(.dismiss)
+        
+        XCTAssertEqual(dismissing.callCount, 1)
+    }
+    
+    // MARK: - draft (form)
+    
+    func test_shouldNotNavigate_onDraftStatus() {
+        
+        let (sut, subject, _) = makeSUT()
+        
+        send(subject, draft())
+        
+        XCTAssertNil(sut.flow.state.navigation)
+    }
+    
+    func test_shouldNavigateToFailure_onDraftApplicationAlertFailure() {
+        
+        let (sut, subject, _) = makeSUT()
+        
+        send(subject, draft(application: .failure(alert())))
+        
+        XCTAssertTrue(sut.flow.isShowingFailure)
+    }
+    
+    func test_shouldNavigateToFailure_onDraftApplicationInformerFailure() {
+        
+        let message = anyMessage()
+        let (sut, subject, _) = makeSUT()
+        
+        send(subject, draft(application: .failure(informer(message))))
+        
+        XCTAssertTrue(sut.flow.isShowingInformer(with: message))
+    }
+    
+    func test_shouldRemoveInformer_onDismiss_onDraftApplicationInformerFailure() {
+        
+        let message = anyMessage()
+        let (sut, subject, dismissing) = makeSUT()
+        subject.send(.completed(draft(application: .failure(informer(message)))))
+        XCTAssertTrue(sut.flow.isShowingInformer(with: message)) // flow.isShowingInformer or what is showing??
+        
+        sut.flow.event(.dismiss)
+        
+        XCTAssertEqual(dismissing.callCount, 1)
+    }
+    
+    func test_shouldNavigateToApproved_onDraftApprovedApplicationStatus() {
+        
+        let (sut, subject, _) = makeSUT()
+        
+        send(subject, draft(application: .completed(.approved)))
+        
+        XCTAssertTrue(sut.flow.isShowingApproved)
+    }
+    
+    func test_shouldNavigateToRejected_onDraftInReviewApplicationStatus() {
+        
+        let (sut, subject, _) = makeSUT()
+        
+        send(subject, draft(application: .completed(.inReview)))
+        
+        XCTAssertTrue(sut.flow.isShowingInReview)
+    }
+    
+    func test_shouldNavigateToRejected_onDraftRejectedApplicationStatus() {
+        
+        let (sut, subject, _) = makeSUT()
+        
+        send(subject, draft(application: .completed(.rejected)))
+        
+        XCTAssertTrue(sut.flow.isShowingRejected)
+    }
+    
+    // MARK: - approved
+    
+    func test_shouldNavigateToApproved_onApprovedStatus() {
+        
+        let (sut, subject, _) = makeSUT()
+        
+        send(subject, .approved)
+        
+        XCTAssertTrue(sut.flow.isShowingApproved)
+    }
+    
+    // MARK: - inReview
+    
+    func test_shouldNavigateToRejected_onInReviewStatus() {
+        
+        let (sut, subject, _) = makeSUT()
+        
+        send(subject, .inReview)
+        
+        XCTAssertTrue(sut.flow.isShowingInReview)
+    }
+    
+    // MARK: - rejected
+    
+    func test_shouldNavigateToRejected_onRejectedStatus() {
+        
+        let (sut, subject, _) = makeSUT()
+        
+        send(subject, .rejected)
+        
+        XCTAssertTrue(sut.flow.isShowingRejected)
+    }
+    
+    // MARK: - loading
+    
+    func test_shouldNotNavigate_onLoadingStatus() {
+        
+        let (sut, subject, _) = makeSUT()
+        
+        subject.send(.loading(.none))
+        
+        XCTAssertNil(sut.flow.state.navigation)
+    }
+    
+    func test_shouldNotNavigate_onDraftLoadingStatus() {
+        
+        let (sut, subject, _) = makeSUT()
+        
+        send(subject, draft())
+        
+        XCTAssertNil(sut.flow.state.navigation)
+    }
+    
+    func test_shouldNotNavigate_onApprovedLoadingStatus() {
+        
+        let (sut, subject, _) = makeSUT()
+        
+        subject.send(.loading(.approved))
+        
+        XCTAssertNil(sut.flow.state.navigation)
+    }
+    
+    func test_shouldNotNavigate_onInReviewLoadingStatus() {
+        
+        let (sut, subject, _) = makeSUT()
+        
+        subject.send(.loading(.inReview))
+        
+        XCTAssertNil(sut.flow.state.navigation)
+    }
+    
+    func test_shouldNotNavigate_onRejectedLoadingStatus() {
+        
+        let (sut, subject, _) = makeSUT()
+        
+        subject.send(.loading(.rejected))
+        
+        XCTAssertNil(sut.flow.state.navigation)
+    }
+    
+    // MARK: - pending
+    
+    func test_shouldNotNavigate_onPendingStatus() {
+        
+        let (sut, subject, _) = makeSUT()
+        
+        subject.send(.pending)
+        
+        XCTAssertNil(sut.flow.state.navigation)
+    }
+    
+    // MARK: - Helpers
+    
+    private typealias SUT = Binder<Subject, Domain.Flow>
+    private typealias Subject = PassthroughSubject<CreditCardMVPContentDomain.State, Never>
+    private typealias Domain = CreditCardMVPDomain
+    private typealias DismissingSpy = CallSpy<Void, Void>
+    
+    private func makeSUT(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (
+        sut: SUT,
+        subject: Subject,
+        dismissing: DismissingSpy
+    ) {
+        let subject = Subject()
+        let dismissing = DismissingSpy(stubs: [()])
+        let (factory, _,_) = super.makeSUT(file: file, line: line)
+        let sut = factory.makeCreditCardMVPBinder(
+            content: subject,
+            emitting: { $0 },
+            dismissing: { _ in dismissing.call }
+        )
+        
+        trackForMemoryLeaks(sut, file: file, line: line)
+        
+        return (sut, subject, dismissing)
+    }
+    
+    private func send(
+        _ subject: Subject,
+        _ status: CreditCardMVPContentDomain.DraftableStatus
+    ) {
+        subject.send(.completed(status))
+    }
+    
+    private func send(
+        _ subject: Subject,
+        _ failure: LoadFailure<ContentDomain.FailureType>
+    ) {
+        subject.send(.failure(failure))
+    }
+}
+
+class CreditCardMVPRootViewModelFactory: RootViewModelFactoryTests {
+    
+    typealias ContentDomain = CreditCardMVPContentDomain
+    
+    func alert(
+        _ message: String = anyMessage()
+    ) -> LoadFailure<ContentDomain.FailureType> {
+        
+        return .init(message: message, type: .alert)
+    }
+    
+    func informer(
+        _ message: String = anyMessage()
+    ) -> LoadFailure<ContentDomain.FailureType> {
+        
+        return .init(message: message, type: .informer)
+    }
+    
+    func draft(
         application: ContentDomain.Draft.ApplicationState = .pending
     ) -> ContentDomain.DraftableStatus {
         
@@ -571,10 +889,12 @@ extension CreditCardMVPDomain.Content {
 
 extension CreditCardMVPDomain.Flow {
     
-    var isShowingAlert: Bool {
+    func isShowingAlert(
+        with message: String = anyMessage()
+    ) -> Bool {
         
-        guard case .alert = state.navigation else { return false }
-        return true
+        guard case let .alert(alertMessage) = state.navigation else { return false }
+        return alertMessage == message
     }
     
     var isShowingFailure: Bool {
@@ -585,10 +905,12 @@ extension CreditCardMVPDomain.Flow {
         return complete.status == .failure
     }
     
-    var isShowingInformer: Bool {
+    func isShowingInformer(
+        with message: String = anyMessage()
+    ) -> Bool {
         
-        guard case .informer = state.navigation else { return false }
-        return true
+        guard case let .informer(informerMessage) = state.navigation else { return false }
+        return informerMessage == message
     }
     
     var isShowingApproved: Bool {

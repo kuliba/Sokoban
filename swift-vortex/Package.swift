@@ -363,6 +363,7 @@ let package = Package(
         .productProfileComponents,
         .productSelectComponent,
         .productSelectComponentTests,
+        .placeholderLandingComponent,
         .sharedConfigs,
         .bottomSheetComponent,
         .carouselComponent,
@@ -3572,6 +3573,14 @@ private extension Target {
         path: "Tests/UI/Components/\(String.productSelectComponentTests)"
     )
     
+    static let placeholderLandingComponent = target(
+        name: .placeholderLandingComponent,
+        dependencies: [
+            .uiPrimitives,
+        ],
+        path: "Sources/UI/Components/\(String.placeholderLandingComponent)"
+    )
+    
     static let sharedConfigs = target(
         name: .sharedConfigs,
         dependencies: [
@@ -3960,6 +3969,10 @@ private extension Target.Dependency {
     
     static let productSelectComponent = byName(
         name: .productSelectComponent
+    )
+    
+    static let placeholderLandingComponent = byName(
+        name: .placeholderLandingComponent
     )
     
     static let sharedConfigs = byName(
@@ -4416,6 +4429,8 @@ private extension String {
     
     static let productSelectComponent = "ProductSelectComponent"
     static let productSelectComponentTests = "ProductSelectComponentTests"
+
+    static let placeholderLandingComponent = "PlaceholderLandingComponent"
     
     static let sharedConfigs = "SharedConfigs"
     
