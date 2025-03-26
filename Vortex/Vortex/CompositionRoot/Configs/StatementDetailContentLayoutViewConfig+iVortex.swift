@@ -18,7 +18,6 @@ extension StatementDetailContentLayoutViewConfig {
             textFont: .textBodySR12160(),
             textColor: .textPlaceholder
         ),
-        logoWidth: 64,
         merchantName: .init(
             textFont: .textBodyMR14180(),
             textColor: .textPlaceholder
@@ -34,6 +33,21 @@ extension StatementDetailContentLayoutViewConfig {
             completed: .systemColorActive,
             inflight: .systemColorWarning,
             rejected: .textRed
+        ),
+        frames: .init(
+            button: .init(width: 100, height: 92),
+            buttonCircle: .init(width: 56, height: 56),
+            buttonText: .init(width: 66, height: 14),
+            formattedAmount: .init(width: 156, height: 22),
+            formattedDate: .init(width: 156, height: 12),
+            logo: 64,
+            purpose: .init(width: 178, height: 16),
+            status: .init(width: 100, height: 10)
+        ),
+        placeholderColors: .init(
+            button: .orange, // Blur/Placeholder
+            logo: .mainColorsGrayLightest,
+            text: .pink // Blur/Placeholder white text
         )
     )
 }

@@ -38,10 +38,13 @@ extension ViewComponents {
                     .padding(.horizontal)
                     
                 case let .failure(failure):
-                    makeStatementDetailContentLayoutView(content: .init(
-                        content: failure.content,
-                        extendedDetails: nil
-                    ))
+                    makeStatementDetailContentLayoutView(
+                        content: .init(
+                            content: failure.content,
+                            extendedDetails: nil
+                        ),
+                        isLoading: false
+                    )
                     
                 default:
                     EmptyView()
@@ -163,35 +166,25 @@ extension ViewComponents {
         
         RxWrapperView(model: details.details) { state, _ in
             
-            switch state.extendedDetails {
-            case let .completed(extendedDetails):
-                makeStatementDetailContentLayoutView(content: .init(
+            makeStatementDetailContentLayoutView(
+                content: .init(
                     content: details.content,
-                    extendedDetails: extendedDetails
-                ))
-                
-            case .failure:
-                makeStatementDetailContentLayoutView(content: .init(
-                    content: details.content,
-                    extendedDetails: nil
-                ))
-                
-            case .loading:
-                ProgressView() // TODO: replace with shimmer
-                
-            case .pending:
-                ProgressView()
-            }
+                    extendedDetails: state.extendedDetails.success
+                ),
+                isLoading: state.extendedDetails.isLoading
+            )
         }
     }
     
     @inlinable
     func makeStatementDetailContentLayoutView(
-        content: StatementDetailContent
+        content: StatementDetailContent,
+        isLoading: Bool
     ) -> some View {
         
         StatementDetailContentLayoutView(
             content: content,
+            isLoading: isLoading,
             config: .iVortex,
             makeLogoView: makeIconView
         )
