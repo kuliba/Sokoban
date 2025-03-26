@@ -63,8 +63,16 @@ extension RootViewModelFactory {
             schedulers.background.delay(for: .seconds(2)) { notify(.dismiss) }
             completion(.informer(message))
             
-        case let .approved(consent, productCard):
-            break
+        case let .approved(consent, product):
+            completion(.decision(.init(
+                message: .approvedMessage,
+                product: product,
+                title: .approvedTitle,
+                status: .approved(.init(
+                    consent: consent,
+                    info: .approvedInfo
+                ))
+            )))
             
         case .inReview:
             completion(.complete(.init(
@@ -85,7 +93,12 @@ extension RootViewModelFactory {
 
 private extension String {
     
+    static let approvedInfo = "Про то что можно забрать в офисе"
+    static let approvedMessage = "Ваша кредитная карта готова к оформлению!"
+    static let approvedTitle = "Кредитная карта одобрена"
+    
     static let failure = "Что-то пошло не так...\nПопробуйте позже."
+    
     static let inReview = "Ожидайте рассмотрения Вашей заявки\nРезультат придет в Push/смс\nПримерное время рассмотрения заявки 10 минут."
     
     static let rejectedMessage = "К сожалению, ваша кредитная история не позволяет оформить карту"

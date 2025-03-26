@@ -54,6 +54,7 @@ extension ViewComponents {
     ) -> some View {
         
         let product = ProductCard(limit: "₽ 0", md5Hash: "d65188320fca0a9291240dae108ebd73", options: [.init(title: "!Fee", value: "!Free"), .init(title: "!Where", value: "!Everywhere")], title: "Credit Card", subtitle: "Better forever")
+        let consent = AttributedString(("Я соглашаюсь с Условиями и Тарифами"), tariffURL: .init(string: "https://ya.ru")!, conditionURL: .init(string: "https://ya.ru")!)
         
         List {
             
@@ -82,7 +83,7 @@ extension ViewComponents {
             
             Button("Application Approved") {
                 
-                binder.flow.event(.select(.approved(consent: .init("TBD: consent"), product)))
+                binder.flow.event(.select(.approved(consent: consent, product)))
             }
             
             Button("Application Rejected") {
@@ -141,6 +142,9 @@ extension ViewComponents {
                 textFont: .textH3Sb18240(),
                 textColor: .textSecondary
             ))
+            .frame(maxWidth: .infinity, alignment: .leading)
+            
+            decision.details.map(makeDecisionDetailsView)
             
             Spacer()
             
@@ -149,13 +153,28 @@ extension ViewComponents {
         .padding([.horizontal, .top])
         .navigationBar(withTitle: decision.title)
     }
+    
+    @inlinable
+    @ViewBuilder
+    func makeDecisionDetailsView(
+        _ details: CreditCardMVPDomain.Navigation.Decision.Status.Details
+    ) -> some View {
+        
+        makeCheckBoxView(title: details.consent, isChecked: true, toggle: {})
+        
+        details.info.text(withConfig: .init(
+            textFont: .textBodyMR14200(),
+            textColor: .textSecondary
+        ))
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
 }
 
 // MARK: - Flow View
 
 struct CreditCardMVPFlowView<CompleteView, DecisionView>: View
 where CompleteView: View,
-        DecisionView: View {
+      DecisionView: View {
     
     let state: State?
     let dismiss: () -> Void
@@ -287,5 +306,43 @@ private extension PaymentCompletion.Status {
         case .failure:  self = .rejected
         case .inReview: self = .completed
         }
+    }
+}
+
+// MARK: - Helpers
+
+private extension CreditCardMVPDomain.Navigation.Decision {
+    
+    var details: Status.Details? {
+        
+        guard case let .approved(details) = status else { return nil }
+        return details
+    }
+}
+
+extension AttributedString {
+    
+    init(
+        _ consent: String,
+        tariffURL: URL,
+        conditionURL: URL
+    ) {
+        var attributedString = AttributedString(consent)
+        attributedString.foregroundColor = .textPlaceholder
+        attributedString.font = .textBodySR12160()
+        
+        if let tariff = attributedString.range(of: "Тарифами") {
+            attributedString[tariff].link = tariffURL
+            attributedString[tariff].underlineStyle = .single
+            attributedString[tariff].foregroundColor = .textPlaceholder
+        }
+        
+        if let tariff = attributedString.range(of: "Условиями") {
+            attributedString[tariff].link = conditionURL
+            attributedString[tariff].underlineStyle = .single
+            attributedString[tariff].foregroundColor = .textPlaceholder
+        }
+        
+        self = attributedString
     }
 }
