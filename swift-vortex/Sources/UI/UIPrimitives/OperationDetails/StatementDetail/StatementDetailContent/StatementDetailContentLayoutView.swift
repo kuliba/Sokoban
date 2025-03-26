@@ -123,18 +123,30 @@ struct StatementDetailContentLayoutView_Previews: PreviewProvider {
         
         Group {
             
+            view(.empty)
+            view(.logo)
+            view(.logoWithStatus)
+            
             view(.completed)
             view(.inflight)
             view(.rejected)
         }
+        .border(.red)
     }
     
     private static func view(
         _ status: StatementDetailContent.Status
     ) -> some View {
         
+        view(.preview(status))
+    }
+    
+    private static func view(
+        _ content: StatementDetailContent
+    ) -> some View {
+        
         StatementDetailContentLayoutView(
-            content: .preview(status),
+            content: content,
             config: .preview
         ) {
             Image(systemName: $0)
@@ -142,11 +154,15 @@ struct StatementDetailContentLayoutView_Previews: PreviewProvider {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
         }
-        .previewDisplayName(status.title)
+        .previewDisplayName(content.status?.title)
     }
 }
 
 private extension StatementDetailContent {
+    
+    static let empty: Self = make()
+    static let logo: Self = make(merchantLogo: "archivebox.circle")
+    static let logoWithStatus: Self = make(merchantLogo: "archivebox.circle", status: .inflight)
     
     static func preview(
         _ status: Status = .completed
@@ -158,6 +174,25 @@ private extension StatementDetailContent {
             merchantLogo: "archivebox.circle",
             merchantName: "УФК Владимирской области",
             purpose: "Транспортный налог",
+            status: status
+        )
+    }
+    
+    private static func make(
+        formattedAmount: String? = nil,
+        formattedDate: String? = nil,
+        merchantLogo: String? = nil,
+        merchantName: String? = nil,
+        purpose: String? = nil,
+        status: Status? = nil
+    ) -> Self {
+        
+        return .init(
+            formattedAmount: formattedAmount,
+            formattedDate: formattedDate,
+            merchantLogo: merchantLogo,
+            merchantName: merchantName,
+            purpose: purpose,
             status: status
         )
     }
