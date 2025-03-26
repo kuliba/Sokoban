@@ -19,7 +19,14 @@ extension StatementDetailsDomain {
     
     // MARK: - Domain
     
-    typealias State = StateMachines.LoadState<Details, Failure>
+    struct State {
+        
+        let content: Content
+        var detailsState: DetailsState
+        
+        typealias DetailsState = StateMachines.LoadState<Details, Failure>
+    }
+    
     typealias Event = StateMachines.LoadEvent<Details, Failure>
     typealias Effect = StateMachines.LoadEffect
     
@@ -30,21 +37,19 @@ extension StatementDetailsDomain {
     
     // MARK: - Types
     
-    struct Details {
+    struct Content {
         
-        let content: Content
+        let logo: String? // Лого- md5hash из getCardStatementForPeriod_V3/getAccountStatementForPeriod_V3
+        let name: String? // Наименование получателя-    foreignName из getCardStatementForPeriod_V3/getAccountStatementForPeriod_V3
+    
         let details: OperationDetailDomain.Model
-        let document: C2GDocumentButtonDomain.Binder?
-        
-        struct Content: Equatable {
-            
-            let logo: String? // Лого- md5hash из getCardStatementForPeriod_V3/getAccountStatementForPeriod_V3
-            let name: String? // Наименование получателя-    foreignName из getCardStatementForPeriod_V3/getAccountStatementForPeriod_V3
-        }
     }
     
-    struct Failure: Error {
+    struct Details {
         
-        let content: Details.Content
+        let details: OperationDetailDomain.Model
+        let document: C2GDocumentButtonDomain.Binder?
     }
+    
+    typealias Failure = Error
 }

@@ -40,6 +40,7 @@ extension RootViewModelFactory {
             guard let self else { return }
             
             completion($0.result(digest: digest, format: format(amount:currency:)))
+            _ = load
         }
     }
     

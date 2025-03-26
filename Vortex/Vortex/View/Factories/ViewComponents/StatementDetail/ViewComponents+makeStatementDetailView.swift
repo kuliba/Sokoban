@@ -15,58 +15,46 @@ extension ViewComponents {
     @inlinable
     @ViewBuilder
     func makeStatementDetailView(
-        _ details: StatementDetailsDomain.Model
+        _ model: StatementDetailsDomain.Model
     ) -> some View {
         
-        RxWrapperView(model: details) { state, _ in
+        RxWrapperView(model: model) { state, _ in
             
-            Group {
+            StatementDetailLayoutView(config: .iVortex) {
                 
-                switch state {
-                case let .completed(details):
-                    StatementDetailLayoutView(config: .iVortex) {
-                        
-                        makeC2GPaymentStatementDetailButtonsView(
-                            details: details.details,
-                            document: details.document
-                        )
-                        
-                    } content: {
-                        
-                        makeStatementDetailContentView(details: details)
-                    }
-                    .padding(.horizontal)
-                    
-                case let .failure(failure):
-                    makeStatementDetailContentLayoutView(
-                        content: .init(
-                            content: failure.content,
-                            extendedDetails: nil
-                        ),
-                        isLoading: false
-                    )
-                    
-                default:
-                    EmptyView()
-                }
+                makeC2GPaymentStatementDetailButtonsView(state: state)
+                
+            } content: {
+                
+                makeStatementDetailContentView(state: state)
             }
-            .animation(.bouncy, value: state.case)
         }
+        .padding(.horizontal)
     }
     
     @inlinable
     func makeC2GPaymentStatementDetailButtonsView(
-        details: OperationDetailDomain.Model,
-        document: C2GDocumentButtonDomain.Binder?
+        state: StatementDetailsDomain.State
     ) -> some View {
         
         HStack(alignment: .top, spacing: 8) {
             
+            let document = state.detailsState.success?.document
+            
             document.map(makeC2GDocumentButtonDomainBinderView)
             
-            RxWrapperView(model: details) { state, _ in
+            switch state.detailsState {
+            case let .completed(details):
+                RxWrapperView(model: details.details) { state, _ in
+                    
+                    let extendedDetails = state.extendedDetails.success
+                    
+                    extendedDetails.map(makeC2GPaymentCompleteDetailsButton)
+                    extendedDetails.map(makeC2GPaymentCompleteRequisitesButton)
+                }
                 
-                makeC2GPaymentCompleteDetailsAndRequisitesButtonsView(state: state)
+            default:
+                makeC2GPaymentCompleteBasicDetailsButton(state.details.state.basicDetails)
             }
         }
     }
@@ -119,11 +107,11 @@ extension ViewComponents {
             switch state {
             case let .completed(pdfDocument):
                 PDFDocumentWrapperView(
-                    pdfDocument: pdfDocument, 
+                    pdfDocument: pdfDocument,
                     dismissAction: dismiss
                 )
                 .navigationBarWithClose(
-                    title: "Сохранить или отправить ", 
+                    title: "Сохранить или отправить ",
                     dismiss: dismiss
                 )
                 
@@ -161,17 +149,17 @@ extension ViewComponents {
     
     @inlinable
     func makeStatementDetailContentView(
-        details: StatementDetailsDomain.Details
+        state detailsState: StatementDetailsDomain.State
     ) -> some View {
         
-        RxWrapperView(model: details.details) { state, _ in
+        RxWrapperView(model: detailsState.details) { state, _ in
             
             makeStatementDetailContentLayoutView(
                 content: .init(
-                    content: details.content,
+                    content: detailsState.content,
                     extendedDetails: state.extendedDetails.success
                 ),
-                isLoading: state.extendedDetails.isLoading
+                isLoading: detailsState.detailsState.isLoading
             )
         }
     }
@@ -188,6 +176,14 @@ extension ViewComponents {
             config: .iVortex,
             makeLogoView: makeIconView
         )
+    }
+}
+
+private extension StatementDetailsDomain.State {
+    
+    var details: OperationDetailDomain.Model {
+        
+        detailsState.success?.details ?? content.details
     }
 }
 
@@ -222,7 +218,7 @@ extension PDFDocumentDomain.Navigation: Identifiable {
 private extension StatementDetailContent {
     
     init(
-        content: StatementDetailsDomain.Details.Content,
+        content: StatementDetailsDomain.Content,
         extendedDetails: OperationDetailDomain.ExtendedDetails?
     ) {
         self.init(
@@ -293,14 +289,20 @@ struct MakeStatementDetailView_Previews: PreviewProvider {
     ) -> some View {
         
         ViewComponents.preview.makeStatementDetailView(.init(
-            initialState: .completed(.init(
-                content: .init(logo: nil, name: "merchant"),
-                details: .preview(
-                    basicDetails: .preview,
-                    fullDetails: fullDetails
+            initialState: .init(
+                content: .init(
+                    logo: nil,
+                    name: "merchant",
+                    details: .preview(basicDetails: .preview)
                 ),
-                document: document
-            )),
+                detailsState: .completed(.init(
+                    details: .preview(
+                        basicDetails: .preview,
+                        fullDetails: fullDetails
+                    ),
+                    document: document
+                ))
+            ),
             reduce: { state, _ in (state, nil) },
             handleEffect: { _,_ in }
         ))

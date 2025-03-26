@@ -29,9 +29,10 @@ extension RootViewModelFactory {
         case .c2gPayment:
             guard let digest = makeDigest(product, statement) else { return nil }
             
-            let content = StatementDetailsDomain.Details.Content(
+            let content = StatementDetailsDomain.Content(
                 logo: statement.md5hash,
-                name: statement.fastPayment?.foreignName
+                name: statement.fastPayment?.foreignName, 
+                details: makeOperationDetail(digest: digest)
             )
             
             return .v3(makeAndLoadC2GPaymentOperationDetail(.init(
@@ -97,8 +98,16 @@ extension RootViewModelFactory {
         )
         
         return .init(
-            initialState: .pending,
-            reduce: reducer.reduce(_:_:),
+            initialState: .init(content: payload.content, detailsState: .pending),
+            reduce: { state, event in
+                
+                var state = state
+                
+                let (detailsState, effect) = reducer.reduce(state.detailsState, event)
+                state.detailsState = detailsState
+                                
+                return (state, effect)
+            },
             handleEffect: effectHandler.handleEffect(_:_:),
             scheduler: schedulers.main
         )
@@ -107,7 +116,7 @@ extension RootViewModelFactory {
     struct LoadStatementDetailsPayload {
         
         let digest: OperationDetailDomain.StatementDigest
-        let content: StatementDetailsDomain.Details.Content
+        let content: StatementDetailsDomain.Content
     }
     
     @inlinable
@@ -120,8 +129,8 @@ extension RootViewModelFactory {
             guard let self else { return }
             
             switch $0 {
-            case .failure:
-                completion(.failure(.init(content: payload.content)))
+            case let .failure(failure):
+                completion(.failure(failure))
                 
             case let .success(extendedDetails):
                 let details = makeOperationDetail(digest: payload.digest)
@@ -130,7 +139,6 @@ extension RootViewModelFactory {
                 let document = extendedDetails.paymentOperationDetailID.map(makeC2GDocumentButtonDomainBinder)
                 
                 completion(.success(.init(
-                    content: payload.content,
                     details: details,
                     document: document
                 )))
