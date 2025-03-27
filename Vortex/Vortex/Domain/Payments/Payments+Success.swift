@@ -567,7 +567,7 @@ extension Payments.ParameterSuccessText {
         case .suspended:
             return .init(
                 id: paramId,
-                value: "Операция временно приостановлена в целях безопасности",
+                value: "Операция приостановлена в целях безопасности.",
                 style: .warning
             )
             
