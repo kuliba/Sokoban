@@ -890,9 +890,16 @@ private extension RootViewModelFactory {
                 }
             }
         )
-                  
+        
+        let alertPermissionGranted = splash.content.$state
+            .map { $0.phase == .hidden }
+        // wait for fadeout
+            .delay(for: .seconds(1.3), scheduler: schedulers.background)
+            .eraseToAnyPublisher()
+        
         let mainViewModel = MainViewModel(
-            model, 
+            model,
+            alertPermissionGranted: alertPermissionGranted,
             bannersBox: bannersBox,
             navigationStateManager: userAccountNavigationStateManager,
             sberQRServices: sberQRServices,

@@ -91,6 +91,7 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
+            alertPermissionGranted: Empty().eraseToAnyPublisher(),
             bannersBox: BannersBox(load: { $0(nil) }),
             navigationStateManager: .preview,
             sberQRServices: .empty(),
@@ -195,8 +196,10 @@ final class MainViewModelTests: XCTestCase {
     
     func test_tapByZKU_onlyCorporateCards_shouldShowAlert() {
         
-        let (sut, model) = makeSUT()
+        let subject = PassthroughSubject<Bool, Never>()
+        let (sut, model) = makeSUT(alertPermissionGranted: subject.eraseToAnyPublisher())
         
+        subject.send(true)
         model.products.value[.card] = [
             makeCardProduct(id: 1, cardType: .individualBusinessman),
             makeCardProduct(id: 2, cardType: .corporate)
@@ -681,6 +684,7 @@ final class MainViewModelTests: XCTestCase {
     private typealias CollateralLandingSpy = CallSpy<Void, GetCollateralLandingDomain.Binder>
 
     private func makeSUT(
+        alertPermissionGranted: AnyPublisher<Bool, Never> = Empty().eraseToAnyPublisher(),
         createSberQRPaymentStub: CreateSberQRPaymentResult = .success(.empty()),
         getSberQRDataResultStub: GetSberQRDataResult = .success(.empty()),
         updateInfoStatusFlag: UpdateInfoStatusFeatureFlag = .inactive,
@@ -714,6 +718,7 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
+            alertPermissionGranted: alertPermissionGranted,
             bannersBox: BannersBox(load: { $0(nil) }),
             navigationStateManager: .preview,
             sberQRServices: sberQRServices,
@@ -788,6 +793,7 @@ final class MainViewModelTests: XCTestCase {
 
         let sut = MainViewModel(
             model,
+            alertPermissionGranted: Empty().eraseToAnyPublisher(),
             bannersBox: BannersBox(load: { $0(nil) }),
             navigationStateManager: .preview,
             sberQRServices: sberQRServices,
@@ -873,6 +879,7 @@ final class MainViewModelTests: XCTestCase {
         
         let sut = MainViewModel(
             model,
+            alertPermissionGranted: Empty().eraseToAnyPublisher(),
             bannersBox: BannersBox(load: { $0(nil) }),
             navigationStateManager: .preview,
             sberQRServices: .empty(),
