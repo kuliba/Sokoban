@@ -154,6 +154,7 @@ extension SceneDelegate {
     func sceneWillResignActive(_ scene: UIScene) {
         
         self.window?.addBlure()
+        self.window?.endEditing(true)
     }
     
     func sceneWillEnterForeground(_ scene: UIScene) {
