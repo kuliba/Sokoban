@@ -278,6 +278,8 @@ extension RootViewModelFactory {
             )))
             
         case let .informer(message):
+            // TODO: add tests for notify
+            schedulers.background.delay(for: .seconds(2)) { notify(.dismiss) }
             completion(.informer(message))
             
         case let .approved(consent, product):

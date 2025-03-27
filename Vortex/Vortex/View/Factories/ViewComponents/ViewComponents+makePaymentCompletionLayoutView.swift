@@ -6,7 +6,6 @@
 //
 
 import PaymentCompletionUI
-import PaymentComponents
 import SwiftUI
 
 extension ViewComponents {
@@ -66,11 +65,9 @@ extension ViewComponents {
             config: config,
             statusConfig: statusConfig,
             buttons: EmptyView.init,
-            details: details
-        ) {
-            PaymentComponents.ButtonView.goToMain(goToMain: goToMain)
-                .conditionalBottomPadding()
-        }
+            details: details,
+            footer: goToMainHeroButton
+        )
     }
     
     @inlinable
@@ -86,11 +83,9 @@ extension ViewComponents {
             config: config,
             statusConfig: statusConfig,
             buttons: buttons,
-            details: EmptyView.init
-        ) {
-            PaymentComponents.ButtonView.goToMain(goToMain: goToMain)
-                .conditionalBottomPadding()
-        }
+            details: EmptyView.init,
+            footer: goToMainHeroButton
+        )
     }
     
     @inlinable

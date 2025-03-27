@@ -1,5 +1,5 @@
 //
-//  View+navigationBarWithBack.swift
+//  View+navigationBar.swift
 //  Vortex
 //
 //  Created by Igor Malyarov on 13.12.2023.
@@ -10,6 +10,19 @@ import UIPrimitives
 
 extension View {
     
+    func navigationBar(
+        withTitle title: String,
+        subtitle: String? = nil,
+        backgroundColor: Color = .clear
+    ) -> some View {
+        
+        navigationBar(with: .init(
+            title: title,
+            subtitle: subtitle,
+            background: backgroundColor
+        ))
+    }
+
     func navigationBarWithBack(
         title: String,
         subtitle: String? = nil,
