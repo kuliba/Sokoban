@@ -534,7 +534,7 @@ private extension Product {
             header: product.item.title,
             subtitle: product.item.description,
             orderTitle: product.item.fee.free,
-            serviceTitle: product.item.fee.open
+            serviceTitle: product.item.fee.maintenance.value.description
         )
     }
 }
