@@ -1,13 +1,9 @@
 {
-  "info" : {
-    "version" : 1,
-    "author" : "xcode"
-  },
   "images" : [
     {
-      "scale" : "1x",
+      "filename" : "imgMainBanner3@1x.png",
       "idiom" : "universal",
-      "filename" : "imgMainBanner3@1x.png"
+      "scale" : "1x"
     },
     {
       "scale" : "2x",
@@ -15,9 +11,13 @@
       "filename" : "imgMainBanner3@2x.png"
     },
     {
-      "filename" : "imgMainBanner3@3x.png",
       "scale" : "3x",
-      "idiom" : "universal"
+      "idiom" : "universal",
+      "filename" : "imgMainBanner3@3x.png"
     }
-  ]
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  }
 }
