@@ -394,15 +394,7 @@ extension RootViewModelFactory {
         
         let savingsAccount = makeSavingsAccount()
         
-        // MARK: - Notifications Authorized
-        
-        performOrWaitForAuthorized { [weak self] in
-            
-            self?.updateAuthorizedClientInform()
-        }
-        
-        updateClientInformAlerts()
-            .store(in: &bindings)
+        // MARK: - Banners Box
         
         let bannersBox = makeBannersBox()
         
@@ -427,6 +419,12 @@ extension RootViewModelFactory {
                 self?.scheduleGetAndCacheSplashImages()
             }
         }
+        
+        // MARK: - Notifications Non-Authorized
+        
+        updateClientInformAlerts().store(in: &bindings)
+        
+        // MARK: - Root
         
         let rootViewModel = make(
             featureFlags: featureFlags,
@@ -462,6 +460,26 @@ extension RootViewModelFactory {
             makePaymentsTransfers: { paymentsTransfersSwitcher },
             makePaymentsMeToMeViewModel: { [makePaymentsMeToMeViewModel] in makePaymentsMeToMeViewModel(featureFlags.processingFlag, $0) }
         )
+        
+        // MARK: - Notifications Authorized
+        
+        // TODO: - extract helper with customizable completion(?)
+        isHidden(splash: splash.content)
+            .filter { $0 }
+            .sink { [weak self] _ in
+                
+                self?.loadAuthorizedClientInform { [weak rootViewModel] in
+                    
+                    if let authorized = $0 {
+                        
+                        // TODO: send event, do not change state directly
+                        rootViewModel?.tabsViewModel.mainViewModel.route.modal = .bottomSheet(.init(type: .clientInform(authorized)))
+                    }
+                }
+            }
+            .store(in: &bindings)
+        
+        // MARK: - marketBinder
         
         let marketBinder = MarketShowcaseToRootViewModelBinder(
             marketShowcase: rootViewModel.tabsViewModel.marketShowcaseBinder,
@@ -523,6 +541,21 @@ extension RootViewModelFactory {
         )
         
         return composer.compose(with: rootViewModel)
+    }
+    
+    // TODO: - extract
+    @inlinable
+    func isHidden(
+        splash: SplashScreenViewModel,
+        delay: Delay = .seconds(1.3),
+        on scheduler: AnySchedulerOfDispatchQueue? = nil
+    ) -> AnyPublisher<Bool, Never> {
+        
+        splash.$state
+            .map { $0.phase == .hidden }
+        // wait for fadeout
+            .delay(for: delay, scheduler: scheduler ?? schedulers.background)
+            .eraseToAnyPublisher()
     }
 }
 
@@ -891,11 +924,7 @@ private extension RootViewModelFactory {
             }
         )
         
-        let alertPermissionGranted = splash.content.$state
-            .map { $0.phase == .hidden }
-        // wait for fadeout
-            .delay(for: .seconds(1.3), scheduler: schedulers.background)
-            .eraseToAnyPublisher()
+        let alertPermissionGranted = isHidden(splash: splash.content)
         
         let mainViewModel = MainViewModel(
             model,
