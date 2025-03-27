@@ -53,8 +53,11 @@ extension ViewComponents {
                     extendedDetails.map(makeC2GPaymentCompleteRequisitesButton)
                 }
                 
-            default:
+            case .failure:
                 makeC2GPaymentCompleteBasicDetailsButton(state.details.state.basicDetails)
+                
+            default:
+                EmptyView()
             }
         }
     }
