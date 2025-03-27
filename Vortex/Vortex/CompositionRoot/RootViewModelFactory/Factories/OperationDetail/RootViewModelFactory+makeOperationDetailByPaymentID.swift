@@ -68,7 +68,7 @@ private extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDRes
         
         return .init(
             product: payload.product,
-            status: payload.status,
+            status: status,
             comment: comment,
             dateForDetail: dateForDetail,
             dateN: dateN,
@@ -87,5 +87,15 @@ private extension RemoteServices.ResponseMapper.GetOperationDetailByPaymentIDRes
             transferNumber: transferNumber,
             upno: upno
         )
+    }
+    
+    private var status: OperationDetailDomain.Status {
+        
+        switch operationStatus {
+        case .complete:   return .completed
+        case .inProgress: return .inflight
+        case .rejected:   return .rejected
+        default:          return .rejected
+        }
     }
 }
