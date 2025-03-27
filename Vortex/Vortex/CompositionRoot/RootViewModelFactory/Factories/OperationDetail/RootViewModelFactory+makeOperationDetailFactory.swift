@@ -29,9 +29,10 @@ extension RootViewModelFactory {
         case .c2gPayment:
             guard let digest = makeDigest(product, statement) else { return nil }
             
-            let content = StatementDetailsDomain.Details.Content(
+            let content = StatementDetailsDomain.Content(
                 logo: statement.md5hash,
-                name: statement.fastPayment?.foreignName
+                name: statement.fastPayment?.foreignName, 
+                details: makeOperationDetail(digest: digest)
             )
             
             return .v3(makeAndLoadC2GPaymentOperationDetail(.init(
@@ -97,8 +98,16 @@ extension RootViewModelFactory {
         )
         
         return .init(
-            initialState: .pending,
-            reduce: reducer.reduce(_:_:),
+            initialState: .init(content: payload.content, detailsState: .pending),
+            reduce: { state, event in
+                
+                var state = state
+                
+                let (detailsState, effect) = reducer.reduce(state.detailsState, event)
+                state.detailsState = detailsState
+                                
+                return (state, effect)
+            },
             handleEffect: effectHandler.handleEffect(_:_:),
             scheduler: schedulers.main
         )
@@ -107,13 +116,13 @@ extension RootViewModelFactory {
     struct LoadStatementDetailsPayload {
         
         let digest: OperationDetailDomain.StatementDigest
-        let content: StatementDetailsDomain.Details.Content
+        let content: StatementDetailsDomain.Content
     }
     
     @inlinable
     func loadStatementDetails(
         _ payload: LoadStatementDetailsPayload,
-        _ completion: @escaping (Result<StatementDetailsDomain.Details, Error>) -> Void
+        _ completion: @escaping (Result<StatementDetailsDomain.Details, StatementDetailsDomain.Failure>) -> Void
     ) {
         getOperationDetail(payload.digest) { [weak self] in
             
@@ -130,7 +139,6 @@ extension RootViewModelFactory {
                 let document = extendedDetails.paymentOperationDetailID.map(makeC2GDocumentButtonDomainBinder)
                 
                 completion(.success(.init(
-                    content: payload.content,
                     details: details,
                     document: document
                 )))

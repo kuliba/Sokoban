@@ -19,27 +19,37 @@ extension StatementDetailsDomain {
     
     // MARK: - Domain
     
-    typealias State = StateMachines.LoadState<Details, Error>
-    typealias Event = StateMachines.LoadEvent<Details, Error>
+    struct State {
+        
+        let content: Content
+        var detailsState: DetailsState
+        
+        typealias DetailsState = StateMachines.LoadState<Details, Failure>
+    }
+    
+    typealias Event = StateMachines.LoadEvent<Details, Failure>
     typealias Effect = StateMachines.LoadEffect
     
     // MARK: - Logic
     
-    typealias Reducer = StateMachines.LoadReducer<Details, Error>
-    typealias EffectHandler = StateMachines.LoadEffectHandler<Details, Error>
+    typealias Reducer = StateMachines.LoadReducer<Details, Failure>
+    typealias EffectHandler = StateMachines.LoadEffectHandler<Details, Failure>
     
     // MARK: - Types
     
+    struct Content {
+        
+        let logo: String? // Лого- md5hash из getCardStatementForPeriod_V3/getAccountStatementForPeriod_V3
+        let name: String? // Наименование получателя-    foreignName из getCardStatementForPeriod_V3/getAccountStatementForPeriod_V3
+    
+        let details: OperationDetailDomain.Model
+    }
+    
     struct Details {
         
-        let content: Content
         let details: OperationDetailDomain.Model
         let document: C2GDocumentButtonDomain.Binder?
-        
-        struct Content: Equatable {
-            
-            let logo: String? // Лого- md5hash из getCardStatementForPeriod_V3/getAccountStatementForPeriod_V3
-            let name: String? // Наименование получателя-    foreignName из getCardStatementForPeriod_V3/getAccountStatementForPeriod_V3
-        }
     }
+    
+    typealias Failure = Error
 }

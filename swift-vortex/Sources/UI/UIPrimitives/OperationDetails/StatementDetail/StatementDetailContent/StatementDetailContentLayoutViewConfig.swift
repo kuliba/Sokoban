@@ -12,31 +12,34 @@ public struct StatementDetailContentLayoutViewConfig: Equatable {
     
     public let formattedAmount: TextConfig
     public let formattedDate: TextConfig
-    public let logoWidth: CGFloat
     public let merchantName: TextConfig
     public let purpose: TextConfig
     public let purposeHeight: CGFloat
     public let spacing: CGFloat
     public let status: Status
+    public let frames: Frames
+    public let placeholderColors: PlaceholderColors
     
     public init(
         formattedAmount: TextConfig,
         formattedDate: TextConfig,
-        logoWidth: CGFloat,
         merchantName: TextConfig,
         purpose: TextConfig,
         purposeHeight: CGFloat,
         spacing: CGFloat,
-        status: Status
+        status: Status,
+        frames: Frames,
+        placeholderColors: PlaceholderColors
     ) {
         self.formattedAmount = formattedAmount
         self.formattedDate = formattedDate
-        self.logoWidth = logoWidth
         self.merchantName = merchantName
         self.purpose = purpose
         self.purposeHeight = purposeHeight
         self.spacing = spacing
         self.status = status
+        self.frames = frames
+        self.placeholderColors = placeholderColors
     }
 }
 
@@ -59,6 +62,57 @@ extension StatementDetailContentLayoutViewConfig {
             self.completed = completed
             self.inflight = inflight
             self.rejected = rejected
+        }
+    }
+    
+    public struct Frames: Equatable {
+        
+        public let button: CGSize
+        public let buttonCircle: CGSize
+        public let buttonText: CGSize
+        public let formattedAmount: CGSize
+        public let formattedDate: CGSize
+        public let logoWidth: CGFloat
+        public let purpose: CGSize
+        public let status: CGSize
+        
+        public init(
+            button: CGSize,
+            buttonCircle: CGSize,
+            buttonText: CGSize,
+            formattedAmount: CGSize,
+            formattedDate: CGSize,
+            logo: CGFloat,
+            purpose: CGSize,
+            status: CGSize
+        ) {
+            self.button = button
+            self.buttonCircle = buttonCircle
+            self.buttonText = buttonText
+            self.formattedAmount = formattedAmount
+            self.formattedDate = formattedDate
+            self.logoWidth = logo
+            self.purpose = purpose
+            self.status = status
+        }
+    }
+    
+    public struct PlaceholderColors: Equatable {
+        
+        public let button: Color
+        public let logo: Color
+        public let text: Color
+        
+        public init(
+            button: Color,
+            // Blur/Placeholder
+            logo: Color,
+            // Main colors/Gray lightest
+            text: Color // Blur/Placeholder white text
+        ) {
+            self.button = button
+            self.logo = logo
+            self.text = text
         }
     }
 }
