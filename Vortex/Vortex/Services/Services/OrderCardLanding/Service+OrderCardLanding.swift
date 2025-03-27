@@ -1,6 +1,6 @@
 //
 //  Service+OrderCardLanding.swift
-//  ForaBank
+//  Vortex
 //
 //  Created by Дмитрий Савушкин on 03.12.2024.
 //
