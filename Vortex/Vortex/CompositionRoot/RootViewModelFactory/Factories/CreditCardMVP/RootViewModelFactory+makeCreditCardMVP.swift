@@ -53,16 +53,6 @@ extension RootViewModelFactory {
         case let .alert(message):
             completion(.alert(message))
             
-        case .failure:
-            completion(.complete(.init(
-                message: .failure,
-                status: .failure
-            )))
-            
-        case let .informer(message):
-            schedulers.background.delay(for: .seconds(2)) { notify(.dismiss) }
-            completion(.informer(message))
-            
         case let .approved(consent, product):
             completion(.decision(.init(
                 message: .approvedMessage,
@@ -73,6 +63,16 @@ extension RootViewModelFactory {
                     info: .approvedInfo
                 ))
             )))
+            
+        case .failure:
+            completion(.complete(.init(
+                message: .failure,
+                status: .failure
+            )))
+            
+        case let .informer(message):
+            schedulers.background.delay(for: .seconds(2)) { notify(.dismiss) }
+            completion(.informer(message))
             
         case .inReview:
             completion(.complete(.init(

@@ -33,9 +33,9 @@ extension CreditCardMVPDomain {
     enum Select {
         
         case alert(String)
+        case approved(consent: AttributedString, ProductCard)
         case failure
         case informer(String)
-        case approved(consent: AttributedString, ProductCard)
         case inReview
         case rejected(ProductCard)
     }
@@ -43,9 +43,9 @@ extension CreditCardMVPDomain {
     enum Navigation {
         
         case alert(String)
-        case informer(String)
         case complete(Complete)
         case decision(Decision)
+        case informer(String)
         
         struct Complete: Equatable {
             
