@@ -153,7 +153,12 @@ extension SceneDelegate {
     
     func sceneWillResignActive(_ scene: UIScene) {
         
-        self.window?.addBlure()
+        window?.addBlure()
+        window?.endEditing(true)
+        
+        binder.content.tabsViewModel.paymentsModel.dismiss()
+        binder.content.action.send(RootViewModelAction.DismissAll())
+        binder.content.action.send(RootViewModelAction.SwitchTab(tabType: .main))
     }
     
     func sceneWillEnterForeground(_ scene: UIScene) {
