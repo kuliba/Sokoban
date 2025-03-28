@@ -411,7 +411,7 @@ private extension FeatureFailure {
     
     static let disabledForCorporate: Self = .init(title: "Информация", message: "Данный функционал не доступен\nдля корпоративных карт.\nОткройте продукт как физ. лицо,\nчтобы использовать все\nвозможности приложения.")
     
-    static let updateForNewPaymentFlow: Self = .init(message: "Обновите приложение до последней версии, чтобы получить доступ к новому разделу.")
+    static let updateForNewPaymentFlow: Self = .init(title: "Внимание", message: "Обновите приложение до последней версии, чтобы получить доступ к новому разделу.")
 }
 
 extension OrderAccountResponse.Status {
