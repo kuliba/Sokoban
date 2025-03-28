@@ -382,6 +382,9 @@ private extension CreateDraftCollateralLoanApplicationDomain.ContentError {
                 switch (statusCode, errorMessage) {
                 case (102, "Введен некорректный код. Попробуйте еще раз."):
                     self = .init(kind: .incorrectOTP(errorMessage))
+                  
+                case (_, let errorMessage) where errorMessage.hasPrefix("Что-то пошло не так"):
+                    self = defaultHandlerError
                     
                 default:
                     self = .init(kind: .serviceFailure(errorMessage))
