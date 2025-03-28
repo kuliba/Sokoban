@@ -84,10 +84,9 @@ private extension TemplatesListView {
             switch viewModel.state {
             case .loading:
                 // TODO: improve with factory helper
-                 ProgressView()
+                SpinnerRefreshView(icon: .init("Logo Vortex"))
                     .offset(y: -44)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                // SpinnerRefreshView(icon: .init("Logo Vortex"))
 //                RoundedRectangle(cornerRadius: 24)
 //                    .foregroundColor(.mainColorsGray)
 //                    .frame(height: 56)
