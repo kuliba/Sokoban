@@ -157,7 +157,7 @@ extension RootViewModelFactory {
         
         return .init(
             emitting: { $0.$state.map(\.flowEvent) },
-            dismissing: { _ in { notify(.dismiss) } }
+            dismissing: { _ in { } }
         )
     }
     
