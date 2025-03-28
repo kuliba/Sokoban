@@ -48,6 +48,16 @@ extension SavingsAccountDetailsState {
             return result
         }
     }
+    
+    var isFailure: Bool {
+        switch status {
+        case .inflight, .result:
+            return false
+            
+        case .failure:
+            return true
+        }
+    }
 }
 
 extension SavingsAccountDetails {

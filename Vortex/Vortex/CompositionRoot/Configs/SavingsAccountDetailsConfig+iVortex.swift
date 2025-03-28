@@ -15,9 +15,9 @@ extension SavingsAccountDetailsConfig {
         clock: .ic24HistoryInactive,
         colors: .init(
             background: .textSecondary,
-            chevron: .gray,
+            chevron: .mainColorsGray,
             progress: .textPrimary,
-            shimmering: Color(red: 0.76, green: 0.76, blue: 0.76)),
+            shimmering: .bgIconGrayLightest),
         cornerRadius: 12,
         days: .init(textFont: .textBodySR12160(), textColor: .textPlaceholder),
         heights: .init(

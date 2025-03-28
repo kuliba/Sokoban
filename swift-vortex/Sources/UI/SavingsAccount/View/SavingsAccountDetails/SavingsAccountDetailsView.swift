@@ -86,6 +86,15 @@ public struct SavingsAccountDetailsView: View {
     
     public var body: some View {
         
+        if state.isFailure {
+            failureView()
+        } else {
+            info()
+        }
+    }
+    
+    private func info() -> some View {
+        
         VStack {
             header(config.texts.header, needShimmering)
                 .frame(height: config.heights.header)
@@ -112,6 +121,46 @@ public struct SavingsAccountDetailsView: View {
         }
         .frame(height: state.isExpanded ? config.heights.big : config.heights.small)
         .modifier(ViewWithBackgroundCornerRadiusAndPaddingModifier(config.colors.background, config.cornerRadius, config.padding))
+    }
+    
+    private func failureView() -> some View {
+        
+        VStack(alignment: .leading) {
+            
+            placeholder(config.heights.header)
+                .padding(.bottom, config.padding)
+            
+            placeholder(config.heights.period)
+                .padding(.bottom, config.padding / 2)
+            
+            placeholder(config.heights.interest)
+                .padding(.bottom, 12)
+            
+            placeholder(config.heights.progress)
+        }
+        .frame(height: config.heights.small)
+        .modifier(ViewWithBackgroundCornerRadiusAndPaddingModifier(config.colors.background, config.cornerRadius, config.padding))
+    }
+    
+    private func gradient() -> LinearGradient {
+        .linearGradient(
+            Gradient(colors: [
+                config.colors.shimmering,
+                config.colors.chevron
+            ]),
+            startPoint: .leading,
+            endPoint: .trailing
+        )
+    }
+    
+    private func placeholder(
+        _ height: CGFloat
+    ) -> some View {
+        
+        RoundedRectangle(cornerRadius: config.cornerRadius)
+            .fill(gradient())
+            .modifier(HeightWithMaxWidthModifier(height: height))
+            .opacity(0.1)
     }
     
     private func interest() -> some View {
