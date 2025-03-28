@@ -1,18 +1,18 @@
 {
   "info" : {
-    "version" : 1,
-    "author" : "xcode"
+    "author" : "xcode",
+    "version" : 1
   },
   "images" : [
     {
-      "scale" : "1x",
       "idiom" : "universal",
-      "filename" : "imgMainBanner6@1x.png"
+      "filename" : "imgMainBanner6@1x.png",
+      "scale" : "1x"
     },
     {
-      "scale" : "2x",
+      "filename" : "imgMainBanner6@2x.png",
       "idiom" : "universal",
-      "filename" : "imgMainBanner6@2x.png"
+      "scale" : "2x"
     },
     {
       "filename" : "imgMainBanner6@3x.png",
