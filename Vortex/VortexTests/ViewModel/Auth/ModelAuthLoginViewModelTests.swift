@@ -798,23 +798,4 @@ private extension Model {
         
         _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
     }
-    
-    //TODO: Update according new ClientInformAlerts realisation
-//    func sendClientInform(
-//        _ data: ClientInformData?,
-//        timeout: TimeInterval = 0.05
-//    ) {
-//        clientInform.send(.result(data))
-//        
-//        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
-//    }
-    
-    func sendClientInformAuthorized(
-        _ data: ClientAuthorizationState,
-        timeout: TimeInterval = 0.05
-    ) {
-        clientAuthorizationState.send(data)
-        
-        _ = XCTWaiter().wait(for: [.init()], timeout: timeout)
-    }
 }

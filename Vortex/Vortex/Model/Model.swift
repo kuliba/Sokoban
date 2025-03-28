@@ -77,7 +77,6 @@ class Model {
     let images: CurrentValueSubject<[String: ImageData], Never>
     
     // MARK: Client Inform Alerts and Notifications
-    let clientAuthorizationState: CurrentValueSubject<ClientAuthorizationState, Never>
     let clientInformAlertManager: any AlertManager<ClientInformAlerts>
 
     var getBannerCatalogListV2: Services.GetBannerCatalogList?
@@ -241,7 +240,6 @@ class Model {
         self.qrPaymentType = .init([])
         self.productsOpening = .init([])
         self.depositsCloseNotified = .init([])
-        self.clientAuthorizationState = .init(.init())
         self.clientInformAlertManager = clientInformAlertManager
         self.clientInformStatus = .init(isShowNotAuthorized: false, isShowAuthorized: false)
         self.productTemplates = .init([])
