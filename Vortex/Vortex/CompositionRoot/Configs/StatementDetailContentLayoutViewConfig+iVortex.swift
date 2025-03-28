@@ -45,9 +45,9 @@ extension StatementDetailContentLayoutViewConfig {
             status: .init(width: 100, height: 10)
         ),
         placeholderColors: .init(
-            button: .orange, // Blur/Placeholder
+            button: .blurPlaceholder,
             logo: .mainColorsGrayLightest,
-            text: .pink // Blur/Placeholder white text
+            text: .blurPlaceholderwhitetext
         )
     )
 }
