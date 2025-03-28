@@ -199,11 +199,14 @@ class ProductViewModel: Identifiable, ObservableObject, Hashable {
             let owner = Self.owner(from: productData)
             let icon = productData.cloverImage
             let balance = Self.balanceFormatted(product: productData, style: appearance.style, model: model)
-            let interestRate: String? = {
-                if let value = productData.asAccount?.interestRate, !value.isEmpty {
-                    return value + "% /год."
-                }
-                return nil
+            let interestRate: String? = { [appearance] in
+                
+                guard appearance.style == .profile,
+                      let value = productData.asAccount?.interestRate,
+                      !value.isEmpty
+                else { return nil }
+                
+                return value + "% /год."
             }()
             let backgroundImage = Self.backgroundImage(with: productData, size: appearance.size, getImage: { model.images.value[.init($0)]?.image })
             
