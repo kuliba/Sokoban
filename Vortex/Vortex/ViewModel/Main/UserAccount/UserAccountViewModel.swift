@@ -153,7 +153,7 @@ private extension UserAccountViewModel {
                         guard let inn = clientInfo?.inn else {
                             return
                         }
-                        UIPasteboard.general.string = "\(inn)"
+                        UIPasteboard.general.string = "ИНН: \(inn)"
                         
                     case .adressPass:
                         guard let address = clientInfo?.address else {
