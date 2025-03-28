@@ -140,9 +140,11 @@ extension ViewComponents {
         switch decision.status {
         case let .approved(approved):
             makeDecisionApprovedView(
-                message: decision.message,
-                title: decision.title,
-                approved: approved
+                decisionApproved: .init(
+                    message: decision.message,
+                    title: decision.title,
+                    approved: approved
+                )
             )
             
         case .rejected:
@@ -155,39 +157,28 @@ extension ViewComponents {
     
     @inlinable
     func makeDecisionApprovedView(
-        message: String,
-        title: String,
-        approved: CreditCardMVPDomain.Navigation.Decision.Status.Approved
+        decisionApproved: DecisionApproved
     ) -> some View {
         
         VStack(spacing: 23) {
             
-            ProductCardView(
-                product: approved.product,
-                config: .prod(),
-                iconView: makeIconView
+            DecisionApprovedView(
+                decisionApproved: decisionApproved,
+                makeIconView: makeIconView
             )
             
-            message.text(withConfig: .init(
-                textFont: .textH3Sb18240(),
-                textColor: .textSecondary
-            ))
-            .frame(maxWidth: .infinity, alignment: .leading) // ??
-            
-            approved.info.text(withConfig: .init(
-                textFont: .textBodyMR14200(),
-                textColor: .textSecondary
-            ))
-            .frame(maxWidth: .infinity, alignment: .leading) // ??
-            
-            makeCheckBoxView(title: approved.consent, isChecked: true, toggle: {})
+            makeCheckBoxView(
+                title: decisionApproved.approved.consent,
+                isChecked: true,
+                toggle: {}
+            )
             
             Spacer()
             
             goToMainHeroButton()
         }
         .padding([.horizontal, .top])
-        .navigationBar(withTitle: title)
+        .navigationBar(withTitle: decisionApproved.title)
     }
     
     @inlinable
@@ -254,6 +245,43 @@ private extension CreditCardMVPFlowView {
             
         case let .decision(decision):
             decisionView(decision)
+        }
+    }
+}
+
+struct DecisionApproved: Equatable {
+    
+    let message: String
+    let title: String
+    let approved: CreditCardMVPDomain.Navigation.Decision.Status.Approved
+}
+
+struct DecisionApprovedView<IconView: View>: View {
+    
+    let decisionApproved: DecisionApproved
+    let makeIconView: (String) -> IconView
+    
+    var body: some View {
+        
+        VStack(spacing: 23) {
+            
+            ProductCardView(
+                product: decisionApproved.approved.product,
+                config: .prod(),
+                iconView: makeIconView
+            )
+            
+            decisionApproved.message.text(withConfig: .init(
+                textFont: .textH3Sb18240(),
+                textColor: .textSecondary
+            ))
+            .frame(maxWidth: .infinity, alignment: .leading) // ??
+            
+            decisionApproved.approved.info.text(withConfig: .init(
+                textFont: .textBodyMR14200(),
+                textColor: .textSecondary
+            ))
+            .frame(maxWidth: .infinity, alignment: .leading) // ??
         }
     }
 }
