@@ -241,7 +241,7 @@ class Model {
         self.qrPaymentType = .init([])
         self.productsOpening = .init([])
         self.depositsCloseNotified = .init([])
-        self.clientAuthorizationState = .init(.init(authorized: nil, notAuthorized: nil))
+        self.clientAuthorizationState = .init(.init())
         self.clientInformAlertManager = clientInformAlertManager
         self.clientInformStatus = .init(isShowNotAuthorized: false, isShowAuthorized: false)
         self.productTemplates = .init([])

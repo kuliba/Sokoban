@@ -38,6 +38,7 @@ class MainViewModel: ObservableObject, Resetable {
     @Published var sections: [Node<MainSectionViewModel>]
     @Published var productProfile: ProductProfileViewModel?
     
+    @Published private var alertPermissionGranted = false
     @Published var route: Route
     
     var rootActions: RootViewModel.RootActions?
@@ -63,6 +64,7 @@ class MainViewModel: ObservableObject, Resetable {
     
     init(
         _ model: Model,
+        alertPermissionGranted: AnyPublisher<Bool, Never>,
         bannersBox: any BannersBoxInterface<BannerList>,
         route: Route = .empty,
         navigationStateManager: UserAccountNavigationStateManager,
@@ -99,6 +101,10 @@ class MainViewModel: ObservableObject, Resetable {
         self.sections = bind(sections)
         bind()
         update(sections, with: model.settingsMainSections)
+        
+        alertPermissionGranted
+            .receive(on: scheduler)
+            .assign(to: &$alertPermissionGranted)
     }
         
     private var disableAlertViewModel: Alert.ViewModel {
@@ -452,19 +458,23 @@ private extension MainViewModel {
             .sink { [unowned self] products in
                 
                 if let accounts = products[.account], !accounts.isEmpty {
+                    
                     handleBanners(sections.map(\.model).productsSection?.productCarouselViewModel.promoProducts)
                 }
                 
                 guard let deposits = products[.deposit], !deposits.isEmpty else { return }
                 
                 let filteredDeposits = deposits.filter { deposit in
+                    
                     guard let deposit = deposit as? ProductDepositData else { return false }
+                    
                     return !self.model.depositsCloseNotified.contains(.init(depositId: deposit.depositId)) && deposit.endDateNf
                 }
                 
                 var previousDepositData: (expired: Date?, id: Int?) = (nil, nil)
                 
                 filteredDeposits.forEach { deposit in
+                    
                     guard let deposit = deposit as? ProductDepositData else { return }
                     
                     self.model.action.send(ModelAction.Deposits.CloseNotified(productId: deposit.depositId))
@@ -472,16 +482,7 @@ private extension MainViewModel {
                     
                 }
                 
-                if let productId = previousDepositData.id {
-                    self.route.modal = .alert(.init(
-                        title: "Срок действия вклада истек",
-                        message: "Переведите деньги со вклада на свою карту/счет в любое время",
-                        primary: .init(type: .default, title: "Отмена", action: {}),
-                        secondary: .init(type: .default, title: "Ok", action: {
-                            self.action.send(MainViewModelAction.Show.ProductProfile(productId: productId))
-                        })
-                    ))
-                }
+                previousDepositData.id.map(expiredDepositAlert)
             }
             .store(in: &bindings)
         
@@ -494,6 +495,34 @@ private extension MainViewModel {
                 
             }
             .store(in: &bindings)
+    }
+    
+    private func expiredDepositAlert(
+        productID: Int
+    ) {
+        let alert = Alert.ViewModel(
+            title: "Срок действия вклада истек",
+            message: "Переведите деньги со вклада на свою карту/счет в любое время",
+            primary: .init(type: .default, title: "Отмена", action: {}),
+            secondary: .init(
+                type: .default,
+                title: "Ok",
+                action: { [weak self] in
+                    
+                    self?.action.send(MainViewModelAction.Show.ProductProfile(productId: productID))
+                }
+            )
+        )
+        
+        if alertPermissionGranted {
+            route.modal = .alert(alert)
+        } else {
+            $alertPermissionGranted
+                .filter { $0 }
+                .first()
+                .sink { [weak self] _ in self?.route.modal = .alert(alert) }
+                .store(in: &bindings)
+        }
     }
     
     func bind(_ sections: [MainSectionViewModel]) -> [Node<MainSectionViewModel>]{

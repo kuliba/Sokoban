@@ -680,6 +680,7 @@ extension MainViewModel {
     
     static let sample = MainViewModel(
         .emptyMock,
+        alertPermissionGranted: Empty().eraseToAnyPublisher(),
         bannersBox: BannersBox(load: { $0(nil) }),
         navigationStateManager: .preview,
         sberQRServices: .empty(),
