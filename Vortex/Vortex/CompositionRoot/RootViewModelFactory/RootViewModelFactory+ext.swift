@@ -472,8 +472,7 @@ extension RootViewModelFactory {
                     
                     if let authorized = $0 {
                         
-                        // TODO: send event, do not change state directly
-                        rootViewModel?.tabsViewModel.mainViewModel.route.modal = .bottomSheet(.init(type: .clientInform(authorized)))
+                        rootViewModel?.tabsViewModel.mainViewModel.action.send((MainViewModelAction.Show.ClientInform(data: authorized)))
                     }
                 }
             }
