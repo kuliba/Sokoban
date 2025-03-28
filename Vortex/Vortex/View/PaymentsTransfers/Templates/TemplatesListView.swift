@@ -85,6 +85,7 @@ private extension TemplatesListView {
             case .loading:
                 // TODO: improve with factory helper
                 SpinnerRefreshView(icon: .init("Logo Vortex"))
+                    .transaction { $0.disablesAnimations = false }
                     .offset(y: -44)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
 //                RoundedRectangle(cornerRadius: 24)
