@@ -139,8 +139,16 @@ private extension AlertModelOf<CategoryPickerSectionDomain.FlowDomain.Event> {
         event: PrimaryEvent
     ) -> Self {
         
-        .default(
-            title: message != .errorRequestLimitExceeded ? "Ошибка" : "",
+        let title: String
+        
+        switch message {
+        case .errorRequestLimitExceeded: title = "Ошибка"
+        case .updateForNewPaymentFlow: title = "Внимание"
+        default: title = ""
+        }
+        
+        return .default(
+            title: title,
             message: message,
             primaryEvent: event
         )
