@@ -155,6 +155,8 @@ extension SceneDelegate {
         
         window?.addBlure()
         window?.endEditing(true)
+        
+        binder.content.tabsViewModel.paymentsModel.dismiss()
         binder.content.action.send(RootViewModelAction.DismissAll())
         binder.content.action.send(RootViewModelAction.SwitchTab(tabType: .main))
     }
