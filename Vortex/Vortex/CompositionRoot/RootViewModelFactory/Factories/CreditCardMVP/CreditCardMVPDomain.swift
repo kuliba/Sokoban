@@ -11,10 +11,12 @@ import Foundation
 import PaymentCompletionUI
 import RxViewModel
 
-/// A namespace.
-enum CreditCardMVPDomain {}
+typealias CreditCardMVPDomain = GenericCreditCardMVPDomain<Void>
 
-extension CreditCardMVPDomain {
+/// A namespace.
+enum GenericCreditCardMVPDomain<T> {}
+
+extension GenericCreditCardMVPDomain {
     
     // MARK: - Binder
     
@@ -22,9 +24,21 @@ extension CreditCardMVPDomain {
     
     // MARK: - Content
     
-    typealias Content = Void
+    typealias Content = T
     
     // MARK: - Flow
+    
+    typealias Flow = CreditCardMVPFlowDomain.Flow
+    typealias Notify = CreditCardMVPFlowDomain.Notify
+    
+    typealias Select = CreditCardMVPFlowDomain.Select
+    typealias Navigation = CreditCardMVPFlowDomain.Navigation
+}
+
+/// A namespace.
+enum CreditCardMVPFlowDomain {}
+
+extension CreditCardMVPFlowDomain {
     
     typealias FlowDomain = FlowCore.FlowDomain<Select, Navigation>
     typealias Flow = FlowDomain.Flow
