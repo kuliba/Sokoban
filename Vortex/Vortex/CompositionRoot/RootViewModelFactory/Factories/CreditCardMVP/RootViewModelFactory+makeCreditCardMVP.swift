@@ -56,12 +56,12 @@ extension RootViewModelFactory {
         case let .approved(consent, product):
             completion(.decision(.init(
                 message: .approvedMessage,
-                product: product,
-                title: .approvedTitle,
                 status: .approved(.init(
                     consent: consent,
-                    info: .approvedInfo
-                ))
+                    info: .approvedInfo,
+                    product: product
+                )),
+                title: .approvedTitle
             )))
             
         case .failure:
@@ -80,12 +80,11 @@ extension RootViewModelFactory {
                 status: .inReview
             )))
             
-        case let .rejected(product):
+        case .rejected:
             completion(.decision(.init(
                 message: .rejectedMessage,
-                product: product,
-                title: .rejectedTitle,
-                status: .rejected
+                status: .rejected,
+                title: .rejectedTitle
             )))
         }
     }

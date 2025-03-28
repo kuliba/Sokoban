@@ -88,11 +88,13 @@ extension ViewComponents {
             
             Button("Application Rejected") {
                 
-                binder.flow.event(.select(.rejected(product)))
+                binder.flow.event(.select(.rejected))
             }
         }
         .listStyle(.plain)
     }
+    
+    // MARK: - Flow
     
     @inlinable
     func makeCreditCardMVPFlowView(
@@ -125,48 +127,86 @@ extension ViewComponents {
                     alignment: .center
                 )
             },
-            statusConfig: .creditCardMVP
+            statusConfig: .creditCardMVP(rejectedTitle: .failure)
         )
     }
     
     @inlinable
+    @ViewBuilder
     func makeDecisionView(
         _ decision: CreditCardMVPDomain.Navigation.Decision
     ) -> some View {
         
+        switch decision.status {
+        case let .approved(approved):
+            makeDecisionApprovedView(
+                message: decision.message,
+                title: decision.title,
+                approved: approved
+            )
+            
+        case .rejected:
+            makeDecisionRejectedView(
+                message: decision.message,
+                title: decision.title
+            )
+        }
+    }
+    
+    @inlinable
+    func makeDecisionApprovedView(
+        message: String,
+        title: String,
+        approved: CreditCardMVPDomain.Navigation.Decision.Status.Approved
+    ) -> some View {
+        
         VStack(spacing: 23) {
             
-            ProductCardView(product: decision.product, config: .prod(), iconView: makeIconView)
+            ProductCardView(
+                product: approved.product,
+                config: .prod(),
+                iconView: makeIconView
+            )
             
-            decision.message.text(withConfig: .init(
+            message.text(withConfig: .init(
                 textFont: .textH3Sb18240(),
                 textColor: .textSecondary
             ))
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, alignment: .leading) // ??
             
-            decision.details.map(makeDecisionDetailsView)
+            approved.info.text(withConfig: .init(
+                textFont: .textBodyMR14200(),
+                textColor: .textSecondary
+            ))
+            .frame(maxWidth: .infinity, alignment: .leading) // ??
+            
+            makeCheckBoxView(title: approved.consent, isChecked: true, toggle: {})
             
             Spacer()
             
             goToMainHeroButton()
         }
         .padding([.horizontal, .top])
-        .navigationBar(withTitle: decision.title)
+        .navigationBar(withTitle: title)
     }
     
     @inlinable
-    @ViewBuilder
-    func makeDecisionDetailsView(
-        _ details: CreditCardMVPDomain.Navigation.Decision.Status.Details
+    func makeDecisionRejectedView(
+        message: String,
+        title: String
     ) -> some View {
         
-        makeCheckBoxView(title: details.consent, isChecked: true, toggle: {})
-        
-        details.info.text(withConfig: .init(
-            textFont: .textBodyMR14200(),
-            textColor: .textSecondary
-        ))
-        .frame(maxWidth: .infinity, alignment: .leading)
+        makePaymentCompletionLayoutView(
+            state: .init(formattedAmount: nil, merchantIcon: nil, status: .rejected),
+            details: {
+                
+                message.text(
+                    withConfig: .placeholder,
+                    alignment: .center
+                )
+            },
+            statusConfig: .creditCardMVP(rejectedTitle: .rejected)
+        )
     }
 }
 
@@ -265,11 +305,8 @@ extension CreditCardMVPDomain.Navigation.Cover: Identifiable {
             
         case let .decision(decision):
             switch decision.status {
-            case .approved:
-                return .decision(.approved)
-                
-            case .rejected:
-                return .decision(.rejected)
+            case .approved: return .decision(.approved)
+            case .rejected: return .decision(.rejected)
             }
         }
     }
@@ -311,15 +348,6 @@ private extension PaymentCompletion.Status {
 
 // MARK: - Helpers
 
-private extension CreditCardMVPDomain.Navigation.Decision {
-    
-    var details: Status.Details? {
-        
-        guard case let .approved(details) = status else { return nil }
-        return details
-    }
-}
-
 extension AttributedString {
     
     init(
@@ -345,4 +373,12 @@ extension AttributedString {
         
         self = attributedString
     }
+}
+
+// MARK: - Constants
+
+private extension String {
+    
+    static let failure = "Заявка на выпуск\nкарты неуспешна"
+    static let rejected = "Кредитная карта не одобрена"
 }
