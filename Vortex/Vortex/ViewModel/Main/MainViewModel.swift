@@ -440,6 +440,17 @@ private extension MainViewModel {
                 
             }).store(in: &bindings)
         
+        
+        action
+            .compactMap { $0 as? MainViewModelAction.Show.ClientInform }
+            .map(\.data)
+            .receive(on: scheduler)
+            .sink { [weak self] in
+                
+                self?.route.modal = .bottomSheet(.init(type: .clientInform($0)))
+            }
+            .store(in: &bindings)
+        
         action
             .compactMap({ $0 as? DelayWrappedAction })
             .flatMap({
@@ -2183,6 +2194,11 @@ enum MainViewModelAction {
         struct Contacts: Action {}
         
         struct Countries: Action {}
+        
+        struct ClientInform: Action {
+            
+            let data: ClientInformListDataState
+        }
     }
     
     enum Toolbar: Action {
