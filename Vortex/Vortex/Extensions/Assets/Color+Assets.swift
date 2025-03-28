@@ -48,7 +48,9 @@ public extension ShapeStyle where Self == Color {
     static var blurBlack30: Color { Color(#function) }
     static var blurBlackMedium50: Color { Color(#function) }
     static var blurGray20: Color { Color(#function) }
+    static var blurPlaceholder: Color { Color(#function) }
     static var blurPlaceholderBlack: Color { Color(#function) }
+    static var blurPlaceholderwhitetext: Color { Color(#function) }
     static var blurMediumGray30: Color { Color(#function) }
     static var blurWhite: Color { Color(#function) }
     static var bordersDivaiderDisabled: Color { Color(#function) }
