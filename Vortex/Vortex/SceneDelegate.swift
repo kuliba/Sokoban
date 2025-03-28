@@ -148,17 +148,17 @@ extension SceneDelegate {
     
     func sceneDidBecomeActive(_ scene: UIScene) {
         
-        self.window?.deleteBlure()
+        window?.deleteBlure()
+        
+        binder.content.tabsViewModel.paymentsModel.dismiss()
+        binder.content.action.send(RootViewModelAction.DismissAll())
+        binder.content.action.send(RootViewModelAction.SwitchTab(tabType: .main))
     }
     
     func sceneWillResignActive(_ scene: UIScene) {
         
         window?.addBlure()
         window?.endEditing(true)
-        
-        binder.content.tabsViewModel.paymentsModel.dismiss()
-        binder.content.action.send(RootViewModelAction.DismissAll())
-        binder.content.action.send(RootViewModelAction.SwitchTab(tabType: .main))
     }
     
     func sceneWillEnterForeground(_ scene: UIScene) {
