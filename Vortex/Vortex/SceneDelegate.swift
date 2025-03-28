@@ -19,6 +19,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private lazy var rootViewComposer: RootViewComposer = ModelRootComposer.shared
     private lazy var featureFlags = loadFeatureFlags()
     
+    // TODO: replace with injected closure
+    private lazy var sessionMonitor: SessionAgentProtocol = Model.shared.sessionAgent
+    
     private lazy var binder = rootComposer.makeBinder(
         featureFlags: featureFlags,
         dismiss: { [weak self] in
@@ -154,7 +157,11 @@ extension SceneDelegate {
     func sceneDidBecomeActive(_ scene: UIScene) {
         
         window?.deleteBlure()
-        binder.rootEvent(.outside(.tab(.main)))
+        
+        if sessionMonitor.isInactive {
+            
+            binder.rootEvent(.outside(.tab(.main)))
+        }
     }
     
     func sceneWillResignActive(_ scene: UIScene) {
@@ -171,6 +178,17 @@ extension SceneDelegate {
     func sceneDidEnterBackground(_ scene: UIScene) {
         
         AppDelegate.shared.model.action.send(ModelAction.App.Inactivated())
+    }
+}
+
+extension SessionAgentProtocol {
+    
+    var isInactive: Bool {
+        
+        switch sessionState.value {
+        case .active: return false
+        default:      return true
+        }
     }
 }
 
