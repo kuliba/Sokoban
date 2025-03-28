@@ -154,10 +154,7 @@ extension SceneDelegate {
     func sceneDidBecomeActive(_ scene: UIScene) {
         
         window?.deleteBlure()
-        
-        binder.content.tabsViewModel.paymentsModel.dismiss()
-        binder.content.action.send(RootViewModelAction.DismissAll())
-        binder.content.action.send(RootViewModelAction.SwitchTab(tabType: .main))
+        binder.rootEvent(.outside(.tab(.main)))
     }
     
     func sceneWillResignActive(_ scene: UIScene) {
