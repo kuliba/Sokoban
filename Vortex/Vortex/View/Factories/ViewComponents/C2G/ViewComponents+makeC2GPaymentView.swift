@@ -335,7 +335,7 @@ extension C2GPaymentDomain.Context {
         
         return payerName.map {
             
-            return .init(icon: .ic24FileHash, title: .payerName, value: $0)
+            return .init(icon: .ic24User, title: .payerName, value: $0)
         }
     }
     
