@@ -104,4 +104,5 @@ private extension FastPaymentsSettings.ServiceFailure {
 extension String {
     
     static let errorRequestLimitExceeded = "Исчерпан лимит запросов. Повторите попытку через 24 часа."
+    static let updateForNewPaymentFlow = "Обновите приложение до последней версии, чтобы получить доступ к новому разделу."
 }
