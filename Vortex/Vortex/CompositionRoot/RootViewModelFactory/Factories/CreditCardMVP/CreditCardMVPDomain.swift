@@ -33,19 +33,19 @@ extension CreditCardMVPDomain {
     enum Select {
         
         case alert(String)
+        case approved(consent: AttributedString, ProductCard)
         case failure
         case informer(String)
-        case approved(consent: AttributedString, ProductCard)
         case inReview
-        case rejected(ProductCard)
+        case rejected
     }
     
     enum Navigation {
         
         case alert(String)
-        case informer(String)
         case complete(Complete)
         case decision(Decision)
+        case informer(String)
         
         struct Complete: Equatable {
             
@@ -61,19 +61,19 @@ extension CreditCardMVPDomain {
         struct Decision: Equatable {
             
             let message: String
-            let product: ProductCard
-            let title: String
             let status: Status
+            let title: String
             
             enum Status: Equatable {
                 
-                case approved(Details)
+                case approved(Approved)
                 case rejected
                 
-                struct Details: Equatable {
+                struct Approved: Equatable {
                     
                     let consent: AttributedString
                     let info: String
+                    let product: ProductCard
                 }
             }
         }
