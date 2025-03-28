@@ -30,20 +30,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     private lazy var rootViewFactory = rootViewComposer.makeRootViewFactory(
         featureFlags: featureFlags,
-        rootEvent: { [weak binder] select in
-            
-            binder?.flow.event(.dismiss)
-            
-            DispatchQueue.main.delay(for: .milliseconds(100)) {
-                
-                binder?.flow.event(.select(select))
-                
-                DispatchQueue.main.delay(for: .milliseconds(100)) {
-                    
-                    binder?.content.tabsViewModel.reset()
-                }
-            }
-        }
+        rootEvent: { [weak binder] in binder?.rootEvent($0) }
     )
     
     convenience init(
@@ -109,6 +96,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 // MARK: - helpers
 
+private extension RootViewDomain.Binder {
+    
+    func rootEvent(_ select: RootViewSelect) {
+        
+        flow.event(.dismiss)
+        
+        DispatchQueue.main.delay(for: .milliseconds(100)) { [weak self] in
+            
+            self?.flow.event(.select(select))
+            
+            DispatchQueue.main.delay(for: .milliseconds(100)) { [weak self] in
+                
+                self?.content.tabsViewModel.reset()
+            }
+        }
+    }
+}
+
 private extension SceneDelegate {
     
     func loadFeatureFlags() -> FeatureFlags {
@@ -148,17 +153,14 @@ extension SceneDelegate {
     
     func sceneDidBecomeActive(_ scene: UIScene) {
         
-        self.window?.deleteBlure()
+        window?.deleteBlure()
+        binder.rootEvent(.outside(.tab(.main)))
     }
     
     func sceneWillResignActive(_ scene: UIScene) {
         
         window?.addBlure()
         window?.endEditing(true)
-        
-        binder.content.tabsViewModel.paymentsModel.dismiss()
-        binder.content.action.send(RootViewModelAction.DismissAll())
-        binder.content.action.send(RootViewModelAction.SwitchTab(tabType: .main))
     }
     
     func sceneWillEnterForeground(_ scene: UIScene) {
