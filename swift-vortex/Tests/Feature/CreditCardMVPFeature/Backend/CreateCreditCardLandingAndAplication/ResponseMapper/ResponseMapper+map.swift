@@ -26,6 +26,7 @@ extension ResponseMapper.CreateCreditCardLandingAndApplication {
     struct Banner: Equatable {
         
         let background: String
+        let conditions: [String]
     }
 }
 
@@ -69,7 +70,9 @@ private extension ResponseMapper._DTO {
         guard let background = banner?.background
         else { return nil }
         
-        return .init(background: background)
+        let conditions = banner?.highlightedOfferConditions ?? []
+        
+        return .init(background: background, conditions: conditions)
     }
     
     var _header: Response.Header? {
@@ -104,7 +107,8 @@ extension ResponseMapper._DTO {
     
     struct _Banner: Decodable {
         
-        let background: String
+        let background: String?
+        let highlightedOfferConditions: [String]?
     }
 }
 
@@ -233,6 +237,34 @@ final class ResponseMapper_mapCreateCreditCardLandingAndApplicationResponseTests
         )
     }
     
+    func test_map_shouldDeliverResponseWithEmptyHighlightedOfferConditions_onMissinhBannerConditions() throws {
+        
+        assert(
+            json: .withoutHighlightedOfferConditions,
+            delivers: makeResponse(bannerConditions: [])
+        )
+    }
+    
+    func test_map_shouldDeliverResponseWithHighlightedOfferCondition() throws {
+        
+        let condition = anyMessage()
+        
+        assert(
+            json: .validData(conditions: [condition]),
+            delivers: makeResponse(bannerConditions: [condition])
+        )
+    }
+    
+    func test_map_shouldDeliverResponseWithHighlightedOfferConditions() throws {
+        
+        let (condition1, condition2) = (anyMessage(), anyMessage())
+        
+        assert(
+            json: .validData(conditions: [condition1, condition2]),
+            delivers: makeResponse(bannerConditions: [condition1, condition2])
+        )
+    }
+    
     // MARK: - Helpers
     
     private typealias Response = ResponseMapper.CreateCreditCardLandingAndApplication
@@ -260,23 +292,37 @@ final class ResponseMapper_mapCreateCreditCardLandingAndApplicationResponseTests
     }
     
     private func makeBanner(
-        background: String = "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png"
+        background: String = "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
+        conditions: [String] = [
+            "Вам одобрена сумма 97 000 ₽",
+            "Предложение действует до 30.04.2025"
+        ]
     ) -> Response.Banner {
         
-        return .init(background: background)
+        return .init(background: background, conditions: conditions)
     }
     
     private func makeResponse(
         theme: String = "DEFAULT",
         headerTitle: String = "Кредитная карта",
         headerSubtitle: String = "«Все включено»",
-        bannerBackground: String = "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png"
+        bannerBackground: String = "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
+        bannerConditions: [String] = [
+            "Вам одобрена сумма 97 000 ₽",
+            "Предложение действует до 30.04.2025"
+        ]
     ) -> Response {
         
         return .init(
             theme: theme,
-            header: .init(title: headerTitle, subtitle: headerSubtitle),
-            banner: .init(background: bannerBackground)
+            header: .init(
+                title: headerTitle,
+                subtitle: headerSubtitle
+            ),
+            banner: .init(
+                background: bannerBackground,
+                conditions: bannerConditions
+            )
         )
     }
     
@@ -353,7 +399,11 @@ private extension String {
         theme: String = "DEFAULT",
         headerTitle: String = "Кредитная карта",
         headerSubtitle: String = "«Все включено»",
-        bannerBackground: String = "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png"
+        bannerBackground: String = "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
+        conditions: [String] = [
+            "Вам одобрена сумма 97 000 ₽",
+            "Предложение действует до 30.04.2025"
+        ]
     ) -> String {
         
 """
@@ -368,10 +418,7 @@ private extension String {
     },
     "banner": {
       "background": "\(bannerBackground)",
-      "highlightedOfferConditions": [
-        "Вам одобрена сумма 97 000 ₽",
-        "Предложение действует до 30.04.2025"
-      ]
+      "highlightedOfferConditions": \(conditions)
     },
     "offerConditions": {
       "title": "Персональное предложение",
@@ -453,6 +500,83 @@ private extension String {
         "Вам одобрена сумма 97 000 ₽",
         "Предложение действует до 30.04.2025"
       ]
+    },
+    "offerConditions": {
+      "title": "Персональное предложение",
+      "list": [
+        {
+          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
+          "title": "Процентная ставка",
+          "subTitle": "6,5 % годовых"
+        },
+        {
+          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
+          "title": "Срок льготного периода",
+          "subTitle": "До 62 дней"
+        },
+        {
+          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
+          "title": "Стоимость обслуживания",
+          "subTitle": "Бесплатно навсегда"
+        },
+        {
+          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
+          "title": "Оформление",
+          "subTitle": "В отделении Банка"
+        }
+      ]
+    },
+    "frequentlyAskedQuestions": {
+      "title": "Часто задаваемые вопросы",
+      "list": [
+        {
+          "title": "Как повторно подключить подписку?",
+          "description": "тест"
+        },
+        {
+          "title": "Как начисляются проценты?",
+          "description": "тесттесттесттесттесттесттесттест"
+        },
+        {
+          "title": "Какие условия бесплатного обслуживания?",
+          "description": ""
+        }
+      ]
+    },
+    "consent": {
+      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
+      "tariffs": "https://www.forabank.ru/tarify/",
+      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
+    },
+    "application": {
+      "id": 123456789,
+      "status": "DRAFT"
+    },
+    "offer": {
+      "id": "123",
+      "gracePeriod": "36",
+      "tarifPlanRate": "69.99",
+      "offerPeriodValidity": "2025-03-31",
+      "offerLimitAmount": "10000.00",
+      "tarifPlanName": "ТП1",
+      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
+    }
+  }
+}
+"""
+    
+    static let withoutHighlightedOfferConditions = """
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": {
+    "theme": "DEFAULT",
+    "header": {
+      "title": "Кредитная карта",
+      "subtitle": "«Все включено»"
+    },
+    "banner": {
+      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png"
     },
     "offerConditions": {
       "title": "Персональное предложение",
