@@ -11,6 +11,7 @@ extension ResponseMapper {
         
         let theme: String
         let header: Header?
+        let banner: Banner
     }
 }
 
@@ -20,6 +21,11 @@ extension ResponseMapper.CreateCreditCardLandingAndApplication {
         
         let title: String
         let subtitle: String
+    }
+    
+    struct Banner: Equatable {
+        
+        let background: String
     }
 }
 
@@ -38,12 +44,14 @@ private extension ResponseMapper.CreateCreditCardLandingAndApplication {
     
     init(data: ResponseMapper._DTO) throws {
         
-        guard let theme = data.theme
+        guard let theme = data.theme,
+              let banner = data._banner
         else { throw ResponseFailure() }
         
         self.init(
             theme: theme,
-            header: data._header
+            header: data._header,
+            banner: banner
         )
     }
     
@@ -54,7 +62,17 @@ private extension ResponseMapper.CreateCreditCardLandingAndApplication {
 
 private extension ResponseMapper._DTO {
     
-    var _header: ResponseMapper.CreateCreditCardLandingAndApplication.Header? {
+    typealias Response = ResponseMapper.CreateCreditCardLandingAndApplication
+    
+    var _banner: Response.Banner? {
+        
+        guard let background = banner?.background
+        else { return nil }
+        
+        return .init(background: background)
+    }
+    
+    var _header: Response.Header? {
         
         guard let title = header?.title,
               let subtitle = header?.subtitle
@@ -72,6 +90,7 @@ private extension ResponseMapper {
         
         let theme: String?
         let header: _Header?
+        let banner: _Banner?
     }
 }
 
@@ -81,6 +100,11 @@ extension ResponseMapper._DTO {
         
         let title: String?
         let subtitle: String?
+    }
+    
+    struct _Banner: Decodable {
+        
+        let background: String
     }
 }
 
@@ -199,6 +223,16 @@ final class ResponseMapper_mapCreateCreditCardLandingAndApplicationResponseTests
         )
     }
     
+    func test_map_shouldDeliverResponseWithBannerBackground() throws {
+        
+        let bannerBackground = anyMessage()
+        
+        assert(
+            json: .validData(bannerBackground: bannerBackground),
+            delivers: makeResponse(bannerBackground: bannerBackground)
+        )
+    }
+    
     // MARK: - Helpers
     
     private typealias Response = ResponseMapper.CreateCreditCardLandingAndApplication
@@ -214,24 +248,35 @@ final class ResponseMapper_mapCreateCreditCardLandingAndApplicationResponseTests
     
     private func makeResponse(
         theme: String = "DEFAULT",
-        header: Response.Header?
+        header: Response.Header?,
+        banner: Response.Banner? = nil
     ) -> Response {
         
         return .init(
             theme: theme,
-            header: header
+            header: header,
+            banner: banner ?? makeBanner()
         )
+    }
+    
+    private func makeBanner(
+        background: String = "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png"
+    ) -> Response.Banner {
+        
+        return .init(background: background)
     }
     
     private func makeResponse(
         theme: String = "DEFAULT",
         headerTitle: String = "Кредитная карта",
-        headerSubtitle: String = "«Все включено»"
+        headerSubtitle: String = "«Все включено»",
+        bannerBackground: String = "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png"
     ) -> Response {
         
         return .init(
             theme: theme,
-            header: .init(title: headerTitle, subtitle: headerSubtitle)
+            header: .init(title: headerTitle, subtitle: headerSubtitle),
+            banner: .init(background: bannerBackground)
         )
     }
     
@@ -307,7 +352,8 @@ private extension String {
     static func validData(
         theme: String = "DEFAULT",
         headerTitle: String = "Кредитная карта",
-        headerSubtitle: String = "«Все включено»"
+        headerSubtitle: String = "«Все включено»",
+        bannerBackground: String = "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png"
     ) -> String {
         
 """
@@ -321,7 +367,7 @@ private extension String {
       "subtitle": "\(headerSubtitle)"
     },
     "banner": {
-      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
+      "background": "\(bannerBackground)",
       "highlightedOfferConditions": [
         "Вам одобрена сумма 97 000 ₽",
         "Предложение действует до 30.04.2025"
