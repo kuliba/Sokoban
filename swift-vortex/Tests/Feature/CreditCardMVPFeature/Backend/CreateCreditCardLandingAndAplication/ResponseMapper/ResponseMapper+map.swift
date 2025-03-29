@@ -404,7 +404,7 @@ final class ResponseMapper_mapCreateCreditCardLandingAndApplicationResponseTests
     
     func test_map_shouldDeliverResponse_onValidData() throws {
         
-        assert(json: .validData(), delivers: makeResponse())
+        assert(json: ._source, delivers: makeResponse())
     }
     
     func test_map_shouldDeliverFailure_onResponseWithoutTheme() throws {
@@ -1017,24 +1017,9 @@ private extension String {
         }
       ]
     },
-    "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
-    },
-    "application": {
-      "id": 123456789,
-      "status": "DRAFT"
-    },
-    "offer": {
-      "id": "123",
-      "gracePeriod": "36",
-      "tarifPlanRate": "69.99",
-      "offerPeriodValidity": "2025-03-31",
-      "offerLimitAmount": "10000.00",
-      "tarifPlanName": "ТП1",
-      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
-    }
+    "consent": \(_consent),
+    "application": \(_application),
+    "offer": \(_offer)
   }
 }
 """
@@ -1049,73 +1034,12 @@ private extension String {
     "header": {
       "subtitle": "«Все включено»"
     },
-    "banner": {
-      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
-      "highlightedOfferConditions": [
-        "Вам одобрена сумма 97 000 ₽",
-        "Предложение действует до 30.04.2025"
-      ]
-    },
-    "offerConditions": {
-      "title": "Персональное предложение",
-      "list": [
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Процентная ставка",
-          "subTitle": "6,5 % годовых"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Срок льготного периода",
-          "subTitle": "До 62 дней"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Стоимость обслуживания",
-          "subTitle": "Бесплатно навсегда"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Оформление",
-          "subTitle": "В отделении Банка"
-        }
-      ]
-    },
-    "frequentlyAskedQuestions": {
-      "title": "Часто задаваемые вопросы",
-      "list": [
-        {
-          "title": "Как повторно подключить подписку?",
-          "description": "тест"
-        },
-        {
-          "title": "Как начисляются проценты?",
-          "description": "тесттесттесттесттесттесттесттест"
-        },
-        {
-          "title": "Какие условия бесплатного обслуживания?",
-          "description": ""
-        }
-      ]
-    },
-    "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
-    },
-    "application": {
-      "id": 123456789,
-      "status": "DRAFT"
-    },
-    "offer": {
-      "id": "123",
-      "gracePeriod": "36",
-      "tarifPlanRate": "69.99",
-      "offerPeriodValidity": "2025-03-31",
-      "offerLimitAmount": "10000.00",
-      "tarifPlanName": "ТП1",
-      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
-    }
+    "banner": \(_banner),
+    "offerConditions": \(_offerConditions),
+    "frequentlyAskedQuestions": \(_faq),
+    "consent": \(_consent),
+    "application": \(_application),
+    "offer": \(_offer)
   }
 }
 """
@@ -1126,73 +1050,15 @@ private extension String {
   "errorMessage": null,
   "data": {
     "theme": "DEFAULT",
-    "header": {
-      "title": "Кредитная карта",
-      "subtitle": "«Все включено»"
-    },
+    "header": \(_header),
     "banner": {
       "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png"
     },
-    "offerConditions": {
-      "title": "Персональное предложение",
-      "list": [
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Процентная ставка",
-          "subTitle": "6,5 % годовых"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Срок льготного периода",
-          "subTitle": "До 62 дней"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Стоимость обслуживания",
-          "subTitle": "Бесплатно навсегда"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Оформление",
-          "subTitle": "В отделении Банка"
-        }
-      ]
-    },
-    "frequentlyAskedQuestions": {
-      "title": "Часто задаваемые вопросы",
-      "list": [
-        {
-          "title": "Как повторно подключить подписку?",
-          "description": "тест"
-        },
-        {
-          "title": "Как начисляются проценты?",
-          "description": "тесттесттесттесттесттесттесттест"
-        },
-        {
-          "title": "Какие условия бесплатного обслуживания?",
-          "description": ""
-        }
-      ]
-    },
-    "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
-    },
-    "application": {
-      "id": 123456789,
-      "status": "DRAFT"
-    },
-    "offer": {
-      "id": "123",
-      "gracePeriod": "36",
-      "tarifPlanRate": "69.99",
-      "offerPeriodValidity": "2025-03-31",
-      "offerLimitAmount": "10000.00",
-      "tarifPlanName": "ТП1",
-      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
-    }
+    "offerConditions": \(_offerConditions),
+    "frequentlyAskedQuestions": \(_faq),
+    "consent": \(_consent),
+    "application": \(_application),
+    "offer": \(_offer)
   }
 }
 """
@@ -1202,77 +1068,13 @@ private extension String {
   "statusCode": 0,
   "errorMessage": null,
   "data": {
-    "header": {
-      "title": "Кредитная карта",
-      "subtitle": "«Все включено»"
-    },
-    "banner": {
-      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
-      "highlightedOfferConditions": [
-        "Вам одобрена сумма 97 000 ₽",
-        "Предложение действует до 30.04.2025"
-      ]
-    },
-    "offerConditions": {
-      "title": "Персональное предложение",
-      "list": [
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Процентная ставка",
-          "subTitle": "6,5 % годовых"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Срок льготного периода",
-          "subTitle": "До 62 дней"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Стоимость обслуживания",
-          "subTitle": "Бесплатно навсегда"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Оформление",
-          "subTitle": "В отделении Банка"
-        }
-      ]
-    },
-    "frequentlyAskedQuestions": {
-      "title": "Часто задаваемые вопросы",
-      "list": [
-        {
-          "title": "Как повторно подключить подписку?",
-          "description": "тест"
-        },
-        {
-          "title": "Как начисляются проценты?",
-          "description": "тесттесттесттесттесттесттесттест"
-        },
-        {
-          "title": "Какие условия бесплатного обслуживания?",
-          "description": ""
-        }
-      ]
-    },
-    "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
-    },
-    "application": {
-      "id": 123456789,
-      "status": "DRAFT"
-    },
-    "offer": {
-      "id": "123",
-      "gracePeriod": "36",
-      "tarifPlanRate": "69.99",
-      "offerPeriodValidity": "2025-03-31",
-      "offerLimitAmount": "10000.00",
-      "tarifPlanName": "ТП1",
-      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
-    }
+    "header": \(_header),
+    "banner": \(_banner),
+    "offerConditions": \(_offerConditions),
+    "frequentlyAskedQuestions": \(_faq),
+    "consent": \(_consent),
+    "application": \(_application),
+    "offer": \(_offer)
   }
 }
 """
@@ -1283,76 +1085,18 @@ private extension String {
   "errorMessage": null,
   "data": {
     "theme": "DEFAULT",
-    "header": {
-      "title": "Кредитная карта",
-      "subtitle": "«Все включено»"
-    },
+    "header": \(_header),
     "banner": {
       "highlightedOfferConditions": [
         "Вам одобрена сумма 97 000 ₽",
         "Предложение действует до 30.04.2025"
       ]
     },
-    "offerConditions": {
-      "title": "Персональное предложение",
-      "list": [
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Процентная ставка",
-          "subTitle": "6,5 % годовых"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Срок льготного периода",
-          "subTitle": "До 62 дней"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Стоимость обслуживания",
-          "subTitle": "Бесплатно навсегда"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Оформление",
-          "subTitle": "В отделении Банка"
-        }
-      ]
-    },
-    "frequentlyAskedQuestions": {
-      "title": "Часто задаваемые вопросы",
-      "list": [
-        {
-          "title": "Как повторно подключить подписку?",
-          "description": "тест"
-        },
-        {
-          "title": "Как начисляются проценты?",
-          "description": "тесттесттесттесттесттесттесттест"
-        },
-        {
-          "title": "Какие условия бесплатного обслуживания?",
-          "description": ""
-        }
-      ]
-    },
-    "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
-    },
-    "application": {
-      "id": 123456789,
-      "status": "DRAFT"
-    },
-    "offer": {
-      "id": "123",
-      "gracePeriod": "36",
-      "tarifPlanRate": "69.99",
-      "offerPeriodValidity": "2025-03-31",
-      "offerLimitAmount": "10000.00",
-      "tarifPlanName": "ТП1",
-      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
-    }
+    "offerConditions": \(_offerConditions),
+    "frequentlyAskedQuestions": \(_faq),
+    "consent": \(_consent),
+    "application": \(_application),
+    "offer": \(_offer)
   }
 }
 """
@@ -1363,17 +1107,8 @@ private extension String {
   "errorMessage": null,
   "data": {
     "theme": "DEFAULT",
-    "header": {
-      "title": "Кредитная карта",
-      "subtitle": "«Все включено»"
-    },
-    "banner": {
-      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
-      "highlightedOfferConditions": [
-        "Вам одобрена сумма 97 000 ₽",
-        "Предложение действует до 30.04.2025"
-      ]
-    },
+    "header": \(_header),
+    "banner": \(_banner),
     "offerConditions": {
       "list": [
         {
@@ -1398,41 +1133,10 @@ private extension String {
         }
       ]
     },
-    "frequentlyAskedQuestions": {
-      "title": "Часто задаваемые вопросы",
-      "list": [
-        {
-          "title": "Как повторно подключить подписку?",
-          "description": "тест"
-        },
-        {
-          "title": "Как начисляются проценты?",
-          "description": "тесттесттесттесттесттесттесттест"
-        },
-        {
-          "title": "Какие условия бесплатного обслуживания?",
-          "description": ""
-        }
-      ]
-    },
-    "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
-    },
-    "application": {
-      "id": 123456789,
-      "status": "DRAFT"
-    },
-    "offer": {
-      "id": "123",
-      "gracePeriod": "36",
-      "tarifPlanRate": "69.99",
-      "offerPeriodValidity": "2025-03-31",
-      "offerLimitAmount": "10000.00",
-      "tarifPlanName": "ТП1",
-      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
-    }
+    "frequentlyAskedQuestions": \(_faq),
+    "consent": \(_consent),
+    "application": \(_application),
+    "offer": \(_offer)
   }
 }
 """
@@ -1443,55 +1147,15 @@ private extension String {
   "errorMessage": null,
   "data": {
     "theme": "DEFAULT",
-    "header": {
-      "title": "Кредитная карта",
-      "subtitle": "«Все включено»"
-    },
-    "banner": {
-      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
-      "highlightedOfferConditions": [
-        "Вам одобрена сумма 97 000 ₽",
-        "Предложение действует до 30.04.2025"
-      ]
-    },
+    "header": \(_header),
+    "banner": \(_banner),
     "offerConditions": {
       "title": "Персональное предложение"
     },
-    "frequentlyAskedQuestions": {
-      "title": "Часто задаваемые вопросы",
-      "list": [
-        {
-          "title": "Как повторно подключить подписку?",
-          "description": "тест"
-        },
-        {
-          "title": "Как начисляются проценты?",
-          "description": "тесттесттесттесттесттесттесттест"
-        },
-        {
-          "title": "Какие условия бесплатного обслуживания?",
-          "description": ""
-        }
-      ]
-    },
-    "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
-    },
-    "application": {
-      "id": 123456789,
-      "status": "DRAFT"
-    },
-    "offer": {
-      "id": "123",
-      "gracePeriod": "36",
-      "tarifPlanRate": "69.99",
-      "offerPeriodValidity": "2025-03-31",
-      "offerLimitAmount": "10000.00",
-      "tarifPlanName": "ТП1",
-      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
-    }
+    "frequentlyAskedQuestions": \(_faq),
+    "consent": \(_consent),
+    "application": \(_application),
+    "offer": \(_offer)
   }
 }
 """
@@ -1502,56 +1166,16 @@ private extension String {
   "errorMessage": null,
   "data": {
     "theme": "DEFAULT",
-    "header": {
-      "title": "Кредитная карта",
-      "subtitle": "«Все включено»"
-    },
-    "banner": {
-      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
-      "highlightedOfferConditions": [
-        "Вам одобрена сумма 97 000 ₽",
-        "Предложение действует до 30.04.2025"
-      ]
-    },
+    "header": \(_header),
+    "banner": \(_banner),
     "offerConditions": {
       "title": "Персональное предложение",
       "list": []
     },
-    "frequentlyAskedQuestions": {
-      "title": "Часто задаваемые вопросы",
-      "list": [
-        {
-          "title": "Как повторно подключить подписку?",
-          "description": "тест"
-        },
-        {
-          "title": "Как начисляются проценты?",
-          "description": "тесттесттесттесттесттесттесттест"
-        },
-        {
-          "title": "Какие условия бесплатного обслуживания?",
-          "description": ""
-        }
-      ]
-    },
-    "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
-    },
-    "application": {
-      "id": 123456789,
-      "status": "DRAFT"
-    },
-    "offer": {
-      "id": "123",
-      "gracePeriod": "36",
-      "tarifPlanRate": "69.99",
-      "offerPeriodValidity": "2025-03-31",
-      "offerLimitAmount": "10000.00",
-      "tarifPlanName": "ТП1",
-      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
-    }
+    "frequentlyAskedQuestions": \(_faq),
+    "consent": \(_consent),
+    "application": \(_application),
+    "offer": \(_offer)
   }
 }
 """
@@ -1562,42 +1186,9 @@ private extension String {
   "errorMessage": null,
   "data": {
     "theme": "DEFAULT",
-    "header": {
-      "title": "Кредитная карта",
-      "subtitle": "«Все включено»"
-    },
-    "banner": {
-      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
-      "highlightedOfferConditions": [
-        "Вам одобрена сумма 97 000 ₽",
-        "Предложение действует до 30.04.2025"
-      ]
-    },
-    "offerConditions": {
-      "title": "Персональное предложение",
-      "list": [
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Процентная ставка",
-          "subTitle": "6,5 % годовых"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Срок льготного периода",
-          "subTitle": "До 62 дней"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Стоимость обслуживания",
-          "subTitle": "Бесплатно навсегда"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Оформление",
-          "subTitle": "В отделении Банка"
-        }
-      ]
-    },
+    "header": \(_header),
+    "banner": \(_banner),
+    "offerConditions": \(_offerConditions),
     "frequentlyAskedQuestions": {
       "list": [
         {
@@ -1614,24 +1205,9 @@ private extension String {
         }
       ]
     },
-    "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
-    },
-    "application": {
-      "id": 123456789,
-      "status": "DRAFT"
-    },
-    "offer": {
-      "id": "123",
-      "gracePeriod": "36",
-      "tarifPlanRate": "69.99",
-      "offerPeriodValidity": "2025-03-31",
-      "offerLimitAmount": "10000.00",
-      "tarifPlanName": "ТП1",
-      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
-    }
+    "consent": \(_consent),
+    "application": \(_application),
+    "offer": \(_offer)
   }
 }
 """
@@ -1642,63 +1218,15 @@ private extension String {
   "errorMessage": null,
   "data": {
     "theme": "DEFAULT",
-    "header": {
-      "title": "Кредитная карта",
-      "subtitle": "«Все включено»"
-    },
-    "banner": {
-      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
-      "highlightedOfferConditions": [
-        "Вам одобрена сумма 97 000 ₽",
-        "Предложение действует до 30.04.2025"
-      ]
-    },
-    "offerConditions": {
-      "title": "Персональное предложение",
-      "list": [
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Процентная ставка",
-          "subTitle": "6,5 % годовых"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Срок льготного периода",
-          "subTitle": "До 62 дней"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Стоимость обслуживания",
-          "subTitle": "Бесплатно навсегда"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Оформление",
-          "subTitle": "В отделении Банка"
-        }
-      ]
-    },
+    "header": \(_header),
+    "banner": \(_banner),
+    "offerConditions": \(_offerConditions),
     "frequentlyAskedQuestions": {
       "title": "Часто задаваемые вопросы"
     },
-    "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
-    },
-    "application": {
-      "id": 123456789,
-      "status": "DRAFT"
-    },
-    "offer": {
-      "id": "123",
-      "gracePeriod": "36",
-      "tarifPlanRate": "69.99",
-      "offerPeriodValidity": "2025-03-31",
-      "offerLimitAmount": "10000.00",
-      "tarifPlanName": "ТП1",
-      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
-    }
+    "consent": \(_consent),
+    "application": \(_application),
+    "offer": \(_offer)
   }
 }
 """
@@ -1709,64 +1237,16 @@ private extension String {
   "errorMessage": null,
   "data": {
     "theme": "DEFAULT",
-    "header": {
-      "title": "Кредитная карта",
-      "subtitle": "«Все включено»"
-    },
-    "banner": {
-      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
-      "highlightedOfferConditions": [
-        "Вам одобрена сумма 97 000 ₽",
-        "Предложение действует до 30.04.2025"
-      ]
-    },
-    "offerConditions": {
-      "title": "Персональное предложение",
-      "list": [
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Процентная ставка",
-          "subTitle": "6,5 % годовых"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Срок льготного периода",
-          "subTitle": "До 62 дней"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Стоимость обслуживания",
-          "subTitle": "Бесплатно навсегда"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Оформление",
-          "subTitle": "В отделении Банка"
-        }
-      ]
-    },
+    "header": \(_header),
+    "banner": \(_banner),
+    "offerConditions": \(_offerConditions),
     "frequentlyAskedQuestions": {
       "title": "Часто задаваемые вопросы",
       "list": []
     },
-    "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
-    },
-    "application": {
-      "id": 123456789,
-      "status": "DRAFT"
-    },
-    "offer": {
-      "id": "123",
-      "gracePeriod": "36",
-      "tarifPlanRate": "69.99",
-      "offerPeriodValidity": "2025-03-31",
-      "offerLimitAmount": "10000.00",
-      "tarifPlanName": "ТП1",
-      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
-    }
+    "consent": \(_consent),
+    "application": \(_application),
+    "offer": \(_offer)
   }
 }
 """
@@ -1777,72 +1257,12 @@ private extension String {
   "errorMessage": null,
   "data": {
     "theme": "DEFAULT",
-    "header": {
-      "title": "Кредитная карта",
-      "subtitle": "«Все включено»"
-    },
-    "banner": {
-      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
-      "highlightedOfferConditions": [
-        "Вам одобрена сумма 97 000 ₽",
-        "Предложение действует до 30.04.2025"
-      ]
-    },
-    "offerConditions": {
-      "title": "Персональное предложение",
-      "list": [
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Процентная ставка",
-          "subTitle": "6,5 % годовых"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Срок льготного периода",
-          "subTitle": "До 62 дней"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Стоимость обслуживания",
-          "subTitle": "Бесплатно навсегда"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Оформление",
-          "subTitle": "В отделении Банка"
-        }
-      ]
-    },
-    "frequentlyAskedQuestions": {
-      "title": "Часто задаваемые вопросы",
-      "list": [
-        {
-          "title": "Как повторно подключить подписку?",
-          "description": "тест"
-        },
-        {
-          "title": "Как начисляются проценты?",
-          "description": "тесттесттесттесттесттесттесттест"
-        },
-        {
-          "title": "Какие условия бесплатного обслуживания?",
-          "description": ""
-        }
-      ]
-    },
-    "application": {
-      "id": 123456789,
-      "status": "DRAFT"
-    },
-    "offer": {
-      "id": "123",
-      "gracePeriod": "36",
-      "tarifPlanRate": "69.99",
-      "offerPeriodValidity": "2025-03-31",
-      "offerLimitAmount": "10000.00",
-      "tarifPlanName": "ТП1",
-      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
-    }
+    "header": \(_header),
+    "banner": \(_banner),
+    "offerConditions": \(_offerConditions),
+    "frequentlyAskedQuestions": \(_faq),
+    "application": \(_application),
+    "offer": \(_offer)
   }
 }
 """
@@ -1853,76 +1273,16 @@ private extension String {
   "errorMessage": null,
   "data": {
     "theme": "DEFAULT",
-    "header": {
-      "title": "Кредитная карта",
-      "subtitle": "«Все включено»"
-    },
-    "banner": {
-      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
-      "highlightedOfferConditions": [
-        "Вам одобрена сумма 97 000 ₽",
-        "Предложение действует до 30.04.2025"
-      ]
-    },
-    "offerConditions": {
-      "title": "Персональное предложение",
-      "list": [
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Процентная ставка",
-          "subTitle": "6,5 % годовых"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Срок льготного периода",
-          "subTitle": "До 62 дней"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Стоимость обслуживания",
-          "subTitle": "Бесплатно навсегда"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Оформление",
-          "subTitle": "В отделении Банка"
-        }
-      ]
-    },
-    "frequentlyAskedQuestions": {
-      "title": "Часто задаваемые вопросы",
-      "list": [
-        {
-          "title": "Как повторно подключить подписку?",
-          "description": "тест"
-        },
-        {
-          "title": "Как начисляются проценты?",
-          "description": "тесттесттесттесттесттесттесттест"
-        },
-        {
-          "title": "Какие условия бесплатного обслуживания?",
-          "description": ""
-        }
-      ]
-    },
+    "header": \(_header),
+    "banner": \(_banner),
+    "offerConditions": \(_offerConditions),
+    "frequentlyAskedQuestions": \(_faq),
     "consent": {
       "tariffs": "https://www.forabank.ru/tarify/",
       "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
     },
-    "application": {
-      "id": 123456789,
-      "status": "DRAFT"
-    },
-    "offer": {
-      "id": "123",
-      "gracePeriod": "36",
-      "tarifPlanRate": "69.99",
-      "offerPeriodValidity": "2025-03-31",
-      "offerLimitAmount": "10000.00",
-      "tarifPlanName": "ТП1",
-      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
-    }
+    "application": \(_application),
+    "offer": \(_offer)
   }
 }
 """
@@ -1933,76 +1293,16 @@ private extension String {
   "errorMessage": null,
   "data": {
     "theme": "DEFAULT",
-    "header": {
-      "title": "Кредитная карта",
-      "subtitle": "«Все включено»"
-    },
-    "banner": {
-      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
-      "highlightedOfferConditions": [
-        "Вам одобрена сумма 97 000 ₽",
-        "Предложение действует до 30.04.2025"
-      ]
-    },
-    "offerConditions": {
-      "title": "Персональное предложение",
-      "list": [
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Процентная ставка",
-          "subTitle": "6,5 % годовых"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Срок льготного периода",
-          "subTitle": "До 62 дней"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Стоимость обслуживания",
-          "subTitle": "Бесплатно навсегда"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Оформление",
-          "subTitle": "В отделении Банка"
-        }
-      ]
-    },
-    "frequentlyAskedQuestions": {
-      "title": "Часто задаваемые вопросы",
-      "list": [
-        {
-          "title": "Как повторно подключить подписку?",
-          "description": "тест"
-        },
-        {
-          "title": "Как начисляются проценты?",
-          "description": "тесттесттесттесттесттесттесттест"
-        },
-        {
-          "title": "Какие условия бесплатного обслуживания?",
-          "description": ""
-        }
-      ]
-    },
+    "header": \(_header),
+    "banner": \(_banner),
+    "offerConditions": \(_offerConditions),
+    "frequentlyAskedQuestions": \(_faq),
     "consent": {
       "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
       "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
     },
-    "application": {
-      "id": 123456789,
-      "status": "DRAFT"
-    },
-    "offer": {
-      "id": "123",
-      "gracePeriod": "36",
-      "tarifPlanRate": "69.99",
-      "offerPeriodValidity": "2025-03-31",
-      "offerLimitAmount": "10000.00",
-      "tarifPlanName": "ТП1",
-      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
-    }
+    "application": \(_application),
+    "offer": \(_offer)
   }
 }
 """
@@ -2013,76 +1313,16 @@ private extension String {
   "errorMessage": null,
   "data": {
     "theme": "DEFAULT",
-    "header": {
-      "title": "Кредитная карта",
-      "subtitle": "«Все включено»"
-    },
-    "banner": {
-      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
-      "highlightedOfferConditions": [
-        "Вам одобрена сумма 97 000 ₽",
-        "Предложение действует до 30.04.2025"
-      ]
-    },
-    "offerConditions": {
-      "title": "Персональное предложение",
-      "list": [
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Процентная ставка",
-          "subTitle": "6,5 % годовых"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Срок льготного периода",
-          "subTitle": "До 62 дней"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Стоимость обслуживания",
-          "subTitle": "Бесплатно навсегда"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Оформление",
-          "subTitle": "В отделении Банка"
-        }
-      ]
-    },
-    "frequentlyAskedQuestions": {
-      "title": "Часто задаваемые вопросы",
-      "list": [
-        {
-          "title": "Как повторно подключить подписку?",
-          "description": "тест"
-        },
-        {
-          "title": "Как начисляются проценты?",
-          "description": "тесттесттесттесттесттесттесттест"
-        },
-        {
-          "title": "Какие условия бесплатного обслуживания?",
-          "description": ""
-        }
-      ]
-    },
+    "header": \(_header),
+    "banner": \(_banner),
+    "offerConditions": \(_offerConditions),
+    "frequentlyAskedQuestions": \(_faq),
     "consent": {
       "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
       "tariffs": "https://www.forabank.ru/tarify/"
     },
-    "application": {
-      "id": 123456789,
-      "status": "DRAFT"
-    },
-    "offer": {
-      "id": "123",
-      "gracePeriod": "36",
-      "tarifPlanRate": "69.99",
-      "offerPeriodValidity": "2025-03-31",
-      "offerLimitAmount": "10000.00",
-      "tarifPlanName": "ТП1",
-      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
-    }
+    "application": \(_application),
+    "offer": \(_offer)
   }
 }
 """
@@ -2093,73 +1333,12 @@ private extension String {
   "errorMessage": null,
   "data": {
     "theme": "DEFAULT",
-    "header": {
-      "title": "Кредитная карта",
-      "subtitle": "«Все включено»"
-    },
-    "banner": {
-      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
-      "highlightedOfferConditions": [
-        "Вам одобрена сумма 97 000 ₽",
-        "Предложение действует до 30.04.2025"
-      ]
-    },
-    "offerConditions": {
-      "title": "Персональное предложение",
-      "list": [
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Процентная ставка",
-          "subTitle": "6,5 % годовых"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Срок льготного периода",
-          "subTitle": "До 62 дней"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Стоимость обслуживания",
-          "subTitle": "Бесплатно навсегда"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Оформление",
-          "subTitle": "В отделении Банка"
-        }
-      ]
-    },
-    "frequentlyAskedQuestions": {
-      "title": "Часто задаваемые вопросы",
-      "list": [
-        {
-          "title": "Как повторно подключить подписку?",
-          "description": "тест"
-        },
-        {
-          "title": "Как начисляются проценты?",
-          "description": "тесттесттесттесттесттесттесттест"
-        },
-        {
-          "title": "Какие условия бесплатного обслуживания?",
-          "description": ""
-        }
-      ]
-    },
-    "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
-    },
-    "offer": {
-      "id": "123",
-      "gracePeriod": "36",
-      "tarifPlanRate": "69.99",
-      "offerPeriodValidity": "2025-03-31",
-      "offerLimitAmount": "10000.00",
-      "tarifPlanName": "ТП1",
-      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
-    }
+    "header": \(_header),
+    "banner": \(_banner),
+    "offerConditions": \(_offerConditions),
+    "frequentlyAskedQuestions": \(_faq),
+    "consent": \(_consent),
+    "offer": \(_offer)
   }
 }
 """
@@ -2170,76 +1349,15 @@ private extension String {
   "errorMessage": null,
   "data": {
     "theme": "DEFAULT",
-    "header": {
-      "title": "Кредитная карта",
-      "subtitle": "«Все включено»"
-    },
-    "banner": {
-      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
-      "highlightedOfferConditions": [
-        "Вам одобрена сумма 97 000 ₽",
-        "Предложение действует до 30.04.2025"
-      ]
-    },
-    "offerConditions": {
-      "title": "Персональное предложение",
-      "list": [
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Процентная ставка",
-          "subTitle": "6,5 % годовых"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Срок льготного периода",
-          "subTitle": "До 62 дней"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Стоимость обслуживания",
-          "subTitle": "Бесплатно навсегда"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Оформление",
-          "subTitle": "В отделении Банка"
-        }
-      ]
-    },
-    "frequentlyAskedQuestions": {
-      "title": "Часто задаваемые вопросы",
-      "list": [
-        {
-          "title": "Как повторно подключить подписку?",
-          "description": "тест"
-        },
-        {
-          "title": "Как начисляются проценты?",
-          "description": "тесттесттесттесттесттесттесттест"
-        },
-        {
-          "title": "Какие условия бесплатного обслуживания?",
-          "description": ""
-        }
-      ]
-    },
-    "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
-    },
+    "header": \(_header),
+    "banner": \(_banner),
+    "offerConditions": \(_offerConditions),
+    "frequentlyAskedQuestions": \(_faq),
+    "consent": \(_consent),
     "application": {
       "status": "DRAFT"
     },
-    "offer": {
-      "id": "123",
-      "gracePeriod": "36",
-      "tarifPlanRate": "69.99",
-      "offerPeriodValidity": "2025-03-31",
-      "offerLimitAmount": "10000.00",
-      "tarifPlanName": "ТП1",
-      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
-    }
+    "offer": \(_offer)
   }
 }
 """
@@ -2250,76 +1368,15 @@ private extension String {
   "errorMessage": null,
   "data": {
     "theme": "DEFAULT",
-    "header": {
-      "title": "Кредитная карта",
-      "subtitle": "«Все включено»"
-    },
-    "banner": {
-      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
-      "highlightedOfferConditions": [
-        "Вам одобрена сумма 97 000 ₽",
-        "Предложение действует до 30.04.2025"
-      ]
-    },
-    "offerConditions": {
-      "title": "Персональное предложение",
-      "list": [
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Процентная ставка",
-          "subTitle": "6,5 % годовых"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Срок льготного периода",
-          "subTitle": "До 62 дней"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Стоимость обслуживания",
-          "subTitle": "Бесплатно навсегда"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Оформление",
-          "subTitle": "В отделении Банка"
-        }
-      ]
-    },
-    "frequentlyAskedQuestions": {
-      "title": "Часто задаваемые вопросы",
-      "list": [
-        {
-          "title": "Как повторно подключить подписку?",
-          "description": "тест"
-        },
-        {
-          "title": "Как начисляются проценты?",
-          "description": "тесттесттесттесттесттесттесттест"
-        },
-        {
-          "title": "Какие условия бесплатного обслуживания?",
-          "description": ""
-        }
-      ]
-    },
-    "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
-    },
+    "header": \(_header),
+    "banner": \(_banner),
+    "offerConditions": \(_offerConditions),
+    "frequentlyAskedQuestions": \(_faq),
+    "consent": \(_consent),
     "application": {
       "id": 123456789
     },
-    "offer": {
-      "id": "123",
-      "gracePeriod": "36",
-      "tarifPlanRate": "69.99",
-      "offerPeriodValidity": "2025-03-31",
-      "offerLimitAmount": "10000.00",
-      "tarifPlanName": "ТП1",
-      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
-    }
+    "offer": \(_offer)
   }
 }
 """
@@ -2330,68 +1387,12 @@ private extension String {
   "errorMessage": null,
   "data": {
     "theme": "DEFAULT",
-    "header": {
-      "title": "Кредитная карта",
-      "subtitle": "«Все включено»"
-    },
-    "banner": {
-      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
-      "highlightedOfferConditions": [
-        "Вам одобрена сумма 97 000 ₽",
-        "Предложение действует до 30.04.2025"
-      ]
-    },
-    "offerConditions": {
-      "title": "Персональное предложение",
-      "list": [
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Процентная ставка",
-          "subTitle": "6,5 % годовых"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Срок льготного периода",
-          "subTitle": "До 62 дней"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Стоимость обслуживания",
-          "subTitle": "Бесплатно навсегда"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Оформление",
-          "subTitle": "В отделении Банка"
-        }
-      ]
-    },
-    "frequentlyAskedQuestions": {
-      "title": "Часто задаваемые вопросы",
-      "list": [
-        {
-          "title": "Как повторно подключить подписку?",
-          "description": "тест"
-        },
-        {
-          "title": "Как начисляются проценты?",
-          "description": "тесттесттесттесттесттесттесттест"
-        },
-        {
-          "title": "Какие условия бесплатного обслуживания?",
-          "description": ""
-        }
-      ]
-    },
-    "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
-    },
-    "application": {
-      "id": 123456789,
-      "status": "DRAFT"
-    },
+    "header": \(_header),
+    "banner": \(_banner),
+    "offerConditions": \(_offerConditions),
+    "frequentlyAskedQuestions": \(_faq),
+    "consent": \(_consent),
+    "application": \(_application),
   }
 }
 """
@@ -2402,68 +1403,12 @@ private extension String {
   "errorMessage": null,
   "data": {
     "theme": "DEFAULT",
-    "header": {
-      "title": "Кредитная карта",
-      "subtitle": "«Все включено»"
-    },
-    "banner": {
-      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
-      "highlightedOfferConditions": [
-        "Вам одобрена сумма 97 000 ₽",
-        "Предложение действует до 30.04.2025"
-      ]
-    },
-    "offerConditions": {
-      "title": "Персональное предложение",
-      "list": [
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Процентная ставка",
-          "subTitle": "6,5 % годовых"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Срок льготного периода",
-          "subTitle": "До 62 дней"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Стоимость обслуживания",
-          "subTitle": "Бесплатно навсегда"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Оформление",
-          "subTitle": "В отделении Банка"
-        }
-      ]
-    },
-    "frequentlyAskedQuestions": {
-      "title": "Часто задаваемые вопросы",
-      "list": [
-        {
-          "title": "Как повторно подключить подписку?",
-          "description": "тест"
-        },
-        {
-          "title": "Как начисляются проценты?",
-          "description": "тесттесттесттесттесттесттесттест"
-        },
-        {
-          "title": "Какие условия бесплатного обслуживания?",
-          "description": ""
-        }
-      ]
-    },
-    "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
-    },
-    "application": {
-      "id": 123456789,
-      "status": "DRAFT"
-    },
+    "header": \(_header),
+    "banner": \(_banner),
+    "offerConditions": \(_offerConditions),
+    "frequentlyAskedQuestions": \(_faq),
+    "consent": \(_consent),
+    "application": \(_application),
     "offer": {
       "gracePeriod": "36",
       "tarifPlanRate": "69.99",
@@ -2482,68 +1427,12 @@ private extension String {
   "errorMessage": null,
   "data": {
     "theme": "DEFAULT",
-    "header": {
-      "title": "Кредитная карта",
-      "subtitle": "«Все включено»"
-    },
-    "banner": {
-      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
-      "highlightedOfferConditions": [
-        "Вам одобрена сумма 97 000 ₽",
-        "Предложение действует до 30.04.2025"
-      ]
-    },
-    "offerConditions": {
-      "title": "Персональное предложение",
-      "list": [
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Процентная ставка",
-          "subTitle": "6,5 % годовых"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Срок льготного периода",
-          "subTitle": "До 62 дней"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Стоимость обслуживания",
-          "subTitle": "Бесплатно навсегда"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Оформление",
-          "subTitle": "В отделении Банка"
-        }
-      ]
-    },
-    "frequentlyAskedQuestions": {
-      "title": "Часто задаваемые вопросы",
-      "list": [
-        {
-          "title": "Как повторно подключить подписку?",
-          "description": "тест"
-        },
-        {
-          "title": "Как начисляются проценты?",
-          "description": "тесттесттесттесттесттесттесттест"
-        },
-        {
-          "title": "Какие условия бесплатного обслуживания?",
-          "description": ""
-        }
-      ]
-    },
-    "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
-    },
-    "application": {
-      "id": 123456789,
-      "status": "DRAFT"
-    },
+    "header": \(_header),
+    "banner": \(_banner),
+    "offerConditions": \(_offerConditions),
+    "frequentlyAskedQuestions": \(_faq),
+    "consent": \(_consent),
+    "application": \(_application),
     "offer": {
       "id": "123",
       "tarifPlanRate": "69.99",
@@ -2562,68 +1451,12 @@ private extension String {
   "errorMessage": null,
   "data": {
     "theme": "DEFAULT",
-    "header": {
-      "title": "Кредитная карта",
-      "subtitle": "«Все включено»"
-    },
-    "banner": {
-      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
-      "highlightedOfferConditions": [
-        "Вам одобрена сумма 97 000 ₽",
-        "Предложение действует до 30.04.2025"
-      ]
-    },
-    "offerConditions": {
-      "title": "Персональное предложение",
-      "list": [
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Процентная ставка",
-          "subTitle": "6,5 % годовых"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Срок льготного периода",
-          "subTitle": "До 62 дней"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Стоимость обслуживания",
-          "subTitle": "Бесплатно навсегда"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Оформление",
-          "subTitle": "В отделении Банка"
-        }
-      ]
-    },
-    "frequentlyAskedQuestions": {
-      "title": "Часто задаваемые вопросы",
-      "list": [
-        {
-          "title": "Как повторно подключить подписку?",
-          "description": "тест"
-        },
-        {
-          "title": "Как начисляются проценты?",
-          "description": "тесттесттесттесттесттесттесттест"
-        },
-        {
-          "title": "Какие условия бесплатного обслуживания?",
-          "description": ""
-        }
-      ]
-    },
-    "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
-    },
-    "application": {
-      "id": 123456789,
-      "status": "DRAFT"
-    },
+    "header": \(_header),
+    "banner": \(_banner),
+    "offerConditions": \(_offerConditions),
+    "frequentlyAskedQuestions": \(_faq),
+    "consent": \(_consent),
+    "application": \(_application),
     "offer": {
       "id": "123",
       "gracePeriod": "36",
@@ -2642,68 +1475,12 @@ private extension String {
   "errorMessage": null,
   "data": {
     "theme": "DEFAULT",
-    "header": {
-      "title": "Кредитная карта",
-      "subtitle": "«Все включено»"
-    },
-    "banner": {
-      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
-      "highlightedOfferConditions": [
-        "Вам одобрена сумма 97 000 ₽",
-        "Предложение действует до 30.04.2025"
-      ]
-    },
-    "offerConditions": {
-      "title": "Персональное предложение",
-      "list": [
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Процентная ставка",
-          "subTitle": "6,5 % годовых"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Срок льготного периода",
-          "subTitle": "До 62 дней"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Стоимость обслуживания",
-          "subTitle": "Бесплатно навсегда"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Оформление",
-          "subTitle": "В отделении Банка"
-        }
-      ]
-    },
-    "frequentlyAskedQuestions": {
-      "title": "Часто задаваемые вопросы",
-      "list": [
-        {
-          "title": "Как повторно подключить подписку?",
-          "description": "тест"
-        },
-        {
-          "title": "Как начисляются проценты?",
-          "description": "тесттесттесттесттесттесттесттест"
-        },
-        {
-          "title": "Какие условия бесплатного обслуживания?",
-          "description": ""
-        }
-      ]
-    },
-    "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
-    },
-    "application": {
-      "id": 123456789,
-      "status": "DRAFT"
-    },
+    "header": \(_header),
+    "banner": \(_banner),
+    "offerConditions": \(_offerConditions),
+    "frequentlyAskedQuestions": \(_faq),
+    "consent": \(_consent),
+    "application": \(_application),
     "offer": {
       "id": "123",
       "gracePeriod": "36",
@@ -2722,68 +1499,12 @@ private extension String {
   "errorMessage": null,
   "data": {
     "theme": "DEFAULT",
-    "header": {
-      "title": "Кредитная карта",
-      "subtitle": "«Все включено»"
-    },
-    "banner": {
-      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
-      "highlightedOfferConditions": [
-        "Вам одобрена сумма 97 000 ₽",
-        "Предложение действует до 30.04.2025"
-      ]
-    },
-    "offerConditions": {
-      "title": "Персональное предложение",
-      "list": [
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Процентная ставка",
-          "subTitle": "6,5 % годовых"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Срок льготного периода",
-          "subTitle": "До 62 дней"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Стоимость обслуживания",
-          "subTitle": "Бесплатно навсегда"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Оформление",
-          "subTitle": "В отделении Банка"
-        }
-      ]
-    },
-    "frequentlyAskedQuestions": {
-      "title": "Часто задаваемые вопросы",
-      "list": [
-        {
-          "title": "Как повторно подключить подписку?",
-          "description": "тест"
-        },
-        {
-          "title": "Как начисляются проценты?",
-          "description": "тесттесттесттесттесттесттесттест"
-        },
-        {
-          "title": "Какие условия бесплатного обслуживания?",
-          "description": ""
-        }
-      ]
-    },
-    "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
-    },
-    "application": {
-      "id": 123456789,
-      "status": "DRAFT"
-    },
+    "header": \(_header),
+    "banner": \(_banner),
+    "offerConditions": \(_offerConditions),
+    "frequentlyAskedQuestions": \(_faq),
+    "consent": \(_consent),
+    "application": \(_application),
     "offer": {
       "id": "123",
       "gracePeriod": "36",
@@ -2802,68 +1523,12 @@ private extension String {
   "errorMessage": null,
   "data": {
     "theme": "DEFAULT",
-    "header": {
-      "title": "Кредитная карта",
-      "subtitle": "«Все включено»"
-    },
-    "banner": {
-      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
-      "highlightedOfferConditions": [
-        "Вам одобрена сумма 97 000 ₽",
-        "Предложение действует до 30.04.2025"
-      ]
-    },
-    "offerConditions": {
-      "title": "Персональное предложение",
-      "list": [
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Процентная ставка",
-          "subTitle": "6,5 % годовых"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Срок льготного периода",
-          "subTitle": "До 62 дней"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Стоимость обслуживания",
-          "subTitle": "Бесплатно навсегда"
-        },
-        {
-          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
-          "title": "Оформление",
-          "subTitle": "В отделении Банка"
-        }
-      ]
-    },
-    "frequentlyAskedQuestions": {
-      "title": "Часто задаваемые вопросы",
-      "list": [
-        {
-          "title": "Как повторно подключить подписку?",
-          "description": "тест"
-        },
-        {
-          "title": "Как начисляются проценты?",
-          "description": "тесттесттесттесттесттесттесттест"
-        },
-        {
-          "title": "Какие условия бесплатного обслуживания?",
-          "description": ""
-        }
-      ]
-    },
-    "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
-    },
-    "application": {
-      "id": 123456789,
-      "status": "DRAFT"
-    },
+    "header": \(_header),
+    "banner": \(_banner),
+    "offerConditions": \(_offerConditions),
+    "frequentlyAskedQuestions": \(_faq),
+    "consent": \(_consent),
+    "application": \(_application),
     "offer": {
       "id": "123",
       "gracePeriod": "36",
@@ -2882,18 +1547,45 @@ private extension String {
   "errorMessage": null,
   "data": {
     "theme": "DEFAULT",
-    "header": {
+    "header": \(_header),
+    "banner": \(_banner),
+    "offerConditions": \(_offerConditions),
+    "frequentlyAskedQuestions": \(_faq),
+    "consent": \(_consent),
+    "application": \(_application),
+    "offer": {
+      "id": "123",
+      "gracePeriod": "36",
+      "tarifPlanRate": "69.99",
+      "offerPeriodValidity": "2025-03-31",
+      "offerLimitAmount": "10000.00",
+      "tarifPlanName": "ТП1"
+    }
+  }
+}
+"""
+    
+    // MARK: - blocks
+    
+    static let _header = """
+{
       "title": "Кредитная карта",
       "subtitle": "«Все включено»"
-    },
-    "banner": {
+    }
+"""
+    
+    static let _banner = """
+{
       "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
       "highlightedOfferConditions": [
         "Вам одобрена сумма 97 000 ₽",
         "Предложение действует до 30.04.2025"
       ]
-    },
-    "offerConditions": {
+    }
+"""
+    
+    static let _offerConditions = """
+{
       "title": "Персональное предложение",
       "list": [
         {
@@ -2917,8 +1609,11 @@ private extension String {
           "subTitle": "В отделении Банка"
         }
       ]
-    },
-    "frequentlyAskedQuestions": {
+    }
+"""
+    
+    static let _faq = """
+{
       "title": "Часто задаваемые вопросы",
       "list": [
         {
@@ -2934,26 +1629,34 @@ private extension String {
           "description": ""
         }
       ]
-    },
-    "consent": {
+    }
+"""
+    
+    static let _consent = """
+{
       "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
       "tariffs": "https://www.forabank.ru/tarify/",
       "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
-    },
-    "application": {
+    }
+"""
+    
+    static let _application = """
+{
       "id": 123456789,
       "status": "DRAFT"
-    },
-    "offer": {
+    }
+"""
+    
+    static let _offer = """
+{
       "id": "123",
       "gracePeriod": "36",
       "tarifPlanRate": "69.99",
       "offerPeriodValidity": "2025-03-31",
       "offerLimitAmount": "10000.00",
-      "tarifPlanName": "ТП1"
+      "tarifPlanName": "ТП1",
+      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
     }
-  }
-}
 """
     
     static let _source = """
