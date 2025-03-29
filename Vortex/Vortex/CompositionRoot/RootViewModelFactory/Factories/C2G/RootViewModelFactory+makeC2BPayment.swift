@@ -68,18 +68,7 @@ extension RootViewModelFactory {
                 completion(.failure(failure))
                 
             case let .success(payload):
-                let details = makeOperationDetailByPaymentID(payload)
-                details.event(.load)
-                
-                let document = makeC2GDocumentButtonDomainBinder(
-                    operationID: payload.paymentOperationDetailID
-                )
-                
-                completion(.success(.init(
-                    context: .init(payload),
-                    details: details,
-                    document: payload.isComplete ? document : nil
-                )))
+                completion(.success(createC2GPaymentComplete(payload)))
             }
         }
     }
@@ -116,6 +105,25 @@ extension RootViewModelFactory {
         }
     }
     
+    @inlinable
+    func createC2GPaymentComplete(
+        _ payload: OperationDetailDomain.ModelPayload
+    ) -> C2GPaymentDomain.Complete {
+        
+        let details = makeOperationDetailByPaymentID(payload)
+        details.event(.load)
+        
+        let document = makeC2GDocumentButtonDomainBinder(
+            operationID: payload.paymentOperationDetailID
+        )
+        
+        return .init(
+            context: .init(payload),
+            details: details,
+            document: payload.isComplete ? document : nil
+        )
+    }
+
     @inlinable
     func makeC2GDocumentButton(
         paymentOperationDetailID id: Int

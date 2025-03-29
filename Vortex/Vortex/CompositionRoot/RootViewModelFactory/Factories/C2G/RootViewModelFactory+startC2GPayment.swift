@@ -109,7 +109,6 @@ extension RootViewModelFactory {
         
         let products = model.c2gProductSelectProducts()
         let fastProduct = fastAccountID.flatMap { id in products.first { $0.id.rawValue == id }}
-        let selected = fastProduct ?? products.first
         
         return (products, fastProduct ?? products.first)
     }
