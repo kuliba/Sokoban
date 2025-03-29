@@ -15,10 +15,17 @@ extension ResponseMapper {
         let offerConditions: OfferConditions
         let faq: FAQ
         let consent: Consent
+        let application: Application
     }
 }
 
 extension ResponseMapper.CreateCreditCardLandingAndApplication {
+    
+    struct Application: Equatable {
+        
+        let id: Int
+        let status: String
+    }
     
     struct Header: Equatable {
         
@@ -85,7 +92,8 @@ private extension ResponseMapper.CreateCreditCardLandingAndApplication {
               let banner = data._banner,
               let offerConditions = data._offerConditions,
               let faq = data._faq,
-              let consent = data._consent
+              let consent = data._consent,
+              let application = data._application
         else { throw ResponseFailure() }
         
         self.init(
@@ -94,7 +102,8 @@ private extension ResponseMapper.CreateCreditCardLandingAndApplication {
             banner: banner,
             offerConditions: offerConditions,
             faq: faq,
-            consent: consent
+            consent: consent,
+            application: application
         )
     }
     
@@ -106,6 +115,15 @@ private extension ResponseMapper.CreateCreditCardLandingAndApplication {
 private extension ResponseMapper._DTO {
     
     typealias Response = ResponseMapper.CreateCreditCardLandingAndApplication
+    
+    var _application: Response.Application? {
+        
+        guard let id = application?.id,
+              let status = application?.status
+        else { return nil }
+        
+        return .init(id: id, status: status)
+    }
     
     var _banner: Response.Banner? {
         
@@ -199,6 +217,7 @@ private extension ResponseMapper {
     
     struct _DTO: Decodable {
         
+        let application: _Application?
         let theme: String?
         let header: _Header?
         let banner: _Banner?
@@ -209,6 +228,12 @@ private extension ResponseMapper {
 }
 
 extension ResponseMapper._DTO {
+    
+    struct _Application: Decodable {
+        
+        let id: Int
+        let status: String
+    }
     
     struct _Header: Decodable {
         
@@ -493,6 +518,14 @@ final class ResponseMapper_mapCreateCreditCardLandingAndApplicationResponseTests
         )
     }
     
+    func test_map_shouldDeliverFailure_onMissingConsent() throws {
+        
+        assert(
+            json: .withMissingConsent,
+            delivers: .invalid(statusCode: 200, data: String.withMissingConsent.json)
+        )
+    }
+    
     func test_map_shouldDeliverFailure_onMissingConsentTerms() throws {
         
         assert(
@@ -517,6 +550,30 @@ final class ResponseMapper_mapCreateCreditCardLandingAndApplicationResponseTests
         )
     }
     
+    func test_map_shouldDeliverFailure_onMissingApplication() throws {
+        
+        assert(
+            json: .withMissingApplication,
+            delivers: .invalid(statusCode: 200, data: String.withMissingApplication.json)
+        )
+    }
+    
+    func test_map_shouldDeliverFailure_onMissingApplicationID() throws {
+        
+        assert(
+            json: .withMissingApplicationID,
+            delivers: .invalid(statusCode: 200, data: String.withMissingApplicationID.json)
+        )
+    }
+    
+    func test_map_shouldDeliverFailure_onMissingApplicationStatus() throws {
+        
+        assert(
+            json: .withMissingApplicationStatus,
+            delivers: .invalid(statusCode: 200, data: String.withMissingApplicationStatus.json)
+        )
+    }
+    
     // MARK: - Helpers
     
     private typealias Response = ResponseMapper.CreateCreditCardLandingAndApplication
@@ -536,7 +593,8 @@ final class ResponseMapper_mapCreateCreditCardLandingAndApplicationResponseTests
         banner: Response.Banner? = nil,
         offerConditions: Response.OfferConditions? = nil,
         faq: Response.FAQ? = nil,
-        consent: Response.Consent? = nil
+        consent: Response.Consent? = nil,
+        application: Response.Application? = nil
     ) -> Response {
         
         return .init(
@@ -545,8 +603,17 @@ final class ResponseMapper_mapCreateCreditCardLandingAndApplicationResponseTests
             banner: banner ?? makeBanner(),
             offerConditions: offerConditions ?? makeOfferConditions(),
             faq: faq ?? makeFAQ(),
-            consent: consent ?? makeConsent()
+            consent: consent ?? makeConsent(),
+            application: application ?? makeApplication()
         )
+    }
+    
+    private func makeApplication(
+        id: Int = 123456789,
+        status: String = "DRAFT"
+    ) -> Response.Application {
+        
+        return .init(id: id, status: status)
     }
     
     private func makeBanner(
@@ -653,7 +720,8 @@ final class ResponseMapper_mapCreateCreditCardLandingAndApplicationResponseTests
         ],
         offerConditions: Response.OfferConditions? = nil,
         faq: Response.FAQ? = nil,
-        consent: Response.Consent? = nil
+        consent: Response.Consent? = nil,
+        application: Response.Application? = nil
     ) -> Response {
         
         return .init(
@@ -668,7 +736,8 @@ final class ResponseMapper_mapCreateCreditCardLandingAndApplicationResponseTests
             ),
             offerConditions: offerConditions ?? makeOfferConditions(),
             faq: faq ?? makeFAQ(),
-            consent: consent ?? makeConsent()
+            consent: consent ?? makeConsent(),
+            application: application ?? makeApplication()
         )
     }
     
@@ -1564,6 +1633,82 @@ private extension String {
 }
 """
     
+    static let withMissingConsent = """
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": {
+    "theme": "DEFAULT",
+    "header": {
+      "title": "Кредитная карта",
+      "subtitle": "«Все включено»"
+    },
+    "banner": {
+      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
+      "highlightedOfferConditions": [
+        "Вам одобрена сумма 97 000 ₽",
+        "Предложение действует до 30.04.2025"
+      ]
+    },
+    "offerConditions": {
+      "title": "Персональное предложение",
+      "list": [
+        {
+          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
+          "title": "Процентная ставка",
+          "subTitle": "6,5 % годовых"
+        },
+        {
+          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
+          "title": "Срок льготного периода",
+          "subTitle": "До 62 дней"
+        },
+        {
+          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
+          "title": "Стоимость обслуживания",
+          "subTitle": "Бесплатно навсегда"
+        },
+        {
+          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
+          "title": "Оформление",
+          "subTitle": "В отделении Банка"
+        }
+      ]
+    },
+    "frequentlyAskedQuestions": {
+      "title": "Часто задаваемые вопросы",
+      "list": [
+        {
+          "title": "Как повторно подключить подписку?",
+          "description": "тест"
+        },
+        {
+          "title": "Как начисляются проценты?",
+          "description": "тесттесттесттесттесттесттесттест"
+        },
+        {
+          "title": "Какие условия бесплатного обслуживания?",
+          "description": ""
+        }
+      ]
+    },
+    "application": {
+      "id": 123456789,
+      "status": "DRAFT"
+    },
+    "offer": {
+      "id": "123",
+      "gracePeriod": "36",
+      "tarifPlanRate": "69.99",
+      "offerPeriodValidity": "2025-03-31",
+      "offerLimitAmount": "10000.00",
+      "tarifPlanName": "ТП1",
+      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
+    }
+  }
+}
+"""
+    
     static let withMissingConsentTerms = """
 {
   "statusCode": 0,
@@ -1790,6 +1935,243 @@ private extension String {
     "application": {
       "id": 123456789,
       "status": "DRAFT"
+    },
+    "offer": {
+      "id": "123",
+      "gracePeriod": "36",
+      "tarifPlanRate": "69.99",
+      "offerPeriodValidity": "2025-03-31",
+      "offerLimitAmount": "10000.00",
+      "tarifPlanName": "ТП1",
+      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
+    }
+  }
+}
+"""
+    
+    static let withMissingApplication = """
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": {
+    "theme": "DEFAULT",
+    "header": {
+      "title": "Кредитная карта",
+      "subtitle": "«Все включено»"
+    },
+    "banner": {
+      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
+      "highlightedOfferConditions": [
+        "Вам одобрена сумма 97 000 ₽",
+        "Предложение действует до 30.04.2025"
+      ]
+    },
+    "offerConditions": {
+      "title": "Персональное предложение",
+      "list": [
+        {
+          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
+          "title": "Процентная ставка",
+          "subTitle": "6,5 % годовых"
+        },
+        {
+          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
+          "title": "Срок льготного периода",
+          "subTitle": "До 62 дней"
+        },
+        {
+          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
+          "title": "Стоимость обслуживания",
+          "subTitle": "Бесплатно навсегда"
+        },
+        {
+          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
+          "title": "Оформление",
+          "subTitle": "В отделении Банка"
+        }
+      ]
+    },
+    "frequentlyAskedQuestions": {
+      "title": "Часто задаваемые вопросы",
+      "list": [
+        {
+          "title": "Как повторно подключить подписку?",
+          "description": "тест"
+        },
+        {
+          "title": "Как начисляются проценты?",
+          "description": "тесттесттесттесттесттесттесттест"
+        },
+        {
+          "title": "Какие условия бесплатного обслуживания?",
+          "description": ""
+        }
+      ]
+    },
+    "consent": {
+      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
+      "tariffs": "https://www.forabank.ru/tarify/",
+      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
+    },
+    "offer": {
+      "id": "123",
+      "gracePeriod": "36",
+      "tarifPlanRate": "69.99",
+      "offerPeriodValidity": "2025-03-31",
+      "offerLimitAmount": "10000.00",
+      "tarifPlanName": "ТП1",
+      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
+    }
+  }
+}
+"""
+    
+    static let withMissingApplicationID = """
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": {
+    "theme": "DEFAULT",
+    "header": {
+      "title": "Кредитная карта",
+      "subtitle": "«Все включено»"
+    },
+    "banner": {
+      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
+      "highlightedOfferConditions": [
+        "Вам одобрена сумма 97 000 ₽",
+        "Предложение действует до 30.04.2025"
+      ]
+    },
+    "offerConditions": {
+      "title": "Персональное предложение",
+      "list": [
+        {
+          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
+          "title": "Процентная ставка",
+          "subTitle": "6,5 % годовых"
+        },
+        {
+          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
+          "title": "Срок льготного периода",
+          "subTitle": "До 62 дней"
+        },
+        {
+          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
+          "title": "Стоимость обслуживания",
+          "subTitle": "Бесплатно навсегда"
+        },
+        {
+          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
+          "title": "Оформление",
+          "subTitle": "В отделении Банка"
+        }
+      ]
+    },
+    "frequentlyAskedQuestions": {
+      "title": "Часто задаваемые вопросы",
+      "list": [
+        {
+          "title": "Как повторно подключить подписку?",
+          "description": "тест"
+        },
+        {
+          "title": "Как начисляются проценты?",
+          "description": "тесттесттесттесттесттесттесттест"
+        },
+        {
+          "title": "Какие условия бесплатного обслуживания?",
+          "description": ""
+        }
+      ]
+    },
+    "consent": {
+      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
+      "tariffs": "https://www.forabank.ru/tarify/",
+      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
+    },
+    "application": {
+      "status": "DRAFT"
+    },
+    "offer": {
+      "id": "123",
+      "gracePeriod": "36",
+      "tarifPlanRate": "69.99",
+      "offerPeriodValidity": "2025-03-31",
+      "offerLimitAmount": "10000.00",
+      "tarifPlanName": "ТП1",
+      "icon": "37baa2ff94fb468f65fa0ea4017bf44a"
+    }
+  }
+}
+"""
+    
+    static let withMissingApplicationStatus = """
+{
+  "statusCode": 0,
+  "errorMessage": null,
+  "data": {
+    "theme": "DEFAULT",
+    "header": {
+      "title": "Кредитная карта",
+      "subtitle": "«Все включено»"
+    },
+    "banner": {
+      "background": "dict/getProductCatalogImage?image=products/pages/order-credit-card/landing/images/digital_card_landing_bg.png",
+      "highlightedOfferConditions": [
+        "Вам одобрена сумма 97 000 ₽",
+        "Предложение действует до 30.04.2025"
+      ]
+    },
+    "offerConditions": {
+      "title": "Персональное предложение",
+      "list": [
+        {
+          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
+          "title": "Процентная ставка",
+          "subTitle": "6,5 % годовых"
+        },
+        {
+          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
+          "title": "Срок льготного периода",
+          "subTitle": "До 62 дней"
+        },
+        {
+          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
+          "title": "Стоимость обслуживания",
+          "subTitle": "Бесплатно навсегда"
+        },
+        {
+          "md5hash": "b6fa019f307d6a72951ab7268708aa15",
+          "title": "Оформление",
+          "subTitle": "В отделении Банка"
+        }
+      ]
+    },
+    "frequentlyAskedQuestions": {
+      "title": "Часто задаваемые вопросы",
+      "list": [
+        {
+          "title": "Как повторно подключить подписку?",
+          "description": "тест"
+        },
+        {
+          "title": "Как начисляются проценты?",
+          "description": "тесттесттесттесттесттесттесттест"
+        },
+        {
+          "title": "Какие условия бесплатного обслуживания?",
+          "description": ""
+        }
+      ]
+    },
+    "consent": {
+      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
+      "tariffs": "https://www.forabank.ru/tarify/",
+      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
+    },
+    "application": {
+      "id": 123456789
     },
     "offer": {
       "id": "123",
