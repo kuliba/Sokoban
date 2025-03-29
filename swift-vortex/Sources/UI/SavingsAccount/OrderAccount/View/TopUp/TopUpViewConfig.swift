@@ -13,6 +13,7 @@ public struct TopUpViewConfig {
     public let description: TitleConfig
     public let icon: Image
     public let iconSize: CGSize
+    public let placeholder: Color
     public let spacing: CGFloat
     public let subtitle: TitleConfig
     public let title: TitleConfig
@@ -24,6 +25,7 @@ public struct TopUpViewConfig {
         description: TitleConfig,
         icon: Image,
         iconSize: CGSize,
+        placeholder: Color,
         spacing: CGFloat,
         subtitle: TitleConfig,
         title: TitleConfig,
@@ -33,6 +35,7 @@ public struct TopUpViewConfig {
         self.description = description
         self.icon = icon
         self.iconSize = iconSize
+        self.placeholder = placeholder
         self.spacing = spacing
         self.subtitle = subtitle
         self.title = title
