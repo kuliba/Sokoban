@@ -1254,6 +1254,8 @@
 		2A8A28402A4089B2000D3807 /* OperatorGroupData+test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8A283F2A4089B2000D3807 /* OperatorGroupData+test.swift */; };
 		2A8A28422A4089D3000D3807 /* OperatorData+test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8A28412A4089D3000D3807 /* OperatorData+test.swift */; };
 		2A8A28442A4089FF000D3807 /* LocalAgentStub+convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8A28432A4089FF000D3807 /* LocalAgentStub+convenience.swift */; };
+		2A8A71C92D97C1BA00948772 /* RootViewModelFactory+makeCreditCardMVPBinderGenericContentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8A71C82D97C1BA00948772 /* RootViewModelFactory+makeCreditCardMVPBinderGenericContentTests.swift */; };
+		2A8A71CB2D97C23000948772 /* CreditCardMVPRootViewModelFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8A71CA2D97C23000948772 /* CreditCardMVPRootViewModelFactoryTests.swift */; };
 		2A8A8FA42C00D5CD001ECAA3 /* OtherConfigs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8A8FA32C00D5CD001ECAA3 /* OtherConfigs.swift */; };
 		2A8B17392A7B6FD4002EBC2E /* RequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8B17382A7B6FD4002EBC2E /* RequestFactory.swift */; };
 		2A8B173B2A7B705E002EBC2E /* ServicesEndpointServiceNameBaseURLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8B173A2A7B705E002EBC2E /* ServicesEndpointServiceNameBaseURLTests.swift */; };
@@ -5116,6 +5118,8 @@
 		2A8A283F2A4089B2000D3807 /* OperatorGroupData+test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperatorGroupData+test.swift"; sourceTree = "<group>"; };
 		2A8A28412A4089D3000D3807 /* OperatorData+test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperatorData+test.swift"; sourceTree = "<group>"; };
 		2A8A28432A4089FF000D3807 /* LocalAgentStub+convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocalAgentStub+convenience.swift"; sourceTree = "<group>"; };
+		2A8A71C82D97C1BA00948772 /* RootViewModelFactory+makeCreditCardMVPBinderGenericContentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModelFactory+makeCreditCardMVPBinderGenericContentTests.swift"; sourceTree = "<group>"; };
+		2A8A71CA2D97C23000948772 /* CreditCardMVPRootViewModelFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditCardMVPRootViewModelFactoryTests.swift; sourceTree = "<group>"; };
 		2A8A8FA32C00D5CD001ECAA3 /* OtherConfigs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherConfigs.swift; sourceTree = "<group>"; };
 		2A8B17382A7B6FD4002EBC2E /* RequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestFactory.swift; sourceTree = "<group>"; };
 		2A8B173A2A7B705E002EBC2E /* ServicesEndpointServiceNameBaseURLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesEndpointServiceNameBaseURLTests.swift; sourceTree = "<group>"; };
@@ -13840,6 +13844,8 @@
 			isa = PBXGroup;
 			children = (
 				2AF6384B2D8E8566007D39E2 /* RootViewModelFactory+makeCreditCardMVPBinderTests.swift */,
+				2A8A71C82D97C1BA00948772 /* RootViewModelFactory+makeCreditCardMVPBinderGenericContentTests.swift */,
+				2A8A71CA2D97C23000948772 /* CreditCardMVPRootViewModelFactoryTests.swift */,
 			);
 			path = CreditCardMVP;
 			sourceTree = "<group>";
@@ -24582,6 +24588,7 @@
 				83A219B22A4D940900A34482 /* ProductConfigTests.swift in Sources */,
 				2A8617702D211C3D00288B01 /* RequestFactory+createGetOperatorsListByParamOperatorOnlyFalseRequestWithPayloadTests.swift in Sources */,
 				83A5B42F2A88D91E00662054 /* Model+Payments_PaymentsProcessSourceReducer_LatestPaymentTests.swift in Sources */,
+				2A8A71C92D97C1BA00948772 /* RootViewModelFactory+makeCreditCardMVPBinderGenericContentTests.swift in Sources */,
 				839331A42C90315200D15379 /* RootViewModelFactory_makeBannersForMainViewTests.swift in Sources */,
 				2A3BD61C2B6D262B009B16F7 /* RequestFactory+createCreateFastPaymentContractRequestTests.swift in Sources */,
 				2A94AB042C8FFDAB003B4FB1 /* LocalAgentSpy.swift in Sources */,
@@ -24890,6 +24897,7 @@
 				2A2E3FC12BB2C73500730D37 /* RequestFactory+createMakeTransferRequestTests.swift in Sources */,
 				2A2146932D845A900054D722 /* Model+splashTests.swift in Sources */,
 				2A72920C2C2028F00077B139 /* RequestFactory+createGetVerificationCodeRequestTests.swift in Sources */,
+				2A8A71CB2D97C23000948772 /* CreditCardMVPRootViewModelFactoryTests.swift in Sources */,
 				2A30394A2A17D8B50008701D /* ReducerTextFieldViewModelTests.swift in Sources */,
 				2AC2FB1D2C510514001972CB /* PaymentProviderServicePickerFlowReducerTests.swift in Sources */,
 				2AEDAD5029A6143900017F73 /* OperatorGroupDataOperatorDataHelpersTests.swift in Sources */,

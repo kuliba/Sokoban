@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 27.02.2025.
 //
 
-import Foundation
+import Combine
 
 extension RootViewModelFactory {
     
@@ -13,12 +13,13 @@ extension RootViewModelFactory {
     func makeCreditCardMVP() -> CreditCardMVPDomain.Binder {
         
         // TODO: remove on live implementation
-        let isLive = false
+        let isDelayed = true
         
-        return composeBinder(
+        return makeCreditCardMVPBinder(
             content: makeCreditCardMVPContent(),
-            getNavigation: isLive ? getNavigation : delayedGetNavigation,
-            witnesses: .empty
+            isDelayed: isDelayed,
+            emitting: { _ in Empty() },
+            dismissing: { _ in {}}
         )
     }
     
@@ -26,6 +27,26 @@ extension RootViewModelFactory {
     func makeCreditCardMVPContent() -> Void {
         
         return ()
+    }
+    
+    typealias CreditCardMVPSelectPublisher = Publisher<CreditCardMVPFlowDomain.Select, Never>
+    
+    @inlinable
+    func makeCreditCardMVPBinder<Content>(
+        content: Content,
+        isDelayed: Bool,
+        emitting: @escaping (Content) -> some CreditCardMVPSelectPublisher,
+        dismissing: @escaping (Content) -> () -> Void
+    ) -> Binder<Content, CreditCardMVPFlowDomain.Flow> {
+        
+        return composeBinder(
+            content: content,
+            getNavigation: isDelayed ? delayedGetNavigation : getNavigation,
+            witnesses: .init(
+                emitting: { emitting($0).map { .select($0) }},
+                dismissing: dismissing
+            )
+        )
     }
     
     // TODO: remove on live implementation
