@@ -9,14 +9,14 @@ extension ResponseMapper {
     
     struct CreateCreditCardLandingAndApplication: Equatable {
         
-        let theme: String
-        let header: Header?
-        let banner: Banner
-        let offerConditions: OfferConditions
-        let faq: FAQ
-        let consent: Consent
         let application: Application
+        let banner: Banner
+        let consent: Consent
+        let faq: FAQ
+        let header: Header?
         let offer: Offer
+        let offerConditions: OfferConditions
+        let theme: String
     }
 }
 
@@ -26,12 +26,6 @@ extension ResponseMapper.CreateCreditCardLandingAndApplication {
         
         let id: Int
         let status: String
-    }
-    
-    struct Header: Equatable {
-        
-        let title: String
-        let subtitle: String
     }
     
     struct Banner: Equatable {
@@ -57,6 +51,12 @@ extension ResponseMapper.CreateCreditCardLandingAndApplication {
             let title: String
             let description: String
         }
+    }
+    
+    struct Header: Equatable {
+        
+        let title: String
+        let subtitle: String
     }
     
     struct Offer: Equatable {
@@ -100,24 +100,24 @@ private extension ResponseMapper.CreateCreditCardLandingAndApplication {
     
     init(data: ResponseMapper._DTO) throws {
         
-        guard let theme = data.theme,
+        guard let application = data._application,
               let banner = data._banner,
-              let offerConditions = data._offerConditions,
-              let faq = data._faq,
               let consent = data._consent,
-              let application = data._application,
-              let offer = data._offer
+              let faq = data._faq,
+              let offer = data._offer,
+              let offerConditions = data._offerConditions,
+              let theme = data.theme
         else { throw ResponseFailure() }
         
         self.init(
-            theme: theme,
-            header: data._header,
-            banner: banner,
-            offerConditions: offerConditions,
-            faq: faq,
-            consent: consent,
             application: application,
-            offer: offer
+            banner: banner,
+            consent: consent,
+            faq: faq,
+            header: data._header,
+            offer: offer,
+            offerConditions: offerConditions,
+            theme: theme
         )
     }
     
@@ -159,6 +159,21 @@ private extension ResponseMapper._DTO {
         return .init(terms: terms, tariffs: tariffs, creditHistoryRequest: creditHistoryRequest)
     }
     
+    var _faq: Response.FAQ? {
+        
+        guard let title = frequentlyAskedQuestions?.title,
+              let faqList,
+              !faqList.isEmpty
+        else { return nil }
+        
+        return .init(title: title, list: faqList)
+    }
+    
+    var faqList: [Response.FAQ.Item]? {
+        
+        frequentlyAskedQuestions?.list?.compactMap(\.item)
+    }
+    
     var _header: Response.Header? {
         
         guard let title = header?.title,
@@ -170,7 +185,7 @@ private extension ResponseMapper._DTO {
     
     var _offer: Response.Offer? {
         
-        guard 
+        guard
             let id = offer?.id,
             let gracePeriod = offer?.gracePeriod,
             let tarifPlanRate = offer?.tarifPlanRate,
@@ -204,21 +219,6 @@ private extension ResponseMapper._DTO {
     var offerConditionsList: [Response.OfferConditions.Condition]? {
         
         offerConditions?.list?.compactMap(\.condition)
-    }
-    
-    var _faq: Response.FAQ? {
-        
-        guard let title = frequentlyAskedQuestions?.title,
-              let faqList,
-              !faqList.isEmpty
-        else { return nil }
-        
-        return .init(title: title, list: faqList)
-    }
-    
-    var faqList: [Response.FAQ.Item]? {
-        
-        frequentlyAskedQuestions?.list?.compactMap(\.item)
     }
 }
 
@@ -255,13 +255,13 @@ private extension ResponseMapper {
     struct _DTO: Decodable {
         
         let application: _Application?
-        let theme: String?
-        let header: _Header?
         let banner: _Banner?
-        let offerConditions: _OfferConditions?
-        let frequentlyAskedQuestions: _FAQ?
         let consent: _Consent?
+        let frequentlyAskedQuestions: _FAQ?
+        let header: _Header?
         let offer: _Offer?
+        let offerConditions: _OfferConditions?
+        let theme: String?
     }
 }
 
@@ -271,12 +271,6 @@ extension ResponseMapper._DTO {
         
         let id: Int?
         let status: String?
-    }
-    
-    struct _Header: Decodable {
-        
-        let title: String?
-        let subtitle: String?
     }
     
     struct _Banner: Decodable {
@@ -290,6 +284,24 @@ extension ResponseMapper._DTO {
         let terms: String?
         let tariffs: String?
         let creditHistoryRequest: String?
+    }
+    
+    struct _FAQ: Decodable {
+        
+        let title: String?
+        let list: [_Item]?
+        
+        struct _Item: Decodable {
+            
+            let title: String?
+            let description: String?
+        }
+    }
+    
+    struct _Header: Decodable {
+        
+        let title: String?
+        let subtitle: String?
     }
     
     struct _Offer: Decodable {
@@ -314,18 +326,6 @@ extension ResponseMapper._DTO {
             let title: String?
             let subtitle: String?
             let subTitle: String?
-        }
-    }
-    
-    struct _FAQ: Decodable {
-        
-        let title: String?
-        let list: [_Item]?
-        
-        struct _Item: Decodable {
-            
-            let title: String?
-            let description: String?
         }
     }
 }
@@ -712,14 +712,14 @@ final class ResponseMapper_mapCreateCreditCardLandingAndApplicationResponseTests
     ) -> Response {
         
         return .init(
-            theme: theme,
-            header: header,
-            banner: banner ?? makeBanner(),
-            offerConditions: offerConditions ?? makeOfferConditions(),
-            faq: faq ?? makeFAQ(),
-            consent: consent ?? makeConsent(),
             application: application ?? makeApplication(),
-            offer: offer ?? makeOffer()
+            banner: banner ?? makeBanner(),
+            consent: consent ?? makeConsent(),
+            faq: faq ?? makeFAQ(),
+            header: header,
+            offer: offer ?? makeOffer(),
+            offerConditions: offerConditions ?? makeOfferConditions(),
+            theme: theme
         )
     }
     
@@ -862,20 +862,20 @@ final class ResponseMapper_mapCreateCreditCardLandingAndApplicationResponseTests
     ) -> Response {
         
         return .init(
-            theme: theme,
-            header: .init(
-                title: headerTitle,
-                subtitle: headerSubtitle
-            ),
+            application: application ?? makeApplication(),
             banner: .init(
                 background: bannerBackground,
                 conditions: bannerConditions
             ),
-            offerConditions: offerConditions ?? makeOfferConditions(),
-            faq: faq ?? makeFAQ(),
             consent: consent ?? makeConsent(),
-            application: application ?? makeApplication(),
-            offer: offer ?? makeOffer()
+            faq: faq ?? makeFAQ(),
+            header: .init(
+                title: headerTitle,
+                subtitle: headerSubtitle
+            ),
+            offer: offer ?? makeOffer(),
+            offerConditions: offerConditions ?? makeOfferConditions(),
+            theme: theme
         )
     }
     
