@@ -58,10 +58,12 @@ extension RootViewModelFactory {
         guard let selectedProduct
         else { return completion(.missingC2GPaymentEligibleProducts) }
         
+        #if DEBUG
         guard !uin.hasEasterEgg else {
             
             return easterEggsGetUINData(uin, selectedProduct, completion)
         }
+        #endif
         
         let service = onBackground(
             makeRequest: Vortex.RequestFactory.createGetUINDataRequest,
@@ -112,6 +114,7 @@ extension RootViewModelFactory {
         return (products, fastProduct ?? products.first)
     }
     
+    #if DEBUG
     // TODO: remove easter egg stub
     @inlinable
     func easterEggsGetUINData(
@@ -136,6 +139,7 @@ extension RootViewModelFactory {
             }
         }
     }
+    #endif
     
     typealias GetUINDataResult = Result<C2GPaymentDomain.ContentPayload, BackendFailure>
 }
@@ -159,6 +163,7 @@ private extension String {
     static let missingC2GPaymentEligibleProducts: Self = "У вас нет подходящих для платежа продуктов."
 }
 
+#if DEBUG
 // TODO: remove with easter egg stub
 private extension SearchByUINDomain.Select.UIN {
     
@@ -194,3 +199,4 @@ private extension C2GPaymentDomain.ContentPayload {
         )
     }
 }
+#endif
