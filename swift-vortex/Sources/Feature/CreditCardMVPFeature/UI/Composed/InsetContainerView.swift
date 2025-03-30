@@ -10,15 +10,29 @@ import UIPrimitives
 
 struct InsetContainerView<Content: View, Header: View, Footer: View>: View {
     
+    @State private var isScrolling = false
+    
     let content: () -> Content
-    let header: () -> Header
+    let header: (Bool) -> Header
     let footer: () -> Footer
     
     var body: some View {
         
-        content()
-            .safeAreaInset(edge: .top, spacing: 0, content: header)
-            .safeAreaInset(edge: .bottom, spacing: 0, content: footer)
+        OffsetReportingScrollView { offset in
+            
+            content()
+                .onChange(of: offset) { isScrolling = abs($0) > 0.1 }
+        }
+        .safeAreaInset(edge: .top, spacing: 0, content: _header)
+        .safeAreaInset(edge: .bottom, spacing: 0, content: footer)
+    }
+}
+
+private extension InsetContainerView {
+    
+    func _header() -> some View {
+        
+        header(isScrolling)
     }
 }
 
@@ -26,39 +40,32 @@ struct InsetContainerView<Content: View, Header: View, Footer: View>: View {
 
 struct InsetContainerView_Demo: View {
     
-    @State private var isScrolling = false
-    
     let subtitle: String?
     
     var body: some View {
         
         InsetContainerView {
             
-            OffsetReportingScrollView { offset in
+            VStack(spacing: 0) {
                 
-                VStack(spacing: 0) {
-                    
-                    Color.blue.opacity(0.2).height(600)
-                        .overlay { Text("offset: \(offset)") }
-                    
-                    Color.green.height(600)
-                }
-                .onChange(of: offset) { isScrolling = abs($0) > 0.1 }
-//                .border(.pink)
+                Color.blue.opacity(0.2).height(400)
+                
+                Color.green.height(600)
             }
-//            .border(.black)
+            //  .border(.black)
             .ignoresSafeArea()
             
         } header: {
             
             HeaderView(
-                title: isScrolling ? "Credit Card" : "",
-                subtitle: isScrolling ? subtitle : nil,
+                title: $0 ? "Credit Card" : "",
+                subtitle: $0 ? subtitle : nil,
                 action: { print("back button tapped") },
                 config: .preview
             )
-            .background(Material.ultraThin.opacity(isScrolling ? 1 : 0))
-            .background(.orange.opacity(isScrolling ? 0 : 0.5))
+            .background(Material.ultraThin.opacity($0 ? 1 : 0))
+            .background(.orange.opacity($0 ? 0 : 0.5))
+            .animation(.easeInOut, value: $0)
             
         } footer: {
             
@@ -66,7 +73,7 @@ struct InsetContainerView_Demo: View {
                 .buttonStyle(.borderedProminent)
                 .frame(maxWidth: .infinity)
                 .padding(.top, 9)
-                // .background(Material.thick)
+            // .background(Material.thick)
                 .background(.pink.opacity(0.5))
         }
     }
