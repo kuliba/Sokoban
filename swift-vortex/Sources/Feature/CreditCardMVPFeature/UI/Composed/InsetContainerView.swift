@@ -7,10 +7,13 @@
 
 import SwiftUI
 import UIPrimitives
+import VortexTools
 
 struct InsetContainerView<Content: View, Header: View, Footer: View>: View {
     
     @State private var isScrolling = false
+    
+    @StateObject var model: ReactiveRefreshScrollViewModel
     
     let content: () -> Content
     let header: (Bool) -> Header
@@ -18,11 +21,12 @@ struct InsetContainerView<Content: View, Header: View, Footer: View>: View {
     
     var body: some View {
         
-        OffsetReportingScrollView { offset in
+        ReactiveRefreshScrollView(model: model) { offset in
             
             content()
-                .onChange(of: offset) { isScrolling = abs($0) > 0.1 }
+                .onChange(of: offset) { isScrolling = $0 < -0.1 }
         }
+        .ignoresSafeArea(.container, edges: .top)
         .safeAreaInset(edge: .top, spacing: 0, content: _header)
         .safeAreaInset(edge: .bottom, spacing: 0, content: footer)
     }
@@ -44,16 +48,14 @@ struct InsetContainerView_Demo: View {
     
     var body: some View {
         
-        InsetContainerView {
+        InsetContainerView(model: .preview) {
             
             VStack(spacing: 0) {
                 
-                Color.blue.opacity(0.2).height(400)
+                Color.blue.opacity(0.4).height(400)
                 
                 Color.green.height(600)
             }
-            //  .border(.black)
-            .ignoresSafeArea()
             
         } header: {
             
@@ -63,8 +65,8 @@ struct InsetContainerView_Demo: View {
                 action: { print("back button tapped") },
                 config: .preview
             )
-            .background(Material.ultraThin.opacity($0 ? 1 : 0))
-            .background(.orange.opacity($0 ? 0 : 0.5))
+            .background(Material.thin.opacity($0 ? 1 : 0))
+            .background(.orange.opacity($0 ? 0 : 0.4))
             .animation(.easeInOut, value: $0)
             
         } footer: {
@@ -95,6 +97,16 @@ struct InsetContainerView_Demo: View {
         .preferredColorScheme(.dark)
 }
 
+private extension ReactiveRefreshScrollViewModel {
+    
+    static let preview = ReactiveRefreshScrollViewModel(
+        config: .preview,
+        scheduler: .main,
+        refresh: { print("refresh called") }
+    )
+}
+
+
 private extension HeaderViewConfig {
     
     static let preview: Self = .init(
@@ -109,4 +121,9 @@ private extension HeaderViewConfig {
         subtitle: .init(textFont: .subheadline, textColor: .secondary),
         vSpacing: 4
     )
+}
+
+extension SwipeToRefreshConfig {
+    
+    static let preview: Self = .init(threshold: 100, debounce: .seconds(1))
 }
