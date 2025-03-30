@@ -5,9 +5,34 @@
 //  Created by Igor Malyarov on 30.03.2025.
 //
 
+import CombineSchedulers
 import SwiftUI
 import UIPrimitives
 import VortexTools
+
+struct InsetContainerWrapperView<Content: View, Header: View, Footer: View>: View {
+    
+    let config: SwipeToRefreshConfig
+    let scheduler: AnySchedulerOf<DispatchQueue>
+    let refresh: () -> Void
+    let content: () -> Content
+    let header: (Bool) -> Header
+    let footer: () -> Footer
+    
+    var body: some View {
+        
+        LazyModelView(
+            factory: {
+                
+                .init(config: config, scheduler: scheduler, refresh: refresh)
+            },
+            content: {
+                
+                InsetContainerView(model: $0, content: content, header: header, footer: footer)
+            }
+        )
+    }
+}
 
 struct InsetContainerView<Content: View, Header: View, Footer: View>: View {
     
@@ -27,58 +52,23 @@ struct InsetContainerView<Content: View, Header: View, Footer: View>: View {
                 .onChange(of: offset) { isScrolling = $0 < -0.1 }
         }
         .ignoresSafeArea(.container, edges: .top)
-        .safeAreaInset(edge: .top, spacing: 0, content: _header)
+        .safeAreaInset(edge: .top, spacing: 0) { header(isScrolling) }
         .safeAreaInset(edge: .bottom, spacing: 0, content: footer)
-    }
-}
-
-private extension InsetContainerView {
-    
-    func _header() -> some View {
-        
-        header(isScrolling)
     }
 }
 
 // MARK: - Previews
 
-struct InsetContainerView_Demo: View {
+#Preview {
     
-    let subtitle: String?
-    
-    var body: some View {
-        
-        InsetContainerView(model: .preview) {
-            
-            VStack(spacing: 0) {
-                
-                Color.blue.opacity(0.4).height(400)
-                
-                Color.green.height(600)
-            }
-            
-        } header: {
-            
-            HeaderView(
-                title: $0 ? "Credit Card" : "",
-                subtitle: $0 ? subtitle : nil,
-                action: { print("back button tapped") },
-                config: .preview
-            )
-            .background(Material.thin.opacity($0 ? 1 : 0))
-            .background(.orange.opacity($0 ? 0 : 0.4))
-            .animation(.easeInOut, value: $0)
-            
-        } footer: {
-            
-            Button("Tap me") {}
-                .buttonStyle(.borderedProminent)
-                .frame(maxWidth: .infinity)
-                .padding(.top, 9)
-            // .background(Material.thick)
-                .background(.pink.opacity(0.5))
-        }
-    }
+    InsetContainerWrapperView(
+        config: .preview,
+        scheduler: .main,
+        refresh: { print("refresh called") },
+        content: _content,
+        header: { _header(isScrolling: $0, subtitle: "All-Inclisive") },
+        footer: _footer
+    )
 }
 
 #Preview {
@@ -95,6 +85,55 @@ struct InsetContainerView_Demo: View {
     
     InsetContainerView_Demo(subtitle: "All-Inclisive")
         .preferredColorScheme(.dark)
+}
+
+struct InsetContainerView_Demo: View {
+    
+    let subtitle: String?
+    
+    var body: some View {
+        
+        InsetContainerView(
+            model: .preview,
+            content: _content,
+            header: { _header(isScrolling: $0, subtitle: subtitle) },
+            footer: _footer
+        )
+    }
+}
+
+private func _content() -> some View {
+    
+    VStack(spacing: 0) {
+        
+        Color.blue.opacity(0.4).height(400)
+        
+        Color.orange.height(600)
+    }
+    
+}
+
+private func _header(isScrolling: Bool, subtitle: String?) -> some View {
+    
+    HeaderView(
+        title: isScrolling ? "Credit Card" : "",
+        subtitle: isScrolling ? subtitle : nil,
+        action: { print("back button tapped") },
+        config: .preview
+    )
+    .background(Material.thin.opacity(isScrolling ? 1 : 0))
+    .background(.green.opacity(isScrolling ? 0 : 0.4))
+    .animation(.easeInOut, value: isScrolling)
+}
+
+private func _footer() -> some View {
+    
+    Button("Tap me") {}
+        .buttonStyle(.borderedProminent)
+        .frame(maxWidth: .infinity)
+        .padding(.top, 9)
+    // .background(Material.thick)
+        .background(.pink.opacity(0.5))
 }
 
 private extension ReactiveRefreshScrollViewModel {
