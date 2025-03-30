@@ -159,6 +159,10 @@ private extension Reducer {
             
             state.form?.confirmation = .loaded(nil)
         }
+        
+        if state.form?.needInformer == true {
+            state.form?.needInformer = false
+        }
     }
     
     func reduceOrderAccount(
@@ -183,7 +187,7 @@ private extension Reducer {
                 notifyOTP?(loadFailure.message)
                 
             case .informer:
-                break
+                form.needInformer = true
                 
             case .alert:
                 form.orderAccountResponse = .reject

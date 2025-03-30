@@ -59,7 +59,7 @@ public extension EffectHandler {
             loadConfirmation(payload, confirmationNotify) { dispatch(.loadConfirmation($0)) }
             
         case let .orderAccount(payload):
-            orderAccount(payload) { dispatch(.orderAccountResult($0)) }
+            orderAccount(payload, { dispatch(.dismissInformer) }) { dispatch(.orderAccountResult($0)) }
         }
     }
 }
@@ -72,5 +72,5 @@ public extension EffectHandler {
     typealias ConfirmationNotify = (ConfirmationEvent) -> Void
     typealias LoadConfirmation = (ProductEffect.LoadConfirmationPayload, @escaping ConfirmationNotify, @escaping (LoadConfirmationResult<Confirmation>) -> Void) -> Void
     
-    typealias OrderAccount = (ProductEffect.OrderAccountPayload, @escaping (ProductEvent.OrderAccountResult) -> Void) -> Void
+    typealias OrderAccount = (ProductEffect.OrderAccountPayload, @escaping DismissInformer, @escaping (ProductEvent.OrderAccountResult) -> Void) -> Void
 }
