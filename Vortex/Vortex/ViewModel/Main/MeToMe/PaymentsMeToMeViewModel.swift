@@ -1131,7 +1131,7 @@ extension PaymentsMeToMeViewModel {
         case general
         case closeAccount(ProductData, Double)
         case closeDeposit(ProductData, Double)
-        case makePaymentTo(ProductData, Double)
+        case makePaymentTo(ProductData?, ProductData, Double)
         case templatePayment(PaymentTemplateData.ID, String)
         case makePaymentToDeposite(ProductData, Double)
         case transferDeposit(ProductData, Double)
