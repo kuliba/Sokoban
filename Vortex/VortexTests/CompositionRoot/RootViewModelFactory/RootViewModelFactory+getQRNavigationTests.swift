@@ -594,7 +594,7 @@ extension Model {
         line: UInt = #line
     ) {
         let count = products.value.count
-        products.value.append(element: .cardActiveMainDebitOnlyRub, toValueOfKey: .card)
+        products.value.append(element: .sberProduct, toValueOfKey: .card)
         
         XCTAssertEqual(products.value.count, count + 1, "Expected to add sberQRProducts, but failed.", file: file, line: line)
     }

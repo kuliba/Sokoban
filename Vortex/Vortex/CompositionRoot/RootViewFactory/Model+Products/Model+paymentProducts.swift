@@ -93,7 +93,7 @@ extension ProductData {
         if let card = self as? ProductCardData,
            let cardType = card.cardType {
             
-            return cardType.isPaymentEligible && card.isActivated
+            return cardType.isPaymentEligible && card.hasActiveStatus
         }
         
         if self is ProductAccountData {
