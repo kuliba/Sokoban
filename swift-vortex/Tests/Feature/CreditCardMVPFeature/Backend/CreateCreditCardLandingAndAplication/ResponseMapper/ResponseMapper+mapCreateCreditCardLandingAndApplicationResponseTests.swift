@@ -418,9 +418,9 @@ final class ResponseMapper_mapCreateCreditCardLandingAndApplicationResponseTests
     }
     
     private func makeConsent(
-        terms: String = "https://www.forabank.ru/dkbo/dkbo.pdf",
-        tariffs: String = "https://www.forabank.ru/tarify/",
-        creditHistoryRequest: String = "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
+        terms: String = "https://www.any.ru/dkbo/dkbo.pdf",
+        tariffs: String = "https://www.any.ru/tarify/",
+        creditHistoryRequest: String = "https://www.any.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
     ) -> Response.Consent {
         
         return .init(terms: terms, tariffs: tariffs, creditHistoryRequest: creditHistoryRequest)
@@ -953,8 +953,8 @@ private extension String {
     "offerConditions": \(_offerConditions),
     "frequentlyAskedQuestions": \(_faq),
     "consent": {
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
+      "tariffs": "https://www.any.ru/tarify/",
+      "creditHistoryRequest": "https://www.any.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
     },
     "application": \(_application),
     "offer": \(_offer)
@@ -973,8 +973,8 @@ private extension String {
     "offerConditions": \(_offerConditions),
     "frequentlyAskedQuestions": \(_faq),
     "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
+      "terms": "https://www.any.ru/dkbo/dkbo.pdf",
+      "creditHistoryRequest": "https://www.any.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
     },
     "application": \(_application),
     "offer": \(_offer)
@@ -993,8 +993,8 @@ private extension String {
     "offerConditions": \(_offerConditions),
     "frequentlyAskedQuestions": \(_faq),
     "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/"
+      "terms": "https://www.any.ru/dkbo/dkbo.pdf",
+      "tariffs": "https://www.any.ru/tarify/"
     },
     "application": \(_application),
     "offer": \(_offer)
@@ -1309,9 +1309,9 @@ private extension String {
     
     static let _consent = """
 {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
+      "terms": "https://www.any.ru/dkbo/dkbo.pdf",
+      "tariffs": "https://www.any.ru/tarify/",
+      "creditHistoryRequest": "https://www.any.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
     }
 """
     
@@ -1394,9 +1394,9 @@ private extension String {
       ]
     },
     "consent": {
-      "terms": "https://www.forabank.ru/dkbo/dkbo.pdf",
-      "tariffs": "https://www.forabank.ru/tarify/",
-      "creditHistoryRequest": "https://www.forabank.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
+      "terms": "https://www.any.ru/dkbo/dkbo.pdf",
+      "tariffs": "https://www.any.ru/tarify/",
+      "creditHistoryRequest": "https://www.any.ru/user-upload/dok-dbo-fl/coglasie-na-zapros-v-bki.pdf"
     },
     "application": {
       "id": 123456789,
