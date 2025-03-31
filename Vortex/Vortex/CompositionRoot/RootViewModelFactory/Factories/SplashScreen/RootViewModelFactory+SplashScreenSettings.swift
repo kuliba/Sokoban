@@ -10,6 +10,7 @@ import RemoteServices
 import SerialComponents
 import SplashScreenBackend
 import SplashScreenCore
+import SplashScreenUI
 import SwiftUI
 import VortexTools
 
@@ -20,18 +21,20 @@ typealias SplashScreenStorage = CategorizedStorage<String, SplashScreenSettings>
 extension RootViewModelFactory {
     
     @inlinable
-    func scheduleGetAndCacheSplashImages() {
-        
+    func scheduleGetAndCacheSplashImages(
+        updateSplash: @escaping (SplashScreenStorage) -> Void
+    ) {
         schedulers.background.schedule { [weak self] in
             
-            self?.getAndCacheSplashImages()
+            self?.getAndCacheSplashImages(updateSplash: updateSplash)
         }
     }
     
     /// - Warning: This method is not responsible for threading.
     @inlinable
-    func getAndCacheSplashImages() {
-        
+    func getAndCacheSplashImages(
+        updateSplash: @escaping (SplashScreenStorage) -> Void
+    ) {
         getSplashImages { [weak self] storage in
             
             guard let storage else {
@@ -40,6 +43,7 @@ extension RootViewModelFactory {
                 return
             }
             
+            updateSplash(storage)
             self?.cache(splashImages: storage)
             self?.infoNetworkLog(message: "Got Splash Images: \(String(describing: storage))")
         }
