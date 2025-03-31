@@ -26,15 +26,17 @@ public struct OffsetReportingScrollView<Content: View>: View {
         
         ScrollView {
             
-            geometryReader()
-            content(offsetY)
+            VStack(spacing: 0) {
+             
+                geometryReader()
+                content(offsetY)
+            }
         }
         .coordinateSpace(name: "scroll")
         .onPreferenceChange(ScrollOffsetPreferenceKey.self) {
             
             offsetY = $0
         }
-        // .onChange(of: offsetY) { print("onChange @State", Int($0).formatted()) }
     }
 }
 
@@ -45,15 +47,14 @@ private extension OffsetReportingScrollView {
         GeometryReader { proxy in
             
             let y = proxy.frame(in: .named("scroll")).origin.y
-            // let _ = print("y:", Int(y).formatted())
             
             Color.clear
-                .frame(height: 0)
                 .preference(
                     key: ScrollOffsetPreferenceKey.self,
                     value: y
                 )
         }
+        .height(0)
     }
 }
 
