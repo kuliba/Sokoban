@@ -33,13 +33,13 @@ extension GetInfoRepeatPaymentDomain.GetInfoRepeatPayment {
         return parameterList.compactMap {
             
             guard let amount = $0.amount,
-                  let productToID = $0.payerOrInternalPayerProductID,
-                  let productTo = getProduct(productToID),
-                  let productFromID = $0.internalPayeeProductID,
-                  let productFrom = getProduct(productFromID)
+                  let productToID = $0.internalPayeeProductID,
+                  let to = getProduct(productToID),
+                  let productFromID = $0.payerOrInternalPayerProductID,
+                  let from = getProduct(productFromID)
             else { return nil }
             
-            return .makePaymentTo(productFrom, productTo, amount)
+            return .makePaymentTo(from: from, to: to, amount)
         }
         .first
     }
