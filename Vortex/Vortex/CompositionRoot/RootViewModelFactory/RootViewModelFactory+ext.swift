@@ -157,8 +157,8 @@ extension RootViewModelFactory {
             createUserVisibilityProductsSettingsService: userVisibilityProductsSettingsServices,
             createCreateGetSVCardLimits: getSVCardLimitsServices,
             createChangeSVCardLimit: changeSVCardLimitServices,
-            createSVCardLanding: landingService, 
-            getSavingsAccountInfo: getSavingsAccountInfo, 
+            createSVCardLanding: landingService,
+            getSavingsAccountInfo: getSavingsAccountInfo,
             getSavingsAccountPrintForm: getPrintFormForSavingsAccount,
             repeatPayment: { [weak self] in self?.repeatPayment(processingFlag: featureFlags.processingFlag, payload: $0, closeAction: $1, completion: $2) },
             makeSVCardLandingViewModel: makeSVCardLandig,
@@ -297,7 +297,7 @@ extension RootViewModelFactory {
             
             performOrWaitForActive(loadCategoriesAndNotifyPicker)
         }
-                
+        
         let makeTemplates = makeMakeTemplates(featureFlags.processingFlag, featureFlags.paymentsTransfersFlag)
         let _makeCloseAccountSpinnerViewModel: MakeCloseAccountSpinnerViewModel = { [weak self] in
             
@@ -495,7 +495,7 @@ extension RootViewModelFactory {
         let getRootNavigation = { select, notify, completion in
             
             self.getRootNavigation(
-                rootFlags: featureFlags.rootFlags, 
+                rootFlags: featureFlags.rootFlags,
                 makeProductProfileByID: makeProductProfileByID,
                 select: select,
                 notify: notify,
@@ -505,29 +505,7 @@ extension RootViewModelFactory {
         
         typealias GN = FlowDomain<RootViewSelect, RootViewNavigation>.GetNavigation
         let decorateGetRootNavigation: (@escaping GN) -> GN  = schedulers.interactive.decorateGetNavigation(
-            delayProvider: {
-              
-                // TODO: - extract to helper func
-                switch $0 {
-                case .failure, .outside:
-                    return .zero
-                
-                case .orderCardResponse:
-                    return .milliseconds(100)
-
-                case .scanQR, .templates:
-                    return .zero//.milliseconds(100)
-                
-                case .openProduct(.creditCardMVP):
-                    return .zero
-                
-                case .openProduct, .searchByUIN, .standardPayment, .userAccount:
-                    return .milliseconds(600)
-                    
-                case .savingsAccount:
-                    return .milliseconds(100)
-                }
-            }
+            delayProvider: delayProvider
         )
         
         let composer = RootViewDomain.BinderComposer(
@@ -540,6 +518,38 @@ extension RootViewModelFactory {
         )
         
         return composer.compose(with: rootViewModel)
+    }
+}
+
+extension RootViewModelFactory {
+    
+    @inlinable
+    func delayProvider(
+        navigation: RootViewNavigation
+    ) -> Delay {
+        
+        switch navigation {
+        case .failure, .outside(.tab):
+            return .zero
+            
+        case .outside(.productProfile):
+            return .milliseconds(200)
+            
+        case .orderCardResponse:
+            return .milliseconds(100)
+            
+        case .scanQR, .templates:
+            return .zero//.milliseconds(100)
+            
+        case .openProduct(.creditCardMVP):
+            return .zero
+            
+        case .openProduct, .searchByUIN, .standardPayment, .userAccount:
+            return .milliseconds(600)
+            
+        case .savingsAccount:
+            return .milliseconds(100)
+        }
     }
     
     // TODO: - extract
