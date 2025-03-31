@@ -8,6 +8,12 @@
 import SharedConfigs
 import SwiftUI
 
+enum DescriptorStatus: Equatable {
+    
+    case loaded(Descriptor)
+    case loading, placeholder
+}
+
 struct Descriptor: Equatable {
     
     let items: [Item] // TODO: improve with non-empty?
@@ -31,6 +37,8 @@ struct DescriptorViewConfig: Equatable {
     let edges: EdgeInsets
     let header: Header
     let item: Item
+    let placeholderColor: Color
+    let placeholderCount: Int
     let spacing: CGFloat
 }
 
@@ -39,6 +47,7 @@ extension DescriptorViewConfig {
     struct Header: Equatable {
         
         let height: CGFloat
+        let placeholder: Placeholder
         let title: TextConfig
     }
     
@@ -50,7 +59,17 @@ extension DescriptorViewConfig {
         let title: TextConfig
         let value: TextConfig
         let vSpacing: CGFloat
+        let placeholder: Placeholder
+    }
+}
+
+extension DescriptorViewConfig.Header {
+    
+    struct Placeholder: Equatable {
         
+        let color: Color
+        let cornerRadius: CGFloat
+        let height: CGFloat
     }
 }
 
@@ -60,24 +79,33 @@ extension DescriptorViewConfig.Item {
         
         let frame: CGSize
     }
+    
+    struct Placeholder: Equatable {
+        
+        let color: Color
+        let cornerRadius: CGFloat
+        let titleHeight: CGFloat
+        let valueHeight: CGFloat
+    }
 }
 
 struct DescriptorView<IconView: View>: View {
     
-    let descriptor: Descriptor
+    let descriptorStatus: DescriptorStatus
     let config: DescriptorViewConfig
-    let iconView: (String) -> IconView
+    let makeIconView: (String) -> IconView
     
     var body: some View {
         
         VStack(spacing: config.spacing) {
             
             header(config: config.header)
+                .height(config.header.height)
             
-            ForEach(descriptor.items, id: \.id) { itemView($0, config.item) }
+            ForEach(items, id: \.id) { itemView($0, config.item) }
         }
         .padding(config.edges)
-        .background(config.background, in: RoundedRectangle(cornerRadius: config.cornerRadius))
+        .background(background)
     }
 }
 
@@ -88,13 +116,51 @@ private extension Descriptor.Item {
 
 private extension DescriptorView {
     
+    private var isActive: Bool { descriptorStatus == .loading }
+    
+    private var background: some View {
+        
+        Group {
+            
+            switch descriptorStatus {
+            case .loaded:
+                config.background
+                
+            default:
+                config.placeholderColor
+                    ._shimmering(isActive: isActive)
+            }
+        }
+        .clipShape(RoundedRectangle(cornerRadius: config.cornerRadius))
+    }
+    
+    private var items: [Descriptor.Item] {
+        
+        switch descriptorStatus {
+        case let .loaded(descriptor):
+            return descriptor.items
+            
+        default:
+            return .placeholder(count: config.placeholderCount)
+        }
+    }
+    
+    @ViewBuilder
     func header(
         config: DescriptorViewConfig.Header
     ) -> some View {
         
-        descriptor.title.text(withConfig: config.title)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .height(config.height)
+        switch descriptorStatus {
+        case let .loaded(descriptor):
+            descriptor.title.text(withConfig: config.title)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
+        default:
+            config.placeholder.color
+                .clipShape(RoundedRectangle(cornerRadius: config.placeholder.cornerRadius))
+                .height(config.placeholder.height)
+                ._shimmering(isActive: isActive)
+        }
     }
     
     func itemView(
@@ -104,19 +170,84 @@ private extension DescriptorView {
         
         HStack(spacing: config.spacing) {
             
-            iconView(item.md5Hash)
+            iconView(md5Hash: item.md5Hash, placeholderColor: config.placeholder.color)
                 .frame(config.icon.frame)
                 .clipShape(Circle())
             
             VStack(alignment: .leading, spacing: config.vSpacing) {
                 
-                item.title.text(withConfig: config.title ,alignment: .leading)
-                
-                item.value.text(withConfig: config.value ,alignment: .leading)
+                titleView(title: item.title, config: config)
+                valueView(value: item.value, config: config)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .height(config.height)
+    }
+    
+    @ViewBuilder
+    func iconView(
+        md5Hash: String,
+        placeholderColor: Color
+    ) -> some View {
+        
+        switch descriptorStatus {
+        case .loaded:
+            makeIconView(md5Hash)
+            
+        default:
+            placeholderColor
+                ._shimmering(isActive: isActive)
+        }
+    }
+    
+    @ViewBuilder
+    func titleView(
+        title: String,
+        config: DescriptorViewConfig.Item
+    ) -> some View {
+        
+        switch descriptorStatus {
+        case .loaded:
+            title.text(withConfig: config.title ,alignment: .leading)
+            
+        default:
+            config.placeholder.color
+                .clipShape(RoundedRectangle(cornerRadius: config.placeholder.cornerRadius))
+                .height(config.placeholder.titleHeight)
+                ._shimmering(isActive: isActive)
+        }
+    }
+    
+    @ViewBuilder
+    func valueView(
+        value: String,
+        config: DescriptorViewConfig.Item
+    ) -> some View {
+        
+        switch descriptorStatus {
+        case .loaded:
+            value.text(withConfig: config.value ,alignment: .leading)
+            
+        default:
+            config.placeholder.color
+                .clipShape(RoundedRectangle(cornerRadius: config.placeholder.cornerRadius))
+                .height(config.placeholder.valueHeight)
+                ._shimmering(isActive: isActive)
+        }
+    }
+}
+
+private extension Array where Element == Descriptor.Item {
+    
+    static func placeholder(
+        count: Int,
+        makeUniqueMD5Hash: (Int) -> String = { _ in UUID().uuidString }
+    ) -> Self {
+        
+        (0..<count).map {
+            
+            return .init(md5Hash: makeUniqueMD5Hash($0), title: "", value: "")
+        }
     }
 }
 
@@ -128,20 +259,29 @@ struct DescriptorView_Previews: PreviewProvider {
         
         VStack {
             
-            descriptorView(.empty)
-            descriptorView(.one)
-            descriptorView(.preview)
+            descriptorView(.loaded(.empty))
+            descriptorView(.loaded(.one))
+            descriptorView(.loaded(.preview))
         }
+        .previewDisplayName("loaded")
+        
+        VStack {
+            
+            descriptorView(.placeholder)
+            descriptorView(.loading)
+        }
+        .previewDisplayName("placeholders")
     }
     
     static func descriptorView(
-        _ descriptor: Descriptor
+        _ descriptorStatus: DescriptorStatus
     ) -> some View {
         
-        DescriptorView(descriptor: descriptor, config: .preview) { _ in
-            
-            Color.blue.opacity(0.6)
-        }
+        DescriptorView(
+            descriptorStatus: descriptorStatus,
+            config: .preview,
+            makeIconView: { _ in Color.blue.opacity(0.6) }
+        )
         .padding()
     }
 }
@@ -171,15 +311,19 @@ extension Descriptor.Item {
     static let preview3: Self = .init(md5Hash: "", title: "Item 3", value: "Value 3")
 }
 
-
 extension DescriptorViewConfig {
     
     static let preview: Self = .init(
-        background: .gray.opacity(0.1), // Main colors/Gray lightest
+        background: .green.opacity(0.3), // Main colors/Gray lightest
         cornerRadius: 12,
         edges: .init(top: 0, leading: 16, bottom: 13, trailing: 16),
         header: .init(
             height: 46,
+            placeholder: .init(
+                color: .pink.opacity(0.5), // Blur/Placeholder white text
+                cornerRadius: 90,
+                height: 24
+            ),
             title: .init(
                 textFont: .title3.bold(), // ??? Nika
                 textColor: .orange // Text/secondary
@@ -187,7 +331,9 @@ extension DescriptorViewConfig {
         ),
         item: .init(
             height: 46,
-            icon: .init(frame: .init(width: 40, height: 40)),
+            icon: .init(
+                frame: .init(width: 40, height: 40)
+            ),
             spacing: 16,
             title: .init(
                 textFont: .footnote, // Text/Body M/R_14×18_0%
@@ -197,9 +343,16 @@ extension DescriptorViewConfig {
                 textFont: .headline, // Text/H4/M_16×24_0%
                 textColor: .pink // Text/secondary
             ),
-            vSpacing: 4
+            vSpacing: 4,
+            placeholder: .init(
+                color: .blue.opacity(0.3), // Blur/Placeholder white text
+                cornerRadius: 90,
+                titleHeight: 14,
+                valueHeight: 18
+            )
         ),
+        placeholderColor: .green.opacity(0.15), // Blur/Placeholder
+        placeholderCount: 4,
         spacing: 13
     )
 }
-
