@@ -137,6 +137,64 @@ final class SplashScreenReducerTests: XCTestCase {
         assert(hidden(), event: .start, delivers: nil)
     }
 
+    // MARK: - update
+    
+    func test_update_shouldChangeSettings_onCover() {
+        
+        let settings = makeSettings()
+        
+        assert(cover(), event: .update(settings)) { $0.settings = settings }
+    }
+    
+    func test_update_shouldNotDeliverEffect_onCover() {
+        
+        let settings = makeSettings()
+        
+        assert(cover(), event: .update(settings), delivers: nil)
+    }
+    
+    func test_update_shouldChangeSettings_onWarm() {
+        
+        let settings = makeSettings()
+        
+        assert(warm(), event: .update(settings)) { $0.settings = settings }
+    }
+    
+    func test_update_shouldNotDeliverEffect_onWarm() {
+        
+        let settings = makeSettings()
+        
+        assert(warm(), event: .update(settings), delivers: nil)
+    }
+    
+    func test_update_shouldChangeSettings_onPresented() {
+        
+        let settings = makeSettings()
+        
+        assert(presented(), event: .update(settings)) { $0.settings = settings }
+    }
+    
+    func test_update_shouldNotDeliverEffect_onPresented() {
+        
+        let settings = makeSettings()
+        
+        assert(presented(), event: .update(settings), delivers: nil)
+    }
+    
+    func test_update_shouldChangeSettings_onHidden() {
+        
+        let settings = makeSettings()
+        
+        assert(hidden(), event: .update(settings)) { $0.settings = settings }
+    }
+    
+    func test_update_shouldNotDeliverEffect_onHidden() {
+        
+        let settings = makeSettings()
+        
+        assert(hidden(), event: .update(settings), delivers: nil)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = SplashScreenReducer
