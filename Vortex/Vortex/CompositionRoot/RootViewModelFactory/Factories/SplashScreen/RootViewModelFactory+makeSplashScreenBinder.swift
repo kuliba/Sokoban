@@ -28,11 +28,7 @@ extension RootViewModelFactory {
         let handler = SplashEventsHandler(
             authOKPublisher: model.pinOrSensorAuthOK.eraseToAnyPublisher(),
             startPublisher: model.hideCoverStartSplash.eraseToAnyPublisher(),
-            event: { [weak self, weak splash] in
-                
-                splash?.event($0)
-                if $0 == .hide { self?.generateFeedback(style: .light) }
-            }
+            event: feedbackDecoratedEvent(splash: splash)
         )
         
         let delay: Delay = .seconds(splash.state.settings.duration) - fadeout
@@ -40,6 +36,18 @@ extension RootViewModelFactory {
         let cancellables = flag.isActive ? handler.bind(delay: delay, on: schedulers.background) : []
         
         return .init(content: splash, flow: handler) { _,_ in cancellables }
+    }
+    
+    @inlinable
+    func feedbackDecoratedEvent(
+        splash: SplashScreenViewModel
+    ) -> (SplashScreenEvent) -> Void {
+        
+        return { [weak self, weak splash] event in
+            
+            splash?.event(event)
+            if event == .hide { self?.generateFeedback(style: .light) }
+        }
     }
     
     @inlinable
