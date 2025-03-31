@@ -25,7 +25,7 @@ extension RootViewModelFactory {
     @inlinable
     func isUserPersonal() -> Bool {
         
-        !model.products.value.isEmpty && !model.onlyCorporateCards
+        model.products.value.isEmpty || !model.onlyCorporateCards
     }
     
     @inlinable
