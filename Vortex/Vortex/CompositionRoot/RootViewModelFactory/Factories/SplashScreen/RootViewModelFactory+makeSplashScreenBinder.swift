@@ -63,10 +63,9 @@ extension RootViewModelFactory {
         phase: SplashScreenState.Phase
     ) -> SplashScreenViewModel {
         
-        let userName = getUserName()
-        let composed = composeSplashScreenSettings().insert(userName: userName)
+        let settings = composeSplashScreenSettings(storage: loadSplashImagesCache())
         
-        let initialState = SplashScreenState(phase: phase, settings: composed)
+        let initialState = SplashScreenState(phase: phase, settings: settings)
         let reducer = SplashScreenReducer()
         
         return .init(
@@ -87,16 +86,19 @@ extension RootViewModelFactory {
     }
     
     @inlinable
-    func composeSplashScreenSettings() -> SplashScreenState.Settings {
+    func composeSplashScreenSettings(
+        storage: SplashScreenStorage?
+    ) -> SplashScreenState.Settings {
         
         let timePeriod = getTimePeriodString()
-        let cache = loadSplashImagesCache()
         
-        guard let items = cache?.items(for: timePeriod.timePeriod)?.settings,
-              let random = items.randomElement()
-        else { return .default(for: timePeriod) }
+        let items = storage?.items(for: timePeriod.timePeriod)
+        let random = items?.settings.randomElement()
         
-        return random
+        let settings = random ?? .default(for: timePeriod)
+        
+        let userName = getUserName()
+        return settings.insert(userName: userName)
     }
 }
 
