@@ -165,7 +165,7 @@ class PaymentsMeToMeViewModel: ObservableObject {
                             let currency = Currency(description: productData.currency)
                             let mode: PaymentsSuccessViewModel.Mode = .closeAccount(productData.id, currency, balance: balance, transferData)
                             if let successViewModel = successViewModelFactory.makeSuccessViewModel(mode) {
-                                self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel))
+                                self.action.send(PaymentsMeToMeAction.Response.Success(viewModel: successViewModel, needUpdateBalance: false))
                                 if transferData.documentStatus == .complete {
                                     makeInformer(closeAccount: true)
                                 }
@@ -311,8 +311,10 @@ class PaymentsMeToMeViewModel: ObservableObject {
                     }
                     sheet = .init(type: .placesMap(placesViewModel))
                     
-                case _ as PaymentsMeToMeAction.Response.Success:
-                    if let productIdFrom = swapViewModel.productIdFrom,
+                case let payload as PaymentsMeToMeAction.Response.Success:
+                    
+                    if payload.needUpdateBalance,
+                       let productIdFrom = swapViewModel.productIdFrom,
                        let productIdTo = swapViewModel.productIdTo,
                        let productFrom = model.product(productId: productIdFrom),
                        let productTo = model.product(productId: productIdTo)
@@ -1100,6 +1102,15 @@ enum PaymentsMeToMeAction {
         struct Success: Action {
             
             let viewModel: PaymentsSuccessViewModel
+            let needUpdateBalance: Bool
+            
+            init(
+                viewModel: PaymentsSuccessViewModel,
+                needUpdateBalance: Bool = true
+            ) {
+                self.viewModel = viewModel
+                self.needUpdateBalance = needUpdateBalance
+            }
         }
         
         struct Failed: Action {}
