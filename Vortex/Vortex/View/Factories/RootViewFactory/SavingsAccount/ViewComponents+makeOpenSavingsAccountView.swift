@@ -115,6 +115,7 @@ extension ViewComponents {
             .opacity(state.isLoading ? 0.7 : 1)
             .disabled(state.isLoading)
             .navigationBarTitleDisplayMode(.inline)
+            .loaderOverlay(isLoading: state.isLoading)
         }
     }
     
@@ -216,12 +217,7 @@ private extension OpenSavingsAccountDomain.State {
     
     var isLoading: Bool {
         
-        loadableForm.isLoading || isConfirmationLoading
-    }
-    
-    var isConfirmationLoading: Bool {
-        
-        loadableForm.state?.confirmation.isLoading ?? false
+        loadableForm.isLoading
     }
 }
 
