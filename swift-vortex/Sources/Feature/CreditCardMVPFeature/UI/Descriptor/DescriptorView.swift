@@ -8,94 +8,23 @@
 import SharedConfigs
 import SwiftUI
 
-enum DescriptorStatus: Equatable {
+public struct DescriptorView<IconView: View>: View {
     
-    case loaded(Descriptor)
-    case loading, placeholder
-}
-
-struct Descriptor: Equatable {
+    private let descriptorStatus: DescriptorStatus
+    private let config: DescriptorViewConfig
+    private let makeIconView: (String) -> IconView
     
-    let items: [Item] // TODO: improve with non-empty?
-    let title: String
-}
-
-extension Descriptor {
-    
-    struct Item: Equatable {
-        
-        let md5Hash: String
-        let title: String
-        let value: String
-    }
-}
-
-struct DescriptorViewConfig: Equatable {
-    
-    let background: Color
-    let cornerRadius: CGFloat
-    let edges: EdgeInsets
-    let header: Header
-    let item: Item
-    let placeholderColor: Color
-    let placeholderCount: Int
-    let spacing: CGFloat
-}
-
-extension DescriptorViewConfig {
-    
-    struct Header: Equatable {
-        
-        let height: CGFloat
-        let placeholder: Placeholder
-        let title: TextConfig
+    public init(
+        descriptorStatus: DescriptorStatus,
+        config: DescriptorViewConfig,
+        makeIconView: @escaping (String) -> IconView
+    ) {
+        self.descriptorStatus = descriptorStatus
+        self.config = config
+        self.makeIconView = makeIconView
     }
     
-    struct Item: Equatable {
-        
-        let height: CGFloat
-        let icon: Icon
-        let spacing: CGFloat
-        let title: TextConfig
-        let value: TextConfig
-        let vSpacing: CGFloat
-        let placeholder: Placeholder
-    }
-}
-
-extension DescriptorViewConfig.Header {
-    
-    struct Placeholder: Equatable {
-        
-        let color: Color
-        let cornerRadius: CGFloat
-        let height: CGFloat
-    }
-}
-
-extension DescriptorViewConfig.Item {
-    
-    struct Icon: Equatable {
-        
-        let frame: CGSize
-    }
-    
-    struct Placeholder: Equatable {
-        
-        let color: Color
-        let cornerRadius: CGFloat
-        let titleHeight: CGFloat
-        let valueHeight: CGFloat
-    }
-}
-
-struct DescriptorView<IconView: View>: View {
-    
-    let descriptorStatus: DescriptorStatus
-    let config: DescriptorViewConfig
-    let makeIconView: (String) -> IconView
-    
-    var body: some View {
+    public var body: some View {
         
         VStack(spacing: config.spacing) {
             
@@ -171,7 +100,7 @@ private extension DescriptorView {
         HStack(spacing: config.spacing) {
             
             iconView(md5Hash: item.md5Hash, placeholderColor: config.placeholder.color)
-                .frame(config.icon.frame)
+                .frame(config.iconFrame)
                 .clipShape(Circle())
             
             VStack(alignment: .leading, spacing: config.vSpacing) {
@@ -331,9 +260,7 @@ extension DescriptorViewConfig {
         ),
         item: .init(
             height: 46,
-            icon: .init(
-                frame: .init(width: 40, height: 40)
-            ),
+            iconFrame: .init(width: 40, height: 40),
             spacing: 16,
             title: .init(
                 textFont: .footnote, // Text/Body M/R_14×18_0%
