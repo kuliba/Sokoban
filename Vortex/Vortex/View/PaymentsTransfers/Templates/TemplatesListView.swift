@@ -44,6 +44,24 @@ struct TemplatesListView: View {
                 .onAppear { height = geo.size.height }
                 .onChange(of: geo.size.height) { height = $0 }
         }
+        .overlay(content: spinnerView)
+    }
+}
+
+private extension TemplatesListView {
+    
+    var isLoading: Bool {
+        
+        guard case .loading = viewModel.state else { return false }
+        return true
+    }
+    
+    func spinnerView() -> some View {
+        
+        SpinnerRefreshView(icon: .init("Logo Vortex"))
+            .frame(width: 100, height: 100) // isolate frame size from geometry updates
+            .offset(y: -44)
+            .opacity(isLoading ? 1 : 0)
     }
 }
 
