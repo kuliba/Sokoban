@@ -14,4 +14,16 @@ public extension View {
         
         self.frame(width: size.width, height: size.height)
     }
+    
+    @inlinable
+    func height(_ height: CGFloat) -> some View {
+        
+        frame(height: height)
+    }
+    
+    @inlinable
+    func width(_ width: CGFloat) -> some View {
+        
+        frame(width: width)
+    }
 }
