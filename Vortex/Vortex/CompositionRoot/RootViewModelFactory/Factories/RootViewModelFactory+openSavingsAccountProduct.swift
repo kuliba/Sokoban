@@ -109,7 +109,22 @@ extension RootViewModelFactory {
             }
             .sink { binder.flow.event(.select(.failure($0))) }
         
-        return .init(model: binder, cancellables: [cancellable, goToMainCancellable, contentCancellable])
+        let formCancellable = binder.content.$state
+            .compactMap {
+                switch $0.form?.needInformer {
+                case true:
+                    return .tryLaterInformer
+                    
+                default:
+                    return nil
+                }
+            }
+            .sink { binder.flow.event(.select(.failure($0))) }
+
+        return .init(
+            model: binder,
+            cancellables: [cancellable, goToMainCancellable, contentCancellable, formCancellable]
+        )
     }
     
     // MARK: - Content
@@ -252,6 +267,7 @@ extension RootViewModelFactory {
     @inlinable
     func orderSavingsAccount(
         payload: OpenSavingsAccountDomain.OrderAccountPayload,
+        dismissInformer: @escaping () -> Void,
         completion: @escaping (OpenSavingsAccountDomain.OrderAccountResult) -> Void
     ) {
         // TODO: use `onBackground` to create service
@@ -263,8 +279,14 @@ extension RootViewModelFactory {
         // TODO: use `onBackground` to create service
         schedulers.background.schedule {
             
-            service(payload.createMakeOpenSavingsAccountPayload) { [service] in
+            service(payload.createMakeOpenSavingsAccountPayload) { [weak self] in
                 
+                guard let self else { return }
+                
+                if case .informer = $0.loadFailure?.type {
+                    
+                    schedulers.background.delay(for: settings.informerDelay, dismissInformer)
+                }
                 completion($0.mapError { $0.loadFailure })
                 _ = service
             }
