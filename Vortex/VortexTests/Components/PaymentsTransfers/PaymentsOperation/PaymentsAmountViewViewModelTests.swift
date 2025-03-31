@@ -165,7 +165,7 @@ final class PaymentsAmountViewViewModelTests: XCTestCase {
     
     func test_initWithMode_makePaymentTo() {
         
-        let (sut, _) = makeSUT(mode: .makePaymentTo(nil, ProductData.stub(), 987.6))
+        let (sut, _) = makeSUT(mode: .makePaymentTo(from: nil, to: ProductData.stub(), 987.6))
         
         XCTAssertEqual(sut.title, "Сумма перевода")
         XCTAssertEqual(sut.transferButton.state, .inactive(title: "Перевести"))
