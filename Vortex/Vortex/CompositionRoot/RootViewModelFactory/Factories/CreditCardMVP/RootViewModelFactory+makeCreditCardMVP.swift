@@ -5,7 +5,7 @@
 //  Created by Igor Malyarov on 27.02.2025.
 //
 
-import Foundation
+import Combine
 
 extension RootViewModelFactory {
     
@@ -13,27 +13,48 @@ extension RootViewModelFactory {
     func makeCreditCardMVP() -> CreditCardMVPDomain.Binder {
         
         // TODO: remove on live implementation
-        let isLive = false
+        let isDelayed = true
         
-        return composeBinder(
+        return makeCreditCardMVPBinder(
             content: makeCreditCardMVPContent(),
-            getNavigation: isLive ? getNavigation : delayedGetNavigation,
-            witnesses: .empty
+            isDelayed: isDelayed,
+            emitting: { _ in Empty() },
+            dismissing: { _ in {}}
         )
     }
     
     @inlinable
-    func makeCreditCardMVPContent() -> CreditCardMVPDomain.Content {
+    func makeCreditCardMVPContent() -> Void {
         
         return ()
+    }
+    
+    typealias CreditCardMVPSelectPublisher = Publisher<CreditCardMVPFlowDomain.Select, Never>
+    
+    @inlinable
+    func makeCreditCardMVPBinder<Content>(
+        content: Content,
+        isDelayed: Bool,
+        emitting: @escaping (Content) -> some CreditCardMVPSelectPublisher,
+        dismissing: @escaping (Content) -> () -> Void
+    ) -> Binder<Content, CreditCardMVPFlowDomain.Flow> {
+        
+        return composeBinder(
+            content: content,
+            getNavigation: isDelayed ? delayedGetNavigation : getNavigation,
+            witnesses: .init(
+                emitting: { emitting($0).map { .select($0) }},
+                dismissing: dismissing
+            )
+        )
     }
     
     // TODO: remove on live implementation
     @inlinable
     func delayedGetNavigation(
-        select: CreditCardMVPDomain.Select,
-        notify: @escaping CreditCardMVPDomain.Notify,
-        completion: @escaping (CreditCardMVPDomain.Navigation) -> Void
+        select: CreditCardMVPFlowDomain.Select,
+        notify: @escaping CreditCardMVPFlowDomain.Notify,
+        completion: @escaping (CreditCardMVPFlowDomain.Navigation) -> Void
     ) {
         schedulers.background.delay(for: .seconds(1)) { [weak self] in
             
@@ -43,52 +64,23 @@ extension RootViewModelFactory {
     
     @inlinable
     func getNavigation(
-        select: CreditCardMVPDomain.Select,
-        notify: @escaping CreditCardMVPDomain.Notify,
-        completion: @escaping (CreditCardMVPDomain.Navigation) -> Void
+        select: CreditCardMVPFlowDomain.Select,
+        notify: @escaping CreditCardMVPFlowDomain.Notify,
+        completion: @escaping (CreditCardMVPFlowDomain.Navigation) -> Void
     ) {
         // TODO: add call to update banners (on success?)
         
-        switch select {
-        case let .alert(message):
-            completion(.alert(message))
+        // TODO: add tests for notify
+        if case .informer = select {
             
-        case let .approved(consent, product):
-            completion(.decision(.init(
-                message: .approvedMessage,
-                status: .approved(.init(
-                    consent: consent,
-                    info: .approvedInfo,
-                    product: product
-                )),
-                title: .approvedTitle
-            )))
-            
-        case .failure:
-            completion(.complete(.init(
-                message: .failure,
-                status: .failure
-            )))
-            
-        case let .informer(message):
             schedulers.background.delay(for: .seconds(2)) { notify(.dismiss) }
-            completion(.informer(message))
-            
-        case .inReview:
-            completion(.complete(.init(
-                message: .inReview,
-                status: .inReview
-            )))
-            
-        case .rejected:
-            completion(.decision(.init(
-                message: .rejectedMessage,
-                status: .rejected,
-                title: .rejectedTitle
-            )))
         }
+        
+        completion(select.navigation)
     }
 }
+
+// MARK: - Helpers
 
 private extension String {
     
@@ -102,4 +94,50 @@ private extension String {
     
     static let rejectedMessage = "К сожалению, ваша кредитная история не позволяет оформить карту"
     static let rejectedTitle = "Кредитная карта не одобрена"
+}
+
+// MARK: - Adapters
+
+private extension CreditCardMVPFlowDomain.Select {
+    
+    var navigation: CreditCardMVPFlowDomain.Navigation {
+        
+        switch self {
+        case let .alert(message):
+            return .alert(message)
+            
+        case let .approved(consent, product):
+            return .decision(.init(
+                message: .approvedMessage,
+                status: .approved(.init(
+                    consent: consent,
+                    info: .approvedInfo,
+                    product: product
+                )),
+                title: .approvedTitle
+            ))
+            
+        case .failure:
+            return .complete(.init(
+                message: .failure,
+                status: .failure
+            ))
+            
+        case let .informer(message):
+            return .informer(message)
+            
+        case .inReview:
+            return .complete(.init(
+                message: .inReview,
+                status: .inReview
+            ))
+            
+        case .rejected:
+            return .decision(.init(
+                message: .rejectedMessage,
+                status: .rejected,
+                title: .rejectedTitle
+            ))
+        }
+    }
 }
