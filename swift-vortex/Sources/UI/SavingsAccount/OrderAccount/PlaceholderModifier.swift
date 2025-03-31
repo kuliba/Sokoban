@@ -25,6 +25,6 @@ struct PlaceholderModifier: ViewModifier {
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(isFailure ? colors.placeholder : .clear)
             .modifier(ShimmeringModifier(isLoading, colors.shimmering))
-            .cornerRadius(cornerRadius)
+            .cornerRadius(isFailure || isLoading ? cornerRadius : 0)
     }
 }
