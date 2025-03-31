@@ -217,7 +217,9 @@ private extension OpenSavingsAccountDomain.State {
     
     var isLoading: Bool {
         
-        loadableForm.isLoading
+        if case let .loading(value) = loadableForm, value != nil { return true }
+        
+        return false
     }
 }
 
