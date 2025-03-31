@@ -863,8 +863,9 @@ struct ProductCarouselView: View {
         
         if let groupViewModel {
             makeGroupWithPromo(groupViewModel, productType)
-        } else {
-            lowPriorityPromoViews(productType: productType)
+        } else if let lowPriorityPromo = lowPriorityPromoByType(productType), !lowPriorityPromo.isEmpty {
+            
+            priorityPromoViews(lowPriorityPromo)
         }
     }
     
@@ -875,40 +876,30 @@ struct ProductCarouselView: View {
     ) -> some View {
         HStack(spacing: 8) {
             
-            highPriorityPromoViews(productType: groupViewModel.productType)
+            if let highPriorityPromo = highPriorityPromoByType(productType), !highPriorityPromo.isEmpty {
+             
+                priorityPromoViews(highPriorityPromo)
+            }
+            
             ProductGroupView(viewModel: groupViewModel)
                 .accessibilityIdentifier("productScrollView")
-            lowPriorityPromoViews(productType: groupViewModel.productType)
+
+            if let lowPriorityPromo = lowPriorityPromoByType(productType), !lowPriorityPromo.isEmpty {
+             
+                priorityPromoViews(lowPriorityPromo)
+            }
         }
     }
     
     // MARK: PromoActions
     
-    @ViewBuilder
-    private func highPriorityPromoViews(
-        productType: ProductType
+    private func priorityPromoViews(
+        _ promo: [AdditionalProductViewModel]
     ) -> some View {
         
         HStack(spacing: 8) {
             
-            highPriorityPromoByType(productType).map {
-                
-                ForEach($0, content: promoView)
-            }
-        }
-    }
-
-    @ViewBuilder
-    private func lowPriorityPromoViews(
-        productType: ProductType
-    ) -> some View {
-        
-        HStack(spacing: 8) {
-            
-            lowPriorityPromoByType(productType).map {
-                
-                ForEach($0, content: promoView)
-            }
+            ForEach(promo, content: promoView)
         }
     }
 
