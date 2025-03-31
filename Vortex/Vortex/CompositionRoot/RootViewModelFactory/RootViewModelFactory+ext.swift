@@ -509,8 +509,11 @@ extension RootViewModelFactory {
               
                 // TODO: - extract to helper func
                 switch $0 {
-                case .failure, .outside:
+                case .failure, .outside(.tab):
                     return .zero
+                
+                case .outside(.productProfile):
+                    return .milliseconds(200)
                 
                 case .orderCardResponse:
                     return .milliseconds(100)
