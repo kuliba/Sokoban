@@ -403,7 +403,18 @@ struct ProductGroupView: View {
     
     @ObservedObject var viewModel: ViewModel
     
+    private var isEmpty: Bool {
+        !viewModel.isOpeningProduct
+        && viewModel.visible.isEmpty
+        && viewModel.groupButton == nil
+    }
+    
     var body: some View {
+        
+        if isEmpty  { EmptyView() } else { content() }
+    }
+    
+    private func content() -> some View {
         
         HStack(alignment: .top, spacing: viewModel.dimensions.spacing) {
             
@@ -433,7 +444,7 @@ struct ProductGroupView: View {
                     .frame(viewModel.dimensions, for: \.button)
             }
             
-            if viewModel.isSeparator { separator() }
+            if viewModel.isSeparator && !viewModel.visible.isEmpty { separator() }
         }
         .frame(
             height: viewModel.dimensions.frameHeight,
