@@ -50,10 +50,12 @@ extension RootViewModelFactory {
         _ digest: C2GPaymentDomain.Select.Digest,
         completion: @escaping (C2GPaymentDomain.Navigation) -> Void
     ) {
+        #if DEBUG
         guard !digest.uin.hasEasterEgg else {
             
             return easterEggsCreateC2GPayment(digest, .inflight, completion)
         }
+        #endif
         
         createC2GPayment(digest: digest) { [weak self] in
             
@@ -66,18 +68,7 @@ extension RootViewModelFactory {
                 completion(.failure(failure))
                 
             case let .success(payload):
-                let details = makeOperationDetailByPaymentID(payload)
-                details.event(.load)
-                
-                let document = makeC2GDocumentButtonDomainBinder(
-                    operationID: payload.paymentOperationDetailID
-                )
-                
-                completion(.success(.init(
-                    context: .init(payload),
-                    details: details,
-                    document: payload.isComplete ? document : nil
-                )))
+                completion(.success(createC2GPaymentComplete(payload)))
             }
         }
     }
@@ -115,6 +106,25 @@ extension RootViewModelFactory {
     }
     
     @inlinable
+    func createC2GPaymentComplete(
+        _ payload: OperationDetailDomain.ModelPayload
+    ) -> C2GPaymentDomain.Complete {
+        
+        let details = makeOperationDetailByPaymentID(payload)
+        details.event(.load)
+        
+        let document = makeC2GDocumentButtonDomainBinder(
+            operationID: payload.paymentOperationDetailID
+        )
+        
+        return .init(
+            context: .init(payload),
+            details: details,
+            document: payload.isComplete ? document : nil
+        )
+    }
+
+    @inlinable
     func makeC2GDocumentButton(
         paymentOperationDetailID id: Int
     ) -> DocumentButtonDomain.Model {
@@ -129,6 +139,7 @@ extension RootViewModelFactory {
         }
     }
     
+    #if DEBUG
     // TODO: remove stub
     @inlinable
     func easterEggsCreateC2GPayment(
@@ -168,6 +179,7 @@ extension RootViewModelFactory {
             }
         }
     }
+    #endif
 }
 
 // MARK: - Helpers
@@ -182,6 +194,7 @@ private extension BackendFailure {
     static let connectivityFailure: Self = .connectivity(.connectivity)
 }
 
+#if DEBUG
 // TODO: remove with stub
 private extension String {
     
@@ -190,6 +203,7 @@ private extension String {
         ["01234567890123456789", "12345678901234567890", "99999999999999999999"].contains(self)
     }
 }
+#endif
 
 // MARK: - Adapters
 
@@ -275,6 +289,7 @@ private extension RemoteServices.ResponseMapper.CreateC2GPaymentResponse {
     }
 }
 
+#if DEBUG
 // MARK: - Stub
 
 private extension OperationDetailDomain.ModelPayload {
@@ -354,3 +369,4 @@ extension String {
 }
 """
 }
+#endif
