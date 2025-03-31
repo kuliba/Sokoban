@@ -25,6 +25,7 @@ public struct OrderSavingsAccountConfig {
     let padding: CGFloat
     let shimmering: Color
     let topUp: TopUp
+    let placeholder: Color
     
     public init(
         amount: AmountConfig,
@@ -37,6 +38,7 @@ public struct OrderSavingsAccountConfig {
         openButton: OpenButton,
         order: Order,
         padding: CGFloat,
+        placeholder: Color,
         shadowColor: Color,
         shimmering: Color,
         topUp: TopUp
@@ -51,6 +53,7 @@ public struct OrderSavingsAccountConfig {
         self.openButton = openButton
         self.order = order
         self.padding = padding
+        self.placeholder = placeholder
         self.shadowColor = shadowColor
         self.shimmering = shimmering
         self.topUp = topUp

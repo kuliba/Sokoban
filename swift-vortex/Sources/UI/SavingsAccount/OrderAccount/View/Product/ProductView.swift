@@ -82,11 +82,11 @@ where IconView: View {
         _  needShimmering: Bool
     ) -> some View {
         
-        if needShimmering {
+        if designMd5hash.isEmpty {
             RoundedRectangle(cornerRadius: 8)
-                .fill(config.shadowColor)
+                .fill(config.placeholder)
                 .frame(config.order.card)
-                .shimmering()
+                .shimmering(active: needShimmering)
         }
         else {
             ZStack {
@@ -108,17 +108,28 @@ where IconView: View {
         VStack(spacing: 0) {
             
             title.text(withConfig: config.order.header.title)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .modifier(placeholderModifier(title.isEmpty, needShimmering))
                 .frame(height: 24)
-                .modifier(ShimmeringModifier(needShimmering, config.shimmering))
             
             subtitle.text(withConfig: config.order.header.subtitle)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .modifier(placeholderModifier(subtitle.isEmpty, needShimmering))
                 .frame(height: 16)
-                .modifier(ShimmeringModifier(needShimmering, config.shimmering))
         }
     }
     
+    private func placeholderModifier(
+        _ isFailure: Bool,
+        _ isLoading: Bool
+    ) -> PlaceholderModifier {
+        
+        .init(
+            colors: config.colors,
+            cornerRadius: config.cornerRadius,
+            isFailure: isFailure,
+            isLoading: isLoading
+        )
+    }
+
     private func orderOption(
         title: String,
         subtitle: String,
@@ -127,16 +138,15 @@ where IconView: View {
         
         VStack(alignment: .leading, spacing: config.padding / 4) {
             
-            title.text(withConfig: config.order.options.config.title)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .modifier(ShimmeringModifier(needShimmering, config.shimmering))
+            (subtitle.isEmpty ? "" : title).text(withConfig: config.order.options.config.title)
+                .modifier(placeholderModifier(subtitle.isEmpty, needShimmering))
             
             HStack {
-                if needShimmering {
+                if subtitle.isEmpty {
                     Circle()
-                        .fill(config.shimmering)
+                        .fill(config.placeholder)
                         .frame(config.order.imageSize)
-                        .shimmering()
+                        .shimmering(active: needShimmering)
                 } else {
                     config.order.image
                         .renderingMode(.template)
@@ -144,8 +154,7 @@ where IconView: View {
                         .frame(config.order.imageSize)
                 }
                 subtitle.text(withConfig: config.order.options.config.subtitle)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .modifier(ShimmeringModifier(needShimmering, config.shimmering))
+                    .modifier(placeholderModifier(subtitle.isEmpty, needShimmering))
             }
         }
     }

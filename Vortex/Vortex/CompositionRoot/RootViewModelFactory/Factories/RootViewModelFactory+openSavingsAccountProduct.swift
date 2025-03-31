@@ -47,7 +47,7 @@ extension OpenSavingsAccountCompleteDomain {
     }
     
     struct Details: Equatable {
-                
+        
         let product: Product?
         
         let payeeAccountId: Int?    // Счет поплнения - "payeeAccountId"
@@ -60,7 +60,7 @@ extension OpenSavingsAccountCompleteDomain {
         let formattedFee: String? // Сумма комиссии - payerFee+ payerCurrency
         let dataForDetails: String?   // Дата и время операции (МСК) - dataForDetails
     }
-
+    
     typealias Product = ProductSelect.Product
 }
 
@@ -74,12 +74,12 @@ extension RootViewModelFactory {
     ) -> OpenSavingsAccount {
         
         let products = model.productSelectProducts
-
+        
         let initialState: OpenSavingsAccountDomain.State = .init(
             loadableForm: .loaded(nil),
             productSelect: .init(selected: products().first)
         )
-
+        
         let content: OpenSavingsAccountDomain.Content = makeContent(initialState, products)
         
         let cancellable = content.$state
@@ -89,7 +89,7 @@ extension RootViewModelFactory {
         let goToMainCancellable = content.$state
             .map(\.needGoToMain)
             .sink { if $0 { notify(.dismiss) } }
-
+        
         
         let binder = composeBinder(
             content: content,
@@ -97,7 +97,19 @@ extension RootViewModelFactory {
             witnesses: witnesses(notify)
         )
         
-        return .init(model: binder, cancellables: [cancellable, goToMainCancellable])
+        let contentCancellable = binder.content.$state
+            .compactMap {
+                switch $0.loadableForm {
+                case let .loaded(.failure(failure)):
+                    return failure
+                    
+                default:
+                    return nil
+                }
+            }
+            .sink { binder.flow.event(.select(.failure($0))) }
+        
+        return .init(model: binder, cancellables: [cancellable, goToMainCancellable, contentCancellable])
     }
     
     // MARK: - Content
@@ -143,8 +155,17 @@ extension RootViewModelFactory {
         completion: @escaping (OpenSavingsAccountDomain.Navigation) -> Void
     ) {
         switch select {
-        case let .failure(loadFailure):
-            completion(.failure(loadFailure))
+        case let .failure(failure):
+            switch failure.type {
+            case .alert:
+                completion(.failure(.tryLaterAlert))
+                
+            case .informer:
+                completion(.failure(.tryLaterInformer))
+                
+            case .otp:
+                break
+            }
         }
     }
     
@@ -195,7 +216,7 @@ extension RootViewModelFactory {
             makeRequest: RequestFactory.createPrepareOpenSavingsAccountRequest,
             mapResponse: RemoteServices.ResponseMapper.mapPrepareOpenSavingsAccountResponse
         )
-
+        
         let otp = makeOTPModel(
             resend: { service { _ in }}, // fire and forget
             observe: { notify(.otp($0)) }
@@ -227,7 +248,7 @@ extension RootViewModelFactory {
             )
         }
     }
-        
+    
     @inlinable
     func orderSavingsAccount(
         payload: OpenSavingsAccountDomain.OrderAccountPayload,
@@ -243,7 +264,7 @@ extension RootViewModelFactory {
         schedulers.background.schedule {
             
             service(payload.createMakeOpenSavingsAccountPayload) { [service] in
-
+                
                 completion($0.mapError { $0.loadFailure })
                 _ = service
             }
@@ -414,7 +435,7 @@ where Success == RemoteServices.ResponseMapper.GetOpenAccountFormResponse {
                 
                 return .success(item.form())
             } else {
-            
+                
                 return .failure(.tryLaterAlert)
             }
         }
@@ -442,7 +463,7 @@ private extension SavingsAccountProduct {
     }
     
     var orderServiceOption: String {
-                
+        
         return (item.fee.maintenance.value == 0 || item.fee.maintenance.period == "free")
         ? "Бесплатно"
         : "\(item.fee.maintenance.value) \(item.currency.symbol) " + period
@@ -466,7 +487,7 @@ private extension SavingsAccountProduct {
 private extension SavingsAccount.TopUp {
     
     static func `default`() -> Self {
-
+        
         return .init(isOn: false)
     }
 }

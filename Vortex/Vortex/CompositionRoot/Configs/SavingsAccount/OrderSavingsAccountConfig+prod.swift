@@ -57,6 +57,7 @@ extension OrderSavingsAccountConfig {
             )
         ),
         padding: 16,
+        placeholder: .bordersDivider,
         shadowColor: .blurBlack20,
         shimmering: .solidGrayBackground,
         topUp: .init(

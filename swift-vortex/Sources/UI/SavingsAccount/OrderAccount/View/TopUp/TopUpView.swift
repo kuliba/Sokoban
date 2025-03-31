@@ -15,6 +15,7 @@ struct TopUpView: View {
     let event: (Bool) -> Void
     let config: TopUpViewConfig
     let isLoading: Bool
+    let isFailure: Bool
     
     var body: some View {
         
@@ -26,11 +27,21 @@ struct TopUpView: View {
                 messageWithToggle()
             }
             
-            config.description.text.string(isLoading).text(withConfig: config.description.config)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .modifier(ShimmeringModifier(isLoading, config.shimmering))
+            config.description.text.string(isLoading || isFailure)
+                .text(withConfig: config.description.config)
+                .modifier(placeholderModifier())
                 .padding(.leading, config.iconSize.width + config.spacing)
         }
+    }
+    
+    private func placeholderModifier() -> PlaceholderModifier {
+        
+        .init(
+            colors: config.colors,
+            cornerRadius: config.iconSize.height / 2,
+            isFailure: isFailure,
+            isLoading: isLoading
+        )
     }
     
     private func messageWithToggle() -> some View {
@@ -47,13 +58,14 @@ struct TopUpView: View {
         
         VStack(alignment: .leading, spacing: 6) {
             
-            config.title.text.string(isLoading).text(withConfig: config.title.config)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .modifier(ShimmeringModifier(isLoading, config.shimmering))
+            config.title.text.string(isLoading || isFailure)
+                .text(withConfig: config.title.config)
+                .modifier(placeholderModifier())
 
-            config.subtitle.text.string(isLoading).text(withConfig: config.subtitle.config)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .modifier(ShimmeringModifier(isLoading, config.shimmering))
+            config.subtitle.text.string(isLoading || isFailure)
+                .text(withConfig: config.subtitle.config)
+                .modifier(placeholderModifier())
+
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -66,10 +78,11 @@ private extension TopUpView {
         _ isLoading: Bool
     ) -> some View {
        
-        if isLoading {
+        if isLoading || isFailure {
             Circle()
+                .fill(config.placeholder)
                 .frame(config.iconSize)
-                .shimmering()
+                .shimmering(active: isLoading)
         }
         else {
             config.icon
@@ -99,7 +112,13 @@ struct TopUpView_Previews: PreviewProvider {
         
         var body: some View {
             
-            TopUpView(state: state, event: { state.isOn = $0 }, config: .preview, isLoading: true)
+            TopUpView(
+                state: state,
+                event: { state.isOn = $0 },
+                config: .preview,
+                isLoading: true,
+                isFailure: false
+            )
         }
     }
     
@@ -119,7 +138,8 @@ extension TopUpViewConfig {
             textColor: .blue
         )),
         icon: .bolt,
-        iconSize: .init(width: 24, height: 24), 
+        iconSize: .init(width: 24, height: 24),
+        placeholder: .gray,
         spacing: 16,
         subtitle: .init(
             text: "Пополнить сейчас",
@@ -143,4 +163,14 @@ extension TopUpViewConfig {
         ), 
         shimmering: .gray
     )
+}
+
+private extension TopUpViewConfig {
+    
+    var colors: PlaceholderModifier.Colors {
+        .init(
+            placeholder: placeholder,
+            shimmering: shimmering
+        )
+    }
 }

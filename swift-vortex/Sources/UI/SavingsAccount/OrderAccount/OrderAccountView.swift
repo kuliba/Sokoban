@@ -44,10 +44,14 @@ where ConfirmationView: View,
     public var body: some View {
         
         switch state.loadableForm {
-        case .loading(nil), .loaded(nil), .loaded(.failure):
-            loadingProductView()
+        case .loading(nil):
+            loadingProductView(true)
                 .frame(maxHeight: .infinity, alignment: .top)
             
+        case .loaded(nil), .loaded(.failure):
+            loadingProductView(false, true)
+                .frame(maxHeight: .infinity, alignment: .top)
+
         case let .loading(.some(form)):
             formView(form)
                 .disabled(true)
@@ -67,7 +71,10 @@ public extension OrderAccountView {
 
 private extension OrderAccountView {
     
-    func loadingProductView() -> some View {
+    func loadingProductView(
+        _ isLoading: Bool,
+        _ isFailure: Bool = false
+    ) -> some View {
       
         VStack(spacing: config.padding) {
             
@@ -75,12 +82,12 @@ private extension OrderAccountView {
                 data: .sample,
                 config: config,
                 makeIconView: { _ in EmptyView() },
-                isLoading: true
+                isLoading: isLoading
             )
             .rounded(config.roundedConfig)
             
-            income(income: "", true)
-            topUpView(.init(isOn: false), true)
+            income(income: "", isLoading)
+            topUpView(.init(isOn: false), isLoading, isFailure)
         }
     }
     
@@ -137,7 +144,7 @@ private extension OrderAccountView {
             
             productView(product(form))
             income(income: form.constants.income, false)
-            topUpView(topUp(form), false)
+            topUpView(topUp(form), false, false)
             
             if form.topUp.isOn {
                 productSelectView()
@@ -210,11 +217,11 @@ private extension OrderAccountView {
     ) -> some View {
         
         HStack(spacing: config.padding) {
-            if isLoading {
+            if income.isEmpty {
                 Circle()
-                    .fill(config.shimmering)
+                    .fill(config.placeholder)
                     .frame(config.income.imageSize)
-                    .shimmering()
+                    .shimmering(active: isLoading)
             } else {
                 config.income.image
                     .renderingMode(.template)
@@ -233,14 +240,30 @@ private extension OrderAccountView {
         
         VStack(alignment: .leading) {
             
-            config.income.title.text.string(isLoading).text(withConfig: config.income.title.config)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .modifier(ShimmeringModifier(isLoading, config.shimmering))
+            config.income.title.text.string(isLoading || income.isEmpty)
+                .text(withConfig: config.income.title.config)
+                .modifier(placeholderModifier(income.isEmpty, isLoading))
+
             income.text(withConfig: config.income.subtitle)
                 .modifier(ShimmeringModifier(isLoading, config.shimmering))
+                .background(income.isEmpty ? config.placeholder : .clear)
+                .cornerRadius(config.cornerRadius)
         }
     }
     
+    private func placeholderModifier(
+        _ isFailure: Bool,
+        _ isLoading: Bool
+    ) -> PlaceholderModifier {
+        
+        .init(
+            colors: config.colors,
+            cornerRadius: config.cornerRadius,
+            isFailure: isFailure,
+            isLoading: isLoading
+        )
+    }
+
     func topUp(
         _ form: Form<Confirmation>
     ) -> TopUp {
@@ -252,14 +275,16 @@ private extension OrderAccountView {
 
     func topUpView(
         _ topUp: TopUp,
-        _ isLoading: Bool
+        _ isLoading: Bool,
+        _ isFailure: Bool
     ) -> some View {
         
         TopUpView(
             state: topUp,
             event: { event(.setMessages($0)) },
             config: config.topUpConfig, 
-            isLoading: isLoading
+            isLoading: isLoading,
+            isFailure: isFailure
         )
         .rounded(config.roundedConfig)
     }
@@ -284,11 +309,22 @@ private extension OrderSavingsAccountConfig {
         .init(
             description: topUp.description,
             icon: topUp.image,
-            iconSize: CGSize(width: 24, height: 24),
+            iconSize: income.imageSize,
+            placeholder: placeholder,
             spacing: padding,
             subtitle: topUp.subtitle,
             title: topUp.title,
             toggle: topUp.toggle, 
+            shimmering: shimmering
+        )
+    }
+}
+
+extension OrderSavingsAccountConfig {
+    
+    var colors: PlaceholderModifier.Colors {
+        .init(
+            placeholder: placeholder,
             shimmering: shimmering
         )
     }
