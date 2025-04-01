@@ -9,7 +9,7 @@ import SplashScreenUI
 import SwiftUI
 import XCTest
 
-final class SplashScreenReducerTests: XCTestCase {
+final class SplashScreenReducerTests: SplashScreenTests {
     
     // MARK: - hide
     
@@ -212,103 +212,50 @@ final class SplashScreenReducerTests: XCTestCase {
     }
     
     private func makeState(
-        phase: SplashScreenState.Phase,
-        settings: SplashScreenState.Settings? = nil
-    ) -> SUT.State {
+        phase: State.Phase,
+        settings: State.Settings? = nil
+    ) -> State {
         
         return .init(phase: phase, settings: settings ?? makeSettings())
     }
     
     private func cover(
-        settings: SplashScreenState.Settings? = nil
-    ) -> SUT.State {
+        settings: State.Settings? = nil
+    ) -> State {
         
         return makeState(phase: .cover, settings: settings)
     }
     
     private func warm(
-        settings: SplashScreenState.Settings? = nil
-    ) -> SUT.State {
+        settings: State.Settings? = nil
+    ) -> State {
         
         return makeState(phase: .warm, settings: settings)
     }
     
     private func presented(
-        settings: SplashScreenState.Settings? = nil
-    ) -> SUT.State {
+        settings: State.Settings? = nil
+    ) -> State {
         
         return makeState(phase: .presented, settings: settings)
     }
     
     private func hidden(
-        settings: SplashScreenState.Settings? = nil
-    ) -> SUT.State {
+        settings: State.Settings? = nil
+    ) -> State {
         
         return makeState(phase: .hidden, settings: settings)
-    }
-    
-    private func makeSettings(
-        duration: TimeInterval = .random(in: 1...100),
-        image: Image = .init(systemName: "star"),
-        logo: SUT.State.Settings.Logo? = nil,
-        text: SUT.State.Settings.Text? = nil,
-        subtext: SUT.State.Settings.Text? = nil,
-        footer: SUT.State.Settings.Logo? = nil
-    ) -> SUT.State.Settings {
-        
-        return .init(
-            duration: duration,
-            image: image,
-            logo: logo ?? makeLogo(),
-            text: text ?? makeText(),
-            subtext: subtext,
-            footer: footer ?? makeLogo()
-        )
-    }
-    
-    private func makeLogo(
-        color: Color = .red,
-        shadow: SplashScreenState.Settings.Shadow? = nil
-    ) -> SUT.State.Settings.Logo {
-        
-        return .init(color: color, shadow: shadow ?? makeShadow())
-    }
-    
-    private func makeText(
-        color: Color = .primary,
-        size: CGFloat = .random(in: 1..<100),
-        value: String = anyMessage(),
-        shadow: SplashScreenState.Settings.Shadow? = nil
-    ) -> SUT.State.Settings.Text {
-        
-        return .init(
-            color: color,
-            size: size,
-            value: value,
-            shadow: shadow ?? makeShadow()
-        )
-    }
-    
-    private func makeShadow(
-        color: Color = .primary,
-        opacity: Double = .random(in: 1..<100),
-        radius: CGFloat = .random(in: 1..<100),
-        x: CGFloat = .random(in: 1..<100),
-        y: CGFloat = .random(in: 1..<100)
-    ) -> SUT.State.Settings.Shadow {
-     
-        return .init(color: color, opacity: opacity, radius: radius, x: x, y: y)
     }
     
     @discardableResult
     private func assert(
         sut: SUT? = nil,
-        _ state: SUT.State,
-        event: SUT.Event,
-        updateStateToExpected: ((inout SUT.State) -> Void)? = nil,
+        _ state: State,
+        event: Event,
+        updateStateToExpected: ((inout State) -> Void)? = nil,
         file: StaticString = #file,
         line: UInt = #line
-    ) -> SUT.State {
+    ) -> State {
         
         let sut = sut ?? makeSUT(file: file, line: line)
         
@@ -330,8 +277,8 @@ final class SplashScreenReducerTests: XCTestCase {
     @discardableResult
     private func assert(
         sut: SUT? = nil,
-        _ state: SUT.State,
-        event: SUT.Event,
+        _ state: State,
+        event: Event,
         delivers expectedEffect: SUT.Effect?,
         file: StaticString = #file,
         line: UInt = #line
@@ -339,7 +286,7 @@ final class SplashScreenReducerTests: XCTestCase {
         
         let sut = sut ?? makeSUT(file: file, line: line)
         
-        let (_, receivedEffect): (SUT.State, SUT.Effect?) = sut.reduce(state, event)
+        let (_, receivedEffect): (State, SUT.Effect?) = sut.reduce(state, event)
         
         XCTAssertNoDiff(
             receivedEffect,
