@@ -11,12 +11,13 @@ import PaymentCompletionUI
 import UIPrimitives
 
 extension ViewComponents {
-    
+        
     @inlinable
     func makeOrderSavingsAccountCompleteView(
         processingFlag: ProcessingFlag,
         _ complete: OpenSavingsAccountCompleteDomain.Complete,
-        action: @escaping () -> Void
+        action: @escaping () -> Void,
+        makePlacesView: @escaping () -> PlacesView?
     ) -> some View {
        
         let needProcessing: Bool = complete.context.status.status == .inflight && processingFlag.isActive
@@ -28,7 +29,7 @@ extension ViewComponents {
         return makePaymentCompletionLayoutView(
             state: complete.context.state(needProcessing),
             statusConfig: config,
-            buttons: { makeButtons(needProcessing, complete) },
+            buttons: { makeButtons(needProcessing, complete, makePlacesView) },
             details: { EmptyView() },
             footer: {
                 heroButton(title: "На главный") {
@@ -42,7 +43,8 @@ extension ViewComponents {
     @ViewBuilder
     func makeButtons(
         _ needProcessing: Bool,
-        _ complete: OpenSavingsAccountCompleteDomain.Complete
+        _ complete: OpenSavingsAccountCompleteDomain.Complete,
+        _ makePlacesView: @escaping () -> PlacesView?
     ) -> some View {
         
         switch (needProcessing, complete.context.status.status) {
@@ -56,7 +58,7 @@ extension ViewComponents {
             HStack {
                 RxWrapperView(model: complete.document) { state, _ in
                     
-                    makeDocumentButtonViewWithShareButton(state: state)
+                    makeDocumentButtonViewWithShareButton(state: state, makePlacesView)
                 }
                 
                 RxWrapperView(model: complete.details) { state, _ in
@@ -119,7 +121,8 @@ extension ViewComponents {
     @inlinable
     @ViewBuilder
     func makeDocumentButtonViewWithShareButton(
-        state: DocumentButtonDomain.State
+        state: DocumentButtonDomain.State,
+        _ makePlacesView: @escaping () -> PlacesView?
     ) -> some View {
         
         switch state {
@@ -129,9 +132,16 @@ extension ViewComponents {
             } sheet: {
                 PrintFormView(viewModel: .init(pdfDocument: document, dismissAction: $0))
             }
-            
-        case .failure, .pending:
+        
+        case .pending:
             EmptyView()
+            
+        case .failure:
+            WithSheetView {
+                circleButton(image: .ic24File, title: "Документ", action: $0)
+            } sheet: {
+                SAFailureDocumentView(goToMain: goToMain, makePlacesView: makePlacesView)
+            }
             
         case .loading:
             circleButtonPlaceholder()
@@ -235,5 +245,62 @@ private extension OpenSavingsAccountCompleteDomain.Complete.Context {
             merchantIcon: nil,
             status: status.newStatus(needProcessing)
         )
+    }
+}
+
+private struct SAFailureDocumentView: View {
+    
+    @State private var needShowPlaces: Bool = false
+    @State private var isShowAlert: Bool = true
+    
+    let goToMain: () -> Void
+    let makePlacesView: () -> PlacesView?
+    
+    init(
+        goToMain: @escaping () -> Void,
+        makePlacesView: @escaping () -> PlacesView?
+    ) {
+        self.goToMain = goToMain
+        self.makePlacesView = makePlacesView
+    }
+    
+    var body: some View {
+        
+        ZStack {
+            Color.clear
+                .alert(
+                    item: alert,
+                    content: Alert.init
+                )
+            if needShowPlaces {
+                makePlacesView()
+            }
+        }
+    }
+    
+    private var alert: Alert.ViewModel? {
+        
+        if isShowAlert {
+            
+            return .init(
+                title: "Форма временно недоступна",
+                message: "Для получения Заявления-анкеты\nобратитесь в отделение банка",
+                primary: .init(
+                    type: .default,
+                    title: "Наши офисы",
+                    action: {
+                        isShowAlert = false
+                        needShowPlaces = true
+                    }),
+                secondary: .init(
+                    type: .cancel,
+                    title: "ОК",
+                    action: {
+                        isShowAlert = false
+                    })
+            )
+        }
+        
+        return nil
     }
 }

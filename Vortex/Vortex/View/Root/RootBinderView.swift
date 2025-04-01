@@ -181,7 +181,8 @@ private extension RootBinderView {
             components.makeOrderSavingsAccountCompleteView(
                 processingFlag: flag,
                 response,
-                action: updateFastAll
+                action: updateFastAll,
+                makePlacesView: rootViewFactory.components.makePlacesView
             )
 
         case let .scanQR(qrScanner):

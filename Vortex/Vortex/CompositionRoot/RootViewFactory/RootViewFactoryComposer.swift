@@ -197,13 +197,21 @@ extension RootViewFactoryComposer {
             makeTransportPaymentsView: makeTransportPaymentsView,
             makeOrderCardView: makeOrderCardView,
             makeUpdatingUserAccountButtonLabel: makeUpdatingUserAccountButtonLabel,
-            makeInfoViews: .default
+            makeInfoViews: .default,
+            makePlacesView: makePlacesView
         )
     }
     
     private func clearCache() {
         
         (model.localAgent as? LocalAgent)?.clearCache()
+    }
+    
+    private func makePlacesView() -> PlacesView? {
+        if let placesViewModel = PlacesViewModel(model) {
+            return .init(viewModel: placesViewModel)
+        }
+        return nil
     }
     
     func makeImageViewFactory(
