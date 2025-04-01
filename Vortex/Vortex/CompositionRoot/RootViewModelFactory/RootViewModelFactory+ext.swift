@@ -533,7 +533,7 @@ extension RootViewModelFactory {
             return .zero
             
         case .outside(.productProfile):
-            return .milliseconds(600)
+            return .milliseconds(100)
             
         case .orderCardResponse:
             return .milliseconds(100)
