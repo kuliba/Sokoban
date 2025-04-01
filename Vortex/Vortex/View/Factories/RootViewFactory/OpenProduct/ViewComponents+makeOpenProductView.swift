@@ -33,13 +33,12 @@ extension ViewComponents {
             makeCreditCardMVPView(binder: creditCardMVP, dismiss: dismiss)
           
         case let .savingsAccount(nodes):
-
             makeSavingsAccountBinderView(
                 binder: nodes.savingsAccountNode.model,
                 openAccountBinder: nodes.openSavingsAccountNode.model,
                 dismiss: dismiss
             )
-                .navigationBarHidden(true)
+            .navigationBarHidden(true)
 
         case .unknown:
             Text("Unknown product")
