@@ -335,7 +335,15 @@ extension RootViewModelFactory {
             makePaymentProviderPickerFlowModel: makeSegmentedPaymentProviderPickerFlowModel,
             makePaymentProviderServicePickerFlowModel: makePaymentProviderServicePickerFlowModel,
             makeServicePaymentBinder: makeServicePaymentBinder,
-            makeOpenNewProductButtons: { _ in [] },
+            makeOpenNewProductButtons: { [weak self] in
+                
+                guard let self else { return [] }
+                
+                return makeOpenNewProductButtons(
+                    collateralLoanLandingFlag: featureFlags.collateralLoanLandingFlag,
+                    action: $0
+                )
+            },
             operationDetailFactory: makeOperationDetailFactory(),
             makePaymentsTransfers: { paymentsTransfersSwitcher },
             makePaymentsMeToMeViewModel: { [makePaymentsMeToMeViewModel] in makePaymentsMeToMeViewModel(featureFlags.processingFlag, $0) }
