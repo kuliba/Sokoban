@@ -28,11 +28,7 @@ extension RootViewModelFactory {
         let handler = SplashEventsHandler(
             authOKPublisher: model.pinOrSensorAuthOK.eraseToAnyPublisher(),
             startPublisher: model.hideCoverStartSplash.eraseToAnyPublisher(),
-            event: { [weak self, weak splash] in
-                
-                splash?.event($0)
-                if $0 == .hide { self?.generateFeedback(style: .light) }
-            }
+            event: feedbackDecoratedEvent(splash: splash)
         )
         
         let delay: Delay = .seconds(splash.state.settings.duration) - fadeout
@@ -40,6 +36,18 @@ extension RootViewModelFactory {
         let cancellables = flag.isActive ? handler.bind(delay: delay, on: schedulers.background) : []
         
         return .init(content: splash, flow: handler) { _,_ in cancellables }
+    }
+    
+    @inlinable
+    func feedbackDecoratedEvent(
+        splash: SplashScreenViewModel
+    ) -> (SplashScreenEvent) -> Void {
+        
+        return { [weak self, weak splash] event in
+            
+            splash?.event(event)
+            if event == .hide { self?.generateFeedback(style: .light) }
+        }
     }
     
     @inlinable
@@ -55,10 +63,9 @@ extension RootViewModelFactory {
         phase: SplashScreenState.Phase
     ) -> SplashScreenViewModel {
         
-        let userName = getUserName()
-        let composed = composeSplashScreenSettings().insert(userName: userName)
+        let settings = composeSplashScreenSettings()
         
-        let initialState = SplashScreenState(phase: phase, settings: composed)
+        let initialState = SplashScreenState(phase: phase, settings: settings)
         let reducer = SplashScreenReducer()
         
         return .init(
@@ -70,25 +77,48 @@ extension RootViewModelFactory {
     }
     
     @inlinable
+    func composeSplashScreenSettings() -> SplashScreenState.Settings {
+        
+        guard let storage = loadSplashImagesCache(),
+              let settings = composeSplashScreenSettings(storage: storage)
+        else { return composeDefaultSplashScreenSettings() }
+        
+        return settings
+    }
+    
+    @inlinable
+    func composeSplashScreenSettings(
+        storage: SplashScreenStorage?
+    ) -> SplashScreenState.Settings? {
+        
+        let timePeriod = getTimePeriodString()
+        
+        guard let items = storage?.items(for: timePeriod.timePeriod),
+              let random = items.settings.randomElement()
+        else { return nil }
+        
+        let userName = getUserName()
+        
+        return random.insert(userName: userName)
+    }
+    
+    
+    @inlinable
+    func composeDefaultSplashScreenSettings() -> SplashScreenState.Settings {
+        
+        let timePeriod = getTimePeriodString()
+        let userName = getUserName()
+        
+        return .default(for: timePeriod).insert(userName: userName)
+    }
+    
+    @inlinable
     func getUserName() -> String? {
         
         guard let info = model.localAgent.load(type: ClientInfoData.self)
         else { return nil }
         
         return info.customName ?? info.firstName
-    }
-    
-    @inlinable
-    func composeSplashScreenSettings() -> SplashScreenState.Settings {
-        
-        let timePeriod = getTimePeriodString()
-        let cache = loadSplashImagesCache()
-        
-        guard let items = cache?.items(for: timePeriod.timePeriod)?.settings,
-              let random = items.randomElement()
-        else { return .default(for: timePeriod) }
-        
-        return random
     }
 }
 

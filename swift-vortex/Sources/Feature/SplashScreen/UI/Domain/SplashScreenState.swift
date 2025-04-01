@@ -10,7 +10,7 @@ import SwiftUI
 public struct SplashScreenState: Equatable {
     
     public var phase: Phase
-    public let settings: Settings
+    public var settings: Settings
     
     public init(
         phase: Phase,

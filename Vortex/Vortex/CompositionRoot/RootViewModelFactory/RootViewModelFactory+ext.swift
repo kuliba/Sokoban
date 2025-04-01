@@ -414,9 +414,19 @@ extension RootViewModelFactory {
                 self?.scheduleGetAndCacheSplashScreenTimePeriods()
             }
             
-            performOrWaitForAuthorized { [weak self] in
+            performOrWaitForAuthorized { [weak self, weak splash] in
                 
-                self?.scheduleGetAndCacheSplashImages()
+                self?.scheduleGetAndCacheSplashImages( 
+                    updateSplash: { [weak self, weak splash] in
+                        
+                        guard let self,
+                              let splash,
+                              let settings = composeSplashScreenSettings(storage: $0)
+                        else { return }
+                        
+                        splash.content.event(.update(settings))
+                    }
+                )
             }
         }
         
