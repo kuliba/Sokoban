@@ -18,9 +18,9 @@ final class SplashScreenReducerTests: XCTestCase {
         assert(cover(), event: .hide) { $0.phase = .hidden }
     }
     
-    func test_hide_shouldNotDeliverEffect_onCover() {
+    func test_hide_shouldDeliverRequestUpdateEffect_onCover() {
         
-        assert(cover(), event: .hide, delivers: nil)
+        assert(cover(), event: .hide, delivers: .requestUpdate)
     }
     
     func test_hide_shouldChangePhaseToHidden_onWarm() {
@@ -28,9 +28,9 @@ final class SplashScreenReducerTests: XCTestCase {
         assert(warm(), event: .hide) { $0.phase = .hidden }
     }
     
-    func test_hide_shouldNotDeliverEffect_onWarm() {
+    func test_hide_shouldDeliverRequestUpdateEffect_onWarm() {
         
-        assert(warm(), event: .hide, delivers: nil)
+        assert(warm(), event: .hide, delivers: .requestUpdate)
     }
     
     func test_hide_shouldChangePhaseToHidden_onPresented() {
@@ -38,9 +38,9 @@ final class SplashScreenReducerTests: XCTestCase {
         assert(presented(), event: .hide) { $0.phase = .hidden }
     }
     
-    func test_hide_shouldNotDeliverEffect_onPresented() {
+    func test_hide_shouldDeliverRequestUpdateEffect_onPresented() {
         
-        assert(presented(), event: .hide, delivers: nil)
+        assert(presented(), event: .hide, delivers: .requestUpdate)
     }
     
     func test_hide_shouldNotChangeState_onHidden() {
@@ -48,9 +48,9 @@ final class SplashScreenReducerTests: XCTestCase {
         assert(hidden(), event: .hide)
     }
     
-    func test_hide_shouldNotDeliverEffect_onHidden() {
+    func test_hide_shouldDeliverRequestUpdateEffect_onHidden() {
         
-        assert(hidden(), event: .hide, delivers: nil)
+        assert(hidden(), event: .hide, delivers: .requestUpdate)
     }
     
     // MARK: - prepare

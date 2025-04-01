@@ -18,11 +18,12 @@ public extension SplashScreenReducer {
     ) -> (State, Effect?) {
         
         var state = state
-        let effect: Effect? = nil
+        var effect: Effect?
         
         switch event {
         case .hide:
             state.phase = .hidden
+            effect = .requestUpdate
             
         case .prepare:
             state.phase = .warm
