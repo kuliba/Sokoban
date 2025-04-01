@@ -137,12 +137,14 @@ extension ViewComponents {
             EmptyView()
             
         case .failure:
-            WithSheetView {
-                circleButton(image: .ic24File, title: "Документ", action: $0)
-            } sheet: {
-                SAFailureDocumentView(goToMain: goToMain, makePlacesView: makePlacesView)
-            }
-            
+            SAFailureDocumentView(
+                content: {
+                    circleButton(image: .ic24File, title: "Документ", action: $0)
+                },
+                goToMain: goToMain,
+                makePlacesView: makePlacesView
+            )
+
         case .loading:
             circleButtonPlaceholder()
         }
@@ -248,32 +250,45 @@ private extension OpenSavingsAccountCompleteDomain.Complete.Context {
     }
 }
 
-private struct SAFailureDocumentView: View {
+private struct SAFailureDocumentView<Content: View>: View {
     
-    @State private var needShowPlaces: Bool = false
+    @State private var isPresented: Bool
     @State private var isShowAlert: Bool = true
+    @State private var needShowPlaces: Bool = false
     
-    let goToMain: () -> Void
-    let makePlacesView: () -> PlacesView?
+    private let content: (@escaping () -> Void) -> Content
+    private let goToMain: () -> Void
+    private let makePlacesView: () -> PlacesView?
     
     init(
+        @ViewBuilder content: @escaping (@escaping () -> Void) -> Content,
+        isPresented: Bool = false,
         goToMain: @escaping () -> Void,
         makePlacesView: @escaping () -> PlacesView?
     ) {
         self.goToMain = goToMain
+        self.isPresented = isPresented
         self.makePlacesView = makePlacesView
+        self.content = content
     }
     
     var body: some View {
         
-        ZStack {
-            Color.clear
-                .alert(
-                    item: alert,
-                    content: Alert.init
-                )
-            if needShowPlaces {
-                makePlacesView()
+        content {
+            isPresented = true
+            needShowPlaces = false
+            isShowAlert = true
+        }
+        .sheet(isPresented: $isPresented) {
+            ZStack {
+                Color.clear
+                    .alert(
+                        item: alert,
+                        content: Alert.init
+                    )
+                if needShowPlaces {
+                    makePlacesView()
+                }
             }
         }
     }
@@ -293,9 +308,11 @@ private struct SAFailureDocumentView: View {
                         needShowPlaces = true
                     }),
                 secondary: .init(
-                    type: .cancel,
-                    title: "ОК",
+                    type: .default,
+                    title: "Ок",
                     action: {
+                        isPresented = false
+                        needShowPlaces = false
                         isShowAlert = false
                     })
             )
