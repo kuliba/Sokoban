@@ -419,9 +419,11 @@ extension RootViewModelFactory {
                 self?.scheduleGetAndCacheSplashImages( 
                     updateSplash: { [weak self, weak splash] in
                         
-                        guard let self, let splash else { return }
+                        guard let self,
+                              let splash,
+                              let settings = composeSplashScreenSettings(storage: $0)
+                        else { return }
                         
-                        let settings = composeSplashScreenSettings(storage: $0)
                         splash.content.event(.update(settings))
                     }
                 )

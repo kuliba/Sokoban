@@ -63,7 +63,7 @@ extension RootViewModelFactory {
         phase: SplashScreenState.Phase
     ) -> SplashScreenViewModel {
         
-        let settings = composeSplashScreenSettings(storage: loadSplashImagesCache())
+        let settings = composeSplashScreenSettings()
         
         let initialState = SplashScreenState(phase: phase, settings: settings)
         let reducer = SplashScreenReducer()
@@ -77,28 +77,48 @@ extension RootViewModelFactory {
     }
     
     @inlinable
+    func composeSplashScreenSettings() -> SplashScreenState.Settings {
+        
+        guard let storage = loadSplashImagesCache(),
+              let settings = composeSplashScreenSettings(storage: storage)
+        else { return composeDefaultSplashScreenSettings() }
+        
+        return settings
+    }
+    
+    @inlinable
+    func composeSplashScreenSettings(
+        storage: SplashScreenStorage?
+    ) -> SplashScreenState.Settings? {
+        
+        let timePeriod = getTimePeriodString()
+        
+        guard let items = storage?.items(for: timePeriod.timePeriod),
+              let random = items.settings.randomElement()
+        else { return nil }
+        
+        let userName = getUserName()
+        
+        return random.insert(userName: userName)
+    }
+    
+    
+    @inlinable
+    func composeDefaultSplashScreenSettings() -> SplashScreenState.Settings {
+        
+        let timePeriod = getTimePeriodString()
+        let userName = getUserName()
+        
+        return .default(for: timePeriod).insert(userName: userName)
+    }
+    
+    @inlinable
     func getUserName() -> String? {
         
         guard let info = model.localAgent.load(type: ClientInfoData.self)
         else { return nil }
         
         return info.customName ?? info.firstName
-    }
-    
-    @inlinable
-    func composeSplashScreenSettings(
-        storage: SplashScreenStorage?
-    ) -> SplashScreenState.Settings {
-        
-        let timePeriod = getTimePeriodString()
-        
-        let items = storage?.items(for: timePeriod.timePeriod)
-        let random = items?.settings.randomElement()
-        
-        let settings = random ?? .default(for: timePeriod)
-        
-        let userName = getUserName()
-        return settings.insert(userName: userName)
     }
 }
 
