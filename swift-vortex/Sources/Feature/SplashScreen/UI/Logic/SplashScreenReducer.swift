@@ -18,11 +18,12 @@ public extension SplashScreenReducer {
     ) -> (State, Effect?) {
         
         var state = state
-        let effect: Effect? = nil
+        var effect: Effect?
         
         switch event {
         case .hide:
             state.phase = .hidden
+            effect = .requestUpdate
             
         case .prepare:
             state.phase = .warm
@@ -30,7 +31,11 @@ public extension SplashScreenReducer {
         case .start:
             state.phase = .presented
             
-        case let .update(settings):
+        case .update(nil):
+            // silent failure
+            break
+            
+        case let .update(.some(settings)):
             state.settings = settings
         }
         

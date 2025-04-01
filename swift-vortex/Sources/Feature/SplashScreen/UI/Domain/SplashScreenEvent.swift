@@ -10,5 +10,5 @@ public enum SplashScreenEvent: Equatable {
     case prepare
     case start
     case hide
-    case update(SplashScreenState.Settings)
+    case update(SplashScreenState.Settings?)
 }
