@@ -64,14 +64,18 @@ extension RootViewModelFactory {
     ) -> SplashScreenViewModel {
         
         let settings = composeSplashScreenSettings()
-        
         let initialState = SplashScreenState(phase: phase, settings: settings)
+        
         let reducer = SplashScreenReducer()
+        let effectHandler = SplashScreenEffectHandler { [weak self] in
+            
+            $0(self?.loadSplashScreenSettings())
+        }
         
         return .init(
             initialState: initialState,
             reduce: reducer.reduce,
-            handleEffect: { _,_ in },
+            handleEffect: effectHandler.handleEffect,
             scheduler: schedulers.main
         )
     }
@@ -79,9 +83,15 @@ extension RootViewModelFactory {
     @inlinable
     func composeSplashScreenSettings() -> SplashScreenState.Settings {
         
+        return loadSplashScreenSettings() ?? composeDefaultSplashScreenSettings()
+    }
+    
+    @inlinable
+    func loadSplashScreenSettings() -> SplashScreenState.Settings? {
+        
         guard let storage = loadSplashImagesCache(),
               let settings = composeSplashScreenSettings(storage: storage)
-        else { return composeDefaultSplashScreenSettings() }
+        else { return nil }
         
         return settings
     }
