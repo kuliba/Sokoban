@@ -105,9 +105,6 @@ private extension RootBinderView {
                 dismiss: { binder.flow.event(.dismiss) }
             )
             
-        case let .productProfile(profile):
-            productProfileView(profile)
-            
         case let .standardPayment(picker):
             standardPaymentView(picker)
             
@@ -176,7 +173,10 @@ private extension RootBinderView {
                 
                 binder.flow.event(.dismiss)
             }
-          
+            
+        case let .productProfile(profile):
+            productProfileView(profile)
+            
         case let .savingsAccount(response, updateFastAll, flag):
             components.makeOrderSavingsAccountCompleteView(
                 processingFlag: flag,
@@ -184,7 +184,7 @@ private extension RootBinderView {
                 action: updateFastAll,
                 makePlacesView: rootViewFactory.components.makePlacesView
             )
-
+            
         case let .scanQR(qrScanner):
             qrScannerView(qrScanner)
             
@@ -297,14 +297,8 @@ extension RootViewNavigation {
         case .orderCardResponse, .savingsAccount:
             return nil
             
-        case let .outside(outside):
-            switch outside {
-            case let .productProfile(productId):
-                return .productProfile(productId)
-                
-            case .tab:
-                return nil
-            }
+        case .outside:
+            return nil
             
         case .scanQR, .templates:
             return nil
@@ -324,7 +318,6 @@ extension RootViewNavigation {
         
         case makeStandardPaymentFailure(ServiceCategoryFailureDomain.Binder)
         case openProduct(OpenProduct)
-        case productProfile(ProductProfileViewModel)
         case searchByUIN(SearchByUIN)
         case standardPayment(PaymentProviderPickerDomain.Binder)
         case userAccount(UserAccountViewModel)
@@ -339,8 +332,11 @@ extension RootViewNavigation {
         case .failure:
             return nil
             
-        case .openProduct, .outside:
+        case .openProduct, .outside(.tab):
             return nil
+            
+        case let .outside(.productProfile(productProfile)):
+            return .productProfile(productProfile)
             
         case let .orderCardResponse(orderCardResponse):
             return .orderCardResponse(orderCardResponse)
@@ -363,6 +359,7 @@ extension RootViewNavigation {
     enum FullScreenCover {
         
         case orderCardResponse(OpenCardDomain.OrderCardResponse)
+        case productProfile(ProductProfileViewModel)
         case savingsAccount(OpenSavingsAccountCompleteDomain.Complete, OpenSavingsAccountCompleteDomain.UpdateFastAll, ProcessingFlag)
         case scanQR(QRScannerDomain.Binder)
         case templates(TemplatesNode)
@@ -384,7 +381,7 @@ extension RootViewNavigation.Destination: Identifiable {
                 switch openCard {
                 case let .form(form):
                     return .openProduct(.card(.init(form.model)))
-
+                    
                 case .landing(_):
                     return .orderCardLanding
                 }
@@ -398,9 +395,6 @@ extension RootViewNavigation.Destination: Identifiable {
             case .unknown:
                 return .openProduct(.unknown)
             }
-            
-        case let .productProfile(profile):
-            return .productProfile(.init(profile))
             
         case let .standardPayment(picker):
             return .standardPayment(.init(picker))
@@ -417,11 +411,10 @@ extension RootViewNavigation.Destination: Identifiable {
         
         case makeStandardPaymentFailure
         case openProduct(OpenProductID)
-        case productProfile(ObjectIdentifier)
+        case orderCardLanding
         case searchByUIN(ObjectIdentifier)
         case standardPayment(ObjectIdentifier)
         case userAccount(ObjectIdentifier)
-        case orderCardLanding
         
         enum OpenProductID: Hashable {
             
@@ -440,10 +433,13 @@ extension RootViewNavigation.FullScreenCover: Identifiable {
         switch self {
         case .orderCardResponse:
             return .orderCardResponse
-         
+            
+        case let .productProfile(profile):
+            return .productProfile(.init(profile))
+            
         case .savingsAccount:
             return .savingsAccount
-
+            
         case let .scanQR(qrRScanner):
             return .scanQR(.init(qrRScanner))
             
@@ -455,6 +451,7 @@ extension RootViewNavigation.FullScreenCover: Identifiable {
     enum ID: Hashable {
         
         case orderCardResponse
+        case productProfile(ObjectIdentifier)
         case savingsAccount
         case scanQR(ObjectIdentifier)
         case templates(ObjectIdentifier)
