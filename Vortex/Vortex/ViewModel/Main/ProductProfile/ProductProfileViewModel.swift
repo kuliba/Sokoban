@@ -1666,7 +1666,8 @@ private extension ProductProfileViewModel {
                 switch action {
                 case let payload as PaymentsMeToMeAction.Response.Success:
                     
-                    if let viewModel = viewModel,
+                    if payload.needUpdateBalance,
+                       let viewModel = viewModel,
                        let productIdFrom = viewModel.swapViewModel.productIdFrom,
                        let productIdTo = viewModel.swapViewModel.productIdTo,
                        let productFrom = model.product(productId: productIdFrom),
