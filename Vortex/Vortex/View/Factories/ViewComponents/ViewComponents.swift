@@ -82,6 +82,7 @@ struct ViewComponents {
     let makeOrderCardView: MakeOrderCardView
     let makeUpdatingUserAccountButtonLabel: () -> UpdatingUserAccountButtonLabel
     let makeInfoViews: MakeInfoViews
+    let makePlacesView: () -> PlacesView?
 }
 
 extension ViewComponents {
@@ -163,7 +164,8 @@ extension ViewComponents {
         makeTransportPaymentsView: { _ in fatalError() },
         makeOrderCardView: { EmptyView() },
         makeUpdatingUserAccountButtonLabel: { .init(label: .init(avatar: .checkImage, name: ""), publisher: Empty().eraseToAnyPublisher(), config: .prod) },
-        makeInfoViews: .default
+        makeInfoViews: .default,
+        makePlacesView: { .init(viewModel: .sample) }
     )
     
     private static let makeContactsView: MakeContactsView = { .init(viewModel: $0, viewFactory: .preview) }
