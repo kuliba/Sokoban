@@ -29,7 +29,9 @@ struct TemplatesListView: View {
     
     var body: some View {
         
-        GeometryReader { geo in
+        ZStack {
+            
+            geometryReader()
             
             mainVStack()
                 .ignoresSafeArea(.container, edges: .bottom)
@@ -41,14 +43,46 @@ struct TemplatesListView: View {
                     dismiss: { viewModel.route.modal = nil },
                     bottomSheetContent: bottomSheetContent
                 )
-                .onAppear { height = geo.size.height }
-                .onChange(of: geo.size.height) { height = $0 }
         }
-        .overlay(content: spinnerView)
+    }
+}
+
+struct HeightPreferenceKey: PreferenceKey {
+    
+    static var defaultValue: CGFloat = 0
+    static func reduce(
+        value: inout CGFloat,
+        nextValue: () -> CGFloat
+    ) {
+        value = nextValue()
     }
 }
 
 private extension TemplatesListView {
+    
+    func geometryReader() -> some View {
+        
+        GeometryReader { geo in
+            
+            Color.clear
+                .preference(
+                    key: HeightPreferenceKey.self,
+                    value: geo.size.height
+                )
+        }
+        .onPreferenceChange(
+            HeightPreferenceKey.self,
+            perform: updateIfSignificant
+        )
+    }
+    
+    func updateIfSignificant(
+        _ newHeight: CGFloat
+    ) {
+        if abs(newHeight - height) > 1 {
+            height = newHeight
+        }
+    }
     
     var isLoading: Bool {
         
@@ -101,7 +135,7 @@ private extension TemplatesListView {
             
             switch viewModel.state {
             case .loading:
-                Color.clear
+                spinnerView()//Color.clear
                 
             case .normal, .select:
                 
