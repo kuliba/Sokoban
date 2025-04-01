@@ -63,7 +63,11 @@ extension RootViewModelFactory {
                 
                 guard let model else { return nil }
                 
-                return .init(model, mode: mode, successViewModelFactory: makeSuccessViewModelFactory(processingFlag))
+                return .init(
+                    model,
+                    mode: mode,
+                    successViewModelFactory: makeSuccessViewModelFactory(processingFlag)
+                )
             }
         )
     }
