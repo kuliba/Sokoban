@@ -63,7 +63,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         
         XCTAssertNoDiff(
             info.betweenTheirMode(getProduct: { _ in product }),
-            .makePaymentTo(product, amount)
+            .makePaymentTo(from: nil, to: product, amount)
         )
     }
     
@@ -80,7 +80,7 @@ class GetInfoRepeatPaymentTests: RootViewModelFactoryTests {
         
         XCTAssertNoDiff(
             info.betweenTheirMode(getProduct: { _ in product }),
-            .makePaymentTo(product, amount)
+            .makePaymentTo(from: nil, to: product, amount)
         )
     }
     
