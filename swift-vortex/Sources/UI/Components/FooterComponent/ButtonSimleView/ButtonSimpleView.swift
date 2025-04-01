@@ -31,6 +31,7 @@ struct ButtonSimpleView: View {
                     .foregroundColor(viewModel.buttonConfig.titleForeground)
             }
         }
+        .buttonStyle(BorderlessButtonStyle())
     }
 }
 
