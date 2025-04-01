@@ -67,9 +67,12 @@ extension RootViewModelFactory {
         let initialState = SplashScreenState(phase: phase, settings: settings)
         
         let reducer = SplashScreenReducer()
-        let effectHandler = SplashScreenEffectHandler { [weak self] in
+        let effectHandler = SplashScreenEffectHandler { [weak self] completion in
             
-            $0(self?.loadSplashScreenSettings())
+            self?.schedulers.background.delay(for: .seconds(30)) { [weak self] in
+                
+                completion(self?.loadSplashScreenSettings())
+            }
         }
         
         return .init(
