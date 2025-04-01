@@ -160,7 +160,15 @@ extension RootViewModelFactory {
             createSVCardLanding: landingService,
             getSavingsAccountInfo: getSavingsAccountInfo,
             getSavingsAccountPrintForm: getPrintFormForSavingsAccount,
-            repeatPayment: { [weak self] in self?.repeatPayment(processingFlag: featureFlags.processingFlag, payload: $0, closeAction: $1, completion: $2) },
+            repeatPayment: { [weak self] in
+                
+                self?.repeatPayment(
+                    processingFlag: featureFlags.processingFlag,
+                    payload: $0,
+                    closeAction: $1,
+                    completion: $2
+                )
+            },
             makeSVCardLandingViewModel: makeSVCardLandig,
             makeInformer: { [weak model] in
                 

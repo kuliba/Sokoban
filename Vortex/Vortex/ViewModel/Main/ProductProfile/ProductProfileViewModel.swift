@@ -1180,7 +1180,7 @@ private extension ProductProfileViewModel {
                     
                     guard let product = model.product(productId: payload.settlementAccountId),
                           let meToMeViewModel = productProfileViewModelFactory.makePaymentsMeToMeViewModel(
-                            .makePaymentTo(product, payload.amount)
+                            .makePaymentTo(from: nil, to: product, payload.amount)
                           )
                     else { return }
                     
@@ -1503,7 +1503,7 @@ private extension ProductProfileViewModel {
                                 .first(where: {$0.number == productData.settlementAccount}) {
                                 
                                 guard let viewModel = productProfileViewModelFactory.makePaymentsMeToMeViewModel(
-                                    .makePaymentTo(loanAccount, 0.0)
+                                    .makePaymentTo(from: nil, to: loanAccount, 0.0)
                                 )
                                 else { return }
                                 
@@ -1525,7 +1525,7 @@ private extension ProductProfileViewModel {
                             else {
                                 
                                 guard let viewModel = productProfileViewModelFactory.makePaymentsMeToMeViewModel(
-                                    .makePaymentTo(productData, 0.0)
+                                    .makePaymentTo(from: nil, to: productData, 0.0)
                                 )
                                 else { return }
                                 
@@ -3208,7 +3208,7 @@ extension ProductProfileViewModel {
                 event(.alert(.delayAlert(.showServiceOnlyIndividualCard)))
             } else {
                 guard let viewModel = productProfileViewModelFactory.makePaymentsMeToMeViewModel(
-                    .makePaymentTo(productData, 0.0)
+                    .makePaymentTo(from: nil, to: productData, 0.0)
                 )
                 else { return }
                 

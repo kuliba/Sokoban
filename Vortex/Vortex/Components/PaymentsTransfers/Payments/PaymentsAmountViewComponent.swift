@@ -291,7 +291,7 @@ extension PaymentsMeToMeViewModel.Mode {
         case
             let .closeAccount(productData, _),
             let .closeDeposit(productData, _),
-            let .makePaymentTo(productData, _),
+            let .makePaymentTo(_, productData, _),
             let .makePaymentToDeposite(productData, _),
             let .transferAndCloseDeposit(productData, _),
             let .transferDeposit(productData, _):
@@ -318,7 +318,7 @@ extension PaymentsMeToMeViewModel.Mode {
         case
             let .closeAccount(_, balance),
             let .closeDeposit(_, balance),
-            let .makePaymentTo(_, balance),
+            let .makePaymentTo(_, _, balance),
             let .makePaymentToDeposite(_, balance),
             let .transferDeposit(_, balance),
             let .transferAndCloseDeposit(_, balance):
