@@ -265,6 +265,13 @@ extension ProductCardData {
         return statusCard == .notActivated
     }
     
+    var hasActiveStatus: Bool {
+        
+        guard let statusCard else { return false }
+
+        return statusCard == .active
+    }
+    
     var isActivated: Bool {
         
         guard let statusCard else {  return true }
