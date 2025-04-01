@@ -195,6 +195,48 @@ final class SplashScreenReducerTests: SplashScreenTests {
         assert(hidden(), event: .update(settings), delivers: nil)
     }
     
+    // MARK: - update nil
+    
+    func test_update_nil_shouldNotChangeSettings_onCover() {
+                
+        assert(cover(), event: .update(nil))
+    }
+    
+    func test_update_nil_shouldNotDeliverEffect_onCover() {
+                
+        assert(cover(), event: .update(nil), delivers: nil)
+    }
+    
+    func test_update_nil_shouldNotChangeSettings_onWarm() {
+                
+        assert(warm(), event: .update(nil))
+    }
+    
+    func test_update_nil_shouldNotDeliverEffect_onWarm() {
+                
+        assert(warm(), event: .update(nil), delivers: nil)
+    }
+    
+    func test_update_nil_shouldNotChangeSettings_onPresented() {
+                
+        assert(presented(), event: .update(nil))
+    }
+    
+    func test_update_nil_shouldNotDeliverEffect_onPresented() {
+                
+        assert(presented(), event: .update(nil), delivers: nil)
+    }
+    
+    func test_update_nil_shouldNotChangeSettings_onHidden() {
+                
+        assert(hidden(), event: .update(nil))
+    }
+    
+    func test_update_nil_shouldNotDeliverEffect_onHidden() {
+                
+        assert(hidden(), event: .update(nil), delivers: nil)
+    }
+    
     // MARK: - Helpers
     
     private typealias SUT = SplashScreenReducer

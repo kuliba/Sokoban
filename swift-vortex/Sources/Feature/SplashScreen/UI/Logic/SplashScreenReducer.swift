@@ -31,7 +31,11 @@ public extension SplashScreenReducer {
         case .start:
             state.phase = .presented
             
-        case let .update(settings):
+        case .update(nil):
+            // silent failure
+            break
+            
+        case let .update(.some(settings)):
             state.settings = settings
         }
         
