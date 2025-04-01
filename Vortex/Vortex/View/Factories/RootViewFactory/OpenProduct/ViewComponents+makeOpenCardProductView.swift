@@ -105,9 +105,22 @@ extension ViewComponents {
     private func iconView(
     ) -> some View {
         
-        Image.ic24User
-            .frame(width: 24, height: 24)
-            .foregroundStyle(.iconGray)
+        //TODO: revert after release
+//        Image.ic24CreditCard
+//            .frame(width: 24, height: 24)
+//            .foregroundStyle(.iconGray)
+        
+        ZStack(alignment: .center) {
+            
+            Circle()
+                .foregroundColor(.bgIconDeepPurpleMedium)
+                .frame(width: 32, height: 32, alignment: .center)
+            
+            Image.ic24CreditCard
+                .resizable()
+                .foregroundColor(.white)
+                .frame(width: 19, height: 19)
+        }
     }
     
     @ViewBuilder
