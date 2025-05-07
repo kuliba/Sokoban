@@ -9,13 +9,10 @@ import SwiftUI
 
 @main
 struct SokobanApp: App {
-    
     var resources = Resources.shared
     
     var body: some Scene {
-     
         WindowGroup {
-        
             ContentView()
         }
     }

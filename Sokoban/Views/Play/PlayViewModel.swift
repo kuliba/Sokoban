@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+final class PlayViewModel: ObservableObject {
+//    @Published var myBoolState: Bool = false
+}
