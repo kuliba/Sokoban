@@ -6,6 +6,6 @@
 //
 
 struct Level {
-    let name: String
+    let id: String
     let raw: String
 }

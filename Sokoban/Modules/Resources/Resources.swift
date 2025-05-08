@@ -11,17 +11,17 @@ final class Resources: ResourcesProtocol, Sendable {
     private let isolatedMembers: IsolatedMembers
 
     private actor IsolatedMembers {
-        private var files: [File]?
+        private var collections: [Collection]?
         
-        func getFiles() -> [File]? { files }
+        func getCollections() -> [Collection]? { collections }
         
-        func loadResources() async -> [File] {
-            let out = Array<File>()
+        func loadCollections() async -> [Collection] {
+            let out = Array<Collection>()
             
             // Читаем файлы
             print("load files")
             
-            files = out
+            collections = out
             return out
         }
     }
@@ -30,12 +30,12 @@ final class Resources: ResourcesProtocol, Sendable {
         isolatedMembers = IsolatedMembers()
     }
     
-    var files: [File] {
+    var collections: [Collection] {
         get async {
-            if let files = await isolatedMembers.getFiles() {
-                return files
+            if let collections = await isolatedMembers.getCollections() {
+                return collections
             } else {
-                return await isolatedMembers.loadResources()
+                return await isolatedMembers.loadCollections()
             }
         }
     }

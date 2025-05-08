@@ -9,4 +9,10 @@ import Foundation
 
 final class PlayViewModel: ObservableObject {
 //    @Published var myBoolState: Bool = false
+    
+    private let resources: Resources
+    
+    init() {
+        self.resources = Resources.shared
+    }
 }
