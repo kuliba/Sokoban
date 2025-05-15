@@ -7,12 +7,22 @@
 
 import Foundation
 
+@MainActor
 final class PlayViewModel: ObservableObject {
-//    @Published var myBoolState: Bool = false
+//    @Published var fileNames: [String] = []
     
-    private let resources: Resources
+    private let resources: ResourcesProtocol
     
     init() {
         self.resources = Resources.shared
+        test()
+    }
+    
+    func test() {
+        
+        Task {
+            let collections = await resources.collections
+            print(collections)
+        }
     }
 }

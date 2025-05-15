@@ -11,6 +11,6 @@ struct PlayView: View {
     @ObservedObject var viewModel: PlayViewModel
     
     var body: some View {
-        Text("PlayView")
+        Text("ssss")
     }
 }
