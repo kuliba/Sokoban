@@ -5,4 +5,10 @@
 //  Created by Valentin Ozerov on 15.05.2025.
 //
 
-import Foundation
+import SwiftUI
+
+struct LaunchView: View {
+    var body: some View {
+        Text("Hello, World!")
+    }
+}
